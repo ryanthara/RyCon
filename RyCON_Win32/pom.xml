@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- coordinates -->
+    <groupId>groupId</groupId>
+    <artifactId>RyCON_Win32</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <name>RyCON for Windows (32-bit)</name>
+
+    <!-- inherit all the things which are global for RyCON -->
+    <parent>
+        <groupId>de.ryanthara.ja.rycon</groupId>
+        <artifactId>rycon-build</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../rycon-build/pom.xml</relativePath>
+    </parent>
+
+    <!-- build management -->
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <finalName>RyCON_Windows</finalName>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <manifestEntries>
+                                        <Specification-Title>${project.name}</Specification-Title>
+                                        <Specification-Version>${project.version}-${maven.build.number}</Specification-Version>
+                                        <Specification-Vendor>Sebastian Aust</Specification-Vendor>
+                                        <Implementation-Version>${maven.build.timestamp}</Implementation-Version>
+                                        <Implementation-Vendor>Windows32</Implementation-Vendor>
+                                        <Main-Class>de.ryanthara.ja.rycon.gui.MainApplication</Main-Class>
+                                        <SplashScreen-Image>de/ryanthara/ja/rycon/gui/RyCON.png</SplashScreen-Image>
+                                    </manifestEntries>
+                                </transformer>
+                            </transformers>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.txt</exclude>
+                                        <exclude>META-INF/LICENSE*</exclude>
+                                        <exclude>META-INF/NOTICE*</exclude>
+                                        <exclude>META-INF/maven/</exclude>
+                                        <exclude>external.xpt</exclude>
+                                        <exclude>version.txt</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <!-- dependencies -->
+    <dependencies>
+        <!-- RyCON base from artifact rycon -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>rycon</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- SWT for Windows (32-bit) -->
+        <dependency>
+            <groupId>org.eclipse.swt</groupId>
+            <artifactId>org.eclipse.swt.win32.win32.x86</artifactId>
+            <version>4.4</version>
+        </dependency>
+
+    </dependencies>
+
+</project>

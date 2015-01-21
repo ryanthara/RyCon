@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/RyCON.iml" filepath="$PROJECT_DIR$/RyCON.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RyCON_Linux_ppc/RyCON_Linux_ppc.iml" filepath="$PROJECT_DIR$/RyCON_Linux_ppc/RyCON_Linux_ppc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RyCON_Linux_ppc64/RyCON_Linux_ppc64.iml" filepath="$PROJECT_DIR$/RyCON_Linux_ppc64/RyCON_Linux_ppc64.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RyCON_Linux_x86/RyCON_Linux_x86.iml" filepath="$PROJECT_DIR$/RyCON_Linux_x86/RyCON_Linux_x86.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RyCON_Linux_x86-64/RyCON_Linux_x86-64.iml" filepath="$PROJECT_DIR$/RyCON_Linux_x86-64/RyCON_Linux_x86-64.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RyCON_MacOSX32/RyCON_MacOSX32.iml" filepath="$PROJECT_DIR$/RyCON_MacOSX32/RyCON_MacOSX32.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RyCON_MacOSX64/RyCON_MacOSX64.iml" filepath="$PROJECT_DIR$/RyCON_MacOSX64/RyCON_MacOSX64.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RyCON_Solaris_sparc/RyCON_Solaris_sparc.iml" filepath="$PROJECT_DIR$/RyCON_Solaris_sparc/RyCON_Solaris_sparc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RyCON_Solaris_x86/RyCON_Solaris_x86.iml" filepath="$PROJECT_DIR$/RyCON_Solaris_x86/RyCON_Solaris_x86.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RyCON_Win32/RyCON_Win32.iml" filepath="$PROJECT_DIR$/RyCON_Win32/RyCON_Win32.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RyCON_Win64/RyCON_Win64.iml" filepath="$PROJECT_DIR$/RyCON_Win64/RyCON_Win64.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RyCON_aix_ppc/RyCON_aix_ppc.iml" filepath="$PROJECT_DIR$/RyCON_aix_ppc/RyCON_aix_ppc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RyCON_aix_ppc64/RyCON_aix_ppc64.iml" filepath="$PROJECT_DIR$/RyCON_aix_ppc64/RyCON_aix_ppc64.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RyCON_hpux-ia64/RyCON_hpux-ia64.iml" filepath="$PROJECT_DIR$/RyCON_hpux-ia64/RyCON_hpux-ia64.iml" />
+      <module fileurl="file://$PROJECT_DIR$/rycon/rycon.iml" filepath="$PROJECT_DIR$/rycon/rycon.iml" />
+      <module fileurl="file://$PROJECT_DIR$/rycon-build/rycon-build.iml" filepath="$PROJECT_DIR$/rycon-build/rycon-build.iml" />
+    </modules>
+  </component>
+</project>

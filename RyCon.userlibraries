@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<eclipse-userlibraries>
+  <library name="iconloader">
+    <archive path="/Users/sebastian/Coder/IntelliJIDEA_projects/RyCON/libs/iconloader.jar" />
+    <archive path="/Users/sebastian/Coder/IntelliJIDEA_projects/RyCON/libs/swt.jar" />
+  </library>
+  <library name="swt-4">
+    <archive path="/Users/sebastian/Coder/libs/swt-4/src.zip" />
+    <archive path="/Users/sebastian/Coder/libs/swt-4/swt.jar" />
+    <archive path="/Users/sebastian/Coder/libs/swt-4/swt-debug.jar" />
+  </library>
+</eclipse-userlibraries>
+
