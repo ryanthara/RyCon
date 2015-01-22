@@ -9,6 +9,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="swt-4" level="project" />
-    <orderEntry type="library" name="Maven: net.sf.opencsv:opencsv:3.1" level="project" />
+    <orderEntry type="library" name="Maven: com.opencsv:opencsv:3.1" level="project" />
   </component>
 </module>

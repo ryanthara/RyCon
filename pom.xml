@@ -141,7 +141,7 @@
     <dependencies>
         <!-- http://opencsv.sourceforge.net -->
         <dependency>
-            <groupId>net.sf.opencsv</groupId>
+            <groupId>com.opencsv</groupId>
             <artifactId>opencsv</artifactId>
             <version>3.1</version>
         </dependency>
