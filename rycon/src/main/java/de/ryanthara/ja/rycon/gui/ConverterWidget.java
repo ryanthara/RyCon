@@ -18,7 +18,7 @@
 
 package de.ryanthara.ja.rycon.gui;
 
-import au.com.bytecode.opencsv.CSVReader;
+import com.opencsv.CSVReader;
 import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.io.LineReader;
 import de.ryanthara.ja.rycon.io.LineWriter;
