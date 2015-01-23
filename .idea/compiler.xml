@@ -28,8 +28,8 @@
         <module name="opencsv" />
         <module name="opencsv_test" />
         <module name="rycon" />
-        <module name="RyCON_aix_ppc" />
-        <module name="RyCON_aix_ppc64" />
+        <module name="RyCON_aix-ppc" />
+        <module name="RyCON_aix-ppc64" />
         <module name="RyCON_cocoa-macosx" />
         <module name="RyCON_cooca-macosx_x86-64" />
         <module name="RyCON_gtk-aix_ppc" />
@@ -58,9 +58,11 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="1.7">
-      <module name="IconLoader" target="1.8" />
       <module name="iconLoader" target="1.6" />
+      <module name="IconLoader" target="1.8" />
       <module name="rycon" target="1.8" />
+      <module name="RyCON_aix-ppc" target="1.8" />
+      <module name="RyCON_aix-ppc64" target="1.8" />
       <module name="RyCON_aix_ppc" target="1.8" />
       <module name="RyCON_aix_ppc64" target="1.8" />
       <module name="RyCON_hpux-ia64" target="1.8" />

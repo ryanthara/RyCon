@@ -24,33 +24,18 @@
 
     <!-- used third party repositories -->
     <repositories>
-        <!-- iconLoader -->
-        <repository>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <id>central</id>
-            <name>bintray</name>
-            <url>http://dl.bintray.com/bulenkov/maven</url>
-        </repository>
-        <!-- SWT -->
         <repository>
             <id>swt-repo</id>
             <url>https://swt-repo.googlecode.com/svn/repo/</url>
         </repository>
     </repositories>
 
-    <!-- additional repositories -->
-    <pluginRepositories>
-        <pluginRepository>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <id>central</id>
-            <name>bintray-plugins</name>
-            <url>http://dl.bintray.com/bulenkov/maven</url>
-        </pluginRepository>
-    </pluginRepositories>
+    <!-- where the sourcecode lives -->
+    <scm>
+        <connection>scm:git:https://github.com/ryanthara/RyCon</connection>
+        <developerConnection>scm:git:git@github.com:ryanthara/RyCon.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
 
     <!-- define properties -->
     <properties>
@@ -139,13 +124,6 @@
 
     <!-- dependencies for third party repositories for all rycon modules -->
     <dependencies>
-        <!-- http://opencsv.sourceforge.net -->
-        <dependency>
-            <groupId>com.opencsv</groupId>
-            <artifactId>opencsv</artifactId>
-            <version>3.1</version>
-        </dependency>
-
     </dependencies>
 
     <!-- parts of the parent multi project RyCON -->

@@ -13,8 +13,8 @@
       <module fileurl="file://$PROJECT_DIR$/RyCON_Solaris_x86/RyCON_Solaris_x86.iml" filepath="$PROJECT_DIR$/RyCON_Solaris_x86/RyCON_Solaris_x86.iml" />
       <module fileurl="file://$PROJECT_DIR$/RyCON_Win32/RyCON_Win32.iml" filepath="$PROJECT_DIR$/RyCON_Win32/RyCON_Win32.iml" />
       <module fileurl="file://$PROJECT_DIR$/RyCON_Win64/RyCON_Win64.iml" filepath="$PROJECT_DIR$/RyCON_Win64/RyCON_Win64.iml" />
-      <module fileurl="file://$PROJECT_DIR$/RyCON_aix_ppc/RyCON_aix_ppc.iml" filepath="$PROJECT_DIR$/RyCON_aix_ppc/RyCON_aix_ppc.iml" />
-      <module fileurl="file://$PROJECT_DIR$/RyCON_aix_ppc64/RyCON_aix_ppc64.iml" filepath="$PROJECT_DIR$/RyCON_aix_ppc64/RyCON_aix_ppc64.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RyCON_aix_ppc/RyCON_aix-ppc.iml" filepath="$PROJECT_DIR$/RyCON_aix_ppc/RyCON_aix-ppc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RyCON_aix_ppc64/RyCON_aix-ppc64.iml" filepath="$PROJECT_DIR$/RyCON_aix_ppc64/RyCON_aix-ppc64.iml" />
       <module fileurl="file://$PROJECT_DIR$/RyCON_hpux-ia64/RyCON_hpux-ia64.iml" filepath="$PROJECT_DIR$/RyCON_hpux-ia64/RyCON_hpux-ia64.iml" />
       <module fileurl="file://$PROJECT_DIR$/rycon/rycon.iml" filepath="$PROJECT_DIR$/rycon/rycon.iml" />
       <module fileurl="file://$PROJECT_DIR$/rycon-build/rycon-build.iml" filepath="$PROJECT_DIR$/rycon-build/rycon-build.iml" />

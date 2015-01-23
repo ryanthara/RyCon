@@ -5,8 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <!-- coordinates -->
-    <groupId>groupId</groupId>
-    <artifactId>RyCON_aix-ppc64</artifactId>
+    <artifactId>RyCON_aix_ppc64</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>RyCON for aix (ppc, 64-bit)</name>
