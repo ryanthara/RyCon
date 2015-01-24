@@ -1,0 +1,19 @@
+# Backups:
+*~
+*.bak
+# RyCON:
+RyCON.config
+RyCON*/buildNumber.properties
+# Maven:
+target/
+# Eclipse:
+.classpath
+.project
+.settings/
+# IDEA:
+*.iml
+*.ipr
+*.iws
+.idea/
+# Logging:
+*.log
