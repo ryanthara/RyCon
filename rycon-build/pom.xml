@@ -54,4 +54,11 @@
         </plugins>
     </build>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.bulenkov</groupId>
+            <artifactId>iconloader</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+    </dependencies>
 </project>

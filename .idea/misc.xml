@@ -59,6 +59,8 @@
     <option name="ignoredFiles">
       <set>
         <option value="$PROJECT_DIR$/IconLoader/pom.xml" />
+        <option value="$PROJECT_DIR$/RyCON_aix_ppc/pom.xml" />
+        <option value="$PROJECT_DIR$/RyCON_aix_ppc64/pom.xml" />
         <option value="$PROJECT_DIR$/iconLoader/pom.xml" />
         <option value="$PROJECT_DIR$/iconloader/pom.xml" />
       </set>

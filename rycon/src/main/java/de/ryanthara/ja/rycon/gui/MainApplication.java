@@ -213,7 +213,7 @@ public class MainApplication extends Main {
 
         // button #1 for cleaner tool
         Button btnToolboxClean = new Button(compositeGrid, SWT.PUSH);
-        btnToolboxClean.setImage(new ImageConverter().convertToImage(display, "../gui/icons/1-clean.png"));
+        btnToolboxClean.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/icons/1-clean.png"));
         btnToolboxClean.setText(I18N.getBtnCleanLabel());
         btnToolboxClean.setToolTipText(I18N.getBtnCleanLabelToolTip());
 
@@ -227,7 +227,7 @@ public class MainApplication extends Main {
 
         // button #2 for splitter tool
         Button btnToolboxSplitter = new Button(compositeGrid, SWT.PUSH);
-        btnToolboxSplitter.setImage(new ImageConverter().convertToImage(display, "../gui/icons/2-code.png"));
+        btnToolboxSplitter.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/icons/2-code.png"));
         btnToolboxSplitter.setText(I18N.getBtnSplitterLabel());
         btnToolboxSplitter.setToolTipText(I18N.getBtnSplitterLabelToolTip());
 
@@ -241,7 +241,7 @@ public class MainApplication extends Main {
 
         // button #3 for leveling tool
         Button btnToolboxLeveling = new Button(compositeGrid, SWT.PUSH);
-        btnToolboxLeveling.setImage(new ImageConverter().convertToImage(display, "../gui/icons/3-level.png"));
+        btnToolboxLeveling.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/icons/3-level.png"));
         btnToolboxLeveling.setText(I18N.getBtnLevelingLabel());
         btnToolboxLeveling.setToolTipText(I18N.getBtnLevelingLabelToolTip());
 
@@ -255,7 +255,7 @@ public class MainApplication extends Main {
 
         // button #4 for converter tool
         Button btnToolboxConvert = new Button(compositeGrid, SWT.PUSH);
-        btnToolboxConvert.setImage(new ImageConverter().convertToImage(display, "../gui/icons/4-convert.png"));
+        btnToolboxConvert.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/icons/4-convert.png"));
         btnToolboxConvert.setText(I18N.getBtnConvertLabel());
         btnToolboxConvert.setToolTipText(I18N.getBtnConvertLabelToolTip());
 
@@ -269,7 +269,7 @@ public class MainApplication extends Main {
 
         // button #5 for project generation tool
         Button btnToolboxGenerator = new Button(compositeGrid, SWT.PUSH);
-        btnToolboxGenerator.setImage(new ImageConverter().convertToImage(display, "../gui/icons/5-project.png"));
+        btnToolboxGenerator.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/icons/5-project.png"));
         btnToolboxGenerator.setText(I18N.getBtnGeneratorLabel());
         btnToolboxGenerator.setToolTipText(I18N.getBtnGeneratorLabelToolTip());
 
@@ -283,7 +283,7 @@ public class MainApplication extends Main {
 
         // button #6 for exit from the program
         Button btnExit = new Button(compositeGrid, SWT.PUSH);
-        btnExit.setImage(new ImageConverter().convertToImage(display, "../gui/icons/6-exit.png"));
+        btnExit.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/icons/6-exit.png"));
         btnExit.setText(I18N.getBtnExitLabel());
         btnExit.setToolTipText(I18N.getBtnExitLabelToolTip());
 

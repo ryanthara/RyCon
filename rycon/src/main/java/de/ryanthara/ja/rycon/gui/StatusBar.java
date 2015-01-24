@@ -97,9 +97,9 @@ public class StatusBar extends Composite {
 
         super(parent, style);
 
-        iconError = new ImageConverter().convertToImage(Display.getCurrent(), "../gui/icons/10-error.png");
-        iconOK = new ImageConverter().convertToImage(Display.getCurrent(), "../gui/icons/20-ok.png");
-        iconWarning = new ImageConverter().convertToImage(Display.getCurrent(), "../gui/icons/15-warning.png");
+        iconError = new ImageConverter().convertToImage(Display.getCurrent(), "/de/ryanthara/ja/rycon/gui/icons/10-error.png");
+        iconOK = new ImageConverter().convertToImage(Display.getCurrent(), "/de/ryanthara/ja/rycon/gui/icons/20-ok.png");
+        iconWarning = new ImageConverter().convertToImage(Display.getCurrent(), "/de/ryanthara/ja/rycon/gui/icons/15-warning.png");
 
         FormLayout formLayout = new FormLayout();
         formLayout.marginHeight = 5;

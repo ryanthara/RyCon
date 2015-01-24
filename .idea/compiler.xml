@@ -27,7 +27,6 @@
         <module name="iconloader" />
         <module name="opencsv" />
         <module name="opencsv_test" />
-        <module name="rycon" />
         <module name="RyCON_aix-ppc" />
         <module name="RyCON_aix-ppc64" />
         <module name="RyCON_cocoa-macosx" />
@@ -41,19 +40,8 @@
         <module name="RyCON_gtk-linux_x86-64" />
         <module name="RyCON_gtk-solaris_sparc" />
         <module name="RyCON_gtk-solaris_x86" />
-        <module name="RyCON_hpux-ia64" />
-        <module name="RyCON_Linux_ppc" />
-        <module name="RyCON_Linux_ppc64" />
-        <module name="RyCON_Linux_x86" />
-        <module name="RyCON_Linux_x86-64" />
         <module name="RyCON_MacOSX" />
-        <module name="RyCON_MacOSX32" />
-        <module name="RyCON_MacOSX64" />
-        <module name="RyCON_Solaris_sparc" />
-        <module name="RyCON_Solaris_x86" />
-        <module name="RyCON_Win32" />
         <module name="RyCON_win32" />
-        <module name="RyCON_Win64" />
         <module name="RyCON_win64" />
       </profile>
     </annotationProcessing>

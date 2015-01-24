@@ -41,7 +41,7 @@ public class ImageCache {
     /**
      * Member for the root path of the icon folder.
      */
-    private static final String IMAGE_ROOT_PATH = "../gui/icons/";
+    private static final String IMAGE_ROOT_PATH = "/de/ryanthara/ja/rycon/gui/icons/";
 
     /**
      * Member that holds the {@code Image} objects with a {@code String} key.
