@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="iconloader1">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/rycon/libs/iconloader.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
