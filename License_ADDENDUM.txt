@@ -1,0 +1,7 @@
+Not all the content of RyCON is under a GPL-3.0 license. Please be careful when using third party libraries
+and the modules of RyCON which are under the given below licenses.
+
+- IconLoader from bulenkov.com is under the APACHE 2.0 license
+- SWT from eclipse.org is under the EPL 1.0 license
+
+All the license texts are put into the project path of RyCON.

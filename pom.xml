@@ -85,6 +85,21 @@
                     </configuration>
                 </plugin>
 
+                <!-- Add the documentation. Some things should be done better! -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>2.10.1</version>
+                    <configuration>
+                        <doctitle>RyCON ${project.version} API</doctitle>
+                        <windowtitle>RyCON ${project.version} API</windowtitle>
+                        <encoding>UTF-8</encoding>
+                        <header>RyCON API</header>
+                        <bottom>Created by Sebastian Aust</bottom>
+                        <detectLinks>true</detectLinks>
+                    </configuration>
+                </plugin>
+
                 <!-- provides the capability to build and sign jars -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -156,6 +171,7 @@
     <modules>
         <module>rycon</module>
         <module>rycon-build</module>
+        <module>rycon-license</module>
         <module>RyCON_aix_ppc</module>
         <module>RyCON_aix_ppc64</module>
         <module>RyCON_hpux-ia64</module>
