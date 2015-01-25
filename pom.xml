@@ -18,9 +18,27 @@
             <id>saust</id>
             <name>Sebastian Aust</name>
             <email>code at ryanthara dot de</email>
+            <url>http://code.ryanthara.de/</url>
             <timezone>+1</timezone>
+            <roles>
+                <role>architect</role>
+                <role>developer</role>
+            </roles>
         </developer>
     </developers>
+
+    <!-- information about important contributors -->
+    <contributors>
+        <contributor>
+            <name>Christian Pesch</name>
+            <email>support at routeconverter dot com</email>
+            <url>http://www.routeconverter.com/</url>
+            <timezone>+1</timezone>
+            <roles>
+                <role>maven-supporter</role>
+            </roles>
+        </contributor>
+    </contributors>
 
     <!-- used third party repositories -->
     <repositories>
@@ -39,7 +57,7 @@
 
     <!-- define properties -->
     <properties>
-        <targetJdk>1.8</targetJdk>
+        <targetJdk>1.7</targetJdk>
     </properties>
 
     <!-- build management -->
@@ -96,6 +114,14 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-shade-plugin</artifactId>
                     <version>1.7.1</version>
+                </plugin>
+
+                <!-- a cross-platform tool for wrapping Java applications distributed as jars in
+                lightweight Windows native executables.  -->
+                <plugin>
+                    <groupId>org.bluestemsoftware.open.maven.plugin</groupId>
+                    <artifactId>launch4j-plugin</artifactId>
+                    <version>1.5.0.0</version>
                 </plugin>
 
                 <!-- give a build number -->

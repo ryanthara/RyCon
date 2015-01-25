@@ -42,6 +42,8 @@
                                         <Implementation-Vendor>Windows32</Implementation-Vendor>
                                         <Main-Class>de.ryanthara.ja.rycon.gui.MainApplication</Main-Class>
                                         <SplashScreen-Image>de/ryanthara/ja/rycon/gui/RyCON.png</SplashScreen-Image>
+                                        <Codebase>http://code.ryanthara.de/RyCON</Codebase>
+                                        <Application-Name>RyCON</Application-Name>
                                     </manifestEntries>
                                 </transformer>
                             </transformers>
@@ -64,6 +66,89 @@
             </plugin>
         </plugins>
     </build>
+
+    <!-- Use a profile for the launch4j-plugin to build the exe of RyCON -->
+    <profiles>
+        <profile>
+            <id>rycon</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <!-- This plugin provides the capability to sign or verify a project artifact and attachments using jarsigner. -->
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jarsigner-plugin</artifactId>
+                        <version>1.4</version>
+                        <executions>
+                            <execution>
+                                <id>sign</id>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <archive>target/RyCON_Windows32.jar</archive>
+                            <keystore>${keystorePath}</keystore>
+                            <alias>${keystoreAlias}</alias>
+                            <storepass>${keystorePassword}</storepass>
+                            <removeExistingSignatures>true</removeExistingSignatures>
+                        </configuration>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>parse-version</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.bluestemsoftware.open.maven.plugin</groupId>
+                        <artifactId>launch4j-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>launch4j</goal>
+                                </goals>
+                                <configuration>
+                                    <headerType>gui</headerType>
+                                    <outfile>target/RyCON_Windows32.exe</outfile>
+                                    <jar>target/RyCON_Windows32.jar</jar>
+                                    <errTitle>RyCON</errTitle>
+                                    <icon>src/main/app-resources/RyCON.ico</icon>
+                                    <classPath>
+                                        <mainClass>de.ryanthara.ja.rycon.gui.MainApplication</mainClass>
+                                    </classPath>
+                                    <jre>
+                                        <minVersion>1.7.0</minVersion>
+                                        <maxHeapSize>512</maxHeapSize>
+                                    </jre>
+                                    <versionInfo>
+                                        <fileVersion>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${maven.build.number}.0</fileVersion>
+                                        <txtFileVersion>${project.version} ${maven.build.number} ${maven.build.timestamp}</txtFileVersion>
+                                        <fileDescription>RyCON converts, clean, process and process measurement files and coordinate data for surveyors</fileDescription>
+                                        <copyright>Sebastian Aust</copyright>
+                                        <productName>RyCON</productName>
+                                        <productVersion>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${maven.build.number}.0</productVersion>
+                                        <txtProductVersion>${project.version} ${maven.build.number} ${maven.build.timestamp}</txtProductVersion>
+                                        <internalName>RyCON for Windows as 32 Bit Executable</internalName>
+                                        <originalFilename>RyCON_Windows32.exe</originalFilename>
+                                    </versionInfo>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <!-- dependencies -->
     <dependencies>
