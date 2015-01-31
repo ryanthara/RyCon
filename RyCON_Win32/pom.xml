@@ -74,28 +74,6 @@
             <build>
                 <plugins>
                     <plugin>
-                        <!-- This plugin provides the capability to sign or verify a project artifact and attachments using jarsigner. -->
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-jarsigner-plugin</artifactId>
-                        <version>1.4</version>
-                        <executions>
-                            <execution>
-                                <id>sign</id>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <archive>target/RyCON_Windows32.jar</archive>
-                            <keystore>${keystorePath}</keystore>
-                            <alias>${keystoreAlias}</alias>
-                            <storepass>${keystorePassword}</storepass>
-                            <removeExistingSignatures>true</removeExistingSignatures>
-                        </configuration>
-                    </plugin>
-
-                    <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>build-helper-maven-plugin</artifactId>
                         <executions>
@@ -109,8 +87,9 @@
                     </plugin>
 
                     <plugin>
-                        <groupId>org.bluestemsoftware.open.maven.plugin</groupId>
-                        <artifactId>launch4j-plugin</artifactId>
+                        <groupId>com.akathist.maven.plugins.launch4j</groupId>
+                        <artifactId>launch4j-maven-plugin</artifactId>
+                        <version>1.7.4</version>
                         <executions>
                             <execution>
                                 <phase>package</phase>

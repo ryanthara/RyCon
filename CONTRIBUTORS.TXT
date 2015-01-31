@@ -11,7 +11,7 @@ I want to say thank you to:
 I have to be indebted to:
 
  - Christ Pesch from http://www.routeconverter.com for maven support and programming help. Not to take this for granted.
- - Sonja from http://swoony.de/ for their graphic design support
+ - Sonja from http://swoony.de/ for their graphic design support and the beautiful icon of RyCON!
 
 Some people more, some doesn't want to be mentioned.
 

@@ -34,7 +34,8 @@ folder in the project structure.
 Installation
 ------------
 
-There is no need to install RyCON, because it is platform independent.
+There is no need to install RyCON, because it is platform independent. For easier
+use it is packed into platform depended jar-executales with the great launch4j.
 
 Licensing
 ---------
@@ -50,7 +51,7 @@ Contact
   ryanthara on [twitter](http://www.twitter.com/ryanthara)
   
 * If you want to get a new version of RyCON and some things more, just take a
-  look on the [RyCON-Website](http://code.ryanthara.de/RyCON)
+  look on the [RyCON-website](http://code.ryanthara.de/RyCON)
   
 * If you are interested in the current code of RyCON, developing java, just take
   a look on [github](https://github.com/ryanthara/RyCon)

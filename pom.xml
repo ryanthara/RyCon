@@ -42,11 +42,27 @@
 
     <!-- used third party repositories -->
     <repositories>
+        <!-- launch4j -->
+        <repository>
+            <id>akathist-repository</id>
+            <name>Akathist Repository</name>
+            <url>http://www.9stmaryrd.com/maven</url>
+        </repository>
+        <!-- SWT -->
         <repository>
             <id>swt-repo</id>
             <url>https://swt-repo.googlecode.com/svn/repo/</url>
         </repository>
     </repositories>
+
+    <pluginRepositories>
+        <!-- launch4j -->
+        <pluginRepository>
+            <id>akathist-repository</id>
+            <name>Akathist Repository</name>
+            <url>http://www.9stmaryrd.com/maven</url>
+        </pluginRepository>
+    </pluginRepositories>
 
     <!-- where the sourcecode lives -->
     <scm>
@@ -57,6 +73,7 @@
 
     <!-- define properties -->
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <targetJdk>1.7</targetJdk>
     </properties>
 
@@ -111,6 +128,14 @@
                             <addMavenDescriptor>false</addMavenDescriptor>
                         </archive>
                     </configuration>
+                    <executions>
+                        <execution>
+                            <id>default-jar</id>
+                            <!-- minitest does not necessary have .java files under src/main
+                                and this causes [WARNING] JAR will be empty upon mvn package -->
+                            <phase>package</phase>
+                        </execution>
+                    </executions>
                 </plugin>
 
                 <!-- The Resources Plugin handles the copying of project resources to the output directory. -->

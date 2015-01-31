@@ -1,0 +1,3 @@
+RyCON 1.0-SNAPSHOT, 2015-02-01
+------------------------------
+- Initial release
