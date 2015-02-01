@@ -98,6 +98,14 @@
                             <!--<dictionaryFile>${basedir}/src/main/app-resources/Info.plist</dictionaryFile>-->
                             <!--<iconFile>${basedir}/src/main/app-resources/RyCON.icns</iconFile>-->
                             <!--<mainClass>de.ryanthara.ja.rycon.gui.MainApplication</mainClass>-->
+                        <!--<additionalResources>-->
+                            <!--<fileSet>-->
+                                <!--<directory>${basedir}/src/main/app-resources</directory>-->
+                                <!--<includes>-->
+                                    <!--<include>README.txt</include>-->
+                                <!--</includes>-->
+                            <!--</fileSet>-->
+                        <!--</additionalResources>-->
                         <!--</configuration>-->
                         <!--<executions>-->
                             <!--<execution>-->
@@ -110,22 +118,49 @@
                     <!--</plugin>-->
 
                     <plugin>
-                        <artifactId>maven-assembly-plugin</artifactId>
+                        <groupId>io.github.appbundler</groupId>
+                        <artifactId>appbundle-maven-plugin</artifactId>
+                        <version>1.0-SNAPSHOT</version>
+                        <configuration>
+                            <dictionaryFile>${basedir}/src/main/app-resources/Info.plist</dictionaryFile>
+                            <iconFile>${basedir}/src/main/app-resources/RyCON.icns</iconFile>
+                            <mainClass>de.ryanthara.ja.rycon.gui.MainApplication</mainClass>
+                            <!--<additionalResources>-->
+                                <!--<fileSet>-->
+                                <!--<directory>${basedir}/src/main/app-resources</directory>-->
+                                    <!--<includes>-->
+                                        <!--<include>README.txt</include>-->
+                                    <!--</includes>-->
+                                <!--</fileSet>-->
+                            <!--</additionalResources>-->
+                        </configuration>
                         <executions>
                             <execution>
                                 <phase>package</phase>
                                 <goals>
-                                    <goal>single</goal>
+                                    <goal>bundle</goal>
                                 </goals>
                             </execution>
                         </executions>
-                        <configuration>
-                            <descriptors>
-                                <descriptor>${basedir}/src/main/assembly/macosx.xml</descriptor>
-                            </descriptors>
-                            <finalName>RyCON_MacOSX64.app</finalName>
-                        </configuration>
                     </plugin>
+
+                    <!--<plugin>-->
+                        <!--<artifactId>maven-assembly-plugin</artifactId>-->
+                        <!--<executions>-->
+                            <!--<execution>-->
+                                <!--<phase>package</phase>-->
+                                <!--<goals>-->
+                                    <!--<goal>single</goal>-->
+                                <!--</goals>-->
+                            <!--</execution>-->
+                        <!--</executions>-->
+                        <!--<configuration>-->
+                            <!--<descriptors>-->
+                                <!--<descriptor>${basedir}/src/main/assembly/macosx.xml</descriptor>-->
+                            <!--</descriptors>-->
+                            <!--<finalName>RyCON_MacOSX64.app</finalName>-->
+                        <!--</configuration>-->
+                    <!--</plugin>-->
 
                 </plugins>
             </build>
@@ -149,11 +184,18 @@
         </dependency>
         
         <!-- Maven OS X Application Bundle Plugin -->
+        <!--<dependency>-->
+            <!--<groupId>com.agiliumlabs.osxappbundle</groupId>-->
+            <!--<artifactId>osxappbundle-maven-plugin</artifactId>-->
+            <!--<version>1.0.1</version>-->
+        <!--</dependency>-->
+
         <dependency>
-            <groupId>com.agiliumlabs.osxappbundle</groupId>
-            <artifactId>osxappbundle-maven-plugin</artifactId>
-            <version>1.0.1</version>
+            <groupId>io.github.appbundler</groupId>
+            <artifactId>appbundle-maven-plugin</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
+        
     </dependencies>
 
 </project>

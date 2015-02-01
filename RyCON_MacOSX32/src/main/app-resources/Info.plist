@@ -38,7 +38,7 @@
                     <string>false</string>
                 </dict>
             <key>VMOptions</key>
-            <string>-XstartOnFirstThread -d32 -Xmx512m</string>
+            <string>-XstartOnFirstThread -d32 -Xmx512m -Dapple.laf.useScreenMenuBar=true</string>
             <key>ClassPath</key>
             <string>$JAVAROOT/RyCON_MacOSX32.jar</string>
         </dict>

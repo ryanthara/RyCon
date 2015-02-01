@@ -35,10 +35,10 @@
             <key>Properties</key>
                 <dict>
                     <key>apple.laf.useScreenMenuBar</key>
-                    <string>false</string>
+                    <string>true</string>
                 </dict>
             <key>VMOptions</key>
-            <string>-XstartOnFirstThread -d64 -Xmx1024m</string>
+            <string>-XstartOnFirstThread -d64 -Xmx1024m -Dapple.laf.useScreenMenuBar=true</string>
             <key>ClassPath</key>
             <string>$JAVAROOT/RyCON_MacOSX64.jar</string>
         </dict>
