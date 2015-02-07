@@ -53,6 +53,17 @@
             <id>swt-repo</id>
             <url>https://swt-repo.googlecode.com/svn/repo/</url>
         </repository>
+        <repository>
+            <id>local-repository</id>
+            <releases>
+                <enabled>true</enabled>
+                <checksumPolicy>ignore</checksumPolicy>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <url>file://${project.basedir}/../local-libs</url>
+        </repository>
     </repositories>
 
     <pluginRepositories>
