@@ -24,7 +24,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>2.3</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -86,28 +85,6 @@
                             </execution>
                         </executions>
                     </plugin>
-
-                    <!-- creates an Application Bundle for OS X containing all your project dependencies
-                    and the necessary metadata -->
-                    <plugin>
-                        <groupId>com.agiliumlabs.osxappbundle</groupId>
-                        <artifactId>osxappbundle-maven-plugin</artifactId>
-                        <version>1.0.1</version>
-                        <configuration>
-                            <dictionaryFile>${basedir}/src/main/app-resources/Info.plist</dictionaryFile>
-                            <iconFile>${basedir}/src/main/app-resources/RyCON.icns</iconFile>
-                            <mainClass>de.ryanthara.ja.rycon.gui.MainApplication</mainClass>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>bundle</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    
                 </plugins>
             </build>
         </profile>
@@ -127,13 +104,6 @@
             <groupId>org.eclipse.swt</groupId>
             <artifactId>org.eclipse.swt.cocoa.macosx</artifactId>
             <version>4.4</version>
-        </dependency>
-
-        <!-- Maven OS X Application Bundle Plugin -->
-        <dependency>
-            <groupId>com.agiliumlabs.osxappbundle</groupId>
-            <artifactId>osxappbundle-maven-plugin</artifactId>
-            <version>1.0.1</version>
         </dependency>
     </dependencies>
 

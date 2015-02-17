@@ -21,72 +21,68 @@
     <!-- build management -->
     <build>
         <plugins>
-            <!--<plugin>-->
-                <!--<groupId>org.apache.maven.plugins</groupId>-->
-                <!--<artifactId>maven-shade-plugin</artifactId>-->
-                <!--<version>2.3</version>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<phase>package</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>shade</goal>-->
-                        <!--</goals>-->
-                        <!--<configuration>-->
-                            <!--<finalName>RyCON_MacOSX64</finalName>-->
-                            <!--<transformers>-->
-                                <!--<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">-->
-                                    <!--<manifestEntries>-->
-                                        <!--<Specification-Title>${project.name}</Specification-Title>-->
-                                        <!--<Specification-Version>${project.version}-${maven.build.number}</Specification-Version>-->
-                                        <!--<Specification-Vendor>Sebastian Aust</Specification-Vendor>-->
-                                        <!--<Implementation-Version>${maven.build.timestamp.clone}</Implementation-Version>-->
-                                        <!--<Implementation-Vendor>Mac64</Implementation-Vendor>-->
-                                        <!--<Main-Class>de.ryanthara.ja.rycon.gui.MainApplication</Main-Class>-->
-                                        <!--&lt;!&ndash; Doesn't work because of an swt bug on OS X &ndash;&gt;-->
-                                        <!--&lt;!&ndash;<SplashScreen-Image>de/ryanthara/ja/rycon/gui/RyCON.png</SplashScreen-Image>&ndash;&gt;-->
-                                        <!--<Permissions>all-permissions</Permissions>-->
-                                        <!--<Codebase>http://code.ryanthara.de/RyCON</Codebase>-->
-                                        <!--<Application-Name>RyCON</Application-Name>-->
-                                    <!--</manifestEntries>-->
-                                <!--</transformer>-->
-                            <!--</transformers>-->
-                            <!--<filters>-->
-                                <!--<filter>-->
-                                    <!--<artifact>*:*</artifact>-->
-                                    <!--<excludes>-->
-                                        <!--<exclude>META-INF/*.txt</exclude>-->
-                                        <!--<exclude>META-INF/LICENSE*</exclude>-->
-                                        <!--<exclude>META-INF/NOTICE*</exclude>-->
-                                        <!--<exclude>META-INF/maven/</exclude>-->
-                                        <!--<exclude>external.xpt</exclude>-->
-                                        <!--<exclude>version.txt</exclude>-->
-                                    <!--</excludes>-->
-                                <!--</filter>-->
-                            <!--</filters>-->
-                        <!--</configuration>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-            <!--</plugin>-->
             <plugin>
-                <groupId>io.github.appbundler</groupId>
-                <artifactId>appbundle-maven-plugin</artifactId>
-                <version>1.0-SNAPSHOT</version>
-                <configuration>
-                    <dictionaryFile>Info.plist</dictionaryFile>
-                    <mainClass>de.ryanthara.ja.rycon.gui.MainApplication</mainClass>
-                    <!--<dictionaryFile>Info.plist</dictionaryFile>-->
-                    <!--<iconFile>${basedir}/src/main/resources/RyCON.icns</iconFile>-->
-                    <iconFile>RyCON.icns</iconFile>
-                    <jvmVersion>1.7+</jvmVersion>
-                </configuration>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
                 <executions>
                     <execution>
                         <phase>package</phase>
                         <goals>
-                            <goal>bundle</goal>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <finalName>RyCON_MacOSX64</finalName>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <manifestEntries>
+                                        <Specification-Title>${project.name}</Specification-Title>
+                                        <Specification-Version>${project.version}-${maven.build.number}</Specification-Version>
+                                        <Specification-Vendor>Sebastian Aust</Specification-Vendor>
+                                        <Implementation-Version>${maven.build.timestamp.clone}</Implementation-Version>
+                                        <Implementation-Vendor>Mac64</Implementation-Vendor>
+                                        <Main-Class>de.ryanthara.ja.rycon.gui.MainApplication</Main-Class>
+                                        <!-- Doesn't work because of an swt bug on OS X
+                                        <SplashScreen-Image>de/ryanthara/ja/rycon/gui/RyCON.png</SplashScreen-Image> -->
+                                        <Permissions>all-permissions</Permissions>
+                                        <Codebase>http://code.ryanthara.de/RyCON</Codebase>
+                                        <Application-Name>RyCON</Application-Name>
+                                    </manifestEntries>
+                                </transformer>
+                            </transformers>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.txt</exclude>
+                                        <exclude>META-INF/LICENSE*</exclude>
+                                        <exclude>META-INF/NOTICE*</exclude>
+                                        <exclude>META-INF/maven/</exclude>
+                                        <exclude>external.xpt</exclude>
+                                        <exclude>version.txt</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <descriptors>
+                        <descriptor>${basedir}/src/main/assembly/macosx.xml</descriptor>
+                    </descriptors>
+                    <finalName>RyCON_MacOSX64.app</finalName>
+                </configuration>
             </plugin>
         </plugins>
     </build>
@@ -106,20 +102,6 @@
             <artifactId>org.eclipse.swt.cocoa.macosx.x86_64</artifactId>
             <version>4.4</version>
         </dependency>
-        
-        <!-- Maven OS X Application Bundle Plugin -->
-        <!--<dependency>-->
-            <!--<groupId>com.agiliumlabs.osxappbundle</groupId>-->
-            <!--<artifactId>osxappbundle-maven-plugin</artifactId>-->
-            <!--<version>1.0.1</version>-->
-        <!--</dependency>-->
-
-        <dependency>
-            <groupId>io.github.appbundler</groupId>
-            <artifactId>appbundle-maven-plugin</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-
     </dependencies>
 
 </project>
