@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <!-- coordinates -->
-    <artifactId>rycon</artifactId>
+    <artifactId>rycon-main</artifactId>
     <packaging>jar</packaging>
     <name>RyCON as program with user interface</name>
 

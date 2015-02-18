@@ -191,9 +191,9 @@
 
     <!-- parts of the parent multi project RyCON -->
     <modules>
-        <module>rycon</module>
         <module>rycon-build</module>
         <module>rycon-license</module>
+        <module>rycon-main</module>
         <module>RyCON_aix_ppc</module>
         <module>RyCON_aix_ppc64</module>
         <module>RyCON_hpux-ia64</module>
