@@ -6,7 +6,6 @@
 
     <!-- coordinates -->
     <artifactId>rycon-build</artifactId>
-    <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>RyCON build parent module</name>
 
@@ -21,8 +20,6 @@
     <!-- define some properties -->
     <properties>
         <maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss</maven.build.timestamp.format>
-        <!-- workaround for http://jira.codehaus.org/browse/MASSEMBLY-603 -->
-        <maven.build.timestamp>${maven.build.timestamp}</maven.build.timestamp>
     </properties>
 
     <!-- build management -->
@@ -31,7 +28,6 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>buildnumber-maven-plugin</artifactId>
-                <version>1.3</version>
                 <executions>
                     <execution>
                         <phase>validate</phase>
@@ -56,9 +52,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.bulenkov</groupId>
-            <artifactId>iconloader</artifactId>
-            <version>1.0.0</version>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>rycon-license</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 </project>

@@ -95,7 +95,7 @@
         <!-- RyCON base from artifact rycon -->
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>rycon</artifactId>
+            <artifactId>rycon-main</artifactId>
             <version>${project.version}</version>
         </dependency>
 

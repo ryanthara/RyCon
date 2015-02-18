@@ -89,7 +89,6 @@
                     <plugin>
                         <groupId>com.akathist.maven.plugins.launch4j</groupId>
                         <artifactId>launch4j-maven-plugin</artifactId>
-                        <version>1.7.4</version>
                         <executions>
                             <execution>
                                 <phase>package</phase>
@@ -134,7 +133,7 @@
         <!-- RyCON base from artifact rycon -->
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>rycon</artifactId>
+            <artifactId>rycon-main</artifactId>
             <version>${project.version}</version>
         </dependency>
 

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- coordinates -->
+    <artifactId>rycon-main</artifactId>
+    <packaging>jar</packaging>
+    <name>RyCON as program with user interface</name>
+
+    <!-- inherit all the things which are global for RyCON -->
+    <parent>
+        <groupId>de.ryanthara.ja.rycon</groupId>
+        <version>1.0-SNAPSHOT</version>
+        <artifactId>rycon-build</artifactId>
+        <relativePath>../rycon-build/pom.xml</relativePath>
+    </parent>
+
+    <!-- dependencies for rycon module -->
+    <dependencies>
+        <dependency>
+            <groupId>com.bulenkov</groupId>
+            <artifactId>iconloader</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+            <version>3.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.swt</groupId>
+            <artifactId>org.eclipse.swt.cocoa.macosx.x86_64</artifactId>
+            <version>4.4</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+</project>
