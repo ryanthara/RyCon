@@ -17,45 +17,7 @@
         <relativePath>../rycon-build/pom.xml</relativePath>
     </parent>
 
-    <!-- build management -->
-    <!--<build>-->
-        <!--<plugins>-->
-            <!--&lt;!&ndash; translate UTF-8 encoded properties files to ISO-8859-1 &ndash;&gt;-->
-            <!--<plugin>-->
-                <!--<groupId>org.codehaus.mojo</groupId>-->
-                <!--<artifactId>native2ascii-maven-plugin</artifactId>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<goals>-->
-                            <!--<goal>native2ascii</goal>-->
-                        <!--</goals>-->
-                        <!--<configuration>-->
-                            <!--<encoding>UTF8</encoding>-->
-                            <!--<includes>-->
-                                <!--&lt;!&ndash;<include>**/RyCON_zh.properties</include>&ndash;&gt;-->
-                            <!--</includes>-->
-                        <!--</configuration>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-            <!--</plugin>-->
-        <!--</plugins>-->
-    <!--</build>-->
-
-    <repositories>
-        <repository>
-            <id>local-repository</id>
-            <releases>
-                <enabled>true</enabled>
-                <checksumPolicy>ignore</checksumPolicy>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <url>file://${project.basedir}/../local-libs</url>
-        </repository>
-    </repositories>
-
-    <!-- dependencies for rycon-build module -->
+    <!-- dependencies for rycon module -->
     <dependencies>
         <dependency>
             <groupId>com.bulenkov</groupId>

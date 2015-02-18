@@ -89,7 +89,6 @@
                     <plugin>
                         <groupId>com.akathist.maven.plugins.launch4j</groupId>
                         <artifactId>launch4j-maven-plugin</artifactId>
-                        <version>1.7.4</version>
                         <executions>
                             <execution>
                                 <phase>package</phase>

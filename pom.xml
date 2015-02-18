@@ -42,12 +42,6 @@
 
     <!-- used third party repositories -->
     <repositories>
-        <!-- launch4j -->
-        <repository>
-            <id>akathist-repository</id>
-            <name>Akathist Repository</name>
-            <url>http://www.9stmaryrd.com/maven</url>
-        </repository>
         <!-- SWT -->
         <repository>
             <id>swt-repo</id>
@@ -139,14 +133,6 @@
                             <addMavenDescriptor>false</addMavenDescriptor>
                         </archive>
                     </configuration>
-                    <executions>
-                        <execution>
-                            <id>default-jar</id>
-                            <!-- minitest does not necessary have .java files under src/main
-                                and this causes [WARNING] JAR will be empty upon mvn package -->
-                            <phase>package</phase>
-                        </execution>
-                    </executions>
                 </plugin>
 
                 <!-- The Resources Plugin handles the copying of project resources to the output directory. -->
@@ -170,9 +156,9 @@
                 <!-- a cross-platform tool for wrapping Java applications distributed as jars in
                 lightweight Windows native executables.  -->
                 <plugin>
-                    <groupId>org.bluestemsoftware.open.maven.plugin</groupId>
-                    <artifactId>launch4j-plugin</artifactId>
-                    <version>1.5.0.0</version>
+                    <groupId>com.akathist.maven.plugins.launch4j</groupId>
+                    <artifactId>launch4j-maven-plugin</artifactId>
+                    <version>1.7.4</version>
                 </plugin>
 
                 <!-- give a build number -->
