@@ -664,7 +664,7 @@ public class ConverterWidget {
 
                         break;
 
-                    case 4:     // CSV format from the geodata server 'Basel Stadt' (http://shop.geo.bs.ch/geoshop_app/geoshop/)
+                    case 4:     // CSV format from the geo data server 'Basel Stadt' (http://shop.geo.bs.ch/geoshop_app/geoshop/)
 
                         // use opencsv project for reading -> could be done better?
                         try {
@@ -856,7 +856,7 @@ public class ConverterWidget {
                                     writeFile = textFileTools.processConversionCSV2TXT(separator);
 
                                     // write file line by line
-                                    if (writeFile(file2read, writeFile, ".CSV")) {
+                                    if (writeFile(file2read, writeFile, ".TXT")) {
                                         counter++;
                                     }
 
@@ -880,7 +880,6 @@ public class ConverterWidget {
                                     }
 
                                     break;
-
 
                             }
 

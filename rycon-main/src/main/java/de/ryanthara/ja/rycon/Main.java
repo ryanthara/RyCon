@@ -18,9 +18,18 @@
 
 package de.ryanthara.ja.rycon;
 
+import de.ryanthara.ja.rycon.data.I18N;
 import de.ryanthara.ja.rycon.data.Preferences;
 import de.ryanthara.ja.rycon.gui.StatusBar;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
+
+import java.awt.*;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
  * Abstract class for holding values, constants and objects for the complete RyCON application.
@@ -29,7 +38,7 @@ import org.eclipse.swt.widgets.Shell;
  * The main idea to do this comes from JOSM.
  *
  * @author sebastian
- * @version 1
+ * @version 2
  * @since 2
  */
 public abstract class Main {
@@ -38,7 +47,6 @@ public abstract class Main {
      * Member to hold the app name - here RyCON.
      */
     public static final String APP_NAME = "RyCON";
-
     /**
      * Member for the comma delimiter sign.
      */
@@ -63,6 +71,17 @@ public abstract class Main {
      *  Member for indication that GSI16 format is used. The value is 'true'.
      */
     public static final boolean GSI16 = true;
+
+    /**
+     * Member for the URL of the RyCON website.
+     */
+    public static final String RyCON_WEBSITE = "http://code.ryanthara.de/RyCON";
+
+    /**
+     * Member for the URL of the RyCON help website.
+     */
+    public static final String RyCON_WEBSITE_HELP = "http://code.ryanthara.de/RyCON/help";
+
     /**
      * The RyCON build number and date as {@code String}.
      */
@@ -77,10 +96,6 @@ public abstract class Main {
      * RyCON grid uses golden rectangle cut with an aspect ratio of 1.618:1
      */
     private static final int RyCON_GRID_WIDTH = 324;
-    /**
-     * The RyCON website url as {@code String}.
-     */
-    private static final String RyCON_WEBSITE = "http://code.ryanthara.de/RyCON";
     /**
      * The height of a widget used in RyCON.
      */
@@ -140,8 +155,16 @@ public abstract class Main {
     }
 
     /**
-     * Simple check for the current JAVA version.
-     *
+     * Check the current JAVA version.
+     * <p>
+     * During the startup of RyCON the version of the installed JRE is checked. 
+     * RyCON can be started only if a minimum version of a JRE is installed on 
+     * the system. This is due to swt dependencies and java dependencies.
+     * <p>
+     * At minimum a JRE version of 1.7 is necessary and must be installed on the
+     * target system.
+     * 
+     * @since 2
      * @return current JAVA version
      */
     public static String checkJavaVersion() {
@@ -149,6 +172,42 @@ public abstract class Main {
         String version = System.getProperty("java.version");
 
         if (version != null) {
+
+            // safe check
+            int pos = version.indexOf('.');
+            pos = version.indexOf('.', pos+1);
+            double ver = Double.parseDouble (version.substring (0, pos));
+            
+            if (ver < 1.7) {
+
+                Display display = new Display();
+                Shell shell = new Shell(display);
+
+                MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR | SWT.YES | SWT.NO);
+                messageBox.setText(I18N.getErrorTitleJavaVersion());
+                messageBox.setMessage(I18N.getErrorTextJavaVersion());
+                int rc = messageBox.open();
+                
+                if (rc == SWT.YES) {
+                    try {
+                        Desktop.getDesktop().browse(new URI("http://java.com/"));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        System.err.println("Could not open default browser.");
+                    } catch (URISyntaxException e) {
+                        e.printStackTrace();
+                        System.err.println("Could not open default browser.");
+                    }
+                }
+                
+                System.out.println("Version of installed JRE " + version + " is to low.");
+                System.out.println("Please install current JRE from http://java.com/");
+                
+                display.dispose();
+                
+                System.exit(0);
+            }
+
             return version;
         } else {
             return "JAVA version couldn't be recognized: ";
@@ -236,19 +295,38 @@ public abstract class Main {
     }
 
     /**
+     * Initializes access to {@code Preferences} with {@code Main.pref} in normal context.
+     */
+    public static void initApplicationPreferences() {
+        Main.pref = new Preferences();
+    }
+
+    /**
+     * Opens an uri in the default browser of the system.
+     *  
+     * @param uri uri to open in default browser
+     */
+    public static void openURI(String uri) {
+
+        try {
+            Desktop.getDesktop().browse(new URI(uri));
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Could not open default browser.");
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            System.err.println("Could not open default browser.");
+        }
+        
+    }
+
+    /**
      * Set the status to indicate an open subshell.
      *
      * @param isSubShellOpen subshell status
      */
     public static void setSubShellStatus(boolean isSubShellOpen) {
         isSubShellOpenStatus = isSubShellOpen;
-    }
-
-    /**
-     * Initializes access to {@code Preferences} with {@code Main.pref} in normal context.
-     */
-    public static void initApplicationPreferences() {
-        Main.pref = new Preferences();
     }
 
 }  // end of Main

@@ -17,12 +17,13 @@
  */
 
 import de.ryanthara.ja.rycon.gui.MainApplication;
+//import de.ryanthara.ja.rycon.gui.RyCONApplication;
 
 /**
  * This class is the entry point of the program.
  * <p>
- * This is used to show a nice name for Mac OS X users, because of there is still
- * no Info.plist file used for RyCON. Maybe later on this will be changed.
+ * This is used to show a nice name for Mac OS X users, because of at the moment there is
+ * no Info.plist file used for RyCON. This is going to be changed in a nearby version.
  * <p>
  * For more information see <a href="https://developer.apple.com/library/mac/documentation/Java/Conceptual/Java14Development/00-Intro/JavaDevelopment.html#//apple_ref/doc/uid/TP40001911-SW1">Apple documentation about java</a>
  * <p>
@@ -33,3 +34,4 @@ import de.ryanthara.ja.rycon.gui.MainApplication;
  * @since 1
  */
 public class RyCON extends MainApplication {} // end of RyCON
+//public class RyCON extends RyCONApplication {} // end of RyCON

@@ -198,6 +198,14 @@ public class I18N {
         return Messages.getString("btnSplitterToolTip");
     }
 
+    public static String getErrorTextJavaVersion() {
+        return Messages.getString("errorTextJavaVersion");
+    }
+
+    public static String getErrorTitleJavaVersion() {
+        return Messages.getString("errorTitleJavaVersion");
+    }
+
     public static String getFileChooserDirBaseMessage() {
         return Messages.getString("fileChooserPathDefaultMessage");
     }
@@ -546,6 +554,18 @@ public class I18N {
         return Messages.getString("statusRyCONSettingsSaved");
     }
 
+    public static String getTrayMenuItemExit() {
+        return Messages.getString("trayMenuItemExit");
+    }
+
+    public static String getTrayMenuItemHelp() {
+        return Messages.getString("trayMenuItemHelp");
+    }
+
+    public static String getTrayMenuItemWebsite() {
+        return Messages.getString("trayMenuItemWebsite");
+    }
+
     public static String getWidgetTitleConverter() {
         return Messages.getString("widgetTitleConverter");
     }
@@ -595,7 +615,4 @@ public class I18N {
         }
 
     }
-
-
-
 } // end of I18N

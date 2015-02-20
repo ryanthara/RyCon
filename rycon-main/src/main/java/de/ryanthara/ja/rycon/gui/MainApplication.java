@@ -24,6 +24,7 @@ import de.ryanthara.ja.rycon.gui.notifier.NotificationPopupWidget;
 import de.ryanthara.ja.rycon.gui.notifier.NotificationType;
 import de.ryanthara.ja.rycon.tools.ImageConverter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.*;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.ShellAdapter;
@@ -41,7 +42,7 @@ import org.eclipse.swt.widgets.*;
  * @author sebastian
  * @version 2
  * @since 1
- * @see Main
+ * @see de.ryanthara.ja.rycon.Main
  */
 public class MainApplication extends Main {
 
@@ -76,8 +77,8 @@ public class MainApplication extends Main {
 
         // to provide illegal thread access -> https://github.com/udoprog/c10t-swt/issues/1
         // add -XstartOnFirstThread as an java option on VM parameter
-//        new MainApplication();
         new MainApplication();
+//        new MainApplication_KOPIE();
 
     }
 
@@ -152,6 +153,13 @@ public class MainApplication extends Main {
 
     /**
      * Implements the user interface (UI) and all its components.
+     * <p>
+     * Drag'n drop is implemented on the buttons of the following modules.
+     * <ul>
+     *     <li>Clean files...</li>
+     *     <li>Split files by code...</li>
+     *     <li>Levelling to cad-import...</li>
+     * </ul>*
      */
     private void initUI() {
 
@@ -161,6 +169,56 @@ public class MainApplication extends Main {
         // initialize a shell and make it global
         Shell shell = new Shell(display, SWT.DIALOG_TRIM);
         Main.shell = shell;
+        
+        // Tray icon with functionality
+        final Tray tray = display.getSystemTray();
+
+        if (tray == null) {
+            System.out.println("System tray functionality is not available on your system.");
+        } else {
+            final TrayItem item = new TrayItem(tray, SWT.NONE);
+            item.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/RyCON_TrayIcon64x64.png"));
+            item.setToolTipText("RyCON: " + Main.getRyCONBuild());
+            
+            final Menu menu = new Menu(shell, SWT.POP_UP);
+            
+            MenuItem webItem = new MenuItem(menu, SWT.PUSH);
+            webItem.setText(I18N.getTrayMenuItemWebsite());
+            webItem.addListener(SWT.Selection, new Listener() {
+                @Override
+                public void handleEvent(Event event) {
+                    Main.openURI(Main.RyCON_WEBSITE);
+                }
+            });
+            
+            MenuItem helpItem = new MenuItem(menu, SWT.PUSH);
+            helpItem.setText(I18N.getTrayMenuItemHelp());
+            helpItem.addListener(SWT.Selection, new Listener() {
+                @Override
+                public void handleEvent(Event event) {
+                    Main.openURI(Main.RyCON_WEBSITE_HELP);
+                }
+            });
+
+            MenuItem exitItem = new MenuItem(menu, SWT.PUSH);
+            exitItem.setText(I18N.getTrayMenuItemExit());
+            exitItem.addListener(SWT.Selection, new Listener() {
+                @Override
+                public void handleEvent(Event event) {
+                    actionBtn6();   
+                }
+            });
+
+            item.addListener (SWT.MenuDetect, new Listener () {
+                public void handleEvent (Event event) {
+                    menu.setVisible (true);
+                }
+            });
+
+        }
+
+        // Dock icon for OS X and Windows task bar
+        shell.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/RyCON_blank256x256.png"));
 
         shell.setText(I18N.getApplicationTitle());
 
@@ -211,6 +269,12 @@ public class MainApplication extends Main {
             }
         });
 
+        // Drag and drop support for buttons - general 
+        int operations = DND.DROP_MOVE | DND.DROP_COPY | DND.DROP_DEFAULT;
+        
+        final FileTransfer fileTransfer = FileTransfer.getInstance();
+        Transfer[] types = new Transfer[] { fileTransfer };
+        
         // button #1 for cleaner tool
         Button btnToolboxClean = new Button(compositeGrid, SWT.PUSH);
         btnToolboxClean.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/icons/1-clean.png"));
@@ -222,6 +286,49 @@ public class MainApplication extends Main {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 actionBtn1();
+            }
+        });
+        
+        // Drag and drop for clean files tool
+        DropTarget targetClean = new DropTarget(btnToolboxClean, operations);
+        targetClean.setTransfer(types);
+
+        targetClean.addDropListener(new DropTargetAdapter() {
+
+            public void dragEnter(DropTargetEvent event) {
+
+                System.out.println("drag enter");
+
+                if (event.detail == DND.DROP_DEFAULT) {
+                    if ((event.operations & DND.DROP_COPY) != 0) {
+                        event.detail = DND.DROP_COPY;
+                    } else {
+                        event.detail = DND.DROP_NONE;
+                    }
+                }
+                // will accept text but prefer to have files dropped
+                for (int i = 0; i < event.dataTypes.length; i++) {
+                    if (fileTransfer.isSupportedType(event.dataTypes[i])) {
+                        event.currentDataType = event.dataTypes[i];
+                        // files should only be copied
+                        if (event.detail != DND.DROP_COPY) {
+                            event.detail = DND.DROP_NONE;
+                        }
+                        break;
+                    }
+                }
+
+            }
+
+            public void drop(DropTargetEvent event) {
+
+                System.out.println("drop");
+
+                if (fileTransfer.isSupportedType(event.currentDataType)) {
+                    String[] files = (String[]) event.data;
+                    statusBar.setStatus(files[0], 0);
+                }
+
             }
         });
 
@@ -239,6 +346,50 @@ public class MainApplication extends Main {
             }
         });
 
+        // Drag and drop for splitter tool
+        DropTarget targetSplitter = new DropTarget(btnToolboxSplitter, operations);
+        targetSplitter.setTransfer(types);
+
+        targetSplitter.addDropListener(new DropTargetAdapter() {
+
+            public void dragEnter(DropTargetEvent event) {
+
+                System.out.println("drag enter 2");
+
+                if (event.detail == DND.DROP_DEFAULT) {
+                    if ((event.operations & DND.DROP_COPY) != 0) {
+                        event.detail = DND.DROP_COPY;
+                    } else {
+                        event.detail = DND.DROP_NONE;
+                    }
+                }
+                // will accept text but prefer to have files dropped
+                for (int i = 0; i < event.dataTypes.length; i++) {
+                    if (fileTransfer.isSupportedType(event.dataTypes[i])) {
+                        event.currentDataType = event.dataTypes[i];
+                        // files should only be copied
+                        if (event.detail != DND.DROP_COPY) {
+                            event.detail = DND.DROP_NONE;
+                        }
+                        break;
+                    }
+                }
+
+            }
+
+            public void drop(DropTargetEvent event) {
+
+                System.out.println("drop 2");
+
+                if (fileTransfer.isSupportedType(event.currentDataType)) {
+                    String[] files = (String[]) event.data;
+                    statusBar.setStatus(files[0], 0);
+                }
+
+            }
+        });
+
+
         // button #3 for leveling tool
         Button btnToolboxLeveling = new Button(compositeGrid, SWT.PUSH);
         btnToolboxLeveling.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/icons/3-level.png"));
@@ -252,6 +403,50 @@ public class MainApplication extends Main {
                 actionBtn3();
             }
         });
+
+        // Drag and drop for levelling tool
+        DropTarget targetLevelling = new DropTarget(btnToolboxLeveling, operations);
+        targetLevelling.setTransfer(types);
+
+        targetLevelling.addDropListener(new DropTargetAdapter() {
+
+            public void dragEnter(DropTargetEvent event) {
+
+                System.out.println("drag enter 3");
+
+                if (event.detail == DND.DROP_DEFAULT) {
+                    if ((event.operations & DND.DROP_COPY) != 0) {
+                        event.detail = DND.DROP_COPY;
+                    } else {
+                        event.detail = DND.DROP_NONE;
+                    }
+                }
+                // will accept text but prefer to have files dropped
+                for (int i = 0; i < event.dataTypes.length; i++) {
+                    if (fileTransfer.isSupportedType(event.dataTypes[i])) {
+                        event.currentDataType = event.dataTypes[i];
+                        // files should only be copied
+                        if (event.detail != DND.DROP_COPY) {
+                            event.detail = DND.DROP_NONE;
+                        }
+                        break;
+                    }
+                }
+
+            }
+
+            public void drop(DropTargetEvent event) {
+
+                System.out.println("drop 3");
+
+                if (fileTransfer.isSupportedType(event.currentDataType)) {
+                    String[] files = (String[]) event.data;
+                    statusBar.setStatus(files[0], 0);
+                }
+
+            }
+        });
+
 
         // button #4 for converter tool
         Button btnToolboxConvert = new Button(compositeGrid, SWT.PUSH);
@@ -327,6 +522,8 @@ public class MainApplication extends Main {
         }
 
         shell.pack();
+
+//        SplashScreen splashScreen = new SplashScreen(display);
 
         // size depends on the grid size
         shell.setSize(3 * getRyCON_GRID_WIDTH() + 20, 2 * getRyCON_GRID_HEIGHT() + 100);

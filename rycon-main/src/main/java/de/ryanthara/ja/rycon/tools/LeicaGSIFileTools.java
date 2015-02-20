@@ -1030,6 +1030,8 @@ public class LeicaGSIFileTools {
                     intern = s;
                 }
 
+                System.out.println(intern);
+
                 Double d = Double.parseDouble(intern);
                 if (d == 0d) {
                     intern = "0";
