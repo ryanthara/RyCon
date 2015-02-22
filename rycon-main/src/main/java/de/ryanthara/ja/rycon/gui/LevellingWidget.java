@@ -19,6 +19,7 @@
 package de.ryanthara.ja.rycon.gui;
 
 import de.ryanthara.ja.rycon.Main;
+import de.ryanthara.ja.rycon.data.PreferenceHandler;
 import de.ryanthara.ja.rycon.io.LineReader;
 import de.ryanthara.ja.rycon.io.LineWriter;
 import de.ryanthara.ja.rycon.data.I18N;
@@ -113,7 +114,8 @@ public class LevellingWidget {
         // Set the initial filter path according to anything selected or typed in
 
         if (destinationTextField.getText() == null) {
-            directoryDialog.setFilterPath(Main.pref.getSingleProperty("DirBase"));
+//            directoryDialog.setFilterPath(Main.pref.getSingleProperty("DirBase"));
+            directoryDialog.setFilterPath(Main.pref.getUserPref(PreferenceHandler.DIR_BASE));
         } else {
             directoryDialog.setFilterPath(destinationTextField.getText());
         }
@@ -183,7 +185,8 @@ public class LevellingWidget {
     private void actionBtnSource() {
 
         FileDialog fileDialog = new FileDialog(innerShell, SWT.MULTI);
-        fileDialog.setFilterPath(Main.pref.getSingleProperty("DirProjects"));
+//        fileDialog.setFilterPath(Main.pref.getSingleProperty("DirProjects"));
+        fileDialog.setFilterPath(Main.pref.getUserPref(PreferenceHandler.DIR_PROJECTS));
         fileDialog.setText(I18N.getFileChooserLevellingSourceText());
         fileDialog.setFilterExtensions(new String[]{"*.gsi"});
         fileDialog.setFilterNames(new String[]{I18N.getFileChooserFilterNameGSI()});
@@ -219,10 +222,11 @@ public class LevellingWidget {
      *
      * @param width width of the group
      */
-    private void createGroupInput(int width) {
+    private void createGroupInputFields(int width) {
 
         GridLayout gridLayout;
-        GridData gridData;// input fields for the splitter widget
+        GridData gridData;
+        
         Group groupInputFields = new Group(innerShell, SWT.NONE);
         groupInputFields.setText(I18N.getGroupTitlePathSelection());
 
@@ -348,8 +352,7 @@ public class LevellingWidget {
         gridData.widthHint = width;
         innerShell.setLayoutData(gridData);
 
-        // group with input fields
-        createGroupInput(width);
+        createGroupInputFields(width);
 
         // checkbox for getting rid of lines with point number 0 (changing points)
         chkBoxChangePoint = new Button(innerShell, SWT.CHECK);

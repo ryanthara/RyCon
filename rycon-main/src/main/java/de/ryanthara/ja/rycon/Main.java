@@ -19,7 +19,7 @@
 package de.ryanthara.ja.rycon;
 
 import de.ryanthara.ja.rycon.data.I18N;
-import de.ryanthara.ja.rycon.data.Preferences;
+import de.ryanthara.ja.rycon.data.PreferenceHandler;
 import de.ryanthara.ja.rycon.gui.StatusBar;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -38,39 +38,93 @@ import java.net.URISyntaxException;
  * The main idea to do this comes from JOSM.
  *
  * @author sebastian
- * @version 2
+ * @version 3
  * @since 2
  */
 public abstract class Main {
 
     /**
-     * Member to hold the app name - here RyCON.
+     * Member to hold the app name - here 'RyCON'.
      */
-    public static final String APP_NAME = "RyCON";
+    private static final String APP_NAME = "RyCON";
+    
     /**
      * Member for the comma delimiter sign.
      */
-    public static final String DELIMITER_COMMA = ",";
+    private static final String DELIMITER_COMMA = ",";
+    
     /**
      * Member for the semicolon delimiter sign.
      */
-    public static final String DELIMITER_SEMICOLON = ";";
+    private static final String DELIMITER_SEMICOLON = ";";
+   
     /**
      * Member for the space delimiter string.
      */
-    public static final String DELIMITER_SPACE = " ";
+    private static final String DELIMITER_SPACE = " ";
+    
     /**
      * Member for the tab delimiter string.
      */
-    public static final String DELIMITER_TAB = "\t";
+    private static final String DELIMITER_TAB = "\t";
+
+    /**
+     * Member for the jobs directory.
+     * @since 3
+     */
+    private static final String DIR_BASE = ".";
+    
+    /**
+     * Member for the jobs directory.
+     * @since 3
+     */
+    private static final String DIR_JOBS = "./jobs";
+
+    /**
+     * Member for the jobs template directory.
+     * @since 3
+     */
+    private static final String DIR_JOBS_TEMPLATE = "./jobs/template-folder";
+
+    /**
+     * Member for the project directory.
+     * @since 3
+     */
+    private static final String DIR_PROJECT = "./projects";
+
+    /**
+     * Member for the project template directory.
+     * @since 3
+     */
+    private static final String DIR_PROJECT_TEMPLATE = "./projects/template-folder";
+
     /**
      * Member for indicating that GSI8 format is used. The value is 'false'.
      */
-    public static final boolean GSI8 = false;
+    private static final boolean GSI8 = false;
+    
     /**
      *  Member for indication that GSI16 format is used. The value is 'true'.
      */
     public static final boolean GSI16 = true;
+
+    /**
+     * Member for the default value of the control point string ('STKE').
+     * @since 3
+     */
+    private static final String PARAM_CONTROL_POINT_STRING = "STKE";
+    
+    /**
+     * Member for the default value of the free station string ('FS').
+     * @since 3
+     */
+    private static final String PARAM_FREE_STATION_STRING = "FS";
+
+    /**
+     * Member for the default value of the known station string ('ST').
+     * @since 3
+     */
+    private static final String PARAM_KNOWN_STATION_STRING = "ST";
 
     /**
      * Member for the URL of the RyCON website.
@@ -85,25 +139,30 @@ public abstract class Main {
     /**
      * The RyCON build number and date as {@code String}.
      */
-    private static final String RyCON_BUILD = "2 - 2014-12-31";
+    private static final String RyCON_BUILD = "3 - 2015-02-21";
+    
     /**
      * The height of a grid cell. Window size and others are calculated from these values.
      * RyCON grid uses a golden rectangle cut with an aspect ratio of 1.618:1
      */
     private static final int RyCON_GRID_HEIGHT = 200;
+    
     /**
      * The width of a grid cell. Window size and others are calculated from these values.
      * RyCON grid uses golden rectangle cut with an aspect ratio of 1.618:1
      */
     private static final int RyCON_GRID_WIDTH = 324;
+    
     /**
      * The height of a widget used in RyCON.
      */
     private static final int RyCON_WIDGET_HEIGHT = 412;
+    
     /**
      * The width of a widget used in RyCON.
      */
     private static final int RyCON_WIDGET_WIDTH = 666;
+    
     /**
      * Reference to the global application.
      */
@@ -132,7 +191,7 @@ public abstract class Main {
     /**
      * Reference to the global application preferences.
      */
-    public static Preferences pref;
+    public static PreferenceHandler pref;
     /**
      * Reference to the global application shell.
      */
@@ -232,6 +291,140 @@ public abstract class Main {
     }
 
     /**
+     * Returns the sign for the comma delimiter as string.
+     * @return comma sign
+     * @since 3 
+     */
+    public static String getDelimiterComma() {
+        return DELIMITER_COMMA;
+    }
+
+    /**
+     * Returns the sign for the semicolon delimiter as string.
+     * @return semicolon sign
+     * @since 3
+     */
+    public static String getDelimiterSemicolon() {
+        return DELIMITER_SEMICOLON;
+    }
+
+    /**
+     * Returns the sign for the space delimiter as string.
+     * @return space sign
+     * @since 3
+     */
+    public static String getDelimiterSpace() {
+        return DELIMITER_SPACE;
+    }
+
+    /**
+     * Returns the sign for the tab delimiter as string.
+     * @return tab sign
+     * @since 3
+     */
+    public static String getDelimiterTab() {
+        return DELIMITER_TAB;
+    }
+
+    /**
+     * Returns the base directory as string value.
+     * @return base directory
+     * @since 3
+     */
+    public static String getDirBase() {
+        return DIR_BASE;
+    }
+
+    /**
+     * Returns the jobs directory as string value.
+     * @return jobs directory
+     * @since 3
+     */
+    public static String getDirJobs() {
+        return DIR_JOBS;
+    }
+    /**
+     * Returns the jobs template directory as string value.
+     * @return jobs template directory
+     * @since 3
+     */
+    public static String getDirJobsTemplate() {
+        return DIR_JOBS_TEMPLATE;
+    }
+
+    /**
+     * Returns the project directory as string value.
+     * @return project directory
+     * @since 3
+     */
+    public static String getDirProject() {
+        return DIR_PROJECT;
+    }
+    
+    /**
+     * Returns the project template directory as string value.
+     * @return project template directory
+     * @since 3
+     */
+    public static String getDirProjectTemplate() {
+        return DIR_PROJECT_TEMPLATE;
+    }
+
+    /**
+     * Returns false as the indicator for GSI8.   
+     * @return false as indicator
+     * @since 3
+     */
+    public static boolean getGSI8() {
+        return GSI8;
+    }
+
+    /**
+     * Returns true as the indicator for GSI16.
+     * @return true as indicator
+     * @since 3
+     */
+    public static boolean getGSI16() {
+        return GSI16;
+    }
+
+    /**
+     * Returns the value of the control point string ('STKE').
+     * @return control point string
+     * @since 3
+     */
+    public static String getParamControlPointString() {
+        return PARAM_CONTROL_POINT_STRING;
+    }
+
+    /**
+     * Returns the value of the free station string ('FS').
+     * @return free station string
+     * @since 3
+     */
+    public static String getParamFreeStationString() {
+        return PARAM_FREE_STATION_STRING;
+    }
+
+    /**
+     * Returns the value of the known station string ('ST').
+     * @return known station string
+     * @since 3
+     */
+    public static String getParamKnownStationString() {
+        return PARAM_KNOWN_STATION_STRING;
+    }
+
+    /**
+     * Returns the app name ('RyCON') as String.
+     * @return the app name ('RyCON')
+     * @since 3
+     */
+    public static String getRyCONAppName() {
+        return APP_NAME;
+    }
+
+    /**
      * Returns the RyCON build number and date as {@code String}.
      *
      * @return the build number and date as {@code String}
@@ -295,10 +488,10 @@ public abstract class Main {
     }
 
     /**
-     * Initializes access to {@code Preferences} with {@code Main.pref} in normal context.
+     * Initializes access to {@code Settings} with {@code Main.pref} in normal context.
      */
     public static void initApplicationPreferences() {
-        Main.pref = new Preferences();
+        Main.pref = new PreferenceHandler();
     }
 
     /**

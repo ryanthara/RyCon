@@ -615,4 +615,12 @@ public class I18N {
         }
 
     }
+
+    public static String getBtnDefaultSettings() {
+        return Messages.getString("btnDefaultSettings");
+    }
+
+    public static String getBtnDefaultSettingsToolTip() {
+        return Messages.getString("btnDefaultSettingsToolTip");
+    }
 } // end of I18N

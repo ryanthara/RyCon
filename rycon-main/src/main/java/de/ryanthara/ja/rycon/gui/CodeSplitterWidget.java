@@ -19,6 +19,7 @@
 package de.ryanthara.ja.rycon.gui;
 
 import de.ryanthara.ja.rycon.Main;
+import de.ryanthara.ja.rycon.data.PreferenceHandler;
 import de.ryanthara.ja.rycon.io.LineReader;
 import de.ryanthara.ja.rycon.io.LineWriter;
 import de.ryanthara.ja.rycon.data.I18N;
@@ -122,7 +123,7 @@ public class CodeSplitterWidget {
 
         // Set the initial filter path according to anything selected or typed in
         if (destinationTextField.getText() == null) {
-            directoryDialog.setFilterPath(Main.pref.getSingleProperty("DirBase"));
+            directoryDialog.setFilterPath(Main.pref.getUserPref(PreferenceHandler.DIR_BASE));
         } else {
             directoryDialog.setFilterPath(destinationTextField.getText());
         }
@@ -199,7 +200,7 @@ public class CodeSplitterWidget {
     private void actionBtnSource() {
 
         FileDialog fileDialog = new FileDialog(innerShell, SWT.MULTI);
-        fileDialog.setFilterPath(Main.pref.getSingleProperty("DirProjects"));
+        fileDialog.setFilterPath(Main.pref.getUserPref(PreferenceHandler.DIR_PROJECTS));
         fileDialog.setText(I18N.getFileChooserSplitterSourceText());
         fileDialog.setFilterExtensions(new String[]{"*.gsi", "*.txt"});
         fileDialog.setFilterNames(new String[]{I18N.getFileChooserFilterNameGSI(), I18N.getFileChooserFilterNameTXT()});
@@ -235,10 +236,11 @@ public class CodeSplitterWidget {
      *
      * @param width width of the group
      */
-    private void createGroupInput(int width) {
+    private void createGroupInputFields(int width) {
 
         GridLayout gridLayout;
-        GridData gridData;// input fields for the splitter widget
+        GridData gridData;
+        
         Group groupInputFields = new Group(innerShell, SWT.NONE);
         groupInputFields.setText(I18N.getGroupTitlePathSelection());
 
@@ -368,10 +370,8 @@ public class CodeSplitterWidget {
         gridData.widthHint = width;
         innerShell.setLayoutData(gridData);
 
-        // group with input fields
-        createGroupInput(width);
+        createGroupInputFields(width);
 
-        // checkboxes
         chkBoxDropCodeBlock = new Button(innerShell, SWT.CHECK);
         chkBoxDropCodeBlock.setSelection(false);
         chkBoxDropCodeBlock.setText(I18N.getBtnChkSplitterIgnoreCodeColumn());
@@ -397,11 +397,10 @@ public class CodeSplitterWidget {
         tip.setLayoutData(new GridData(SWT.HORIZONTAL, SWT.TOP, true, false, 1, 1));
         tip.setText(String.format(I18N.getLabelTipSplitterWidget()));
 
-        // buttons on bottom
-        Composite compositeBtns = new Composite(innerShell, SWT.NONE);
-        compositeBtns.setLayout(new FillLayout());
+        Composite compositeBottomBtns = new Composite(innerShell, SWT.NONE);
+        compositeBottomBtns.setLayout(new FillLayout());
 
-        Button btnCancel = new Button(compositeBtns, SWT.NONE);
+        Button btnCancel = new Button(compositeBottomBtns, SWT.NONE);
         btnCancel.setText(I18N.getBtnCancelLabel());
         btnCancel.setToolTipText(I18N.getBtnCancelLabelToolTip());
 
@@ -412,7 +411,7 @@ public class CodeSplitterWidget {
             }
         });
 
-        Button btnOK = new Button(compositeBtns, SWT.NONE);
+        Button btnOK = new Button(compositeBottomBtns, SWT.NONE);
         btnOK.setText(I18N.getBtnOKAndOpenLabel());
         btnOK.setToolTipText(I18N.getBtnOKAndOpenLabelToolTip());
         btnOK.addSelectionListener(new SelectionAdapter() {
@@ -422,7 +421,7 @@ public class CodeSplitterWidget {
             }
         });
 
-        Button btnOkAndExit = new Button(compositeBtns, SWT.NONE);
+        Button btnOkAndExit = new Button(compositeBottomBtns, SWT.NONE);
         btnOkAndExit.setText(I18N.getBtnOKAndExitLabel());
         btnOkAndExit.setToolTipText(I18N.getBtnOKAndExitLabelToolTip());
         btnOkAndExit.addSelectionListener(new SelectionAdapter() {
@@ -433,7 +432,7 @@ public class CodeSplitterWidget {
         });
 
         gridData = new GridData(SWT.END, SWT.END, false, true);
-        compositeBtns.setLayoutData(gridData);
+        compositeBottomBtns.setLayoutData(gridData);
 
 
         ShellCenter shellCenter = new ShellCenter(innerShell);

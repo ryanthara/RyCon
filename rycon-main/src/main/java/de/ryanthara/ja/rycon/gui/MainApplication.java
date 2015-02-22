@@ -163,7 +163,7 @@ public class MainApplication extends Main {
      */
     private void initUI() {
 
-        Display.setAppName(APP_NAME);
+        Display.setAppName(Main.getRyCONAppName());
         Display display = new Display();
 
         // initialize a shell and make it global

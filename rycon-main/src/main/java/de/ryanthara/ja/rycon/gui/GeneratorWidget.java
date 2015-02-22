@@ -19,6 +19,7 @@
 package de.ryanthara.ja.rycon.gui;
 
 import de.ryanthara.ja.rycon.Main;
+import de.ryanthara.ja.rycon.data.PreferenceHandler;
 import de.ryanthara.ja.rycon.io.FileUtils;
 import de.ryanthara.ja.rycon.data.I18N;
 import org.eclipse.swt.SWT;
@@ -129,11 +130,11 @@ public class GeneratorWidget {
         boolean success = false;
 
         // get saved values from the properties object
-        String jobDir = Main.pref.getSingleProperty("DirJobs");
-        String jobDirTemplate = Main.pref.getSingleProperty("DirJobsTemplate");
+        String jobDir = Main.pref.getUserPref(PreferenceHandler.DIR_JOBS);
+        String jobDirTemplate = Main.pref.getUserPref(PreferenceHandler.DIR_JOBS_TEMPLATE);
 
-        String projectDir = Main.pref.getSingleProperty("DirProjects");
-        String projectDirTemplate = Main.pref.getSingleProperty("DirProjectsTemplate");
+        String projectDir = Main.pref.getUserPref(PreferenceHandler.DIR_PROJECTS);
+        String projectDirTemplate = Main.pref.getUserPref(PreferenceHandler.DIR_PROJECTS_TEMPLATE);
 
 
         File jobExistTest = new File(jobDir + File.separator + number);
@@ -227,7 +228,7 @@ public class GeneratorWidget {
         innerShell.setLayout(formLayout);
 
         innerShell.setText(I18N.getWidgetTitleGenerator());
-        innerShell.setSize(width, height); // golden rectangle cut with an aspect ratio of 1.618:1
+        innerShell.setSize(width, height);
 
         Group groupInputField = new Group(innerShell, SWT.NONE);
         groupInputField.setText(I18N.getGroupTitleNumberInput());

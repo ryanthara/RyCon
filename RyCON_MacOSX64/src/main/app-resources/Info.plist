@@ -21,13 +21,15 @@
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
 	<key>CFBundleSignature</key>
-	<string>????</string>
+	<string>rycn</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>NSHumanReadableCopyright</key>
-	<string></string>
+	<string>© 2015, by Sebastian Aust - http://code.ryanthara.de/</string>
 	<key>JVMMainClassName</key>
 	<string>de/ryanthara/ja/rycon/gui/MainApplication</string>
+	<key>JVMVersion</key>
+    <string>1.7+</string>
 	<key>JVMOptions</key>
 	<array>
 		<string>-XstartOnFirstThread</string>

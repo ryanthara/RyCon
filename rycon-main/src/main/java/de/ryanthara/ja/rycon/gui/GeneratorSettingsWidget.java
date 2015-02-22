@@ -20,6 +20,7 @@ package de.ryanthara.ja.rycon.gui;
 
 import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.data.I18N;
+import de.ryanthara.ja.rycon.data.PreferenceHandler;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -29,7 +30,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
 import java.io.File;
-import java.util.Properties;
 
 
 /**
@@ -107,7 +107,7 @@ public class GeneratorSettingsWidget {
         DirectoryDialog dlg1 = new DirectoryDialog(innerShell);
 
         // Set the initial filter path according to anything selected or typed in
-        dlg1.setFilterPath(Main.pref.getSingleProperty("DirBase"));
+        dlg1.setFilterPath(Main.pref.getUserPref(PreferenceHandler.DIR_BASE));
 
         dlg1.setText(I18N.getFileChooserDirBaseTitle());
 
@@ -127,7 +127,7 @@ public class GeneratorSettingsWidget {
         DirectoryDialog dlg2 = new DirectoryDialog(innerShell);
 
         // Set the initial filter path according to anything selected or typed in
-        dlg2.setFilterPath(Main.pref.getSingleProperty("DirJobs"));
+        dlg2.setFilterPath(Main.pref.getUserPref(PreferenceHandler.DIR_JOBS));
 
         dlg2.setText(I18N.getFileChooserDirJobsTitle());
 
@@ -147,7 +147,7 @@ public class GeneratorSettingsWidget {
         DirectoryDialog dlg3 = new DirectoryDialog(innerShell);
 
         // Set the initial filter path according to anything selected or typed in
-        dlg3.setFilterPath(Main.pref.getSingleProperty("DirJobsTemplate"));
+        dlg3.setFilterPath(Main.pref.getUserPref(PreferenceHandler.DIR_JOBS_TEMPLATE));
 
         dlg3.setText(I18N.getFileChooserDirJobsTemplateTitle());
 
@@ -169,8 +169,6 @@ public class GeneratorSettingsWidget {
         if ((textDefaultPath != null) && (textJobPath != null) && (textJobPathTemplateFolder != null) &&
                 (textProjectPath != null) && (textProjectPathTemplateFolder != null)) {
 
-            Properties properties = Main.pref.getProperties();
-
             File checkDirBase = new File(textDefaultPath.getText());
             if (!checkDirBase.exists()) {
                 MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
@@ -178,7 +176,7 @@ public class GeneratorSettingsWidget {
                 msgBox.setText(I18N.getMsgBoxTitleWarning());
                 msgBox.open();
             } else {
-                properties.setProperty("DirBase", textDefaultPath.getText());
+                Main.pref.setUserPref(PreferenceHandler.DIR_BASE, textDefaultPath.getText());
             }
 
             File checkDirJobs = new File(textJobPath.getText());
@@ -188,7 +186,7 @@ public class GeneratorSettingsWidget {
                 msgBox.setText(I18N.getMsgBoxTitleWarning());
                 msgBox.open();
             } else {
-                properties.setProperty("DirJobs", textJobPath.getText());
+                Main.pref.setUserPref(PreferenceHandler.DIR_JOBS, textJobPath.getText());
             }
 
             File checkDirJobsDefault = new File(textJobPathTemplateFolder.getText());
@@ -198,7 +196,7 @@ public class GeneratorSettingsWidget {
                 msgBox.setText(I18N.getMsgBoxTitleWarning());
                 msgBox.open();
             } else {
-                properties.setProperty("DirJobsTemplate", textJobPathTemplateFolder.getText());
+                Main.pref.setUserPref(PreferenceHandler.DIR_JOBS_TEMPLATE, textJobPathTemplateFolder.getText());
             }
 
             File checkDirProject = new File(textProjectPath.getText());
@@ -208,7 +206,7 @@ public class GeneratorSettingsWidget {
                 msgBox.setText(I18N.getMsgBoxTitleWarning());
                 msgBox.open();
             } else {
-                properties.setProperty("DirProjects", textProjectPath.getText());
+                Main.pref.setUserPref(PreferenceHandler.DIR_PROJECTS, textProjectPath.getText());
             }
 
             File checkDirProjectDefault = new File(textProjectPathTemplateFolder.getText());
@@ -218,10 +216,8 @@ public class GeneratorSettingsWidget {
                 msgBox.setText(I18N.getMsgBoxTitleWarning());
                 msgBox.open();
             } else {
-                properties.setProperty("DirProjectsTemplate", textProjectPathTemplateFolder.getText());
+                Main.pref.setUserPref(PreferenceHandler.DIR_PROJECTS_TEMPLATE, textProjectPathTemplateFolder.getText());
             }
-
-            Main.pref.setProperties(properties);
 
             Main.statusBar.setStatus(I18N.getStatusSettingsSaved(), StatusBar.OK);
             shell.setText(I18N.getWidgetTitleGenerator());
@@ -241,7 +237,7 @@ public class GeneratorSettingsWidget {
         DirectoryDialog dlg4 = new DirectoryDialog(innerShell);
 
         // Set the initial filter path according to anything selected or typed in
-        dlg4.setFilterPath(Main.pref.getSingleProperty("DirProjects"));
+        dlg4.setFilterPath(Main.pref.getUserPref(PreferenceHandler.DIR_PROJECTS));
 
         dlg4.setText(I18N.getFileChooserDirProjectsTitle());
 
@@ -261,7 +257,7 @@ public class GeneratorSettingsWidget {
         DirectoryDialog dlg5 = new DirectoryDialog(innerShell);
 
         // Set the initial filter path according to anything selected or typed in
-        dlg5.setFilterPath(Main.pref.getSingleProperty("DirProjectsTemplate"));
+        dlg5.setFilterPath(Main.pref.getUserPref(PreferenceHandler.DIR_PROJECTS_TEMPLATE));
 
         dlg5.setText(I18N.getFileChooserDirProjectTemplateTitle());
 
@@ -304,13 +300,11 @@ public class GeneratorSettingsWidget {
 
         innerShell.setLayout(gridLayout);
 
-
-        // default path
         Label defaultPath = new Label(innerShell, style);
         defaultPath.setText(I18N.getLabelDirBase());
 
         textDefaultPath = new Text(innerShell, style | SWT.SINGLE);
-        textDefaultPath.setText(Main.pref.getSingleProperty("DirBase"));
+        textDefaultPath.setText(Main.pref.getUserPref(PreferenceHandler.DIR_BASE));
 
         Button btnDefaultPath = new Button(innerShell, SWT.PUSH);
         btnDefaultPath.setText(I18N.getBtnChoosePath());
@@ -335,13 +329,11 @@ public class GeneratorSettingsWidget {
         data1_3.horizontalAlignment = SWT.END;
         btnDefaultPath.setLayoutData(data1_3);
 
-
-        // job path
         Label jobPath = new Label(innerShell, style);
         jobPath.setText(I18N.getLabelDirJobs());
 
         textJobPath = new Text(innerShell, style | SWT.SINGLE);
-        textJobPath.setText(Main.pref.getSingleProperty("DirJobs"));
+        textJobPath.setText(Main.pref.getUserPref(PreferenceHandler.DIR_JOBS));
 
         Button btnJobPath = new Button(innerShell, SWT.PUSH);
         btnJobPath.setText(I18N.getBtnChoosePath());
@@ -365,13 +357,11 @@ public class GeneratorSettingsWidget {
         data1_3.horizontalAlignment = SWT.END;
         btnJobPath.setLayoutData(data2_3);
 
-
-        // job path template folder
         Label jobPathTemplateFolder = new Label(innerShell, style);
         jobPathTemplateFolder.setText(I18N.getLabelDirJobsTemplate());
 
         textJobPathTemplateFolder = new Text(innerShell, style | SWT.SINGLE);
-        textJobPathTemplateFolder.setText(Main.pref.getSingleProperty("DirJobsTemplate"));
+        textJobPathTemplateFolder.setText(Main.pref.getUserPref(PreferenceHandler.DIR_JOBS_TEMPLATE));
 
         Button btnJobPathTemplateFolder = new Button(innerShell, SWT.PUSH);
         btnJobPathTemplateFolder.setText(I18N.getBtnChoosePath());
@@ -395,13 +385,11 @@ public class GeneratorSettingsWidget {
         data3_3.horizontalAlignment = SWT.END;
         btnJobPathTemplateFolder.setLayoutData(data3_3);
 
-
-        // project path
         Label projectPath = new Label(innerShell, style);
         projectPath.setText(I18N.getLabelDirProjects());
 
         textProjectPath = new Text(innerShell, style | SWT.SINGLE);
-        textProjectPath.setText(Main.pref.getSingleProperty("DirProjects"));
+        textProjectPath.setText(Main.pref.getUserPref(PreferenceHandler.DIR_PROJECTS));
 
         Button btnProjectPath = new Button(innerShell, SWT.PUSH);
         btnProjectPath.setText(I18N.getBtnChoosePath());
@@ -425,13 +413,11 @@ public class GeneratorSettingsWidget {
         data4_3.horizontalAlignment = SWT.END;
         btnProjectPath.setLayoutData(data4_3);
 
-
-        // project template path
         Label projectPathTemplateFolder = new Label(innerShell, style);
         projectPathTemplateFolder.setText(I18N.getLabelDirProjectsTemplate());
 
         textProjectPathTemplateFolder = new Text(innerShell, style | SWT.SINGLE);
-        textProjectPathTemplateFolder.setText(Main.pref.getSingleProperty("DirProjectsTemplate"));
+        textProjectPathTemplateFolder.setText(Main.pref.getUserPref(PreferenceHandler.DIR_PROJECTS_TEMPLATE));
 
         Button btnProjectPatTemplateFolder = new Button(innerShell, SWT.PUSH);
         btnProjectPatTemplateFolder.setText(I18N.getBtnChoosePath());
@@ -490,7 +476,6 @@ public class GeneratorSettingsWidget {
         GridData data6_1 = new GridData(SWT.END, SWT.END, false, true);
         data6_1.horizontalSpan = 3;
         compositeCancelOK.setLayoutData(data6_1);
-
 
         // innerShell.setLayout(gridLayout);
         innerShell.open();

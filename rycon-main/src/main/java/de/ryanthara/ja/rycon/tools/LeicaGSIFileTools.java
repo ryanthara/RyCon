@@ -18,6 +18,7 @@
 package de.ryanthara.ja.rycon.tools;
 
 import de.ryanthara.ja.rycon.Main;
+import de.ryanthara.ja.rycon.data.PreferenceHandler;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -704,9 +705,12 @@ public class LeicaGSIFileTools {
 
         }
 
-        String controlPointIdentifier = Main.pref.getSingleProperty("ParamControlPointString");
-        String freeStationIdentifier = "000" + Main.pref.getSingleProperty("ParamFreeStationString");
-        String stationIdentifier = "000" + Main.pref.getSingleProperty("ParamStationString");
+//        String controlPointIdentifier = Main.pref.getSingleProperty("ParamControlPointString");
+        String controlPointIdentifier = Main.pref.getUserPref(PreferenceHandler.PARAM_CONTROL_POINT_STRING);
+//        String freeStationIdentifier = "000" + Main.pref.getSingleProperty("ParamFreeStationString");
+        String freeStationIdentifier = "000" + Main.pref.getUserPref(PreferenceHandler.PARAM_FREE_STATION_STRING);
+//        String stationIdentifier = "000" + Main.pref.getSingleProperty("ParamStationString");
+        String stationIdentifier = "000" + Main.pref.getUserPref(PreferenceHandler.PARAM_KNOWN_STATION_STRING);
 
         ArrayList<String> result = new ArrayList<String>();
 
