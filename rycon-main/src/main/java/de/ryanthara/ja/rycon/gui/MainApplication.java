@@ -70,6 +70,8 @@ public class MainApplication extends Main {
     public static void main(String[] args) {
 
         checkJavaVersion();
+        
+        checkRyCONVersion();
 
         checkLicense();
 
@@ -447,7 +449,6 @@ public class MainApplication extends Main {
             }
         });
 
-
         // button #4 for converter tool
         Button btnToolboxConvert = new Button(compositeGrid, SWT.PUSH);
         btnToolboxConvert.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/icons/4-convert.png"));
@@ -502,12 +503,9 @@ public class MainApplication extends Main {
         btnToolboxSplitter.setLayoutData(gridData);
         btnExit.setLayoutData(gridData);
 
-
-        // status bar
         StatusBar statusBar = new StatusBar(shell, SWT.NONE);
         statusBar.setStatus(I18N.getStatusRyCONInitialized(), StatusBar.OK);
         Main.statusBar = statusBar;
-
 
         FormData formDataStatus = new FormData();
         formDataStatus.width = 3 * getRyCON_GRID_WIDTH() + 2; // width of the status bar!

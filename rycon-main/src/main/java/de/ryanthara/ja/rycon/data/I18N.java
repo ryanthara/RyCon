@@ -623,4 +623,12 @@ public class I18N {
     public static String getBtnDefaultSettingsToolTip() {
         return Messages.getString("btnDefaultSettingsToolTip");
     }
+
+    public static String getInfoTitleRyCONUpdate() {
+        return Messages.getString("infoTitleRyCONUpdate");
+    }
+
+    public static String getInfoTextRyCONUpdate() {
+        return Messages.getString("infoTextRyCONUpdate");
+    }
 } // end of I18N

@@ -21,6 +21,7 @@ package de.ryanthara.ja.rycon;
 import de.ryanthara.ja.rycon.data.I18N;
 import de.ryanthara.ja.rycon.data.PreferenceHandler;
 import de.ryanthara.ja.rycon.gui.StatusBar;
+import de.ryanthara.ja.rycon.tools.Updater;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
@@ -112,35 +113,50 @@ public abstract class Main {
      * Member for the default value of the control point string ('STKE').
      * @since 3
      */
-    private static final String PARAM_CONTROL_POINT_STRING = "STKE";
-    
-    /**
+     private static final String PARAM_CONTROL_POINT_STRING = "STKE";
+
+     /**
      * Member for the default value of the free station string ('FS').
      * @since 3
      */
-    private static final String PARAM_FREE_STATION_STRING = "FS";
+     private static final String PARAM_FREE_STATION_STRING = "FS";
 
-    /**
+     /**
      * Member for the default value of the known station string ('ST').
      * @since 3
      */
-    private static final String PARAM_KNOWN_STATION_STRING = "ST";
+     private static final String PARAM_KNOWN_STATION_STRING = "ST";
 
     /**
+     * The RyCON build number and date as {@code String}.
+     * <p>
+     * This string is used for the update checker of RyCON and has to be set with every new version.     
+     */
+    private static final String RyCON_BUILD = "3 : 2015-02-23";
+
+    /**
+     * The RyCON version as {@code String}.
+     * <p>
+     * This string is used for the update checker of RyCON and has to be set with every new version.     
+     */
+    private static final String RyCON_VERSION = "1.00";
+
+    /**
+     * Member for the URL of the RyCON update check website.
+     * @since 3
+     */
+     public static final String RyCON_UPDATE_URL = "http://code.ryanthara.de/content/3-RyCON/_current.version";
+
+     /**
      * Member for the URL of the RyCON website.
      */
-    public static final String RyCON_WEBSITE = "http://code.ryanthara.de/RyCON";
+     public static final String RyCON_WEBSITE = "http://code.ryanthara.de/RyCON";
 
     /**
      * Member for the URL of the RyCON help website.
      */
     public static final String RyCON_WEBSITE_HELP = "http://code.ryanthara.de/RyCON/help";
 
-    /**
-     * The RyCON build number and date as {@code String}.
-     */
-    private static final String RyCON_BUILD = "3 - 2015-02-21";
-    
     /**
      * The height of a grid cell. Window size and others are calculated from these values.
      * RyCON grid uses a golden rectangle cut with an aspect ratio of 1.618:1
@@ -214,7 +230,7 @@ public abstract class Main {
     }
 
     /**
-     * Check the current JAVA version.
+     * Checks the current JAVA version.
      * <p>
      * During the startup of RyCON the version of the installed JRE is checked. 
      * RyCON can be started only if a minimum version of a JRE is installed on 
@@ -287,6 +303,53 @@ public abstract class Main {
         LICENSE = true;
 
         return success;
+
+    }
+
+    /**
+     * Performs an online check for a new RyCON version.
+     * <p>
+     * If a newer version of RyCON is available an info dialog is shown to the user
+     * and an update is offered.
+     * <p>
+     * At the moment there is not planed to force an automatic update via Java Webstart functions.
+     * 
+     * @since 3
+     */
+    public static void checkRyCONVersion() {
+
+        Updater updater = new Updater(Main.RyCON_UPDATE_URL);
+
+        if (updater.checkForUpdate()) {
+            if (updater.isUpdateAvailable()) {
+                Display display = new Display();
+                Shell shell = new Shell(display);
+
+                MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR | SWT.YES | SWT.NO);
+                messageBox.setText(I18N.getInfoTitleRyCONUpdate());
+                messageBox.setMessage(I18N.getInfoTextRyCONUpdate());
+                int rc = messageBox.open();
+
+                if (rc == SWT.YES) {
+                    try {
+                        Desktop.getDesktop().browse(new URI(getRyCONWebsite()));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        System.err.println("Could not open default browser.");
+                    } catch (URISyntaxException e) {
+                        e.printStackTrace();
+                        System.err.println("Could not open default browser.");
+                    }
+                }
+
+                System.out.println("An old version of RyCON is used.");
+                System.out.println("Please update from " + getRyCONWebsite());
+
+                display.dispose();
+
+                System.exit(0);
+            }
+        }
 
     }
 
@@ -431,6 +494,16 @@ public abstract class Main {
      */
     public static String getRyCONBuild() {
         return RyCON_BUILD;
+    }
+
+    /**
+     * Returns the RyCON version as {@code String}.
+     *
+     * @return the version as {@code String}
+     * @since 3
+     */
+    public static String getRyCONVersion() {
+        return RyCON_VERSION;
     }
 
     /**

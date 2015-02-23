@@ -19,10 +19,10 @@
 package de.ryanthara.ja.rycon.gui;
 
 import de.ryanthara.ja.rycon.Main;
+import de.ryanthara.ja.rycon.data.I18N;
 import de.ryanthara.ja.rycon.data.PreferenceHandler;
 import de.ryanthara.ja.rycon.io.LineReader;
 import de.ryanthara.ja.rycon.io.LineWriter;
-import de.ryanthara.ja.rycon.data.I18N;
 import de.ryanthara.ja.rycon.tools.LeicaGSIFileTools;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -139,8 +139,11 @@ public class TidyUpWidget {
 
     /**
      * Does all the things when hitting the OK button.
+     *  
+     * @return int value for the 'OK and exit' button handling
+     * @since 3
      */
-    private void actionBtnOk() {
+    private int actionBtnOk() {
 
         String source = sourceTextField.getText();
         String destination = destinationTextField.getText();
@@ -150,6 +153,8 @@ public class TidyUpWidget {
             msgBox.setMessage(I18N.getMsgEmptyTextFieldWarning());
             msgBox.setText(I18N.getMsgBoxTitleWarning());
             msgBox.open();
+            
+            return 0;
         } else {
             if (processFileOperations()) {
 
@@ -160,21 +165,30 @@ public class TidyUpWidget {
                     Main.statusBar.setStatus(String.format(I18N.getStatusCleanFileSuccessful(Main.TEXT_PLURAL), Main.countFileOps), StatusBar.OK);
                 }
             }
+            return 1;
         }
 
     }
 
     /**
-     * Does all the things when hitting the OK and exit button.
+     * Does all the things when hitting the 'OK and exit' button.
+     * <p>
+     * This button uses the {@code actionBtnOk} method inside.
      */
     private void actionBtnOkAndExit() {
-        Main.setSubShellStatus(false);
 
-        actionBtnOk();
+        switch (actionBtnOk()) {
+            case 0:
 
-        Main.statusBar.setStatus("", StatusBar.OK);
+                break;
+            case 1:
+                Main.setSubShellStatus(false);
+                Main.statusBar.setStatus("", StatusBar.OK);
 
-        innerShell.dispose();
+                innerShell.dispose();
+                break;
+        }
+
     }
 
     /**

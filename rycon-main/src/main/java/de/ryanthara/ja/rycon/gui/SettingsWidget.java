@@ -28,10 +28,6 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Label;
 
 import java.io.File;
 
@@ -147,14 +143,20 @@ public class SettingsWidget {
     }
 
     /**
-     * Does all the things when hitting the Default Settings button. 
+     * Does all the things when hitting the 'default settings' button.
      */
     private void actionBtnDefaultSettings() {
-        System.out.println(
-                
-                "DEFAULT SETTINGS"
-                
-        );
+        Main.pref.createDefaultSettings();
+        Main.pref.setDefaultSettingsGenerated(true);
+        Main.setSubShellStatus(false);
+        Main.statusBar.setStatus("", StatusBar.OK);
+        
+        MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_INFORMATION);
+        msgBox.setMessage(I18N.getMsgSettingsDefaultGenerated());
+        msgBox.setText(I18N.getMsgBoxTitleSuccess());
+        msgBox.open();
+
+        innerShell.dispose();
     }
 
     /**
@@ -609,7 +611,6 @@ public class SettingsWidget {
                 actionBtnDefaultSettings();
             }
         });
-        
 
         Button btnCancel = new Button(compositeBottomBtns, SWT.NONE);
         btnCancel.setText(I18N.getBtnCancelLabel());
@@ -623,8 +624,8 @@ public class SettingsWidget {
         });
 
         Button btnOK = new Button(compositeBottomBtns, SWT.NONE);
-        btnOK.setText(I18N.getBtnOKAndOpenLabel());
-        btnOK.setToolTipText(I18N.getBtnOKAndOpenLabelToolTip());
+        btnOK.setText(I18N.getBtnOKLabel());
+        btnOK.setToolTipText(I18N.getBtnOKLabel());
         btnOK.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {

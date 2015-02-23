@@ -19,9 +19,9 @@
 package de.ryanthara.ja.rycon.gui;
 
 import de.ryanthara.ja.rycon.Main;
+import de.ryanthara.ja.rycon.data.I18N;
 import de.ryanthara.ja.rycon.data.PreferenceHandler;
 import de.ryanthara.ja.rycon.io.FileUtils;
-import de.ryanthara.ja.rycon.data.I18N;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -79,9 +79,12 @@ public class GeneratorWidget {
     }
 
     /**
-     * Do all the things when the OK button is hit. In this case the dialog stays open.
+     * Does all the things when hitting the OK button.
+     *
+     * @return int value for the 'OK and exit' button handling
+     * @since 3
      */
-    private void actionBtnOk() {
+    private int actionBtnOk() {
 
         String number = inputNumber.getText();
 
@@ -90,25 +93,36 @@ public class GeneratorWidget {
             msgBox.setMessage(I18N.getMsgEmptyTextFieldWarning());
             msgBox.setText(I18N.getMsgEmptyTextFieldWarningJobNumber());
             msgBox.open();
+            
+            return 0;
         } else {
             if (generateFolders(number)) {
                 Main.statusBar.setStatus(String.format(I18N.getStatusJobAndProjectGenerated(), number, number), StatusBar.OK);
             }
+            
+            return 1;
         }
 
     }
 
     /**
-     * Do all the things when the OK and Exit button is hit. In this case the dialog is closed.
+     * Does all the things when hitting the 'OK and exit' button.
+     * <p>
+     * This button uses the {@code actionBtnOk} method inside.
      */
     private void actionBtnOkAndExit() {
 
-        Main.setSubShellStatus(false);
+        switch (actionBtnOk()) {
+            case 0:
 
-        if (!inputNumber.getText().trim().equals("")) {
-            actionBtnOk();
+                break;
+            case 1:
+                Main.setSubShellStatus(false);
+                Main.statusBar.setStatus("", StatusBar.OK);
+
+                innerShell.dispose();
+                break;
         }
-        innerShell.dispose();
 
     }
 

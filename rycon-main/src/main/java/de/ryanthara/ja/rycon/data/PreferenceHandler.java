@@ -20,7 +20,7 @@ package de.ryanthara.ja.rycon.data;
 
 import de.ryanthara.ja.rycon.Main;
 
-import java.util.prefs.*;
+import java.util.prefs.Preferences;
 
 
 /**
@@ -136,6 +136,14 @@ public class PreferenceHandler {
     public PreferenceHandler() {
 
         userPreferences = Preferences.userRoot().node("/de/ryanthara/rycon");
+        
+        if (userPreferences.get(PreferenceHandler.GENERATOR, "").equals(Main.getRyCONAppName())) {
+            
+        } else {
+            System.out.println("DEFAULT SETTINGS");
+            createDefaultSettings();
+            isDefaultSettingsGenerated = true;
+        }
 
     }
 
@@ -156,7 +164,7 @@ public class PreferenceHandler {
     }
 
     /**
-     * Fills in the default values for RyCON into system and user preferences.
+     * Fills in the default values for RyCON into user preferences.
      * <p>
      * Default settings are generated for the following parameters (parameter name - value).
      * <ul>
@@ -177,7 +185,7 @@ public class PreferenceHandler {
      * It is <b>highly recommend</b> that the user will overwrite this settings to his preferred values
      * after the first start of RyCON. To do this, hit the key 'p' on the keyboard.
      */
-    private void createDefaultSettings() {
+    public void createDefaultSettings() {
         // general settings
         userPreferences.put(GENERATOR, Main.getRyCONAppName());
         userPreferences.put(BUILD_VERSION, Main.getRyCONBuild());
@@ -197,6 +205,8 @@ public class PreferenceHandler {
         
         // user settings
         userPreferences.put(USER_LAST_USED_DIR, System.getProperty("user.home"));
+        
+        isDefaultSettingsGenerated = true;
 
     }
 
@@ -218,7 +228,6 @@ public class PreferenceHandler {
      */
     public void setUserPref(String prefName, String value) {
         userPreferences.put(prefName, value);
-        System.out.println(userPreferences.get(prefName, ""));
     }
 
 } // end of Preferences
