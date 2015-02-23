@@ -36,7 +36,7 @@ import java.net.URISyntaxException;
  * Abstract class for holding values, constants and objects for the complete RyCON application.
  * <p>
  * This class was implemented after version 1 of RyCON to get easier access to different things.
- * The main idea to do this comes from JOSM.
+ * The main idea to do this comes from the code of JOSM.
  *
  * @author sebastian
  * @version 3
