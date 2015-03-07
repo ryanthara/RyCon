@@ -48,55 +48,27 @@ import java.util.List;
  * files into different formats. RyCON can be used to convert special formats
  * e.g. coordinate files from governmental services in switzerland
  *
+ * <h3>Changes:</h3>
+ * <ul>
+ *     <li>3: code improvements and clean up</li>
+ *     <li>2: basic improvements
+ *     <li>1: basic implementation
+ * </ul>
+ *
  * @author sebastian
- * @version 2
+ * @version 3
  * @since 1
  */
 public class ConverterWidget {
 
-    /**
-     * Member for the inner Shell object.
-     */
-    private Shell innerShell = null;
-
-    /**
-     * Member for the checkbox to hold station lines.
-     */
-    private Button chkBoxTXTSpaceDelimiter;
-
-    /**
-     * Member for the checkbox to hold station lines.
-     */
     private Button chkBoxCSVSemiColonDelimiter;
-
-    /**
-     * Member for the checkbox to write first comment line.
-     */
+    private Button chkBoxTXTSpaceDelimiter;
     private Button chkBoxWriteCommentLine;
-
-    /**
-     * Member for the destination text field.
-     */
-    private Text destinationTextField = null;
-
-    /**
-     * Member for the files to read.
-     */
     private File[] files2read;
-
-    /**
-     * Member for a group of radio buttons for the source system.
-     */
     private Group groupSource;
-
-    /**
-     * Member for a group of radio buttons for the target system.
-     */
     private Group groupTarget;
-
-    /**
-     * Member for the source text field.
-     */
+    private Shell innerShell = null;
+    private Text destinationTextField = null;
     private Text sourceTextField = null;
 
     /**
@@ -108,178 +80,51 @@ public class ConverterWidget {
         initUI();
     }
 
-    /**
-     * Does all the things when hitting the cancel button.
-     */
-    private void actionBtnCancel() {
-        Main.setSubShellStatus(false);
+    private void initUI() {
+        // golden rectangle cut with an aspect ratio of 1.618:1
+        int height = Main.getRyCONWidgetHeight();
+        int width = Main.getRyCONWidgetWidth();
 
-        Main.statusBar.setStatus("", StatusBar.OK);
+        innerShell = new Shell(Main.shell, SWT.CLOSE | SWT.DIALOG_TRIM | SWT.MAX | SWT.TITLE | SWT.APPLICATION_MODAL);
 
-        innerShell.dispose();
-    }
-
-    /**
-     * Does all the things when hitting the button to choose a destination path.
-     * <p>
-     * Normally the user wants to store the converted file in the same directory like
-     * the source file was stored. Because of this, the path is set by the source path.
-     */
-    private void actionBtnDestination() {
-
-        DirectoryDialog directoryDialog = new DirectoryDialog(innerShell);
-
-        directoryDialog.setText(I18N.getFileChooserDirBaseTitle());
-
-        directoryDialog.setMessage(I18N.getFileChooserDirBaseMessage());
-
-        // Set the initial filter path according to anything selected or typed in
-        if (destinationTextField.getText() == null) {
-            directoryDialog.setFilterPath(Main.pref.getUserPref(PreferenceHandler.DIR_BASE));
-        } else {
-            directoryDialog.setFilterPath(destinationTextField.getText());
-        }
-
-        String path = directoryDialog.open();
-
-        if (path != null) {
-
-            File checkDirDestination = new File(path);
-            if (!checkDirDestination.exists()) {
-                MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
-                msgBox.setMessage(I18N.getMsgDirDestinationNotExistWarning());
-                msgBox.setText(I18N.getMsgBoxTitleWarning());
-                msgBox.open();
-            } else {
-                destinationTextField.setText(path);
+        innerShell.addListener(SWT.Close, new Listener() {
+            public void handleEvent(Event event) {
+                actionBtnCancel();
             }
+        });
 
-        }
+        innerShell.setText(I18N.getWidgetTitleConverter());
+        innerShell.setSize(width, height);
 
-    }
+        GridLayout gridLayout = new GridLayout(1, true);
+        gridLayout.marginHeight = 5;
+        gridLayout.marginWidth = 5;
 
-    /**
-     * Does all the things when hitting the OK button.
-     *
-     * @return int value for the 'OK and exit' button handling
-     * @since 3
-     */
-    private int actionBtnOk() {
+        innerShell.setLayout(gridLayout);
 
-        String source = sourceTextField.getText();
-        String destination = destinationTextField.getText();
+        GridData gridData = new GridData(SWT.FILL, SWT.CENTER, true, true);
+        gridData.heightHint = height;
+        gridData.widthHint = width;
+        innerShell.setLayoutData(gridData);
 
-        if (source.trim().equals("") || (destination.trim().equals(""))) {
-            MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
-            msgBox.setMessage(I18N.getMsgEmptyTextFieldWarning());
-            msgBox.setText(I18N.getMsgBoxTitleWarning());
-            msgBox.open();
+        createGroupInputFields(width);
 
-            return 0;
-        } else {
-            if (processFileOperations()) {
+        // composite for the two columns for the source and target groups
+        createCompositeSourceTarget();
+        createCheckBoxes();
+        createDescription(width);
+        createBottomButtons();
 
-                // use counter to display different text on the status bar
-                if (Main.countFileOps == 1) {
-                    Main.statusBar.setStatus(String.format(I18N.getStatusConvertSuccess(Main.TEXT_SINGULAR), Main.countFileOps), StatusBar.OK);
-                } else {
-                    Main.statusBar.setStatus(String.format(I18N.getStatusConvertSuccess(Main.TEXT_PLURAL), Main.countFileOps), StatusBar.OK);
-                }
+        innerShell.setLocation(ShellCenter.centeredShellLocation(innerShell));
 
-            }
+        Main.setSubShellStatus(true);
 
-            return 1;
-        }
+        innerShell.pack();
+        innerShell.open();
 
     }
 
-    /**
-     * Does all the things when hitting the 'OK and exit' button.
-     * <p>
-     * This button uses the {@code actionBtnOk} method inside.
-     */
-    private void actionBtnOkAndExit() {
-
-        switch (actionBtnOk()) {
-            case 0:
-
-                break;
-            case 1:
-                Main.setSubShellStatus(false);
-                Main.statusBar.setStatus("", StatusBar.OK);
-
-                innerShell.dispose();
-                break;
-        }
-
-    }
-
-    /**
-     * Does all the things when hitting the choose source button.
-     */
-    private void actionBtnSource() {
-
-        FileDialog fileDialog = new FileDialog(innerShell, SWT.MULTI);
-        fileDialog.setFilterPath(Main.pref.getUserPref(PreferenceHandler.DIR_PROJECTS));
-        fileDialog.setText(I18N.getFileChooserTidyUpSourceText());
-        fileDialog.setFilterExtensions(new String[]{"*.gsi", "*.txt", "*.csv"});
-        fileDialog.setFilterNames(new String[]{I18N.getFileChooserFilterNameGSI(), I18N.getFileChooserFilterNameTXT(),
-                I18N.getFileChooserFilterNameCSV()});
-
-        String firstFile = fileDialog.open();
-
-        if (firstFile != null) {
-            String[] files = fileDialog.getFileNames();
-
-            files2read = new File[files.length];
-
-            // displaying file names without path in text field
-            String concatString = "";
-
-            String workingDir = fileDialog.getFilterPath();
-
-            for (int i = 0; i < files.length; i++) {
-                concatString = concatString.concat(files[i]);
-                concatString = concatString.concat(" ");
-
-                files2read[i] = new File(workingDir + File.separator + files[i]);
-            }
-
-            destinationTextField.setText(fileDialog.getFilterPath());
-            sourceTextField.setText(concatString);
-
-            // set the radio buttons
-            Control[] childrenSource = groupSource.getChildren();
-            Control[] childrenTarget = groupTarget.getChildren();
-
-            switch (fileDialog.getFilterIndex()) {
-
-                case 0:
-                    RadioHelper.selectBtn(childrenSource, 1);
-                    RadioHelper.selectBtn(childrenTarget, 2);
-                    break;
-
-                case 1:
-                    RadioHelper.selectBtn(childrenSource, 2);
-                    RadioHelper.selectBtn(childrenTarget, 1);
-                    break;
-
-                case 2:
-                    RadioHelper.selectBtn(childrenSource, 3);
-                    RadioHelper.selectBtn(childrenTarget, 2);
-                    break;
-
-            }
-
-        }
-
-    }
-
-    /**
-     * Creates the composite with the radio buttons for source and target.
-     */
     private void createCompositeSourceTarget() {
-
         Composite compositeSourceTarget = new Composite(innerShell, SWT.NONE);
         GridLayout gridLayout = new GridLayout(2, true);
         compositeSourceTarget.setLayout(gridLayout);
@@ -360,11 +205,75 @@ public class ConverterWidget {
 
     }
 
-    /**
-     * Creates the group with the input fields and all its functionality.
-     *
-     * @param width width of the group
-     */
+    private void createCheckBoxes() {
+        chkBoxTXTSpaceDelimiter = new Button(innerShell, SWT.CHECK);
+        chkBoxTXTSpaceDelimiter.setSelection(false);
+        chkBoxTXTSpaceDelimiter.setText(I18N.getBtnChkConverterTXTSpaceDelimiter());
+
+        chkBoxCSVSemiColonDelimiter = new Button(innerShell, SWT.CHECK);
+        chkBoxCSVSemiColonDelimiter.setSelection(false);
+        chkBoxCSVSemiColonDelimiter.setText(I18N.getBtnChkConverterCSVSemiColonDelimiter());
+
+        chkBoxWriteCommentLine = new Button(innerShell, SWT.CHECK);
+        chkBoxWriteCommentLine.setSelection(false);
+        chkBoxWriteCommentLine.setText(I18N.getBtnChkConverterWriteCommentLine());
+    }
+
+    private void createDescription(int width) {
+        Group groupDescription = new Group(innerShell, SWT.NONE);
+        groupDescription.setText(I18N.getGroupTitleNumberInputAdvice());
+
+        GridLayout gridLayout = new GridLayout(1, true);
+        groupDescription.setLayout(gridLayout);
+
+        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
+        gridData.widthHint = width - 24;
+        groupDescription.setLayoutData(gridData);
+
+        Label tip = new Label(groupDescription, SWT.WRAP | SWT.BORDER | SWT.LEFT);
+        tip.setLayoutData(new GridData(SWT.HORIZONTAL, SWT.TOP, true, false, 1, 1));
+        tip.setText(String.format(I18N.getLabelTipConverterWidget()));
+    }
+
+    private void createBottomButtons() {
+        Composite compositeBottomBtns = new Composite(innerShell, SWT.NONE);
+        compositeBottomBtns.setLayout(new FillLayout());
+
+        Button btnCancel = new Button(compositeBottomBtns, SWT.NONE);
+        btnCancel.setText(I18N.getBtnCancelLabel());
+        btnCancel.setToolTipText(I18N.getBtnCancelLabelToolTip());
+
+        btnCancel.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                actionBtnCancel();
+            }
+        });
+
+        Button btnOK = new Button(compositeBottomBtns, SWT.NONE);
+        btnOK.setText(I18N.getBtnOKAndOpenLabel());
+        btnOK.setToolTipText(I18N.getBtnOKAndOpenLabelToolTip());
+        btnOK.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                actionBtnOk();
+            }
+        });
+
+        Button btnOKAndExit = new Button(compositeBottomBtns, SWT.NONE);
+        btnOKAndExit.setText(I18N.getBtnOKAndExitLabel());
+        btnOKAndExit.setToolTipText(I18N.getBtnOKAndExitLabelToolTip());
+        btnOKAndExit.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                actionBtnOkAndExit();
+            }
+        });
+
+        GridData gridData = new GridData(SWT.END, SWT.END, false, true);
+        compositeBottomBtns.setLayoutData(gridData);
+    }
+
     private void createGroupInputFields(int width) {
         Group groupInputFields = new Group(innerShell, SWT.NONE);
         groupInputFields.setText(I18N.getGroupTitlePathSelection());
@@ -464,123 +373,137 @@ public class ConverterWidget {
 
     }
 
-    /**
-     * Initializes all the gui of the tidy up widget.
-     */
-    private void initUI() {
-
-        // golden rectangle cut with an aspect ratio of 1.618:1
-        int height = Main.getRyCONWidgetHeight();
-        int width = Main.getRyCONWidgetWidth();
-
-        innerShell = new Shell(Main.shell, SWT.CLOSE | SWT.DIALOG_TRIM | SWT.MAX | SWT.TITLE | SWT.APPLICATION_MODAL);
-
-        innerShell.addListener(SWT.Close, new Listener() {
-            public void handleEvent(Event event) {
-                actionBtnCancel();
-            }
-        });
-
-        innerShell.setText(I18N.getWidgetTitleConverter());
-        innerShell.setSize(width, height);
-
-
-        GridLayout gridLayout = new GridLayout(1, true);
-        gridLayout.marginHeight = 5;
-        gridLayout.marginWidth = 5;
-
-        innerShell.setLayout(gridLayout);
-
-        GridData gridData = new GridData(SWT.FILL, SWT.CENTER, true, true);
-        gridData.heightHint = height;
-        gridData.widthHint = width;
-        innerShell.setLayoutData(gridData);
-
-        createGroupInputFields(width);
-
-        // composite for the two columns for the source and target groups
-        createCompositeSourceTarget();
-
-        chkBoxTXTSpaceDelimiter = new Button(innerShell, SWT.CHECK);
-        chkBoxTXTSpaceDelimiter.setSelection(false);
-        chkBoxTXTSpaceDelimiter.setText(I18N.getBtnChkConverterTXTSpaceDelimiter());
-
-        chkBoxCSVSemiColonDelimiter = new Button(innerShell, SWT.CHECK);
-        chkBoxCSVSemiColonDelimiter.setSelection(false);
-        chkBoxCSVSemiColonDelimiter.setText(I18N.getBtnChkConverterCSVSemiColonDelimiter());
-
-        chkBoxWriteCommentLine = new Button(innerShell, SWT.CHECK);
-        chkBoxWriteCommentLine.setSelection(false);
-        chkBoxWriteCommentLine.setText(I18N.getBtnChkConverterWriteCommentLine());
-
-        // description for the tidy up field as text on a label
-        Group groupDescription = new Group(innerShell, SWT.NONE);
-        groupDescription.setText(I18N.getGroupTitleNumberInputAdvice());
-
-        gridLayout = new GridLayout(1, true);
-        groupDescription.setLayout(gridLayout);
-
-        gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
-        gridData.widthHint = width - 24;
-        groupDescription.setLayoutData(gridData);
-
-        Label tip = new Label(groupDescription, SWT.WRAP | SWT.BORDER | SWT.LEFT);
-        tip.setLayoutData(new GridData(SWT.HORIZONTAL, SWT.TOP, true, false, 1, 1));
-        tip.setText(String.format(I18N.getLabelTipConverterWidget()));
-
-        Composite compositeBottomBtns = new Composite(innerShell, SWT.NONE);
-        compositeBottomBtns.setLayout(new FillLayout());
-
-        Button btnCancel = new Button(compositeBottomBtns, SWT.NONE);
-        btnCancel.setText(I18N.getBtnCancelLabel());
-        btnCancel.setToolTipText(I18N.getBtnCancelLabelToolTip());
-
-        btnCancel.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                actionBtnCancel();
-            }
-        });
-
-        Button btnOK = new Button(compositeBottomBtns, SWT.NONE);
-        btnOK.setText(I18N.getBtnOKAndOpenLabel());
-        btnOK.setToolTipText(I18N.getBtnOKAndOpenLabelToolTip());
-        btnOK.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                actionBtnOk();
-            }
-        });
-
-        Button btnOKAndExit = new Button(compositeBottomBtns, SWT.NONE);
-        btnOKAndExit.setText(I18N.getBtnOKAndExitLabel());
-        btnOKAndExit.setToolTipText(I18N.getBtnOKAndExitLabelToolTip());
-        btnOKAndExit.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                actionBtnOkAndExit();
-            }
-        });
-
-        gridData = new GridData(SWT.END, SWT.END, false, true);
-        compositeBottomBtns.setLayoutData(gridData);
-
-
-        ShellCenter shellCenter = new ShellCenter(innerShell);
-        innerShell.setLocation(shellCenter.centeredShellLocation());
-
-        Main.setSubShellStatus(true);
-
-        innerShell.pack();
-        innerShell.open();
-
+    private void actionBtnCancel() {
+        Main.setSubShellStatus(false);
+        Main.statusBar.setStatus("", StatusBar.OK);
+        innerShell.dispose();
     }
 
-    /**
-     * Process all the operations on the chosen tidy up files.
-     *
-     * @return success
-     */
+    private void actionBtnDestination() {
+        DirectoryDialog directoryDialog = new DirectoryDialog(innerShell);
+        directoryDialog.setText(I18N.getFileChooserDirBaseTitle());
+        directoryDialog.setMessage(I18N.getFileChooserDirBaseMessage());
+
+        // Set the initial filter path according to anything selected or typed in
+        if (destinationTextField.getText() == null) {
+            directoryDialog.setFilterPath(Main.pref.getUserPref(PreferenceHandler.DIR_BASE));
+        } else {
+            directoryDialog.setFilterPath(destinationTextField.getText());
+        }
+
+        String path = directoryDialog.open();
+
+        if (path != null) {
+            File checkDirDestination = new File(path);
+            if (!checkDirDestination.exists()) {
+                MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
+                msgBox.setMessage(I18N.getMsgDirDestinationNotExistWarning());
+                msgBox.setText(I18N.getMsgBoxTitleWarning());
+                msgBox.open();
+            } else {
+                destinationTextField.setText(path);
+            }
+        }
+    }
+
+    // TODO implement functional check
+    private int actionBtnOk() {
+        String source = sourceTextField.getText();
+        String destination = destinationTextField.getText();
+
+        if (source.trim().equals("") || (destination.trim().equals(""))) {
+            MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
+            msgBox.setMessage(I18N.getMsgEmptyTextFieldWarning());
+            msgBox.setText(I18N.getMsgBoxTitleWarning());
+            msgBox.open();
+
+            return 0;
+        } else {
+            if (processFileOperations()) {
+
+                // use counter to display different text on the status bar
+                if (Main.countFileOps == 1) {
+                    Main.statusBar.setStatus(String.format(I18N.getStatusConvertSuccess(Main.TEXT_SINGULAR), Main.countFileOps), StatusBar.OK);
+                } else {
+                    Main.statusBar.setStatus(String.format(I18N.getStatusConvertSuccess(Main.TEXT_PLURAL), Main.countFileOps), StatusBar.OK);
+                }
+
+            }
+
+            return 1;
+        }
+    }
+
+    private void actionBtnOkAndExit() {
+        switch (actionBtnOk()) {
+            case 0:
+
+                break;
+            case 1:
+                Main.setSubShellStatus(false);
+                Main.statusBar.setStatus("", StatusBar.OK);
+
+                innerShell.dispose();
+                break;
+        }
+    }
+
+    private void actionBtnSource() {
+        FileDialog fileDialog = new FileDialog(innerShell, SWT.MULTI);
+        fileDialog.setFilterPath(Main.pref.getUserPref(PreferenceHandler.DIR_PROJECTS));
+        fileDialog.setText(I18N.getFileChooserTidyUpSourceText());
+        fileDialog.setFilterExtensions(new String[]{"*.gsi", "*.txt", "*.csv"});
+        fileDialog.setFilterNames(new String[]{I18N.getFileChooserFilterNameGSI(), I18N.getFileChooserFilterNameTXT(),
+                I18N.getFileChooserFilterNameCSV()});
+
+        String firstFile = fileDialog.open();
+
+        if (firstFile != null) {
+            String[] files = fileDialog.getFileNames();
+
+            files2read = new File[files.length];
+
+            // displaying file names without path in text field
+            String concatString = "";
+
+            String workingDir = fileDialog.getFilterPath();
+
+            for (int i = 0; i < files.length; i++) {
+                concatString = concatString.concat(files[i]);
+                concatString = concatString.concat(" ");
+
+                files2read[i] = new File(workingDir + File.separator + files[i]);
+            }
+
+            destinationTextField.setText(fileDialog.getFilterPath());
+            sourceTextField.setText(concatString);
+
+            // set the radio buttons
+            Control[] childrenSource = groupSource.getChildren();
+            Control[] childrenTarget = groupTarget.getChildren();
+
+            switch (fileDialog.getFilterIndex()) {
+
+                case 0:
+                    RadioHelper.selectBtn(childrenSource, 1);
+                    RadioHelper.selectBtn(childrenTarget, 2);
+                    break;
+
+                case 1:
+                    RadioHelper.selectBtn(childrenSource, 2);
+                    RadioHelper.selectBtn(childrenTarget, 1);
+                    break;
+
+                case 2:
+                    RadioHelper.selectBtn(childrenSource, 3);
+                    RadioHelper.selectBtn(childrenTarget, 2);
+                    break;
+
+            }
+        }
+    }
+
+    // TODO implement functional check
     private boolean processFileOperations() {
 
         boolean success = false;
@@ -987,26 +910,13 @@ public class ConverterWidget {
 
                 success = false;
             }
-
         }
-
         return success;
-
     }
 
-    /**
-     * Helper method for simplify code. The file writing is controlled from here.
-     *
-     * @param file2read file object for name generation
-     * @param writeFile {@code ArrayList<String>} with the lines to be written
-     * @param suffix    file suffix
-     * @return success of file writing, false when failed
-     */
     private boolean writeFile(File file2read, ArrayList<String> writeFile, String suffix) {
-
         String fileName = file2read.toString().substring(0, file2read.toString().length() - 4) + "_CONV" + suffix;
 
-        // see if file exists
         File file = new File(fileName);
 
         if (file.exists()) {
@@ -1025,7 +935,6 @@ public class ConverterWidget {
         } else {
             return new LineWriter(fileName).writeFile(writeFile);
         }
-
     }
 
 } // end of ConverterWidget

@@ -26,28 +26,24 @@ import java.util.ArrayList;
 
 /**
  * Class that holds font objects.
+ *
+ * <h3>Changes:</h3>
+ * <ul>
+ *     <li>2: code improvements and clean up</li>
+ *     <li>1: basic implementation
+ * </ul>
+ *
+ * @author sebastian
+ * @version 2
+ * @since 1
+ *
  */
 class AFont {
 
-    /**
-     * Member for the font name.
-     */
-    private String name;
-
-    /**
-     * Member for the font object.
-     */
-    private Font font;
-
-    /**
-     * Member for the height of the font.
-     */
     private int height;
-
-    /**
-     * Member that holds an font style.
-     */
     private int style;
+    private Font font;
+    private String name;
 
     /**
      * Class constructor which accepts a {@code FontData} object as parameter.
@@ -155,24 +151,24 @@ class AFont {
  * <p>
  * The implementation is inspired by an article on <a href="http://hexapixel.com/2009/06/30/creating-a-notification-popup-widget">hexapixel.com</a>
  *
+ * <h3>Changes:</h3>
+ * <ul>
+ *     <li>2: code improvements and clean up</li>
+ *     <li>1: basic implementation
+ * </ul>
+ *
  * @author sebastian
+ * @version 2
  * @since 2
- * @version 1
  */
 public class FontCache {
 
-    // define some members
-    /**
-     * Member that holds the {@code AFont} objects.
-     */
     private static ArrayList<AFont> fontMap = new ArrayList<AFont>();
-
 
     /**
      * Disposes all fonts and clear the cache. 
      */
     public static void disposeFonts(){
-
         for (AFont aFont : fontMap) {
             if ((aFont.getFont() == null) && (!aFont.getFont().isDisposed())) {
                 aFont.getFont().dispose();
@@ -180,7 +176,6 @@ public class FontCache {
         }
 
         fontMap.clear();
-
     }
 
     /**
@@ -189,7 +184,6 @@ public class FontCache {
      * @return the font
      */
     public static Font getFont(FontData fontData) {
-
         try {
             boolean disposed = false;
             AFont toRemove = null;
@@ -220,7 +214,6 @@ public class FontCache {
         }
 
         return null;
-
     }
 
     /**
@@ -229,7 +222,6 @@ public class FontCache {
      * @return the font
      */
     public static Font getFont(Font font) {
-
         try {
             if ((font == null) || (font.isDisposed())) {
                 return null;
@@ -241,7 +233,6 @@ public class FontCache {
         }
 
         return null;
-
     }
 
     /**
@@ -252,7 +243,6 @@ public class FontCache {
      * @return the font
      */
     public static Font getFont(String name, int height, int style) {
-
         try {
             boolean disposed = false;
             AFont toRemove = null;
@@ -282,7 +272,6 @@ public class FontCache {
         }
 
         return null;
-
     }
 
 } // end of ImageCache

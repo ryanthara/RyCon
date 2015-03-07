@@ -35,36 +35,24 @@ import java.util.*;
  * starts every line with a <code>*</code> sign.
  * <p>
  *
+ * <h3>Changes:</h3>
+ * <ul>
+ *     <li>3: code improvements and clean up</li>
+ *     <li>2: basic improvements
+ *     <li>1: basic implementation
+ * </ul>
+ *
  * @author sebastian
- * @version 2
+ * @version 3
  * @since 1
  */
 public class LeicaGSIFileTools {
 
-    /**
-     * Member for the {@code ArrayList<String>} object with the lines in GSI8 or GSI16 format.
-     */
-    private ArrayList<String> arrayList;
-
-    /**
-     * Member for storing the found codes. Needed, because of, the code is eliminated from the string line.
-     */
-    private TreeSet<Integer> foundCodes = new TreeSet<Integer>();
-
-    /**
-     * Member for storing the found Word Indices. Needed for a simple TXT and CSV column count.
-     */
-    private TreeSet<Integer> foundWordIndices = new TreeSet<Integer>();
-
-    /**
-     * Member for indicating that the block is a GSI16 one.
-     */
     private boolean isGSI16 = false;
-
-    /**
-     * Member for the list of read CSV file lines.
-     */
+    private ArrayList<String> arrayList;
     private List<String[]> list;
+    private TreeSet<Integer> foundCodes = new TreeSet<Integer>();
+    private TreeSet<Integer> foundWordIndices = new TreeSet<Integer>();
 
     /**
      * Class constructor with parameter for the read lines as {@code ArrayList<String>} object.
@@ -110,7 +98,6 @@ public class LeicaGSIFileTools {
      * @return converted {@code ArrayList<ArrayList<String>>} for writing
      */
     public ArrayList<ArrayList<String>> processCodeSplit(boolean dropCode, boolean writeLinesWithoutCode) {
-
         ArrayList<GSIHelper> linesWithCode = new ArrayList<GSIHelper>();
         ArrayList<GSIHelper> linesWithOutCode = new ArrayList<GSIHelper>();
         String newLine = null;
@@ -159,9 +146,7 @@ public class LeicaGSIFileTools {
                         newLine = newLine.concat(" " + block.toString());
                         validCheckHelperValue += 6;
                         break;
-
                 }
-
             }
 
             // split lines with and without code
@@ -172,7 +157,6 @@ public class LeicaGSIFileTools {
                 // use 'blind' code '987789' for this
                 linesWithOutCode.add(new GSIHelper(-987789, newLine));
             }
-
         }
 
         // sorting the ArrayList
@@ -209,7 +193,6 @@ public class LeicaGSIFileTools {
                 code = gsiHelpers.getCode();
 
             }
-
             // insert last element
             result.add(temp);
         }
@@ -227,11 +210,9 @@ public class LeicaGSIFileTools {
 
             foundCodes.add(987789);
             result.add(temp);
-
         }
 
         return result;
-
     }
 
     /**
@@ -243,12 +224,9 @@ public class LeicaGSIFileTools {
      * @return converted {@code ArrayList<String>} with lines of GSI8 or GSI16 format
      */
     public ArrayList<String> processFormatConversionBetweenGSI8AndGSI16(boolean isGSI16) {
-
         // transform lines into GSI-Blocks
         ArrayList<ArrayList<GSIBlock>> gsiBlocks = blockEncoder(arrayList);
-
         return lineTransformation(isGSI16, gsiBlocks);
-
     }
 
     /**
@@ -261,7 +239,6 @@ public class LeicaGSIFileTools {
      * @return converted {@code ArrayList<String>} with lines of GSI format
      */
     public ArrayList<String> processFormatConversionCSV2GSI(boolean isGSI16) {
-
         ArrayList<String> result = new ArrayList<String>();
 
         // convert the List<String[]> into an ArrayList<String> and use known stuff (-:
@@ -300,7 +277,6 @@ public class LeicaGSIFileTools {
      * @return converted {@code ArrayList<String>} with lines of text format
      */
     public ArrayList<String> processFormatConversionCSVBaselStadt2GSI(boolean isGSI16) {
-
         ArrayList<String> result = new ArrayList<String>();
 
         for (String[] stringField : list) {
@@ -333,7 +309,6 @@ public class LeicaGSIFileTools {
         this.arrayList = result;
 
         return processFormatConversionTXT2GSI(isGSI16);
-
     }
 
     /**
@@ -346,7 +321,6 @@ public class LeicaGSIFileTools {
      * @return converted {@code ArrayList<String>} with lines of text format
      */
     public ArrayList<String> processFormatConversionGSI2CSV(String delimiter, boolean writeCommentLine) {
-
         ArrayList<String> result = new ArrayList<String>();
 
         // transform lines into GSI-Blocks
@@ -410,7 +384,6 @@ public class LeicaGSIFileTools {
         }
 
         return result;
-
     }
 
     /**
@@ -424,7 +397,6 @@ public class LeicaGSIFileTools {
      * @return converted {@code ArrayList<String>} with lines of text format
      */
     public ArrayList<String> processFormatConversionGSI2TXT(String delimiter, boolean isGSI16, boolean writeCommentLine) {
-
         String commentLine = "";
         String delim;
         ArrayList<String> result = new ArrayList<String>();
@@ -519,7 +491,6 @@ public class LeicaGSIFileTools {
         }
 
         return result;
-
     }
 
     /**
@@ -531,7 +502,6 @@ public class LeicaGSIFileTools {
      * @return converted {@code ArrayList<String>>} with lines
      */
     public ArrayList<String> processFormatConversionTXT2GSI(boolean isGSI16) {
-
         ArrayList<GSIBlock> blocks;
         ArrayList<ArrayList<GSIBlock>> blocksInLines = new ArrayList<ArrayList<GSIBlock>>();
 
@@ -594,7 +564,6 @@ public class LeicaGSIFileTools {
         }
 
         return lineTransformation(isGSI16, blocksInLines);
-
     }
 
     /**
@@ -607,7 +576,6 @@ public class LeicaGSIFileTools {
      * @return Converted {@code ArrayList<String>} for cad import
      */
     public ArrayList<String> processLevelling2Cad(boolean ignoreChangePoints) {
-
         int lineCounter = 1; // counter
         String newLine;
 
@@ -654,7 +622,6 @@ public class LeicaGSIFileTools {
         }
 
         return result;
-
     }
 
     /**
@@ -859,12 +826,6 @@ public class LeicaGSIFileTools {
         return result;
     }
 
-    /**
-     * Helper which converts String lines from {@code ArrayList<String>} into {@code ArrayList<ArrayList<GSIBlock>>}.
-     *
-     * @param lines  {@code ArrayList<String>} with the lines as {@code String} to convert
-     * @return converted {@code ArrayList<ArrayList<GSIBlock>>}
-     */
     private ArrayList<ArrayList<GSIBlock>> blockEncoder(ArrayList<String> lines) {
 
         ArrayList<GSIBlock> blocks; // full initialisation may be better
@@ -906,18 +867,9 @@ public class LeicaGSIFileTools {
         }
 
         return blocksInLines;
-
     }
 
-    /**
-     * Transform an {@code ArrayList<ArrayList<GSIBlock>>} into an {@code ArrayList<String>}.
-     *
-     * @param isGSI16   if GSI16 format is needed
-     * @param gsiBlocks blocks to transform
-     * @return transformed blocks as lines of {@code String}
-     */
     private ArrayList<String> lineTransformation(boolean isGSI16, ArrayList<ArrayList<GSIBlock>> gsiBlocks) {
-
         ArrayList<String> result = new ArrayList<String>();
 
         for (ArrayList<GSIBlock> blocksInLines : gsiBlocks) {
@@ -947,7 +899,6 @@ public class LeicaGSIFileTools {
         }
 
         return result;
-
     }
 
     /**
@@ -958,23 +909,10 @@ public class LeicaGSIFileTools {
      */
     private class GSIBlock {
 
-        /**
-         * Member for the data as <code>String</code> (pos 8-15, GSI8) or (pos 8-23, GSI16)
-         */
-        private final String dataGSI;
-
-        /**
-         * Member for the information as <code>String</code> (pos 3-6)
-         */
-        private final String information;
-        /**
-         * Member for the word index (pos 1-2).
-         */
         private final int wordIndex;
-        /**
-         * Member for the sign (+ and -) with is by default plus.
-         */
         private String sign = "+";
+        private final String dataGSI;
+        private final String information;
 
         /**
          * Constructor which defines the object with parameter.
@@ -1053,9 +991,7 @@ public class LeicaGSIFileTools {
             }
 
             this.dataGSI = fillWithZeros(length, intern);
-
         }
-
 
         /**
          * Constructor with parameters to build the GSI structure.
@@ -1092,9 +1028,7 @@ public class LeicaGSIFileTools {
          * @return formatted {@code String} for CSV output
          */
         public String toPrintFormatCSV() {
-
             return this.toPrintFormatTXT().trim();
-
         }
 
         /**
@@ -1103,7 +1037,6 @@ public class LeicaGSIFileTools {
          * @return formatted {@code String} for TXT output
          */
         public String toPrintFormatTXT() {
-
             String s = this.dataGSI;
             int length = s.length();
 
@@ -1173,7 +1106,6 @@ public class LeicaGSIFileTools {
             }
 
             return s;
-
         }
 
         /**
@@ -1194,7 +1126,6 @@ public class LeicaGSIFileTools {
          * @return GSIBlock as String depending on format GSI8/GSI16
          */
         public String toString(boolean isGSI16) {
-
             String data;
             String leadingZeros = "00000000";
             String result;
@@ -1219,47 +1150,19 @@ public class LeicaGSIFileTools {
             }
 
             return result;
-
         }
 
-        /**
-         * Fills a given {@code String} with space character to the given length.
-         *
-         * @param length defined length of the filled {@code String}
-         * @param input  {@code String} to fill up with space character
-         * @return with spaces filled {@code String}
-         */
         private String fillWithSpaces(int length, String input) {
-
             String format = "%" + length + "." + length + "s";
-
             return String.format(format, input);
-
         }
 
-        /**
-         * Fills a given {@code String} with zeros to the given length.
-         *
-         * @param length defined length of the filled {@code String}
-         * @param input  {@code String} to fill up with zeros
-         * @return with zeros filled {@code String}
-         */
         private String fillWithZeros(int length, String input) {
-
             String format = "%" + length + "s";
-
             return String.format(format, input).replace(' ', '0');
-
         }
 
-        /**
-         * Trims leading zeros in a given {@code String}.
-         *
-         * @param s string to trim
-         * @return string without leading zeros
-         */
         private String trimLeadingZeros(String s) {
-
             String intern = s.replaceFirst("^0+(?!$)", "");  // cut off leading zeros with regex;
 
             if (intern.startsWith(".")) {
@@ -1267,7 +1170,6 @@ public class LeicaGSIFileTools {
             } else {
                 return intern;
             }
-
         }
 
     } // end of inner class GSIBlock
@@ -1279,14 +1181,7 @@ public class LeicaGSIFileTools {
      */
     private class GSIHelper {
 
-        /**
-         * Member for the code as Integer value.
-         */
         private final int code;
-
-        /**
-         * Member for the line as String.
-         */
         private final String line;
 
         /**

@@ -40,20 +40,20 @@ import java.io.IOException;
  * The GeneratorWidget of RyCON is used to generate default paths and subdirectory
  * structure by a given point number.
  *
+ * <h3>Changes:</h3>
+ * <ul>
+ *     <li>3: code improvements and clean up</li>
+ *     <li>2: basic improvements
+ *     <li>1: basic implementation
+ * </ul>
+ *
  * @author sebastian
- * @version 2
+ * @version 3
  * @since 1
  */
 public class GeneratorWidget {
 
-    /**
-     * Member for the text input field.
-     */
     private Text inputNumber = null;
-
-    /**
-     * Member for the inner shell.
-     */
     private Shell innerShell = null;
 
     /**
@@ -65,162 +65,6 @@ public class GeneratorWidget {
         initUI();
     }
 
-    /**
-     * Do all the things when hitting the cancel button.
-     */
-    private void actionBtnCancel() {
-
-        Main.setSubShellStatus(false);
-
-        Main.statusBar.setStatus("", StatusBar.OK);
-
-        innerShell.dispose();
-
-    }
-
-    /**
-     * Does all the things when hitting the OK button.
-     *
-     * @return int value for the 'OK and exit' button handling
-     * @since 3
-     */
-    private int actionBtnOk() {
-
-        String number = inputNumber.getText();
-
-        if (number.trim().equals("")) {
-            MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
-            msgBox.setMessage(I18N.getMsgEmptyTextFieldWarning());
-            msgBox.setText(I18N.getMsgEmptyTextFieldWarningJobNumber());
-            msgBox.open();
-            
-            return 0;
-        } else {
-            if (generateFolders(number)) {
-                Main.statusBar.setStatus(String.format(I18N.getStatusJobAndProjectGenerated(), number, number), StatusBar.OK);
-            }
-            
-            return 1;
-        }
-
-    }
-
-    /**
-     * Does all the things when hitting the 'OK and exit' button.
-     * <p>
-     * This button uses the {@code actionBtnOk} method inside.
-     */
-    private void actionBtnOkAndExit() {
-
-        switch (actionBtnOk()) {
-            case 0:
-
-                break;
-            case 1:
-                Main.setSubShellStatus(false);
-                Main.statusBar.setStatus("", StatusBar.OK);
-
-                innerShell.dispose();
-                break;
-        }
-
-    }
-
-    /**
-     * Do all the things when hitting the settings button.
-     */
-    private void actionBtnSettings() {
-        new GeneratorSettingsWidget(innerShell);
-    }
-
-    /**
-     * Controls the complete folder generation process.
-     *
-     * @param number job/project number as String from text field
-     * @return success
-     */
-    private boolean generateFolders(String number) {
-
-        boolean success = false;
-
-        // get saved values from the properties object
-        String jobDir = Main.pref.getUserPref(PreferenceHandler.DIR_JOBS);
-        String jobDirTemplate = Main.pref.getUserPref(PreferenceHandler.DIR_JOBS_TEMPLATE);
-
-        String projectDir = Main.pref.getUserPref(PreferenceHandler.DIR_PROJECTS);
-        String projectDirTemplate = Main.pref.getUserPref(PreferenceHandler.DIR_PROJECTS_TEMPLATE);
-
-
-        File jobExistTest = new File(jobDir + File.separator + number);
-        File projectExistsTest = new File(projectDir + File.separator + number);
-
-        // check if folders exist
-        if (!jobExistTest.exists() && !projectExistsTest.exists()) {
-
-            /* maybe later on with java 8 support in the office
-            Path copySourcePathJob = Paths.get(jobDirTemplate);
-            Path copySourcePathProject = Paths.get(projectDirTemplate);
-
-            Path copyDestinationPathJob = Paths.get(jobDir + File.separator + number);
-            Path copyDestinationPathProject = Paths.get(projectDir + File.separator + number);
-            */
-
-            File copySourcePathJob = new File(jobDirTemplate);
-            File copySourcePathProject = new File(projectDirTemplate);
-
-            File copyDestinationPathJob = new File(jobDir + File.separator + number);
-            File copyDestinationPathProject = new File(projectDir + File.separator + number);
-
-            try {
-                //Files.copy(copySourcePathJob, copyDestinationPathJob);
-                //Files.copy(copySourcePathProject, copyDestinationPathProject);
-
-                FileUtils fileUtils = new FileUtils();
-                fileUtils.copy(copySourcePathJob, copyDestinationPathJob);
-                fileUtils.copy(copySourcePathProject, copyDestinationPathProject);
-
-                MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_INFORMATION);
-                msgBox.setMessage(String.format(I18N.getMsgCreateDirJobAndProjectGenerated(), number, number));
-                msgBox.setText(I18N.getMsgBoxTitleSuccess());
-                msgBox.open();
-                success = true;
-            } catch (IOException e) {
-                System.err.println(e.getMessage());
-
-                MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_ERROR);
-                msgBox.setMessage(I18N.getMsgCreateDirJobAndProjectWarning());
-                msgBox.setText(I18N.getMsgBoxTitleError());
-                msgBox.open();
-                success = false;
-            }
-
-        } else if (jobExistTest.exists() && projectExistsTest.exists()) {
-            Main.statusBar.setStatus("", StatusBar.OK);
-            MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
-            msgBox.setMessage(String.format(I18N.getMsgCreateDirJobAndProjectExist(), number, number));
-            msgBox.setText(I18N.getMsgBoxTitleWarning());
-            msgBox.open();
-        } else if (jobExistTest.exists() && !projectExistsTest.exists()) {
-            Main.statusBar.setStatus("", StatusBar.OK);
-            MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
-            msgBox.setMessage(String.format(I18N.getMsgCreateDirJobExist(), number));
-            msgBox.setText(I18N.getMsgBoxTitleWarning());
-            msgBox.open();
-        } else if (!jobExistTest.exists() && projectExistsTest.exists()) {
-            Main.statusBar.setStatus("", StatusBar.OK);
-            MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
-            msgBox.setMessage(String.format(I18N.getMsgCreateDirProjectExist(), number));
-            msgBox.setText(I18N.getMsgBoxTitleWarning());
-            msgBox.open();
-        }
-
-        return success;
-
-    }
-
-    /**
-     * Initialize all the GUI of the generator widget.
-     */
     private void initUI() {
 
         // golden rectangle cut with an aspect ratio of 1.618:1
@@ -288,7 +132,6 @@ public class GeneratorWidget {
         data.right = new FormAttachment(50, 155);
         groupInputField.setLayoutData(data);
 
-
         // description for the input field as text on a label
         Group groupDescription = new Group(innerShell, SWT.NONE);
         groupDescription.setText(I18N.getGroupTitleNumberInputAdvice());
@@ -308,7 +151,16 @@ public class GeneratorWidget {
         data.bottom = new FormAttachment(75, -25);
         groupDescription.setLayoutData(data);
 
+        createBottomButtons();
 
+        innerShell.setLocation(ShellCenter.centeredShellLocation(innerShell));
+
+        Main.setSubShellStatus(true);
+
+        innerShell.open();
+    }
+
+    private void createBottomButtons() {
         Button btnSettings = new Button(innerShell, SWT.NONE);
         btnSettings.setText(I18N.getBtnSettingsLabel());
         btnSettings.setToolTipText(I18N.getBtnSettingsLabelToolTip());
@@ -371,14 +223,123 @@ public class GeneratorWidget {
         dataOkAndExit.bottom = new FormAttachment(100, -5);
         dataOkAndExit.right = new FormAttachment(100, -5);
         btnOKAndExit.setLayoutData(dataOkAndExit);
+    }
 
+    private void actionBtnCancel() {
+        Main.setSubShellStatus(false);
+        Main.statusBar.setStatus("", StatusBar.OK);
+        innerShell.dispose();
+    }
 
-        ShellCenter shellCenter = new ShellCenter(innerShell);
-        innerShell.setLocation(shellCenter.centeredShellLocation());
+    private int actionBtnOk() {
+        String number = inputNumber.getText();
 
-        Main.setSubShellStatus(true);
+        if (number.trim().equals("")) {
+            MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
+            msgBox.setMessage(I18N.getMsgEmptyTextFieldWarning());
+            msgBox.setText(I18N.getMsgEmptyTextFieldWarningJobNumber());
+            msgBox.open();
 
-        innerShell.open();
+            return 0;
+        } else {
+            if (generateFolders(number)) {
+                Main.statusBar.setStatus(String.format(I18N.getStatusJobAndProjectGenerated(), number, number), StatusBar.OK);
+            }
+
+            return 1;
+        }
+    }
+
+    private void actionBtnOkAndExit() {
+        switch (actionBtnOk()) {
+            case 0:
+
+                break;
+            case 1:
+                Main.setSubShellStatus(false);
+                Main.statusBar.setStatus("", StatusBar.OK);
+
+                innerShell.dispose();
+                break;
+        }
+    }
+
+    private void actionBtnSettings() {
+        new GeneratorSettingsWidget(innerShell);
+    }
+
+    private boolean generateFolders(String number) {
+        boolean success = false;
+
+        String jobDir = Main.pref.getUserPref(PreferenceHandler.DIR_JOBS);
+        String jobDirTemplate = Main.pref.getUserPref(PreferenceHandler.DIR_JOBS_TEMPLATE);
+
+        String projectDir = Main.pref.getUserPref(PreferenceHandler.DIR_PROJECTS);
+        String projectDirTemplate = Main.pref.getUserPref(PreferenceHandler.DIR_PROJECTS_TEMPLATE);
+
+        File jobExistTest = new File(jobDir + File.separator + number);
+        File projectExistsTest = new File(projectDir + File.separator + number);
+
+        if (!jobExistTest.exists() && !projectExistsTest.exists()) {
+
+            /* maybe later on with java 8 support in the office
+            Path copySourcePathJob = Paths.get(jobDirTemplate);
+            Path copySourcePathProject = Paths.get(projectDirTemplate);
+
+            Path copyDestinationPathJob = Paths.get(jobDir + File.separator + number);
+            Path copyDestinationPathProject = Paths.get(projectDir + File.separator + number);
+            */
+
+            File copySourcePathJob = new File(jobDirTemplate);
+            File copySourcePathProject = new File(projectDirTemplate);
+
+            File copyDestinationPathJob = new File(jobDir + File.separator + number);
+            File copyDestinationPathProject = new File(projectDir + File.separator + number);
+
+            try {
+                //Files.copy(copySourcePathJob, copyDestinationPathJob);
+                //Files.copy(copySourcePathProject, copyDestinationPathProject);
+
+                FileUtils fileUtils = new FileUtils();
+                fileUtils.copy(copySourcePathJob, copyDestinationPathJob);
+                fileUtils.copy(copySourcePathProject, copyDestinationPathProject);
+
+                MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_INFORMATION);
+                msgBox.setMessage(String.format(I18N.getMsgCreateDirJobAndProjectGenerated(), number, number));
+                msgBox.setText(I18N.getMsgBoxTitleSuccess());
+                msgBox.open();
+                success = true;
+            } catch (IOException e) {
+                System.err.println(e.getMessage());
+
+                MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_ERROR);
+                msgBox.setMessage(I18N.getMsgCreateDirJobAndProjectWarning());
+                msgBox.setText(I18N.getMsgBoxTitleError());
+                msgBox.open();
+                success = false;
+            }
+
+        } else if (jobExistTest.exists() && projectExistsTest.exists()) {
+            Main.statusBar.setStatus("", StatusBar.OK);
+            MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
+            msgBox.setMessage(String.format(I18N.getMsgCreateDirJobAndProjectExist(), number, number));
+            msgBox.setText(I18N.getMsgBoxTitleWarning());
+            msgBox.open();
+        } else if (jobExistTest.exists() && !projectExistsTest.exists()) {
+            Main.statusBar.setStatus("", StatusBar.OK);
+            MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
+            msgBox.setMessage(String.format(I18N.getMsgCreateDirJobExist(), number));
+            msgBox.setText(I18N.getMsgBoxTitleWarning());
+            msgBox.open();
+        } else if (!jobExistTest.exists() && projectExistsTest.exists()) {
+            Main.statusBar.setStatus("", StatusBar.OK);
+            MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
+            msgBox.setMessage(String.format(I18N.getMsgCreateDirProjectExist(), number));
+            msgBox.setText(I18N.getMsgBoxTitleWarning());
+            msgBox.open();
+        }
+
+        return success;
     }
 
 }  // end of GeneratorWidget

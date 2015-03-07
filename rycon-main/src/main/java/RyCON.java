@@ -31,6 +31,7 @@ import de.ryanthara.ja.rycon.gui.MainApplication;
  * running, RyCON uses no functions of java version 8 in versions lower than 2.
  *
  * @author sebastian
+ * @version 1
  * @since 1
  */
 public class RyCON extends MainApplication {} // end of RyCON

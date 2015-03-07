@@ -66,26 +66,36 @@
                     </execution>
                 </executions>
             </plugin>
-
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <descriptors>
-                        <descriptor>${basedir}/src/main/assembly/macosx.xml</descriptor>
-                    </descriptors>
-                    <finalName>RyCON_MacOSX64.app</finalName>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
+
+    <!-- Use a profile for the maven-assembly-plugin to build the app of RyCON -->
+    <profiles>
+        <profile>
+            <id>rycon</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>single</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>${basedir}/src/main/assembly/macosx.xml</descriptor>
+                            </descriptors>
+                            <finalName>RyCON_MacOSX64.app</finalName>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <!-- dependencies -->
     <dependencies>

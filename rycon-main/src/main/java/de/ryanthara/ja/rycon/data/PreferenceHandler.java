@@ -36,21 +36,19 @@ import java.util.prefs.Preferences;
  *
  * <h3>Changes:</h3>
  * <ul>
+ *     <li>4: code improvements and clean up</li>
  *     <li>3: change from properties file to Java Preferences API
  *     <li>2: add a couple of parameters
  *     <li>1: basic implementation
  * </ul>
  *
  * @author sebastian
- * @version 3
+ * @version 4
  * @since 1
  */
 public class PreferenceHandler {
 
-    /**
-     * Member that holds the user preference keys for RyCON.
-     * @since 3
-     */
+    private boolean isDefaultSettingsGenerated = false;
     private Preferences userPreferences;
 
     /**
@@ -58,7 +56,7 @@ public class PreferenceHandler {
      * @since 3
      */
     public final static String BUILD_VERSION = "build_version";
-    
+
     /**
      * Member for the preference key of the base directory value.
      * @since 3
@@ -88,7 +86,7 @@ public class PreferenceHandler {
      * @since 3
      */
     public final static String DIR_PROJECTS_TEMPLATE = "dir_projects_template";
-    
+
     /**
      * Member for the preference key of the generator value.
      * @since 3
@@ -112,7 +110,7 @@ public class PreferenceHandler {
      * @since 3
      */
     public final static String PARAM_FREE_STATION_STRING = "param_free_station_string";
-    
+
     /**
      * Member for the preference key for the free station identifier string.
      * @since 3
@@ -126,15 +124,9 @@ public class PreferenceHandler {
     public final static String USER_LAST_USED_DIR = "user_last_used_dir";
 
     /**
-     * Member that is used for indicating the generation of default settings.
-     */
-    private boolean isDefaultSettingsGenerated = false;
-
-    /**
      * Class constructor which initializes the configuration handling.
      */
     public PreferenceHandler() {
-
         userPreferences = Preferences.userRoot().node("/de/ryanthara/rycon");
         
         if (userPreferences.get(PreferenceHandler.GENERATOR, "").equals(Main.getRyCONAppName())) {
@@ -144,7 +136,6 @@ public class PreferenceHandler {
             createDefaultSettings();
             isDefaultSettingsGenerated = true;
         }
-
     }
 
     /**
@@ -207,7 +198,6 @@ public class PreferenceHandler {
         userPreferences.put(USER_LAST_USED_DIR, System.getProperty("user.home"));
         
         isDefaultSettingsGenerated = true;
-
     }
 
     /**

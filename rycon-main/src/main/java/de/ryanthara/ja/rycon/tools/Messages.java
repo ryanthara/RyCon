@@ -26,21 +26,20 @@ import java.util.ResourceBundle;
  * <p>
  * The strings are stored in Resource Bundle RyCON and loaded from this class.
  *
+ * <h3>Changes:</h3>
+ * <ul>
+ *     <li>2: code improvements and clean up</li>
+ *     <li>1: basic implementation
+ * </ul>
+ *
  * @author sebastian
- * @version 1
+ * @version 2
  * @since 1
  *
  */
 public class Messages {
 
-    /**
-     * Name of the resource bundle.
-     */
     private static final String BUNDLE_NAME = "de/ryanthara/ja/rycon/gui/RyCON";
-
-    /**
-     * Look up for the matching resource bundle for a language.
-     */
     private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 
     /**

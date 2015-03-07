@@ -20,7 +20,9 @@ package de.ryanthara.ja.rycon.tools;
 
 import de.ryanthara.ja.rycon.Main;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Scanner;
 
@@ -28,30 +30,25 @@ import java.util.Scanner;
  * This class holds all the update functionality for RyCON.
  * <p>
  * This class checks the RyCON website (URL 'http://code.ryanthar.de/RyCON') for a new version.
- * 
- * @version 1
+ *
+ * <h3>Changes:</h3>
+ * <ul>
+ *     <li>2: basic improvements
+ *     <li>1: basic implementation
+ * </ul>
+ *
+ * @author sebastian
+ * @version 2
  * @since 3
- * Created by sebastian on 23.02.15.
  */
 public class Updater {
 
-    /**
-     * Member that indicates an avaible update.
-     */
     private boolean updateAvailable = false;
 
     /**
-     * Member that holds the update URL as String.
+     * Class constructor without a parameter.
      */
-    private final String url;
-
-    /**
-     * Class constructor with the update URL as parameter.
-     *
-     * @param url URL as String
-     */
-    public Updater(String url) {
-        this.url = url;
+    public Updater() {
     }
 
     /**
@@ -63,7 +60,7 @@ public class Updater {
         boolean success = false;
 
         try {
-            URL updateUrl = new URL(url);
+            URL updateUrl = new URL(Main.RyCON_UPDATE_URL);
 
             Scanner scanner = new Scanner(updateUrl.openStream());
             
@@ -83,10 +80,38 @@ public class Updater {
             }
             
         } catch (IOException e) {
+            System.err.println("checkForUpdate() failed");
             e.printStackTrace();
         }
 
         return success;
+    }
+
+    /**
+     * Picks the latest news from the RyCON website.
+     *
+     * @return latest news from the update site
+     */
+    public String getWhatsNew() {
+        
+        StringBuilder builder = new StringBuilder();
+        
+        try {
+            URL whatsNewURL = new URL(Main.RyCON_WHATS_NEW_URL);
+            BufferedReader in = new BufferedReader(new InputStreamReader(whatsNewURL.openStream()));
+
+            String inputLine;
+            while ((inputLine = in.readLine()) != null) {
+                builder.append(inputLine);
+            }
+            in.close();
+
+        } catch (IOException e) {
+            System.err.println("getWhatsNew() failed");
+            e.printStackTrace();
+        }
+
+        return builder.toString();
     }
 
     /**

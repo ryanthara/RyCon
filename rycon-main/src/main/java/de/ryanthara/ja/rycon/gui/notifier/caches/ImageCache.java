@@ -32,21 +32,25 @@ import java.util.Iterator;
  * <p>
  * The implementation is inspired by an article on <a href="http://hexapixel.com/2009/06/30/creating-a-notification-popup-widget">hexapixel.com</a>
  *
+ * <h3>Changes:</h3>
+ * <ul>
+ *     <li>2: code improvements and clean up</li>
+ *     <li>1: basic implementation
+ * </ul>
+ *
  * @author sebastian
+ * @version 2
  * @since 2
- * @version 1
  */
 public class ImageCache {
 
-    /**
-     * Member for the root path of the icon folder.
-     */
+    private static HashMap<String, Image> imageMap = new HashMap<String, Image>();
     private static final String IMAGE_ROOT_PATH = "/de/ryanthara/ja/rycon/gui/icons/";
 
-    /**
-     * Member that holds the {@code Image} objects with a {@code String} key.
-     */
-    private static HashMap<String, Image> imageMap = new HashMap<String, Image>();
+    private static Image createImage(String fileName) {
+        // TODO the original functionality was implemented with a Classloader and images in a jar file
+        return new ImageConverter().convertToImage(Main.shell.getDisplay(), fileName);
+    }
 
     /**
      * Returns the image.
@@ -58,7 +62,6 @@ public class ImageCache {
      * @return the image as {@code Image} object
      */
     public static Image getImage(String fileName) {
-
         fileName = IMAGE_ROOT_PATH.concat(fileName);
 
         // try to get the image from the HashMap
@@ -70,21 +73,6 @@ public class ImageCache {
         }
 
         return image;
-
-    }
-
-    /**
-     * Creates the image.
-     *
-     * @param fileName filename of the image
-     * @return the image as {@code Image}
-     */
-    private static Image createImage(String fileName) {
-
-        // TODO the original functionality was implemented with a Classloader and images in a jar file
-
-        return new ImageConverter().convertToImage(Main.shell.getDisplay(), fileName);
-
     }
 
     /**
@@ -93,13 +81,11 @@ public class ImageCache {
      * This is necessary because of memory usage. See this <a href="http://www.eclipse.org/articles/swt-design-2/swt-design-2.html">article</a>.
      */
     public static void dispose() {
-
         Iterator<Image> iterator = imageMap.values().iterator();
 
         while (iterator.hasNext()) {
             iterator.next().dispose();
         }
-
     }
 
 } // end of ImageCache

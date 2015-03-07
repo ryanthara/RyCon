@@ -28,25 +28,17 @@ import org.eclipse.swt.widgets.Shell;
  * <p>
  * This is done because of there is no simple method in SWT.
  *
+ * <h3>Changes:</h3>
+ * <ul>
+ *     <li>2: code improvements and clean up</li>
+ *     <li>1: basic implementation
+ * </ul>
+ *
  * @author sebastian
- * @version 1
+ * @version 2
  * @since 1
  */
 public class ShellCenter {
-
-    /**
-     * Member for the shell.
-     */
-    private Shell shell = null;
-
-    /**
-     * Class constructor with parameter for the parent shell of the widget that has to be centered.
-     *
-     * @param parent shell of the calling widget
-     */
-    public ShellCenter(Shell parent) {
-        this.shell = parent;
-    }
 
     /**
      * Calculates the centered shell location and returns it als <code>Point</code> object.
@@ -57,11 +49,11 @@ public class ShellCenter {
      *
      * @return centered shell location
      */
-    public Point centeredShellLocation() {
+    public static Point centeredShellLocation(Shell parent) {
         // center the shell on the primary monitor
-        Monitor primary = shell.getDisplay().getPrimaryMonitor();
+        Monitor primary = parent.getDisplay().getPrimaryMonitor();
         Rectangle bounds = primary.getBounds();
-        Rectangle rect = shell.getBounds();
+        Rectangle rect = parent.getBounds();
 
         int x = bounds.x + (bounds.width - rect.width) / 2;
         int y = bounds.y + (bounds.height - rect.height) / 2;

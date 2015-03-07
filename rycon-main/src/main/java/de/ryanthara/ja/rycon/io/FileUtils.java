@@ -26,14 +26,20 @@ import java.io.*;
  * Because of the fact that there are a lot of user who has java version 6 or 7
  * running, RyCON uses no functions of java version 8 in versions lower than 2.
  *
+ * <h3>Changes:</h3>
+ * <ul>
+ *     <li>2: code improvements and clean up</li>
+ *     <li>1: basic implementation
+ * </ul>
+ *
  * @author sebastian
- * @version 1
+ * @version 2
  * @since 1
  */
 public class FileUtils {
 
     /**
-     * Class Constructor without parameters.
+     * Class Constructor.
      */
     public FileUtils() {
     }
@@ -49,58 +55,30 @@ public class FileUtils {
      * @throws IOException copying failed
      */
     public void copy(File sourceLocation, File targetLocation) throws IOException {
-
         if (sourceLocation.isDirectory()) {
             copyDirectory(sourceLocation, targetLocation);
         } else {
             copyFile(sourceLocation, targetLocation);
         }
-
     }
 
-    /**
-     * Internal method which copies folders and containing files.
-     * <p>
-     * Internally there is a recursion used to copy the folders and the containing content.
-     *
-     * @param source source directory to be copied
-     * @param target target directory to be copied
-     * @throws IOException copying directory failed
-     */
     private void copyDirectory(File source, File target) throws IOException {
-
-        //if directory not exists, create it
         if (!target.exists()) {
             if (!target.mkdir()) {
                 System.err.println("copying dirs and files failed. Directory couldn't be created.");
             }
         }
 
-        //list all the directory contents
         String files[] = source.list();
 
         for (String file : files) {
-            //construct the source and target file structure
             File sourceFile = new File(source, file);
             File targetFile = new File(target, file);
-            //recursive copy
             copy(sourceFile, targetFile);
         }
-
     }
 
-    /**
-     * Internal method which copies a file bit by bit.
-     * <p>
-     * In most cases the folders contains only less empty folders and a couple of small files.
-     * Maybe in a later version of RyCON there will be other methods used.
-     *
-     * @param source source file to be copied
-     * @param target target file to be copied
-     * @throws IOException copying file failed
-     */
     private void copyFile(File source, File target) throws IOException {
-
         InputStream in = new InputStream() {
             @Override
             public int read() throws IOException {
@@ -113,8 +91,6 @@ public class FileUtils {
         };
 
         try {
-            // if file, then copy it
-            // use bytes stream to support all file types
             in = new FileInputStream(source);
             out = new FileOutputStream(target);
 
@@ -122,16 +98,13 @@ public class FileUtils {
 
             int length;
 
-            //copy the file content in bytes
             while ((length = in.read(buffer)) > 0) {
                 out.write(buffer, 0, length);
             }
         } finally {
-            // force closing the in and out streams
             in.close();
             out.close();
         }
-
     }
 
 } // end of FileUtils

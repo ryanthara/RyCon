@@ -32,31 +32,22 @@ import java.util.ArrayList;
  * The demo and open source version of RyCON will be limited to read only 20 lines
  * and show a notification window always on top.
  *
+ * <h3>Changes:</h3>
+ * <ul>
+ *     <li>2: code improvements and clean up</li>
+ *     <li>1: basic implementation
+ * </ul>
+ *
  * @author sebastian
- * @version 1
+ * @version 2
  * @since 1
  */
 public class LineReader {
 
-    /**
-     * Member for the file name as file object.
-     */
-    private final File file;
-
-    /**
-     * Member for count the number of read lines.
-     */
     private int countReadLines = -1;
-
-    /**
-     * Member for count the number of stored lines.
-     */
     private int countStoredLines = -1;
-
-    /**
-     * Member for storing the read lines.
-     */
     private ArrayList<String> lines = null;
+    private final File file;
 
     /**
      * Class constructor with parameter that accept a file object for the file to read.
@@ -128,7 +119,7 @@ public class LineReader {
         String line;
 
         // check file for a couple of things
-        //  null-reference       directory or file       file                   can be read
+        //  null-reference       directory or file      file                   can be read
         if (this.file == null || !this.file.exists() || !this.file.isFile() || !this.file.canRead()) {
             return false;
         } else {
@@ -192,9 +183,7 @@ public class LineReader {
             }
 
             return success;
-
         }
-
     }
 
 } // end of LineReader

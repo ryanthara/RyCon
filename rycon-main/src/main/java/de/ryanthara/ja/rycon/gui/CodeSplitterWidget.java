@@ -50,41 +50,25 @@ import java.util.Iterator;
  *     <li>text files with code (format no, code, x, y, z)
  * </ul>
  *
+ * <h3>Changes:</h3>
+ * <ul>
+ *     <li>3: code improvements and clean up</li>
+ *     <li>2: basic improvements
+ *     <li>1: basic implementation
+ * </ul>
+ *
  * @author sebastian
- * @version 2
+ * @version 3
  * @since 1
  */
 public class CodeSplitterWidget {
 
-    /**
-     * Member for the destination text field.
-     */
-    private Text destinationTextField;
-
-    /**
-     * Member for the inner Shell object.
-     */
-    private Shell innerShell = null;
-
-    /**
-     * Member for the source text field.
-     */
-    private Text sourceTextField;
-
-    /**
-     * Member for the files to read.
-     */
-    private File[] files2read;
-
-    /**
-     * Member for the checkbox which controls the drop code function.
-     */
-    private Button chkBoxDropCodeBlock;
-
-    /**
-     * Member for the checkbox which controls the option of writing a split file for code '0'.
-     */
     private Button chkBoxWriteCodeZero;
+    private Button chkBoxDropCodeBlock;
+    private File[] files2read;
+    private Shell innerShell = null;
+    private Text destinationTextField;
+    private Text sourceTextField;
 
     /**
      * Class constructor without parameters.
@@ -95,160 +79,51 @@ public class CodeSplitterWidget {
         initUI();
     }
 
-    /**
-     * Does all the things when hitting the cancel button.
-     */
-    private void actionBtnCancel() {
-        Main.setSubShellStatus(false);
+    private void initUI() {
+        // golden rectangle cut with an aspect ratio of 1.618:1
+        int height = Main.getRyCONWidgetHeight();
+        int width = Main.getRyCONWidgetWidth();
 
-        Main.statusBar.setStatus("", StatusBar.OK);
+        innerShell = new Shell(Main.shell, SWT.CLOSE | SWT.DIALOG_TRIM | SWT.MAX | SWT.TITLE | SWT.APPLICATION_MODAL);
 
-        innerShell.dispose();
-    }
-
-    /**
-     * Does all the things when hitting the button to choose a destination path.
-     * <p>
-     * Normally the user wants to store the split file in the same directory where
-     * the source file was stored. Because of this, the path is set by the result
-     * path of source path.
-     */
-    private void actionBtnDestination() {
-
-        DirectoryDialog directoryDialog = new DirectoryDialog(innerShell);
-
-        directoryDialog.setText(I18N.getFileChooserDirBaseTitle());
-
-        directoryDialog.setMessage(I18N.getFileChooserDirBaseMessage());
-
-        // Set the initial filter path according to anything selected or typed in
-        if (destinationTextField.getText() == null) {
-            directoryDialog.setFilterPath(Main.pref.getUserPref(PreferenceHandler.DIR_BASE));
-        } else {
-            directoryDialog.setFilterPath(destinationTextField.getText());
-        }
-
-        String path = directoryDialog.open();
-
-        if (path != null) {
-
-            File checkDirDestination = new File(path);
-            if (!checkDirDestination.exists()) {
-                MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
-                msgBox.setMessage(I18N.getMsgDirDestinationNotExistWarning());
-                msgBox.setText(I18N.getMsgBoxTitleWarning());
-                msgBox.open();
-            } else {
-                destinationTextField.setText(path);
+        innerShell.addListener(SWT.Close, new Listener() {
+            public void handleEvent(Event event) {
+                actionBtnCancel();
             }
+        });
 
-        }
+        innerShell.setText(I18N.getWidgetTitleSplitter());
+        innerShell.setSize(width, height);
 
+        GridLayout gridLayout = new GridLayout(1, true);
+        gridLayout.marginHeight = 5;
+        gridLayout.marginWidth = 5;
+
+        innerShell.setLayout(gridLayout);
+
+        GridData gridData = new GridData(SWT.FILL, SWT.CENTER, true, true);
+        gridData.heightHint = height;
+        gridData.widthHint = width;
+        innerShell.setLayoutData(gridData);
+
+        createGroupInputFields(width);
+        createCheckBoxes();
+        createDescription(width);
+        createBottomButtons();
+
+        innerShell.setLocation(ShellCenter.centeredShellLocation(innerShell));
+
+        Main.setSubShellStatus(true);
+
+        innerShell.pack();
+        innerShell.open();
     }
 
-    /**
-     * Does all the things when hitting the OK button.
-     *
-     * @return int value for the 'OK and exit' button handling
-     * @since 3
-     */
-    private int actionBtnOk() {
-
-        String source = sourceTextField.getText();
-        String destination = destinationTextField.getText();
-
-        if (source.trim().equals("") || (destination.trim().equals(""))) {
-            MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
-            msgBox.setMessage(I18N.getMsgEmptyTextFieldWarning());
-            msgBox.setText(I18N.getMsgBoxTitleWarning());
-            msgBox.open();
-
-            return 0;
-        } else {
-            if (processFileOperations()) {
-
-                // use counter to display different text on the status bar
-                if (Main.countFileOps == 1) {
-                    Main.statusBar.setStatus(String.format(I18N.getStatusCodeSplitSuccess(Main.TEXT_SINGULAR), Main.countFileOps), StatusBar.OK);
-                } else {
-                    Main.statusBar.setStatus(String.format(I18N.getStatusCodeSplitSuccess(Main.TEXT_PLURAL), Main.countFileOps), StatusBar.OK);
-                }
-
-            }
-
-            return 1;
-        }
-
-    }
-
-    /**
-     * Does all the things when hitting the 'OK and exit' button.
-     * <p>
-     * This button uses the {@code actionBtnOk} method inside.
-     */
-    private void actionBtnOkAndExit() {
-        
-        switch (actionBtnOk()) {
-            case 0:
-
-                break;
-            case 1:
-                Main.setSubShellStatus(false);
-                Main.statusBar.setStatus("", StatusBar.OK);
-
-                innerShell.dispose();
-                break;
-        }
-        
-    }
-
-    /**
-     * Does all the things when hitting the choose source button.
-     */
-    private void actionBtnSource() {
-
-        FileDialog fileDialog = new FileDialog(innerShell, SWT.MULTI);
-        fileDialog.setFilterPath(Main.pref.getUserPref(PreferenceHandler.DIR_PROJECTS));
-        fileDialog.setText(I18N.getFileChooserSplitterSourceText());
-        fileDialog.setFilterExtensions(new String[]{"*.gsi", "*.txt"});
-        fileDialog.setFilterNames(new String[]{I18N.getFileChooserFilterNameGSI(), I18N.getFileChooserFilterNameTXT()});
-
-        String firstFile = fileDialog.open();
-
-        if (firstFile != null) {
-            String[] files = fileDialog.getFileNames();
-
-            files2read = new File[files.length];
-
-            // hack for displaying file names without path in text field
-            String concatString = "";
-
-            String workingDir = fileDialog.getFilterPath();
-
-            //for (String element : files) {
-            for (int i = 0; i < files.length; i++) {
-                concatString = concatString.concat(files[i]);
-                concatString = concatString.concat(" ");
-
-                files2read[i] = new File(workingDir + File.separator + files[i]);
-            }
-
-            destinationTextField.setText(fileDialog.getFilterPath());
-            sourceTextField.setText(concatString);
-        }
-
-    }
-
-    /**
-     * Create the group with the input fields and all its functionality.
-     *
-     * @param width width of the group
-     */
     private void createGroupInputFields(int width) {
 
         GridLayout gridLayout;
         GridData gridData;
-        
+
         Group groupInputFields = new Group(innerShell, SWT.NONE);
         groupInputFields.setText(I18N.getGroupTitlePathSelection());
 
@@ -345,41 +220,7 @@ public class CodeSplitterWidget {
 
     }
 
-    /**
-     * Initializes all the gui of the code splitter widget.
-     * <p>
-     * Some of the code is in sub methods for a cleaner code design.
-     */
-    private void initUI() {
-
-        // golden rectangle cut with an aspect ratio of 1.618:1
-        int height = Main.getRyCONWidgetHeight();
-        int width = Main.getRyCONWidgetWidth();
-
-        innerShell = new Shell(Main.shell, SWT.CLOSE | SWT.DIALOG_TRIM | SWT.MAX | SWT.TITLE | SWT.APPLICATION_MODAL);
-
-        innerShell.addListener(SWT.Close, new Listener() {
-            public void handleEvent(Event event) {
-                actionBtnCancel();
-            }
-        });
-
-        innerShell.setText(I18N.getWidgetTitleSplitter());
-        innerShell.setSize(width, height);
-
-        GridLayout gridLayout = new GridLayout(1, true);
-        gridLayout.marginHeight = 5;
-        gridLayout.marginWidth = 5;
-
-        innerShell.setLayout(gridLayout);
-
-        GridData gridData = new GridData(SWT.FILL, SWT.CENTER, true, true);
-        gridData.heightHint = height;
-        gridData.widthHint = width;
-        innerShell.setLayoutData(gridData);
-
-        createGroupInputFields(width);
-
+    private void createCheckBoxes() {
         chkBoxDropCodeBlock = new Button(innerShell, SWT.CHECK);
         chkBoxDropCodeBlock.setSelection(false);
         chkBoxDropCodeBlock.setText(I18N.getBtnChkSplitterIgnoreCodeColumn());
@@ -387,24 +228,25 @@ public class CodeSplitterWidget {
         chkBoxWriteCodeZero = new Button(innerShell, SWT.CHECK);
         chkBoxWriteCodeZero.setSelection(false);
         chkBoxWriteCodeZero.setText(I18N.getBtnChkSplitterWriteCodeZero());
+    }
 
-
-        // description for the splitter field as text on a label
+    private void createDescription(int width) {
         Group groupDescription = new Group(innerShell, SWT.NONE);
         groupDescription.setText(I18N.getGroupTitleNumberInputAdvice());
 
-        gridLayout = new GridLayout(1, true);
+        GridLayout gridLayout = new GridLayout(1, true);
         groupDescription.setLayout(gridLayout);
 
-        gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
+        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
         gridData.widthHint = width - 24;
         groupDescription.setLayoutData(gridData);
-
 
         Label tip = new Label(groupDescription, SWT.WRAP | SWT.BORDER | SWT.LEFT);
         tip.setLayoutData(new GridData(SWT.HORIZONTAL, SWT.TOP, true, false, 1, 1));
         tip.setText(String.format(I18N.getLabelTipSplitterWidget()));
+    }
 
+    private void createBottomButtons() {
         Composite compositeBottomBtns = new Composite(innerShell, SWT.NONE);
         compositeBottomBtns.setLayout(new FillLayout());
 
@@ -439,27 +281,121 @@ public class CodeSplitterWidget {
             }
         });
 
-        gridData = new GridData(SWT.END, SWT.END, false, true);
+        GridData gridData = new GridData(SWT.END, SWT.END, false, true);
         compositeBottomBtns.setLayoutData(gridData);
-
-
-        ShellCenter shellCenter = new ShellCenter(innerShell);
-        innerShell.setLocation(shellCenter.centeredShellLocation());
-
-        Main.setSubShellStatus(true);
-
-        innerShell.pack();
-        innerShell.open();
-
     }
 
-    /**
-     * Process all the operations on the chosen split files.
-     *
-     * @return success
-     */
-    private boolean processFileOperations() {
+    private void actionBtnCancel() {
+        Main.setSubShellStatus(false);
+        Main.statusBar.setStatus("", StatusBar.OK);
+        innerShell.dispose();
+    }
 
+    private void actionBtnDestination() {
+        DirectoryDialog directoryDialog = new DirectoryDialog(innerShell);
+        directoryDialog.setText(I18N.getFileChooserDirBaseTitle());
+        directoryDialog.setMessage(I18N.getFileChooserDirBaseMessage());
+
+        // Set the initial filter path according to anything selected or typed in
+        if (destinationTextField.getText() == null) {
+            directoryDialog.setFilterPath(Main.pref.getUserPref(PreferenceHandler.DIR_BASE));
+        } else {
+            directoryDialog.setFilterPath(destinationTextField.getText());
+        }
+
+        String path = directoryDialog.open();
+
+        if (path != null) {
+
+            File checkDirDestination = new File(path);
+            if (!checkDirDestination.exists()) {
+                MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
+                msgBox.setMessage(I18N.getMsgDirDestinationNotExistWarning());
+                msgBox.setText(I18N.getMsgBoxTitleWarning());
+                msgBox.open();
+            } else {
+                destinationTextField.setText(path);
+            }
+
+        }
+    }
+
+    // TODO implement functional check
+    private int actionBtnOk() {
+        String source = sourceTextField.getText();
+        String destination = destinationTextField.getText();
+
+        if (source.trim().equals("") || (destination.trim().equals(""))) {
+            MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
+            msgBox.setMessage(I18N.getMsgEmptyTextFieldWarning());
+            msgBox.setText(I18N.getMsgBoxTitleWarning());
+            msgBox.open();
+
+            return 0;
+        } else {
+            if (processFileOperations()) {
+
+                // use counter to display different text on the status bar
+                if (Main.countFileOps == 1) {
+                    Main.statusBar.setStatus(String.format(I18N.getStatusCodeSplitSuccess(Main.TEXT_SINGULAR), Main.countFileOps), StatusBar.OK);
+                } else {
+                    Main.statusBar.setStatus(String.format(I18N.getStatusCodeSplitSuccess(Main.TEXT_PLURAL), Main.countFileOps), StatusBar.OK);
+                }
+
+            }
+
+            return 1;
+        }
+    }
+
+    private void actionBtnOkAndExit() {
+        switch (actionBtnOk()) {
+            case 0:
+
+                break;
+            case 1:
+                Main.setSubShellStatus(false);
+                Main.statusBar.setStatus("", StatusBar.OK);
+
+                innerShell.dispose();
+                break;
+        }
+    }
+
+    private void actionBtnSource() {
+        FileDialog fileDialog = new FileDialog(innerShell, SWT.MULTI);
+        fileDialog.setFilterPath(Main.pref.getUserPref(PreferenceHandler.DIR_PROJECTS));
+        fileDialog.setText(I18N.getFileChooserSplitterSourceText());
+        fileDialog.setFilterExtensions(new String[]{"*.gsi", "*.txt"});
+        fileDialog.setFilterNames(new String[]{I18N.getFileChooserFilterNameGSI(), I18N.getFileChooserFilterNameTXT()});
+
+        String firstFile = fileDialog.open();
+
+        if (firstFile != null) {
+            String[] files = fileDialog.getFileNames();
+
+            files2read = new File[files.length];
+
+            // hack for displaying file names without path in text field
+            String concatString = "";
+
+            String workingDir = fileDialog.getFilterPath();
+
+            //for (String element : files) {
+            for (int i = 0; i < files.length; i++) {
+                concatString = concatString.concat(files[i]);
+                concatString = concatString.concat(" ");
+
+                files2read[i] = new File(workingDir + File.separator + files[i]);
+            }
+
+            destinationTextField.setText(fileDialog.getFilterPath());
+            sourceTextField.setText(concatString);
+        }
+    }
+
+    // TODO implement functional check
+    private boolean processFileOperations() {
         boolean success = false;
 
         // checks for text field inputs and valid directories
@@ -551,7 +487,6 @@ public class CodeSplitterWidget {
         }
 
         return success;
-
     }
 
 } // end of CodeSplitterWidget

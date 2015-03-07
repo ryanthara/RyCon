@@ -34,25 +34,23 @@ import org.eclipse.swt.graphics.Image;
  * <p>
  * The implementation is inspired by an article on <a href="http://hexapixel.com/2009/06/30/creating-a-notification-popup-widget">hexapixel.com</a>
  *
+ * <h3>Changes:</h3>
+ * <ul>
+ *     <li>2: code improvements and clean up</li>
+ *     <li>1: basic implementation
+ * </ul>
+ *
  * @author sebastian
+ * @version 2
  * @since 2
- * @version 1
  */
 public enum NotificationType {
 
     LOCKED(ImageCache.getImage("locked.png")),
     UNLOCKED(ImageCache.getImage("unlocked.png"));
 
-    /**
-     * Member for storing the image.
-     */
     private final Image image;
 
-    /**
-     * Class constructor with parameter.
-     *
-     * @param image reference to an image
-     */
     private NotificationType(Image image) {
         this.image = image;
     }

@@ -27,21 +27,20 @@ import java.util.ArrayList;
  * A couple of things are implemented as additional functionality. At the moment,
  * there is no thread safety implemented or planed.
  *
+ * <h3>Changes:</h3>
+ * <ul>
+ *     <li>2: code improvements and clean up</li>
+ *     <li>1: basic implementation
+ * </ul>
+ *
  * @author sebastian
- * @version 1
+ * @version 2
  * @since 1
  */
 public class LineWriter {
 
-    /**
-     * Member for storing the file object to write in.
-     */
-    private final File file;
-
-    /**
-     * Member for storing the number of written lines.
-     */
     private int writtenLines = -1;
+    private final File file;
 
     /**
      * @param fileName filename as {@code String}

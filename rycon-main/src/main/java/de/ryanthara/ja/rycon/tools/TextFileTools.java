@@ -25,26 +25,22 @@ import java.util.*;
  * Therefore a couple of methods and helpers are implemented to do the conversions and
  * operations on the given text files.
  *
+ * <h3>Changes:</h3>
+ * <ul>
+ *     <li>3: code improvements and clean up</li>
+ *     <li>2: basic improvements
+ *     <li>1: basic implementation
+ * </ul>
+ *
  * @author sebastian
- * @version 2
+ * @version 3
  * @since 1
  */
 public class TextFileTools {
 
-    /**
-     * Member that stores the read lines. The lines are stored as {@code String} in an {@code ArrayList<String>}.
-     */
     private ArrayList<String> arrayList;
-
-    /**
-     * Member that stores the found codes. This is necessary, because of the code is eliminated from the string line.
-     */
-    private TreeSet<Integer> foundCodes = new TreeSet<Integer>();
-
-    /**
-     * Member for the list of read CSV file lines.
-     */
     private List<String[]> list;
+    private TreeSet<Integer> foundCodes = new TreeSet<Integer>();
 
     /**
      * Class Constructor with parameter.
@@ -68,7 +64,6 @@ public class TextFileTools {
         this.list = list;
     }
 
-
     /**
      * Returns the found codes as an integer array.
      * <p>
@@ -90,7 +85,6 @@ public class TextFileTools {
      * @return converted {@code ArrayList<ArrayList<String>>} for writing
      */
     public ArrayList<ArrayList<String>> processCodeSplit(boolean dropCode) {
-
         String newLine;
         StringTokenizer stringTokenizer;
 
@@ -100,7 +94,6 @@ public class TextFileTools {
         ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
 
         for (String line : arrayList) {
-
             stringTokenizer = new StringTokenizer(line);
 
             // a line with code contains 5 tokens (nr, code, y, y, z)
@@ -128,10 +121,8 @@ public class TextFileTools {
 
                 linesWithCode.add(new TextHelper(Integer.parseInt(codeBlock), newLine));
             }
-
         }
 
-        // sorting the ArrayList
         Collections.sort(linesWithCode, new Comparator<TextHelper>() {
             @Override
             public int compare(TextHelper o1, TextHelper o2) {
@@ -148,25 +139,22 @@ public class TextFileTools {
         // helpers for generating a new array for every found code
         // TODO a file without code is not supported
         int code = linesWithCode.get(0).code;
-        ArrayList<String> temp = new ArrayList<String>();
+        ArrayList<String> lineStorage = new ArrayList<String>();
 
         // fill in the sorted textBlocks into an ArrayList<ArrayList<String>> for writing it out
         for (TextHelper textBlock : linesWithCode) {
-
             if (code == textBlock.code) {
-                temp.add(textBlock.block);
+                lineStorage.add(textBlock.block);
             } else {
-                result.add(temp);
-                temp = new ArrayList<String>(); // do not use temp.clear()!!!
-                temp.add(textBlock.block);
+                result.add(lineStorage);
+                lineStorage = new ArrayList<String>(); // do not use temp.clear()!!!
+                lineStorage.add(textBlock.block);
             }
-
             code = textBlock.code;
-
         }
 
         // insert last element
-        result.add(temp);
+        result.add(lineStorage);
 
         return result;
 
@@ -181,11 +169,9 @@ public class TextFileTools {
      * @return converted {@code ArrayList<String>} with lines of text format
      */
     public ArrayList<String> processFormatConversionCSVBaselStadt2TXT(String delimiter) {
-
         ArrayList<String> result = new ArrayList<String>();
 
         for (String[] stringField : list) {
-
             String line;
 
             // point number is in column 1
@@ -206,11 +192,8 @@ public class TextFileTools {
             }
 
             result.add(line.trim());
-
         }
-
         return result;
-
     }
 
     /**
@@ -220,19 +203,15 @@ public class TextFileTools {
      * @return converted TXT file
      */
     public ArrayList<String> processConversionCSV2TXT(String delimiter) {
-
         ArrayList<String> result = new ArrayList<String>();
 
         // convert the List<String[]> into an ArrayList<String> and use known stuff (-:
         for (String[] stringField : list) {
-
             String line = "";
 
             for (String s : stringField) {
-
                 line = line.concat(s);
                 line = line.concat(delimiter);
-
             }
 
             line = line.trim();
@@ -242,11 +221,8 @@ public class TextFileTools {
             if (!line.equals("")) {
                 result.add(line);
             }
-
         }
-
         return result;
-
     }
 
     /**
@@ -256,19 +232,14 @@ public class TextFileTools {
      * @return converted CSV file
      */
     public ArrayList<String> processConversionTXT2CSV(String delimiter) {
-
         ArrayList<String> result = new ArrayList<String>();
 
         for (String line : arrayList) {
-
             // get rid off one or more empty signs at the beginning and end of the given string
             line = line.trim();
             result.add(line.replaceAll("\\s+", delimiter));
-
         }
-
         return result;
-
     }
 
     /**
@@ -283,15 +254,8 @@ public class TextFileTools {
      */
     private class TextHelper {
 
-        /**
-         * Member for storing the complete block as string.
-         */
-        final String block;
-
-        /**
-         * Member for storing the code as integer value.
-         */
         final int code;
+        final String block;
 
         /**
          * Constructor with parameters to build the block structure.

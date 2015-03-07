@@ -41,40 +41,24 @@ import java.util.ArrayList;
  * With the TidyUpWidget of RyCON it is possible to clean up coordinate and
  * measurement files with a simple 'intelligence'.
  *
+ * <h3>Changes:</h3>
+ * <ul>
+ *     <li>3: code improvements and clean up</li>
+ *     <li>2: basic improvements
+ *     <li>1: basic implementation
+ * </ul>
+ *
  * @author sebastian
- * @version 2
+ * @version 3
  * @since 1
  */
 public class TidyUpWidget {
 
-    /**
-     * Member for the inner Shell object.
-     */
-    private Shell innerShell = null;
-
-    /**
-     * Member for the checkbox to hold station lines.
-     */
     private Button chkBoxHoldControlPoints;
-
-    /**
-     * Member for the checkbox to hold station lines.
-     */
     private Button chkBoxHoldStations;
-
-    /**
-     * Member for the destination text field.
-     */
-    private Text destinationTextField;
-
-    /**
-     * Member for the files to read.
-     */
     private File[] files2read;
-
-    /**
-     * Member for the source text field.
-     */
+    private Shell innerShell = null;
+    private Text destinationTextField;
     private Text sourceTextField;
 
     /**
@@ -86,152 +70,46 @@ public class TidyUpWidget {
         initUI();
     }
 
-    /**
-     * Does all the things when hitting the cancel button.
-     */
-    private void actionBtnCancel() {
-        Main.setSubShellStatus(false);
+    private void initUI() {
+        int height = Main.getRyCONWidgetHeight();
+        int width = Main.getRyCONWidgetWidth();
 
-        Main.statusBar.setStatus("", StatusBar.OK);
+        innerShell = new Shell(Main.shell, SWT.CLOSE | SWT.DIALOG_TRIM | SWT.MAX | SWT.TITLE | SWT.APPLICATION_MODAL);
 
-        innerShell.dispose();
-    }
-
-    /**
-     * Does all the things when hitting the button to choose a destination path.
-     * <p>
-     * Normally the user wants to store the tidied up file in the same directory like
-     * the source file was stored. Because of this, the path is set by the source path.
-     */
-    private void actionBtnDestination() {
-
-        DirectoryDialog directoryDialog = new DirectoryDialog(innerShell);
-
-        directoryDialog.setText(I18N.getFileChooserDirBaseTitle());
-
-        directoryDialog.setMessage(I18N.getFileChooserDirBaseMessage());
-
-        // Set the initial filter path according to anything selected or typed in
-
-        if (destinationTextField.getText() == null) {
-            directoryDialog.setFilterPath(Main.pref.getUserPref(PreferenceHandler.DIR_BASE));
-        } else {
-            directoryDialog.setFilterPath(destinationTextField.getText());
-        }
-
-        String path = directoryDialog.open();
-
-        if (path != null) {
-
-            File checkDirDestination = new File(path);
-            if (!checkDirDestination.exists()) {
-                MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
-                msgBox.setMessage(I18N.getMsgDirDestinationNotExistWarning());
-                msgBox.setText(I18N.getMsgBoxTitleWarning());
-                msgBox.open();
-            } else {
-                destinationTextField.setText(path);
+        innerShell.addListener(SWT.Close, new Listener() {
+            public void handleEvent(Event event) {
+                actionBtnCancel();
             }
+        });
 
-        }
+        innerShell.setText(I18N.getWidgetTitleTidyUp());
+        innerShell.setSize(width, height);
 
-    }
+        GridLayout gridLayout = new GridLayout(1, true);
+        gridLayout.marginHeight = 5;
+        gridLayout.marginWidth = 5;
 
-    /**
-     * Does all the things when hitting the OK button.
-     *  
-     * @return int value for the 'OK and exit' button handling
-     * @since 3
-     */
-    private int actionBtnOk() {
+        innerShell.setLayout(gridLayout);
 
-        String source = sourceTextField.getText();
-        String destination = destinationTextField.getText();
+        GridData gridData = new GridData(SWT.FILL, SWT.CENTER, true, true);
+        gridData.heightHint = height;
+        gridData.widthHint = width;
+        innerShell.setLayoutData(gridData);
 
-        if (source.trim().equals("") || (destination.trim().equals(""))) {
-            MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
-            msgBox.setMessage(I18N.getMsgEmptyTextFieldWarning());
-            msgBox.setText(I18N.getMsgBoxTitleWarning());
-            msgBox.open();
-            
-            return 0;
-        } else {
-            if (processFileOperations()) {
+        createGroupInputFields(width);
+        createCheckBoxes();
+        createDescription(width);
+        createBottomButtons();
 
-                // use counter to display different text on the status bar
-                if (Main.countFileOps == 1) {
-                    Main.statusBar.setStatus(String.format(I18N.getStatusCleanFileSuccessful(Main.TEXT_SINGULAR), Main.countFileOps), StatusBar.OK);
-                } else {
-                    Main.statusBar.setStatus(String.format(I18N.getStatusCleanFileSuccessful(Main.TEXT_PLURAL), Main.countFileOps), StatusBar.OK);
-                }
-            }
-            return 1;
-        }
+        innerShell.setLocation(ShellCenter.centeredShellLocation(innerShell));
+
+        Main.setSubShellStatus(true);
+
+        innerShell.pack();
+        innerShell.open();
 
     }
 
-    /**
-     * Does all the things when hitting the 'OK and exit' button.
-     * <p>
-     * This button uses the {@code actionBtnOk} method inside.
-     */
-    private void actionBtnOkAndExit() {
-
-        switch (actionBtnOk()) {
-            case 0:
-
-                break;
-            case 1:
-                Main.setSubShellStatus(false);
-                Main.statusBar.setStatus("", StatusBar.OK);
-
-                innerShell.dispose();
-                break;
-        }
-
-    }
-
-    /**
-     * Does all the things when hitting the choose source button.
-     */
-    private void actionBtnSource() {
-
-        FileDialog fileDialog = new FileDialog(innerShell, SWT.MULTI);
-        fileDialog.setFilterPath(Main.pref.getUserPref(PreferenceHandler.DIR_PROJECTS));
-        fileDialog.setText(I18N.getFileChooserTidyUpSourceText());
-        fileDialog.setFilterExtensions(new String[]{"*.gsi"});
-        fileDialog.setFilterNames(new String[]{I18N.getFileChooserFilterNameGSI()});
-
-        String firstFile = fileDialog.open();
-
-        if (firstFile != null) {
-            String[] files = fileDialog.getFileNames();
-
-            files2read = new File[files.length];
-
-            // displaying file names without path in text field
-            String concatString = "";
-
-            String workingDir = fileDialog.getFilterPath();
-
-            for (int i = 0; i < files.length; i++) {
-                concatString = concatString.concat(files[i]);
-                concatString = concatString.concat(" ");
-
-                files2read[i] = new File(workingDir + File.separator + files[i]);
-            }
-
-            destinationTextField.setText(fileDialog.getFilterPath());
-            sourceTextField.setText(concatString);
-        }
-
-    }
-
-    /**
-     * Creates the group with the input fields and all its functionality.
-     *
-     * @param width width of the group
-     */
     private void createGroupInputFields(int width) {
         GridLayout gridLayout;
         GridData gridData;
@@ -326,44 +204,12 @@ public class TidyUpWidget {
                 actionBtnDestination();
             }
         });
+
         btnDestination.setToolTipText(I18N.getBtnChoosePathToolTip());
         btnDestination.setLayoutData(new GridData());
-
     }
 
-    /**
-     * Initializes all the gui of the tidy up widget.
-     */
-    private void initUI() {
-
-        // golden rectangle cut with an aspect ratio of 1.618:1
-        int height = Main.getRyCONWidgetHeight();
-        int width = Main.getRyCONWidgetWidth();
-
-        innerShell = new Shell(Main.shell, SWT.CLOSE | SWT.DIALOG_TRIM | SWT.MAX | SWT.TITLE | SWT.APPLICATION_MODAL);
-
-        innerShell.addListener(SWT.Close, new Listener() {
-            public void handleEvent(Event event) {
-                actionBtnCancel();
-            }
-        });
-
-        innerShell.setText(I18N.getWidgetTitleTidyUp());
-        innerShell.setSize(width, height);
-
-        GridLayout gridLayout = new GridLayout(1, true);
-        gridLayout.marginHeight = 5;
-        gridLayout.marginWidth = 5;
-
-        innerShell.setLayout(gridLayout);
-
-        GridData gridData = new GridData(SWT.FILL, SWT.CENTER, true, true);
-        gridData.heightHint = height;
-        gridData.widthHint = width;
-        innerShell.setLayoutData(gridData);
-
-        createGroupInputFields(width);
-
+    private void createCheckBoxes() {
         chkBoxHoldControlPoints = new Button(innerShell, SWT.CHECK);
         chkBoxHoldControlPoints.setSelection(false);
         chkBoxHoldControlPoints.setText(I18N.getBtnChkTidyUpHoldControlPoints());
@@ -371,21 +217,25 @@ public class TidyUpWidget {
         chkBoxHoldStations = new Button(innerShell, SWT.CHECK);
         chkBoxHoldStations.setSelection(false);
         chkBoxHoldStations.setText(I18N.getBtnChkTidyUpHoldStations());
+    }
 
+    private void createDescription(int width) {
         Group groupDescription = new Group(innerShell, SWT.NONE);
         groupDescription.setText(I18N.getGroupTitleNumberInputAdvice());
 
-        gridLayout = new GridLayout(1, true);
+        GridLayout gridLayout = new GridLayout(1, true);
         groupDescription.setLayout(gridLayout);
 
-        gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
+        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
         gridData.widthHint = width - 24;
         groupDescription.setLayoutData(gridData);
 
         Label tip = new Label(groupDescription, SWT.WRAP | SWT.BORDER | SWT.LEFT);
         tip.setLayoutData(new GridData(SWT.HORIZONTAL, SWT.TOP, true, false, 1, 1));
         tip.setText(String.format(I18N.getLabelTipTidyUpWidget()));
+    }
 
+    private void createBottomButtons() {
         Composite compositeBottomBtns = new Composite(innerShell, SWT.NONE);
         compositeBottomBtns.setLayout(new FillLayout());
 
@@ -420,27 +270,139 @@ public class TidyUpWidget {
             }
         });
 
-        gridData = new GridData(SWT.END, SWT.END, false, true);
+        GridData gridData = new GridData(SWT.END, SWT.END, false, true);
         compositeBottomBtns.setLayoutData(gridData);
-
-
-        ShellCenter shellCenter = new ShellCenter(innerShell);
-        innerShell.setLocation(shellCenter.centeredShellLocation());
-
-        Main.setSubShellStatus(true);
-
-        innerShell.pack();
-        innerShell.open();
-
     }
 
-    /**
-     * Process all the operations on the chosen tidy up files.
-     *
-     * @return success
-     */
-    private boolean processFileOperations() {
+    private void actionBtnCancel() {
+        Main.setSubShellStatus(false);
+        Main.statusBar.setStatus("", StatusBar.OK);
+        innerShell.dispose();
+    }
 
+    private void actionBtnDestination() {
+        DirectoryDialog directoryDialog = new DirectoryDialog(innerShell);
+        directoryDialog.setText(I18N.getFileChooserDirBaseTitle());
+        directoryDialog.setMessage(I18N.getFileChooserDirBaseMessage());
+
+        // Set the initial filter path according to anything selected or typed in
+        if (destinationTextField.getText() == null) {
+            directoryDialog.setFilterPath(Main.pref.getUserPref(PreferenceHandler.DIR_BASE));
+        } else {
+            directoryDialog.setFilterPath(destinationTextField.getText());
+        }
+
+        String path = directoryDialog.open();
+
+        if (path != null) {
+            File checkDirDestination = new File(path);
+            if (!checkDirDestination.exists()) {
+                MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
+                msgBox.setMessage(I18N.getMsgDirDestinationNotExistWarning());
+                msgBox.setText(I18N.getMsgBoxTitleWarning());
+                msgBox.open();
+            } else {
+                destinationTextField.setText(path);
+            }
+        }
+    }
+
+    private int actionBtnOk() {
+        String source = sourceTextField.getText();
+        String destination = destinationTextField.getText();
+
+        files2read = WidgetHelper.checkSourceAndDestinationTextFields(sourceTextField, destinationTextField, files2read);
+
+//        if (files2read == null) {
+//            // TODO check for spaces in file names or directory names
+//            StringTokenizer st = new StringTokenizer(source);
+//
+//            int counter = st.countTokens();
+//
+//            for (int i = 0; i < counter; i++) {
+//                String s = st.nextToken();
+//                File sourceFile = new File(s);
+//
+//                if (sourceFile.isFile()) {
+//                    files2read[i] = sourceFile;
+//                } else {
+//                    MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
+//                    msgBox.setMessage(I18N.getMsgEmptyTextFieldWarning());
+//                    msgBox.setText(I18N.getMsgBoxTitleWarning());
+//                    msgBox.open();
+//                }
+//            }
+//
+//            File destinationPath = new File(destination);
+//
+//            if (destinationPath.isDirectory() && files2read.length > 0) {
+//                processFileOperations();
+//                return 1;
+//            } else {
+//                return 0;
+//            }
+//
+//        } else {
+//            if (processFileOperations()) {
+//                // use counter to display different text on the status bar
+//                if (Main.countFileOps == 1) {
+//                    Main.statusBar.setStatus(String.format(I18N.getStatusCleanFileSuccessful(Main.TEXT_SINGULAR), Main.countFileOps), StatusBar.OK);
+//                } else {
+//                    Main.statusBar.setStatus(String.format(I18N.getStatusCleanFileSuccessful(Main.TEXT_PLURAL), Main.countFileOps), StatusBar.OK);
+//                }
+//            }
+//            return 1;
+//        }
+
+        return 1;
+    }
+
+    private void actionBtnOkAndExit() {
+        switch (actionBtnOk()) {
+            case 0:
+
+                break;
+            case 1:
+                Main.setSubShellStatus(false);
+                Main.statusBar.setStatus("", StatusBar.OK);
+
+                innerShell.dispose();
+                break;
+        }
+    }
+
+    private void actionBtnSource() {
+        FileDialog fileDialog = new FileDialog(innerShell, SWT.MULTI);
+        fileDialog.setFilterPath(Main.pref.getUserPref(PreferenceHandler.DIR_PROJECTS));
+        fileDialog.setText(I18N.getFileChooserTidyUpSourceText());
+        fileDialog.setFilterExtensions(new String[]{"*.gsi"});
+        fileDialog.setFilterNames(new String[]{I18N.getFileChooserFilterNameGSI()});
+
+        String firstFile = fileDialog.open();
+
+        if (firstFile != null) {
+            String[] files = fileDialog.getFileNames();
+
+            files2read = new File[files.length];
+
+            // displaying file names without path in text field
+            String concatString = "";
+
+            String workingDir = fileDialog.getFilterPath();
+
+            for (int i = 0; i < files.length; i++) {
+                concatString = concatString.concat(files[i]);
+                concatString = concatString.concat(" ");
+
+                files2read[i] = new File(workingDir + File.separator + files[i]);
+            }
+
+            destinationTextField.setText(fileDialog.getFilterPath());
+            sourceTextField.setText(concatString);
+        }
+    }
+
+    private boolean processFileOperations() {
         boolean success = false;
 
         // checks for text field inputs and valid directories
@@ -498,7 +460,6 @@ public class TidyUpWidget {
         }
 
         return success;
-
     }
 
 } // end of TidyUpWidget

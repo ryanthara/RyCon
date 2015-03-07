@@ -38,45 +38,25 @@ import java.io.File;
  * The GeneratorSettingsWidget of RyCON is used to set preferences for the generator
  * functionality.
  *
+ * <h3>Changes:</h3>
+ * <ul>
+ *     <li>3: code improvements and clean up</li>
+ *     <li>2: basic improvements
+ *     <li>1: basic implementation
+ * </ul>
+ *
  * @author sebastian
- * @version 2
+ * @version 3
  * @since 1
  */
 public class GeneratorSettingsWidget {
 
-    /**
-     * Member for the inner shell.
-     */
     private Shell innerShell = null;
-
-    /**
-     * Member for the outer shell.
-     */
     private Shell shell = null;
-
-    /**
-     * Member for the default path text field.
-     */
     private Text textDefaultPath = null;
-
-    /**
-     * Member for the job path text field.
-     */
     private Text textJobPath = null;
-
-    /**
-     * Member for the job path template folder text field.
-     */
     private Text textJobPathTemplateFolder = null;
-
-    /**
-     * Member for the
-     */
     private Text textProjectPath = null;
-
-    /**
-     * Member for the project path template folder
-     */
     private Text textProjectPathTemplateFolder = null;
 
     /**
@@ -88,193 +68,10 @@ public class GeneratorSettingsWidget {
      */
     public GeneratorSettingsWidget(Shell shell) {
         this.shell = shell;
-
         initUI();
     }
 
-    /**
-     * Do all the things when hitting the cancel button.
-     */
-    private void actionBtnCancel() {
-        shell.setText(I18N.getWidgetTitleGenerator());
-        innerShell.dispose();
-    }
-
-    /**
-     * Do all the things when hitting the default path button.
-     */
-    private void actionBtnDefaultPath() {
-        DirectoryDialog dlg1 = new DirectoryDialog(innerShell);
-
-        // Set the initial filter path according to anything selected or typed in
-        dlg1.setFilterPath(Main.pref.getUserPref(PreferenceHandler.DIR_BASE));
-
-        dlg1.setText(I18N.getFileChooserDirBaseTitle());
-
-        dlg1.setMessage(I18N.getFileChooserDirBaseMessage());
-
-        String dir1 = dlg1.open();
-
-        if (dir1 != null) {
-            textDefaultPath.setText(dir1);
-        }
-    }
-
-    /**
-     * Do all the things when hitting the job path button.
-     */
-    private void actionBtnJobPath() {
-        DirectoryDialog dlg2 = new DirectoryDialog(innerShell);
-
-        // Set the initial filter path according to anything selected or typed in
-        dlg2.setFilterPath(Main.pref.getUserPref(PreferenceHandler.DIR_JOBS));
-
-        dlg2.setText(I18N.getFileChooserDirJobsTitle());
-
-        dlg2.setMessage(I18N.getFileChooserDirJobsMessage());
-
-        String dir2 = dlg2.open();
-
-        if (dir2 != null) {
-            textJobPath.setText(dir2);
-        }
-    }
-
-    /**
-     * Do all the things when hitting the template job path button.
-     */
-    private void actionBtnJobPathDefaultFolder() {
-        DirectoryDialog dlg3 = new DirectoryDialog(innerShell);
-
-        // Set the initial filter path according to anything selected or typed in
-        dlg3.setFilterPath(Main.pref.getUserPref(PreferenceHandler.DIR_JOBS_TEMPLATE));
-
-        dlg3.setText(I18N.getFileChooserDirJobsTemplateTitle());
-
-        dlg3.setMessage(I18N.getFileChooserDirJobsTemplateMessage());
-
-        String dir3 = dlg3.open();
-
-        if (dir3 != null) {
-            textJobPathTemplateFolder.setText(dir3);
-        }
-    }
-
-    /**
-     * Do all the things when hitting the ok button.
-     */
-    private void actionBtnOk() {
-
-        // checks for text field inputs and valid directories
-        if ((textDefaultPath != null) && (textJobPath != null) && (textJobPathTemplateFolder != null) &&
-                (textProjectPath != null) && (textProjectPathTemplateFolder != null)) {
-
-            File checkDirBase = new File(textDefaultPath.getText());
-            if (!checkDirBase.exists()) {
-                MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
-                msgBox.setMessage(I18N.getMsgDirBaseNotFound());
-                msgBox.setText(I18N.getMsgBoxTitleWarning());
-                msgBox.open();
-            } else {
-                Main.pref.setUserPref(PreferenceHandler.DIR_BASE, textDefaultPath.getText());
-            }
-
-            File checkDirJobs = new File(textJobPath.getText());
-            if (!checkDirJobs.exists()) {
-                MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
-                msgBox.setMessage(I18N.getMsgDirJobNotFound());
-                msgBox.setText(I18N.getMsgBoxTitleWarning());
-                msgBox.open();
-            } else {
-                Main.pref.setUserPref(PreferenceHandler.DIR_JOBS, textJobPath.getText());
-            }
-
-            File checkDirJobsDefault = new File(textJobPathTemplateFolder.getText());
-            if (!checkDirJobsDefault.exists()) {
-                MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
-                msgBox.setMessage(I18N.getMsgDirJobDefaultNotFound());
-                msgBox.setText(I18N.getMsgBoxTitleWarning());
-                msgBox.open();
-            } else {
-                Main.pref.setUserPref(PreferenceHandler.DIR_JOBS_TEMPLATE, textJobPathTemplateFolder.getText());
-            }
-
-            File checkDirProject = new File(textProjectPath.getText());
-            if (!checkDirProject.exists()) {
-                MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
-                msgBox.setMessage(I18N.getMsgDirProjectNotFound());
-                msgBox.setText(I18N.getMsgBoxTitleWarning());
-                msgBox.open();
-            } else {
-                Main.pref.setUserPref(PreferenceHandler.DIR_PROJECTS, textProjectPath.getText());
-            }
-
-            File checkDirProjectDefault = new File(textProjectPathTemplateFolder.getText());
-            if (!checkDirProjectDefault.exists()) {
-                MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
-                msgBox.setMessage(I18N.getMsgDirProjectDefaultNotFound());
-                msgBox.setText(I18N.getMsgBoxTitleWarning());
-                msgBox.open();
-            } else {
-                Main.pref.setUserPref(PreferenceHandler.DIR_PROJECTS_TEMPLATE, textProjectPathTemplateFolder.getText());
-            }
-
-            Main.statusBar.setStatus(I18N.getStatusSettingsSaved(), StatusBar.OK);
-            shell.setText(I18N.getWidgetTitleGenerator());
-            innerShell.dispose();
-        } else {
-            MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
-            msgBox.setMessage(I18N.getMsgChooseDirWarning());
-            msgBox.setText(I18N.getMsgBoxTitleWarning());
-            msgBox.open();
-        }
-    }
-
-    /**
-     * Do all the things when hitting the project path button
-     */
-    private void actionBtnProjectPath() {
-        DirectoryDialog dlg4 = new DirectoryDialog(innerShell);
-
-        // Set the initial filter path according to anything selected or typed in
-        dlg4.setFilterPath(Main.pref.getUserPref(PreferenceHandler.DIR_PROJECTS));
-
-        dlg4.setText(I18N.getFileChooserDirProjectsTitle());
-
-        dlg4.setMessage(I18N.getFileChooserDirProjectsMessage());
-
-        String dir4 = dlg4.open();
-
-        if (dir4 != null) {
-            textProjectPath.setText(dir4);
-        }
-    }
-
-    /**
-     * Do all the things when hitting the template project path button.
-     */
-    private void actionBtnProjectPathDefault() {
-        DirectoryDialog dlg5 = new DirectoryDialog(innerShell);
-
-        // Set the initial filter path according to anything selected or typed in
-        dlg5.setFilterPath(Main.pref.getUserPref(PreferenceHandler.DIR_PROJECTS_TEMPLATE));
-
-        dlg5.setText(I18N.getFileChooserDirProjectTemplateTitle());
-
-        dlg5.setMessage(I18N.getFileChooserDirProjectTemplateMessage());
-
-        String dir5 = dlg5.open();
-
-        if (dir5 != null) {
-            textProjectPathTemplateFolder.setText(dir5);
-        }
-    }
-
-    /**
-     * Initialize all the GUI of the generator widget.
-     */
     private void initUI() {
-
         // golden rectangle cut with an aspect ratio of 1.618:1
         int height = Main.getRyCONWidgetHeight();
         int width = Main.getRyCONWidgetWidth();
@@ -447,11 +244,16 @@ public class GeneratorSettingsWidget {
                 btnJobPathTemplateFolder, textProjectPath, btnProjectPath, textProjectPathTemplateFolder, btnProjectPatTemplateFolder};
         innerShell.setTabList(controls);
 
+        createBottomButtons();
 
+        // innerShell.setLayout(gridLayout);
+        innerShell.open();
+    }
+
+    private void createBottomButtons() {
         Composite compositeCancelOK = new Composite(innerShell, SWT.NONE);
         compositeCancelOK.setLayout(new FillLayout());
 
-        // cancel and ok button
         Button btnCancel = new Button(compositeCancelOK, SWT.NONE);
         btnCancel.setText(I18N.getBtnCancelLabel());
         btnCancel.setToolTipText(I18N.getBtnCancelLabelToolTip());
@@ -464,7 +266,7 @@ public class GeneratorSettingsWidget {
 
         Button btnOK = new Button(compositeCancelOK, SWT.NONE);
         btnOK.setText(I18N.getBtnOKLabel());
-        btnOK.setToolTipText(I18N.getBtnOKLabelToolTip());
+        btnOK.setToolTipText(I18N.getBtnOKToolTip());
         btnOK.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -472,13 +274,166 @@ public class GeneratorSettingsWidget {
             }
         });
 
+        GridData data = new GridData(SWT.END, SWT.END, false, true);
+        data.horizontalSpan = 3;
+        compositeCancelOK.setLayoutData(data);
+    }
 
-        GridData data6_1 = new GridData(SWT.END, SWT.END, false, true);
-        data6_1.horizontalSpan = 3;
-        compositeCancelOK.setLayoutData(data6_1);
+    private void actionBtnCancel() {
+        shell.setText(I18N.getWidgetTitleGenerator());
+        innerShell.dispose();
+    }
 
-        // innerShell.setLayout(gridLayout);
-        innerShell.open();
+    private void actionBtnDefaultPath() {
+        DirectoryDialog dlg1 = new DirectoryDialog(innerShell);
+
+        // Set the initial filter path according to anything selected or typed in
+        dlg1.setFilterPath(Main.pref.getUserPref(PreferenceHandler.DIR_BASE));
+
+        dlg1.setText(I18N.getFileChooserDirBaseTitle());
+
+        dlg1.setMessage(I18N.getFileChooserDirBaseMessage());
+
+        String dir1 = dlg1.open();
+
+        if (dir1 != null) {
+            textDefaultPath.setText(dir1);
+        }
+    }
+
+    private void actionBtnJobPath() {
+        DirectoryDialog dlg2 = new DirectoryDialog(innerShell);
+
+        // Set the initial filter path according to anything selected or typed in
+        dlg2.setFilterPath(Main.pref.getUserPref(PreferenceHandler.DIR_JOBS));
+
+        dlg2.setText(I18N.getFileChooserDirJobsTitle());
+
+        dlg2.setMessage(I18N.getFileChooserDirJobsMessage());
+
+        String dir2 = dlg2.open();
+
+        if (dir2 != null) {
+            textJobPath.setText(dir2);
+        }
+    }
+
+    private void actionBtnJobPathDefaultFolder() {
+        DirectoryDialog dlg3 = new DirectoryDialog(innerShell);
+
+        // Set the initial filter path according to anything selected or typed in
+        dlg3.setFilterPath(Main.pref.getUserPref(PreferenceHandler.DIR_JOBS_TEMPLATE));
+
+        dlg3.setText(I18N.getFileChooserDirJobsTemplateTitle());
+
+        dlg3.setMessage(I18N.getFileChooserDirJobsTemplateMessage());
+
+        String dir3 = dlg3.open();
+
+        if (dir3 != null) {
+            textJobPathTemplateFolder.setText(dir3);
+        }
+    }
+
+    // TODO implement functional check
+    private void actionBtnOk() {
+        // checks for text field inputs and valid directories
+        if ((textDefaultPath != null) && (textJobPath != null) && (textJobPathTemplateFolder != null) &&
+                (textProjectPath != null) && (textProjectPathTemplateFolder != null)) {
+
+            File checkDirBase = new File(textDefaultPath.getText());
+            if (!checkDirBase.exists()) {
+                MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
+                msgBox.setMessage(I18N.getMsgDirBaseNotFound());
+                msgBox.setText(I18N.getMsgBoxTitleWarning());
+                msgBox.open();
+            } else {
+                Main.pref.setUserPref(PreferenceHandler.DIR_BASE, textDefaultPath.getText());
+            }
+
+            File checkDirJobs = new File(textJobPath.getText());
+            if (!checkDirJobs.exists()) {
+                MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
+                msgBox.setMessage(I18N.getMsgDirJobNotFound());
+                msgBox.setText(I18N.getMsgBoxTitleWarning());
+                msgBox.open();
+            } else {
+                Main.pref.setUserPref(PreferenceHandler.DIR_JOBS, textJobPath.getText());
+            }
+
+            File checkDirJobsDefault = new File(textJobPathTemplateFolder.getText());
+            if (!checkDirJobsDefault.exists()) {
+                MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
+                msgBox.setMessage(I18N.getMsgDirJobDefaultNotFound());
+                msgBox.setText(I18N.getMsgBoxTitleWarning());
+                msgBox.open();
+            } else {
+                Main.pref.setUserPref(PreferenceHandler.DIR_JOBS_TEMPLATE, textJobPathTemplateFolder.getText());
+            }
+
+            File checkDirProject = new File(textProjectPath.getText());
+            if (!checkDirProject.exists()) {
+                MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
+                msgBox.setMessage(I18N.getMsgDirProjectNotFound());
+                msgBox.setText(I18N.getMsgBoxTitleWarning());
+                msgBox.open();
+            } else {
+                Main.pref.setUserPref(PreferenceHandler.DIR_PROJECTS, textProjectPath.getText());
+            }
+
+            File checkDirProjectDefault = new File(textProjectPathTemplateFolder.getText());
+            if (!checkDirProjectDefault.exists()) {
+                MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
+                msgBox.setMessage(I18N.getMsgDirProjectDefaultNotFound());
+                msgBox.setText(I18N.getMsgBoxTitleWarning());
+                msgBox.open();
+            } else {
+                Main.pref.setUserPref(PreferenceHandler.DIR_PROJECTS_TEMPLATE, textProjectPathTemplateFolder.getText());
+            }
+
+            Main.statusBar.setStatus(I18N.getStatusSettingsSaved(), StatusBar.OK);
+            shell.setText(I18N.getWidgetTitleGenerator());
+            innerShell.dispose();
+        } else {
+            MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
+            msgBox.setMessage(I18N.getMsgChooseDirWarning());
+            msgBox.setText(I18N.getMsgBoxTitleWarning());
+            msgBox.open();
+        }
+    }
+
+    private void actionBtnProjectPath() {
+        DirectoryDialog dlg4 = new DirectoryDialog(innerShell);
+
+        // Set the initial filter path according to anything selected or typed in
+        dlg4.setFilterPath(Main.pref.getUserPref(PreferenceHandler.DIR_PROJECTS));
+
+        dlg4.setText(I18N.getFileChooserDirProjectsTitle());
+
+        dlg4.setMessage(I18N.getFileChooserDirProjectsMessage());
+
+        String dir4 = dlg4.open();
+
+        if (dir4 != null) {
+            textProjectPath.setText(dir4);
+        }
+    }
+
+    private void actionBtnProjectPathDefault() {
+        DirectoryDialog dlg5 = new DirectoryDialog(innerShell);
+
+        // Set the initial filter path according to anything selected or typed in
+        dlg5.setFilterPath(Main.pref.getUserPref(PreferenceHandler.DIR_PROJECTS_TEMPLATE));
+
+        dlg5.setText(I18N.getFileChooserDirProjectTemplateTitle());
+
+        dlg5.setMessage(I18N.getFileChooserDirProjectTemplateMessage());
+
+        String dir5 = dlg5.open();
+
+        if (dir5 != null) {
+            textProjectPathTemplateFolder.setText(dir5);
+        }
     }
 
 } // end of GeneratorSettingsWidget

@@ -57,9 +57,15 @@ import java.awt.image.WritableRaster;
  * <p>
  * From me there are a couple of additional methods implemented.
  *
+ * <h3>Changes:</h3>
+ * <ul>
+ *     <li>2: code improvements and clean up</li>
+ *     <li>1: basic implementation
+ * </ul>
+ *
  * @author sebastian
+ * @version 2
  * @since 1
- * @version 1
  */
 public class ImageConverter {
 
@@ -129,11 +135,6 @@ public class ImageConverter {
         return null;
     }
 
-    /**
-     * Converts an {@code Icon} object to a {@code BufferedImage} object.
-     * @param icon the Icon to convert
-     * @return converted Icon as BufferedImage
-     */
     private BufferedImage convertToBufferedImage(Icon icon) {
         int w = icon.getIconWidth();
         int h = icon.getIconHeight();
@@ -148,11 +149,6 @@ public class ImageConverter {
         return image;
     }
 
-    /**
-     * Converts an {@code Icon} object to an {@code ImageData} object.
-     * @param icon the Icon to convert
-     * @return converted Icon as ImageData
-     */
     private ImageData convertToImageData(Icon icon) {
         return convertToImageData(convertToBufferedImage(icon));
     }

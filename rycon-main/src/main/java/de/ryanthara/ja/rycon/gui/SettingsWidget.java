@@ -636,8 +636,7 @@ public class SettingsWidget {
         gridData = new GridData(SWT.END, SWT.END, false, true);
         compositeBottomBtns.setLayoutData(gridData);
 
-        ShellCenter shellCenter = new ShellCenter(innerShell);
-        innerShell.setLocation(shellCenter.centeredShellLocation());
+        innerShell.setLocation(ShellCenter.centeredShellLocation(innerShell));
 
         Main.setSubShellStatus(true);
 
@@ -645,16 +644,9 @@ public class SettingsWidget {
 
         innerShell.pack();
         innerShell.open();
-
     }
 
-    /**
-     * Picks the values from the settings widget and initialize the writing to the properties file.
-     *  
-     * @return true 
-     */
     private boolean writeSettings() {
-
         Main.pref.setUserPref(PreferenceHandler.DIR_BASE, dirBaseTextField.getText());
         Main.pref.setUserPref(PreferenceHandler.DIR_JOBS, dirJobsTextField.getText());
         Main.pref.setUserPref(PreferenceHandler.DIR_JOBS_TEMPLATE, dirJobsTemplateTextField.getText());
@@ -668,7 +660,6 @@ public class SettingsWidget {
         // TODO implement write setting success
         
         return true;
-
     }
 
 }

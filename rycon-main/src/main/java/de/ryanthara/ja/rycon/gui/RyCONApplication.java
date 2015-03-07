@@ -25,8 +25,15 @@ import org.eclipse.swt.widgets.Display;
  * <p>
  * It will be used to implement a clean structure for initialization process and
  * background functionality.
+ *
+ * <h3>Changes:</h3>
+ * <ul>
+ *     <li>2: code improvements and clean up</li>
+ *     <li>1: basic implementation
+ * </ul>
+ *
  * @author sebastian
- * @version 1
+ * @version 2
  * @since 2
  */
 public class RyCONApplication {
@@ -38,9 +45,11 @@ public class RyCONApplication {
      */
     // TODO implement event handling mechanism
     public static MainApplication mainApplication;
-    
-    public RyCONApplication() {
 
+    /**
+     * Constructor which initializes the next steps.
+     */
+    public RyCONApplication() {
         Display display = new Display();
 //        mainApplication = new MainApplication(display);
         SplashScreen splashScreen = new SplashScreen(display);
@@ -50,9 +59,12 @@ public class RyCONApplication {
                 display.sleep();
             }
         }
-        
     }
-    
+
+    /**
+     * Main method.
+     * @param args
+     */
     public static void main(String[] args) {
         new RyCONApplication();
     }

@@ -23,17 +23,17 @@ import de.ryanthara.ja.rycon.gui.notifier.caches.ColorCache;
 import de.ryanthara.ja.rycon.gui.notifier.caches.FontCache;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
-import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 
@@ -53,9 +53,15 @@ import java.util.Collections;
  * <p>
  * The implementation is inspired by an article on <a href="http://hexapixel.com/2009/06/30/creating-a-notification-popup-widget">hexapixel.com</a>
  *
+ * <h3>Changes:</h3>
+ * <ul>
+ *     <li>2: code improvements and clean up</li>
+ *     <li>1: basic implementation
+ * </ul>
+ *
  * @author sebastian
+ * @version 2
  * @since 2
- * @version 1
  */
 public class NotificationPopupWidget {
 
@@ -64,150 +70,25 @@ public class NotificationPopupWidget {
      */
     public static int DISPLAY_TIME = 4500;
 
-    /**
-     * Member which controls the length of time how long a popup is displayed.
-     * <p>
-     * The default value is 4500 ms.
-     */
     private static int displayTime;
-
-    /**
-     * Member which controls the length of each tick in ms.
-     */
-    private static final int FADE_TIMER = 50;
-
-    /**
-     * Member which controls the fade in tick in ms.
-     */
     private static final int FADE_IN_STEP = 30;
-
-    /**
-     * Member which controls the fade out tick in ms.
-     */
     private static final int FADE_OUT_STEP = 8;
-
-    /**
-     * Member for the alpha value after finished fading process.
-     */
+    private static final int FADE_TIMER = 50;
     private static final int FINAL_ALPHA = 255;
 
-    /**
-     * Member for the inner shell.
-     */
-    private static Shell innerShell;
-
-    /**
-     * Member for the shell gradient background color - bottom layer
-     */
-    private static Color backgroundGradient = ColorCache.getColor(177, 211, 243);
-
-    /**
-     * Member for the shell border color.
-     */
-    private static Color borderColor  = ColorCache.getColor(40, 73, 97);
-
-    /**
-     * Member for the foreground color.
-     */
-    private static Color foregroundColor  = ColorCache.getColor(40, 73, 97);
-
-    /**
-     * Member for the shell gradient foreground color - top layer
-     */
-    private static Color foregroundGradient = ColorCache.getColor(226, 239, 249);
-
-    /**
-     * Member for the old background image used for gradient.
-     */
-    private static Image oldImage;
-
-    /**
-     * Member for the title color.
-     */
-    private static Color titleColor = ColorCache.getColor(40, 73, 97);
-
-    /**
-     * Member that holds all active NotificationPopupWidgets in an {@code ArrayList<Shell>} object.
-     */
     private static ArrayList<Shell> activeShells = new ArrayList<Shell>();
 
-    /**
-     * Fades in a shell.
-     * @param shell shell to fade in
-     */
-    private static void fadeIn(final Shell shell) {
+    private static Color backgroundGradient = ColorCache.getColor(177, 211, 243);
+    private static Color borderColor  = ColorCache.getColor(40, 73, 97);
+    private static Color foregroundColor  = ColorCache.getColor(40, 73, 97);
+    private static Color foregroundGradient = ColorCache.getColor(226, 239, 249);
+    private static Color titleColor = ColorCache.getColor(40, 73, 97);
+    private static Image oldImage;
 
-        final Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    if (shell == null || shell.isDisposed()) {
-                        return;
-                    }
+    private static Shell innerShell;
 
-                    int current = shell.getAlpha();
-                    current += FADE_IN_STEP;
-
-                    if (current > FINAL_ALPHA) {
-                        shell.setAlpha(FINAL_ALPHA);
-                        startTimer(shell);
-                        return;
-                    }
-
-                    shell.setAlpha(current);
-                    Display.getDefault().timerExec(FADE_TIMER, this);
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-
-        Display.getDefault().timerExec(FADE_TIMER, runnable);
-
-    }
-
-    /**
-     * Fades out a shell.
-     * @param shell shell to fade out
-     */
-    private static void fadeOut(final Shell shell) {
-
-        final Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    if (shell == null || shell.isDisposed()) {
-                        return;
-                    }
-
-                    int current = shell.getAlpha();
-                    current -= FADE_OUT_STEP;
-
-                    if (current <= 0) {
-                        shell.setAlpha(0);
-
-                        if (oldImage != null) {
-                            oldImage.dispose();
-                        }
-
-                        shell.dispose();
-                        activeShells.remove(shell);
-                        return;
-                    }
-
-                    shell.setAlpha(current);
-                    Display.getDefault().timerExec(FADE_TIMER, this);
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-
-        Display.getDefault().timerExec(FADE_TIMER, runnable);
-
-    }
+    private static String message = null;
+    private static String title = null;
 
     /**
      * Shows a NotificationPopupWidget which can be set up by a couple of parameters.
@@ -220,6 +101,8 @@ public class NotificationPopupWidget {
      * @param time time in ms how long the popup is shown
      */
     public static void notify(String title, String message, NotificationType type, int time) {
+        NotificationPopupWidget.title = title;
+        NotificationPopupWidget.message = message;
 
         displayTime = time;
 
@@ -298,7 +181,6 @@ public class NotificationPopupWidget {
 
         int normalHeight = gc.stringExtent("THW").y;
 
-
         for (String line : lines) {
             Point extent = gc.stringExtent(line);
 
@@ -317,58 +199,7 @@ public class NotificationPopupWidget {
 
         int minHeight = normalHeight * lines.length;
 
-        // sets the labels - CLabel is used because of the gradient
-        CLabel imgLabel = new CLabel(composite, SWT.NONE);
-        imgLabel.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_BEGINNING | GridData.HORIZONTAL_ALIGN_BEGINNING));
-        imgLabel.setImage(type.getImage());
-
-        CLabel titleLabel = new CLabel(composite, SWT.NONE);
-        titleLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_CENTER));
-        titleLabel.setText(title);
-        titleLabel.setForeground(titleColor);
-
-        Font titleFont = titleLabel.getFont();
-        FontData titleFontData = titleFont.getFontData()[0];
-        titleFontData.setHeight(11);
-        titleFontData.setStyle(SWT.BOLD);
-        titleLabel.setFont(FontCache.getFont(titleFontData));
-
-        // sets the text on a label
-        Label textLabel = new Label(composite, SWT.WRAP);
-
-        Font textFont = textLabel.getFont();
-        FontData textFontData = textFont.getFontData()[0];
-        textFontData.setHeight(8);
-        textFontData.setStyle(SWT.BOLD);
-        textLabel.setFont(FontCache.getFont(textFontData));
-
-        GridData gridData = new GridData(GridData.FILL_BOTH);
-        gridData.horizontalSpan = 2;
-
-        textLabel.setForeground(foregroundColor);
-        textLabel.setLayoutData(gridData);
-        textLabel.setText(String.format(message));
-
-
-        // sets the url on the bottom
-        Link link = new Link(composite, SWT.NONE);
-        String url = "<a href=\"http://code.ryanthara.de/RyCON\">RyCON - Homepage</a>";
-        link.setText(url);
-        link.setSize(400, 100);
-        link.addListener(SWT.Selection, new Listener() {
-            public void handleEvent(Event event) {
-                Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
-                if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
-                    try {
-                        desktop.browse(new URI(Main.getRyCONWebsite()));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-            }
-        });
-
+        createLabels(composite, type);
 
         // fixed value for minHeight
         // TODO better value handling should be done here later
@@ -411,30 +242,139 @@ public class NotificationPopupWidget {
         activeShells.add(innerShell);
 
         fadeIn(innerShell);
-
     }
 
-    /**
-     * Starts a timer to enable automatic fade out the popup after the time.
-     * @param shell shell object to fade out
-     */
-    private static void startTimer(final Shell shell) {
+    private static void createLabels(Composite composite, NotificationType type) {
+        // sets the labels - CLabel is used because of the gradient
+        CLabel imgLabel = new CLabel(composite, SWT.NONE);
+        imgLabel.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_BEGINNING | GridData.HORIZONTAL_ALIGN_BEGINNING));
+        imgLabel.setImage(type.getImage());
 
+        CLabel titleLabel = new CLabel(composite, SWT.NONE);
+        titleLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_CENTER));
+        titleLabel.setText(title);
+        titleLabel.setForeground(titleColor);
+
+        Font titleFont = titleLabel.getFont();
+        FontData titleFontData = titleFont.getFontData()[0];
+        titleFontData.setHeight(11);
+        titleFontData.setStyle(SWT.BOLD);
+        titleLabel.setFont(FontCache.getFont(titleFontData));
+
+        // sets the text on a label
+        Label textLabel = new Label(composite, SWT.WRAP);
+
+        Font textFont = textLabel.getFont();
+        FontData textFontData = textFont.getFontData()[0];
+        textFontData.setHeight(8);
+        textFontData.setStyle(SWT.BOLD);
+        textLabel.setFont(FontCache.getFont(textFontData));
+
+        GridData gridData = new GridData(GridData.FILL_BOTH);
+        gridData.horizontalSpan = 2;
+
+        textLabel.setForeground(foregroundColor);
+        textLabel.setLayoutData(gridData);
+        textLabel.setText(String.format(message));
+
+        // sets the url on the bottom
+        Link link = new Link(composite, SWT.NONE);
+        String url = "<a href=\"http://code.ryanthara.de/RyCON\">RyCON - Homepage</a>";
+        link.setText(url);
+        link.setSize(400, 100);
+        link.addListener(SWT.Selection, new Listener() {
+            public void handleEvent(Event event) {
+                Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+                if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+                    try {
+                        desktop.browse(new URI(Main.getRyCONWebsite()));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            }
+        });
+    }
+
+    private static void fadeIn(final Shell shell) {
+        final Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    if (shell == null || shell.isDisposed()) {
+                        return;
+                    }
+
+                    int current = shell.getAlpha();
+                    current += FADE_IN_STEP;
+
+                    if (current > FINAL_ALPHA) {
+                        shell.setAlpha(FINAL_ALPHA);
+                        startTimerForFadeOut(shell);
+                        return;
+                    }
+
+                    shell.setAlpha(current);
+                    Display.getDefault().timerExec(FADE_TIMER, this);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        Display.getDefault().timerExec(FADE_TIMER, runnable);
+    }
+
+    private static void fadeOut(final Shell shell) {
+        final Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    if (shell == null || shell.isDisposed()) {
+                        return;
+                    }
+
+                    int current = shell.getAlpha();
+                    current -= FADE_OUT_STEP;
+
+                    if (current <= 0) {
+                        shell.setAlpha(0);
+
+                        if (oldImage != null) {
+                            oldImage.dispose();
+                        }
+
+                        shell.dispose();
+                        activeShells.remove(shell);
+                        return;
+                    }
+
+                    shell.setAlpha(current);
+                    Display.getDefault().timerExec(FADE_TIMER, this);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        Display.getDefault().timerExec(FADE_TIMER, runnable);
+    }
+
+    private static void startTimerForFadeOut(final Shell shell) {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-
                 if (shell == null || shell.isDisposed()) {
                     return;
                 }
-
                 fadeOut(shell);
-
             }
         };
 
         Display.getDefault().timerExec(displayTime, runnable);
-
     }
 
 } // end of NotifyPopup

@@ -38,11 +38,23 @@ import org.eclipse.swt.widgets.Label;
  * <p>
  * Later on a progress bar should be implemented.
  *
+ * <h3>Changes:</h3>
+ * <ul>
+ *     <li>2: code improvements and clean up</li>
+ *     <li>1: basic implementation
+ * </ul>
+ *
  * @author sebastian
- * @version 1
+ * @version 2
  * @since 1
  */
 public class StatusBar extends Composite {
+
+    private Image iconError = null;
+    private Image iconOK = null;
+    private Image iconWarning = null;
+    private Label icon = null;
+    private Label message = null;
 
     /**
      * Constant value for displaying the error icon.
@@ -60,31 +72,6 @@ public class StatusBar extends Composite {
     public static final int WARNING = 15;
 
     /**
-     * Member for the error icon.
-     */
-    private Image iconError = null;
-
-    /**
-     * Member for the OK icon.
-     */
-    private Image iconOK = null;
-
-    /**
-     * Member for the warning icon.
-     */
-    private Image iconWarning = null;
-
-    /**
-     * Label which displays the message with String.
-     */
-    private Label message = null;
-
-    /**
-     * Label which displays the status with icons.
-     */
-    private Label icon = null;
-
-    /**
      * Constructor with parameters for StatusBar.
      * <p>
      * Initializes the Control and its Widgets.
@@ -94,12 +81,9 @@ public class StatusBar extends Composite {
      * @since 1
      */
     public StatusBar(Composite parent, int style) {
-
         super(parent, style);
 
-        iconError = new ImageConverter().convertToImage(Display.getCurrent(), "/de/ryanthara/ja/rycon/gui/icons/10-error.png");
-        iconOK = new ImageConverter().convertToImage(Display.getCurrent(), "/de/ryanthara/ja/rycon/gui/icons/20-ok.png");
-        iconWarning = new ImageConverter().convertToImage(Display.getCurrent(), "/de/ryanthara/ja/rycon/gui/icons/15-warning.png");
+        prepareIcons();
 
         FormLayout formLayout = new FormLayout();
         formLayout.marginHeight = 5;
@@ -110,7 +94,7 @@ public class StatusBar extends Composite {
 
         FormData data = new FormData();
 
-        // TODO later here comes the progress bar
+        // TODO here comes the progress bar
 
         data.left = new FormAttachment(0, 0);
         message.setLayoutData(data);
@@ -125,7 +109,12 @@ public class StatusBar extends Composite {
                 StatusBar.this.dispose();
             }
         });
+    }
 
+    private void prepareIcons() {
+        iconError = new ImageConverter().convertToImage(Display.getCurrent(), "/de/ryanthara/ja/rycon/gui/icons/10-error.png");
+        iconOK = new ImageConverter().convertToImage(Display.getCurrent(), "/de/ryanthara/ja/rycon/gui/icons/20-ok.png");
+        iconWarning = new ImageConverter().convertToImage(Display.getCurrent(), "/de/ryanthara/ja/rycon/gui/icons/15-warning.png");
     }
 
     /**

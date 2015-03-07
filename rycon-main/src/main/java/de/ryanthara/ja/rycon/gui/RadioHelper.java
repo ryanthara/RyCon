@@ -26,8 +26,14 @@ import org.eclipse.swt.widgets.Control;
  * <p>
  * The access to simple functions is implemented with static access.
  *
+ * <h3>Changes:</h3>
+ * <ul>
+ *     <li>2: code improvements and clean up</li>
+ *     <li>1: basic implementation
+ * </ul>
+ *
  * @author sebastian
- * @version 1
+ * @version 2
  * @since 2
  */
 public class RadioHelper {
@@ -46,7 +52,6 @@ public class RadioHelper {
      * @return number of the selected radio button
      */
     public static int getSelectedBtn(Control[] control) {
-
         int number = -1;
 
         for (int i = 0; i < control.length; i++) {
@@ -61,7 +66,6 @@ public class RadioHelper {
         }
 
         return number;
-
     }
 
     /**
@@ -71,7 +75,6 @@ public class RadioHelper {
      * @param number  Button to enable
      */
     public static void selectBtn(Control[] control, int number) {
-
         for (int i = 0; i < control.length; i++) {
             Control child = control[i];
             if (child instanceof Button) {
@@ -82,9 +85,7 @@ public class RadioHelper {
                     button.setSelection(false);
                 }
             }
-
         }
-
     }
 
     /**
@@ -96,7 +97,6 @@ public class RadioHelper {
      * @param slave  Radio button group which has to be toggled
      */
     public static void toggleBtn(Control[] master, Control[] slave) {
-
         int selectedMaster = -1;
         int selectedSlave;
 
@@ -134,7 +134,6 @@ public class RadioHelper {
                 }
             }
         }
-
     }
 
 }  // end of RadioHelper

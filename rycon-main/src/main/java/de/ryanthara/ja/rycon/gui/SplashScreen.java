@@ -35,15 +35,29 @@ import org.eclipse.swt.widgets.Shell;
  * <p>
  * This is necessary because of a bug in Cocoa from Apple when 
  * starting a SWT-jar which needs -XstartOnFirstThread option!
- *  
- * Created by sebastian on 08.02.15.
+ *
+ * <h3>Changes:</h3>
+ * <ul>
+ *     <li>2: code improvements and clean up</li>
+ *     <li>1: basic implementation
+ * </ul>
+ *
+ * @author sebastian
+ * @version 2
+ * @since 1
  */
 public class SplashScreen {
     
     private int splashPos = 0;
-    
     private final int SPLASH_MAX = 100;
-    
+
+    /**
+     * Constructor with most of the functionality.
+     * <p>
+     * This will be changed later.
+     *
+     * @param display
+     */
     public SplashScreen(Display display) {
         
         final Image image = new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/RyCON_SplashScreen.png");
@@ -102,7 +116,6 @@ public class SplashScreen {
                 display.sleep();
             }
         }
-
     }
     
 } // end of SplashScreen

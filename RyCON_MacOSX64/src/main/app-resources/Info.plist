@@ -35,7 +35,6 @@
 		<string>-XstartOnFirstThread</string>
 	</array>
 	<key>JVMArguments</key>
-	<array/>
 	<key>NSHighResolutionCapable</key>
     <true/>
 </dict>

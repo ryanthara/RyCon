@@ -178,7 +178,7 @@ public class I18N {
         return Messages.getString("btnOK");
     }
 
-    public static String getBtnOKLabelToolTip() {
+    public static String getBtnOKToolTip() {
         return Messages.getString("btnOKToolTip");
     }
 
@@ -602,7 +602,7 @@ public class I18N {
      * set with {@code Main.TEXT_PLURAL}
      *
      * @param property property to get the text from
-     * @param singular set to get a singular or plurar text back
+     * @param singular set to get a singular or plural text back
      * @return singular or plural string message
      */
     private static String prepareString(String property, boolean singular) {
@@ -630,5 +630,21 @@ public class I18N {
 
     public static String getInfoTextRyCONUpdate() {
         return Messages.getString("infoTextRyCONUpdate");
+    }
+
+    public static String getTrayMenuItemSettings() {
+        return Messages.getString("trayMenuItemSettings");
+    }
+
+    public static String getBtnOKAndOpenBrowserLabel() {
+        return Messages.getString("btnOKAndOpenBrowserLabel");
+    }
+
+    public static String getBtnOKAndOpenBrowserToolTip() {
+        return Messages.getString("btnOKAndOpenBrowserToolTip");
+    }
+
+    public static String getMsgFileNotExist() {
+        return Messages.getString("msgFileNotExist")
     }
 } // end of I18N

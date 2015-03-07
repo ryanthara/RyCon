@@ -67,23 +67,29 @@
             </plugin>
         </plugins>
     </build>
-    
+
+    <!-- Use a profile for the maven-assembly-plugin to build the app of RyCON -->
     <profiles>
         <profile>
             <id>rycon</id>
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <artifactId>maven-assembly-plugin</artifactId>
                         <executions>
                             <execution>
                                 <phase>package</phase>
                                 <goals>
-                                    <goal>parse-version</goal>
+                                    <goal>single</goal>
                                 </goals>
                             </execution>
                         </executions>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>${basedir}/src/main/assembly/macosx.xml</descriptor>
+                            </descriptors>
+                            <finalName>RyCON_MacOSX32.app</finalName>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>

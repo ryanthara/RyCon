@@ -20,8 +20,8 @@ package de.ryanthara.ja.rycon.gui.notifier.caches;
 
 import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.tools.ImageConverter;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 
@@ -35,13 +35,25 @@ import java.util.Iterator;
  * <p>
  * The implementation is inspired by an article on <a href="http://hexapixel.com/2009/06/30/creating-a-notification-popup-widget">hexapixel.com</a>
  *
+ * <h3>Changes:</h3>
+ * <ul>
+ *     <li>2: code improvements and clean up</li>
+ *     <li>1: basic implementation
+ * </ul>
+ *
  * @author sebastian
+ * @version 2
  * @since 2
- * @version 1
  */
 public class ColorCache {
 
-    // define some members
+    private static ColorCache colorCache;
+    private static HashMap<RGB, Color> colorMap = new HashMap<RGB, Color>();
+
+    private ColorCache() {
+        colorCache = this;
+    }
+
     /**
      * Default RGB for black.
      */
@@ -52,41 +64,10 @@ public class ColorCache {
      */
     public static final RGB WHITE = new RGB(255, 255, 255);
 
-    /**
-     * Member that holds the {@code RGB} objects with a {@code Color} key.
-     */
-    private static HashMap<RGB, Color> colorMap = new HashMap<RGB, Color>();
-
-    /**
-     * Member for the ColorCache.
-     */
-    private static ColorCache colorCache;
-
     // static constructor because of getInstance()
     static {
         // TODO check if this is good and necessary
         new ColorCache();
-    }
-
-    /**
-     * Class constructor
-     */
-    private ColorCache() {
-        colorCache = this;
-    }
-    
-    /**
-     * Creates the image.
-     *
-     * @param fileName filename of the image
-     * @return the image as {@code Image}
-     */
-    private static Image createImage(String fileName) {
-
-        // TODO the original functionality was implemented with a Classloader and images in a jar file
-
-        return new ImageConverter().convertToImage(Main.shell.getDisplay(), fileName);
-
     }
 
     /**
@@ -168,6 +149,14 @@ public class ColorCache {
      */
     public static Color getWhite() {
         return getColorFromRGB(WHITE);
+    }
+
+    private static Image createImage(String fileName) {
+
+        // TODO the original functionality was implemented with a Classloader and images in a jar file
+
+        return new ImageConverter().convertToImage(Main.shell.getDisplay(), fileName);
+
     }
 
 } // end of ImageCache
