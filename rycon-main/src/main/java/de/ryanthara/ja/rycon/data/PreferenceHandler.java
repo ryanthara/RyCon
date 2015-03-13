@@ -177,9 +177,11 @@ public class PreferenceHandler {
      * after the first start of RyCON. To do this, hit the key 'p' on the keyboard.
      */
     public void createDefaultSettings() {
+        Version version = new Version();
+
         // general settings
         userPreferences.put(GENERATOR, Main.getRyCONAppName());
-        userPreferences.put(BUILD_VERSION, Main.getRyCONBuild());
+        userPreferences.put(BUILD_VERSION, version.getBuildNumber() + version.getBuildDate());
         userPreferences.put(INFORMATION_STRING, Main.getRyCONWebsite());
 
         // parameters for module #1 - clean up

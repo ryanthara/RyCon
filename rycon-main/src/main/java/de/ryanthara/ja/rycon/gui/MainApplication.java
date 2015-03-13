@@ -20,6 +20,7 @@ package de.ryanthara.ja.rycon.gui;
 
 import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.data.I18N;
+import de.ryanthara.ja.rycon.data.Version;
 import de.ryanthara.ja.rycon.gui.notifier.NotificationPopupWidget;
 import de.ryanthara.ja.rycon.gui.notifier.NotificationType;
 import de.ryanthara.ja.rycon.tools.ImageConverter;
@@ -222,9 +223,11 @@ public class MainApplication extends Main {
         if (tray == null) {
             System.out.println("System tray functionality is not available on your system.");
         } else {
+            Version version = new Version();
+
             final TrayItem item = new TrayItem(tray, SWT.NONE);
             item.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/RyCON_TrayIcon64x64.png"));
-            item.setToolTipText("RyCON: " + Main.getRyCONBuild());
+            item.setToolTipText("RyCON: " + version.getBuildNumber() + " : " + version.getBuildDate());
 
             final Menu menu = new Menu(shell, SWT.POP_UP);
 

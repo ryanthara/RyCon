@@ -645,6 +645,6 @@ public class I18N {
     }
 
     public static String getMsgFileNotExist() {
-        return Messages.getString("msgFileNotExist")
+        return Messages.getString("msgFileNotExist");
     }
 } // end of I18N

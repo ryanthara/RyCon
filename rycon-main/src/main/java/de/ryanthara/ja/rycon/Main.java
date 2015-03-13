@@ -79,9 +79,6 @@ public abstract class Main {
     private static final String PARAM_FREE_STATION_STRING = "FS";
     private static final String PARAM_KNOWN_STATION_STRING = "ST";
 
-    private static final String RyCON_BUILD = "3 : 2015-02-23";
-    private static final String RyCON_VERSION = "0.00";
-
     /**
      * Member for the URL of the RyCON update check website.
      * @since 3
@@ -434,25 +431,6 @@ public abstract class Main {
      */
     public static String getRyCONAppName() {
         return APP_NAME;
-    }
-
-    /**
-     * Returns the RyCON build number and date as {@code String}.
-     *
-     * @return the build number and date as {@code String}
-     */
-    public static String getRyCONBuild() {
-        return RyCON_BUILD;
-    }
-
-    /**
-     * Returns the RyCON version as {@code String}.
-     *
-     * @return the version as {@code String}
-     * @since 3
-     */
-    public static String getRyCONVersion() {
-        return RyCON_VERSION;
     }
 
     /**

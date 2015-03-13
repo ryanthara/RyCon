@@ -43,12 +43,7 @@ import java.util.StringTokenizer;
  */
 public class WidgetHelper {
 
-    /**
-     * Class constructor.
-     */
-    public WidgetHelper() {}
-
-    public static File[] checkSourceAndDestinationTextFields(Text source, Text destination, File[] choosenFiles) {
+    public static File[] checkSourceAndDestinationTextFields(Text source, Text destination, File[] chosenFiles) {
         File[] files2read = null;
 
         if (TextHelper.checkIsEmpty(source) || TextHelper.checkIsEmpty(destination)) {
@@ -56,9 +51,10 @@ public class WidgetHelper {
             msgBox.setMessage(I18N.getMsgEmptyTextFieldWarning());
             msgBox.setText(I18N.getMsgBoxTitleWarning());
             msgBox.open();
-            return files2read;
-        } else if (choosenFiles == null) {
-              // TODO check for spaces in file names or directory names
+
+            return new File[0];
+        } else if (chosenFiles == null) {
+              // TODO check for spaces in file names or directory names (not trivial)
             StringTokenizer st = new StringTokenizer(source.getText());
 
             int counter = st.countTokens();
@@ -82,22 +78,13 @@ public class WidgetHelper {
             if (destinationPath.isDirectory() && files2read.length > 0) {
                 return files2read;
             } else {
-                return new File[];
+                return new File[0];
             }
-
-
-
-            System.out.println("NO FILE CHOOSEN 2");
-        } else if (choosenFiles.length > 0) {
-            System.out.println("FILES CHOOSEN");
-
-
-
+        } else if (chosenFiles.length > 0) {
+            return chosenFiles;
         }
 
         return files2read;
     }
-
-
 
 }

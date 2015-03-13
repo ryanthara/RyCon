@@ -19,12 +19,14 @@
 package de.ryanthara.ja.rycon.tools;
 
 import de.ryanthara.ja.rycon.Main;
+import de.ryanthara.ja.rycon.data.Version;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 /**
  * This class holds all the update functionality for RyCON.
@@ -33,6 +35,7 @@ import java.util.Scanner;
  *
  * <h3>Changes:</h3>
  * <ul>
+ *     <li>3: clean up and improvements
  *     <li>2: basic improvements
  *     <li>1: basic implementation
  * </ul>
@@ -46,12 +49,6 @@ public class Updater {
     private boolean updateAvailable = false;
 
     /**
-     * Class constructor without a parameter.
-     */
-    public Updater() {
-    }
-
-    /**
      * Performs the check of the RyCON update website.
      *  
      * @return success
@@ -59,23 +56,34 @@ public class Updater {
     public boolean checkForUpdate() {
         boolean success = false;
 
+        Version versionHandle = new Version();
+
         try {
             URL updateUrl = new URL(Main.RyCON_UPDATE_URL);
 
             Scanner scanner = new Scanner(updateUrl.openStream());
-            
+
             scanner.next();
-            double version = Double.parseDouble(scanner.next());
+            String majorMinor = scanner.next();
+            System.out.println(majorMinor);
+            String[] segments = majorMinor.split(Pattern.quote("."));
+            int majorVersion = Integer.parseInt(segments[0]);
+            int minorVersion = Integer.parseInt(segments[1]);
 
             scanner.next();
             int build = scanner.nextInt();
-            
+            System.out.println(build);
+
+            scanner.next();
+            String date = scanner.next();
+            System.out.println(date);
+
             scanner.close();
             
             success = true;
 
-            if ((Integer.parseInt(Main.getRyCONBuild().substring(0, 1)) < build) || 
-                    (Double.parseDouble(Main.getRyCONVersion()) < version)) {
+            if (versionHandle.getBuildNumber() < build ||
+                (majorVersion < versionHandle.getMajorVersionNumber() && minorVersion < versionHandle.getMinorVersionNumber())) {
                 updateAvailable = true;
             }
             
