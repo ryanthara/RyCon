@@ -647,4 +647,12 @@ public class I18N {
     public static String getMsgFileNotExist() {
         return Messages.getString("msgFileNotExist");
     }
+
+    public static String getMsgTidyUpError() {
+        return Messages.getString("msgSplittingError");
+    }
+
+    public static String getMsgLevellingError() {
+        return Messages.getString("msgLevellingError");
+    }
 } // end of I18N

@@ -25,9 +25,6 @@ import de.ryanthara.ja.rycon.io.LineReader;
 import de.ryanthara.ja.rycon.io.LineWriter;
 import de.ryanthara.ja.rycon.tools.LeicaGSIFileTools;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
@@ -43,13 +40,14 @@ import java.util.ArrayList;
  *
  * <h3>Changes:</h3>
  * <ul>
+ *     <li>4: simplification and improvements, extract input fields and bottom button bar into separate classes</li>
  *     <li>3: code improvements and clean up</li>
  *     <li>2: basic improvements
  *     <li>1: basic implementation
  * </ul>
  *
  * @author sebastian
- * @version 3
+ * @version 4
  * @since 1
  */
 public class TidyUpWidget {
@@ -57,9 +55,8 @@ public class TidyUpWidget {
     private Button chkBoxHoldControlPoints;
     private Button chkBoxHoldStations;
     private File[] files2read;
+    private InputFieldsComposite inputFieldsComposite;
     private Shell innerShell = null;
-    private Text destinationTextField;
-    private Text sourceTextField;
 
     /**
      * Class constructor without parameters.
@@ -96,10 +93,13 @@ public class TidyUpWidget {
         gridData.widthHint = width;
         innerShell.setLayoutData(gridData);
 
-        createGroupInputFields(width);
+        inputFieldsComposite = new InputFieldsComposite(this, innerShell, SWT.NONE);
+        inputFieldsComposite.setLayout(gridLayout);
+
         createCheckBoxes();
         createDescription(width);
-        createBottomButtons();
+
+        new BottomButtonBar(this, innerShell, SWT.NONE);
 
         innerShell.setLocation(ShellCenter.centeredShellLocation(innerShell));
 
@@ -107,106 +107,6 @@ public class TidyUpWidget {
 
         innerShell.pack();
         innerShell.open();
-
-    }
-
-    private void createGroupInputFields(int width) {
-        GridLayout gridLayout;
-        GridData gridData;
-
-        Group groupInputFields = new Group(innerShell, SWT.NONE);
-        groupInputFields.setText(I18N.getGroupTitlePathSelection());
-
-        gridLayout = new GridLayout();
-        gridLayout.numColumns = 3;
-        groupInputFields.setLayout(gridLayout);
-
-        gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
-        gridData.widthHint = width - 24;
-        groupInputFields.setLayoutData(gridData);
-
-        Label source = new Label(groupInputFields, SWT.NONE);
-        source.setText(I18N.getLabelSource());
-
-        sourceTextField = new Text(groupInputFields, SWT.BORDER);
-        sourceTextField.addListener(SWT.Traverse, new Listener() {
-            @Override
-            public void handleEvent(Event event) {
-                // prevent this shortcut for execute when the text fields are empty
-                if (!(sourceTextField.getText().trim().equals("") || (destinationTextField.getText().trim().equals("")))) {
-
-                    if (((event.stateMask & SWT.SHIFT) == SWT.SHIFT) && (event.detail == SWT.TRAVERSE_RETURN)) {
-                        actionBtnOk();
-                    } else if (((event.stateMask & SWT.CTRL) == SWT.CTRL) && (event.detail == SWT.TRAVERSE_RETURN)) {
-                        actionBtnOkAndExit();
-                    }
-
-                } else if (event.detail == SWT.TRAVERSE_RETURN) {
-                    actionBtnSource();
-                    destinationTextField.setFocus();
-                }
-            }
-        });
-
-        gridData = new GridData();
-        gridData.horizontalAlignment = GridData.FILL;
-        gridData.grabExcessHorizontalSpace = true;
-        sourceTextField.setLayoutData(gridData);
-
-        Button btnSource = new Button(groupInputFields, SWT.NONE);
-        btnSource.setText(I18N.getBtnChooseFiles());
-        btnSource.setToolTipText(I18N.getBtnChooseFilesToolTip());
-        btnSource.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                actionBtnSource();
-            }
-        });
-        gridData = new GridData();
-        gridData.horizontalAlignment = SWT.FILL;
-        btnSource.setLayoutData(gridData);
-
-        Label destination = new Label(groupInputFields, SWT.NONE);
-        destination.setText(I18N.getLabelDestination());
-        destination.setLayoutData(new GridData());
-
-        destinationTextField = new Text(groupInputFields, SWT.SINGLE | SWT.BORDER);
-        destinationTextField.addListener(SWT.Traverse, new Listener() {
-            @Override
-            public void handleEvent(Event event) {
-                // prevent this shortcut for execute when the text fields are empty
-                if (!(sourceTextField.getText().trim().equals("") || (destinationTextField.getText().trim().equals("")))) {
-
-                    if (((event.stateMask & SWT.SHIFT) == SWT.SHIFT) && (event.detail == SWT.TRAVERSE_RETURN)) {
-                        actionBtnOk();
-                    } else if (((event.stateMask & SWT.CTRL) == SWT.CTRL) && (event.detail == SWT.TRAVERSE_RETURN)) {
-                        actionBtnOkAndExit();
-                    }
-
-                } else if (event.detail == SWT.TRAVERSE_RETURN) {
-                    actionBtnDestination();
-                    sourceTextField.setFocus();
-                }
-            }
-        });
-
-        gridData = new GridData();
-        gridData.horizontalAlignment = GridData.FILL;
-        gridData.grabExcessHorizontalSpace = true;
-        destinationTextField.setLayoutData(gridData);
-
-
-        Button btnDestination = new Button(groupInputFields, SWT.NONE);
-        btnDestination.setText(I18N.getBtnChoosePath());
-        btnDestination.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                actionBtnDestination();
-            }
-        });
-
-        btnDestination.setToolTipText(I18N.getBtnChoosePathToolTip());
-        btnDestination.setLayoutData(new GridData());
     }
 
     private void createCheckBoxes() {
@@ -235,45 +135,6 @@ public class TidyUpWidget {
         tip.setText(String.format(I18N.getLabelTipTidyUpWidget()));
     }
 
-    private void createBottomButtons() {
-        Composite compositeBottomBtns = new Composite(innerShell, SWT.NONE);
-        compositeBottomBtns.setLayout(new FillLayout());
-
-        Button btnCancel = new Button(compositeBottomBtns, SWT.NONE);
-        btnCancel.setText(I18N.getBtnCancelLabel());
-        btnCancel.setToolTipText(I18N.getBtnCancelLabelToolTip());
-
-        btnCancel.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                actionBtnCancel();
-            }
-        });
-
-        Button btnOK = new Button(compositeBottomBtns, SWT.NONE);
-        btnOK.setText(I18N.getBtnOKAndOpenLabel());
-        btnOK.setToolTipText(I18N.getBtnOKAndOpenLabelToolTip());
-        btnOK.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                actionBtnOk();
-            }
-        });
-
-        Button btnOKAndExit = new Button(compositeBottomBtns, SWT.NONE);
-        btnOKAndExit.setText(I18N.getBtnOKAndExitLabel());
-        btnOKAndExit.setToolTipText(I18N.getBtnOKAndExitLabelToolTip());
-        btnOKAndExit.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                actionBtnOkAndExit();
-            }
-        });
-
-        GridData gridData = new GridData(SWT.END, SWT.END, false, true);
-        compositeBottomBtns.setLayoutData(gridData);
-    }
-
     private void actionBtnCancel() {
         Main.setSubShellStatus(false);
         Main.statusBar.setStatus("", StatusBar.OK);
@@ -286,10 +147,10 @@ public class TidyUpWidget {
         directoryDialog.setMessage(I18N.getFileChooserDirBaseMessage());
 
         // Set the initial filter path according to anything selected or typed in
-        if (destinationTextField.getText() == null) {
+        if (inputFieldsComposite.getDestinationTextField().getText() == null) {
             directoryDialog.setFilterPath(Main.pref.getUserPref(PreferenceHandler.DIR_BASE));
         } else {
-            directoryDialog.setFilterPath(destinationTextField.getText());
+            directoryDialog.setFilterPath(inputFieldsComposite.getDestinationTextField().getText());
         }
 
         String path = directoryDialog.open();
@@ -302,59 +163,28 @@ public class TidyUpWidget {
                 msgBox.setText(I18N.getMsgBoxTitleWarning());
                 msgBox.open();
             } else {
-                destinationTextField.setText(path);
+                inputFieldsComposite.getDestinationTextField().setText(path);
             }
         }
     }
 
     private int actionBtnOk() {
-        String source = sourceTextField.getText();
-        String destination = destinationTextField.getText();
+        files2read = WidgetHelper.checkSourceAndDestinationTextFields(
+                inputFieldsComposite.getSourceTextField(),
+                inputFieldsComposite.getDestinationTextField(), files2read);
 
-        files2read = WidgetHelper.checkSourceAndDestinationTextFields(sourceTextField, destinationTextField, files2read);
-
-//        if (files2read == null) {
-//            // TODO check for spaces in file names or directory names
-//            StringTokenizer st = new StringTokenizer(source);
-//
-//            int counter = st.countTokens();
-//
-//            for (int i = 0; i < counter; i++) {
-//                String s = st.nextToken();
-//                File sourceFile = new File(s);
-//
-//                if (sourceFile.isFile()) {
-//                    files2read[i] = sourceFile;
-//                } else {
-//                    MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
-//                    msgBox.setMessage(I18N.getMsgEmptyTextFieldWarning());
-//                    msgBox.setText(I18N.getMsgBoxTitleWarning());
-//                    msgBox.open();
-//                }
-//            }
-//
-//            File destinationPath = new File(destination);
-//
-//            if (destinationPath.isDirectory() && files2read.length > 0) {
-//                processFileOperations();
-//                return 1;
-//            } else {
-//                return 0;
-//            }
-//
-//        } else {
-//            if (processFileOperations()) {
-//                // use counter to display different text on the status bar
-//                if (Main.countFileOps == 1) {
-//                    Main.statusBar.setStatus(String.format(I18N.getStatusCleanFileSuccessful(Main.TEXT_SINGULAR), Main.countFileOps), StatusBar.OK);
-//                } else {
-//                    Main.statusBar.setStatus(String.format(I18N.getStatusCleanFileSuccessful(Main.TEXT_PLURAL), Main.countFileOps), StatusBar.OK);
-//                }
-//            }
-//            return 1;
-//        }
-
-        return 1;
+        if ((files2read != null) && (files2read.length > 0)) {
+            if (processFileOperations()) {
+                // use counter to display different text on the status bar
+                if (Main.countFileOps == 1) {
+                    Main.statusBar.setStatus(String.format(I18N.getStatusCleanFileSuccessful(Main.TEXT_SINGULAR), Main.countFileOps), StatusBar.OK);
+                } else {
+                    Main.statusBar.setStatus(String.format(I18N.getStatusCleanFileSuccessful(Main.TEXT_PLURAL), Main.countFileOps), StatusBar.OK);
+                }
+            }
+            return 1;
+        }
+        return 0;
     }
 
     private void actionBtnOkAndExit() {
@@ -397,66 +227,62 @@ public class TidyUpWidget {
                 files2read[i] = new File(workingDir + File.separator + files[i]);
             }
 
-            destinationTextField.setText(fileDialog.getFilterPath());
-            sourceTextField.setText(concatString);
+            inputFieldsComposite.getDestinationTextField().setText(fileDialog.getFilterPath());
+            inputFieldsComposite.getSourceTextField().setText(concatString);
         }
     }
 
     private boolean processFileOperations() {
-        boolean success = false;
+        boolean success;
 
-        // checks for text field inputs and valid directories
-        if ((sourceTextField != null) && (destinationTextField != null)) {
+        int counter = 0;
 
-            int counter = 0;
+        LineReader lineReader;
 
-            LineReader lineReader;
+        for (File file2read : files2read) {
+            lineReader = new LineReader(file2read);
 
-            // read files
-            for (File file2read : files2read) {
-                lineReader = new LineReader(file2read);
+            if (lineReader.readFile()) {
+                // read
+                ArrayList<String> readFile = lineReader.getLines();
+                ArrayList<String> writeFile;
 
-                if (lineReader.readFile()) {
-                    // read
-                    ArrayList<String> readFile = lineReader.getLines();
-                    ArrayList<String> writeFile;
+                // processFileOperations
+                LeicaGSIFileTools gsiTools = new LeicaGSIFileTools(readFile);
+                writeFile = gsiTools.processTidyUp(chkBoxHoldStations.getSelection(), chkBoxHoldControlPoints.getSelection());
 
-                    // processFileOperations
-                    LeicaGSIFileTools gsiTools = new LeicaGSIFileTools(readFile);
-                    writeFile = gsiTools.processTidyUp(chkBoxHoldStations.getSelection(), chkBoxHoldControlPoints.getSelection());
-
-                    // write file line by line
-                    String file2write = file2read.toString().substring(0, file2read.toString().length() - 4) + "_EDIT.GSI";
-                    LineWriter lineWriter = new LineWriter(file2write);
-                    if (lineWriter.writeFile(writeFile)) {
-                        counter++;
-                    }
-
-                } else {
-                    System.err.println("File " + file2read.getName() + " could not be read.");
+                // write file line by line
+                String file2write = file2read.toString().substring(0, file2read.toString().length() - 4) + "_EDIT.GSI";
+                LineWriter lineWriter = new LineWriter(file2write);
+                if (lineWriter.writeFile(writeFile)) {
+                    counter++;
                 }
-
-            }
-
-            if (counter > 0) {
-                MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_INFORMATION);
-
-                if (counter == 1) {
-                    msgBox.setMessage(String.format(I18N.getMsgTidyUpSuccess(Main.TEXT_SINGULAR), counter));
-                } else {
-                    msgBox.setMessage(String.format(I18N.getMsgTidyUpSuccess(Main.TEXT_PLURAL), counter));
-                }
-
-                msgBox.setText(I18N.getMsgBoxTitleSuccess());
-                msgBox.open();
-
-                // set the counter for status bar information
-                Main.countFileOps = counter;
-                success = true;
             } else {
-                success = false;
+                System.err.println("File " + file2read.getName() + " could not be read.");
+            }
+        }
+
+        if (counter > 0) {
+            MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_INFORMATION);
+
+            if (counter == 1) {
+                msgBox.setMessage(String.format(I18N.getMsgTidyUpSuccess(Main.TEXT_SINGULAR), counter));
+            } else {
+                msgBox.setMessage(String.format(I18N.getMsgTidyUpSuccess(Main.TEXT_PLURAL), counter));
             }
 
+            msgBox.setText(I18N.getMsgBoxTitleSuccess());
+            msgBox.open();
+
+            // set the counter for status bar information
+            Main.countFileOps = counter;
+            success = true;
+        } else {
+            MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
+            msgBox.setMessage(String.format(I18N.getMsgTidyUpError()));
+            msgBox.setText(I18N.getMsgBoxTitleError());
+            msgBox.open();
+            success = false;
         }
 
         return success;

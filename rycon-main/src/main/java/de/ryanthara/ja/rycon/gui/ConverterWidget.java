@@ -50,13 +50,14 @@ import java.util.List;
  *
  * <h3>Changes:</h3>
  * <ul>
+ *     <li>4: simplification and improvements, extract input fields and bottom button bar into separate classes</li>
  *     <li>3: code improvements and clean up</li>
  *     <li>2: basic improvements
  *     <li>1: basic implementation
  * </ul>
  *
  * @author sebastian
- * @version 3
+ * @version 4
  * @since 1
  */
 public class ConverterWidget {
@@ -67,9 +68,8 @@ public class ConverterWidget {
     private File[] files2read;
     private Group groupSource;
     private Group groupTarget;
+    private InputFieldsComposite inputFieldsComposite;
     private Shell innerShell = null;
-    private Text destinationTextField = null;
-    private Text sourceTextField = null;
 
     /**
      * Class constructor without parameters.
@@ -81,7 +81,6 @@ public class ConverterWidget {
     }
 
     private void initUI() {
-        // golden rectangle cut with an aspect ratio of 1.618:1
         int height = Main.getRyCONWidgetHeight();
         int width = Main.getRyCONWidgetWidth();
 
@@ -107,13 +106,15 @@ public class ConverterWidget {
         gridData.widthHint = width;
         innerShell.setLayoutData(gridData);
 
-        createGroupInputFields(width);
+        inputFieldsComposite = new InputFieldsComposite(this, innerShell, SWT.NONE);
+        inputFieldsComposite.setLayout(gridLayout);
 
         // composite for the two columns for the source and target groups
         createCompositeSourceTarget();
         createCheckBoxes();
         createDescription(width);
-        createBottomButtons();
+
+        new BottomButtonBar(this, innerShell, SWT.NONE);
 
         innerShell.setLocation(ShellCenter.centeredShellLocation(innerShell));
 
@@ -121,7 +122,6 @@ public class ConverterWidget {
 
         innerShell.pack();
         innerShell.open();
-
     }
 
     private void createCompositeSourceTarget() {
@@ -274,105 +274,6 @@ public class ConverterWidget {
         compositeBottomBtns.setLayoutData(gridData);
     }
 
-    private void createGroupInputFields(int width) {
-        Group groupInputFields = new Group(innerShell, SWT.NONE);
-        groupInputFields.setText(I18N.getGroupTitlePathSelection());
-
-        GridLayout gridLayout = new GridLayout();
-        gridLayout.numColumns = 3;
-        groupInputFields.setLayout(gridLayout);
-
-        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
-        gridData.widthHint = width - 24;
-        groupInputFields.setLayoutData(gridData);
-
-        Label source = new Label(groupInputFields, SWT.NONE);
-        source.setText(I18N.getLabelSource());
-
-        sourceTextField = new Text(groupInputFields, SWT.BORDER);
-        sourceTextField.addListener(SWT.Traverse, new Listener() {
-            @Override
-            public void handleEvent(Event event) {
-                // prevent this shortcut for execute when the text fields are empty
-                if (!(sourceTextField.getText().trim().equals("") || (destinationTextField.getText().trim().equals("")))) {
-
-                    if (((event.stateMask & SWT.SHIFT) == SWT.SHIFT) && (event.detail == SWT.TRAVERSE_RETURN)) {
-                        actionBtnOk();
-                    } else if (((event.stateMask & SWT.CTRL) == SWT.CTRL) && (event.detail == SWT.TRAVERSE_RETURN)) {
-                        actionBtnOkAndExit();
-                    }
-
-                } else if (event.detail == SWT.TRAVERSE_RETURN) {
-                    actionBtnSource();
-                    destinationTextField.setFocus();
-                }
-            }
-        });
-
-
-        gridData = new GridData();
-        gridData.horizontalAlignment = GridData.FILL;
-        gridData.grabExcessHorizontalSpace = true;
-        sourceTextField.setLayoutData(gridData);
-
-        Button btnSource = new Button(groupInputFields, SWT.NONE);
-        btnSource.setText(I18N.getBtnChooseFiles());
-        btnSource.setToolTipText(I18N.getBtnChooseFilesToolTip());
-        btnSource.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                actionBtnSource();
-            }
-        });
-
-        gridData = new GridData();
-        gridData.horizontalAlignment = SWT.FILL;
-        btnSource.setLayoutData(gridData);
-
-        Label destination = new Label(groupInputFields, SWT.NONE);
-        destination.setText(I18N.getLabelDestination());
-        destination.setLayoutData(new GridData());
-
-        destinationTextField = new Text(groupInputFields, SWT.SINGLE | SWT.BORDER);
-        destinationTextField.addListener(SWT.Traverse, new Listener() {
-            @Override
-            public void handleEvent(Event event) {
-                // prevent this shortcut for execute when the text fields are empty
-                if (!(sourceTextField.getText().trim().equals("") || (destinationTextField.getText().trim().equals("")))) {
-
-                    if (((event.stateMask & SWT.SHIFT) == SWT.SHIFT) && (event.detail == SWT.TRAVERSE_RETURN)) {
-                        actionBtnOk();
-                    } else if (((event.stateMask & SWT.CTRL) == SWT.CTRL) && (event.detail == SWT.TRAVERSE_RETURN)) {
-                        actionBtnOkAndExit();
-                    }
-
-                } else if (event.detail == SWT.TRAVERSE_RETURN) {
-                    actionBtnDestination();
-                    sourceTextField.setFocus();
-                }
-            }
-        });
-
-        gridData = new GridData();
-        gridData.horizontalAlignment = GridData.FILL;
-        gridData.grabExcessHorizontalSpace = true;
-        destinationTextField.setLayoutData(gridData);
-
-
-        Button btnDestination = new Button(groupInputFields, SWT.NONE);
-        btnDestination.setText(I18N.getBtnChoosePath());
-        btnDestination.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                actionBtnDestination();
-            }
-        });
-
-        btnDestination.setToolTipText(I18N.getBtnChoosePathToolTip());
-        btnDestination.setLayoutData(new GridData());
-
-    }
-
     private void actionBtnCancel() {
         Main.setSubShellStatus(false);
         Main.statusBar.setStatus("", StatusBar.OK);
@@ -385,10 +286,10 @@ public class ConverterWidget {
         directoryDialog.setMessage(I18N.getFileChooserDirBaseMessage());
 
         // Set the initial filter path according to anything selected or typed in
-        if (destinationTextField.getText() == null) {
+        if (inputFieldsComposite.getDestinationTextField().getText() == null) {
             directoryDialog.setFilterPath(Main.pref.getUserPref(PreferenceHandler.DIR_BASE));
         } else {
-            directoryDialog.setFilterPath(destinationTextField.getText());
+            directoryDialog.setFilterPath(inputFieldsComposite.getDestinationTextField().getText());
         }
 
         String path = directoryDialog.open();
@@ -401,37 +302,28 @@ public class ConverterWidget {
                 msgBox.setText(I18N.getMsgBoxTitleWarning());
                 msgBox.open();
             } else {
-                destinationTextField.setText(path);
+                inputFieldsComposite.getDestinationTextField().setText(path);
             }
         }
     }
 
-    // TODO implement functional check
     private int actionBtnOk() {
-        String source = sourceTextField.getText();
-        String destination = destinationTextField.getText();
+        files2read = WidgetHelper.checkSourceAndDestinationTextFields(
+                inputFieldsComposite.getSourceTextField(),
+                inputFieldsComposite.getDestinationTextField(), files2read);
 
-        if (source.trim().equals("") || (destination.trim().equals(""))) {
-            MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
-            msgBox.setMessage(I18N.getMsgEmptyTextFieldWarning());
-            msgBox.setText(I18N.getMsgBoxTitleWarning());
-            msgBox.open();
-
-            return 0;
-        } else {
+        if ((files2read != null) && (files2read.length > 0)) {
             if (processFileOperations()) {
-
                 // use counter to display different text on the status bar
                 if (Main.countFileOps == 1) {
                     Main.statusBar.setStatus(String.format(I18N.getStatusConvertSuccess(Main.TEXT_SINGULAR), Main.countFileOps), StatusBar.OK);
                 } else {
                     Main.statusBar.setStatus(String.format(I18N.getStatusConvertSuccess(Main.TEXT_PLURAL), Main.countFileOps), StatusBar.OK);
                 }
-
             }
-
             return 1;
         }
+        return 0;
     }
 
     private void actionBtnOkAndExit() {
@@ -475,15 +367,14 @@ public class ConverterWidget {
                 files2read[i] = new File(workingDir + File.separator + files[i]);
             }
 
-            destinationTextField.setText(fileDialog.getFilterPath());
-            sourceTextField.setText(concatString);
+            inputFieldsComposite.getDestinationTextField().setText(fileDialog.getFilterPath());
+            inputFieldsComposite.getSourceTextField().setText(concatString);
 
             // set the radio buttons
             Control[] childrenSource = groupSource.getChildren();
             Control[] childrenTarget = groupTarget.getChildren();
 
             switch (fileDialog.getFilterIndex()) {
-
                 case 0:
                     RadioHelper.selectBtn(childrenSource, 1);
                     RadioHelper.selectBtn(childrenTarget, 2);
@@ -503,414 +394,343 @@ public class ConverterWidget {
         }
     }
 
-    // TODO implement functional check
     private boolean processFileOperations() {
+        boolean success;
+        boolean GSIFormat;
 
-        boolean success = false;
+        int sourceNumber = RadioHelper.getSelectedBtn(groupSource.getChildren());
+        int targetNumber = RadioHelper.getSelectedBtn(groupTarget.getChildren());
 
-        // checks for text field inputs and valid directories
-        if ((sourceTextField.getText() != null) && (destinationTextField.getText() != null)) {
+        if (sourceNumber == 0) {
+            GSIFormat = Main.getGSI8();
+        } else {
+            GSIFormat = Main.getGSI16();
+        }
 
-            int sourceNumber = RadioHelper.getSelectedBtn(groupSource.getChildren());
-            int targetNumber = RadioHelper.getSelectedBtn(groupTarget.getChildren());
+        int counter = 0;
 
-            boolean GSIFormat;
+        for (File file2read : files2read) {
+            boolean readFileSuccess = false;
 
-            if (sourceNumber == 0) {
-                GSIFormat = Main.getGSI8();
-            } else {
-                GSIFormat = Main.getGSI16();
+            LineReader lineReader;
+
+            List<String[]> readCSVFile = null;
+            ArrayList<String> readFile = null;
+            ArrayList<String> writeFile;
+
+            LeicaGSIFileTools gsiTools;
+            TextFileTools textFileTools;
+
+            String separator;
+
+            // read files
+            switch (sourceNumber) {
+                case 0:     // fall through for GSI8 format
+                case 1:     // fall through GSI16 format
+                case 2:     // TXT format (tabulator or space separated)
+                    lineReader = new LineReader(file2read);
+                    if (lineReader.readFile()) {
+                        readFile = lineReader.getLines();
+                        readFileSuccess = true;
+                    } else {
+                        System.err.println("File " + file2read.getName() + " could not be read.");
+
+                        MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_ERROR);
+                        msgBox.setMessage(I18N.getMsgConvertReaderFailed());
+                        msgBox.setText(I18N.getMsgBoxTitleError());
+                        msgBox.open();
+                    }
+                    break;
+
+                case 3:     // CSV format (comma or semicolon separated)
+                    char delimiter = ',';
+
+                    if (chkBoxCSVSemiColonDelimiter.getSelection()) {
+                        delimiter = ';';
+                    }
+
+                    // use opencsv project for reading -> could be done better?
+                    try {
+                        CSVReader reader = new CSVReader(new FileReader(file2read), delimiter);
+                        readCSVFile = reader.readAll();
+                        readFileSuccess = true;
+                    } catch (IOException e) {
+                        System.err.println("File " + file2read.getName() + " could not be read.");
+
+                        MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_ERROR);
+                        msgBox.setMessage(I18N.getMsgConvertReaderCSVFailed());
+                        msgBox.setText(I18N.getMsgBoxTitleError());
+                        msgBox.open();
+                    }
+                    break;
+
+                case 4:     // CSV format from the geo data server 'Basel Stadt' (http://shop.geo.bs.ch/geoshop_app/geoshop/)
+                    try {
+                        CSVReader reader = new CSVReader(new FileReader(file2read), ';', '"', 1); // skip first line
+                        readCSVFile = reader.readAll();
+                        readFileSuccess = true;
+                    } catch (IOException e) {
+                        System.err.println("File " + file2read.getName() + " could not be read.");
+
+                        MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_ERROR);
+                        msgBox.setMessage(I18N.getMsgConvertReaderCSVFailed());
+                        msgBox.setText(I18N.getMsgBoxTitleError());
+                        msgBox.open();
+                    }
+                    break;
             }
 
-            int counter = 0;
+            if (readFileSuccess) {
+                // write files
+                switch (targetNumber) {
+                    case 0:     // GSI8 format
+                        switch (sourceNumber) {
+                            case 0:     // GSI8 format (not possible)
+                                break;
 
-            for (File file2read : files2read) {
+                            case 1:     // GSI16 format
+                                // process file operations
+                                gsiTools = new LeicaGSIFileTools(readFile);
+                                writeFile = gsiTools.processFormatConversionBetweenGSI8AndGSI16(Main.getGSI8());
 
-                boolean readFileSuccess = false;
+                                // write file line by line
+                                if (writeFile(file2read, writeFile, ".GSI")) {
+                                    counter++;
+                                }
+                                break;
 
-                LineReader lineReader;
+                            case 2:     // TXT format (tabulator separated)
+                                gsiTools = new LeicaGSIFileTools(readFile);
+                                writeFile = gsiTools.processFormatConversionTXT2GSI(Main.getGSI8());
 
-                List<String[]> readCSVFile = null;
-                ArrayList<String> readFile = null;
-                ArrayList<String> writeFile;
+                                // write file line by line
+                                if (writeFile(file2read, writeFile, ".GSI")) {
+                                    counter++;
+                                }
+                                break;
 
-                LeicaGSIFileTools gsiTools;
-                TextFileTools textFileTools;
+                            case 3:     // CSV format (comma or semicolon separated)
+                                gsiTools = new LeicaGSIFileTools(readCSVFile);
+                                writeFile = gsiTools.processFormatConversionCSV2GSI(Main.getGSI8());
 
-                String separator;
+                                // write file line by line
+                                if (writeFile(file2read, writeFile, ".GSI")) {
+                                    counter++;
+                                }
+                                break;
 
-                // read files
-                switch (sourceNumber) {
+                            case 4:     // CSV format 'Basel Stadt' (semicolon separated)
+                                gsiTools = new LeicaGSIFileTools(readCSVFile);
+                                writeFile = gsiTools.processFormatConversionCSVBaselStadt2GSI(Main.getGSI8());
 
-                    case 0:     // fall through for GSI8 format
-
-                    case 1:     // fall through GSI16 format
-
-                    case 2:     // TXT format (tabulator or space separated)
-
-                        lineReader = new LineReader(file2read);
-                        if (lineReader.readFile()) {
-                            readFile = lineReader.getLines();
-                            readFileSuccess = true;
-                        } else {
-                            System.err.println("File " + file2read.getName() + " could not be read.");
-
-                            MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_ERROR);
-                            msgBox.setMessage(I18N.getMsgConvertReaderFailed());
-                            msgBox.setText(I18N.getMsgBoxTitleError());
-                            msgBox.open();
+                                // write file line by line
+                                if (writeFile(file2read, writeFile, ".GSI")) {
+                                    counter++;
+                                }
+                                break;
 
                         }
+                        break;
 
+                    case 1:     // GSI16 format
+                        switch (sourceNumber) {
+                            case 0:     // GSI8 format
+                                // process file operations
+                                gsiTools = new LeicaGSIFileTools(readFile);
+                                writeFile = gsiTools.processFormatConversionBetweenGSI8AndGSI16(Main.getGSI16());
+
+                                // write file line by line
+                                if (writeFile(file2read, writeFile, ".GSI")) {
+                                    counter++;
+                                }
+                                break;
+
+                            case 1:     // GSI16 format (not possible)
+                                break;
+
+                            case 2:     // TXT format (space or tabulator separated)
+                                gsiTools = new LeicaGSIFileTools(readFile);
+                                writeFile = gsiTools.processFormatConversionTXT2GSI(Main.getGSI16());
+
+                                // write file line by line
+                                if (writeFile(file2read, writeFile, ".GSI")) {
+                                    counter++;
+                                }
+                                break;
+
+                            case 3:     // CSV format (comma or semicolon separated)
+                                gsiTools = new LeicaGSIFileTools(readCSVFile);
+                                writeFile = gsiTools.processFormatConversionCSV2GSI(Main.getGSI16());
+
+                                // write file line by line
+                                if (writeFile(file2read, writeFile, ".GSI")) {
+                                    counter++;
+                                }
+                                break;
+
+                            case 4:     // CSV format 'Basel Stadt' (semicolon separated)
+                                gsiTools = new LeicaGSIFileTools(readCSVFile);
+                                writeFile = gsiTools.processFormatConversionCSVBaselStadt2GSI(Main.getGSI16());
+
+                                // write file line by line
+                                if (writeFile(file2read, writeFile, ".GSI")) {
+                                    counter++;
+                                }
+                                break;
+
+                        }
+                        break;
+
+                    case 2:     // TXT format (space or tabulator separated)
+                        switch (sourceNumber) {
+                            case 0:     // fall through for GSI8 format
+                            case 1:     // GSI16 format
+                                // get separator sign
+                                if (chkBoxTXTSpaceDelimiter.getSelection()) {
+                                    separator = Main.getDelimiterSpace();
+                                } else {
+                                    separator = Main.getDelimiterTab();
+                                }
+
+                                // process file operations
+                                gsiTools = new LeicaGSIFileTools(readFile);
+                                writeFile = gsiTools.processFormatConversionGSI2TXT(separator, GSIFormat, chkBoxWriteCommentLine.getSelection());
+
+                                // write file line by line
+                                if (writeFile(file2read, writeFile, ".TXT")) {
+                                    counter++;
+                                }
+                                break;
+
+                            case 2:     // TXT format (not possible)
+                                break;
+
+                            case 3:     // CSV format (comma or semicolon separated)
+                                // get separator sign
+                                if (chkBoxTXTSpaceDelimiter.getSelection()) {
+                                    separator = Main.getDelimiterSpace();
+                                } else {
+                                    separator = Main.getDelimiterTab();
+                                }
+
+                                // process file operations
+                                textFileTools = new TextFileTools(readCSVFile);
+                                writeFile = textFileTools.processConversionCSV2TXT(separator);
+
+                                // write file line by line
+                                if (writeFile(file2read, writeFile, ".TXT")) {
+                                    counter++;
+                                }
+                                break;
+
+                            case 4:     // CSV format 'Basel Stadt' (semicolon separated)
+                                // get separator sign
+                                if (chkBoxTXTSpaceDelimiter.getSelection()) {
+                                    separator = Main.getDelimiterSpace();
+                                } else {
+                                    separator = Main.getDelimiterTab();
+                                }
+
+                                textFileTools = new TextFileTools(readCSVFile);
+                                writeFile = textFileTools.processFormatConversionCSVBaselStadt2TXT(separator);
+
+                                // write file line by line
+                                if (writeFile(file2read, writeFile, ".TXT")) {
+                                    counter++;
+                                }
+                                break;
+
+                        }
                         break;
 
                     case 3:     // CSV format (comma or semicolon separated)
+                        switch (sourceNumber) {
+                            case 0:     // fall through for GSI8 format
+                            case 1:     // GSI16 format
 
-                        char delimiter = ',';
-                        if (chkBoxCSVSemiColonDelimiter.getSelection()) {
-                            delimiter = ';';
+                                // get separator sign
+                                if (chkBoxCSVSemiColonDelimiter.getSelection()) {
+                                    separator = Main.getDelimiterSemicolon();
+                                } else {
+                                    separator = Main.getDelimiterComma();
+                                }
+
+                                // process file operations
+                                gsiTools = new LeicaGSIFileTools(readFile);
+                                writeFile = gsiTools.processFormatConversionGSI2CSV(separator, chkBoxWriteCommentLine.getSelection());
+
+                                // write file line by line
+                                if (writeFile(file2read, writeFile, ".CSV")) {
+                                    counter++;
+                                }
+                                break;
+
+                            case 2:     // TXT format (space or tabulator separated)
+                                // get separator sign
+                                if (chkBoxCSVSemiColonDelimiter.getSelection()) {
+                                    separator = Main.getDelimiterSemicolon();
+                                } else {
+                                    separator = Main.getDelimiterComma();
+                                }
+
+                                // process file operations
+                                textFileTools = new TextFileTools(readFile);
+                                writeFile = textFileTools.processConversionTXT2CSV(separator);
+
+                                // write file line by line
+                                if (writeFile(file2read, writeFile, ".CSV")) {
+                                    counter++;
+                                }
+                                break;
+
+                            case 3:     // CSV format (not possible)
+                                break;
+
+                            case 4:     // CSV format 'Basel Stadt' (semicolon separated)
+                                // get separator sign
+                                if (chkBoxCSVSemiColonDelimiter.getSelection()) {
+                                    separator = Main.getDelimiterSemicolon();
+                                } else {
+                                    separator = Main.getDelimiterComma();
+                                }
+
+                                textFileTools = new TextFileTools(readCSVFile);
+                                writeFile = textFileTools.processFormatConversionCSVBaselStadt2TXT(separator);
+
+                                // write file line by line
+                                if (writeFile(file2read, writeFile, ".CSV")) {
+                                    counter++;
+                                }
+                                break;
+
                         }
-
-                        // use opencsv project for reading -> could be done better?
-                        try {
-                            CSVReader reader = new CSVReader(new FileReader(file2read), delimiter);
-                            readCSVFile = reader.readAll();
-                            readFileSuccess = true;
-                        } catch (IOException e) {
-
-                            System.err.println("File " + file2read.getName() + " could not be read.");
-
-                            MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_ERROR);
-                            msgBox.setMessage(I18N.getMsgConvertReaderCSVFailed());
-                            msgBox.setText(I18N.getMsgBoxTitleError());
-                            msgBox.open();
-
-                        }
-
                         break;
 
-                    case 4:     // CSV format from the geo data server 'Basel Stadt' (http://shop.geo.bs.ch/geoshop_app/geoshop/)
-
-                        // use opencsv project for reading -> could be done better?
-                        try {
-                            CSVReader reader = new CSVReader(new FileReader(file2read), ';', '"', 1); // skip first line
-                            readCSVFile = reader.readAll();
-                            readFileSuccess = true;
-                        } catch (IOException e) {
-
-                            System.err.println("File " + file2read.getName() + " could not be read.");
-
-                            MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_ERROR);
-                            msgBox.setMessage(I18N.getMsgConvertReaderCSVFailed());
-                            msgBox.setText(I18N.getMsgBoxTitleError());
-                            msgBox.open();
-
-                        }
-
-                        break;
-
                 }
-
-                if (readFileSuccess) {
-                    // write files
-                    switch (targetNumber) {
-
-                        case 0:     // GSI8 format
-
-                            switch (sourceNumber) {
-
-                                case 0:     // GSI8 format (not possible)
-
-                                    break;
-
-                                case 1:     // GSI16 format
-
-                                    // process file operations
-                                    gsiTools = new LeicaGSIFileTools(readFile);
-                                    writeFile = gsiTools.processFormatConversionBetweenGSI8AndGSI16(Main.getGSI8());
-
-                                    // write file line by line
-                                    if (writeFile(file2read, writeFile, ".GSI")) {
-                                        counter++;
-                                    }
-
-                                    break;
-
-                                case 2:     // TXT format (tabulator separated)
-
-                                    gsiTools = new LeicaGSIFileTools(readFile);
-                                    writeFile = gsiTools.processFormatConversionTXT2GSI(Main.getGSI8());
-
-                                    // write file line by line
-                                    if (writeFile(file2read, writeFile, ".GSI")) {
-                                        counter++;
-                                    }
-
-                                    break;
-
-                                case 3:     // CSV format (comma or semicolon separated)
-
-                                    gsiTools = new LeicaGSIFileTools(readCSVFile);
-                                    writeFile = gsiTools.processFormatConversionCSV2GSI(Main.getGSI8());
-
-                                    // write file line by line
-                                    if (writeFile(file2read, writeFile, ".GSI")) {
-                                        counter++;
-                                    }
-
-                                    break;
-
-                                case 4:     // CSV format 'Basel Stadt' (semicolon separated)
-
-                                    gsiTools = new LeicaGSIFileTools(readCSVFile);
-                                    writeFile = gsiTools.processFormatConversionCSVBaselStadt2GSI(Main.getGSI8());
-
-                                    // write file line by line
-                                    if (writeFile(file2read, writeFile, ".GSI")) {
-                                        counter++;
-                                    }
-
-                                    break;
-
-                            }
-
-                            break;
-
-                        case 1:     // GSI16 format
-
-                            switch (sourceNumber) {
-
-                                case 0:     // GSI8 format
-
-                                    // process file operations
-                                    gsiTools = new LeicaGSIFileTools(readFile);
-                                    writeFile = gsiTools.processFormatConversionBetweenGSI8AndGSI16(Main.getGSI16());
-
-                                    // write file line by line
-                                    if (writeFile(file2read, writeFile, ".GSI")) {
-                                        counter++;
-                                    }
-
-                                    break;
-
-                                case 1:     // GSI16 format (not possible)
-
-                                    break;
-
-                                case 2:     // TXT format (space or tabulator separated)
-
-                                    gsiTools = new LeicaGSIFileTools(readFile);
-                                    writeFile = gsiTools.processFormatConversionTXT2GSI(Main.getGSI16());
-
-                                    // write file line by line
-                                    if (writeFile(file2read, writeFile, ".GSI")) {
-                                        counter++;
-                                    }
-
-                                    break;
-
-                                case 3:     // CSV format (comma or semicolon separated)
-
-                                    gsiTools = new LeicaGSIFileTools(readCSVFile);
-                                    writeFile = gsiTools.processFormatConversionCSV2GSI(Main.getGSI16());
-
-                                    // write file line by line
-                                    if (writeFile(file2read, writeFile, ".GSI")) {
-                                        counter++;
-                                    }
-
-                                    break;
-
-                                case 4:     // CSV format 'Basel Stadt' (semicolon separated)
-
-                                    gsiTools = new LeicaGSIFileTools(readCSVFile);
-                                    writeFile = gsiTools.processFormatConversionCSVBaselStadt2GSI(Main.getGSI16());
-
-                                    // write file line by line
-                                    if (writeFile(file2read, writeFile, ".GSI")) {
-                                        counter++;
-                                    }
-
-                                    break;
-
-                            }
-
-                            break;
-
-                        case 2:     // TXT format (space or tabulator separated)
-
-                            switch (sourceNumber) {
-
-                                case 0:     // fall through for GSI8 format
-
-                                case 1:     // GSI16 format
-
-                                    // get separator sign
-                                    if (chkBoxTXTSpaceDelimiter.getSelection()) {
-                                        separator = Main.getDelimiterSpace();
-                                    } else {
-                                        separator = Main.getDelimiterTab();
-                                    }
-
-                                    // process file operations
-                                    gsiTools = new LeicaGSIFileTools(readFile);
-                                    writeFile = gsiTools.processFormatConversionGSI2TXT(separator, GSIFormat, chkBoxWriteCommentLine.getSelection());
-
-                                    // write file line by line
-                                    if (writeFile(file2read, writeFile, ".TXT")) {
-                                        counter++;
-                                    }
-
-                                    break;
-
-                                case 2:     // TXT format (not possible)
-
-                                    break;
-
-                                case 3:     // CSV format (comma or semicolon separated)
-
-                                    // get separator sign
-                                    if (chkBoxTXTSpaceDelimiter.getSelection()) {
-                                        separator = Main.getDelimiterSpace();
-                                    } else {
-                                        separator = Main.getDelimiterTab();
-                                    }
-
-                                    // process file operations
-                                    textFileTools = new TextFileTools(readCSVFile);
-                                    writeFile = textFileTools.processConversionCSV2TXT(separator);
-
-                                    // write file line by line
-                                    if (writeFile(file2read, writeFile, ".TXT")) {
-                                        counter++;
-                                    }
-
-                                    break;
-
-                                case 4:     // CSV format 'Basel Stadt' (semicolon separated)
-
-                                    // get separator sign
-                                    if (chkBoxTXTSpaceDelimiter.getSelection()) {
-                                        separator = Main.getDelimiterSpace();
-                                    } else {
-                                        separator = Main.getDelimiterTab();
-                                    }
-
-                                    textFileTools = new TextFileTools(readCSVFile);
-                                    writeFile = textFileTools.processFormatConversionCSVBaselStadt2TXT(separator);
-
-                                    // write file line by line
-                                    if (writeFile(file2read, writeFile, ".TXT")) {
-                                        counter++;
-                                    }
-
-                                    break;
-
-                            }
-
-                            break;
-
-                        case 3:     // CSV format (comma or semicolon separated)
-
-                            switch (sourceNumber) {
-
-                                case 0:     // fall through for GSI8 format
-
-                                case 1:     // GSI16 format
-
-                                    // get separator sign
-                                    if (chkBoxCSVSemiColonDelimiter.getSelection()) {
-                                        separator = Main.getDelimiterSemicolon();
-                                    } else {
-                                        separator = Main.getDelimiterComma();
-                                    }
-
-                                    // process file operations
-                                    gsiTools = new LeicaGSIFileTools(readFile);
-                                    writeFile = gsiTools.processFormatConversionGSI2CSV(separator, chkBoxWriteCommentLine.getSelection());
-
-                                    // write file line by line
-                                    if (writeFile(file2read, writeFile, ".CSV")) {
-                                        counter++;
-                                    }
-
-                                    break;
-
-                                case 2:     // TXT format (space or tabulator separated)
-
-                                    // get separator sign
-                                    if (chkBoxCSVSemiColonDelimiter.getSelection()) {
-                                        separator = Main.getDelimiterSemicolon();
-                                    } else {
-                                        separator = Main.getDelimiterComma();
-                                    }
-
-                                    // process file operations
-                                    textFileTools = new TextFileTools(readFile);
-                                    writeFile = textFileTools.processConversionTXT2CSV(separator);
-
-                                    // write file line by line
-                                    if (writeFile(file2read, writeFile, ".CSV")) {
-                                        counter++;
-                                    }
-
-                                    break;
-
-                                case 3:     // CSV format (not possible)
-
-                                    break;
-
-                                case 4:     // CSV format 'Basel Stadt' (semicolon separated)
-
-                                    // get separator sign
-                                    if (chkBoxCSVSemiColonDelimiter.getSelection()) {
-                                        separator = Main.getDelimiterSemicolon();
-                                    } else {
-                                        separator = Main.getDelimiterComma();
-                                    }
-
-                                    textFileTools = new TextFileTools(readCSVFile);
-                                    writeFile = textFileTools.processFormatConversionCSVBaselStadt2TXT(separator);
-
-                                    // write file line by line
-                                    if (writeFile(file2read, writeFile, ".CSV")) {
-                                        counter++;
-                                    }
-
-                                    break;
-
-                            }
-
-                            break;
-
-                    }
-
-                }
-
-            }
-
-            if (counter > 0) {
-                MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_INFORMATION);
-                if (counter == 1) {
-                    msgBox.setMessage(String.format(I18N.getMsgConvertSuccess(Main.TEXT_SINGULAR), counter));
-                } else {
-                    msgBox.setMessage(String.format(I18N.getMsgConvertSuccess(Main.TEXT_PLURAL), counter));
-                }
-                msgBox.setText(I18N.getMsgBoxTitleSuccess());
-                msgBox.open();
-
-                // set the counter for status bar information
-                Main.countFileOps = counter;
-                success = true;
-            } else {
-                MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_ERROR);
-                msgBox.setMessage(I18N.getMsgConvertFailed());
-                msgBox.setText(I18N.getMsgBoxTitleError());
-                msgBox.open();
-
-                success = false;
             }
         }
+
+        if (counter > 0) {
+            MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_INFORMATION);
+            if (counter == 1) {
+                msgBox.setMessage(String.format(I18N.getMsgConvertSuccess(Main.TEXT_SINGULAR), counter));
+            } else {
+                msgBox.setMessage(String.format(I18N.getMsgConvertSuccess(Main.TEXT_PLURAL), counter));
+            }
+            msgBox.setText(I18N.getMsgBoxTitleSuccess());
+            msgBox.open();
+
+            // set the counter for status bar information
+            Main.countFileOps = counter;
+            success = true;
+        } else {
+            MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_ERROR);
+            msgBox.setMessage(I18N.getMsgConvertFailed());
+            msgBox.setText(I18N.getMsgBoxTitleError());
+            msgBox.open();
+            success = false;
+        }
+
         return success;
     }
 
