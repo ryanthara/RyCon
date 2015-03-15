@@ -141,6 +141,9 @@ public class LevellingWidget {
         innerShell.dispose();
     }
 
+    /*
+     * This method is used from the class InputFieldsComposite!
+     */
     private void actionBtnDestination() {
         DirectoryDialog directoryDialog = new DirectoryDialog(innerShell);
         directoryDialog.setText(I18N.getFileChooserDirBaseTitle());
@@ -188,6 +191,9 @@ public class LevellingWidget {
         return 0;
     }
 
+    /*
+     * This method is used from the class BottomButtonBar!
+     */
     private void actionBtnOkAndExit() {
         switch (actionBtnOk()) {
             case 0:
@@ -202,6 +208,9 @@ public class LevellingWidget {
         }
     }
 
+    /*
+     * This method is used from the class InputFieldsComposite!
+     */
     private void actionBtnSource() {
         FileDialog fileDialog = new FileDialog(innerShell, SWT.MULTI);
         fileDialog.setFilterPath(Main.pref.getUserPref(PreferenceHandler.DIR_PROJECTS));

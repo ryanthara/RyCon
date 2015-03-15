@@ -101,7 +101,6 @@ public class Updater {
      * @return latest news from the update site
      */
     public String getWhatsNew() {
-        
         StringBuilder builder = new StringBuilder();
         
         try {

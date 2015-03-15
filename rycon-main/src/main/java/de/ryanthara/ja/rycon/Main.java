@@ -32,6 +32,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Locale;
 
 /**
  * Abstract class for holding values, constants and objects for the complete RyCON application.
@@ -282,6 +283,20 @@ public abstract class Main {
                 display.dispose();
             }
         }
+    }
+
+    /**
+     * Sets the locale to a given language code in alpha-2 or alpha-3 language code.
+     *
+     * @see {url http://docs.oracle.com/javase/7/docs/api/java/util/Locale.html}
+     * @param languageCode language code
+     */
+    public static void setLocaleTo(String languageCode) {
+        final String lowerCase = languageCode;
+        final String upperCase = languageCode.toUpperCase();
+
+        Locale locale = new Locale(lowerCase, upperCase);
+        Locale.setDefault(locale);
     }
 
     /**

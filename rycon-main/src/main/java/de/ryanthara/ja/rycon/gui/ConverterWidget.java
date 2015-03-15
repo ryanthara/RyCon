@@ -30,7 +30,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
@@ -109,7 +108,6 @@ public class ConverterWidget {
         inputFieldsComposite = new InputFieldsComposite(this, innerShell, SWT.NONE);
         inputFieldsComposite.setLayout(gridLayout);
 
-        // composite for the two columns for the source and target groups
         createCompositeSourceTarget();
         createCheckBoxes();
         createDescription(width);
@@ -235,51 +233,15 @@ public class ConverterWidget {
         tip.setText(String.format(I18N.getLabelTipConverterWidget()));
     }
 
-    private void createBottomButtons() {
-        Composite compositeBottomBtns = new Composite(innerShell, SWT.NONE);
-        compositeBottomBtns.setLayout(new FillLayout());
-
-        Button btnCancel = new Button(compositeBottomBtns, SWT.NONE);
-        btnCancel.setText(I18N.getBtnCancelLabel());
-        btnCancel.setToolTipText(I18N.getBtnCancelLabelToolTip());
-
-        btnCancel.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                actionBtnCancel();
-            }
-        });
-
-        Button btnOK = new Button(compositeBottomBtns, SWT.NONE);
-        btnOK.setText(I18N.getBtnOKAndOpenLabel());
-        btnOK.setToolTipText(I18N.getBtnOKAndOpenLabelToolTip());
-        btnOK.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                actionBtnOk();
-            }
-        });
-
-        Button btnOKAndExit = new Button(compositeBottomBtns, SWT.NONE);
-        btnOKAndExit.setText(I18N.getBtnOKAndExitLabel());
-        btnOKAndExit.setToolTipText(I18N.getBtnOKAndExitLabelToolTip());
-        btnOKAndExit.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                actionBtnOkAndExit();
-            }
-        });
-
-        GridData gridData = new GridData(SWT.END, SWT.END, false, true);
-        compositeBottomBtns.setLayoutData(gridData);
-    }
-
     private void actionBtnCancel() {
         Main.setSubShellStatus(false);
         Main.statusBar.setStatus("", StatusBar.OK);
         innerShell.dispose();
     }
 
+    /*
+     * This method is used from the class InputFieldsComposite!
+     */
     private void actionBtnDestination() {
         DirectoryDialog directoryDialog = new DirectoryDialog(innerShell);
         directoryDialog.setText(I18N.getFileChooserDirBaseTitle());
@@ -326,6 +288,9 @@ public class ConverterWidget {
         return 0;
     }
 
+    /*
+     * This method is used from the class BottomButtonBar!
+     */
     private void actionBtnOkAndExit() {
         switch (actionBtnOk()) {
             case 0:
@@ -340,6 +305,9 @@ public class ConverterWidget {
         }
     }
 
+    /*
+     * This method is used from the class InputFieldsComposite!
+     */
     private void actionBtnSource() {
         FileDialog fileDialog = new FileDialog(innerShell, SWT.MULTI);
         fileDialog.setFilterPath(Main.pref.getUserPref(PreferenceHandler.DIR_PROJECTS));

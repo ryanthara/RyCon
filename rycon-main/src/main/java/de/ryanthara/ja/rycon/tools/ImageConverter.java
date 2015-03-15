@@ -149,8 +149,4 @@ public class ImageConverter {
         return image;
     }
 
-    private ImageData convertToImageData(Icon icon) {
-        return convertToImageData(convertToBufferedImage(icon));
-    }
-
 } // end of ImageConverter

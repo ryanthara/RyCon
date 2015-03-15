@@ -94,22 +94,6 @@ public class UpdateDialog extends Dialog {
     }
 
     /**
-     * Returns the message string.
-     * @return the message string
-     */
-    public String getMessage() {
-        return message;
-    }
-
-    /**
-     * Returns the what's new info.
-     * @return the what's new info as String
-     */
-    public String getWhatsNewInfo() {
-        return this.whatsNewInfo;
-    }
-
-    /**
      * Sets the update dialog's message. The message will be visible on the dialog while it is open.
      *
      * @param message the message to be shown
@@ -127,7 +111,7 @@ public class UpdateDialog extends Dialog {
     /**
      * Sets the what's new info for displaying.
      *
-     * @param whatsNewInfo
+     * @param whatsNewInfo the info to be set
      *
      * @exception java.lang.IllegalArgumentException ERROR_NULL_ARGUMENT - if the string is null
      */
@@ -238,23 +222,13 @@ public class UpdateDialog extends Dialog {
     }
 
     private void createBrowser() {
-//        Composite browserArea = new Composite(shell, SWT.NONE);
-//        browserArea.setLayout(new GridLayout(2, true));
-//        GridData data = new GridData(SWT.CENTER, SWT.CENTER, true, false);
-//        data.horizontalSpan = 2;
-//        browserArea.setLayoutData(data);
-
         Browser browser = new Browser(shell, SWT.NONE);
         browser.setText(whatsNewInfo);
-//        GridData browserData = new GridData(SWT.FILL, SWT.FILL, true, true);
         GridData browserData = new GridData(SWT.HORIZONTAL, SWT.TOP, true, false, 2, 1);
-//        GridData browserData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
         browserData.widthHint = MAX_WIDTH;
         browserData.heightHint = MAX_HEIGHT;
-
         browser.setLayoutData(browserData);
     }
-
 
     private void createButtons() {
         Composite buttonArea = new Composite(shell, SWT.NONE);
@@ -315,6 +289,7 @@ public class UpdateDialog extends Dialog {
         result.y = (parentSize.height - preferredSize.y) / 2 + parentSize.y;
         result.width = Math.min(preferredSize.x, MAX_WIDTH);
         result.height = preferredSize.y;
+
         return result;
     }
 

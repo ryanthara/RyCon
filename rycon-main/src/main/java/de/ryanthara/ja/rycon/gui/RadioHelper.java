@@ -39,11 +39,6 @@ import org.eclipse.swt.widgets.Control;
 public class RadioHelper {
 
     /**
-     * Class constructor without parameters.
-     */
-    public RadioHelper() {}
-
-    /**
      * Returns the number of a selected radio button from a given control group.
      * <p>
      * Pay attention to the fact, that the first button in the field has the number '0'.
@@ -55,7 +50,6 @@ public class RadioHelper {
         int number = -1;
 
         for (int i = 0; i < control.length; i++) {
-
             Control child = control[i];
             if (child instanceof Button) {
                 Button button = (Button) child;
@@ -120,7 +114,6 @@ public class RadioHelper {
                     selectedSlave = i;
 
                     if (selectedSlave == selectedMaster) {
-
                         ((Button) slave[i]).setSelection(false);
 
                         if (selectedSlave == master.length - 1) {
@@ -128,9 +121,7 @@ public class RadioHelper {
                         } else {
                             ((Button) slave[i + 1]).setSelection(true);
                         }
-
                     }
-
                 }
             }
         }

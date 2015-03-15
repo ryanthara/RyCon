@@ -43,12 +43,6 @@ public class Messages {
     private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 
     /**
-     * Class constructor without parameter.
-     */
-    public Messages() {
-    }
-
-    /**
      * Returns the key-text-pair.
      *
      * @param key key to look up

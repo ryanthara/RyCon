@@ -157,7 +157,6 @@ public class TextFileTools {
         result.add(lineStorage);
 
         return result;
-
     }
 
     /**

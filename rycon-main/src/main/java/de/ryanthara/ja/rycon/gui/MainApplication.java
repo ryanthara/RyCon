@@ -529,6 +529,7 @@ public class MainApplication extends Main {
     public static void main(String[] args) {
         checkJavaVersion();
         checkRyCONVersion();
+        setLocaleTo("DE");
         checkLicense();
         initApplicationPreferences();
 
@@ -538,12 +539,7 @@ public class MainApplication extends Main {
 //        new MainApplication_KOPIE();
     }
 
-    /**
-     * Does all the things after the application has started.
-     * <p>
-     * It is called from a listener after the shell is displayed.
-     */
-    public void applicationStarted() {
+    private void applicationStarted() {
         // TODO popup widget
         if (LICENSE) {
             NotificationPopupWidget.notify(I18N.getLicenseTitleFull(), I18N.getLicenseMsgFull(), NotificationType.values()[1], 4500);
