@@ -33,6 +33,8 @@ import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 
+import java.io.File;
+
 /**
  * This class is the main application of RyCON.
  * <p>
@@ -42,6 +44,7 @@ import org.eclipse.swt.widgets.*;
  *
  * <h3>Changes:</h3>
  * <ul>
+ *     <li>4: enable drag and drop handling </li>
  *     <li>3: code improvements and clean up</li>
  *     <li>2: basic improvements
  *     <li>1: basic implementation
@@ -72,7 +75,7 @@ public class MainApplication extends Main {
     /**
      * Implements the user interface (UI) and all its components.
      * <p>
-     * Drag'n drop is implemented on the buttons of the following modules.
+     * Drag and drop is implemented on the buttons of the following modules.
      * <ul>
      *     <li>Clean files...</li>
      *     <li>Split files by code...</li>
@@ -160,7 +163,6 @@ public class MainApplication extends Main {
 
         statusBar.setLayoutData(formDataStatus);
 
-        // show information on status bar e.g. when a new config file was generated
         if (pref.isDefaultSettingsGenerated()) {
             statusBar.setStatus(I18N.getMsgNewConfigFileGenerated(), StatusBar.WARNING);
         }
@@ -172,8 +174,7 @@ public class MainApplication extends Main {
         // size depends on the grid size
         shell.setSize(3 * getRyCON_GRID_WIDTH() + 20, 2 * getRyCON_GRID_HEIGHT() + 100);
 
-        // center the shell on the primary monitor
-        shell.setLocation(ShellCenter.centeredShellLocation(shell));
+        shell.setLocation(ShellCenter.centerShellOnPrimaryMonitor(shell));
 
         shell.addShellListener(new ShellAdapter() {
             /**
@@ -196,24 +197,16 @@ public class MainApplication extends Main {
 
         shell.open();
 
-        // show settings widget when necessary
         if (pref.isDefaultSettingsGenerated()) {
             new SettingsWidget();
         }
 
-        // run the event loop as long as the window is open
         while (!shell.isDisposed()) {
-
-            // read the next OS event queue and transfer it to a SWT event
             if (!display.readAndDispatch()) {
-
-                // if there are currently no other OS event to process
-                // sleep until the next OS event is available
                 display.sleep();
             }
         }
 
-        // disposes all associated windows and their components
         display.dispose();
     }
 
@@ -293,7 +286,6 @@ public class MainApplication extends Main {
         btnToolboxClean.setText(I18N.getBtnCleanLabel());
         btnToolboxClean.setToolTipText(I18N.getBtnCleanLabelToolTip());
 
-        //register listener for the selection event
         btnToolboxClean.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -309,41 +301,18 @@ public class MainApplication extends Main {
         targetClean.setTransfer(types);
 
         targetClean.addDropListener(new DropTargetAdapter() {
-
-            public void dragEnter(DropTargetEvent event) {
-
-                System.out.println("drag enter");
-
-                if (event.detail == DND.DROP_DEFAULT) {
-                    if ((event.operations & DND.DROP_COPY) != 0) {
-                        event.detail = DND.DROP_COPY;
-                    } else {
-                        event.detail = DND.DROP_NONE;
-                    }
-                }
-                // will accept text but prefer to have files dropped
-                for (int i = 0; i < event.dataTypes.length; i++) {
-                    if (fileTransfer.isSupportedType(event.dataTypes[i])) {
-                        event.currentDataType = event.dataTypes[i];
-                        // files should only be copied
-                        if (event.detail != DND.DROP_COPY) {
-                            event.detail = DND.DROP_NONE;
-                        }
-                        break;
-                    }
-                }
-
-            }
-
             public void drop(DropTargetEvent event) {
-
-                System.out.println("drop");
-
                 if (fileTransfer.isSupportedType(event.currentDataType)) {
-                    String[] files = (String[]) event.data;
-                    statusBar.setStatus(files[0], 0);
-                }
+                    String[] droppedFiles = (String[]) event.data;
+                    File files[] = new File[droppedFiles.length];
 
+                    for (int i = 0; i < droppedFiles.length; i++) {
+                        files[i] = new File(droppedFiles[i]);
+                    }
+
+                    new TidyUpWidget(files).executeDropInjection();
+
+                }
             }
         });
     }
@@ -371,41 +340,20 @@ public class MainApplication extends Main {
 
         targetSplitter.addDropListener(new DropTargetAdapter() {
 
-            public void dragEnter(DropTargetEvent event) {
-
-                System.out.println("drag enter 2");
-
-                if (event.detail == DND.DROP_DEFAULT) {
-                    if ((event.operations & DND.DROP_COPY) != 0) {
-                        event.detail = DND.DROP_COPY;
-                    } else {
-                        event.detail = DND.DROP_NONE;
-                    }
-                }
-                // will accept text but prefer to have files dropped
-                for (int i = 0; i < event.dataTypes.length; i++) {
-                    if (fileTransfer.isSupportedType(event.dataTypes[i])) {
-                        event.currentDataType = event.dataTypes[i];
-                        // files should only be copied
-                        if (event.detail != DND.DROP_COPY) {
-                            event.detail = DND.DROP_NONE;
-                        }
-                        break;
-                    }
-                }
-
-            }
-
             public void drop(DropTargetEvent event) {
-
-                System.out.println("drop 2");
-
                 if (fileTransfer.isSupportedType(event.currentDataType)) {
-                    String[] files = (String[]) event.data;
-                    statusBar.setStatus(files[0], 0);
-                }
+                    String[] droppedFiles = (String[]) event.data;
+                    File files[] = new File[droppedFiles.length];
 
+                    for (int i = 0; i < droppedFiles.length; i++) {
+                        files[i] = new File(droppedFiles[i]);
+                    }
+
+                    new CodeSplitterWidget(files).executeDropInjection();
+
+                }
             }
+
         });
     }
 
@@ -431,41 +379,20 @@ public class MainApplication extends Main {
 
         targetLevelling.addDropListener(new DropTargetAdapter() {
 
-            public void dragEnter(DropTargetEvent event) {
-
-                System.out.println("drag enter 3");
-
-                if (event.detail == DND.DROP_DEFAULT) {
-                    if ((event.operations & DND.DROP_COPY) != 0) {
-                        event.detail = DND.DROP_COPY;
-                    } else {
-                        event.detail = DND.DROP_NONE;
-                    }
-                }
-                // will accept text but prefer to have files dropped
-                for (int i = 0; i < event.dataTypes.length; i++) {
-                    if (fileTransfer.isSupportedType(event.dataTypes[i])) {
-                        event.currentDataType = event.dataTypes[i];
-                        // files should only be copied
-                        if (event.detail != DND.DROP_COPY) {
-                            event.detail = DND.DROP_NONE;
-                        }
-                        break;
-                    }
-                }
-
-            }
-
             public void drop(DropTargetEvent event) {
-
-                System.out.println("drop 3");
-
                 if (fileTransfer.isSupportedType(event.currentDataType)) {
-                    String[] files = (String[]) event.data;
-                    statusBar.setStatus(files[0], 0);
-                }
+                    String[] droppedFiles = (String[]) event.data;
+                    File files[] = new File[droppedFiles.length];
 
+                    for (int i = 0; i < droppedFiles.length; i++) {
+                        files[i] = new File(droppedFiles[i]);
+                    }
+
+                    new LevellingWidget(files).executeDropInjection();
+
+                }
             }
+
         });
     }
 

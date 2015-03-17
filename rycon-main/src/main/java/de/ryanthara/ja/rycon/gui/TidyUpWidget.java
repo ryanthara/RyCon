@@ -40,6 +40,7 @@ import java.util.ArrayList;
  *
  * <h3>Changes:</h3>
  * <ul>
+ *     <li>5: enable drag and drop handling </li>
  *     <li>4: simplification and improvements, extract input fields and bottom button bar into separate classes</li>
  *     <li>3: code improvements and clean up</li>
  *     <li>2: basic improvements
@@ -65,6 +66,32 @@ public class TidyUpWidget {
      */
     public TidyUpWidget() {
         initUI();
+    }
+
+    /**
+     * Class constructor with a file array as parameter. This constructor type
+     * is used for the drag and drop injection.
+     *
+     * @param droppedFiles file array from drop source
+     */
+    public TidyUpWidget(File[] droppedFiles) {
+        files2read = droppedFiles;
+    }
+
+    /**
+     * Executes the drop action as injection.
+     * <p>
+     * The file processing will be done without a graphical user interface
+     * and the result is only shown on the status bar.
+     *
+     * @return success of file processing.
+     */
+    public boolean executeDropInjection() {
+        boolean success = false;
+
+        System.out.println("INJECTION");
+
+        return success;
     }
 
     private void initUI() {
@@ -102,7 +129,7 @@ public class TidyUpWidget {
 
         new BottomButtonBar(this, innerShell, SWT.NONE);
 
-        innerShell.setLocation(ShellCenter.centeredShellLocation(innerShell));
+        innerShell.setLocation(ShellCenter.centerShellOnPrimaryMonitor(innerShell));
 
         Main.setSubShellStatus(true);
 

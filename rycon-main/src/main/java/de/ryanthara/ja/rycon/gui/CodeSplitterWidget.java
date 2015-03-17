@@ -76,6 +76,32 @@ public class CodeSplitterWidget {
         initUI();
     }
 
+    /**
+     * Class constructor with a file array as parameter. This constructor type
+     * is used for the drag and drop injection.
+     *
+     * @param droppedFiles file array from drop source
+     */
+    public CodeSplitterWidget(File[] droppedFiles) {
+        files2read = droppedFiles;
+    }
+
+    /**
+     * Executes the drop action as injection.
+     * <p>
+     * The file processing will be done without a graphical user interface
+     * and the result is only shown on the status bar.
+     *
+     * @return success of file processing.
+     */
+    public boolean executeDropInjection() {
+        boolean success = false;
+
+        System.out.println("INJECTION");
+
+        return success;
+    }
+
     private void initUI() {
         int height = Main.getRyCONWidgetHeight();
         int width = Main.getRyCONWidgetWidth();
@@ -111,7 +137,7 @@ public class CodeSplitterWidget {
 
         new BottomButtonBar(this, innerShell, SWT.NONE);
 
-        innerShell.setLocation(ShellCenter.centeredShellLocation(innerShell));
+        innerShell.setLocation(ShellCenter.centerShellOnPrimaryMonitor(innerShell));
 
         Main.setSubShellStatus(true);
 

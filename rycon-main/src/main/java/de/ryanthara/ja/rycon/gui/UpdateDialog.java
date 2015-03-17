@@ -132,7 +132,7 @@ public class UpdateDialog extends Dialog {
         createControls();
 
         shell.setBounds(computeShellBounds());
-        shell.setLocation(ShellCenter.centeredShellLocation(shell));
+        shell.setLocation(ShellCenter.centerShellOnPrimaryMonitor(shell));
         shell.pack();
         shell.open();
 

@@ -100,7 +100,7 @@ public class GeneratorWidget {
         createDescription(width);
         createBottomButtons();
 
-        innerShell.setLocation(ShellCenter.centeredShellLocation(innerShell));
+        innerShell.setLocation(ShellCenter.centerShellOnPrimaryMonitor(innerShell));
 
         Main.setSubShellStatus(true);
 

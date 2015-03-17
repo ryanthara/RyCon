@@ -49,8 +49,7 @@ public class ShellCenter {
      *
      * @return centered shell location
      */
-    public static Point centeredShellLocation(Shell parent) {
-        // center the shell on the primary monitor
+    public static Point centerShellOnPrimaryMonitor(Shell parent) {
         Monitor primary = parent.getDisplay().getPrimaryMonitor();
         Rectangle bounds = primary.getBounds();
         Rectangle rect = parent.getBounds();

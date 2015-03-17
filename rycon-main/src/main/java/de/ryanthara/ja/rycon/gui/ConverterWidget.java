@@ -115,7 +115,7 @@ public class ConverterWidget {
 
         new BottomButtonBar(this, innerShell, SWT.NONE);
 
-        innerShell.setLocation(ShellCenter.centeredShellLocation(innerShell));
+        innerShell.setLocation(ShellCenter.centerShellOnPrimaryMonitor(innerShell));
 
         Main.setSubShellStatus(true);
 
