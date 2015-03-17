@@ -37,56 +37,28 @@ import java.io.File;
  * With the SettingsWidget of RyCON it is possible to set up the options of RyCON and
  * write the configuration file.
  *
+ * <h3>Changes:</h3>
+ * <ul>
+ *     <li>3: code improvements and clean up</li>
+ *     <li>2: basic improvements
+ *     <li>1: basic implementation
+ * </ul>
+ *
  * @author sebastian
- * @version 1
+ * @version 3
  * @since 2
  */
 public class SettingsWidget {
 
-    /**
-     * Member for the inner shell object.
-     */
     private Shell innerShell = null;
-
-    /**
-     * Member for the text field with the free station identifier
-     */
-    private Text identifierFreeStationTextField;
-
-    /**
-     * Member for the text field with the free station identifier
-     */
-    private Text identifierControlPointTextField;
-
-    /**
-     * Member for the text field with the known station identifier
-     */
-    private Text identifierKnownStationTextField;
-
-    /**
-     * Member for the base dir text field.
-     */
     private Text dirBaseTextField;
-
-    /**
-     * Member for the jobs dir text field.
-     */
-    private Text dirJobsTextField;
-
-    /**
-     * Member for the jobs template dir text field.
-     */
     private Text dirJobsTemplateTextField;
-
-    /**
-     * Member for the projects dir text field.
-     */
-    private Text dirProjectsTextField;
-
-    /**
-     * Member for the projects template dir text field.
-     */
+    private Text dirJobsTextField;
     private Text dirProjectsTemplateTextField;
+    private Text dirProjectsTextField;
+    private Text identifierControlPointTextField;
+    private Text identifierFreeStationTextField;
+    private Text identifierKnownStationTextField;
 
     /**
      * Class constructor without parameters.
@@ -95,31 +67,22 @@ public class SettingsWidget {
      */
     public SettingsWidget() {
         initUI();
+        Main.setiIsSettingsWidgetOpen(true);
     }
 
-    /**
-     * Does all the things when hitting the cancel button.
-     */
     private void actionBtnCancel() {
         Main.setSubShellStatus(false);
-
         Main.statusBar.setStatus("", StatusBar.OK);
 
-        innerShell.dispose();
+        widgetDispose();
     }
 
-    /**
-     * Helper for choosing a path via dialogs.
-     *
-     * @param textField calling text field
-     * @param title title of the dialog
-     * @param message message of the dialog
-     * @param filterPath path of the dialog
-     */
+    private void widgetDispose() {
+        widgetDispose();
+    }
+
     private void actionBtnChoosePath(Text textField, String title, String message, String filterPath) {
-
         DirectoryDialog directoryDialog = new DirectoryDialog(innerShell);
-
         directoryDialog.setText(title);
         directoryDialog.setMessage(message);
         directoryDialog.setFilterPath(filterPath);
@@ -127,7 +90,6 @@ public class SettingsWidget {
         String path = directoryDialog.open();
 
         if (path != null) {
-
             File checkDirDestination = new File(path);
             if (!checkDirDestination.exists()) {
                 MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
@@ -137,14 +99,9 @@ public class SettingsWidget {
             } else {
                 textField.setText(path);
             }
-
         }
-
     }
 
-    /**
-     * Does all the things when hitting the 'default settings' button.
-     */
     private void actionBtnDefaultSettings() {
         Main.pref.createDefaultSettings();
         Main.pref.setDefaultSettingsGenerated(true);
@@ -156,14 +113,10 @@ public class SettingsWidget {
         msgBox.setText(I18N.getMsgBoxTitleSuccess());
         msgBox.open();
 
-        innerShell.dispose();
+        widgetDispose();
     }
 
-    /**
-     * Does all the things when hitting the OK button.
-     */
     private void actionBtnOk() {
-
         if (!checkEmptyTextFields()) {
             if (writeSettings()) {
                 Main.pref.setDefaultSettingsGenerated(false);
@@ -175,7 +128,7 @@ public class SettingsWidget {
                 msgBox.setText(I18N.getMsgBoxTitleSuccess());
                 msgBox.open();
 
-                innerShell.dispose();
+                widgetDispose();
             } else {
                 MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_ERROR);
                 msgBox.setMessage(I18N.getMsgSettingsError());
@@ -188,13 +141,8 @@ public class SettingsWidget {
             msgBox.setText(I18N.getMsgBoxTitleWarning());
             msgBox.open();
         }
-
     }
 
-    /**
-     * Checks the text fields for being empty.
-     * @return true if one or more text fields are empty
-     */
     private boolean checkEmptyTextFields() {
 
         return  dirBaseTextField.getText().trim().equals("") ||
@@ -209,23 +157,16 @@ public class SettingsWidget {
 
     }
 
-    /**
-     * Creates the group for the path settings and all its functionality.
-     *
-     * @param width width of the group
-     */
     private void createGroupPaths(int width) {
-
-        GridLayout gridLayout;
-        GridData gridData;
-
         Group group = new Group(innerShell, SWT.NONE);
         group.setText(I18N.getGroupTitlePathSettings());
 
+        GridLayout gridLayout;
         gridLayout = new GridLayout();
         gridLayout.numColumns = 3;
         group.setLayout(gridLayout);
 
+        GridData gridData;
         gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
         gridData.widthHint = width - 24;
         group.setLayoutData(gridData);
@@ -464,27 +405,18 @@ public class SettingsWidget {
 
         btnDirProjectsTemplate.setToolTipText(I18N.getBtnChoosePathToolTip());
         btnDirProjectsTemplate.setLayoutData(new GridData());
-
     }
 
-    /**
-     * Creates the group for the settings of the {@code TidyUpWidget} and all its functionality.
-     *
-     * @param width width of the group
-     * @see de.ryanthara.ja.rycon.gui.TidyUpWidget
-     */
     private void createGroupTidyUp(int width) {
-
-        GridLayout gridLayout;
-        GridData gridData;
-
         Group group = new Group(innerShell, SWT.NONE);
         group.setText(I18N.getGroupTitleTidyUpSettings());
 
+        GridLayout gridLayout;
         gridLayout = new GridLayout();
         gridLayout.numColumns = 2;
         group.setLayout(gridLayout);
 
+        GridData gridData;
         gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
         gridData.widthHint = width - 24;
         group.setLayoutData(gridData);
@@ -560,51 +492,15 @@ public class SettingsWidget {
         gridData.widthHint = 50;
         gridData.grabExcessHorizontalSpace = false;
         identifierControlPointTextField.setLayoutData(gridData);
-
     }
 
-    /**
-     * Initializes all the gui of the tidy up widget.
-     */
-    private void initUI() {
-
-        // golden rectangle cut with an aspect ratio of 1.618:1
-        int height = Main.getRyCONWidgetHeight();
-        int width = Main.getRyCONWidgetWidth();
-
-        innerShell = new Shell(Main.shell, SWT.CLOSE | SWT.DIALOG_TRIM | SWT.MAX | SWT.TITLE | SWT.APPLICATION_MODAL);
-
-        innerShell.addListener(SWT.Close, new Listener() {
-            public void handleEvent(Event event) {
-                actionBtnCancel();
-            }
-        });
-
-        innerShell.setText(I18N.getWidgetTitleSettingsWidget());
-        innerShell.setSize(width, height);
-
-        GridLayout gridLayout = new GridLayout(1, true);
-        gridLayout.marginHeight = 5;
-        gridLayout.marginWidth = 5;
-
-        innerShell.setLayout(gridLayout);
-
-        GridData gridData = new GridData(SWT.FILL, SWT.CENTER, true, true);
-        gridData.heightHint = height;
-        gridData.widthHint = width;
-        innerShell.setLayoutData(gridData);
-
-        createGroupPaths(width);
-
-        createGroupTidyUp(width);
-
+    private void createBottomButtons() {
         Composite compositeBottomBtns = new Composite(innerShell, SWT.NONE);
         compositeBottomBtns.setLayout(new FillLayout());
-        
+
         Button btnDefaultSettings = new Button(compositeBottomBtns, SWT.NONE);
         btnDefaultSettings.setText(I18N.getBtnDefaultSettings());
         btnDefaultSettings.setToolTipText(I18N.getBtnDefaultSettingsToolTip());
-        
         btnDefaultSettings.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -615,7 +511,6 @@ public class SettingsWidget {
         Button btnCancel = new Button(compositeBottomBtns, SWT.NONE);
         btnCancel.setText(I18N.getBtnCancelLabel());
         btnCancel.setToolTipText(I18N.getBtnCancelLabelToolTip());
-
         btnCancel.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -633,8 +528,36 @@ public class SettingsWidget {
             }
         });
 
-        gridData = new GridData(SWT.END, SWT.END, false, true);
+        GridData gridData = new GridData(SWT.END, SWT.END, false, true);
         compositeBottomBtns.setLayoutData(gridData);
+    }
+
+    private void initUI() {
+        int height = Main.getRyCONWidgetHeight();
+        int width = Main.getRyCONWidgetWidth();
+
+        GridLayout gridLayout = new GridLayout(1, true);
+        gridLayout.marginHeight = 5;
+        gridLayout.marginWidth = 5;
+
+        GridData gridData = new GridData(SWT.FILL, SWT.CENTER, true, true);
+        gridData.heightHint = height;
+        gridData.widthHint = width;
+
+        innerShell = new Shell(Main.shell, SWT.CLOSE | SWT.DIALOG_TRIM | SWT.MAX | SWT.TITLE | SWT.APPLICATION_MODAL);
+        innerShell.addListener(SWT.Close, new Listener() {
+            public void handleEvent(Event event) {
+                actionBtnCancel();
+            }
+        });
+        innerShell.setText(I18N.getWidgetTitleSettingsWidget());
+        innerShell.setSize(width, height);
+        innerShell.setLayout(gridLayout);
+        innerShell.setLayoutData(gridData);
+
+        createGroupPaths(width);
+        createGroupTidyUp(width);
+        createBottomButtons();
 
         innerShell.setLocation(ShellCenter.centeredShellLocation(innerShell));
 

@@ -55,6 +55,7 @@ public abstract class Main {
 
     private static final boolean GSI8 = false;
     private static final boolean GSI16 = true;
+    private static boolean isSettingsWidgetOpenStatus = false;
     private static boolean isSubShellOpenStatus = false;
     /*
      * The width of a grid cell. Window size and others are calculated from these values.
@@ -503,6 +504,15 @@ public abstract class Main {
     }
 
     /**
+     * Returns the status to indicate an open settings widget.
+     *
+     * @return true if a settings widget is open
+     */
+    public static boolean isSettingsWidgetOpen() {
+        return isSettingsWidgetOpenStatus;
+    }
+
+    /**
      * Initializes access to {@code Settings} with {@code Main.pref} in normal context.
      */
     public static void initApplicationPreferences() {
@@ -529,9 +539,18 @@ public abstract class Main {
     }
 
     /**
-     * Set the status to indicate an open subshell.
+     * Sets the status to indicate an open settings widget.
      *
-     * @param isSubShellOpen subshell status
+     * @param isSettingsWidgetOpen settings widget open status
+     */
+    public static void setiIsSettingsWidgetOpen(boolean isSettingsWidgetOpen) {
+        isSettingsWidgetOpenStatus = isSettingsWidgetOpen;
+    }
+
+    /**
+     * Sets the status to indicate an open subshell.
+     *
+     * @param isSubShellOpen subshell open status
      */
     public static void setSubShellStatus(boolean isSubShellOpen) {
         isSubShellOpenStatus = isSubShellOpen;

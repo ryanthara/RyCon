@@ -254,7 +254,9 @@ public class MainApplication extends Main {
             settingsItem.addListener(SWT.Selection, new Listener() {
                 @Override
                 public void handleEvent(Event event) {
-                    new SettingsWidget();
+                    if (!Main.isSettingsWidgetOpen()) {
+                        new SettingsWidget();
+                    }
                 }
             });
 

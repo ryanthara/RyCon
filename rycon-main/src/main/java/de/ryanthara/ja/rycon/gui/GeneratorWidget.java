@@ -25,10 +25,10 @@ import de.ryanthara.ja.rycon.io.FileUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.FormAttachment;
-import org.eclipse.swt.layout.FormData;
-import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
 import java.io.File;
@@ -53,6 +53,9 @@ import java.io.IOException;
  */
 public class GeneratorWidget {
 
+    private Button chkBoxCreateJobAndProjectFolder;
+    private Button chkBoxCreateOnlyJobFolder;
+    private Button chkBoxCreateOnlyProjectFolder;
     private Text inputNumber = null;
     private Shell innerShell = null;
 
@@ -66,105 +69,162 @@ public class GeneratorWidget {
     }
 
     private void initUI() {
-
-        // golden rectangle cut with an aspect ratio of 1.618:1
         int height = Main.getRyCONWidgetHeight();
         int width = Main.getRyCONWidgetWidth();
 
-        innerShell = new Shell(Main.shell, SWT.CLOSE | SWT.DIALOG_TRIM | SWT.MAX | SWT.TITLE | SWT.APPLICATION_MODAL);
+        GridLayout gridLayout = new GridLayout(1, true);
+        gridLayout.marginHeight = 5;
+        gridLayout.marginWidth = 5;
 
+        GridData gridData = new GridData(SWT.FILL, SWT.CENTER, true, true);
+        gridData.heightHint = height;
+        gridData.widthHint = width;
+
+        innerShell = new Shell(Main.shell, SWT.CLOSE | SWT.DIALOG_TRIM | SWT.MAX | SWT.TITLE | SWT.APPLICATION_MODAL);
         innerShell.addListener(SWT.Close, new Listener() {
             public void handleEvent(Event event) {
                 actionBtnCancel();
             }
         });
-
-        FormLayout formLayout = new FormLayout();
-        formLayout.marginHeight = 5;
-        formLayout.marginWidth = 5;
-
-        innerShell.setLayout(formLayout);
-
         innerShell.setText(I18N.getWidgetTitleGenerator());
         innerShell.setSize(width, height);
+        innerShell.setLayout(gridLayout);
+        innerShell.setLayoutData(gridData);
 
-        Group groupInputField = new Group(innerShell, SWT.NONE);
-        groupInputField.setText(I18N.getGroupTitleNumberInput());
+        gridLayout = new GridLayout(1, true);
+        gridLayout.marginHeight = 0;
+        gridLayout.marginWidth = 0;
 
-        FormLayout groupInputFieldLayout = new FormLayout();
-        groupInputFieldLayout.marginHeight = 5;
-        groupInputFieldLayout.marginWidth = 5;
-        groupInputField.setLayout(groupInputFieldLayout);
-
-        Label jobAndProjectNumber = new Label(groupInputField, SWT.NONE);
-        jobAndProjectNumber.setText(I18N.getLabelJobAndProjectNumber());
-
-        inputNumber = new Text(groupInputField, SWT.SINGLE | SWT.BORDER);
-
-        // platform independent key handling for ENTER, TAB, ...
-        // TODO change bad listener with a better one
-        inputNumber.addListener(SWT.Traverse, new Listener() {
-
-            @Override
-            public void handleEvent(Event event) {
-
-                if ((event.stateMask & SWT.SHIFT) == SWT.SHIFT && event.detail == SWT.TRAVERSE_RETURN) {
-                    actionBtnOkAndExit();
-                } else if (event.detail == SWT.TRAVERSE_RETURN) {
-                    actionBtnOk();
-                }
-
-            }
-        });
-
-        FormData data = new FormData();
-        data.top = new FormAttachment(inputNumber, 5, SWT.CENTER);
-        jobAndProjectNumber.setLayoutData(data);
-
-        data = new FormData();
-        data.left = new FormAttachment(jobAndProjectNumber, 5);
-        data.right = new FormAttachment(100, 0);
-        inputNumber.setLayoutData(data);
-
-        data = new FormData();
-        data.top = new FormAttachment(15, 5);
-        data.left = new FormAttachment(50, -155);
-        data.right = new FormAttachment(50, 155);
-        groupInputField.setLayoutData(data);
-
-        // description for the input field as text on a label
-        Group groupDescription = new Group(innerShell, SWT.NONE);
-        groupDescription.setText(I18N.getGroupTitleNumberInputAdvice());
-
-        FillLayout fillLayout = new FillLayout();
-        fillLayout.spacing = 5;
-        fillLayout.type = SWT.VERTICAL;
-        groupDescription.setLayout(fillLayout);
-
-        Label tip = new Label(groupDescription, SWT.WRAP | SWT.BORDER | SWT.LEFT);
-        tip.setText(I18N.getLabelTipGeneratorWidget());
-
-        data = new FormData();
-        data.top = new FormAttachment(groupInputField, 5);
-        data.left = new FormAttachment(50, -155);
-        data.right = new FormAttachment(50, 155);
-        data.bottom = new FormAttachment(75, -25);
-        groupDescription.setLayoutData(data);
-
+        createGroupInputField();
+        createGroupOptions(width);
+        createDescription(width);
         createBottomButtons();
 
         innerShell.setLocation(ShellCenter.centeredShellLocation(innerShell));
 
         Main.setSubShellStatus(true);
 
+        innerShell.pack();
         innerShell.open();
     }
 
+    private void createGroupInputField() {
+        Group group = new Group(innerShell, SWT.NONE);
+        group.setText(I18N.getGroupTitleGeneratorNumberInput());
+
+        GridLayout gridLayout = new GridLayout();
+        gridLayout.marginHeight = 5;
+        gridLayout.marginWidth = 5;
+        gridLayout.numColumns = 3;
+        group.setLayout(gridLayout);
+
+        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
+        gridData.widthHint = Main.getRyCONWidgetWidth();
+        group.setLayoutData(gridData);
+
+        Label jobAndProjectNumber = new Label(group, SWT.NONE);
+        jobAndProjectNumber.setText(I18N.getLabelJobAndProjectNumber());
+
+        inputNumber = new Text(group, SWT.SINGLE | SWT.BORDER);
+
+        // platform independent key handling for ENTER, TAB, ...
+        // TODO change bad listener with a better one
+        inputNumber.addListener(SWT.Traverse, new Listener() {
+            @Override
+            public void handleEvent(Event event) {
+                if (!inputNumber.getText().trim().equals("")) {
+
+                    if ((event.stateMask & SWT.SHIFT) == SWT.SHIFT && event.detail == SWT.TRAVERSE_RETURN) {
+                        actionBtnOkAndExit();
+                    } else if (event.detail == SWT.TRAVERSE_RETURN) {
+                        actionBtnOk();
+                    }
+
+                }
+
+            }
+        });
+
+        gridData = new GridData();
+        gridData.grabExcessHorizontalSpace = true;
+        gridData.horizontalAlignment = GridData.FILL;
+        inputNumber.setLayoutData(gridData);
+    }
+
+    private void createGroupOptions(int width) {
+        Group group = new Group(innerShell, SWT.NONE);
+        group.setText(I18N.getGroupTitleOptions());
+
+        GridLayout gridLayout = new GridLayout(1, true);
+        group.setLayout(gridLayout);
+
+        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
+        gridData.widthHint = width - 24;
+        group.setLayoutData(gridData);
+
+        SelectionListener selectionListener = new SelectionAdapter() {
+            public void widgetSelected(SelectionEvent e) {
+                boolean isSelected = ((Button) e.getSource()).getSelection();
+                if (isSelected) {
+                    if (e.getSource().equals(chkBoxCreateJobAndProjectFolder)) {
+                        chkBoxCreateOnlyJobFolder.setSelection(false);
+                        chkBoxCreateOnlyProjectFolder.setSelection(false);
+                    } else if (e.getSource().equals(chkBoxCreateOnlyJobFolder)) {
+                        chkBoxCreateJobAndProjectFolder.setSelection(false);
+                        chkBoxCreateOnlyProjectFolder.setSelection(false);
+                    } else if (e.getSource().equals(chkBoxCreateOnlyProjectFolder)) {
+                        chkBoxCreateJobAndProjectFolder.setSelection(false);
+                        chkBoxCreateOnlyJobFolder.setSelection(false);
+                    }
+                }
+            }
+        };
+
+        chkBoxCreateJobAndProjectFolder = new Button(group, SWT.CHECK);
+        chkBoxCreateJobAndProjectFolder.setSelection(true);
+        chkBoxCreateJobAndProjectFolder.setText(I18N.getBtnChkBoxCreateJobAndProjectFolder());
+        chkBoxCreateJobAndProjectFolder.addSelectionListener(selectionListener);
+
+        chkBoxCreateOnlyJobFolder = new Button(group, SWT.CHECK);
+        chkBoxCreateOnlyJobFolder.setSelection(false);
+        chkBoxCreateOnlyJobFolder.setText(I18N.getBtnChkBoxCreateOnlyJobFolder());
+        chkBoxCreateOnlyJobFolder.addSelectionListener(selectionListener);
+
+        chkBoxCreateOnlyProjectFolder = new Button(group, SWT.CHECK);
+        chkBoxCreateOnlyProjectFolder.setSelection(false);
+        chkBoxCreateOnlyProjectFolder.setText(I18N.getBtnChkBoxCreateOnlyProjectFolder());
+        chkBoxCreateOnlyProjectFolder.addSelectionListener(selectionListener);
+    }
+
+    private void createDescription(int width) {
+        Group group = new Group(innerShell, SWT.NONE);
+        group.setText(I18N.getGroupTitleGeneratorNumberInputAdvice());
+
+        GridLayout gridLayout = new GridLayout(1, true);
+        group.setLayout(gridLayout);
+
+        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
+        gridData.widthHint = width - 24;
+        group.setLayoutData(gridData);
+
+        Label tip = new Label(group, SWT.WRAP | SWT.BORDER | SWT.LEFT);
+        tip.setText(I18N.getLabelTipGeneratorWidget());
+        tip.setLayoutData(new GridData(SWT.HORIZONTAL, SWT.TOP, true, false, 1, 1));
+    }
+
     private void createBottomButtons() {
-        Button btnSettings = new Button(innerShell, SWT.NONE);
+        Composite composite = new Composite(innerShell, SWT.NONE);
+        GridLayout gridLayout = new GridLayout();
+        gridLayout.numColumns = 2;
+        composite.setLayout(gridLayout);
+
+
+        Composite compositeLeft = new Composite(composite, SWT.NONE);
+        compositeLeft.setLayout(new FillLayout());
+
+        Button btnSettings = new Button(compositeLeft, SWT.NONE);
         btnSettings.setText(I18N.getBtnSettingsLabel());
         btnSettings.setToolTipText(I18N.getBtnSettingsLabelToolTip());
-
         btnSettings.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -172,11 +232,15 @@ public class GeneratorWidget {
             }
         });
 
+        Label blindTextAsPlaceHolder = new Label(compositeLeft, SWT.NONE);
 
-        Button btnCancel = new Button(innerShell, SWT.NONE);
+
+        Composite compositeRight = new Composite(composite, SWT.NONE);
+        compositeRight.setLayout(new FillLayout());
+
+        Button btnCancel = new Button(compositeRight, SWT.NONE);
         btnCancel.setText(I18N.getBtnCancelLabel());
         btnCancel.setToolTipText(I18N.getBtnCancelLabelToolTip());
-
         btnCancel.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -184,7 +248,7 @@ public class GeneratorWidget {
             }
         });
 
-        Button btnOK = new Button(innerShell, SWT.NONE);
+        Button btnOK = new Button(compositeRight, SWT.NONE);
         btnOK.setText(I18N.getBtnOKAndOpenLabel());
         btnOK.setToolTipText(I18N.getBtnOKAndOpenLabelToolTip());
         btnOK.addSelectionListener(new SelectionAdapter() {
@@ -194,7 +258,7 @@ public class GeneratorWidget {
             }
         });
 
-        Button btnOKAndExit = new Button(innerShell, SWT.NONE);
+        Button btnOKAndExit = new Button(compositeRight, SWT.NONE);
         btnOKAndExit.setText(I18N.getBtnOKAndExitLabel());
         btnOKAndExit.setToolTipText(I18N.getBtnOKAndExitLabelToolTip());
         btnOKAndExit.addSelectionListener(new SelectionAdapter() {
@@ -203,26 +267,6 @@ public class GeneratorWidget {
                 actionBtnOkAndExit();
             }
         });
-
-        FormData dataSettings = new FormData();
-        dataSettings.bottom = new FormAttachment(100, -5);
-        dataSettings.left = new FormAttachment(0, 5);
-        btnSettings.setLayoutData(dataSettings);
-
-        FormData dataCancel = new FormData();
-        dataCancel.bottom = new FormAttachment(100, -5);
-        dataCancel.right = new FormAttachment(btnOK, 5);
-        btnCancel.setLayoutData(dataCancel);
-
-        FormData dataOk = new FormData();
-        dataOk.bottom = new FormAttachment(100, -5);
-        dataOk.right = new FormAttachment(btnOKAndExit, 5);
-        btnOK.setLayoutData(dataOk);
-
-        FormData dataOkAndExit = new FormData();
-        dataOkAndExit.bottom = new FormAttachment(100, -5);
-        dataOkAndExit.right = new FormAttachment(100, -5);
-        btnOKAndExit.setLayoutData(dataOkAndExit);
     }
 
     private void actionBtnCancel() {
@@ -237,7 +281,7 @@ public class GeneratorWidget {
         if (number.trim().equals("")) {
             MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
             msgBox.setMessage(I18N.getMsgEmptyTextFieldWarning());
-            msgBox.setText(I18N.getMsgEmptyTextFieldWarningJobNumber());
+            msgBox.setText(I18N.getMsgBoxTitleWarning());
             msgBox.open();
 
             return 0;
@@ -271,17 +315,47 @@ public class GeneratorWidget {
     private boolean generateFolders(String number) {
         boolean success = false;
 
+        if (chkBoxCreateJobAndProjectFolder.getSelection()) {
+            boolean jobOK = generateJobFolder(number);
+            boolean projectOK = generateProjectFolder(number);
+
+            if (jobOK && projectOK) {
+                MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
+                msgBox.setMessage(String.format(I18N.getMsgCreateDirJobAndProjectGenerated(), number, number));
+                msgBox.setText(I18N.getMsgBoxTitleSuccess());
+                msgBox.open();
+
+                success = true;
+            } else {
+                MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_ERROR);
+                msgBox.setMessage(I18N.getMsgCreateDirJobAndProjectWarning());
+                msgBox.setText(I18N.getMsgBoxTitleError());
+                msgBox.open();
+            }
+        } else if (chkBoxCreateOnlyJobFolder.getSelection()) {
+            success = generateJobFolder(number);
+        } else if (chkBoxCreateOnlyProjectFolder.getSelection()) {
+            success = generateProjectFolder(number);
+        }
+
+        return success;
+    }
+
+    private boolean generateJobFolder(String number) {
+        boolean success = false;
+
         String jobDir = Main.pref.getUserPref(PreferenceHandler.DIR_JOBS);
         String jobDirTemplate = Main.pref.getUserPref(PreferenceHandler.DIR_JOBS_TEMPLATE);
 
-        String projectDir = Main.pref.getUserPref(PreferenceHandler.DIR_PROJECTS);
-        String projectDirTemplate = Main.pref.getUserPref(PreferenceHandler.DIR_PROJECTS_TEMPLATE);
+        File newJobDir = new File(jobDir + File.separator + number);
 
-        File jobExistTest = new File(jobDir + File.separator + number);
-        File projectExistsTest = new File(projectDir + File.separator + number);
-
-        if (!jobExistTest.exists() && !projectExistsTest.exists()) {
-
+        if (newJobDir.exists()) {
+            Main.statusBar.setStatus("", StatusBar.OK);
+            MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
+            msgBox.setMessage(String.format(I18N.getMsgCreateDirJobExist(), number));
+            msgBox.setText(I18N.getMsgBoxTitleWarning());
+            msgBox.open();
+        } else {
             /* maybe later on with java 8 support in the office
             Path copySourcePathJob = Paths.get(jobDirTemplate);
             Path copySourcePathProject = Paths.get(projectDirTemplate);
@@ -291,10 +365,7 @@ public class GeneratorWidget {
             */
 
             File copySourcePathJob = new File(jobDirTemplate);
-            File copySourcePathProject = new File(projectDirTemplate);
-
             File copyDestinationPathJob = new File(jobDir + File.separator + number);
-            File copyDestinationPathProject = new File(projectDir + File.separator + number);
 
             try {
                 //Files.copy(copySourcePathJob, copyDestinationPathJob);
@@ -302,43 +373,66 @@ public class GeneratorWidget {
 
                 FileUtils fileUtils = new FileUtils();
                 fileUtils.copy(copySourcePathJob, copyDestinationPathJob);
-                fileUtils.copy(copySourcePathProject, copyDestinationPathProject);
 
-                MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_INFORMATION);
-                msgBox.setMessage(String.format(I18N.getMsgCreateDirJobAndProjectGenerated(), number, number));
-                msgBox.setText(I18N.getMsgBoxTitleSuccess());
-                msgBox.open();
                 success = true;
             } catch (IOException e) {
                 System.err.println(e.getMessage());
 
                 MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_ERROR);
-                msgBox.setMessage(I18N.getMsgCreateDirJobAndProjectWarning());
+                msgBox.setMessage(I18N.getMsgCreateDirJobWarning());
                 msgBox.setText(I18N.getMsgBoxTitleError());
                 msgBox.open();
                 success = false;
             }
+        }
+        return success;
+    }
 
-        } else if (jobExistTest.exists() && projectExistsTest.exists()) {
-            Main.statusBar.setStatus("", StatusBar.OK);
-            MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
-            msgBox.setMessage(String.format(I18N.getMsgCreateDirJobAndProjectExist(), number, number));
-            msgBox.setText(I18N.getMsgBoxTitleWarning());
-            msgBox.open();
-        } else if (jobExistTest.exists() && !projectExistsTest.exists()) {
-            Main.statusBar.setStatus("", StatusBar.OK);
-            MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
-            msgBox.setMessage(String.format(I18N.getMsgCreateDirJobExist(), number));
-            msgBox.setText(I18N.getMsgBoxTitleWarning());
-            msgBox.open();
-        } else if (!jobExistTest.exists() && projectExistsTest.exists()) {
+    private boolean generateProjectFolder(String number) {
+        boolean success = false;
+
+        String projectDir = Main.pref.getUserPref(PreferenceHandler.DIR_PROJECTS);
+        String projectDirTemplate = Main.pref.getUserPref(PreferenceHandler.DIR_PROJECTS_TEMPLATE);
+
+        File newProjectDir = new File(projectDir + File.separator + number);
+
+        if (newProjectDir.exists()) {
             Main.statusBar.setStatus("", StatusBar.OK);
             MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
             msgBox.setMessage(String.format(I18N.getMsgCreateDirProjectExist(), number));
             msgBox.setText(I18N.getMsgBoxTitleWarning());
             msgBox.open();
-        }
+        } else {
+            /* maybe later on with java 8 support in the office
+            Path copySourcePathJob = Paths.get(jobDirTemplate);
+            Path copySourcePathProject = Paths.get(projectDirTemplate);
 
+            Path copyDestinationPathJob = Paths.get(jobDir + File.separator + number);
+            Path copyDestinationPathProject = Paths.get(projectDir + File.separator + number);
+            */
+
+            File copySourcePathProject = new File(projectDirTemplate);
+            File copyDestinationPathProject = new File(projectDir + File.separator + number);
+
+            try {
+                //Files.copy(copySourcePathJob, copyDestinationPathJob);
+                //Files.copy(copySourcePathProject, copyDestinationPathProject);
+
+                FileUtils fileUtils = new FileUtils();
+                fileUtils.copy(copySourcePathProject, copyDestinationPathProject);
+
+                success = true;
+            } catch (IOException e) {
+                System.err.println(e.getMessage());
+
+                MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_ERROR);
+                msgBox.setMessage(I18N.getMsgCreateDirProjectWarning());
+                msgBox.setText(I18N.getMsgBoxTitleError());
+                msgBox.open();
+                success = false;
+            }
+
+        }
         return success;
     }
 

@@ -72,7 +72,6 @@ public class GeneratorSettingsWidget {
     }
 
     private void initUI() {
-        // golden rectangle cut with an aspect ratio of 1.618:1
         int height = Main.getRyCONWidgetHeight();
         int width = Main.getRyCONWidgetWidth();
 
@@ -86,7 +85,6 @@ public class GeneratorSettingsWidget {
                 actionBtnCancel();
             }
         });
-
         innerShell.setText(I18N.getWidgetTitleGeneratorSettings());
         innerShell.setSize(width, height);
 

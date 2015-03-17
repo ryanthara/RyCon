@@ -75,32 +75,33 @@ public class LevellingWidget {
         int height = Main.getRyCONWidgetHeight();
         int width = Main.getRyCONWidgetWidth();
 
-        innerShell = new Shell(Main.shell, SWT.CLOSE | SWT.DIALOG_TRIM | SWT.MAX | SWT.TITLE | SWT.APPLICATION_MODAL);
+        GridLayout gridLayout = new GridLayout(1, true);
+        gridLayout.marginHeight = 5;
+        gridLayout.marginWidth = 5;
 
+        GridData gridData = new GridData(SWT.FILL, SWT.CENTER, true, true);
+        gridData.heightHint = height;
+        gridData.widthHint = width;
+
+        innerShell = new Shell(Main.shell, SWT.CLOSE | SWT.DIALOG_TRIM | SWT.MAX | SWT.TITLE | SWT.APPLICATION_MODAL);
         innerShell.addListener(SWT.Close, new Listener() {
             public void handleEvent(Event event) {
                 actionBtnCancel();
             }
         });
-
         innerShell.setText(I18N.getWidgetTitleLevelling());
         innerShell.setSize(width, height);
-
-        GridLayout gridLayout = new GridLayout(1, true);
-        gridLayout.marginHeight = 5;
-        gridLayout.marginWidth = 5;
-
         innerShell.setLayout(gridLayout);
-
-        GridData gridData = new GridData(SWT.FILL, SWT.CENTER, true, true);
-        gridData.heightHint = height;
-        gridData.widthHint = width;
         innerShell.setLayoutData(gridData);
+
+        gridLayout = new GridLayout(1, true);
+        gridLayout.marginHeight = 0;
+        gridLayout.marginWidth = 0;
 
         inputFieldsComposite = new InputFieldsComposite(this, innerShell, SWT.NONE);
         inputFieldsComposite.setLayout(gridLayout);
 
-        createCheckBoxes();
+        createOptions(width);
         createDescription(width);
 
         new BottomButtonBar(this, innerShell, SWT.NONE);
@@ -113,26 +114,36 @@ public class LevellingWidget {
         innerShell.open();
     }
 
-    private void createCheckBoxes() {
-        chkBoxChangePoint = new Button(innerShell, SWT.CHECK);
+    private void createOptions(int width) {
+        Group group = new Group(innerShell, SWT.NONE);
+        group.setText(I18N.getGroupTitleOptions());
+
+        GridLayout gridLayout = new GridLayout(1, true);
+        group.setLayout(gridLayout);
+
+        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
+        gridData.widthHint = width - 24;
+        group.setLayoutData(gridData);
+
+        chkBoxChangePoint = new Button(group, SWT.CHECK);
         chkBoxChangePoint.setSelection(true);
         chkBoxChangePoint.setText(I18N.getBtnChkLevellingIgnoreChangePoints());
     }
 
     private void createDescription(int width) {
-        Group groupDescription = new Group(innerShell, SWT.NONE);
-        groupDescription.setText(I18N.getGroupTitleNumberInputAdvice());
+        Group group = new Group(innerShell, SWT.NONE);
+        group.setText(I18N.getGroupTitleGeneratorNumberInputAdvice());
 
         GridLayout gridLayout = new GridLayout(1, true);
-        groupDescription.setLayout(gridLayout);
+        group.setLayout(gridLayout);
 
         GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
         gridData.widthHint = width - 24;
-        groupDescription.setLayoutData(gridData);
+        group.setLayoutData(gridData);
 
-        Label tip = new Label(groupDescription, SWT.WRAP | SWT.BORDER | SWT.LEFT);
-        tip.setLayoutData(new GridData(SWT.HORIZONTAL, SWT.TOP, true, false, 1, 1));
+        Label tip = new Label(group, SWT.WRAP | SWT.BORDER | SWT.LEFT);
         tip.setText(String.format(I18N.getLabelTipLevellingWidget()));
+        tip.setLayoutData(new GridData(SWT.HORIZONTAL, SWT.TOP, true, false, 1, 1));
     }
 
     private void actionBtnCancel() {
@@ -250,7 +261,6 @@ public class LevellingWidget {
 
         LineReader lineReader;
 
-        // read files
         for (File file2read : files2read) {
             lineReader = new LineReader(file2read);
 

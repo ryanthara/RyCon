@@ -66,7 +66,6 @@ public class BottomButtonBar extends Composite {
         Button btnCancel = new Button(this, SWT.NONE);
         btnCancel.setText(I18N.getBtnCancelLabel());
         btnCancel.setToolTipText(I18N.getBtnCancelLabelToolTip());
-
         btnCancel.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {

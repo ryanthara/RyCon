@@ -63,24 +63,23 @@ public class InputFieldsComposite extends Composite {
     }
 
     private void createContents() {
-        GridLayout gridLayout;
-        GridData gridData;
+        Group group = new Group(this, SWT.NONE);
+        group.setText(I18N.getGroupTitlePathSelection());
 
-        Group groupInputFields = new Group(this, SWT.NONE);
-        groupInputFields.setText(I18N.getGroupTitlePathSelection());
-
-        gridLayout = new GridLayout();
+        GridLayout gridLayout = new GridLayout();
+        gridLayout.marginHeight = 5;
+        gridLayout.marginWidth = 5;
         gridLayout.numColumns = 3;
-        groupInputFields.setLayout(gridLayout);
+        group.setLayout(gridLayout);
 
-        gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
-        gridData.widthHint = Main.getRyCONWidgetWidth() - 24;
-        groupInputFields.setLayoutData(gridData);
+        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
+        gridData.widthHint = Main.getRyCONWidgetWidth();
+        group.setLayoutData(gridData);
 
-        Label source = new Label(groupInputFields, SWT.NONE);
+        Label source = new Label(group, SWT.NONE);
         source.setText(I18N.getLabelSource());
 
-        sourceTextField = new Text(groupInputFields, SWT.BORDER);
+        sourceTextField = new Text(group, SWT.BORDER);
         sourceTextField.addListener(SWT.Traverse, new Listener() {
             @Override
             public void handleEvent(Event event) {
@@ -105,7 +104,7 @@ public class InputFieldsComposite extends Composite {
         gridData.grabExcessHorizontalSpace = true;
         sourceTextField.setLayoutData(gridData);
 
-        Button btnSource = new Button(groupInputFields, SWT.NONE);
+        Button btnSource = new Button(group, SWT.NONE);
         btnSource.setText(I18N.getBtnChooseFiles());
         btnSource.setToolTipText(I18N.getBtnChooseFilesToolTip());
         btnSource.addSelectionListener(new SelectionAdapter() {
@@ -118,11 +117,11 @@ public class InputFieldsComposite extends Composite {
         gridData.horizontalAlignment = SWT.FILL;
         btnSource.setLayoutData(gridData);
 
-        Label destination = new Label(groupInputFields, SWT.NONE);
+        Label destination = new Label(group, SWT.NONE);
         destination.setText(I18N.getLabelDestination());
         destination.setLayoutData(new GridData());
 
-        destinationTextField = new Text(groupInputFields, SWT.SINGLE | SWT.BORDER);
+        destinationTextField = new Text(group, SWT.SINGLE | SWT.BORDER);
         destinationTextField.addListener(SWT.Traverse, new Listener() {
             @Override
             public void handleEvent(Event event) {
@@ -147,7 +146,7 @@ public class InputFieldsComposite extends Composite {
         gridData.grabExcessHorizontalSpace = true;
         destinationTextField.setLayoutData(gridData);
 
-        Button btnDestination = new Button(groupInputFields, SWT.NONE);
+        Button btnDestination = new Button(group, SWT.NONE);
         btnDestination.setText(I18N.getBtnChoosePath());
         btnDestination.addSelectionListener(new SelectionAdapter() {
             @Override

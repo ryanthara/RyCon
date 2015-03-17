@@ -83,33 +83,34 @@ public class ConverterWidget {
         int height = Main.getRyCONWidgetHeight();
         int width = Main.getRyCONWidgetWidth();
 
-        innerShell = new Shell(Main.shell, SWT.CLOSE | SWT.DIALOG_TRIM | SWT.MAX | SWT.TITLE | SWT.APPLICATION_MODAL);
+        GridLayout gridLayout = new GridLayout(1, true);
+        gridLayout.marginHeight = 5;
+        gridLayout.marginWidth = 5;
 
+        GridData gridData = new GridData(SWT.FILL, SWT.CENTER, true, true);
+        gridData.heightHint = height;
+        gridData.widthHint = width;
+
+        innerShell = new Shell(Main.shell, SWT.CLOSE | SWT.DIALOG_TRIM | SWT.MAX | SWT.TITLE | SWT.APPLICATION_MODAL);
         innerShell.addListener(SWT.Close, new Listener() {
             public void handleEvent(Event event) {
                 actionBtnCancel();
             }
         });
-
         innerShell.setText(I18N.getWidgetTitleConverter());
         innerShell.setSize(width, height);
-
-        GridLayout gridLayout = new GridLayout(1, true);
-        gridLayout.marginHeight = 5;
-        gridLayout.marginWidth = 5;
-
         innerShell.setLayout(gridLayout);
-
-        GridData gridData = new GridData(SWT.FILL, SWT.CENTER, true, true);
-        gridData.heightHint = height;
-        gridData.widthHint = width;
         innerShell.setLayoutData(gridData);
+
+        gridLayout = new GridLayout(1, true);
+        gridLayout.marginHeight = 0;
+        gridLayout.marginWidth = 0;
 
         inputFieldsComposite = new InputFieldsComposite(this, innerShell, SWT.NONE);
         inputFieldsComposite.setLayout(gridLayout);
 
         createCompositeSourceTarget();
-        createCheckBoxes();
+        createOptions(width);
         createDescription(width);
 
         new BottomButtonBar(this, innerShell, SWT.NONE);
@@ -125,6 +126,8 @@ public class ConverterWidget {
     private void createCompositeSourceTarget() {
         Composite compositeSourceTarget = new Composite(innerShell, SWT.NONE);
         GridLayout gridLayout = new GridLayout(2, true);
+        gridLayout.marginHeight = 0;
+        gridLayout.marginWidth = 0;
         compositeSourceTarget.setLayout(gridLayout);
 
         GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
@@ -150,12 +153,10 @@ public class ConverterWidget {
                 // control of double fired events
                 boolean isSelected = ((Button) e.getSource()).getSelection();
                 if (isSelected) {
-
                     Control[] childrenSource = groupSource.getChildren();
                     Control[] childrenTarget = groupTarget.getChildren();
 
                     RadioHelper.toggleBtn(childrenSource, childrenTarget);
-
                 }
             }
         };
@@ -165,12 +166,10 @@ public class ConverterWidget {
                 // control of double fired events
                 boolean isSelected = ((Button) e.getSource()).getSelection();
                 if (isSelected) {
-
                     Control[] childrenSource = groupSource.getChildren();
                     Control[] childrenTarget = groupTarget.getChildren();
 
                     RadioHelper.toggleBtn(childrenTarget, childrenSource);
-
                 }
 
             }
@@ -179,58 +178,66 @@ public class ConverterWidget {
         String[] formatSource = {"GSI8", "GSI16", "TXT", "CSV", "Basel Stadt CSV"};
         String[] formatTarget = {"GSI8", "GSI16", "TXT", "CSV"};
 
-        // radio buttons for the source formats
         for (int i = 0; i < formatSource.length; i++) {
-            Button button = new Button(groupSource, SWT.RADIO);
-            button.addSelectionListener(selectionListenerSource);
-            button.setText(formatSource[i]);
+            Button btnSourceFormats = new Button(groupSource, SWT.RADIO);
+            btnSourceFormats.addSelectionListener(selectionListenerSource);
+            btnSourceFormats.setText(formatSource[i]);
 
             if (i == 1) {
-                button.setSelection(true);
+                btnSourceFormats.setSelection(true);
             }
         }
 
-        // radio buttons for the target formats
         for (int i = 0; i < formatTarget.length; i++) {
-            Button button = new Button(groupTarget, SWT.RADIO);
-            button.addSelectionListener(selectionListenerTarget);
-            button.setText(formatTarget[i]);
+            Button btnTargetFormats = new Button(groupTarget, SWT.RADIO);
+            btnTargetFormats.addSelectionListener(selectionListenerTarget);
+            btnTargetFormats.setText(formatTarget[i]);
 
             if (i == 0) {
-                button.setSelection(true);
+                btnTargetFormats.setSelection(true);
             }
         }
 
     }
 
-    private void createCheckBoxes() {
-        chkBoxTXTSpaceDelimiter = new Button(innerShell, SWT.CHECK);
+    private void createOptions(int width) {
+        Group group = new Group(innerShell, SWT.NONE);
+        group.setText(I18N.getGroupTitleOptions());
+
+        GridLayout gridLayout = new GridLayout(1, true);
+        group.setLayout(gridLayout);
+
+        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
+        gridData.widthHint = width - 24;
+        group.setLayoutData(gridData);
+
+        chkBoxTXTSpaceDelimiter = new Button(group, SWT.CHECK);
         chkBoxTXTSpaceDelimiter.setSelection(false);
         chkBoxTXTSpaceDelimiter.setText(I18N.getBtnChkConverterTXTSpaceDelimiter());
 
-        chkBoxCSVSemiColonDelimiter = new Button(innerShell, SWT.CHECK);
+        chkBoxCSVSemiColonDelimiter = new Button(group, SWT.CHECK);
         chkBoxCSVSemiColonDelimiter.setSelection(false);
         chkBoxCSVSemiColonDelimiter.setText(I18N.getBtnChkConverterCSVSemiColonDelimiter());
 
-        chkBoxWriteCommentLine = new Button(innerShell, SWT.CHECK);
+        chkBoxWriteCommentLine = new Button(group, SWT.CHECK);
         chkBoxWriteCommentLine.setSelection(false);
         chkBoxWriteCommentLine.setText(I18N.getBtnChkConverterWriteCommentLine());
     }
 
     private void createDescription(int width) {
-        Group groupDescription = new Group(innerShell, SWT.NONE);
-        groupDescription.setText(I18N.getGroupTitleNumberInputAdvice());
+        Group group = new Group(innerShell, SWT.NONE);
+        group.setText(I18N.getGroupTitleGeneratorNumberInputAdvice());
 
         GridLayout gridLayout = new GridLayout(1, true);
-        groupDescription.setLayout(gridLayout);
+        group.setLayout(gridLayout);
 
         GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
         gridData.widthHint = width - 24;
-        groupDescription.setLayoutData(gridData);
+        group.setLayoutData(gridData);
 
-        Label tip = new Label(groupDescription, SWT.WRAP | SWT.BORDER | SWT.LEFT);
-        tip.setLayoutData(new GridData(SWT.HORIZONTAL, SWT.TOP, true, false, 1, 1));
+        Label tip = new Label(group, SWT.WRAP | SWT.BORDER | SWT.LEFT);
         tip.setText(String.format(I18N.getLabelTipConverterWidget()));
+        tip.setLayoutData(new GridData(SWT.HORIZONTAL, SWT.TOP, true, false, 1, 1));
     }
 
     private void actionBtnCancel() {

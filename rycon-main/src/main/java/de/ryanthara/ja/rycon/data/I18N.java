@@ -274,12 +274,12 @@ public class I18N {
         return Messages.getString("fileChooserTidyUpSourceText");
     }
 
-    public static String getGroupTitleNumberInput() {
-        return Messages.getString("groupTitleNumberInput");
+    public static String getGroupTitleGeneratorNumberInput() {
+        return Messages.getString("groupTitleGeneratorNumberInput");
     }
 
-    public static String getGroupTitleNumberInputAdvice() {
-        return Messages.getString("groupTitleNumberInputAdvice");
+    public static String getGroupTitleGeneratorNumberInputAdvice() {
+        return Messages.getString("groupTitleGeneratorNumberInputAdvice");
     }
 
     public static String getGroupTitlePathSelection() {
@@ -654,5 +654,29 @@ public class I18N {
 
     public static String getMsgLevellingError() {
         return Messages.getString("msgLevellingError");
+    }
+
+    public static String getGroupTitleOptions() {
+        return Messages.getString("groupTitleOptions");
+    }
+
+    public static String getBtnChkBoxCreateOnlyJobFolder() {
+        return Messages.getString("btnChkBoxCreateOnlyJobFolder");
+    }
+
+    public static String getBtnChkBoxCreateOnlyProjectFolder() {
+        return Messages.getString("btnChkBoxCreateOnlyProjectFolder");
+    }
+
+    public static String getBtnChkBoxCreateJobAndProjectFolder() {
+        return Messages.getString("btnChkBoxCreateJobAndProjectFolder");
+    }
+
+    public static String getMsgCreateDirProjectWarning() {
+        return Messages.getString("msgCreateDirProjectWarning");
+    }
+
+    public static String getMsgCreateDirJobWarning() {
+        return Messages.getString("msgCreateDirJobWarning");
     }
 } // end of I18N
