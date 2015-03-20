@@ -25,15 +25,17 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Text;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 /**
- * This class implements functionality which is used by all four main widgets of RyCON.
+ * This class implements functionality which is used by all main widgets of RyCON.
  * <p>
  * Later on, here will be more flexible stuff implemented.
  *
  * <h3>Changes:</h3>
  * <ul>
+ *     <li>2: documentation, optimization and new features
  *     <li>1: basic implementation
  * </ul>
  *
@@ -43,6 +45,14 @@ import java.util.StringTokenizer;
  */
 public class WidgetHelper {
 
+    /**
+     * Checks the source and destination text fields for valid files and returns the valid chosen files as file object.
+     *
+     * @param source the source text field
+     * @param destination the destination text field
+     * @param chosenFiles the chosen files to be checked
+     * @return the valid chosen files
+     */
     public static File[] checkSourceAndDestinationTextFields(Text source, Text destination, File[] chosenFiles) {
         File[] files2read = null;
 
@@ -85,6 +95,26 @@ public class WidgetHelper {
         }
 
         return files2read;
+    }
+
+    /**
+     * Checks the content of an file array for valid files.
+     * <p>
+     * Non readable file objects and directories will be not included in the returned file array.
+     *
+     * @param files file array to be checked
+     * @return check file array with only valid and readable file obejcts
+     */
+    public static File[] checkForValidFiles(File[] files) {
+        ArrayList<File> temp = new ArrayList<>();
+
+        for (int i = 0; i < files.length; i++) {
+            if (files[i].isFile() && files[i].canRead()) {
+                temp.add(files[i]);
+            }
+        }
+
+        return temp.toArray(new File[0]);
     }
 
 }

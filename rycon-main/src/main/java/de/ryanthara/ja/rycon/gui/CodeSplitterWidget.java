@@ -79,11 +79,13 @@ public class CodeSplitterWidget {
     /**
      * Class constructor with a file array as parameter. This constructor type
      * is used for the drag and drop injection.
+     * <p>
+     * The file array of the dropped files will be checked for being valid and not being a directory.
      *
      * @param droppedFiles file array from drop source
      */
     public CodeSplitterWidget(File[] droppedFiles) {
-        files2read = droppedFiles;
+        files2read = WidgetHelper.checkForValidFiles(droppedFiles);
     }
 
     /**
