@@ -97,7 +97,6 @@ public class TidyUpWidget {
                 if (Main.countFileOps == 1) {
                     Main.statusBar.setStatus(String.format(I18N.getStatusCleanFileSuccessful(Main.TEXT_SINGULAR), Main.countFileOps), StatusBar.OK);
                 } else {
-                    System.out.println(Main.countFileOps);
                     Main.statusBar.setStatus(String.format(I18N.getStatusCleanFileSuccessful(Main.TEXT_PLURAL), Main.countFileOps), StatusBar.OK);
                 }
             }

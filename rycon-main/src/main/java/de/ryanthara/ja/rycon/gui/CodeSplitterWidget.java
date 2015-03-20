@@ -99,7 +99,18 @@ public class CodeSplitterWidget {
     public boolean executeDropInjection() {
         boolean success = false;
 
-        System.out.println("INJECTION");
+        if ((files2read != null) && (files2read.length > 0)) {
+
+            if (success = processFileOperationsDND()) {
+                // use counter to display different text on the status bar
+                if (Main.countFileOps == 1) {
+                    Main.statusBar.setStatus(String.format(I18N.getStatusCodeSplitSuccess(Main.TEXT_SINGULAR), Main.countFileOps), StatusBar.OK);
+                } else {
+                    Main.statusBar.setStatus(String.format(I18N.getStatusCodeSplitSuccess(Main.TEXT_PLURAL), Main.countFileOps), StatusBar.OK);
+                }
+            }
+
+        }
 
         return success;
     }
@@ -289,58 +300,7 @@ public class CodeSplitterWidget {
     private boolean processFileOperations() {
         boolean success;
 
-        int counter = 0;
-
-        LineReader lineReader;
-
-        for (File file2read : files2read) {
-            lineReader = new LineReader(file2read);
-
-            if (lineReader.readFile()) {
-                // read
-                ArrayList<String> readFile = lineReader.getLines();
-                ArrayList<ArrayList<String>> writeFile;
-
-                // processFileOperations by differ between txt oder gsi files
-                String suffix = file2read.getName().toLowerCase();
-
-                if (suffix.endsWith(".gsi")) {
-                    LeicaGSIFileTools gsiTools = new LeicaGSIFileTools(readFile);
-                    writeFile = gsiTools.processCodeSplit(chkBoxDropCodeBlock.getSelection(), chkBoxWriteCodeZero.getSelection());
-
-                    Iterator<Integer> codeIterator = gsiTools.getFoundCodes().iterator();
-
-                    // write file by file with one code
-                    for (ArrayList<String> lines : writeFile) {
-                        int code = codeIterator.next();
-                        String file2write = file2read.toString().substring(0, file2read.toString().length() - 4) + "_CODE-" + code + ".GSI";
-                        LineWriter lineWriter = new LineWriter(file2write);
-                        if (lineWriter.writeFile(lines)) {
-                            counter++;
-                        }
-                    }
-                } else if (suffix.endsWith(".txt")) {
-                    TextFileTools textFileTools = new TextFileTools(readFile);
-                    writeFile = textFileTools.processCodeSplit(chkBoxDropCodeBlock.getSelection());
-
-                    Iterator<Integer> codeIterator = textFileTools.getFoundCodes().iterator();
-
-                    // write file by file with one code
-                    for (ArrayList<String> lines : writeFile) {
-                        int code = codeIterator.next();
-                        String file2write = file2read.toString().substring(0, file2read.toString().length() - 4) + "_CODE-" + code + ".TXT";
-                        LineWriter lineWriter = new LineWriter(file2write);
-                        if (lineWriter.writeFile(lines)) {
-                            counter++;
-                        }
-                    }
-                } else {
-                    System.err.println("File format of " + file2read.getName() + " are not supported.");
-                }
-            } else {
-                System.err.println("File " + file2read.getName() + " could not be read.");
-            }
-        }
+        int counter = fileOperations(chkBoxDropCodeBlock.getSelection(), chkBoxWriteCodeZero.getSelection());
 
         if (counter > 0) {
             MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_INFORMATION);
@@ -366,6 +326,75 @@ public class CodeSplitterWidget {
         }
 
         return success;
+    }
+
+    private boolean processFileOperationsDND() {
+        int counter = fileOperations(false, true);
+
+        if (counter > 0) {
+            // set the counter for status bar information
+            Main.countFileOps = counter;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private int fileOperations(boolean createCodeColumn, boolean writeFileWithCodeZero) {
+        int counter = 0;
+
+        LineReader lineReader;
+
+        for (File file2read : files2read) {
+            lineReader = new LineReader(file2read);
+
+            if (lineReader.readFile()) {
+                // read
+                ArrayList<String> readFile = lineReader.getLines();
+                ArrayList<ArrayList<String>> writeFile;
+
+                // processFileOperations by differ between txt oder gsi files
+                String suffix = file2read.getName().toLowerCase();
+
+                if (suffix.endsWith(".gsi")) {
+                    LeicaGSIFileTools gsiTools = new LeicaGSIFileTools(readFile);
+                    writeFile = gsiTools.processCodeSplit(createCodeColumn, writeFileWithCodeZero);
+
+                    Iterator<Integer> codeIterator = gsiTools.getFoundCodes().iterator();
+
+                    // write file by file with one code
+                    for (ArrayList<String> lines : writeFile) {
+                        int code = codeIterator.next();
+                        String file2write = file2read.toString().substring(0, file2read.toString().length() - 4) + "_CODE-" + code + ".GSI";
+                        LineWriter lineWriter = new LineWriter(file2write);
+                        if (lineWriter.writeFile(lines)) {
+                            counter++;
+                        }
+                    }
+                } else if (suffix.endsWith(".txt")) {
+                    TextFileTools textFileTools = new TextFileTools(readFile);
+                    writeFile = textFileTools.processCodeSplit(createCodeColumn);
+
+                    Iterator<Integer> codeIterator = textFileTools.getFoundCodes().iterator();
+
+                    // write file by file with one code
+                    for (ArrayList<String> lines : writeFile) {
+                        int code = codeIterator.next();
+                        String file2write = file2read.toString().substring(0, file2read.toString().length() - 4) + "_CODE-" + code + ".TXT";
+                        LineWriter lineWriter = new LineWriter(file2write);
+                        if (lineWriter.writeFile(lines)) {
+                            counter++;
+                        }
+                    }
+                } else {
+                    System.err.println("File format of " + file2read.getName() + " are not supported.");
+                }
+            } else {
+                System.err.println("File " + file2read.getName() + " could not be read.");
+            }
+        }
+
+        return counter;
     }
 
 } // end of CodeSplitterWidget
