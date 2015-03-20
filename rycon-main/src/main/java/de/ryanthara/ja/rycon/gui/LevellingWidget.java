@@ -57,7 +57,7 @@ import java.util.ArrayList;
  */
 public class LevellingWidget {
 
-    private Button chkBoxChangePoint = null;
+    private Button chkBoxHoldChangePoint = null;
     private File[] files2read = null;
     private InputFieldsComposite inputFieldsComposite;
     private Shell innerShell = null;
@@ -94,7 +94,16 @@ public class LevellingWidget {
     public boolean executeDropInjection() {
         boolean success = false;
 
-        System.out.println("INJECTION");
+        if ((files2read != null) && (files2read.length > 0)) {
+            if (success = processFileOperationsDND()) {
+                // use counter to display different text on the status bar
+                if (Main.countFileOps == 1) {
+                    Main.statusBar.setStatus(String.format(I18N.getStatusPrepareLevelSuccess(Main.TEXT_SINGULAR), Main.countFileOps), StatusBar.OK);
+                } else {
+                    Main.statusBar.setStatus(String.format(I18N.getStatusPrepareLevelSuccess(Main.TEXT_PLURAL), Main.countFileOps), StatusBar.OK);
+                }
+            }
+        }
 
         return success;
     }
@@ -153,9 +162,9 @@ public class LevellingWidget {
         gridData.widthHint = width - 24;
         group.setLayoutData(gridData);
 
-        chkBoxChangePoint = new Button(group, SWT.CHECK);
-        chkBoxChangePoint.setSelection(true);
-        chkBoxChangePoint.setText(I18N.getBtnChkLevellingIgnoreChangePoints());
+        chkBoxHoldChangePoint = new Button(group, SWT.CHECK);
+        chkBoxHoldChangePoint.setSelection(true);
+        chkBoxHoldChangePoint.setText(I18N.getBtnChkLevellingIgnoreChangePoints());
     }
 
     private void createDescription(int width) {
@@ -285,33 +294,7 @@ public class LevellingWidget {
     private boolean processFileOperations() {
         boolean success;
 
-        int counter = 0;
-
-        LineReader lineReader;
-
-        for (File file2read : files2read) {
-            lineReader = new LineReader(file2read);
-
-            if (lineReader.readFile()) {
-                // read
-                ArrayList<String> readFile = lineReader.getLines();
-
-                // processFileOperations
-                LeicaGSIFileTools gsiTools = new LeicaGSIFileTools(readFile);
-                ArrayList<String> writeFile = gsiTools.processLevelling2Cad(chkBoxChangePoint.getSelection());
-
-                // write
-                String file2write = file2read.toString().substring(0, file2read.toString().length() - 4) + "_LEVEL.GSI";
-                LineWriter lineWriter = new LineWriter(file2write);
-                if (lineWriter.writeFile(writeFile)) {
-                    counter++;
-                }
-
-            } else {
-                System.err.println("File " + file2read.getName() + " could not be read.");
-            }
-
-        }
+        int counter = fileOperations(chkBoxHoldChangePoint.getSelection());
 
         if (counter > 0) {
             MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_INFORMATION);
@@ -337,6 +320,49 @@ public class LevellingWidget {
         }
 
         return success;
+    }
+
+    private int fileOperations(boolean holdChangePoints) {
+        int counter = 0;
+        LineReader lineReader;
+
+        for (File file2read : files2read) {
+            lineReader = new LineReader(file2read);
+
+            if (lineReader.readFile()) {
+                // read
+                ArrayList<String> readFile = lineReader.getLines();
+
+                // processFileOperations
+                LeicaGSIFileTools gsiTools = new LeicaGSIFileTools(readFile);
+                ArrayList<String> writeFile = gsiTools.processLevelling2Cad(holdChangePoints);
+
+                // write
+                String file2write = file2read.toString().substring(0, file2read.toString().length() - 4) + "_LEVEL.GSI";
+                LineWriter lineWriter = new LineWriter(file2write);
+                if (lineWriter.writeFile(writeFile)) {
+                    counter++;
+                }
+
+            } else {
+                System.err.println("File " + file2read.getName() + " could not be read.");
+            }
+
+        }
+
+        return counter;
+    }
+
+    private boolean processFileOperationsDND() {
+        int counter = fileOperations(false);
+
+        if (counter > 0) {
+            // set the counter for status bar information
+            Main.countFileOps = counter;
+            return true;
+        } else {
+            return false;
+        }
     }
 
 } // end of LevellingWidget

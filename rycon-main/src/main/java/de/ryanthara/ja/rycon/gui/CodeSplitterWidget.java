@@ -328,21 +328,8 @@ public class CodeSplitterWidget {
         return success;
     }
 
-    private boolean processFileOperationsDND() {
-        int counter = fileOperations(false, true);
-
-        if (counter > 0) {
-            // set the counter for status bar information
-            Main.countFileOps = counter;
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     private int fileOperations(boolean createCodeColumn, boolean writeFileWithCodeZero) {
         int counter = 0;
-
         LineReader lineReader;
 
         for (File file2read : files2read) {
@@ -395,6 +382,18 @@ public class CodeSplitterWidget {
         }
 
         return counter;
+    }
+
+    private boolean processFileOperationsDND() {
+        int counter = fileOperations(false, true);
+
+        if (counter > 0) {
+            // set the counter for status bar information
+            Main.countFileOps = counter;
+            return true;
+        } else {
+            return false;
+        }
     }
 
 } // end of CodeSplitterWidget

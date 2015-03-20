@@ -321,18 +321,6 @@ public class TidyUpWidget {
         return success;
     }
 
-    private boolean processFileOperationsDND() {
-        int counter = fileOperations(false, false);
-
-        if (counter > 0) {
-            // set the counter for status bar information
-            Main.countFileOps = counter;
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     private int fileOperations(boolean holdStations, boolean holdControlPoints) {
         int counter = 0;
         LineReader lineReader;
@@ -360,6 +348,18 @@ public class TidyUpWidget {
             }
         }
         return counter;
+    }
+
+    private boolean processFileOperationsDND() {
+        int counter = fileOperations(false, false);
+
+        if (counter > 0) {
+            // set the counter for status bar information
+            Main.countFileOps = counter;
+            return true;
+        } else {
+            return false;
+        }
     }
 
 } // end of TidyUpWidget
