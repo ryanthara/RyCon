@@ -91,11 +91,17 @@ public class TidyUpWidget {
     public boolean executeDropInjection() {
         boolean success = false;
 
-        for (int i = 0; i < files2read.length; i++) {
-            System.out.println(files2read[i].getName());
+        if ((files2read != null) && (files2read.length > 0)) {
+            if (success = processFileOperationsDND()) {
+                // use counter to display different text on the status bar
+                if (Main.countFileOps == 1) {
+                    Main.statusBar.setStatus(String.format(I18N.getStatusCleanFileSuccessful(Main.TEXT_SINGULAR), Main.countFileOps), StatusBar.OK);
+                } else {
+                    System.out.println(Main.countFileOps);
+                    Main.statusBar.setStatus(String.format(I18N.getStatusCleanFileSuccessful(Main.TEXT_PLURAL), Main.countFileOps), StatusBar.OK);
+                }
+            }
         }
-
-        System.out.println("INJECTION");
 
         return success;
     }
@@ -288,32 +294,7 @@ public class TidyUpWidget {
     private boolean processFileOperations() {
         boolean success;
 
-        int counter = 0;
-
-        LineReader lineReader;
-
-        for (File file2read : files2read) {
-            lineReader = new LineReader(file2read);
-
-            if (lineReader.readFile()) {
-                // read
-                ArrayList<String> readFile = lineReader.getLines();
-                ArrayList<String> writeFile;
-
-                // processFileOperations
-                LeicaGSIFileTools gsiTools = new LeicaGSIFileTools(readFile);
-                writeFile = gsiTools.processTidyUp(chkBoxHoldStations.getSelection(), chkBoxHoldControlPoints.getSelection());
-
-                // write file line by line
-                String file2write = file2read.toString().substring(0, file2read.toString().length() - 4) + "_EDIT.GSI";
-                LineWriter lineWriter = new LineWriter(file2write);
-                if (lineWriter.writeFile(writeFile)) {
-                    counter++;
-                }
-            } else {
-                System.err.println("File " + file2read.getName() + " could not be read.");
-            }
-        }
+        int counter = fileOperations(chkBoxHoldStations.getSelection(), chkBoxHoldControlPoints.getSelection());
 
         if (counter > 0) {
             MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_INFORMATION);
@@ -339,6 +320,47 @@ public class TidyUpWidget {
         }
 
         return success;
+    }
+
+    private boolean processFileOperationsDND() {
+        int counter = fileOperations(false, false);
+
+        if (counter > 0) {
+            // set the counter for status bar information
+            Main.countFileOps = counter;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private int fileOperations(boolean holdStations, boolean holdControlPoints) {
+        int counter = 0;
+        LineReader lineReader;
+
+        for (File file2read : files2read) {
+            lineReader = new LineReader(file2read);
+
+            if (lineReader.readFile()) {
+                // read
+                ArrayList<String> readFile = lineReader.getLines();
+                ArrayList<String> writeFile;
+
+                // processFileOperations
+                LeicaGSIFileTools gsiTools = new LeicaGSIFileTools(readFile);
+                writeFile = gsiTools.processTidyUp(holdStations, holdControlPoints);
+
+                // write file line by line
+                String file2write = file2read.toString().substring(0, file2read.toString().length() - 4) + "_EDIT.GSI";
+                LineWriter lineWriter = new LineWriter(file2write);
+                if (lineWriter.writeFile(writeFile)) {
+                    counter++;
+                }
+            } else {
+                System.err.println("File " + file2read.getName() + " could not be read.");
+            }
+        }
+        return counter;
     }
 
 } // end of TidyUpWidget
