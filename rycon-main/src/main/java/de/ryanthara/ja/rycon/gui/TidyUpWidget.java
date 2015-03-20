@@ -41,10 +41,10 @@ import java.util.ArrayList;
  * <h3>Changes:</h3>
  * <ul>
  *     <li>5: enable drag and drop handling </li>
- *     <li>4: simplification and improvements, extract input fields and bottom button bar into separate classes</li>
- *     <li>3: code improvements and clean up</li>
- *     <li>2: basic improvements
- *     <li>1: basic implementation
+ *     <li>4: simplification and improvements, extract input fields and bottom button bar into separate classes </li>
+ *     <li>3: code improvements and clean up </li>
+ *     <li>2: basic improvements </li>
+ *     <li>1: basic implementation </li>
  * </ul>
  *
  * @author sebastian
@@ -58,6 +58,7 @@ public class TidyUpWidget {
     private File[] files2read;
     private InputFieldsComposite inputFieldsComposite;
     private Shell innerShell = null;
+    private final String[] acceptableFileSuffixes = new String[]{"*.gsi"};
 
     /**
      * Class constructor without parameters.
@@ -77,7 +78,7 @@ public class TidyUpWidget {
      * @param droppedFiles file array from drop source
      */
     public TidyUpWidget(File[] droppedFiles) {
-        files2read = WidgetHelper.checkForValidFiles(droppedFiles);
+        files2read = WidgetHelper.checkForValidFiles(droppedFiles, acceptableFileSuffixes);
     }
 
     /**
@@ -263,7 +264,7 @@ public class TidyUpWidget {
         FileDialog fileDialog = new FileDialog(innerShell, SWT.MULTI);
         fileDialog.setFilterPath(Main.pref.getUserPref(PreferenceHandler.DIR_PROJECTS));
         fileDialog.setText(I18N.getFileChooserTidyUpSourceText());
-        fileDialog.setFilterExtensions(new String[]{"*.gsi"});
+        fileDialog.setFilterExtensions(acceptableFileSuffixes);
         fileDialog.setFilterNames(new String[]{I18N.getFileChooserFilterNameGSI()});
 
         String firstFile = fileDialog.open();

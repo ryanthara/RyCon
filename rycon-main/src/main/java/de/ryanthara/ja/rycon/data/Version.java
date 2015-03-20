@@ -33,7 +33,7 @@ public class Version {
     private final int buildNumber = 4;
     private final int majorVersion = 0;
     private final int minorVersion = 95;
-    private final String buildDate = "2015-03-13";
+    private final String buildDate = "2015-03-20";
 
     /**
      * Returns the build date of RyCON as string.

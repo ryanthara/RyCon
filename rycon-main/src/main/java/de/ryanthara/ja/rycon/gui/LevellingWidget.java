@@ -45,10 +45,10 @@ import java.util.ArrayList;
  *
  * <h3>Changes:</h3>
  * <ul>
- *     <li>4: simplification and improvements, extract input fields and bottom button bar into separate classes</li>
- *     <li>3: code improvements and clean up</li>
- *     <li>2: basic improvements
- *     <li>1: basic implementation
+ *     <li>4: simplification and improvements, extract input fields and bottom button bar into separate classes </li>
+ *     <li>3: code improvements and clean up </li>
+ *     <li>2: basic improvements </li>
+ *     <li>1: basic implementation </li>
  * </ul>
  *
  * @author sebastian
@@ -61,6 +61,7 @@ public class LevellingWidget {
     private File[] files2read = null;
     private InputFieldsComposite inputFieldsComposite;
     private Shell innerShell = null;
+    private final String[] acceptableFileSuffixes = new String[]{"*.gsi"};
 
     /**
      * Class constructor without parameters.
@@ -80,7 +81,7 @@ public class LevellingWidget {
      * @param droppedFiles file array from drop source
      */
     public LevellingWidget(File[] droppedFiles) {
-        files2read = WidgetHelper.checkForValidFiles(droppedFiles);
+        files2read = WidgetHelper.checkForValidFiles(droppedFiles, acceptableFileSuffixes);
     }
 
     /**
@@ -263,7 +264,7 @@ public class LevellingWidget {
         FileDialog fileDialog = new FileDialog(innerShell, SWT.MULTI);
         fileDialog.setFilterPath(Main.pref.getUserPref(PreferenceHandler.DIR_PROJECTS));
         fileDialog.setText(I18N.getFileChooserLevellingSourceText());
-        fileDialog.setFilterExtensions(new String[]{"*.gsi"});
+        fileDialog.setFilterExtensions(acceptableFileSuffixes);
         fileDialog.setFilterNames(new String[]{I18N.getFileChooserFilterNameGSI()});
 
         String firstFile = fileDialog.open();

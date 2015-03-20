@@ -28,8 +28,8 @@ import java.io.*;
  *
  * <h3>Changes:</h3>
  * <ul>
- *     <li>2: code improvements and clean up</li>
- *     <li>1: basic implementation
+ *     <li>2: code improvements and clean up </li>
+ *     <li>1: basic implementation </li>
  * </ul>
  *
  * @author sebastian

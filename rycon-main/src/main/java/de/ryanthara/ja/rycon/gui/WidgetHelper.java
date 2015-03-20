@@ -35,12 +35,13 @@ import java.util.StringTokenizer;
  *
  * <h3>Changes:</h3>
  * <ul>
- *     <li>2: documentation, optimization and new features
- *     <li>1: basic implementation
+ *     <li>3: check for valid files and suffixes </li>
+ *     <li>2: documentation, optimization and new features </li>
+ *     <li>1: basic implementation </li>
  * </ul>
  *
  * @author sebastian
- * @version 1
+ * @version 3
  * @since 4
  */
 public class WidgetHelper {
@@ -103,14 +104,22 @@ public class WidgetHelper {
      * Non readable file objects and directories will be not included in the returned file array.
      *
      * @param files file array to be checked
+     * @param acceptableFileSuffix string array with the acceptable file suffixes to be accepted
      * @return check file array with only valid and readable file obejcts
      */
-    public static File[] checkForValidFiles(File[] files) {
+    public static File[] checkForValidFiles(File[] files, String[] acceptableFileSuffix) {
         ArrayList<File> temp = new ArrayList<>();
 
         for (int i = 0; i < files.length; i++) {
             if (files[i].isFile() && files[i].canRead()) {
-                temp.add(files[i]);
+                for (int j = 0; j < acceptableFileSuffix.length; j++) {
+                    String reducedSuffix = acceptableFileSuffix[j].toString().substring(2, acceptableFileSuffix[j].length());
+
+                    if (files[i].getName().toLowerCase().endsWith(reducedSuffix)) {
+                        System.out.println(acceptableFileSuffix[j] + " " + files[i].getName());
+                        temp.add(files[i]);
+                    }
+                }
             }
         }
 

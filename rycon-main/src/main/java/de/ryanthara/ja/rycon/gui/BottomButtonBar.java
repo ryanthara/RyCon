@@ -36,7 +36,7 @@ import java.lang.reflect.Method;
  *
  * <h3>Changes:</h3>
  * <ul>
- *     <li>1: basic implementation
+ *     <li>1: basic implementation </li>
  * </ul>
  *
  * @author sebastian

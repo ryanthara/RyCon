@@ -25,9 +25,9 @@ import de.ryanthara.ja.rycon.tools.Messages;
  * <p>
  * In the first version of RyCON there are support for the following languages.
  * <ul>
- *     <li>english - since version 1
- *     <li>german - since version 1
- *     <li>...
+ *     <li>english - since version 1 </li>
+ *     <li>german - since version 1 </li>
+ *     <li>... </li>
  * </ul>
  * <p>
  * Every translated text in the program is prepared as <code>String</code> object here.

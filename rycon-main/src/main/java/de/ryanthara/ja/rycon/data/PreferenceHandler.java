@@ -36,10 +36,10 @@ import java.util.prefs.Preferences;
  *
  * <h3>Changes:</h3>
  * <ul>
- *     <li>4: code improvements and clean up</li>
- *     <li>3: change from properties file to Java Preferences API
- *     <li>2: add a couple of parameters
- *     <li>1: basic implementation
+ *     <li>4: code improvements and clean up </li>
+ *     <li>3: change from properties file to Java Preferences API </li>
+ *     <li>2: add a couple of parameters </li>
+ *     <li>1: basic implementation </li>
  * </ul>
  *
  * @author sebastian

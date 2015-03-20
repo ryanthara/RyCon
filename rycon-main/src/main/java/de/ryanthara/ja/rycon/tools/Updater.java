@@ -35,9 +35,9 @@ import java.util.regex.Pattern;
  *
  * <h3>Changes:</h3>
  * <ul>
- *     <li>3: clean up and improvements
- *     <li>2: basic improvements
- *     <li>1: basic implementation
+ *     <li>3: clean up and improvements </li>
+ *     <li>2: basic improvements </li>
+ *     <li>1: basic implementation </li>
  * </ul>
  *
  * @author sebastian

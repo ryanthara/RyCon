@@ -40,9 +40,9 @@ import java.io.File;
  *
  * <h3>Changes:</h3>
  * <ul>
- *     <li>3: code improvements and clean up</li>
- *     <li>2: basic improvements
- *     <li>1: basic implementation
+ *     <li>3: code improvements and clean up </li>
+ *     <li>2: basic improvements </li>
+ *     <li>1: basic implementation </li>
  * </ul>
  *
  * @author sebastian
