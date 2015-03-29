@@ -6,7 +6,7 @@
 
     <!-- coordinates -->
     <groupId>de.ryanthara.ja.rycon</groupId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.9.0-SNAPSHOT</version>
     <artifactId>RyCON</artifactId>
     <packaging>pom</packaging>
     <name>RyCON</name>
@@ -69,6 +69,14 @@
         </pluginRepository>
     </pluginRepositories>
 
+    <!-- distribution management -->
+    <distributionManagement>
+        <repository>
+            <id>absolute directory</id>
+            <url>file:///Users/sebastian/Coder/deploy</url>
+        </repository>
+    </distributionManagement>
+
     <!-- where the sourcecode lives -->
     <scm>
         <connection>scm:git:https://github.com/ryanthara/RyCon</connection>
@@ -84,7 +92,14 @@
 
     <!-- build management -->
     <build>
-        <!-- extensions - not used at the moment -->
+        <extensions>
+            <!-- Enabling the use of Wagon file -->
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-file</artifactId>
+                <version>1.0</version>
+            </extension>
+        </extensions>
 
         <!-- plugins used to build RyCON and all the things around -->
         <pluginManagement>

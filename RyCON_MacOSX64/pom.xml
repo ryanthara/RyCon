@@ -6,7 +6,7 @@
 
     <!-- coordinates -->
     <artifactId>RyCON_MacOSX64</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.9.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>RyCON for Mac OS X (64-bit)</name>
 
@@ -14,7 +14,7 @@
     <parent>
         <groupId>de.ryanthara.ja.rycon</groupId>
         <artifactId>rycon-build</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>0.9.0-SNAPSHOT</version>
         <relativePath>../rycon-build/pom.xml</relativePath>
     </parent>
 
@@ -92,6 +92,29 @@
                             <finalName>RyCON_MacOSX64.app</finalName>
                         </configuration>
                     </plugin>
+
+                    <!-- Fix this later -->
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>wagon-maven-plugin</artifactId>
+                        <version>1.0</version>
+                        <executions>
+                            <execution>
+                                <id>upload-jar-to-folder</id>
+                                <phase>deploy</phase>
+                                <goals>
+                                    <goal>upload</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <fromDir>${project.build.directory}</fromDir>
+                            <includes>*</includes>
+                            <url>file:///Users/sebastian/Coder</url>
+                            <toDir>deploy</toDir>
+                        </configuration>
+                    </plugin>
+
                 </plugins>
             </build>
         </profile>

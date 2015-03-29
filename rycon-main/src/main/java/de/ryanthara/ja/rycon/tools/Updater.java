@@ -65,18 +65,16 @@ public class Updater {
 
             scanner.next();
             String majorMinor = scanner.next();
-            System.out.println(majorMinor);
+
             String[] segments = majorMinor.split(Pattern.quote("."));
             int majorVersion = Integer.parseInt(segments[0]);
             int minorVersion = Integer.parseInt(segments[1]);
 
             scanner.next();
             int build = scanner.nextInt();
-            System.out.println(build);
 
             scanner.next();
             String date = scanner.next();
-            System.out.println(date);
 
             scanner.close();
             
