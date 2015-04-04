@@ -36,6 +36,7 @@ import java.util.prefs.Preferences;
  *
  * <h3>Changes:</h3>
  * <ul>
+ *     <li>5: defeat bug #1 and #3 </li>
  *     <li>4: code improvements and clean up </li>
  *     <li>3: change from properties file to Java Preferences API </li>
  *     <li>2: add a couple of parameters </li>
@@ -43,13 +44,20 @@ import java.util.prefs.Preferences;
  * </ul>
  *
  * @author sebastian
- * @version 4
+ * @version 5
  * @since 1
  */
 public class PreferenceHandler {
 
     private boolean isDefaultSettingsGenerated = false;
     private Preferences userPreferences;
+
+    /**
+     * Member for the preference key of the GSI setting for line ending.
+     * Maybe only a problem with the Autocad import tool of RAPP AG.
+     * @since 5
+     */
+    public final static String GSI_SETTING_LINE_ENDING_WITH_BLANK = "gsi_setting_line_ending_with_blank";
 
     /**
      * Member for the preference key of the build and version number value.
@@ -159,18 +167,19 @@ public class PreferenceHandler {
      * <p>
      * Default settings are generated for the following parameters (parameter name - value).
      * <ul>
-     *     <li>'GENERATOR' - 'RyCON'
-     *     <li>'BUILD_VERSION' - 'version - build date'
-     *     <li>'INFORMATION' - 'information string'
-     *     <li>'DIR_BASE' - '.'
-     *     <li>'DIR_JOBS' - './jobs'
-     *     <li>'DIR_JOBS_TEMPLATE' - './jobs/template-folder'
-     *     <li>'DIR_PROJECTS' - './projects'
-     *     <li>'DIR_PROJECTS_TEMPLATE' - './projects/template-folder'
-     *     <li>'PARAM_CONTROL_POINT_STRING' - 'STKE'
-     *     <li>'PARAM_FREE_STATION_STRING' - 'FS'
-     *     <li>'PARAM_STAKE_OUT_STRING' - 'ST'
-     *     <li>'USER_LAST_USED_DIR' - '.'
+     *     <li>'GENERATOR' - 'RyCON' </li>
+     *     <li>'BUILD_VERSION' - 'version - build date' </li>
+     *     <li>'INFORMATION' - 'information string' </li>
+     *     <li>'DIR_BASE' - '.' </li>
+     *     <li>'DIR_JOBS' - './jobs' </li>
+     *     <li>'DIR_JOBS_TEMPLATE' - './jobs/template-folder' </li>
+     *     <li>'DIR_PROJECTS' - './projects' </li>
+     *     <li>'DIR_PROJECTS_TEMPLATE' - './projects/template-folder' </li>
+     *     <li>'GSI_SETTING_LINE_ENDING_WITH_BLANK' -  true </li>
+     *     <li>'PARAM_CONTROL_POINT_STRING' - 'STKE' </li>
+     *     <li>'PARAM_FREE_STATION_STRING' - 'FS' </li>
+     *     <li>'PARAM_STAKE_OUT_STRING' - 'ST' </li>
+     *     <li>'USER_LAST_USED_DIR' - '.' </li>
      * </ul>
      * <p>
      * It is <b>highly recommend</b> that the user will overwrite this settings to his preferred values
@@ -188,6 +197,9 @@ public class PreferenceHandler {
         userPreferences.put(PARAM_CONTROL_POINT_STRING, Main.getParamControlPointString());
         userPreferences.put(PARAM_FREE_STATION_STRING, Main.getParamFreeStationString());
         userPreferences.put(PARAM_KNOWN_STATION_STRING, Main.getParamKnownStationString());
+
+        // GSI file format settings
+        userPreferences.put(GSI_SETTING_LINE_ENDING_WITH_BLANK, Main.getGSISettingLineEnding());
 
         // paths for module #5 - project generation
         userPreferences.put(DIR_BASE, Main.getDirBase());

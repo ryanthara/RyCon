@@ -39,17 +39,19 @@ import java.io.File;
  *
  * <h3>Changes:</h3>
  * <ul>
+ *     <li>4: defeat bug #1 and #3 </li>
  *     <li>3: code improvements and clean up </li>
  *     <li>2: basic improvements </li>
  *     <li>1: basic implementation </li>
  * </ul>
  *
  * @author sebastian
- * @version 3
+ * @version 4
  * @since 2
  */
 public class SettingsWidget {
 
+    private Button chkBoxUseSpaceAtLineEnd;
     private Shell innerShell = null;
     private Text dirBaseTextField;
     private Text dirJobsTemplateTextField;
@@ -78,7 +80,8 @@ public class SettingsWidget {
     }
 
     private void widgetDispose() {
-        widgetDispose();
+        Main.setiIsSettingsWidgetOpen(false);
+        innerShell.dispose();
     }
 
     private void actionBtnChoosePath(Text textField, String title, String message, String filterPath) {
@@ -231,7 +234,6 @@ public class SettingsWidget {
 
                 } else if (event.detail == SWT.TRAVERSE_RETURN) {
                     if (!Main.pref.isDefaultSettingsGenerated()) {
-                        System.out.println("MF");
                         actionBtnChoosePath(dirJobsTextField, I18N.getFileChooserDirJobsTitle(), I18N.getFileChooserDirJobsMessage(), dirBaseTextField.getText());
                     } else {
                         actionBtnChoosePath(dirJobsTextField, I18N.getFileChooserDirJobsTitle(), I18N.getFileChooserDirJobsMessage(), Main.pref.getUserPref(PreferenceHandler.DIR_JOBS));
@@ -407,6 +409,22 @@ public class SettingsWidget {
         btnDirProjectsTemplate.setLayoutData(new GridData());
     }
 
+    private void createGroupGSIFormat(int width) {
+        Group group = new Group(innerShell, SWT.NONE);
+        group.setText(I18N.getGroupTitleGSISettings());
+
+        GridLayout gridLayout = new GridLayout(1, true);
+        group.setLayout(gridLayout);
+
+        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
+        gridData.widthHint = width - 24;
+        group.setLayoutData(gridData);
+
+        chkBoxUseSpaceAtLineEnd = new Button(group, SWT.CHECK);
+        chkBoxUseSpaceAtLineEnd.setSelection(Boolean.parseBoolean(Main.pref.getUserPref(PreferenceHandler.GSI_SETTING_LINE_ENDING_WITH_BLANK)));
+        chkBoxUseSpaceAtLineEnd.setText(I18N.getBtnUseSpaceAtLineEnd());
+    }
+
     private void createGroupTidyUp(int width) {
         Group group = new Group(innerShell, SWT.NONE);
         group.setText(I18N.getGroupTitleTidyUpSettings());
@@ -556,6 +574,7 @@ public class SettingsWidget {
         innerShell.setLayoutData(gridData);
 
         createGroupPaths(width);
+        createGroupGSIFormat(width);
         createGroupTidyUp(width);
         createBottomButtons();
 
@@ -575,6 +594,8 @@ public class SettingsWidget {
         Main.pref.setUserPref(PreferenceHandler.DIR_JOBS_TEMPLATE, dirJobsTemplateTextField.getText());
         Main.pref.setUserPref(PreferenceHandler.DIR_PROJECTS, dirProjectsTextField.getText());
         Main.pref.setUserPref(PreferenceHandler.DIR_PROJECTS_TEMPLATE, dirProjectsTemplateTextField.getText());
+
+        Main.pref.setUserPref(PreferenceHandler.GSI_SETTING_LINE_ENDING_WITH_BLANK, Boolean.toString(chkBoxUseSpaceAtLineEnd.getSelection()));
 
         Main.pref.setUserPref(PreferenceHandler.PARAM_CONTROL_POINT_STRING, identifierControlPointTextField.getText());
         Main.pref.setUserPref(PreferenceHandler.PARAM_FREE_STATION_STRING, identifierFreeStationTextField.getText());

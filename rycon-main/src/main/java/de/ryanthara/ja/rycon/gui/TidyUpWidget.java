@@ -40,6 +40,7 @@ import java.util.ArrayList;
  *
  * <h3>Changes:</h3>
  * <ul>
+ *     <li>6: defeat bug #1, #2 and #3! </li>
  *     <li>5: enable drag and drop handling </li>
  *     <li>4: simplification and improvements, extract input fields and bottom button bar into separate classes </li>
  *     <li>3: code improvements and clean up </li>
@@ -48,7 +49,7 @@ import java.util.ArrayList;
  * </ul>
  *
  * @author sebastian
- * @version 4
+ * @version 6
  * @since 1
  */
 public class TidyUpWidget {
@@ -330,7 +331,6 @@ public class TidyUpWidget {
             lineReader = new LineReader(file2read);
 
             if (lineReader.readFile()) {
-                // read
                 ArrayList<String> readFile = lineReader.getLines();
                 ArrayList<String> writeFile;
 

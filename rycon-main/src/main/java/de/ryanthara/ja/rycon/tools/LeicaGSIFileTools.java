@@ -37,20 +37,21 @@ import java.util.*;
  *
  * <h3>Changes:</h3>
  * <ul>
+ *     <li>4: defeat bug #3 blank sign at line ending in GSI file and bug #1</li>
  *     <li>3: code improvements and clean up </li>
  *     <li>2: basic improvements </li>
  *     <li>1: basic implementation </li>
  * </ul>
  *
  * @author sebastian
- * @version 3
+ * @version 4
  * @since 1
  */
 public class LeicaGSIFileTools {
 
     private boolean isGSI16 = false;
-    private ArrayList<String> arrayList;
-    private List<String[]> list;
+    private ArrayList<String> readStringLines;
+    private List<String[]> readCSVLines;
     private TreeSet<Integer> foundCodes = new TreeSet<Integer>();
     private TreeSet<Integer> foundWordIndices = new TreeSet<Integer>();
 
@@ -59,10 +60,10 @@ public class LeicaGSIFileTools {
      * <p>
      * This constructor is used for read text and GSI file lines.
      *
-     * @param arrayList {@code ArrayList<String>} with lines as {@code String}
+     * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
      */
-    public LeicaGSIFileTools(ArrayList<String> arrayList) {
-        this.arrayList = arrayList;
+    public LeicaGSIFileTools(ArrayList<String> readStringLines) {
+        this.readStringLines = readStringLines;
     }
 
     /**
@@ -70,10 +71,10 @@ public class LeicaGSIFileTools {
      * <p>
      * This constructor is used for read csv file lines.
      *
-     * @param list {@code List<String[]>} with lines as {@code String[]}
+     * @param readCSVLines {@code List<String[]>} with lines as {@code String[]}
      */
-    public LeicaGSIFileTools(List<String[]> list) {
-        this.list = list;
+    public LeicaGSIFileTools(List<String[]> readCSVLines) {
+        this.readCSVLines = readCSVLines;
     }
 
     /**
@@ -103,7 +104,7 @@ public class LeicaGSIFileTools {
         String newLine = null;
 
         // transform lines into GSI-Blocks
-        ArrayList<ArrayList<GSIBlock>> gsiBlocks = blockEncoder(arrayList);
+        ArrayList<ArrayList<GSIBlock>> gsiBlocks = blockEncoder(readStringLines);
 
         // one top level for every code
         ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
@@ -148,6 +149,8 @@ public class LeicaGSIFileTools {
                         break;
                 }
             }
+
+            newLine = prepareLineEnding(newLine);
 
             // split lines with and without code
             if (((code != -1) & (newLine != null)) & validCheckHelperValue > 1) {
@@ -199,13 +202,10 @@ public class LeicaGSIFileTools {
 
         // insert lines without code for writing
         if (writeLinesWithoutCode && (linesWithOutCode.size() > 0)){
-
             ArrayList<String> temp = new ArrayList<String>();
 
             for (GSIHelper gsiHelper : linesWithOutCode) {
-
                 temp.add(gsiHelper.getLine());
-
             }
 
             foundCodes.add(987789);
@@ -225,7 +225,7 @@ public class LeicaGSIFileTools {
      */
     public ArrayList<String> processFormatConversionBetweenGSI8AndGSI16(boolean isGSI16) {
         // transform lines into GSI-Blocks
-        ArrayList<ArrayList<GSIBlock>> gsiBlocks = blockEncoder(arrayList);
+        ArrayList<ArrayList<GSIBlock>> gsiBlocks = blockEncoder(readStringLines);
         return lineTransformation(isGSI16, gsiBlocks);
     }
 
@@ -242,7 +242,7 @@ public class LeicaGSIFileTools {
         ArrayList<String> result = new ArrayList<String>();
 
         // convert the List<String[]> into an ArrayList<String> and use known stuff (-:
-        for (String[] stringField : list) {
+        for (String[] stringField : readCSVLines) {
 
             String line = "";
 
@@ -263,7 +263,7 @@ public class LeicaGSIFileTools {
 
         }
 
-        this.arrayList = result;
+        this.readStringLines = result;
 
         return processFormatConversionTXT2GSI(isGSI16);
     }
@@ -279,7 +279,7 @@ public class LeicaGSIFileTools {
     public ArrayList<String> processFormatConversionCSVBaselStadt2GSI(boolean isGSI16) {
         ArrayList<String> result = new ArrayList<String>();
 
-        for (String[] stringField : list) {
+        for (String[] stringField : readCSVLines) {
 
             String line;
 
@@ -306,7 +306,7 @@ public class LeicaGSIFileTools {
 
         }
 
-        this.arrayList = result;
+        this.readStringLines = result;
 
         return processFormatConversionTXT2GSI(isGSI16);
     }
@@ -324,7 +324,7 @@ public class LeicaGSIFileTools {
         ArrayList<String> result = new ArrayList<String>();
 
         // transform lines into GSI-Blocks
-        ArrayList<ArrayList<GSIBlock>> gsiBlocks = blockEncoder(arrayList);
+        ArrayList<ArrayList<GSIBlock>> gsiBlocks = blockEncoder(readStringLines);
 
         // prepare comment line if necessary
         if (writeCommentLine) {
@@ -402,7 +402,7 @@ public class LeicaGSIFileTools {
         ArrayList<String> result = new ArrayList<String>();
 
         // transform lines into GSI-Blocks
-        ArrayList<ArrayList<GSIBlock>> gsiBlocks = blockEncoder(arrayList);
+        ArrayList<ArrayList<GSIBlock>> gsiBlocks = blockEncoder(readStringLines);
 
         if (delimiter.equals(" ")) {
             delim = "    ";
@@ -507,8 +507,7 @@ public class LeicaGSIFileTools {
 
         int lineCounter = 1;
 
-        for (String line : arrayList) {
-
+        for (String line : readStringLines) {
             blocks = new ArrayList<GSIBlock>();
 
             String[] lineSplit = line.split("\\s+");
@@ -520,20 +519,17 @@ public class LeicaGSIFileTools {
                     break;
 
                 case 2:     // no, height
-
                     blocks.add(new GSIBlock(isGSI16, 11, lineCounter, lineSplit[0]));
                     blocks.add(new GSIBlock(isGSI16, 83, lineCounter, lineSplit[1]));
                     break;
 
                 case 3:     // no, code, height
-
                     blocks.add(new GSIBlock(isGSI16, 11, lineCounter, lineSplit[0]));
                     blocks.add(new GSIBlock(isGSI16, 71, lineCounter, lineSplit[1]));
                     blocks.add(new GSIBlock(isGSI16, 83, lineCounter, lineSplit[2]));
                     break;
 
                 case 4:     // no, easting, northing, height
-
                     blocks.add(new GSIBlock(isGSI16, 11, lineCounter, lineSplit[0]));
                     blocks.add(new GSIBlock(isGSI16, 81, lineCounter, lineSplit[1]));
                     blocks.add(new GSIBlock(isGSI16, 82, lineCounter, lineSplit[2]));
@@ -545,7 +541,6 @@ public class LeicaGSIFileTools {
                     break;
 
                 case 5:     // no, code, easting, northing, height
-
                     blocks.add(new GSIBlock(isGSI16, 11, lineCounter, lineSplit[0]));
                     blocks.add(new GSIBlock(isGSI16, 71, lineCounter, lineSplit[1]));
                     blocks.add(new GSIBlock(isGSI16, 81, lineCounter, lineSplit[2]));
@@ -560,7 +555,6 @@ public class LeicaGSIFileTools {
                 lineCounter++;
                 blocksInLines.add(blocks);
             }
-
         }
 
         return lineTransformation(isGSI16, blocksInLines);
@@ -576,12 +570,12 @@ public class LeicaGSIFileTools {
      * @return Converted {@code ArrayList<String>} for cad import
      */
     public ArrayList<String> processLevelling2Cad(boolean ignoreChangePoints) {
-        int lineCounter = 1; // counter
+        int lineCounter = 1;
         String newLine;
 
         ArrayList<String> result = new ArrayList<String>();
 
-        for (String line : arrayList) {
+        for (String line : readStringLines) {
 
             String[] lineSplit = line.split("\\s+");
 
@@ -609,6 +603,7 @@ public class LeicaGSIFileTools {
                 String leveledRounded = leveled.substring(0, 4) + "26" + leveled.substring(6, 7) + "0" + leveled.substring(7, leveled.length() - 1);
 
                 newLine = newLine.concat(" " + leveledRounded);
+                newLine = prepareLineEnding(newLine);
 
                 // ignore lines with change points
                 if (!((ignoreChangePoints) & (number == 0))) {
@@ -672,17 +667,14 @@ public class LeicaGSIFileTools {
 
         }
 
-//        String controlPointIdentifier = Main.pref.getSingleProperty("ParamControlPointString");
         String controlPointIdentifier = Main.pref.getUserPref(PreferenceHandler.PARAM_CONTROL_POINT_STRING);
-//        String freeStationIdentifier = "000" + Main.pref.getSingleProperty("ParamFreeStationString");
         String freeStationIdentifier = "000" + Main.pref.getUserPref(PreferenceHandler.PARAM_FREE_STATION_STRING);
-//        String stationIdentifier = "000" + Main.pref.getSingleProperty("ParamStationString");
         String stationIdentifier = "000" + Main.pref.getUserPref(PreferenceHandler.PARAM_KNOWN_STATION_STRING);
 
         ArrayList<String> result = new ArrayList<String>();
 
         // handle special case / exception when the file starts with one or more free station or (station) lines
-        String firstRow = arrayList.get(0).toUpperCase();
+        String firstRow = readStringLines.get(0).toUpperCase();
 
         if (firstRow.startsWith("*")) {
             isGSI16 = true;
@@ -695,9 +687,7 @@ public class LeicaGSIFileTools {
         breakOut:
         // breaking out of nested loops with a label called 'breakOut'
         if (firstRow.contains(freeStationIdentifier) || firstRow.contains(stationIdentifier)) {
-
-            for (Iterator<String> iter = arrayList.iterator(); iter.hasNext(); ) {
-
+            for (Iterator<String> iter = readStringLines.iterator(); iter.hasNext(); ) {
                 firstRow = iter.next();
                 if (firstRow.toUpperCase().contains(freeStationIdentifier) || firstRow.toUpperCase().contains(stationIdentifier)) {
                     if (!holdStations) {
@@ -710,65 +700,54 @@ public class LeicaGSIFileTools {
                 } else {
                     break breakOut;
                 }
-
             }
-
         }
 
         /*
-
-        Use a helper array to identify the different lines by 'type'.
-
-        type:
-        =================================
-        0: measurement value
-        1: target measurement
-        2: free station
-        3: stake out value / control points
-
+         * Use a helper array to identify the different lines by 'type'.
+         *
+         * type:
+         * =================================
+         * 1: target measurement
+         * 2: free station
+         * 3: stake out value / control points
+         * 9: measurement value
          */
-        int[] helperArray = new int[arrayList.size()];
-
+        int[] helperArray = new int[readStringLines.size()];
 
         /*
-        Try to detect single and two face measurements of control points.
-
-        A one face measured control point contains only zero values as coordinates. A two face
-        measured control point contains the coordinates of the control point in the first, and
-        only zeros in the second line. Therefore the comparison has to be made from current
-        to previous line!
-
-        The first comparison is made with the biggest integer value.
+         * Try to detect single and two face measurements of control points.
+         *
+         * A one face measured control point contains only zero values as coordinates. A two face
+         * measured control point contains the coordinates of the control point in the first, and
+         * only zeros in the second line. Therefore the comparison has to be made from current
+         * to previous line!
+         *
+         * The first comparison is made with the biggest integer value.
          */
-
         String currentLine;
         String previousLine = "12345678901234567890" + Integer.toString(Integer.MAX_VALUE);
 
         // The operations starts with the last line outside the for loop!
-        for (int i = 0; i < arrayList.size(); i++) {
+        for (int i = 0; i < readStringLines.size(); i++) {
+            currentLine = readStringLines.get(i);
 
-            currentLine = arrayList.get(i);
+            // detect two face measurement for target measurement
+            String currentLineNumber = new StringHelper().numberConvert(currentLine);
+            String previousLineNumber = new StringHelper().numberConvert(previousLine);
 
             // detect line type
             if (new StringHelper().isTargetLine(currentLine)) {
                 helperArray[i] = 1;
-
-                // detect two face measurement for target measurement
-                String currentLineNumber = new StringHelper().numberConvert(currentLine);
-                String previousLineNumber = new StringHelper().numberConvert(previousLine);
 
                 if (currentLineNumber.equals(previousLineNumber)) {
                     helperArray[i - 1] = 1;
                 } else if (previousLineNumber.contains(controlPointIdentifier)) {
                     helperArray[i - 1] = 3;
                 }
-
             } else if (currentLine.contains(freeStationIdentifier) || currentLine.contains(stationIdentifier)) {
                 helperArray[i] = 2;
             } else if (currentLine.contains(controlPointIdentifier)) {
-
-                String currentLineNumber = new StringHelper().numberConvert(currentLine);
-                String previousLineNumber = new StringHelper().numberConvert(previousLine);
 
                 // line above is free station
                 if (previousLineNumber.contains(freeStationIdentifier) || currentLineNumber.contains(stationIdentifier)) {
@@ -782,48 +761,56 @@ public class LeicaGSIFileTools {
                         helperArray[i] = 1;
                     }
                 }
+                // line above is control point and not last line -> stake out point is measurement value
                 else {
-                    helperArray[i] = 3;
+                    if (i < readStringLines.size() - 1) {
+                        helperArray[i] = 9;
+                    } else {
+                        helperArray[i] = 3;
+                    }
                 }
-
             } else {
-                helperArray[i] = 0;
+                helperArray[i] = 9;
             }
-
             previousLine = currentLine;
-
         }
 
-        // preparing the result list
+        // preparing the result lines
         for (int i = 0; i < helperArray.length; i++) {
-
             int value = helperArray[i];
 
-            if (value == 0) {
-                result.add(arrayList.get(i));
+            String resultLine = prepareLineEnding(readStringLines.get(i));
+
+            if (value == 9) {
+                result.add(resultLine);
             } else {
-
                 if (holdStations) {
-
                     if (value == 2) {
-                        result.add(arrayList.get(i));
+                        result.add(resultLine);
                     }
-
                 }
 
                 if (holdControlPoints) {
-
                     if (value == 3) {
-                        result.add(arrayList.get(i));
+                        result.add(resultLine);
                     }
-
                 }
-
             }
-
         }
 
         return result;
+    }
+
+    private String prepareLineEnding(String stringToPrepare) {
+        boolean concatBlankAtLineEnding = Boolean.parseBoolean(Main.pref.getUserPref(PreferenceHandler.GSI_SETTING_LINE_ENDING_WITH_BLANK));
+
+        if (concatBlankAtLineEnding) {
+            if (!stringToPrepare.endsWith(" ")) {
+                stringToPrepare = stringToPrepare.concat(" ");
+            }
+        }
+
+        return stringToPrepare;
     }
 
     private ArrayList<ArrayList<GSIBlock>> blockEncoder(ArrayList<String> lines) {
@@ -833,20 +820,16 @@ public class LeicaGSIFileTools {
 
         // do it over all read lines
         for (String line : lines) {
-
             blocks = new ArrayList<GSIBlock>();
             String[] lineSplit = line.split("\\s+");
 
             // used instead of 'deprecated' StringTokenizer here
             for (String aResult : lineSplit) {
-
                 GSIBlock block = new GSIBlock(aResult);
-
                 blocks.add(block);
 
                 // detect WIs
                 foundWordIndices.add(block.wordIndex);
-
             }
 
             // sort every 'line' of GSI blocks by word index (WI)
@@ -861,9 +844,8 @@ public class LeicaGSIFileTools {
                 }
             });
 
-            // fill in the sorted 'line' of blocks into an array list
+            // fill in the sorted 'line' of blocks into an array readCSVLines
             blocksInLines.add(blocks);
-
         }
 
         return blocksInLines;
@@ -873,7 +855,6 @@ public class LeicaGSIFileTools {
         ArrayList<String> result = new ArrayList<String>();
 
         for (ArrayList<GSIBlock> blocksInLines : gsiBlocks) {
-
             String newLine = "";
 
             if (isGSI16) {
@@ -883,19 +864,18 @@ public class LeicaGSIFileTools {
             int counter = 0;
 
             for (GSIBlock block : blocksInLines) {
-
                 newLine = newLine.concat(block.toString(isGSI16));
 
-                if (counter < blocksInLines.size() - 1) {
+                if (counter < blocksInLines.size()) {
                     newLine = newLine.concat(" ");
                 }
 
                 counter++;
-
             }
 
-            result.add(newLine);
+            newLine = prepareLineEnding(newLine);
 
+            result.add(newLine);
         }
 
         return result;
@@ -971,8 +951,6 @@ public class LeicaGSIFileTools {
                 } else {
                     intern = s;
                 }
-
-                System.out.println(intern);
 
                 Double d = Double.parseDouble(intern);
                 if (d == 0d) {

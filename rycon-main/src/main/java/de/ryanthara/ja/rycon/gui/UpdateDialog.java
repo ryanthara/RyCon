@@ -20,14 +20,30 @@ package de.ryanthara.ja.rycon.gui;
 
 import de.ryanthara.ja.rycon.data.I18N;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.SWTError;
 import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.browser.LocationEvent;
+import org.eclipse.swt.browser.LocationListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.*;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Label;
 
+import java.awt.*;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.StringTokenizer;
 
 /**
@@ -39,9 +55,15 @@ import java.util.StringTokenizer;
  * <p>
  * The code is inspired by the original MessageDialog code from SWT.
  *
+ * <h3>Changes:</h3>
+ * <ul>
+ *     <li>2: enable system default browser support in the what's new dialog </li>
+ *     <li>1: basic implementation </li>
+ * </ul> *
+ *
  * @author sebastian
  * @since 3
- * @version 1
+ * @version 2
  */
 public class UpdateDialog extends Dialog {
 
@@ -72,7 +94,7 @@ public class UpdateDialog extends Dialog {
      * Constructs a new instance of this class given only its parent.
      * <p>
      * The Constructor passes default styles.
-     * *
+     *
      * @param parent a shell which will be the parent of the new instance
      */
     public UpdateDialog(Shell parent) {
@@ -83,7 +105,7 @@ public class UpdateDialog extends Dialog {
      * Constructs a new instance of this class given its parent and a style.
      * <p>
      * The Constructor passes default styles.
-     * *
+     *
      * @param parent a shell which will be the parent of the new instance
      * @param style the style of dialog to construct
      */
@@ -99,7 +121,6 @@ public class UpdateDialog extends Dialog {
      * @param message the message to be shown
      * 
      * @exception java.lang.IllegalArgumentException ERROR_NULL_ARGUMENT - if the string is null
-     *                
      */
     public void setMessage(String message) {
         if (message == null) {
@@ -161,7 +182,6 @@ public class UpdateDialog extends Dialog {
             data.widthHint = image.getBounds().width + SPACING;
             imageLabel.setLayoutData(data);
             imageLabel.setImage(image);
-            System.out.println("IMAGE");
         }
     }
 
@@ -190,13 +210,43 @@ public class UpdateDialog extends Dialog {
          * the line break has to be forced
          * see: http://book.javanb.com/swt-the-standard-widget-toolkit/ch15lev1sec12.html
          */
-        textLabel.addListener(SWT.Resize, new Listener () {
+        textLabel.addListener(SWT.Resize, new Listener() {
             public void handleEvent(Event event) {
                 Rectangle bounds = textLabel.getBounds();
                 data.widthHint = bounds.width;
                 shell.layout();
             }
         });
+    }
+
+    private void createBrowser() {
+        final Browser browser;
+        try {
+            browser = new Browser(shell, SWT.NONE);
+        } catch (SWTError e) {
+            System.out.println("Could not instantiate Browser: " + e.getMessage());
+            Display.getCurrent().dispose();
+            return;
+        }
+
+        browser.setText(whatsNewInfo);
+        browser.addLocationListener(new LocationListener() {
+            @Override
+            public void changing(LocationEvent event) {
+                event.doit = false;
+                openDefaultSystemBrowser(event.location);
+            }
+
+            @Override
+            public void changed(LocationEvent locationEvent) {
+                System.out.println("changed: " + locationEvent.location);
+            }
+        });
+
+        GridData browserData = new GridData(SWT.HORIZONTAL, SWT.TOP, true, false, 2, 1);
+        browserData.widthHint = MAX_WIDTH;
+        browserData.heightHint = MAX_HEIGHT;
+        browser.setLayoutData(browserData);
     }
 
     private int getMaxMessageLineWidth() {
@@ -221,13 +271,16 @@ public class UpdateDialog extends Dialog {
         return result;
     }
 
-    private void createBrowser() {
-        Browser browser = new Browser(shell, SWT.NONE);
-        browser.setText(whatsNewInfo);
-        GridData browserData = new GridData(SWT.HORIZONTAL, SWT.TOP, true, false, 2, 1);
-        browserData.widthHint = MAX_WIDTH;
-        browserData.heightHint = MAX_HEIGHT;
-        browser.setLayoutData(browserData);
+    private void openDefaultSystemBrowser(String uri) {
+        try {
+            Desktop.getDesktop().browse(new URI(uri));
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Could not open the connection in the default browser.");
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            System.err.println("Could not open URI in the default browser.");
+        }
     }
 
     private void createButtons() {

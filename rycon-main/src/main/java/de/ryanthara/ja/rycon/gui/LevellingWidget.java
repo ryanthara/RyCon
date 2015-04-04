@@ -45,6 +45,7 @@ import java.util.ArrayList;
  *
  * <h3>Changes:</h3>
  * <ul>
+ *     <li>3: defeat bug #3 </li>
  *     <li>4: simplification and improvements, extract input fields and bottom button bar into separate classes </li>
  *     <li>3: code improvements and clean up </li>
  *     <li>2: basic improvements </li>
@@ -52,7 +53,7 @@ import java.util.ArrayList;
  * </ul>
  *
  * @author sebastian
- * @version 3
+ * @version 5
  * @since 1
  */
 public class LevellingWidget {

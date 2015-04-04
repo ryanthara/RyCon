@@ -337,7 +337,6 @@ public class CodeSplitterWidget {
             lineReader = new LineReader(file2read);
 
             if (lineReader.readFile()) {
-                // read
                 ArrayList<String> readFile = lineReader.getLines();
                 ArrayList<ArrayList<String>> writeFile;
 

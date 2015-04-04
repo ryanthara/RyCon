@@ -116,7 +116,6 @@ public class WidgetHelper {
                     String reducedSuffix = acceptableFileSuffix[j].toString().substring(2, acceptableFileSuffix[j].length());
 
                     if (files[i].getName().toLowerCase().endsWith(reducedSuffix)) {
-                        System.out.println(acceptableFileSuffix[j] + " " + files[i].getName());
                         temp.add(files[i]);
                     }
                 }

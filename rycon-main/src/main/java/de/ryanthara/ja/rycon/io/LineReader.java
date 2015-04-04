@@ -148,7 +148,6 @@ public class LineReader {
                         if (!Main.LICENSE) {
                             if (countReadLines > 20) {
                                 success = true;
-                                System.out.println("MF");
                                 break;
                             }
                         }

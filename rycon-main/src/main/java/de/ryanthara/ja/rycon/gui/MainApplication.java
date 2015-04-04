@@ -51,7 +51,7 @@ import java.io.File;
  * </ul>
  *
  * @author sebastian
- * @version 3
+ * @version 4
  * @since 1
  * @see de.ryanthara.ja.rycon.Main
  */
@@ -214,7 +214,7 @@ public class MainApplication extends Main {
         final Tray tray = display.getSystemTray();
 
         if (tray == null) {
-            System.out.println("System tray functionality is not available on your system.");
+            System.err.println("System tray functionality is not available on your system.");
         } else {
             Version version = new Version();
 
@@ -463,9 +463,8 @@ public class MainApplication extends Main {
         initApplicationPreferences();
 
         // to provide illegal thread access -> https://github.com/udoprog/c10t-swt/issues/1
-        // add -XstartOnFirstThread as an java option on VM parameter
+        // add -XstartOnFirstThread as an java option on VM parameter on OS X
         new MainApplication();
-//        new MainApplication_KOPIE();
     }
 
     private void applicationStarted() {

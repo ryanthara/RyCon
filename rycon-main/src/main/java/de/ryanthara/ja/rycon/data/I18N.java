@@ -679,4 +679,12 @@ public class I18N {
     public static String getMsgCreateDirJobWarning() {
         return Messages.getString("msgCreateDirJobWarning");
     }
+
+    public static String getGroupTitleGSISettings() {
+        return Messages.getString("groupTitleGSISettings");
+    }
+
+    public static String getBtnUseSpaceAtLineEnd() {
+        return Messages.getString("btnUseSpaceAtLineEnd");
+    }
 } // end of I18N

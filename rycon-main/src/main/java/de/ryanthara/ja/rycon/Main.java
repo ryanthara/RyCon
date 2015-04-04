@@ -42,13 +42,14 @@ import java.util.Locale;
  *
  * <h3>Changes:</h3>
  * <ul>
+ *     <li>4: defeat bug #3 </li>
  *     <li>3: code improvements and clean up </li>
  *     <li>2: basic improvements </li>
  *     <li>1: basic implementation </li>
  * </ul>
  *
  * @author sebastian
- * @version 3
+ * @version 4
  * @since 2
  */
 public abstract class Main {
@@ -76,8 +77,8 @@ public abstract class Main {
     private static final String DIR_JOBS_TEMPLATE = "./jobs/template-folder";
     private static final String DIR_PROJECT = "./projects";
     private static final String DIR_PROJECT_TEMPLATE = "./projects/template-folder";
+    private static final String GSI_SETTING_LINE_ENDING_WITH_BLANK = "true";
     private static final String PARAM_CONTROL_POINT_STRING = "STKE";
-
     private static final String PARAM_FREE_STATION_STRING = "FS";
     private static final String PARAM_KNOWN_STATION_STRING = "ST";
 
@@ -187,10 +188,10 @@ public abstract class Main {
                         Desktop.getDesktop().browse(new URI("http://java.com/"));
                     } catch (IOException e) {
                         e.printStackTrace();
-                        System.err.println("Could not open default browser.");
+                        System.err.println("Could not open the connection in the default browser.");
                     } catch (URISyntaxException e) {
                         e.printStackTrace();
-                        System.err.println("Could not open default browser.");
+                        System.err.println("Could not open URI in the default browser.");
                     }
                 }
 
@@ -198,7 +199,6 @@ public abstract class Main {
                 System.out.println("Please install current JRE from http://java.com/");
 
                 display.dispose();
-
                 System.exit(0);
             }
 
@@ -242,44 +242,25 @@ public abstract class Main {
                 updateDialog.setText(I18N.getInfoTitleRyCONUpdate());
                 updateDialog.setMessage(I18N.getInfoTextRyCONUpdate());
                 updateDialog.setWhatsNewInfo(updater.getWhatsNew());
-                updateDialog.open();
+                int returnCode = updateDialog.open();
 
-//                UpdateDialog d = new UpdateDialog(shell);
-//                String input = d.open();
-//
-//                if (input != null) {
-//                    // User clicked OK; set the text into the label
-//                    System.out.println(input);
-//                }
-//                while (!shell.isDisposed()) {
-//                    if (!display.readAndDispatch()) {
-//                        display.sleep();
-//                    }
-//                }
-//                display.dispose();
-                
-//                MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR | SWT.YES | SWT.NO);
-//                messageBox.setText(I18N.getInfoTitleRyCONUpdate());
-//                messageBox.setMessage(I18N.getInfoTextRyCONUpdate());
-//                int rc = messageBox.open();
-//
-//                if (rc == SWT.YES) {
-//                    try {
-//                        Desktop.getDesktop().browse(new URI(getRyCONWebsite()));
-//
-//                        display.dispose();
-//                        System.exit(0);
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                        System.err.println("Could not open default browser.");
-//                    } catch (URISyntaxException e) {
-//                        e.printStackTrace();
-//                        System.err.println("Could not open default browser.");
-//                    }
-//                }
+                if (returnCode == UpdateDialog.CLOSE_AND_OPEN_BROWSER) {
+                    try {
+                        Desktop.getDesktop().browse(new URI(getRyCONWebsite()));
 
-                System.out.println("An old version of RyCON is used.");
-                System.out.println("Please update from " + getRyCONWebsite());
+                        display.dispose();
+                        System.exit(0);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        System.err.println("Could not open default browser.");
+                    } catch (URISyntaxException e) {
+                        e.printStackTrace();
+                        System.err.println("Could not open default browser.");
+                    }
+                } else if (returnCode == UpdateDialog.CLOSE_AND_CONTINUE) {
+                    System.out.println("An old version of RyCON is used.");
+                    System.out.println("Please update from " + getRyCONWebsite());
+                }
 
                 display.dispose();
             }
@@ -407,6 +388,15 @@ public abstract class Main {
      */
     public static boolean getGSI16() {
         return GSI16;
+    }
+
+    /**
+     * Returns true or false as String for indicating a blank at the end of a gsi format line.
+     * @return true or false
+     * @since 4
+     */
+    public static String getGSISettingLineEnding() {
+        return GSI_SETTING_LINE_ENDING_WITH_BLANK;
     }
 
     /**
