@@ -236,11 +236,6 @@ public class UpdateDialog extends Dialog {
                 event.doit = false;
                 openDefaultSystemBrowser(event.location);
             }
-
-            @Override
-            public void changed(LocationEvent locationEvent) {
-                System.out.println("changed: " + locationEvent.location);
-            }
         });
 
         GridData browserData = new GridData(SWT.HORIZONTAL, SWT.TOP, true, false, 2, 1);
