@@ -18,6 +18,8 @@
 
 package de.ryanthara.ja.rycon;
 
+import de.ryanthara.ja.rycon.cli.CmdLineInterfaceException;
+import de.ryanthara.ja.rycon.cli.CmdLineInterfaceParser;
 import de.ryanthara.ja.rycon.data.I18N;
 import de.ryanthara.ja.rycon.data.PreferenceHandler;
 import de.ryanthara.ja.rycon.gui.StatusBar;
@@ -42,6 +44,7 @@ import java.util.Locale;
  *
  * <h3>Changes:</h3>
  * <ul>
+ *     <li>5: implement command line interface (cli) handling </li>
  *     <li>4: defeat bug #3 </li>
  *     <li>3: code improvements and clean up </li>
  *     <li>2: basic improvements </li>
@@ -49,7 +52,7 @@ import java.util.Locale;
  * </ul>
  *
  * @author sebastian
- * @version 4
+ * @version 5
  * @since 2
  */
 public abstract class Main {
@@ -84,6 +87,7 @@ public abstract class Main {
 
     /**
      * Member for the URL of the RyCON update check website.
+     *
      * @since 3
      */
     public static final String RyCON_UPDATE_URL = "http://code.ryanthara.de/content/3-RyCON/_current.version";
@@ -99,7 +103,8 @@ public abstract class Main {
     public static final String RyCON_WEBSITE_HELP = "http://code.ryanthara.de/RyCON/help";
 
     /**
-     * Member for the URL of the RyCON what's new website .
+     * Member for the URL of the RyCON what's new website.
+     *
      * @since 3
      */
     public static final String RyCON_WHATS_NEW_URL = "http://code.ryanthara.de/content/3-RyCON/_whats.new";
@@ -152,11 +157,42 @@ public abstract class Main {
     }
 
     /**
+     * Checks the command line interface and it's given arguments.
+     *
+     * <p>
+     * RyCON accept a couple of simple command line interface (cli) arguments. At the moment there are
+     * the following parameters implemented and can be used as described.
+     *
+     * <p>
+     * --help               shows the help and the valid cli arguments
+     * --locale=<LOCALE>    <LOCALE> in ISO 639 alpha-2 or alpha-3 language code (e.g. de for GERMAN, en for ENGLISH)
+     *
+     * @param args command line interface arguments
+     * @since 5
+     */
+    public static void checkCommandLineInterfaceArguments(String... args) {
+        CmdLineInterfaceParser parser = new CmdLineInterfaceParser();
+
+        try {
+            parser.parseArguments(args);
+        } catch (CmdLineInterfaceException e) {
+            System.err.println(e.toString());
+            System.exit(1);
+        }
+
+        if (parser.getParsedLanguageCode() != null) {
+            setLocaleTo(parser.getParsedLanguageCode());
+        }
+    }
+
+    /**
      * Checks the current JAVA version.
+     *
      * <p>
      * During the startup of RyCON the version of the installed JRE is checked. 
      * RyCON can be started only if a minimum version of a JRE is installed on 
      * the system. This is due to swt dependencies and java dependencies.
+     *
      * <p>
      * At minimum a JRE version of 1.7 is necessary and must be installed on the
      * target system.
@@ -222,9 +258,11 @@ public abstract class Main {
 
     /**
      * Performs an online check for a new RyCON version.
+     *
      * <p>
      * If a newer version of RyCON is available an info dialog is shown to the user
      * and an update is offered.
+     *
      * <p>
      * At the moment there is not planed to force an automatic update via Java Webstart functions.
      * 
@@ -333,6 +371,7 @@ public abstract class Main {
 
     /**
      * Returns the jobs directory as string value.
+     *
      * @return jobs directory
      * @since 3
      */

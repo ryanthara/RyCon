@@ -453,12 +453,12 @@ public class MainApplication extends Main {
     /**
      * Main application startup
      *
-     * @param args command line arguments (not used yet)
+     * @param args command line arguments
      */
     public static void main(String[] args) {
+        checkCommandLineInterfaceArguments(args);
         checkJavaVersion();
         checkRyCONVersion();
-        setLocaleTo("DE");
         checkLicense();
         initApplicationPreferences();
 
