@@ -45,7 +45,8 @@ import java.util.ArrayList;
  *
  * <h3>Changes:</h3>
  * <ul>
- *     <li>3: defeat bug #3 </li>
+ *     <li>6: Support for NIGRA levelling files</li>
+ *     <li>5: defeat bug #3 </li>
  *     <li>4: simplification and improvements, extract input fields and bottom button bar into separate classes </li>
  *     <li>3: code improvements and clean up </li>
  *     <li>2: basic improvements </li>
@@ -53,7 +54,7 @@ import java.util.ArrayList;
  * </ul>
  *
  * @author sebastian
- * @version 5
+ * @version 6
  * @since 1
  */
 public class LevellingWidget {
@@ -62,7 +63,7 @@ public class LevellingWidget {
     private File[] files2read = null;
     private InputFieldsComposite inputFieldsComposite;
     private Shell innerShell = null;
-    private final String[] acceptableFileSuffixes = new String[]{"*.gsi"};
+    private final String[] acceptableFileSuffixes = new String[]{"*.gsi", "*.asc"};
 
     /**
      * Class constructor without parameters.
@@ -266,7 +267,7 @@ public class LevellingWidget {
         fileDialog.setFilterPath(Main.pref.getUserPref(PreferenceHandler.DIR_PROJECTS));
         fileDialog.setText(I18N.getFileChooserLevellingSourceText());
         fileDialog.setFilterExtensions(acceptableFileSuffixes);
-        fileDialog.setFilterNames(new String[]{I18N.getFileChooserFilterNameGSI()});
+        fileDialog.setFilterNames(new String[]{I18N.getFileChooserFilterNameGSI(), I18N.getFileChooserFilterNameNIGRA()});
 
         String firstFile = fileDialog.open();
 
@@ -335,15 +336,26 @@ public class LevellingWidget {
                 // read
                 ArrayList<String> readFile = lineReader.getLines();
 
-                // processFileOperations
-                LeicaGSIFileTools gsiTools = new LeicaGSIFileTools(readFile);
-                ArrayList<String> writeFile = gsiTools.processLevelling2Cad(holdChangePoints);
+                String[] fileNameAndSuffix = file2read.getName().split("\\.(?=[^\\.]+$)");
 
-                // write
-                String file2write = file2read.toString().substring(0, file2read.toString().length() - 4) + "_LEVEL.GSI";
-                LineWriter lineWriter = new LineWriter(file2write);
-                if (lineWriter.writeFile(writeFile)) {
-                    counter++;
+                if (fileNameAndSuffix[1].equalsIgnoreCase("GSI")) {
+                    LeicaGSIFileTools gsiTools = new LeicaGSIFileTools(readFile);
+                    ArrayList<String> writeFile = gsiTools.processLevelling2Cad(holdChangePoints);
+                    String file2write = file2read.toString().substring(0, file2read.toString().length() - 4) + "_LEVEL.GSI";
+                    LineWriter lineWriter = new LineWriter(file2write);
+                    if (lineWriter.writeFile(writeFile)) {
+                        counter++;
+                    }
+                } else if (fileNameAndSuffix[1].equalsIgnoreCase("ASC")) {
+                    LeicaGSIFileTools gsiFileTools = new LeicaGSIFileTools(readFile);
+                    ArrayList<String> writeFile = gsiFileTools.processConversionNIGRA2GSI(Main.getGSI16());
+                    String file2write = file2read.toString().substring(0, file2read.toString().length() - 4) + "_LEVEL.GSI";
+                    LineWriter lineWriter = new LineWriter(file2write);
+                    if (lineWriter.writeFile(writeFile)) {
+                        counter++;
+                    }
+                } else {
+                    System.err.println("File " + file2read.getName() + " is not supported (yet).");
                 }
 
             } else {

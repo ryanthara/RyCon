@@ -37,6 +37,7 @@ import java.util.*;
  *
  * <h3>Changes:</h3>
  * <ul>
+ *     <li>5: NIGRA support implemented for dnd-support of the levelling widget</li>
  *     <li>4: defeat bug #3 blank sign at line ending in GSI file and bug #1</li>
  *     <li>3: code improvements and clean up </li>
  *     <li>2: basic improvements </li>
@@ -44,7 +45,7 @@ import java.util.*;
  * </ul>
  *
  * @author sebastian
- * @version 4
+ * @version 5
  * @since 1
  */
 public class LeicaGSIFileTools {
@@ -494,6 +495,47 @@ public class LeicaGSIFileTools {
     }
 
     /**
+     * Converts a NIGRA height listing (*.ASC) into a Leica GSI file.
+     * @param isGSI16 true if GSI16 format is used
+     * @return converted GSI format file
+     * @since 5
+     */
+    public ArrayList<String> processConversionNIGRA2GSI(boolean isGSI16) {
+        ArrayList<GSIBlock> blocks;
+        ArrayList<ArrayList<GSIBlock>> blocksInLines = new ArrayList<ArrayList<GSIBlock>>();
+        StringTokenizer stringTokenizer;
+
+        int lineCounter = 1;
+
+        // skip the first 8 lines without any needed information
+        for (int i = 7; i < readStringLines.size(); i++) {
+            blocks = new ArrayList<GSIBlock>();
+            String line = readStringLines.get(i);
+            stringTokenizer = new StringTokenizer(line);
+
+            if (stringTokenizer.countTokens() > 2) {
+                String number = stringTokenizer.nextToken();
+                String easting = Integer.toString(i);
+                String northing = Integer.toString(i);
+                String height = stringTokenizer.nextToken();
+
+                blocks.add(new GSIBlock(isGSI16, 11, lineCounter, number));
+                blocks.add(new GSIBlock(isGSI16, 81, lineCounter, easting));
+                blocks.add(new GSIBlock(isGSI16, 82, lineCounter, northing));
+                blocks.add(new GSIBlock(isGSI16, 83, lineCounter, height));
+            }
+
+            // check for at least one or more added elements to prevent writing empty lines
+            if (blocks.size() > 0) {
+                lineCounter++;
+                blocksInLines.add(blocks);
+            }
+        }
+
+        return lineTransformation(isGSI16, blocksInLines);
+    }
+
+    /**
      * Converts a text file (space or tabulator separated) into a GSI file.
      * <p>
      * The GSI format decision is done by a parameter in the constructor.
@@ -515,7 +557,6 @@ public class LeicaGSIFileTools {
             switch (lineSplit.length) {
 
                 case 1:     // prevent fall through
-
                     break;
 
                 case 2:     // no, height
@@ -921,9 +962,9 @@ public class LeicaGSIFileTools {
          * @param isGSI16   true if it is GSI16 format
          * @param wordIndex word index (WI) of the block
          * @param number    information for the point number (filled up with zeros)
-         * @param s         {@code String} to transform into a GSIBlock
+         * @param dataGSI         {@code String} to transform into a GSIBlock
          */
-        public GSIBlock(boolean isGSI16, int wordIndex, int number, String s) {
+        public GSIBlock(boolean isGSI16, int wordIndex, int number, String dataGSI) {
 
             String intern = "";
 
@@ -937,19 +978,19 @@ public class LeicaGSIFileTools {
 
             if (wordIndex == 11) {                                          // point number
                 this.information = String.format("%04d", number);
-                intern = s;
+                intern = dataGSI;
             } else if (wordIndex == 71) {                                   // code
                 this.information = "..46";
-                intern = s;
+                intern = dataGSI;
             } else if ((wordIndex > 80) || (wordIndex < 90)) {              // coordinates
                 this.information = "..46";
-                if (s.startsWith("-")) {
+                if (dataGSI.startsWith("-")) {
                     this.sign = "-";
-                    intern = s.substring(1, s.length());
-                } else if (s.startsWith("+")) {
-                    intern = s.substring(1, s.length());
+                    intern = dataGSI.substring(1, dataGSI.length());
+                } else if (dataGSI.startsWith("+")) {
+                    intern = dataGSI.substring(1, dataGSI.length());
                 } else {
-                    intern = s;
+                    intern = dataGSI;
                 }
 
                 Double d = Double.parseDouble(intern);

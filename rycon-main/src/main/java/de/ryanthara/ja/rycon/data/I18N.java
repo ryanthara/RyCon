@@ -687,4 +687,8 @@ public class I18N {
     public static String getBtnUseSpaceAtLineEnd() {
         return Messages.getString("btnUseSpaceAtLineEnd");
     }
+
+    public static String getFileChooserFilterNameNIGRA() {
+        return Messages.getString("fileChooserFilterNameNIGRA");
+    }
 } // end of I18N

@@ -27,18 +27,19 @@ import java.util.*;
  *
  * <h3>Changes:</h3>
  * <ul>
+ *     <li>4: support for NIGRA levelling files</li>
  *     <li>3: code improvements and clean up </li>
  *     <li>2: basic improvements </li>
  *     <li>1: basic implementation </li>
  * </ul>
  *
  * @author sebastian
- * @version 3
+ * @version 4
  * @since 1
  */
 public class TextFileTools {
 
-    private ArrayList<String> arrayList;
+    private ArrayList<String> readStringLines;
     private List<String[]> list;
     private TreeSet<Integer> foundCodes = new TreeSet<Integer>();
 
@@ -50,7 +51,7 @@ public class TextFileTools {
      * @param arrayList {@code ArrayList<String>} with lines in text format
      */
     public TextFileTools(ArrayList<String> arrayList) {
-        this.arrayList = arrayList;
+        this.readStringLines = arrayList;
     }
 
     /**
@@ -93,7 +94,7 @@ public class TextFileTools {
         // one top level for every code
         ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
 
-        for (String line : arrayList) {
+        for (String line : readStringLines) {
             stringTokenizer = new StringTokenizer(line);
 
             // a line with code contains 5 tokens (nr, code, y, y, z)
@@ -233,7 +234,7 @@ public class TextFileTools {
     public ArrayList<String> processConversionTXT2CSV(String delimiter) {
         ArrayList<String> result = new ArrayList<String>();
 
-        for (String line : arrayList) {
+        for (String line : readStringLines) {
             // get rid off one or more empty signs at the beginning and end of the given string
             line = line.trim();
             result.add(line.replaceAll("\\s+", delimiter));
