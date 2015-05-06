@@ -18,6 +18,8 @@
 
 package de.ryanthara.ja.rycon.gui;
 
+import de.ryanthara.ja.rycon.events.StatusInformationEvent;
+import de.ryanthara.ja.rycon.events.StatusInformationListener;
 import de.ryanthara.ja.rycon.tools.ImageConverter;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -28,6 +30,8 @@ import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+
+import java.util.Vector;
 
 /**
  * This class defines a status bar and it's functionality.
@@ -55,6 +59,7 @@ public class StatusBar extends Composite {
     private Image iconWarning = null;
     private Label icon = null;
     private Label message = null;
+    private Vector statusInformationListeners = new Vector();
 
     /**
      * Constant value for displaying the error icon.
@@ -103,6 +108,14 @@ public class StatusBar extends Composite {
         data.right = new FormAttachment(100, 0);
         icon.setLayoutData(data);
 
+        addStatusInformationListener(new StatusInformationListener() {
+            @Override
+            public void setStatusText(StatusInformationEvent e) {
+                System.out.println("THW");
+                message.setText(e.statusText);
+            }
+        });
+
         // dispose not used elements (icons, etc...) to clean up memory
         addDisposeListener(new DisposeListener() {
             public void widgetDisposed(DisposeEvent e) {
@@ -143,6 +156,14 @@ public class StatusBar extends Composite {
         // force a Layout to recalculate the sizes of and reposition children
         // by sending layout() to the parent Composite.
         layout(true);
+    }
+
+    public void addStatusInformationListener(StatusInformationListener listener) {
+        statusInformationListeners.addElement(listener);
+    }
+
+    public void removeStatusInformationListener(StatusInformationListener listener) {
+        statusInformationListeners.removeElement(listener);
     }
 
 } // end of StatusBar

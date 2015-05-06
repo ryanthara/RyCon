@@ -34,12 +34,13 @@ import java.util.ArrayList;
  *
  * <h3>Changes:</h3>
  * <ul>
+ *     <li>3: stop reading empty lines</li>
  *     <li>2: code improvements and clean up </li>
  *     <li>1: basic implementation </li>
  * </ul>
  *
  * @author sebastian
- * @version 2
+ * @version 3
  * @since 1
  */
 public class LineReader {
@@ -110,7 +111,6 @@ public class LineReader {
      * @return success of file reading
      */
     public boolean readFile(String comment) {
-
         // some basic initialization
         boolean success = false;
         lines = new ArrayList<String>();
@@ -123,7 +123,6 @@ public class LineReader {
         if (this.file == null || !this.file.exists() || !this.file.isFile() || !this.file.canRead()) {
             return false;
         } else {
-
             try {
                 fileInputStream = new FileInputStream(this.file);
 
@@ -134,13 +133,15 @@ public class LineReader {
                     // read the lines into an ArrayList
                     while ((line = bufferedReader.readLine()) != null) {
                         countReadLines++;
-                        if (comment == null) {
-                            lines.add(line);
-                            countStoredLines++;
-                        } else {
-                            if (!line.startsWith(comment)) {
+                        if (!line.trim().equals("")) {
+                            if (comment == null) {
                                 lines.add(line);
                                 countStoredLines++;
+                            } else {
+                                if (!line.startsWith(comment)) {
+                                    lines.add(line);
+                                    countStoredLines++;
+                                }
                             }
                         }
 
@@ -163,7 +164,6 @@ public class LineReader {
                     System.err.println("File " + file.getName() + " could not be locked.");
                     e.printStackTrace();
                 }
-
             } catch (FileNotFoundException e) {
                 System.err.println("File: " + file.getName() + "could not be read.");
                 e.printStackTrace();
@@ -180,7 +180,6 @@ public class LineReader {
                     e.printStackTrace();
                 }
             }
-
             return success;
         }
     }

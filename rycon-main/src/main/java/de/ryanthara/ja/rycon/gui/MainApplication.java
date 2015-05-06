@@ -112,9 +112,7 @@ public class MainApplication extends Main {
         display.addFilter(SWT.KeyDown, new Listener() {
             @Override
             public void handleEvent(Event event) {
-
                 if (!getSubShellStatus()) {
-
                     switch (event.keyCode) {
                         case '1':
                             actionBtn1();
@@ -139,7 +137,6 @@ public class MainApplication extends Main {
                             break;
                     }
                 }
-
             }
         });
 

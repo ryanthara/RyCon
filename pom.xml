@@ -6,7 +6,7 @@
 
     <!-- coordinates -->
     <groupId>de.ryanthara.ja.rycon</groupId>
-    <version>0.9.1-SNAPSHOT</version>
+    <version>0.9.3-SNAPSHOT</version>
     <artifactId>RyCON</artifactId>
     <packaging>pom</packaging>
     <name>RyCON</name>

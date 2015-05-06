@@ -281,7 +281,6 @@ public class LeicaGSIFileTools {
         ArrayList<String> result = new ArrayList<String>();
 
         for (String[] stringField : readCSVLines) {
-
             String line;
 
             // point number is in column 1
@@ -304,7 +303,6 @@ public class LeicaGSIFileTools {
             }
 
             result.add(line.trim());
-
         }
 
         this.readStringLines = result;
@@ -329,47 +327,39 @@ public class LeicaGSIFileTools {
 
         // prepare comment line if necessary
         if (writeCommentLine) {
-
             StringBuilder builder = new StringBuilder();
 
             int counter = 0;
 
-            for (Integer wordIndice : foundWordIndices) {
-
+            for (Integer wordIndex : foundWordIndices) {
                 builder.append("WI_");
-                builder.append(wordIndice.toString());
+                builder.append(wordIndex.toString());
 
                 if (counter < foundWordIndices.size() - 1) {
                     builder.append(delimiter);
                 }
 
                 counter++;
-
             }
 
             result.add(0, builder.toString());
         }
 
         for (ArrayList<GSIBlock> blocksAsLines : gsiBlocks) {
-
             String newLine = "";
 
             Iterator<Integer> it = foundWordIndices.iterator();
 
             for (int i = 0; i < foundWordIndices.size(); i++) {
-
                 Integer wordIndice = it.next();
-
                 String intern = "";
 
                 for (GSIBlock block : blocksAsLines) {
-
                     // check the WI and fill in an empty block of spaces if WI doesn't match to 'column'
                     if (wordIndice == block.wordIndex) {
                         intern = block.toPrintFormatCSV();
                         break; // important if else statement will be added!!!
                     }
-
                 }
 
                 newLine = newLine.concat(intern);
@@ -377,11 +367,8 @@ public class LeicaGSIFileTools {
                 if (i < foundWordIndices.size() - 1) {
                     newLine = newLine.concat(delimiter);
                 }
-
             }
-
             result.add(newLine);
-
         }
 
         return result;
@@ -413,7 +400,6 @@ public class LeicaGSIFileTools {
 
         // prepare comment line if necessary
         if (writeCommentLine) {
-
             int length;
 
             if (isGSI16) {
@@ -428,16 +414,13 @@ public class LeicaGSIFileTools {
             int counter = 0;
 
             for (Integer wordIndice : foundWordIndices) {
-
                 s = String.format(format, wordIndice.toString());
                 commentLine = commentLine.concat(s);
 
                 if (counter < foundWordIndices.size() - 1) {
                     commentLine = commentLine.concat(delim);
                 }
-
                 counter++;
-
             }
 
             StringBuilder builder = new StringBuilder(commentLine);
@@ -447,19 +430,16 @@ public class LeicaGSIFileTools {
         }
 
         for (ArrayList<GSIBlock> blocksAsLines : gsiBlocks) {
-
             String newLine = "";
 
             Iterator<Integer> it = foundWordIndices.iterator();
 
             for (int i = 0; i < foundWordIndices.size(); i++) {
-
                 Integer wordIndice = it.next();
 
                 String intern = "";
 
                 for (GSIBlock block : blocksAsLines) {
-
                     // check the WI and fill in an empty block of spaces if WI doesn't match to 'column'
                     if (wordIndice == block.wordIndex) {
                         intern = block.toPrintFormatTXT();
@@ -474,9 +454,7 @@ public class LeicaGSIFileTools {
                         }
 
                         intern = emptyBlock;
-
                     }
-
                 }
 
                 newLine = newLine.concat(intern);
@@ -484,13 +462,9 @@ public class LeicaGSIFileTools {
                 if (i < foundWordIndices.size() - 1) {
                     newLine = newLine.concat(delim);
                 }
-
             }
-
             result.add(newLine);
-
         }
-
         return result;
     }
 
@@ -555,7 +529,6 @@ public class LeicaGSIFileTools {
             String[] lineSplit = line.split("\\s+");
 
             switch (lineSplit.length) {
-
                 case 1:     // prevent fall through
                     break;
 
@@ -588,7 +561,6 @@ public class LeicaGSIFileTools {
                     blocks.add(new GSIBlock(isGSI16, 82, lineCounter, lineSplit[3]));
                     blocks.add(new GSIBlock(isGSI16, 83, lineCounter, lineSplit[4]));
                     break;
-
             }
 
             // check for at least one or more added elements to prevent writing empty lines
@@ -617,7 +589,6 @@ public class LeicaGSIFileTools {
         ArrayList<String> result = new ArrayList<String>();
 
         for (String line : readStringLines) {
-
             String[] lineSplit = line.split("\\s+");
 
             // line with height information from levelling has four tokens in GSI format
@@ -652,11 +623,8 @@ public class LeicaGSIFileTools {
 
                     lineCounter++;
                 }
-
             }
-
         }
-
         return result;
     }
 
@@ -684,13 +652,11 @@ public class LeicaGSIFileTools {
              * @return true if it is a target line
              */
             boolean isTargetLine(String line) {
-
                 if (isGSI16) {
                     return (line.split("0000000000000000").length - 1) == 3;
                 } else {
                     return (line.split("00000000").length - 1) == 3;
                 }
-
             }
 
             /**
@@ -706,7 +672,7 @@ public class LeicaGSIFileTools {
                 }
             }
 
-        }
+        } // end of class StringHelper
 
         String controlPointIdentifier = Main.pref.getUserPref(PreferenceHandler.PARAM_CONTROL_POINT_STRING);
         String freeStationIdentifier = "000" + Main.pref.getUserPref(PreferenceHandler.PARAM_FREE_STATION_STRING);
@@ -769,7 +735,7 @@ public class LeicaGSIFileTools {
         String currentLine;
         String previousLine = "12345678901234567890" + Integer.toString(Integer.MAX_VALUE);
 
-        // The operations starts with the last line outside the for loop!
+        // The operations starts with the last line outside the for-loop!
         for (int i = 0; i < readStringLines.size(); i++) {
             currentLine = readStringLines.get(i);
 
