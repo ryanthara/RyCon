@@ -49,6 +49,7 @@ import java.util.List;
  *
  * <h3>Changes:</h3>
  * <ul>
+ *     <li>6: implement support for cadwork-files (node.dat) </li>
  *     <li>5: defeat bug #3 </li>
  *     <li>4: simplification and improvements, extract input fields and bottom button bar into separate classes </li>
  *     <li>3: code improvements and clean up </li>
@@ -57,11 +58,13 @@ import java.util.List;
  * </ul>
  *
  * @author sebastian
- * @version 5
+ * @version 6
  * @since 1
  */
 public class ConverterWidget {
 
+    private Button chkBoxCadworkUseCode;
+    private Button chkBoxCadworkUseZeroHeights;
     private Button chkBoxCSVSemiColonDelimiter;
     private Button chkBoxTXTSpaceDelimiter;
     private Button chkBoxWriteCommentLine;
@@ -176,7 +179,7 @@ public class ConverterWidget {
             }
         };
 
-        String[] formatSource = {"GSI8", "GSI16", "TXT", "CSV", "Basel Stadt CSV"};
+        String[] formatSource = {"GSI8", "GSI16", "TXT", "CSV", "cadwork node.dat", "Basel Stadt CSV"};
         String[] formatTarget = {"GSI8", "GSI16", "TXT", "CSV"};
 
         for (int i = 0; i < formatSource.length; i++) {
@@ -219,6 +222,14 @@ public class ConverterWidget {
         chkBoxCSVSemiColonDelimiter = new Button(group, SWT.CHECK);
         chkBoxCSVSemiColonDelimiter.setSelection(false);
         chkBoxCSVSemiColonDelimiter.setText(I18N.getBtnChkConverterCSVSemiColonDelimiter());
+
+        chkBoxCadworkUseCode = new Button(group, SWT.CHECK);
+        chkBoxCadworkUseCode.setSelection(false);
+        chkBoxCadworkUseCode.setText(I18N.getBtnChkBoxCadworkUseCode());
+
+        chkBoxCadworkUseZeroHeights = new Button(group, SWT.CHECK);
+        chkBoxCadworkUseZeroHeights.setSelection(false);
+        chkBoxCadworkUseZeroHeights.setText(I18N.getBtnChkBoxCadworkUseZeroHeights());
 
         chkBoxWriteCommentLine = new Button(group, SWT.CHECK);
         chkBoxWriteCommentLine.setSelection(false);
@@ -320,9 +331,33 @@ public class ConverterWidget {
         FileDialog fileDialog = new FileDialog(innerShell, SWT.MULTI);
         fileDialog.setFilterPath(Main.pref.getUserPref(PreferenceHandler.DIR_PROJECTS));
         fileDialog.setText(I18N.getFileChooserTidyUpSourceText());
-        fileDialog.setFilterExtensions(new String[]{"*.gsi", "*.txt", "*.csv"});
-        fileDialog.setFilterNames(new String[]{I18N.getFileChooserFilterNameGSI(), I18N.getFileChooserFilterNameTXT(),
-                I18N.getFileChooserFilterNameCSV()});
+        fileDialog.setFilterExtensions(new String[]{"*.gsi", "*.txt", "*.csv", "*.dat"});
+        fileDialog.setFilterNames(new String[]{
+                I18N.getFileChooserFilterNameGSI(),
+                I18N.getFileChooserFilterNameTXT(),
+                I18N.getFileChooserFilterNameCSV(),
+                I18N.getFileChooserFilterNameCadwork()});
+
+        // determine filter index by source group selection
+        int selectedBtnSource = RadioHelper.getSelectedBtn(groupSource.getChildren());
+        switch (selectedBtnSource) {
+            case 0:
+            case 1:
+                fileDialog.setFilterIndex(0);
+                break;
+            case 2:
+                fileDialog.setFilterIndex(1);
+                break;
+            case 3:
+                fileDialog.setFilterIndex(2);
+                break;
+            case 4:
+                fileDialog.setFilterIndex(3);
+                break;
+            case 5:
+                fileDialog.setFilterIndex(2);
+                break;
+        }
 
         String firstFile = fileDialog.open();
 
@@ -440,7 +475,21 @@ public class ConverterWidget {
                     }
                     break;
 
-                case 4:     // CSV format from the geo data server 'Basel Stadt' (http://shop.geo.bs.ch/geoshop_app/geoshop/)
+                case 4:     // cadwork node.dat format from the cadwork CAD program
+                    lineReader = new LineReader(file2read);
+                    if (lineReader.readFile()) {
+                        readFile = lineReader.getLines();
+                        readFileSuccess = true;
+                    } else {
+                        System.err.println("File " + file2read.getName() + " could not be read.");
+
+                        MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_ERROR);
+                        msgBox.setMessage(I18N.getMsgConvertReaderFailed());
+                        msgBox.setText(I18N.getMsgBoxTitleError());
+                        msgBox.open();
+                    }
+                    break;
+                case 5:     // CSV format from the geo data server 'Basel Stadt' (http://shop.geo.bs.ch/geoshop_app/geoshop/)
                     try {
                         CSVReader reader = new CSVReader(new FileReader(file2read), ';', '"', 1); // skip first line
                         readCSVFile = reader.readAll();
@@ -467,7 +516,7 @@ public class ConverterWidget {
                             case 1:     // GSI16 format
                                 // process file operations
                                 gsiTools = new LeicaGSIFileTools(readFile);
-                                writeFile = gsiTools.processFormatConversionBetweenGSI8AndGSI16(Main.getGSI8());
+                                writeFile = gsiTools.convertGSI8vsGSI16(Main.getGSI8());
 
                                 // write file line by line
                                 if (writeFile(file2read, writeFile, ".GSI")) {
@@ -477,7 +526,7 @@ public class ConverterWidget {
 
                             case 2:     // TXT format (tabulator separated)
                                 gsiTools = new LeicaGSIFileTools(readFile);
-                                writeFile = gsiTools.processFormatConversionTXT2GSI(Main.getGSI8());
+                                writeFile = gsiTools.convertTXT2GSI(Main.getGSI8());
 
                                 // write file line by line
                                 if (writeFile(file2read, writeFile, ".GSI")) {
@@ -487,7 +536,7 @@ public class ConverterWidget {
 
                             case 3:     // CSV format (comma or semicolon separated)
                                 gsiTools = new LeicaGSIFileTools(readCSVFile);
-                                writeFile = gsiTools.processFormatConversionCSV2GSI(Main.getGSI8());
+                                writeFile = gsiTools.convertCSV2GSI(Main.getGSI8());
 
                                 // write file line by line
                                 if (writeFile(file2read, writeFile, ".GSI")) {
@@ -495,9 +544,20 @@ public class ConverterWidget {
                                 }
                                 break;
 
-                            case 4:     // CSV format 'Basel Stadt' (semicolon separated)
+                            case 4:     // cadwork node.dat from cadwork CAD program
+                                gsiTools = new LeicaGSIFileTools(readFile);
+                                writeFile = gsiTools.convertCadwork2GSI(Main.getGSI8(),
+                                        chkBoxCadworkUseCode.getSelection(),
+                                        chkBoxCadworkUseZeroHeights.getSelection());
+
+                                if (writeFile(file2read, writeFile, ".GSI")) {
+                                    counter++;
+                                }
+                                break;
+
+                            case 5:     // CSV format 'Basel Stadt' (semicolon separated)
                                 gsiTools = new LeicaGSIFileTools(readCSVFile);
-                                writeFile = gsiTools.processFormatConversionCSVBaselStadt2GSI(Main.getGSI8());
+                                writeFile = gsiTools.convertCSVBaselStadt2GSI(Main.getGSI8());
 
                                 // write file line by line
                                 if (writeFile(file2read, writeFile, ".GSI")) {
@@ -513,7 +573,7 @@ public class ConverterWidget {
                             case 0:     // GSI8 format
                                 // process file operations
                                 gsiTools = new LeicaGSIFileTools(readFile);
-                                writeFile = gsiTools.processFormatConversionBetweenGSI8AndGSI16(Main.getGSI16());
+                                writeFile = gsiTools.convertGSI8vsGSI16(Main.getGSI16());
 
                                 // write file line by line
                                 if (writeFile(file2read, writeFile, ".GSI")) {
@@ -526,7 +586,7 @@ public class ConverterWidget {
 
                             case 2:     // TXT format (space or tabulator separated)
                                 gsiTools = new LeicaGSIFileTools(readFile);
-                                writeFile = gsiTools.processFormatConversionTXT2GSI(Main.getGSI16());
+                                writeFile = gsiTools.convertTXT2GSI(Main.getGSI16());
 
                                 // write file line by line
                                 if (writeFile(file2read, writeFile, ".GSI")) {
@@ -536,7 +596,7 @@ public class ConverterWidget {
 
                             case 3:     // CSV format (comma or semicolon separated)
                                 gsiTools = new LeicaGSIFileTools(readCSVFile);
-                                writeFile = gsiTools.processFormatConversionCSV2GSI(Main.getGSI16());
+                                writeFile = gsiTools.convertCSV2GSI(Main.getGSI16());
 
                                 // write file line by line
                                 if (writeFile(file2read, writeFile, ".GSI")) {
@@ -544,9 +604,20 @@ public class ConverterWidget {
                                 }
                                 break;
 
-                            case 4:     // CSV format 'Basel Stadt' (semicolon separated)
+                            case 4:     // cadwork node.dat from cadwork CAD program
+                                gsiTools = new LeicaGSIFileTools(readFile);
+                                writeFile = gsiTools.convertCadwork2GSI(Main.getGSI16(),
+                                        chkBoxCadworkUseCode.getSelection(),
+                                        chkBoxCadworkUseZeroHeights.getSelection());
+
+                                if (writeFile(file2read, writeFile, ".GSI")) {
+                                    counter++;
+                                }
+                                break;
+
+                            case 5:     // CSV format 'Basel Stadt' (semicolon separated)
                                 gsiTools = new LeicaGSIFileTools(readCSVFile);
-                                writeFile = gsiTools.processFormatConversionCSVBaselStadt2GSI(Main.getGSI16());
+                                writeFile = gsiTools.convertCSVBaselStadt2GSI(Main.getGSI16());
 
                                 // write file line by line
                                 if (writeFile(file2read, writeFile, ".GSI")) {
@@ -570,7 +641,7 @@ public class ConverterWidget {
 
                                 // process file operations
                                 gsiTools = new LeicaGSIFileTools(readFile);
-                                writeFile = gsiTools.processFormatConversionGSI2TXT(separator, GSIFormat, chkBoxWriteCommentLine.getSelection());
+                                writeFile = gsiTools.convertGSI2TXT(separator, GSIFormat, chkBoxWriteCommentLine.getSelection());
 
                                 // write file line by line
                                 if (writeFile(file2read, writeFile, ".TXT")) {
@@ -591,7 +662,7 @@ public class ConverterWidget {
 
                                 // process file operations
                                 textFileTools = new TextFileTools(readCSVFile);
-                                writeFile = textFileTools.processConversionCSV2TXT(separator);
+                                writeFile = textFileTools.convertCSV2TXT(separator);
 
                                 // write file line by line
                                 if (writeFile(file2read, writeFile, ".TXT")) {
@@ -599,7 +670,29 @@ public class ConverterWidget {
                                 }
                                 break;
 
-                            case 4:     // CSV format 'Basel Stadt' (semicolon separated)
+                            case 4:     // cadwork node.dat from cadwork CAD program
+                                // get separator sign
+                                if (chkBoxTXTSpaceDelimiter.getSelection()) {
+                                    separator = Main.getDelimiterSpace();
+                                } else {
+                                    separator = Main.getDelimiterTab();
+                                }
+
+                                // process file operations
+                                gsiTools = new LeicaGSIFileTools(readFile);
+                                ArrayList<String> stopOver = gsiTools.convertCadwork2GSI(Main.getGSI16(),
+                                        chkBoxCadworkUseCode.getSelection(),
+                                        chkBoxCadworkUseZeroHeights.getSelection());
+                                LeicaGSIFileTools stopOverFile = new LeicaGSIFileTools(stopOver);
+                                writeFile = stopOverFile.convertGSI2TXT(separator, GSIFormat, chkBoxWriteCommentLine.getSelection());
+
+                                // write file line by line
+                                if (writeFile(file2read, writeFile, ".TXT")) {
+                                    counter++;
+                                }
+                                break;
+
+                            case 5:     // CSV format 'Basel Stadt' (semicolon separated)
                                 // get separator sign
                                 if (chkBoxTXTSpaceDelimiter.getSelection()) {
                                     separator = Main.getDelimiterSpace();
@@ -608,7 +701,7 @@ public class ConverterWidget {
                                 }
 
                                 textFileTools = new TextFileTools(readCSVFile);
-                                writeFile = textFileTools.processFormatConversionCSVBaselStadt2TXT(separator);
+                                writeFile = textFileTools.convertCSVBaselStadt2TXT(separator);
 
                                 // write file line by line
                                 if (writeFile(file2read, writeFile, ".TXT")) {
@@ -633,7 +726,7 @@ public class ConverterWidget {
 
                                 // process file operations
                                 gsiTools = new LeicaGSIFileTools(readFile);
-                                writeFile = gsiTools.processFormatConversionGSI2CSV(separator, chkBoxWriteCommentLine.getSelection());
+                                writeFile = gsiTools.convertGSI2CSV(separator, chkBoxWriteCommentLine.getSelection());
 
                                 // write file line by line
                                 if (writeFile(file2read, writeFile, ".CSV")) {
@@ -651,7 +744,7 @@ public class ConverterWidget {
 
                                 // process file operations
                                 textFileTools = new TextFileTools(readFile);
-                                writeFile = textFileTools.processConversionTXT2CSV(separator);
+                                writeFile = textFileTools.convertTXT2CSV(separator);
 
                                 // write file line by line
                                 if (writeFile(file2read, writeFile, ".CSV")) {
@@ -662,7 +755,10 @@ public class ConverterWidget {
                             case 3:     // CSV format (not possible)
                                 break;
 
-                            case 4:     // CSV format 'Basel Stadt' (semicolon separated)
+                            case 4:     // cadwork node.dat from cadwork CAD program
+                                break;
+                            
+                            case 5:     // CSV format 'Basel Stadt' (semicolon separated)
                                 // get separator sign
                                 if (chkBoxCSVSemiColonDelimiter.getSelection()) {
                                     separator = Main.getDelimiterSemicolon();
@@ -671,7 +767,7 @@ public class ConverterWidget {
                                 }
 
                                 textFileTools = new TextFileTools(readCSVFile);
-                                writeFile = textFileTools.processFormatConversionCSVBaselStadt2TXT(separator);
+                                writeFile = textFileTools.convertCSVBaselStadt2TXT(separator);
 
                                 // write file line by line
                                 if (writeFile(file2read, writeFile, ".CSV")) {

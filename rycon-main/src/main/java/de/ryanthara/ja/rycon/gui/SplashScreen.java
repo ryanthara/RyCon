@@ -21,7 +21,6 @@ package de.ryanthara.ja.rycon.gui;
 import de.ryanthara.ja.rycon.tools.ImageConverter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
@@ -59,38 +58,42 @@ public class SplashScreen {
      * @param display
      */
     public SplashScreen(Display display) {
-        
+
         final Image image = new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/RyCON_SplashScreen.png");
-        
-        final Shell splash = new Shell(SWT.ON_TOP);
-        final ProgressBar progressBar = new ProgressBar(splash, SWT.NONE);
+        final Shell shell = new Shell(SWT.ON_TOP);
+        final ProgressBar progressBar = new ProgressBar(shell, SWT.NONE);
         progressBar.setMaximum(SPLASH_MAX);
 
-        Label label = new Label(splash, SWT.NONE);
+        Label label = new Label(shell, SWT.NONE);
         label.setImage(image);
 
+        Label infoText = new Label(shell, SWT.NONE);
+        infoText.setText("APP started");
+
         FormLayout formLayout = new FormLayout();
-        splash.setLayout(formLayout);
+        shell.setLayout(formLayout);
 
         FormData labelData = new FormData();
         labelData.right = new FormAttachment(100, 0);
         labelData.bottom = new FormAttachment(100, 0);
         label.setLayoutData(labelData);
-        
+
         FormData progressBarData = new FormData();
         progressBarData.left = new FormAttachment(0, -5);
         progressBarData.right = new FormAttachment(100, 0);
-        progressBarData.bottom = new FormAttachment(100, 0);
+        progressBarData.top = new FormAttachment(76, 0);
         progressBar.setLayoutData(progressBarData);
-        
-        splash.pack();
 
-        Rectangle splashRect = splash.getBounds();
-        Rectangle displayRect = display.getBounds();
-        int x = (displayRect.width - splashRect.width) / 2;
-        int y = (displayRect.height - splashRect.width) / 2;
-        splash.setLocation(x, y);
-        splash.open();
+        FormData infoTextData = new FormData();
+        infoTextData.left = new FormAttachment(0, -5);
+        infoTextData.right = new FormAttachment(100, 5);
+        infoTextData.bottom = new FormAttachment(progressBar, -50);
+        infoText.setLayoutData(infoTextData);
+
+        shell.pack();
+
+        shell.setLocation(ShellCenter.centerShellOnPrimaryMonitor(shell));
+        shell.open();
 
         display.asyncExec(new Runnable() {
             @Override
@@ -104,9 +107,9 @@ public class SplashScreen {
                     progressBar.setSelection(splashPos);
                 }
 
-//                RyCONApplication.mainApplication.initUI();
+                // RyCONApplication.mainApplication.initUI();
 
-                splash.close();
+                shell.close();
                 image.dispose();
             }
         });

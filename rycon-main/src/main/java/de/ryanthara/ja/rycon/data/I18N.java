@@ -250,6 +250,10 @@ public class I18N {
         return Messages.getString("fileChooserFilterNameCSV");
     }
 
+    public static String getFileChooserFilterNameCadwork() {
+        return Messages.getString("fileChooserFilterNameCadwork");
+    }
+
     public static String getFileChooserFilterNameGSI() {
         return Messages.getString("fileChooserFilterNameGSI");
     }
@@ -690,5 +694,17 @@ public class I18N {
 
     public static String getFileChooserFilterNameNIGRA() {
         return Messages.getString("fileChooserFilterNameNIGRA");
+    }
+
+    public static String getFileChooserFilterNameAllFiles() {
+        return Messages.getString("fileChooserFilterNameAllFiles");
+    }
+
+    public static String getBtnChkBoxCadworkUseZeroHeights() {
+        return Messages.getString("btnChkBoxCadworkUseZeroHeights");
+    }
+
+    public static String getBtnChkBoxCadworkUseCode() {
+        return Messages.getString("btnChkBoxCadworkUseCode");
     }
 } // end of I18N

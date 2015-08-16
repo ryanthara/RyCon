@@ -101,6 +101,7 @@ public class RadioHelper {
                 Button button = (Button) child;
                 if (button.getSelection()) {
                     selectedMaster = i;
+                    System.out.println("Selected master: " + i);
                 }
             }
         }
@@ -112,15 +113,24 @@ public class RadioHelper {
                 Button button = (Button) child;
                 if (button.getSelection()) {
                     selectedSlave = i;
+                    System.out.println("Selected slave: " + i);
 
                     if (selectedSlave == selectedMaster) {
                         ((Button) slave[i]).setSelection(false);
 
+                        if (selectedSlave == slave.length - 1) {
+                            ((Button) slave[0]).setSelection(true);
+                            System.out.println("LAST ELEMENT");
+                        }  else {
+                            ((Button) slave[i + 1]).setSelection(true);
+                        }
+/*
                         if (selectedSlave == master.length - 1) {
                             ((Button) slave[0]).setSelection(true);
                         } else {
                             ((Button) slave[i + 1]).setSelection(true);
                         }
+                        */
                     }
                 }
             }

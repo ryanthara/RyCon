@@ -27,6 +27,7 @@ import java.util.*;
  *
  * <h3>Changes:</h3>
  * <ul>
+ *     <li>5: support for cadwork node.dat files</li>
  *     <li>4: support for NIGRA levelling files</li>
  *     <li>3: code improvements and clean up </li>
  *     <li>2: basic improvements </li>
@@ -168,7 +169,7 @@ public class TextFileTools {
      * @param delimiter delimiter sign as {@code String}
      * @return converted {@code ArrayList<String>} with lines of text format
      */
-    public ArrayList<String> processFormatConversionCSVBaselStadt2TXT(String delimiter) {
+    public ArrayList<String> convertCSVBaselStadt2TXT(String delimiter) {
         ArrayList<String> result = new ArrayList<String>();
 
         for (String[] stringField : list) {
@@ -202,7 +203,7 @@ public class TextFileTools {
      * @param delimiter delimiter sign to use for conversion
      * @return converted TXT file
      */
-    public ArrayList<String> processConversionCSV2TXT(String delimiter) {
+    public ArrayList<String> convertCSV2TXT(String delimiter) {
         ArrayList<String> result = new ArrayList<String>();
 
         // convert the List<String[]> into an ArrayList<String> and use known stuff (-:
@@ -231,7 +232,7 @@ public class TextFileTools {
      * @param delimiter delimiter sign to use for conversion
      * @return converted CSV file
      */
-    public ArrayList<String> processConversionTXT2CSV(String delimiter) {
+    public ArrayList<String> convertTXT2CSV(String delimiter) {
         ArrayList<String> result = new ArrayList<String>();
 
         for (String line : readStringLines) {

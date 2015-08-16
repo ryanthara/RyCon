@@ -348,7 +348,7 @@ public class LevellingWidget {
                     }
                 } else if (fileNameAndSuffix[1].equalsIgnoreCase("ASC")) {
                     LeicaGSIFileTools gsiFileTools = new LeicaGSIFileTools(readFile);
-                    ArrayList<String> writeFile = gsiFileTools.processConversionNIGRA2GSI(Main.getGSI16());
+                    ArrayList<String> writeFile = gsiFileTools.convertNIGRA2GSI(Main.getGSI16());
                     String file2write = file2read.toString().substring(0, file2read.toString().length() - 4) + "_LEVEL.GSI";
                     LineWriter lineWriter = new LineWriter(file2write);
                     if (lineWriter.writeFile(writeFile)) {
