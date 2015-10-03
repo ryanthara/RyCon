@@ -37,6 +37,7 @@ import java.util.*;
  *
  * <h3>Changes:</h3>
  * <ul>
+ *     <li>6: precise the header clean up for conversion from ASCII to GSI after changes in NIGRA WIN line endings</li>
  *     <li>5: NIGRA support implemented for dnd-support of the levelling widget</li>
  *     <li>4: defeat bug #3 blank sign at line ending in GSI file and bug #1</li>
  *     <li>3: code improvements and clean up </li>
@@ -45,7 +46,7 @@ import java.util.*;
  * </ul>
  *
  * @author sebastian
- * @version 5
+ * @version 6
  * @since 1
  */
 public class LeicaGSIFileTools {
@@ -399,8 +400,8 @@ public class LeicaGSIFileTools {
 
         int lineCounter = 1;
 
-        // skip the first 8 lines without any needed information
-        for (int i = 7; i < readStringLines.size(); i++) {
+        // skip the first 7 lines without any needed information
+        for (int i = 5; i < readStringLines.size(); i++) {
             blocks = new ArrayList<GSIBlock>();
             String line = readStringLines.get(i);
             stringTokenizer = new StringTokenizer(line);
