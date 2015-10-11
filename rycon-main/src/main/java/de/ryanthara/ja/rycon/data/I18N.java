@@ -566,6 +566,10 @@ public class I18N {
         return Messages.getString("trayMenuItemHelp");
     }
 
+    public static String getTrayMenuItemInfo() {
+        return Messages.getString("trayMenuItemInfo");
+    }
+
     public static String getTrayMenuItemWebsite() {
         return Messages.getString("trayMenuItemWebsite");
     }

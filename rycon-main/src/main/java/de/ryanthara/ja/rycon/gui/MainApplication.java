@@ -215,7 +215,7 @@ public class MainApplication extends Main {
 
             final TrayItem item = new TrayItem(tray, SWT.NONE);
             item.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/RyCON_TrayIcon64x64.png"));
-            item.setToolTipText("RyCON: " + version.getBuildNumber() + " : " + version.getBuildDate());
+            item.setToolTipText("RyCON: " + version.getBuildNumber() + " <--> " + version.getBuildDate());
 
             final Menu menu = new Menu(shell, SWT.POP_UP);
 
@@ -247,6 +247,11 @@ public class MainApplication extends Main {
                     }
                 }
             });
+
+            new MenuItem(menu, SWT.SEPARATOR);
+
+            MenuItem infoItem = new MenuItem(menu, SWT.PUSH);
+            infoItem.setText(I18N.getTrayMenuItemInfo() + version.getBuildNumber() + " (" + version.getBuildDate() + ")");
 
             new MenuItem(menu, SWT.SEPARATOR);
 
