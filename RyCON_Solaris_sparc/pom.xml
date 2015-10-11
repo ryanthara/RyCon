@@ -6,7 +6,7 @@
 
     <!-- coordinates -->
     <artifactId>RyCON_Solaris_sparc</artifactId>
-    <version>0.9.5-SNAPSHOT</version>
+    <version>${rycon.version}</version>
     <packaging>jar</packaging>
     <name>RyCON for Solaris (sparc)</name>
 
@@ -14,11 +14,11 @@
     <parent>
         <groupId>de.ryanthara.ja.rycon</groupId>
         <artifactId>rycon-build</artifactId>
-        <version>0.9.5-SNAPSHOT</version>
-        <relativePath>../rycon-build/pom.xml</relativePath>
-    </parent>
+        <version>${rycon.version}</version>
+    <relativePath>../rycon-build/pom.xml</relativePath>
+</parent>
 
-    <!-- build management -->
+<!-- build management -->
     <build>
         <plugins>
             <plugin>

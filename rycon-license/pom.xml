@@ -13,7 +13,7 @@
     <parent>
         <artifactId>RyCON</artifactId>
         <groupId>de.ryanthara.ja.rycon</groupId>
-        <version>0.9.5-SNAPSHOT</version>
+        <version>${rycon.version}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
