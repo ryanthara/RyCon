@@ -111,7 +111,6 @@ public class StatusBar extends Composite {
         addStatusInformationListener(new StatusInformationListener() {
             @Override
             public void setStatusText(StatusInformationEvent e) {
-                System.out.println("THW");
                 message.setText(e.statusText);
             }
         });
