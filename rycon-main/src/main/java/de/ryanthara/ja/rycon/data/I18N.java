@@ -58,6 +58,10 @@ public class I18N {
         return Messages.getString("btnChkConverterCSVSemiColonDelimiter");
     }
 
+    public static String getBtnChkBoxSourceContainsCode() {
+        return Messages.getString("btnChkBoxSourceContainsCode");
+    }
+
     public static String getBtnChkConverterTXTSpaceDelimiter() {
         return Messages.getString("btnChkConverterTXTSpaceDelimiter");
     }

@@ -66,6 +66,7 @@ public class ConverterWidget {
     private Button chkBoxCadworkUseCode;
     private Button chkBoxCadworkUseZeroHeights;
     private Button chkBoxCSVSemiColonDelimiter;
+    private Button chkBoxSourceContainsCode;
     private Button chkBoxTXTSpaceDelimiter;
     private Button chkBoxWriteCommentLine;
     private File[] files2read;
@@ -180,7 +181,7 @@ public class ConverterWidget {
         };
 
         String[] formatSource = {"GSI8", "GSI16", "TXT", "CSV", "cadwork node.dat", "Basel Stadt CSV"};
-        String[] formatTarget = {"GSI8", "GSI16", "TXT", "CSV"};
+        String[] formatTarget = {"GSI8", "GSI16", "TXT", "CSV", "Excel 2007 (.xlsx)","Excel '97 (.xls)"};
 
         for (int i = 0; i < formatSource.length; i++) {
             Button btnSourceFormats = new Button(groupSource, SWT.RADIO);
@@ -214,6 +215,10 @@ public class ConverterWidget {
         GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
         gridData.widthHint = width - 24;
         group.setLayoutData(gridData);
+
+        chkBoxSourceContainsCode = new Button(group, SWT.CHECK);
+        chkBoxSourceContainsCode.setSelection(false);
+        chkBoxSourceContainsCode.setText(I18N.getBtnChkBoxSourceContainsCode());
 
         chkBoxTXTSpaceDelimiter = new Button(group, SWT.CHECK);
         chkBoxTXTSpaceDelimiter.setSelection(false);
@@ -775,6 +780,50 @@ public class ConverterWidget {
                                 }
                                 break;
 
+                        }
+                        break;
+
+                    case 4:     // Excel 2007 (.xlsx)
+                        switch (sourceNumber) {
+                            case 0:     // fall through for GSI8 format
+                            case 1:     // GSI16 format
+                                // process file operations
+                                gsiTools = new LeicaGSIFileTools(readFile);
+                                gsiTools.prepareTableData(chkBoxWriteCommentLine.getSelection());
+                                break;
+                            case 2:     // TXT format (space or tabulator separated)
+                                break;
+                            case 3:     // CSV format (not possible)
+                                break;
+
+                            case 4:     // cadwork node.dat from cadwork CAD program
+                                break;
+
+                            case 5:     // CSV format 'Basel Stadt' (semicolon separated)
+                                break;
+
+                        }
+
+                        break;
+
+                    case 5:     // Excel 97 (.xls)
+                        switch (sourceNumber) {
+                            case 0:     // fall through for GSI8 format
+                            case 1:     // GSI16 format
+                                // process file operations
+                                gsiTools = new LeicaGSIFileTools(readFile);
+                                gsiTools.prepareTableData(chkBoxWriteCommentLine.getSelection());
+                                break;
+                            case 2:     // TXT format (space or tabulator separated)
+                                break;
+                            case 3:     // CSV format (not possible)
+                                break;
+
+                            case 4:     // cadwork node.dat from cadwork CAD program
+                                break;
+
+                            case 5:     // CSV format 'Basel Stadt' (semicolon separated)
+                                break;
                         }
                         break;
 

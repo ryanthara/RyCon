@@ -102,7 +102,7 @@ public class LeicaGSIFileTools {
         for (String line : readStringLines) {
             blocks = new ArrayList<GSIBlock>();
 
-            String[] lineSplit = line.split("\\s+");
+            String[] lineSplit = line.trim().split("\\s+");
 
             // point number
             blocks.add(new GSIBlock(isGSI16, 11, lineCounter, lineSplit[6]));
@@ -445,9 +445,9 @@ public class LeicaGSIFileTools {
         for (String line : readStringLines) {
             blocks = new ArrayList<GSIBlock>();
 
-            String[] lineSplit = line.split("\\s+");
-
+            String[] lineSplit = line.trim().split("\\s+");
             switch (lineSplit.length) {
+
                 case 1:     // prevent fall through
                     break;
 
@@ -501,6 +501,76 @@ public class LeicaGSIFileTools {
      */
     public TreeSet<Integer> getFoundCodes() {
         return foundCodes;
+    }
+
+    /**
+     * Prepares the read GSI data for table output.
+     * <p>
+     *
+     */
+    public void prepareTableData(boolean writeCommentLine) {
+
+        int row = 1;
+        String commentLine = "";
+
+        //This data needs to be written (Object[])
+        Map<String, Object[]> data = new TreeMap<String, Object[]>();
+
+        // transform lines into GSI-Blocks
+        ArrayList<ArrayList<GSIBlock>> gsiBlocks = blockEncoder(readStringLines);
+
+        // prepare comment line if necessary
+        if (writeCommentLine) {
+            StringBuffer stringBuffer = new StringBuffer(commentLine);
+
+            for (Integer wordIndice : foundWordIndices) {
+                stringBuffer.append("\"");
+                stringBuffer.append(wordIndice.toString());
+                stringBuffer.append("\", ");
+            }
+
+            stringBuffer.deleteCharAt(stringBuffer.lastIndexOf(", "));
+            System.out.println(stringBuffer.toString());
+            commentLine = stringBuffer.toString();
+        }
+/*
+        for (ArrayList<GSIBlock> blocksAsLines : gsiBlocks) {
+            String newLine = "";
+
+            Iterator<Integer> it = foundWordIndices.iterator();
+
+            for (int i = 0; i < foundWordIndices.size(); i++) {
+                Integer wordIndice = it.next();
+
+                String intern = "";
+
+                for (GSIBlock block : blocksAsLines) {
+                    // check the WI and fill in an empty block of spaces if WI doesn't match to 'column'
+                    if (wordIndice == block.wordIndex) {
+                        intern = block.toPrintFormatTXT();
+                        break; // important!!!
+                    } else {
+                        String emptyBlock;
+
+                        if (isGSI16) {
+                            emptyBlock = "                ";
+                        } else {
+                            emptyBlock = "        ";
+                        }
+
+                        intern = emptyBlock;
+                    }
+                }
+
+                newLine = newLine.concat(intern);
+
+                if (i < foundWordIndices.size() - 1) {
+                    newLine = newLine.concat(delim);
+                }
+            }
+            result.add(newLine);
+        }
+*/
     }
 
     /**
@@ -646,7 +716,7 @@ public class LeicaGSIFileTools {
         ArrayList<String> result = new ArrayList<String>();
 
         for (String line : readStringLines) {
-            String[] lineSplit = line.split("\\s+");
+            String[] lineSplit = line.trim().split("\\s+");
 
             // line with height information from levelling has four tokens in GSI format
             if (lineSplit.length == 4) {
@@ -885,7 +955,7 @@ public class LeicaGSIFileTools {
         // do it over all read lines
         for (String line : lines) {
             blocks = new ArrayList<GSIBlock>();
-            String[] lineSplit = line.split("\\s+");
+            String[] lineSplit = line.trim().split("\\s+");
 
             // used instead of 'deprecated' StringTokenizer here
             for (String aResult : lineSplit) {
@@ -908,7 +978,7 @@ public class LeicaGSIFileTools {
                 }
             });
 
-            // fill in the sorted 'line' of blocks into an array readCSVLines
+            // fill in the sorted 'line' of blocks into an array
             blocksInLines.add(blocks);
         }
 
