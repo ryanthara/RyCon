@@ -49,6 +49,7 @@ import java.util.List;
  *
  * <h3>Changes:</h3>
  * <ul>
+ *     <li>7: defeat txt to gsi conversion bug (not listed)</li>
  *     <li>6: implement support for cadwork-files (node.dat) </li>
  *     <li>5: defeat bug #3 </li>
  *     <li>4: simplification and improvements, extract input fields and bottom button bar into separate classes </li>
@@ -58,7 +59,7 @@ import java.util.List;
  * </ul>
  *
  * @author sebastian
- * @version 6
+ * @version 7
  * @since 1
  */
 public class ConverterWidget {
@@ -542,7 +543,8 @@ public class ConverterWidget {
 
                             case 3:     // CSV format (comma or semicolon separated)
                                 gsiTools = new LeicaGSIFileTools(readCSVFile);
-                                writeFile = gsiTools.convertCSV2GSI(Main.getGSI8());
+                                writeFile = gsiTools.convertCSV2GSI(Main.getGSI8(),
+                                        chkBoxSourceContainsCode.getSelection());
 
                                 // write file line by line
                                 if (writeFile(file2read, writeFile, ".GSI")) {
@@ -563,7 +565,8 @@ public class ConverterWidget {
 
                             case 5:     // CSV format 'Basel Stadt' (semicolon separated)
                                 gsiTools = new LeicaGSIFileTools(readCSVFile);
-                                writeFile = gsiTools.convertCSVBaselStadt2GSI(Main.getGSI8());
+                                writeFile = gsiTools.convertCSVBaselStadt2GSI(Main.getGSI8(),
+                                        chkBoxSourceContainsCode.getSelection());
 
                                 // write file line by line
                                 if (writeFile(file2read, writeFile, ".GSI")) {
@@ -603,7 +606,8 @@ public class ConverterWidget {
 
                             case 3:     // CSV format (comma or semicolon separated)
                                 gsiTools = new LeicaGSIFileTools(readCSVFile);
-                                writeFile = gsiTools.convertCSV2GSI(Main.getGSI16());
+                                writeFile = gsiTools.convertCSV2GSI(Main.getGSI16(),
+                                        chkBoxSourceContainsCode.getSelection());
 
                                 // write file line by line
                                 if (writeFile(file2read, writeFile, ".GSI")) {
@@ -624,7 +628,8 @@ public class ConverterWidget {
 
                             case 5:     // CSV format 'Basel Stadt' (semicolon separated)
                                 gsiTools = new LeicaGSIFileTools(readCSVFile);
-                                writeFile = gsiTools.convertCSVBaselStadt2GSI(Main.getGSI16());
+                                writeFile = gsiTools.convertCSVBaselStadt2GSI(Main.getGSI16(),
+                                        chkBoxSourceContainsCode.getSelection());
 
                                 // write file line by line
                                 if (writeFile(file2read, writeFile, ".GSI")) {

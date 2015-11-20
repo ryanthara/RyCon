@@ -141,9 +141,10 @@ public class LeicaGSIFileTools {
      * With a parameter it is possible to distinguish between GSI8 and GSI16
      *
      * @param isGSI16 distinguish between GSI8 or GSI16
+     * @param sourceContainsCodeColumn if source file contains a code column
      * @return converted {@code ArrayList<String>} with lines of text format
      */
-    public ArrayList<String> convertCSVBaselStadt2GSI(boolean isGSI16) {
+    public ArrayList<String> convertCSVBaselStadt2GSI(boolean isGSI16, boolean sourceContainsCodeColumn) {
         ArrayList<String> result = new ArrayList<String>();
 
         for (String[] stringField : readCSVLines) {
@@ -173,7 +174,7 @@ public class LeicaGSIFileTools {
 
         this.readStringLines = result;
 
-        return convertTXT2GSI(isGSI16, false); // false because csv contains no code
+        return convertTXT2GSI(isGSI16, sourceContainsCodeColumn);
     }
 
     /**
@@ -183,9 +184,10 @@ public class LeicaGSIFileTools {
      * sign is automatically detected.
      *
      * @param isGSI16 control if GSI8 or GSI16 format is written
+     * @param sourceContainsCodeColumn if source file contains a code column
      * @return converted {@code ArrayList<String>} with lines of GSI format
      */
-    public ArrayList<String> convertCSV2GSI(boolean isGSI16) {
+    public ArrayList<String> convertCSV2GSI(boolean isGSI16, boolean sourceContainsCodeColumn) {
         ArrayList<String> result = new ArrayList<String>();
 
         // convert the List<String[]> into an ArrayList<String> and use known stuff (-:
@@ -212,7 +214,7 @@ public class LeicaGSIFileTools {
 
         this.readStringLines = result;
 
-        return convertTXT2GSI(isGSI16, false); // false because csv contains no code
+        return convertTXT2GSI(isGSI16, sourceContainsCodeColumn);
     }
 
     /**
