@@ -173,7 +173,7 @@ public class LeicaGSIFileTools {
 
         this.readStringLines = result;
 
-        return convertTXT2GSI(isGSI16);
+        return convertTXT2GSI(isGSI16, false); // false because csv contains no code
     }
 
     /**
@@ -212,7 +212,7 @@ public class LeicaGSIFileTools {
 
         this.readStringLines = result;
 
-        return convertTXT2GSI(isGSI16);
+        return convertTXT2GSI(isGSI16, false); // false because csv contains no code
     }
 
     /**
@@ -434,9 +434,10 @@ public class LeicaGSIFileTools {
      * The GSI format decision is done by a parameter in the constructor.
      *
      * @param isGSI16 decision which GSI format is used
+     * @param sourceContainsCodeColumn if source file contains a code column
      * @return converted {@code ArrayList<String>>} with lines
      */
-    public ArrayList<String> convertTXT2GSI(boolean isGSI16) {
+    public ArrayList<String> convertTXT2GSI(boolean isGSI16, boolean sourceContainsCodeColumn) {
         ArrayList<GSIBlock> blocks;
         ArrayList<ArrayList<GSIBlock>> blocksInLines = new ArrayList<ArrayList<GSIBlock>>();
 
@@ -456,10 +457,16 @@ public class LeicaGSIFileTools {
                     blocks.add(new GSIBlock(isGSI16, 83, lineCounter, lineSplit[1]));
                     break;
 
-                case 3:     // no, code, height
+                case 3:     // no, code, height or no, easting, northing
                     blocks.add(new GSIBlock(isGSI16, 11, lineCounter, lineSplit[0]));
-                    blocks.add(new GSIBlock(isGSI16, 71, lineCounter, lineSplit[1]));
-                    blocks.add(new GSIBlock(isGSI16, 83, lineCounter, lineSplit[2]));
+                    if (sourceContainsCodeColumn) {
+                        blocks.add(new GSIBlock(isGSI16, 71, lineCounter, lineSplit[1]));
+                        blocks.add(new GSIBlock(isGSI16, 83, lineCounter, lineSplit[2]));
+                    } else {
+                        blocks.add(new GSIBlock(isGSI16, 81, lineCounter, lineSplit[1]));
+                        blocks.add(new GSIBlock(isGSI16, 82, lineCounter, lineSplit[2]));
+                    }
+
                     break;
 
                 case 4:     // no, easting, northing, height

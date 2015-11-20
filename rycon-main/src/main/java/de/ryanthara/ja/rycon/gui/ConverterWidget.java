@@ -529,9 +529,10 @@ public class ConverterWidget {
                                 }
                                 break;
 
-                            case 2:     // TXT format (tabulator separated)
+                            case 2:     // TXT format (space or tabulator separated)
                                 gsiTools = new LeicaGSIFileTools(readFile);
-                                writeFile = gsiTools.convertTXT2GSI(Main.getGSI8());
+                                writeFile = gsiTools.convertTXT2GSI(Main.getGSI8(),
+                                        chkBoxSourceContainsCode.getSelection());
 
                                 // write file line by line
                                 if (writeFile(file2read, writeFile, ".GSI")) {
@@ -591,7 +592,8 @@ public class ConverterWidget {
 
                             case 2:     // TXT format (space or tabulator separated)
                                 gsiTools = new LeicaGSIFileTools(readFile);
-                                writeFile = gsiTools.convertTXT2GSI(Main.getGSI16());
+                                writeFile = gsiTools.convertTXT2GSI(Main.getGSI16(),
+                                        chkBoxSourceContainsCode.getSelection());
 
                                 // write file line by line
                                 if (writeFile(file2read, writeFile, ".GSI")) {
