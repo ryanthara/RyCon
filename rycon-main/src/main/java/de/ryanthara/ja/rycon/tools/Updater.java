@@ -1,5 +1,5 @@
 /*
- * License: GPL. Copyright 2014- (C) by Sebastian Aust (http://www.ryanthara.de/)
+ * License: GPL. Copyright 2014- (C) by Sebastian Aust (https://www.ryanthara.de/)
  *
  * This file is part of the package de.ryanthara.ja.rycon.gui
  *
@@ -31,7 +31,7 @@ import java.util.regex.Pattern;
 /**
  * This class holds all the update functionality for RyCON.
  * <p>
- * This class checks the RyCON website (URL 'http://code.ryanthar.de/RyCON') for a new version.
+ * This class checks the RyCON website (URL 'https://code.ryanthara.de/RyCON') for a new version.
  *
  * <h3>Changes:</h3>
  * <ul>

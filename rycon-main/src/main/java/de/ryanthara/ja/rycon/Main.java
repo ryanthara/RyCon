@@ -1,5 +1,5 @@
 /*
- * License: GPL. Copyright 2014- (C) by Sebastian Aust (http://www.ryanthara.de/)
+ * License: GPL. Copyright 2014- (C) by Sebastian Aust (https://www.ryanthara.de/)
  *
  * This file is part of the package de.ryanthara.ja.rycon
  *
@@ -90,24 +90,24 @@ public abstract class Main {
      *
      * @since 3
      */
-    public static final String RyCON_UPDATE_URL = "http://code.ryanthara.de/content/3-RyCON/_current.version";
+    public static final String RyCON_UPDATE_URL = "https://code.ryanthara.de/content/3-RyCON/_current.version";
 
     /**
      * Member for the URL of the RyCON website.
      */
-    public static final String RyCON_WEBSITE = "http://code.ryanthara.de/RyCON";
+    public static final String RyCON_WEBSITE = "https://code.ryanthara.de/RyCON";
 
     /**
      * Member for the URL of the RyCON help website.
      */
-    public static final String RyCON_WEBSITE_HELP = "http://code.ryanthara.de/RyCON/help";
+    public static final String RyCON_WEBSITE_HELP = "https://code.ryanthara.de/RyCON/help";
 
     /**
      * Member for the URL of the RyCON what's new website.
      *
      * @since 3
      */
-    public static final String RyCON_WHATS_NEW_URL = "http://code.ryanthara.de/content/3-RyCON/_whats.new";
+    public static final String RyCON_WHATS_NEW_URL = "https://code.ryanthara.de/content/3-RyCON/_whats.new";
 
     /**
      * Reference to the global application.

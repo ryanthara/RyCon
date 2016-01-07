@@ -1,5 +1,5 @@
 /*
- * License: GPL. Copyright 2014- (C) by Sebastian Aust (http://www.ryanthara.de/)
+ * License: GPL. Copyright 2014- (C) by Sebastian Aust (https://www.ryanthara.de/)
  *
  * This file is part of the package de.ryanthara.ja.rycon.notifier
  *

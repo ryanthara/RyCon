@@ -1,5 +1,5 @@
 /*
- * License: GPL. Copyright 2014- (C) by Sebastian Aust (http://www.ryanthara.de/)
+ * License: GPL. Copyright 2014- (C) by Sebastian Aust (https://www.ryanthara.de/)
  *
  * This file is part of the package de.ryanthara.ja.rycon.gui
  *
@@ -182,7 +182,8 @@ public class ConverterWidget {
         };
 
         String[] formatSource = {"GSI8", "GSI16", "TXT", "CSV", "cadwork node.dat", "Basel Stadt CSV"};
-        String[] formatTarget = {"GSI8", "GSI16", "TXT", "CSV", "Excel 2007 (.xlsx)","Excel '97 (.xls)"};
+        // String[] formatTarget = {"GSI8", "GSI16", "TXT", "CSV", "Excel 2007 (.xlsx)","Excel '97 (.xls)"};
+        String[] formatTarget = {"GSI8", "GSI16", "TXT", "CSV"};
 
         for (int i = 0; i < formatSource.length; i++) {
             Button btnSourceFormats = new Button(groupSource, SWT.RADIO);

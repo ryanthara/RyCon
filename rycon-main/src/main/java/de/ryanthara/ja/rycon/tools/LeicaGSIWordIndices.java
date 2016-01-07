@@ -1,10 +1,5 @@
-package de.ryanthara.ja.rycon.tools;
-
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
-
 /*
- * License: GPL. Copyright 2015- (C) by Sebastian Aust (http://www.ryanthara.de/)
+ * License: GPL. Copyright 2015- (C) by Sebastian Aust (https://www.ryanthara.de/)
  *
  * This file is part of the package de.ryanthara.ja.rycon.tools
  *
@@ -20,6 +15,10 @@ import java.util.ResourceBundle;
  * You should have received a copy of the GNU General Public License along with
  * this package. If not, see <http://www.gnu.org/licenses/>.
  */
+package de.ryanthara.ja.rycon.tools;
+
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 /**
  * This class manages the strings of the Leica GSI format word indices for multi-language support in RyCON.

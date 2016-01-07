@@ -1,5 +1,5 @@
 /*
- * License: GPL. Copyright 2015- (C) by Sebastian Aust (http://www.ryanthara.de/)
+ * License: GPL. Copyright 2015- (C) by Sebastian Aust (https://www.ryanthara.de/)
  *
  * This file is part of the package de.ryanthara.ja.rycon.gui
  *
@@ -30,10 +30,10 @@ package de.ryanthara.ja.rycon.data;
  */
 public class Version {
 
-    private final int buildNumber = 19;
+    private final int buildNumber = 20;
     private final int majorVersion = 0;
     private final int minorVersion = 98;
-    private final String buildDate = "2015-11-01";
+    private final String buildDate = "2015-11-20";
 
     /**
      * Returns the build date of RyCON as string.
