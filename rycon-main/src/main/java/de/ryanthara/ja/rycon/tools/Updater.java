@@ -21,10 +21,14 @@ package de.ryanthara.ja.rycon.tools;
 import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.data.Version;
 
+import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
@@ -56,41 +60,73 @@ public class Updater {
     public boolean checkForUpdate() {
         boolean success = false;
 
+        InputStream is = null;
         Version versionHandle = new Version();
 
         try {
             URL updateUrl = new URL(Main.RyCON_UPDATE_URL);
+            URLConnection con = updateUrl.openConnection();
 
-            Scanner scanner = new Scanner(updateUrl.openStream());
+            if (con.getContentLength() > 0) {
 
-            scanner.next();
-            String majorMinor = scanner.next();
+                Scanner scanner = new Scanner(updateUrl.openStream());
 
-            String[] segments = majorMinor.split(Pattern.quote("."));
-            int majorVersion = Integer.parseInt(segments[0]);
-            int minorVersion = Integer.parseInt(segments[1]);
+                scanner.next();
+                String majorMinor = scanner.next();
 
-            scanner.next();
-            int build = scanner.nextInt();
+                String[] segments = majorMinor.split(Pattern.quote("."));
+                int majorVersion = Integer.parseInt(segments[0]);
+                int minorVersion = Integer.parseInt(segments[1]);
 
-            scanner.next();
-            String date = scanner.next();
+                scanner.next();
+                int build = scanner.nextInt();
 
-            scanner.close();
-            
-            success = true;
+                scanner.next();
+                String date = scanner.next();
 
-            if (versionHandle.getBuildNumber() < build ||
-                (majorVersion < versionHandle.getMajorVersionNumber() && minorVersion < versionHandle.getMinorVersionNumber())) {
-                updateAvailable = true;
+                scanner.close();
+
+                success = true;
+
+                if (versionHandle.getBuildNumber() < build ||
+                        (majorVersion < versionHandle.getMajorVersionNumber() && minorVersion < versionHandle.getMinorVersionNumber())) {
+                    updateAvailable = true;
+                }
             }
-            
+        } catch (MalformedURLException e) {
+            System.err.println("checkForUpdate() failed: MalformedURLException");
+            e.printStackTrace();
         } catch (IOException e) {
-            System.err.println("checkForUpdate() failed");
+            System.err.println("checkForUpdate() failed: IOException");
             e.printStackTrace();
         }
 
         return success;
+    }
+
+    public boolean checkForUpdate2() {
+        try {
+            String httpsURL = Main.RyCON_UPDATE_URL;
+            URL myurl = new URL(httpsURL);
+            HttpsURLConnection con = (HttpsURLConnection)myurl.openConnection();
+            InputStream ins = con.getInputStream();
+            InputStreamReader isr = new InputStreamReader(ins);
+            BufferedReader in = new BufferedReader(isr);
+
+            String inputLine;
+
+            while ((inputLine = in.readLine()) != null)
+            {
+                System.out.println(inputLine);
+            }
+
+            in.close();
+        } catch (Exception e) {
+            System.out.println("ERROR");
+            System.out.println(e.toString());
+        }
+
+        return true;
     }
 
     /**

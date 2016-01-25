@@ -25,7 +25,6 @@ import de.ryanthara.ja.rycon.io.FileUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -37,25 +36,26 @@ import java.io.IOException;
 /**
  * This class implements a complete widget and it's functionality.
  * <p>
- * The GeneratorWidget of RyCON is used to generate default paths and subdirectory
- * structure by a given point number.
+ * The GeneratorWidget of RyCON is used to generate folders and substructures
+ * in a default path by a given point number.
  *
  * <h3>Changes:</h3>
  * <ul>
+ *     <li>4: implementation of a new directory structure, code reformat</li>
  *     <li>3: code improvements and clean up </li>
  *     <li>2: basic improvements </li>
  *     <li>1: basic implementation </li>
  * </ul>
  *
  * @author sebastian
- * @version 3
+ * @version 4
  * @since 1
  */
 public class GeneratorWidget {
 
-    private Button chkBoxCreateJobAndProjectFolder;
-    private Button chkBoxCreateOnlyJobFolder;
-    private Button chkBoxCreateOnlyProjectFolder;
+    private Button chkBoxCreateAdminFolder;
+    private Button chkBoxCreateBigDataFolder;
+    private Button chkBoxCreateProjectFolder;
     private Text inputNumber = null;
     private Shell innerShell = null;
 
@@ -122,8 +122,8 @@ public class GeneratorWidget {
         gridData.widthHint = Main.getRyCONWidgetWidth();
         group.setLayoutData(gridData);
 
-        Label jobAndProjectNumber = new Label(group, SWT.NONE);
-        jobAndProjectNumber.setText(I18N.getLabelJobAndProjectNumber());
+        Label projectNumberLabel = new Label(group, SWT.NONE);
+        projectNumberLabel.setText(I18N.getLabelTextProjectNumber());
 
         inputNumber = new Text(group, SWT.SINGLE | SWT.BORDER);
 
@@ -162,38 +162,17 @@ public class GeneratorWidget {
         gridData.widthHint = width - 24;
         group.setLayoutData(gridData);
 
-        SelectionListener selectionListener = new SelectionAdapter() {
-            public void widgetSelected(SelectionEvent e) {
-                boolean isSelected = ((Button) e.getSource()).getSelection();
-                if (isSelected) {
-                    if (e.getSource().equals(chkBoxCreateJobAndProjectFolder)) {
-                        chkBoxCreateOnlyJobFolder.setSelection(false);
-                        chkBoxCreateOnlyProjectFolder.setSelection(false);
-                    } else if (e.getSource().equals(chkBoxCreateOnlyJobFolder)) {
-                        chkBoxCreateJobAndProjectFolder.setSelection(false);
-                        chkBoxCreateOnlyProjectFolder.setSelection(false);
-                    } else if (e.getSource().equals(chkBoxCreateOnlyProjectFolder)) {
-                        chkBoxCreateJobAndProjectFolder.setSelection(false);
-                        chkBoxCreateOnlyJobFolder.setSelection(false);
-                    }
-                }
-            }
-        };
+        chkBoxCreateProjectFolder = new Button(group, SWT.CHECK);
+        chkBoxCreateProjectFolder.setSelection(false);
+        chkBoxCreateProjectFolder.setText(I18N.getBtnChkBoxCreateProjectFolder());
 
-        chkBoxCreateJobAndProjectFolder = new Button(group, SWT.CHECK);
-        chkBoxCreateJobAndProjectFolder.setSelection(true);
-        chkBoxCreateJobAndProjectFolder.setText(I18N.getBtnChkBoxCreateJobAndProjectFolder());
-        chkBoxCreateJobAndProjectFolder.addSelectionListener(selectionListener);
+        chkBoxCreateAdminFolder = new Button(group, SWT.CHECK);
+        chkBoxCreateAdminFolder.setSelection(true);
+        chkBoxCreateAdminFolder.setText(I18N.getBtnChkBoxCreateAdminFolder());
 
-        chkBoxCreateOnlyJobFolder = new Button(group, SWT.CHECK);
-        chkBoxCreateOnlyJobFolder.setSelection(false);
-        chkBoxCreateOnlyJobFolder.setText(I18N.getBtnChkBoxCreateOnlyJobFolder());
-        chkBoxCreateOnlyJobFolder.addSelectionListener(selectionListener);
-
-        chkBoxCreateOnlyProjectFolder = new Button(group, SWT.CHECK);
-        chkBoxCreateOnlyProjectFolder.setSelection(false);
-        chkBoxCreateOnlyProjectFolder.setText(I18N.getBtnChkBoxCreateOnlyProjectFolder());
-        chkBoxCreateOnlyProjectFolder.addSelectionListener(selectionListener);
+        chkBoxCreateBigDataFolder = new Button(group, SWT.CHECK);
+        chkBoxCreateBigDataFolder.setSelection(false);
+        chkBoxCreateBigDataFolder.setText(I18N.getBtnChkBoxCreateBigDataFolder());
     }
 
     private void createDescription(int width) {
@@ -233,7 +212,6 @@ public class GeneratorWidget {
         });
 
         Label blindTextAsPlaceHolder = new Label(compositeLeft, SWT.NONE);
-
 
         Composite compositeRight = new Composite(composite, SWT.NONE);
         compositeRight.setLayout(new FillLayout());
@@ -315,7 +293,7 @@ public class GeneratorWidget {
     private boolean generateFolders(String number) {
         boolean success = false;
 
-        if (chkBoxCreateJobAndProjectFolder.getSelection()) {
+        if (chkBoxCreateAdminFolder.getSelection()) {
             boolean jobOK = generateJobFolder(number);
             boolean projectOK = generateProjectFolder(number);
 
@@ -332,9 +310,9 @@ public class GeneratorWidget {
                 msgBox.setText(I18N.getMsgBoxTitleError());
                 msgBox.open();
             }
-        } else if (chkBoxCreateOnlyJobFolder.getSelection()) {
+        } else if (chkBoxCreateBigDataFolder.getSelection()) {
             success = generateJobFolder(number);
-        } else if (chkBoxCreateOnlyProjectFolder.getSelection()) {
+        } else if (chkBoxCreateProjectFolder.getSelection()) {
             success = generateProjectFolder(number);
         }
 
@@ -344,8 +322,8 @@ public class GeneratorWidget {
     private boolean generateJobFolder(String number) {
         boolean success = false;
 
-        String jobDir = Main.pref.getUserPref(PreferenceHandler.DIR_JOBS);
-        String jobDirTemplate = Main.pref.getUserPref(PreferenceHandler.DIR_JOBS_TEMPLATE);
+        String jobDir = Main.pref.getUserPref(PreferenceHandler.DIR_ADMIN);
+        String jobDirTemplate = Main.pref.getUserPref(PreferenceHandler.DIR_ADMIN_TEMPLATE);
 
         File newJobDir = new File(jobDir + File.separator + number);
 
@@ -391,8 +369,8 @@ public class GeneratorWidget {
     private boolean generateProjectFolder(String number) {
         boolean success = false;
 
-        String projectDir = Main.pref.getUserPref(PreferenceHandler.DIR_PROJECTS);
-        String projectDirTemplate = Main.pref.getUserPref(PreferenceHandler.DIR_PROJECTS_TEMPLATE);
+        String projectDir = Main.pref.getUserPref(PreferenceHandler.DIR_PROJECT);
+        String projectDirTemplate = Main.pref.getUserPref(PreferenceHandler.DIR_PROJECT_TEMPLATE);
 
         File newProjectDir = new File(projectDir + File.separator + number);
 

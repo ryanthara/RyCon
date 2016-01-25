@@ -44,6 +44,7 @@ import java.util.Locale;
  *
  * <h3>Changes:</h3>
  * <ul>
+ *     <li>6: implementation of a new directory structure, code reformat</li>
  *     <li>5: implement command line interface (cli) handling </li>
  *     <li>4: defeat bug #3 </li>
  *     <li>3: code improvements and clean up </li>
@@ -57,10 +58,28 @@ import java.util.Locale;
  */
 public abstract class Main {
 
+    /**
+     * Member for the URL of the RyCON update check website.
+     *
+     * @since 3
+     */
+    public static final String RyCON_UPDATE_URL = "https://code.ryanthara.de/content/3-RyCON/_current.version";
+    /**
+     * Member for the URL of the RyCON website.
+     */
+    public static final String RyCON_WEBSITE = "https://code.ryanthara.de/RyCON";
+    /**
+     * Member for the URL of the RyCON help website.
+     */
+    public static final String RyCON_WEBSITE_HELP = "https://code.ryanthara.de/RyCON/help";
+    /**
+     * Member for the URL of the RyCON what's new website.
+     *
+     * @since 3
+     */
+    public static final String RyCON_WHATS_NEW_URL = "https://code.ryanthara.de/content/3-RyCON/_whats.new";
     private static final boolean GSI8 = false;
     private static final boolean GSI16 = true;
-    private static boolean isSettingsWidgetOpenStatus = false;
-    private static boolean isSubShellOpenStatus = false;
     /*
      * The width of a grid cell. Window size and others are calculated from these values.
      * RyCON grid uses golden rectangle cut with an aspect ratio of 1.618:1
@@ -68,7 +87,6 @@ public abstract class Main {
     private static final int RyCON_GRID_WIDTH = 324;
     private static final int RyCON_GRID_HEIGHT = 200;
     private static final int RyCON_WIDGET_WIDTH = 666;
-
     private static final int RyCON_WIDGET_HEIGHT = 412;
     private static final String APP_NAME = "RyCON";
     private static final String DELIMITER_COMMA = ",";
@@ -76,78 +94,50 @@ public abstract class Main {
     private static final String DELIMITER_SPACE = " ";
     private static final String DELIMITER_TAB = "\t";
     private static final String DIR_BASE = ".";
-    private static final String DIR_JOBS = "./jobs";
-    private static final String DIR_JOBS_TEMPLATE = "./jobs/template-folder";
+    private static final String DIR_ADMIN = "./admin";
+    private static final String DIR_ADMIN_TEMPLATE = "./admin/template-folder";
+    private static final String DIR_BIG_DATA = "./big_data";
+    private static final String DIR_BIG_DATA_TEMPLATE = "./big_data/template-folder";
     private static final String DIR_PROJECT = "./projects";
     private static final String DIR_PROJECT_TEMPLATE = "./projects/template-folder";
     private static final String GSI_SETTING_LINE_ENDING_WITH_BLANK = "true";
     private static final String PARAM_CONTROL_POINT_STRING = "STKE";
     private static final String PARAM_FREE_STATION_STRING = "FS";
     private static final String PARAM_KNOWN_STATION_STRING = "ST";
-
-    /**
-     * Member for the URL of the RyCON update check website.
-     *
-     * @since 3
-     */
-    public static final String RyCON_UPDATE_URL = "https://code.ryanthara.de/content/3-RyCON/_current.version";
-
-    /**
-     * Member for the URL of the RyCON website.
-     */
-    public static final String RyCON_WEBSITE = "https://code.ryanthara.de/RyCON";
-
-    /**
-     * Member for the URL of the RyCON help website.
-     */
-    public static final String RyCON_WEBSITE_HELP = "https://code.ryanthara.de/RyCON/help";
-
-    /**
-     * Member for the URL of the RyCON what's new website.
-     *
-     * @since 3
-     */
-    public static final String RyCON_WHATS_NEW_URL = "https://code.ryanthara.de/content/3-RyCON/_whats.new";
-
     /**
      * Reference to the global application.
      */
     public static Main main;
-
     /**
      * Member for application wide counting of processed file operations.
      */
     public static int countFileOps = -1;
-
     /**
      * Member for indicating that a demo version without a valid license is used.
      */
     public static boolean LICENSE = false;
-
     /**
      * Member for indicating that a text is singular.
      */
     public static boolean TEXT_SINGULAR = true;
-
     /**
      * Member for indicating that a text is in plural.
      */
     public static boolean TEXT_PLURAL = false;
-
     /**
      * Reference to the global application preferences.
      */
     public static PreferenceHandler pref;
-
     /**
      * Reference to the global application shell.
      */
     public static Shell shell;
-
     /**
      * Reference tot the global application status bar.
      */
     public static StatusBar statusBar;
+    private static boolean isSettingsWidgetOpenStatus = false;
+    private static boolean isSubShellOpenStatus = false;
 
     /**
      * Constructs a new {@code Main} object with all it's functionality.
@@ -270,8 +260,16 @@ public abstract class Main {
      */
     public static void checkRyCONVersion() {
         Updater updater = new Updater();
+        boolean updateSuccessful = false;
 
-        if (updater.checkForUpdate()) {
+        try {
+            updateSuccessful = updater.checkForUpdate();
+        } catch (Exception e) {
+            System.err.println("checkRyCONVersion failed");
+            e.printStackTrace();
+        }
+
+        if (updateSuccessful) {
             if (updater.isUpdateAvailable()) {
                 Display display = new Display();
                 Shell shell = new Shell(display);
@@ -306,24 +304,10 @@ public abstract class Main {
     }
 
     /**
-     * Sets the locale to a given language code in alpha-2 or alpha-3 language code.
-     *
-     * @see {url http://docs.oracle.com/javase/7/docs/api/java/util/Locale.html}
-     * @param languageCode language code
-     */
-    public static void setLocaleTo(String languageCode) {
-        final String lowerCase = languageCode;
-        final String upperCase = languageCode.toUpperCase();
-
-        Locale locale = new Locale(lowerCase, upperCase);
-        Locale.setDefault(locale);
-    }
-
-    /**
      * Returns the sign for the comma delimiter as string.
      *
      * @return comma sign
-     * @since 3 
+     * @since 3
      */
     public static String getDelimiterComma() {
         return DELIMITER_COMMA;
@@ -360,7 +344,27 @@ public abstract class Main {
     }
 
     /**
-     * Returns the base directory as string value.
+     * Returns the path of the admin directory as string value.
+     *
+     * @return admin directory
+     * @since 3
+     */
+    public static String getDirAdmin() {
+        return DIR_ADMIN;
+    }
+
+    /**
+     * Returns the path of the admin template directory as string value.
+     *
+     * @return admin template directory
+     * @since 3
+     */
+    public static String getDirAdminTemplate() {
+        return DIR_ADMIN_TEMPLATE;
+    }
+
+    /**
+     * Returns the path of the base directory as string value.
      *
      * @return base directory
      * @since 3
@@ -370,27 +374,19 @@ public abstract class Main {
     }
 
     /**
-     * Returns the jobs directory as string value.
-     *
-     * @return jobs directory
-     * @since 3
+     * Returns the path of the big data directory as string value
+     * @return
      */
-    public static String getDirJobs() {
-        return DIR_JOBS;
+    public static String getDirBigData() {
+        return DIR_BIG_DATA;
     }
 
-    /**
-     * Returns the jobs template directory as string value.
-     *
-     * @return jobs template directory
-     * @since 3
-     */
-    public static String getDirJobsTemplate() {
-        return DIR_JOBS_TEMPLATE;
+    public static String getDirBigDataTemplate() {
+        return DIR_BIG_DATA_TEMPLATE;
     }
-
+    
     /**
-     * Returns the project directory as string value.
+     * Returns the path of the project directory as string value.
      *
      * @return project directory
      * @since 3
@@ -398,25 +394,15 @@ public abstract class Main {
     public static String getDirProject() {
         return DIR_PROJECT;
     }
-    
+
     /**
-     * Returns the project template directory as string value.
+     * Returns the path of the project template directory as string value.
      *
      * @return project template directory
      * @since 3
      */
     public static String getDirProjectTemplate() {
         return DIR_PROJECT_TEMPLATE;
-    }
-
-    /**
-     * Returns false as the indicator for GSI8.
-     *
-     * @return false as indicator
-     * @since 3
-     */
-    public static boolean getGSI8() {
-        return GSI8;
     }
 
     /**
@@ -427,6 +413,16 @@ public abstract class Main {
      */
     public static boolean getGSI16() {
         return GSI16;
+    }
+
+    /**
+     * Returns false as the indicator for GSI8.
+     *
+     * @return false as indicator
+     * @since 3
+     */
+    public static boolean getGSI8() {
+        return GSI8;
     }
 
     /**
@@ -533,12 +529,12 @@ public abstract class Main {
     }
 
     /**
-     * Returns the status to indicate an open settings widget.
+     * Sets the status to indicate an open subshell.
      *
-     * @return true if a settings widget is open
+     * @param isSubShellOpen subshell open status
      */
-    public static boolean isSettingsWidgetOpen() {
-        return isSettingsWidgetOpenStatus;
+    public static void setSubShellStatus(boolean isSubShellOpen) {
+        isSubShellOpenStatus = isSubShellOpen;
     }
 
     /**
@@ -549,8 +545,17 @@ public abstract class Main {
     }
 
     /**
+     * Returns the status to indicate an open settings widget.
+     *
+     * @return true if a settings widget is open
+     */
+    public static boolean isSettingsWidgetOpen() {
+        return isSettingsWidgetOpenStatus;
+    }
+
+    /**
      * Opens an uri in the default browser of the system.
-     *  
+     *
      * @param uri uri to open in default browser
      */
     public static void openURI(String uri) {
@@ -564,7 +569,21 @@ public abstract class Main {
             e.printStackTrace();
             System.err.println("Could not open default browser.");
         }
-        
+
+    }
+
+    /**
+     * Sets the locale to a given language code in alpha-2 or alpha-3 language code.
+     *
+     * @see {url http://docs.oracle.com/javase/7/docs/api/java/util/Locale.html}
+     * @param languageCode language code
+     */
+    public static void setLocaleTo(String languageCode) {
+        final String lowerCase = languageCode;
+        final String upperCase = languageCode.toUpperCase();
+
+        Locale locale = new Locale(lowerCase, upperCase);
+        Locale.setDefault(locale);
     }
 
     /**
@@ -572,17 +591,7 @@ public abstract class Main {
      *
      * @param isSettingsWidgetOpen settings widget open status
      */
-    public static void setiIsSettingsWidgetOpen(boolean isSettingsWidgetOpen) {
+    public static void setIsSettingsWidgetOpen(boolean isSettingsWidgetOpen) {
         isSettingsWidgetOpenStatus = isSettingsWidgetOpen;
     }
-
-    /**
-     * Sets the status to indicate an open subshell.
-     *
-     * @param isSubShellOpen subshell open status
-     */
-    public static void setSubShellStatus(boolean isSubShellOpen) {
-        isSubShellOpenStatus = isSubShellOpen;
-    }
-
 }  // end of Main

@@ -29,8 +29,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
-import java.io.File;
-
 /**
  * This class implements a complete widget and it's functionality.
  * <p>
@@ -39,6 +37,7 @@ import java.io.File;
  *
  * <h3>Changes:</h3>
  * <ul>
+ *     <li>5: implementation of a new directory structure, code reformat</li>
  *     <li>4: defeat bug #1 and #3 </li>
  *     <li>3: code improvements and clean up </li>
  *     <li>2: basic improvements </li>
@@ -54,10 +53,12 @@ public class SettingsWidget {
     private Button chkBoxUseSpaceAtLineEnd;
     private Shell innerShell = null;
     private Text dirBaseTextField;
-    private Text dirJobsTemplateTextField;
-    private Text dirJobsTextField;
-    private Text dirProjectsTemplateTextField;
-    private Text dirProjectsTextField;
+    private Text dirAdminTemplateTextField;
+    private Text dirAdminTextField;
+    private Text dirBigDataTemplateTextField;
+    private Text dirBigDataTextField;
+    private Text dirProjectTemplateTextField;
+    private Text dirProjectTextField;
     private Text identifierControlPointTextField;
     private Text identifierFreeStationTextField;
     private Text identifierKnownStationTextField;
@@ -69,7 +70,7 @@ public class SettingsWidget {
      */
     public SettingsWidget() {
         initUI();
-        Main.setiIsSettingsWidgetOpen(true);
+        Main.setIsSettingsWidgetOpen(true);
     }
 
     private void actionBtnCancel() {
@@ -80,29 +81,8 @@ public class SettingsWidget {
     }
 
     private void widgetDispose() {
-        Main.setiIsSettingsWidgetOpen(false);
+        Main.setIsSettingsWidgetOpen(false);
         innerShell.dispose();
-    }
-
-    private void actionBtnChoosePath(Text textField, String title, String message, String filterPath) {
-        DirectoryDialog directoryDialog = new DirectoryDialog(innerShell);
-        directoryDialog.setText(title);
-        directoryDialog.setMessage(message);
-        directoryDialog.setFilterPath(filterPath);
-
-        String path = directoryDialog.open();
-
-        if (path != null) {
-            File checkDirDestination = new File(path);
-            if (!checkDirDestination.exists()) {
-                MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
-                msgBox.setMessage(I18N.getMsgDirDestinationNotExistWarning());
-                msgBox.setText(I18N.getMsgBoxTitleWarning());
-                msgBox.open();
-            } else {
-                textField.setText(path);
-            }
-        }
     }
 
     private void actionBtnDefaultSettings() {
@@ -147,17 +127,15 @@ public class SettingsWidget {
     }
 
     private boolean checkEmptyTextFields() {
-
         return  dirBaseTextField.getText().trim().equals("") ||
-                dirJobsTemplateTextField.getText().trim().equals("") ||
-                dirJobsTextField.getText().trim().equals("") ||
-                dirProjectsTemplateTextField.getText().trim().equals("") ||
-                dirProjectsTextField.getText().trim().equals("") ||
+                dirAdminTemplateTextField.getText().trim().equals("") ||
+                dirAdminTextField.getText().trim().equals("") ||
+                dirProjectTemplateTextField.getText().trim().equals("") ||
+                dirProjectTextField.getText().trim().equals("") ||
                 identifierFreeStationTextField.getText().trim().equals("") ||
                 identifierControlPointTextField.getText().trim().equals("") ||
                 identifierKnownStationTextField.getText().trim().equals("")
         ;
-
     }
 
     private void createGroupPaths(int width) {
@@ -175,7 +153,7 @@ public class SettingsWidget {
         group.setLayoutData(gridData);
 
         Label dirBaseLabel = new Label(group, SWT.NONE);
-        dirBaseLabel.setText(I18N.getLabelDirBase());
+        dirBaseLabel.setText(I18N.getLabelTextDirBase());
 
         dirBaseTextField = new Text(group, SWT.BORDER);
         dirBaseTextField.setText(Main.pref.getUserPref(PreferenceHandler.DIR_BASE));
@@ -190,8 +168,9 @@ public class SettingsWidget {
                     }
 
                 } else if (event.detail == SWT.TRAVERSE_RETURN) {
-                    actionBtnChoosePath(dirBaseTextField, I18N.getFileChooserDirBaseTitle(), I18N.getFileChooserDirBaseMessage(), Main.pref.getUserPref(PreferenceHandler.DIR_BASE));
-                    dirJobsTextField.setFocus();
+                    GuiHelper.showAdvancedDirectoryDialog(innerShell, dirBaseTextField, I18N.getFileChooserDirBaseTitle(),
+                            I18N.getFileChooserDirBaseMessage(), Main.pref.getUserPref(PreferenceHandler.DIR_BASE));
+                    dirAdminTextField.setFocus();
                 }
             }
         });
@@ -207,22 +186,24 @@ public class SettingsWidget {
         btnDirBase.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                actionBtnChoosePath(dirBaseTextField, I18N.getFileChooserDirBaseTitle(), I18N.getFileChooserDirBaseMessage(), Main.pref.getUserPref(PreferenceHandler.DIR_BASE));
-                dirJobsTextField.setFocus();
+                GuiHelper.showAdvancedDirectoryDialog(innerShell, dirBaseTextField, I18N.getFileChooserDirBaseTitle(),
+                        I18N.getFileChooserDirBaseMessage(), Main.pref.getUserPref(PreferenceHandler.DIR_BASE));
+                dirAdminTextField.setFocus();
             }
         });
 
         gridData = new GridData();
         gridData.horizontalAlignment = SWT.FILL;
         btnDirBase.setLayoutData(gridData);
+        
 
-        Label dirJobsLabel = new Label(group, SWT.NONE);
-        dirJobsLabel.setText(I18N.getLabelDirJobs());
-        dirJobsLabel.setLayoutData(new GridData());
+        Label dirProjectLabel = new Label(group, SWT.NONE);
+        dirProjectLabel.setText(I18N.getLabelTextDirProject());
+        dirProjectLabel.setLayoutData(new GridData());
 
-        dirJobsTextField = new Text(group, SWT.SINGLE | SWT.BORDER);
-        dirJobsTextField.setText(Main.pref.getUserPref(PreferenceHandler.DIR_JOBS));
-        dirJobsTextField.addListener(SWT.Traverse, new Listener() {
+        dirProjectTextField = new Text(group, SWT.SINGLE | SWT.BORDER);
+        dirProjectTextField.setText(Main.pref.getUserPref(PreferenceHandler.DIR_PROJECT));
+        dirProjectTextField.addListener(SWT.Traverse, new Listener() {
             @Override
             public void handleEvent(Event event) {
                 // prevent this shortcut for execute when the text fields are empty
@@ -234,11 +215,13 @@ public class SettingsWidget {
 
                 } else if (event.detail == SWT.TRAVERSE_RETURN) {
                     if (!Main.pref.isDefaultSettingsGenerated()) {
-                        actionBtnChoosePath(dirJobsTextField, I18N.getFileChooserDirJobsTitle(), I18N.getFileChooserDirJobsMessage(), dirBaseTextField.getText());
+                        GuiHelper.showAdvancedDirectoryDialog(innerShell, dirProjectTextField, I18N.getFileChooserDirProjectTitle(),
+                                I18N.getFileChooserDirProjectMessage(), dirBaseTextField.getText());
                     } else {
-                        actionBtnChoosePath(dirJobsTextField, I18N.getFileChooserDirJobsTitle(), I18N.getFileChooserDirJobsMessage(), Main.pref.getUserPref(PreferenceHandler.DIR_JOBS));
+                        GuiHelper.showAdvancedDirectoryDialog(innerShell, dirProjectTextField, I18N.getFileChooserDirProjectTitle(),
+                                I18N.getFileChooserDirProjectMessage(), Main.pref.getUserPref(PreferenceHandler.DIR_PROJECT));
                     }
-                    dirJobsTemplateTextField.setFocus();
+                    dirProjectTemplateTextField.setFocus();
                 }
             }
         });
@@ -246,32 +229,35 @@ public class SettingsWidget {
         gridData = new GridData();
         gridData.horizontalAlignment = GridData.FILL;
         gridData.grabExcessHorizontalSpace = true;
-        dirJobsTextField.setLayoutData(gridData);
+        dirProjectTextField.setLayoutData(gridData);
 
-        Button btnDirJobs = new Button(group, SWT.NONE);
-        btnDirJobs.setText(I18N.getBtnChoosePath());
-        btnDirJobs.addSelectionListener(new SelectionAdapter() {
+        Button btnDirProject = new Button(group, SWT.NONE);
+        btnDirProject.setText(I18N.getBtnChoosePath());
+        btnDirProject.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 if (!Main.pref.isDefaultSettingsGenerated()) {
-                    actionBtnChoosePath(dirJobsTextField, I18N.getFileChooserDirJobsTitle(), I18N.getFileChooserDirJobsMessage(), dirBaseTextField.getText());
+                    GuiHelper.showAdvancedDirectoryDialog(innerShell, dirProjectTextField, I18N.getFileChooserDirProjectTitle(),
+                            I18N.getFileChooserDirProjectMessage(), dirBaseTextField.getText());
                 } else {
-                    actionBtnChoosePath(dirJobsTextField, I18N.getFileChooserDirJobsTitle(), I18N.getFileChooserDirJobsMessage(), Main.pref.getUserPref(PreferenceHandler.DIR_JOBS));
+                    GuiHelper.showAdvancedDirectoryDialog(innerShell, dirProjectTextField, I18N.getFileChooserDirProjectTitle(),
+                            I18N.getFileChooserDirProjectMessage(), Main.pref.getUserPref(PreferenceHandler.DIR_PROJECT));
                 }
-                dirJobsTemplateTextField.setFocus();
+                dirProjectTemplateTextField.setFocus();
             }
         });
 
-        btnDirJobs.setToolTipText(I18N.getBtnChoosePathToolTip());
-        btnDirJobs.setLayoutData(new GridData());
+        btnDirProject.setToolTipText(I18N.getBtnChoosePathToolTip());
+        btnDirProject.setLayoutData(new GridData());
 
-        Label dirJobsTemplateLabel = new Label(group, SWT.NONE);
-        dirJobsTemplateLabel.setText(I18N.getLabelDirJobsTemplate());
-        dirJobsTemplateLabel.setLayoutData(new GridData());
 
-        dirJobsTemplateTextField = new Text(group, SWT.SINGLE | SWT.BORDER);
-        dirJobsTemplateTextField.setText(Main.pref.getUserPref(PreferenceHandler.DIR_JOBS_TEMPLATE));
-        dirJobsTemplateTextField.addListener(SWT.Traverse, new Listener() {
+        Label dirProjectTemplateLabel = new Label(group, SWT.NONE);
+        dirProjectTemplateLabel.setText(I18N.getLabelTextDirProjectTemplate());
+        dirProjectTemplateLabel.setLayoutData(new GridData());
+
+        dirProjectTemplateTextField = new Text(group, SWT.SINGLE | SWT.BORDER);
+        dirProjectTemplateTextField.setText(Main.pref.getUserPref(PreferenceHandler.DIR_PROJECT_TEMPLATE));
+        dirProjectTemplateTextField.addListener(SWT.Traverse, new Listener() {
             @Override
             public void handleEvent(Event event) {
                 // prevent this shortcut for execute when the text fields are empty
@@ -283,107 +269,11 @@ public class SettingsWidget {
 
                 } else if (event.detail == SWT.TRAVERSE_RETURN) {
                     if (!Main.pref.isDefaultSettingsGenerated()) {
-                        actionBtnChoosePath(dirJobsTemplateTextField, I18N.getFileChooserDirJobsTemplateTitle(), I18N.getFileChooserDirJobsTemplateMessage(), dirJobsTextField.getText());
+                        GuiHelper.showAdvancedDirectoryDialog(innerShell, dirProjectTemplateTextField, I18N.getFileChooserDirProjectTemplateTitle(),
+                                I18N.getFileChooserDirProjectTemplateMessage(), dirProjectTextField.getText());
                     } else {
-                        actionBtnChoosePath(dirJobsTemplateTextField, I18N.getFileChooserDirJobsTemplateTitle(), I18N.getFileChooserDirJobsTemplateMessage(), Main.pref.getUserPref(PreferenceHandler.DIR_JOBS_TEMPLATE));
-                    }
-                    dirProjectsTextField.setFocus();
-                }
-            }
-        });
-
-        gridData = new GridData();
-        gridData.horizontalAlignment = GridData.FILL;
-        gridData.grabExcessHorizontalSpace = true;
-        dirJobsTemplateTextField.setLayoutData(gridData);
-
-        Button btnDirJobsTemplate = new Button(group, SWT.NONE);
-        btnDirJobsTemplate.setText(I18N.getBtnChoosePath());
-        btnDirJobsTemplate.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                if (!Main.pref.isDefaultSettingsGenerated()) {
-                    actionBtnChoosePath(dirJobsTemplateTextField, I18N.getFileChooserDirJobsTemplateTitle(), I18N.getFileChooserDirJobsTemplateMessage(), dirJobsTextField.getText());
-                } else {
-                    actionBtnChoosePath(dirJobsTemplateTextField, I18N.getFileChooserDirJobsTemplateTitle(), I18N.getFileChooserDirJobsTemplateMessage(), Main.pref.getUserPref(PreferenceHandler.DIR_JOBS_TEMPLATE));
-                }
-                dirProjectsTextField.setFocus();
-            }
-        });
-
-        btnDirJobsTemplate.setToolTipText(I18N.getBtnChoosePathToolTip());
-        btnDirJobsTemplate.setLayoutData(new GridData());
-
-        Label dirProjectsLabel = new Label(group, SWT.NONE);
-        dirProjectsLabel.setText(I18N.getLabelDirProjects());
-        dirProjectsLabel.setLayoutData(new GridData());
-
-        dirProjectsTextField = new Text(group, SWT.SINGLE | SWT.BORDER);
-        dirProjectsTextField.setText(Main.pref.getUserPref(PreferenceHandler.DIR_PROJECTS));
-        dirProjectsTextField.addListener(SWT.Traverse, new Listener() {
-            @Override
-            public void handleEvent(Event event) {
-                // prevent this shortcut for execute when the text fields are empty
-                if (!checkEmptyTextFields()) {
-
-                    if (((event.stateMask & SWT.CTRL) == SWT.CTRL) && (event.detail == SWT.TRAVERSE_RETURN)) {
-                        actionBtnOk();
-                    }
-
-                } else if (event.detail == SWT.TRAVERSE_RETURN) {
-                    if (!Main.pref.isDefaultSettingsGenerated()) {
-                        actionBtnChoosePath(dirProjectsTextField, I18N.getFileChooserDirProjectsTitle(), I18N.getFileChooserDirProjectsMessage(), dirBaseTextField.getText());
-                    } else {
-                        actionBtnChoosePath(dirProjectsTextField, I18N.getFileChooserDirProjectsTitle(), I18N.getFileChooserDirProjectsMessage(), Main.pref.getUserPref(PreferenceHandler.DIR_PROJECTS));
-                    }
-                    dirProjectsTemplateTextField.setFocus();
-                }
-            }
-        });
-
-        gridData = new GridData();
-        gridData.horizontalAlignment = GridData.FILL;
-        gridData.grabExcessHorizontalSpace = true;
-        dirProjectsTextField.setLayoutData(gridData);
-
-        Button btnDirProjects = new Button(group, SWT.NONE);
-        btnDirProjects.setText(I18N.getBtnChoosePath());
-        btnDirProjects.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                if (!Main.pref.isDefaultSettingsGenerated()) {
-                    actionBtnChoosePath(dirProjectsTextField, I18N.getFileChooserDirProjectsTitle(), I18N.getFileChooserDirProjectsMessage(), dirBaseTextField.getText());
-                } else {
-                    actionBtnChoosePath(dirProjectsTextField, I18N.getFileChooserDirProjectsTitle(), I18N.getFileChooserDirProjectsMessage(), Main.pref.getUserPref(PreferenceHandler.DIR_PROJECTS));
-                }
-                dirProjectsTemplateTextField.setFocus();
-            }
-        });
-
-        btnDirProjects.setToolTipText(I18N.getBtnChoosePathToolTip());
-        btnDirProjects.setLayoutData(new GridData());
-
-        Label dirProjectsTemplateLabel = new Label(group, SWT.NONE);
-        dirProjectsTemplateLabel.setText(I18N.getLabelDirProjectsTemplate());
-        dirProjectsTemplateLabel.setLayoutData(new GridData());
-
-        dirProjectsTemplateTextField = new Text(group, SWT.SINGLE | SWT.BORDER);
-        dirProjectsTemplateTextField.setText(Main.pref.getUserPref(PreferenceHandler.DIR_PROJECTS_TEMPLATE));
-        dirProjectsTemplateTextField.addListener(SWT.Traverse, new Listener() {
-            @Override
-            public void handleEvent(Event event) {
-                // prevent this shortcut for execute when the text fields are empty
-                if (!checkEmptyTextFields()) {
-
-                    if (((event.stateMask & SWT.CTRL) == SWT.CTRL) && (event.detail == SWT.TRAVERSE_RETURN)) {
-                        actionBtnOk();
-                    }
-
-                } else if (event.detail == SWT.TRAVERSE_RETURN) {
-                    if (!Main.pref.isDefaultSettingsGenerated()) {
-                        actionBtnChoosePath(dirProjectsTemplateTextField, I18N.getFileChooserDirProjectTemplateTitle(), I18N.getFileChooserDirProjectTemplateMessage(), dirProjectsTextField.getText());
-                    } else {
-                        actionBtnChoosePath(dirProjectsTemplateTextField, I18N.getFileChooserDirProjectTemplateTitle(), I18N.getFileChooserDirProjectTemplateMessage(), Main.pref.getUserPref(PreferenceHandler.DIR_PROJECTS_TEMPLATE));
+                        GuiHelper.showAdvancedDirectoryDialog(innerShell, dirProjectTemplateTextField, I18N.getFileChooserDirProjectTemplateTitle(),
+                                I18N.getFileChooserDirProjectTemplateMessage(), Main.pref.getUserPref(PreferenceHandler.DIR_PROJECT_TEMPLATE));
                     }
                     dirBaseTextField.setFocus();
                 }
@@ -393,20 +283,232 @@ public class SettingsWidget {
         gridData = new GridData();
         gridData.horizontalAlignment = GridData.FILL;
         gridData.grabExcessHorizontalSpace = true;
-        dirProjectsTemplateTextField.setLayoutData(gridData);
+        dirProjectTemplateTextField.setLayoutData(gridData);
 
-        Button btnDirProjectsTemplate = new Button(group, SWT.NONE);
-        btnDirProjectsTemplate.setText(I18N.getBtnChoosePath());
-        btnDirProjectsTemplate.addSelectionListener(new SelectionAdapter() {
+        Button btnDirProjectTemplate = new Button(group, SWT.NONE);
+        btnDirProjectTemplate.setText(I18N.getBtnChoosePath());
+        btnDirProjectTemplate.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                actionBtnChoosePath(dirProjectsTemplateTextField, I18N.getFileChooserDirProjectTemplateTitle(), I18N.getFileChooserDirProjectTemplateMessage(), dirProjectsTextField.getText());
+                GuiHelper.showAdvancedDirectoryDialog(innerShell, dirProjectTemplateTextField, I18N.getFileChooserDirProjectTemplateTitle(),
+                        I18N.getFileChooserDirProjectTemplateMessage(), dirProjectTextField.getText());
                 dirBaseTextField.setFocus();
             }
         });
 
-        btnDirProjectsTemplate.setToolTipText(I18N.getBtnChoosePathToolTip());
-        btnDirProjectsTemplate.setLayoutData(new GridData());
+        btnDirProjectTemplate.setToolTipText(I18N.getBtnChoosePathToolTip());
+        btnDirProjectTemplate.setLayoutData(new GridData());
+
+
+        Label dirAdminLabel = new Label(group, SWT.NONE);
+        dirAdminLabel.setText(I18N.getLabelTextDirAdmin());
+        dirAdminLabel.setLayoutData(new GridData());
+
+        dirAdminTextField = new Text(group, SWT.SINGLE | SWT.BORDER);
+        dirAdminTextField.setText(Main.pref.getUserPref(PreferenceHandler.DIR_ADMIN));
+        dirAdminTextField.addListener(SWT.Traverse, new Listener() {
+            @Override
+            public void handleEvent(Event event) {
+                // prevent this shortcut for execute when the text fields are empty
+                if (!checkEmptyTextFields()) {
+
+                    if (((event.stateMask & SWT.CTRL) == SWT.CTRL) && (event.detail == SWT.TRAVERSE_RETURN)) {
+                        actionBtnOk();
+                    }
+
+                } else if (event.detail == SWT.TRAVERSE_RETURN) {
+                    if (!Main.pref.isDefaultSettingsGenerated()) {
+                        GuiHelper.showAdvancedDirectoryDialog(innerShell, dirAdminTextField, I18N.getFileChooserDirAdminTitle(),
+                                I18N.getFileChooserDirAdminMessage(), dirBaseTextField.getText());
+                    } else {
+                        GuiHelper.showAdvancedDirectoryDialog(innerShell, dirAdminTextField, I18N.getFileChooserDirAdminTitle(),
+                                I18N.getFileChooserDirAdminMessage(), Main.pref.getUserPref(PreferenceHandler.DIR_ADMIN));
+                    }
+                    dirAdminTemplateTextField.setFocus();
+                }
+            }
+        });
+
+        gridData = new GridData();
+        gridData.horizontalAlignment = GridData.FILL;
+        gridData.grabExcessHorizontalSpace = true;
+        dirAdminTextField.setLayoutData(gridData);
+
+        Button btnDirAdmin = new Button(group, SWT.NONE);
+        btnDirAdmin.setText(I18N.getBtnChoosePath());
+        btnDirAdmin.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                if (!Main.pref.isDefaultSettingsGenerated()) {
+                    GuiHelper.showAdvancedDirectoryDialog(innerShell, dirAdminTextField, I18N.getFileChooserDirAdminTitle(),
+                            I18N.getFileChooserDirAdminMessage(), dirBaseTextField.getText());
+                } else {
+                    GuiHelper.showAdvancedDirectoryDialog(innerShell, dirAdminTextField, I18N.getFileChooserDirAdminTitle(),
+                            I18N.getFileChooserDirAdminMessage(), Main.pref.getUserPref(PreferenceHandler.DIR_ADMIN));
+                }
+                dirAdminTemplateTextField.setFocus();
+            }
+        });
+
+        btnDirAdmin.setToolTipText(I18N.getBtnChoosePathToolTip());
+        btnDirAdmin.setLayoutData(new GridData());
+
+
+        Label dirAdminTemplateLabel = new Label(group, SWT.NONE);
+        dirAdminTemplateLabel.setText(I18N.getLabelTextDirAdminTemplate());
+        dirAdminTemplateLabel.setLayoutData(new GridData());
+
+        dirAdminTemplateTextField = new Text(group, SWT.SINGLE | SWT.BORDER);
+        dirAdminTemplateTextField.setText(Main.pref.getUserPref(PreferenceHandler.DIR_ADMIN_TEMPLATE));
+        dirAdminTemplateTextField.addListener(SWT.Traverse, new Listener() {
+            @Override
+            public void handleEvent(Event event) {
+                // prevent this shortcut for execute when the text fields are empty
+                if (!checkEmptyTextFields()) {
+
+                    if (((event.stateMask & SWT.CTRL) == SWT.CTRL) && (event.detail == SWT.TRAVERSE_RETURN)) {
+                        actionBtnOk();
+                    }
+
+                } else if (event.detail == SWT.TRAVERSE_RETURN) {
+                    if (!Main.pref.isDefaultSettingsGenerated()) {
+                        GuiHelper.showAdvancedDirectoryDialog(innerShell, dirAdminTemplateTextField, I18N.getFileChooserDirAdminTemplateTitle(),
+                                I18N.getFileChooserDirAdminTemplateMessage(), dirAdminTextField.getText());
+                    } else {
+                        GuiHelper.showAdvancedDirectoryDialog(innerShell, dirAdminTemplateTextField, I18N.getFileChooserDirAdminTemplateTitle(),
+                                I18N.getFileChooserDirAdminTemplateMessage(), Main.pref.getUserPref(PreferenceHandler.DIR_ADMIN_TEMPLATE));
+                    }
+                    dirProjectTextField.setFocus();
+                }
+            }
+        });
+
+        gridData = new GridData();
+        gridData.horizontalAlignment = GridData.FILL;
+        gridData.grabExcessHorizontalSpace = true;
+        dirAdminTemplateTextField.setLayoutData(gridData);
+
+        Button btnDirAdminTemplate = new Button(group, SWT.NONE);
+        btnDirAdminTemplate.setText(I18N.getBtnChoosePath());
+        btnDirAdminTemplate.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                if (!Main.pref.isDefaultSettingsGenerated()) {
+                    GuiHelper.showAdvancedDirectoryDialog(innerShell, dirAdminTemplateTextField, I18N.getFileChooserDirAdminTemplateTitle(),
+                            I18N.getFileChooserDirAdminTemplateMessage(), dirAdminTextField.getText());
+                } else {
+                    GuiHelper.showAdvancedDirectoryDialog(innerShell, dirAdminTemplateTextField, I18N.getFileChooserDirAdminTemplateTitle(),
+                            I18N.getFileChooserDirAdminTemplateMessage(), Main.pref.getUserPref(PreferenceHandler.DIR_ADMIN_TEMPLATE));
+                }
+                dirProjectTextField.setFocus();
+            }
+        });
+
+        btnDirAdminTemplate.setToolTipText(I18N.getBtnChoosePathToolTip());
+        btnDirAdminTemplate.setLayoutData(new GridData());
+
+
+        Label dirProjectLabel = new Label(group, SWT.NONE);
+        dirProjectLabel.setText(I18N.getLabelTextDirProject());
+        dirProjectLabel.setLayoutData(new GridData());
+
+        dirProjectTextField = new Text(group, SWT.SINGLE | SWT.BORDER);
+        dirProjectTextField.setText(Main.pref.getUserPref(PreferenceHandler.DIR_PROJECT));
+        dirProjectTextField.addListener(SWT.Traverse, new Listener() {
+            @Override
+            public void handleEvent(Event event) {
+                // prevent this shortcut for execute when the text fields are empty
+                if (!checkEmptyTextFields()) {
+
+                    if (((event.stateMask & SWT.CTRL) == SWT.CTRL) && (event.detail == SWT.TRAVERSE_RETURN)) {
+                        actionBtnOk();
+                    }
+
+                } else if (event.detail == SWT.TRAVERSE_RETURN) {
+                    if (!Main.pref.isDefaultSettingsGenerated()) {
+                        GuiHelper.showAdvancedDirectoryDialog(innerShell, dirProjectTextField, I18N.getFileChooserDirProjectTitle(),
+                                I18N.getFileChooserDirProjectMessage(), dirBaseTextField.getText());
+                    } else {
+                        GuiHelper.showAdvancedDirectoryDialog(innerShell, dirProjectTextField, I18N.getFileChooserDirProjectTitle(),
+                                I18N.getFileChooserDirProjectMessage(), Main.pref.getUserPref(PreferenceHandler.DIR_PROJECT));
+                    }
+                    dirProjectTemplateTextField.setFocus();
+                }
+            }
+        });
+
+        gridData = new GridData();
+        gridData.horizontalAlignment = GridData.FILL;
+        gridData.grabExcessHorizontalSpace = true;
+        dirProjectTextField.setLayoutData(gridData);
+
+        Button btnDirProject = new Button(group, SWT.NONE);
+        btnDirProject.setText(I18N.getBtnChoosePath());
+        btnDirProject.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                if (!Main.pref.isDefaultSettingsGenerated()) {
+                    GuiHelper.showAdvancedDirectoryDialog(innerShell, dirProjectTextField, I18N.getFileChooserDirProjectTitle(),
+                            I18N.getFileChooserDirProjectMessage(), dirBaseTextField.getText());
+                } else {
+                    GuiHelper.showAdvancedDirectoryDialog(innerShell, dirProjectTextField, I18N.getFileChooserDirProjectTitle(),
+                            I18N.getFileChooserDirProjectMessage(), Main.pref.getUserPref(PreferenceHandler.DIR_PROJECT));
+                }
+                dirProjectTemplateTextField.setFocus();
+            }
+        });
+
+        btnDirProject.setToolTipText(I18N.getBtnChoosePathToolTip());
+        btnDirProject.setLayoutData(new GridData());
+
+
+        Label dirProjectTemplateLabel = new Label(group, SWT.NONE);
+        dirProjectTemplateLabel.setText(I18N.getLabelTextDirProjectTemplate());
+        dirProjectTemplateLabel.setLayoutData(new GridData());
+
+        dirProjectTemplateTextField = new Text(group, SWT.SINGLE | SWT.BORDER);
+        dirProjectTemplateTextField.setText(Main.pref.getUserPref(PreferenceHandler.DIR_PROJECT_TEMPLATE));
+        dirProjectTemplateTextField.addListener(SWT.Traverse, new Listener() {
+            @Override
+            public void handleEvent(Event event) {
+                // prevent this shortcut for execute when the text fields are empty
+                if (!checkEmptyTextFields()) {
+
+                    if (((event.stateMask & SWT.CTRL) == SWT.CTRL) && (event.detail == SWT.TRAVERSE_RETURN)) {
+                        actionBtnOk();
+                    }
+
+                } else if (event.detail == SWT.TRAVERSE_RETURN) {
+                    if (!Main.pref.isDefaultSettingsGenerated()) {
+                        GuiHelper.showAdvancedDirectoryDialog(innerShell, dirProjectTemplateTextField, I18N.getFileChooserDirProjectTemplateTitle(),
+                                I18N.getFileChooserDirProjectTemplateMessage(), dirProjectTextField.getText());
+                    } else {
+                        GuiHelper.showAdvancedDirectoryDialog(innerShell, dirProjectTemplateTextField, I18N.getFileChooserDirProjectTemplateTitle(),
+                                I18N.getFileChooserDirProjectTemplateMessage(), Main.pref.getUserPref(PreferenceHandler.DIR_PROJECT_TEMPLATE));
+                    }
+                    dirBaseTextField.setFocus();
+                }
+            }
+        });
+
+        gridData = new GridData();
+        gridData.horizontalAlignment = GridData.FILL;
+        gridData.grabExcessHorizontalSpace = true;
+        dirProjectTemplateTextField.setLayoutData(gridData);
+
+        Button btnDirProjectTemplate = new Button(group, SWT.NONE);
+        btnDirProjectTemplate.setText(I18N.getBtnChoosePath());
+        btnDirProjectTemplate.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                GuiHelper.showAdvancedDirectoryDialog(innerShell, dirProjectTemplateTextField, I18N.getFileChooserDirProjectTemplateTitle(),
+                        I18N.getFileChooserDirProjectTemplateMessage(), dirProjectTextField.getText());
+                dirBaseTextField.setFocus();
+            }
+        });
+
+        btnDirProjectTemplate.setToolTipText(I18N.getBtnChoosePathToolTip());
+        btnDirProjectTemplate.setLayoutData(new GridData());
     }
 
     private void createGroupGSIFormat(int width) {
@@ -440,7 +542,7 @@ public class SettingsWidget {
         group.setLayoutData(gridData);
 
         Label freeStationLabel = new Label(group, SWT.NONE);
-        freeStationLabel.setText(I18N.getLabelIdentifierFreeStation());
+        freeStationLabel.setText(I18N.getLabelTextIdentifierFreeStation());
 
         identifierFreeStationTextField = new Text(group, SWT.BORDER);
         identifierFreeStationTextField.setText(Main.pref.getUserPref(PreferenceHandler.PARAM_FREE_STATION_STRING));
@@ -464,7 +566,7 @@ public class SettingsWidget {
         identifierFreeStationTextField.setLayoutData(gridData);
 
         Label stationLabel = new Label(group, SWT.NONE);
-        stationLabel.setText(I18N.getLabelIdentifierStation());
+        stationLabel.setText(I18N.getLabelTextIdentifierStation());
 
         identifierKnownStationTextField = new Text(group, SWT.BORDER);
         identifierKnownStationTextField.setText(Main.pref.getUserPref(PreferenceHandler.PARAM_KNOWN_STATION_STRING));
@@ -488,7 +590,7 @@ public class SettingsWidget {
         identifierKnownStationTextField.setLayoutData(gridData);
 
         Label stakeOutLabel = new Label(group, SWT.NONE);
-        stakeOutLabel.setText(I18N.getLabelIdentifierStakeOutPoint());
+        stakeOutLabel.setText(I18N.getLabelTextIdentifierStakeOutPoint());
 
         identifierControlPointTextField = new Text(group, SWT.BORDER);
         identifierControlPointTextField.setText(Main.pref.getUserPref(PreferenceHandler.PARAM_CONTROL_POINT_STRING));
@@ -590,10 +692,12 @@ public class SettingsWidget {
 
     private boolean writeSettings() {
         Main.pref.setUserPref(PreferenceHandler.DIR_BASE, dirBaseTextField.getText());
-        Main.pref.setUserPref(PreferenceHandler.DIR_JOBS, dirJobsTextField.getText());
-        Main.pref.setUserPref(PreferenceHandler.DIR_JOBS_TEMPLATE, dirJobsTemplateTextField.getText());
-        Main.pref.setUserPref(PreferenceHandler.DIR_PROJECTS, dirProjectsTextField.getText());
-        Main.pref.setUserPref(PreferenceHandler.DIR_PROJECTS_TEMPLATE, dirProjectsTemplateTextField.getText());
+        Main.pref.setUserPref(PreferenceHandler.DIR_ADMIN, dirAdminTextField.getText());
+        Main.pref.setUserPref(PreferenceHandler.DIR_ADMIN_TEMPLATE, dirAdminTemplateTextField.getText());
+        Main.pref.setUserPref(PreferenceHandler.DIR_BIG_DATA, dirBigDataTextField.getText());
+        Main.pref.setUserPref(PreferenceHandler.DIR_BIG_DATA_TEMPLATE, dirBigDataTemplateTextField.getText());
+        Main.pref.setUserPref(PreferenceHandler.DIR_PROJECT, dirProjectTextField.getText());
+        Main.pref.setUserPref(PreferenceHandler.DIR_PROJECT_TEMPLATE, dirProjectTemplateTextField.getText());
 
         Main.pref.setUserPref(PreferenceHandler.GSI_SETTING_LINE_ENDING_WITH_BLANK, Boolean.toString(chkBoxUseSpaceAtLineEnd.getSelection()));
 
@@ -606,4 +710,4 @@ public class SettingsWidget {
         return true;
     }
 
-}
+} // end of SettingsWidget.java

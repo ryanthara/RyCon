@@ -264,7 +264,7 @@ public class LevellingWidget {
      */
     private void actionBtnSource() {
         FileDialog fileDialog = new FileDialog(innerShell, SWT.MULTI);
-        fileDialog.setFilterPath(Main.pref.getUserPref(PreferenceHandler.DIR_PROJECTS));
+        fileDialog.setFilterPath(Main.pref.getUserPref(PreferenceHandler.DIR_PROJECT));
         fileDialog.setText(I18N.getFileChooserLevellingSourceText());
         fileDialog.setFilterExtensions(acceptableFileSuffixes);
         fileDialog.setFilterNames(new String[]{I18N.getFileChooserFilterNameGSI(), I18N.getFileChooserFilterNameNIGRA()});

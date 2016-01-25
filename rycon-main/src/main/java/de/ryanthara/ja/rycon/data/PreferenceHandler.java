@@ -20,6 +20,7 @@ package de.ryanthara.ja.rycon.data;
 
 import de.ryanthara.ja.rycon.Main;
 
+import java.io.File;
 import java.util.prefs.Preferences;
 
 
@@ -36,6 +37,7 @@ import java.util.prefs.Preferences;
  *
  * <h3>Changes:</h3>
  * <ul>
+ *     <li>6: implementation of a new directory structure, code improvements, small corrections</li>
  *     <li>5: defeat bug #1 and #3 </li>
  *     <li>4: code improvements and clean up </li>
  *     <li>3: change from properties file to Java Preferences API </li>
@@ -49,87 +51,84 @@ import java.util.prefs.Preferences;
  */
 public class PreferenceHandler {
 
-    private boolean isDefaultSettingsGenerated = false;
-    private Preferences userPreferences;
-
     /**
      * Member for the preference key of the GSI setting for line ending.
      * Maybe only a problem with the Autocad import tool of RAPP AG.
      * @since 5
      */
     public final static String GSI_SETTING_LINE_ENDING_WITH_BLANK = "gsi_setting_line_ending_with_blank";
-
     /**
      * Member for the preference key of the build and version number value.
      * @since 3
      */
     public final static String BUILD_VERSION = "build_version";
-
     /**
      * Member for the preference key of the base directory value.
      * @since 3
      */
     public final static String DIR_BASE = "dir_base";
-
     /**
-     * Member for the preference key of the jobs directory value.
+     * Member for the preference key of the big data directory value.
+     * @since 6
+     */
+    public final static String DIR_BIG_DATA = "dir_big_data";
+    /**
+     * Member for the preference key of the big data template directory value.
+     * @since 6
+     */
+    public final static String DIR_BIG_DATA_TEMPLATE = "dir_big_data_template";
+    /**
+     * Member for the preference key of the admin directory value.
      * @since 3
      */
-    public final static String DIR_JOBS = "dir_jobs";
-
+    public final static String DIR_ADMIN = "dir_admin";
     /**
-     * Member for the preference key of the jobs template directory value.
+     * Member for the preference key of the admin template directory value.
      * @since 3
      */
-    public final static String DIR_JOBS_TEMPLATE = "dir_jobs_template";
-
+    public final static String DIR_ADMIN_TEMPLATE = "dir_admin_template";
     /**
-     * Member for the preference key of the projects directory value.
+     * Member for the preference key of the project directory value.
      * @since 3
      */
-    public final static String DIR_PROJECTS = "dir_projects";
-
+    public final static String DIR_PROJECT = "dir_projects";
     /**
-     * Member for the preference key of the projects template directory value.
+     * Member for the preference key of the project template directory value.
      * @since 3
      */
-    public final static String DIR_PROJECTS_TEMPLATE = "dir_projects_template";
-
+    public final static String DIR_PROJECT_TEMPLATE = "dir_projects_template";
     /**
      * Member for the preference key of the generator value.
      * @since 3
      */
     public final static String GENERATOR = "generator";
-
     /**
      * Member for the preference key of the information string value.
      * @since 3
      */
     public final static String INFORMATION_STRING = "information_string";
-
     /**
      * Member for the preference key for the control point identifier string.
      * @since 3
      */
     public final static String PARAM_CONTROL_POINT_STRING = "param_control_point_string";
-
     /**
      * Member for the preference key for the free station identifier string.
      * @since 3
      */
     public final static String PARAM_FREE_STATION_STRING = "param_free_station_string";
-
     /**
      * Member for the preference key for the free station identifier string.
      * @since 3
      */
     public final static String PARAM_KNOWN_STATION_STRING = "param_known_station_string";
-
     /**
      * Member for the preference key for the last used directory.
      * @since 3
      */
     public final static String USER_LAST_USED_DIR = "user_last_used_dir";
+    private boolean isDefaultSettingsGenerated = false;
+    private Preferences userPreferences;
 
     /**
      * Class constructor which initializes the configuration handling.
@@ -147,19 +146,21 @@ public class PreferenceHandler {
     }
 
     /**
-     * Returns true if a file with default settings was generated.
-     * @return success
+     * Checks a path which is stored in the user preferences of RyCON. If the path doesn't exist,
+     * the value of the "HOME" preference will be returned.
+     *
+     * @param pathToBeChecked
      */
-    public boolean isDefaultSettingsGenerated() {
-        return isDefaultSettingsGenerated;
-    }
-
-    /**
-     * Sets the value for defaultSettingsGenerated from outside this class.
-     * @param defaultSettingsGenerated value to be set
-     */
-    public void setDefaultSettingsGenerated(boolean defaultSettingsGenerated) {
-        isDefaultSettingsGenerated = defaultSettingsGenerated;
+    public static String checkUserPrefPathExist(String pathToBeChecked) {
+        File f = new File(pathToBeChecked);
+        File baseDir = new File(PreferenceHandler.DIR_BASE);
+        if (f.exists()) {
+            return pathToBeChecked;
+        } else if (baseDir.exists()) {
+            return PreferenceHandler.DIR_BASE;
+        } else {
+            return System.getenv().get("HOME");
+        }
     }
 
     /**
@@ -171,10 +172,12 @@ public class PreferenceHandler {
      *     <li>'BUILD_VERSION' - 'version - build date' </li>
      *     <li>'INFORMATION' - 'information string' </li>
      *     <li>'DIR_BASE' - '.' </li>
-     *     <li>'DIR_JOBS' - './jobs' </li>
-     *     <li>'DIR_JOBS_TEMPLATE' - './jobs/template-folder' </li>
-     *     <li>'DIR_PROJECTS' - './projects' </li>
-     *     <li>'DIR_PROJECTS_TEMPLATE' - './projects/template-folder' </li>
+     *     <li>'DIR_ADMIN' - './admin' </li>
+     *     <li>'DIR_ADMIN_TEMPLATE' - './admin/template-folder' </li>
+     *     <li>'DIR_BIG_DATA' - './big_data' </li>
+     *     <li>'DIR_BIG_DATA_TEMPLATE' - './big_data/template-folder' </li>
+     *     <li>'DIR_PROJECT' - './project' </li>
+     *     <li>'DIR_PROJECT_TEMPLATE' - './project/template-folder' </li>
      *     <li>'GSI_SETTING_LINE_ENDING_WITH_BLANK' -  true </li>
      *     <li>'PARAM_CONTROL_POINT_STRING' - 'STKE' </li>
      *     <li>'PARAM_FREE_STATION_STRING' - 'FS' </li>
@@ -203,14 +206,16 @@ public class PreferenceHandler {
 
         // paths for module #5 - project generation
         userPreferences.put(DIR_BASE, Main.getDirBase());
-        userPreferences.put(DIR_JOBS, Main.getDirJobs());
-        userPreferences.put(DIR_JOBS_TEMPLATE, Main.getDirJobsTemplate());
-        userPreferences.put(DIR_PROJECTS, Main.getDirProject());
-        userPreferences.put(DIR_PROJECTS_TEMPLATE, Main.getDirProjectTemplate());
-        
+        userPreferences.put(DIR_ADMIN, Main.getDirAdmin());
+        userPreferences.put(DIR_ADMIN_TEMPLATE, Main.getDirAdminTemplate());
+        userPreferences.put(DIR_BIG_DATA, Main.getDirBigData());
+        userPreferences.put(DIR_BIG_DATA_TEMPLATE, Main.getDirBigDataTemplate());
+        userPreferences.put(DIR_PROJECT, Main.getDirProject());
+        userPreferences.put(DIR_PROJECT_TEMPLATE, Main.getDirProjectTemplate());
+
         // user settings
         userPreferences.put(USER_LAST_USED_DIR, System.getProperty("user.home"));
-        
+
         isDefaultSettingsGenerated = true;
     }
 
@@ -222,6 +227,22 @@ public class PreferenceHandler {
      */
     public String getUserPref(String prefName) {
         return userPreferences.get(prefName, "");
+    }
+
+    /**
+     * Returns true if a file with default settings was generated.
+     * @return success
+     */
+    public boolean isDefaultSettingsGenerated() {
+        return isDefaultSettingsGenerated;
+    }
+
+    /**
+     * Sets the value for defaultSettingsGenerated from outside this class.
+     * @param defaultSettingsGenerated value to be set
+     */
+    public void setDefaultSettingsGenerated(boolean defaultSettingsGenerated) {
+        isDefaultSettingsGenerated = defaultSettingsGenerated;
     }
 
     /**

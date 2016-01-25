@@ -336,7 +336,7 @@ public class ConverterWidget {
      */
     private void actionBtnSource() {
         FileDialog fileDialog = new FileDialog(innerShell, SWT.MULTI);
-        fileDialog.setFilterPath(Main.pref.getUserPref(PreferenceHandler.DIR_PROJECTS));
+        fileDialog.setFilterPath(Main.pref.getUserPref(PreferenceHandler.DIR_PROJECT));
         fileDialog.setText(I18N.getFileChooserTidyUpSourceText());
         fileDialog.setFilterExtensions(new String[]{"*.gsi", "*.txt", "*.csv", "*.dat"});
         fileDialog.setFilterNames(new String[]{

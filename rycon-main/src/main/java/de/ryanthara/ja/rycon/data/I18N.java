@@ -54,12 +54,32 @@ public class I18N {
         return Messages.getString("btnCancelToolTip");
     }
 
-    public static String getBtnChkConverterCSVSemiColonDelimiter() {
-        return Messages.getString("btnChkConverterCSVSemiColonDelimiter");
+    public static String getBtnChkBoxCadworkUseCode() {
+        return Messages.getString("btnChkBoxCadworkUseCode");
+    }
+
+    public static String getBtnChkBoxCadworkUseZeroHeights() {
+        return Messages.getString("btnChkBoxCadworkUseZeroHeights");
+    }
+
+    public static String getBtnChkBoxCreateAdminFolder() {
+        return Messages.getString("btnChkBoxCreateAdminFolder");
+    }
+
+    public static String getBtnChkBoxCreateBigDataFolder() {
+        return Messages.getString("btnChkBoxCreateBigDataFolder");
+    }
+
+    public static String getBtnChkBoxCreateProjectFolder() {
+        return Messages.getString("btnChkBoxCreateProjectFolder");
     }
 
     public static String getBtnChkBoxSourceContainsCode() {
         return Messages.getString("btnChkBoxSourceContainsCode");
+    }
+
+    public static String getBtnChkConverterCSVSemiColonDelimiter() {
+        return Messages.getString("btnChkConverterCSVSemiColonDelimiter");
     }
 
     public static String getBtnChkConverterTXTSpaceDelimiter() {
@@ -138,6 +158,14 @@ public class I18N {
         return Messages.getString("btnConvertToolTip");
     }
 
+    public static String getBtnDefaultSettings() {
+        return Messages.getString("btnDefaultSettings");
+    }
+
+    public static String getBtnDefaultSettingsToolTip() {
+        return Messages.getString("btnDefaultSettingsToolTip");
+    }
+
     public static String getBtnExitLabel() {
         return Messages.getString("btnExit");
     }
@@ -168,6 +196,14 @@ public class I18N {
 
     public static String getBtnOKAndExitLabelToolTip() {
         return Messages.getString("btnOKAndExitToolTip");
+    }
+
+    public static String getBtnOKAndOpenBrowserLabel() {
+        return Messages.getString("btnOKAndOpenBrowserLabel");
+    }
+
+    public static String getBtnOKAndOpenBrowserToolTip() {
+        return Messages.getString("btnOKAndOpenBrowserToolTip");
     }
 
     public static String getBtnOKAndOpenLabel() {
@@ -202,12 +238,32 @@ public class I18N {
         return Messages.getString("btnSplitterToolTip");
     }
 
+    public static String getBtnUseSpaceAtLineEnd() {
+        return Messages.getString("btnUseSpaceAtLineEnd");
+    }
+
     public static String getErrorTextJavaVersion() {
         return Messages.getString("errorTextJavaVersion");
     }
 
     public static String getErrorTitleJavaVersion() {
         return Messages.getString("errorTitleJavaVersion");
+    }
+
+    public static String getFileChooserDirAdminMessage() {
+        return Messages.getString("fileChooserDirAdminMessage");
+    }
+
+    public static String getFileChooserDirAdminTemplateMessage() {
+        return Messages.getString("fileChooserDirAdminDefaultMessage");
+    }
+
+    public static String getFileChooserDirAdminTemplateTitle() {
+        return Messages.getString("fileChooserDirAdminDefaultTitle");
+    }
+
+    public static String getFileChooserDirAdminTitle() {
+        return Messages.getString("fileChooserDirAdminTitle");
     }
 
     public static String getFileChooserDirBaseMessage() {
@@ -218,36 +274,40 @@ public class I18N {
         return Messages.getString("fileChooserPathDefaultTitle");
     }
 
-    public static String getFileChooserDirJobsMessage() {
-        return Messages.getString("fileChooserFolderJobMessage");
+    public static String getFileChooserDirBigDataMessage() {
+        return Messages.getString("fileChooserDirBigDataMessage");
     }
 
-    public static String getFileChooserDirJobsTemplateMessage() {
-        return Messages.getString("fileChooserFolderJobDefaultMessage");
+    public static String getFileChooserDirBigDataTemplateMessage() {
+        return Messages.getString("fileChooserDirBigDataTemplateMessage");
     }
 
-    public static String getFileChooserDirJobsTemplateTitle() {
-        return Messages.getString("fileChooserFolderJobDefaultTitle");
+    public static String getFileChooserDirBigDataTemplateTitle() {
+        return Messages.getString("fileChooserDirBigDataTemplateTitle");
     }
 
-    public static String getFileChooserDirJobsTitle() {
-        return Messages.getString("fileChooserFolderJobTitle");
+    public static String getFileChooserDirBigDataTitle() {
+        return Messages.getString("fileChooserDirBigDataTitle");
+    }
+
+    public static String getFileChooserDirProjectMessage() {
+        return Messages.getString("fileChooserDirProjectMessage");
     }
 
     public static String getFileChooserDirProjectTemplateMessage() {
-        return Messages.getString("fileChooserFolderProjectDefaultMessage");
+        return Messages.getString("fileChooserDirProjectDefaultMessage");
     }
 
     public static String getFileChooserDirProjectTemplateTitle() {
-        return Messages.getString("fileChooserFolderProjectDefaultTitle");
+        return Messages.getString("fileChooserDirProjectDefaultTitle");
     }
 
-    public static String getFileChooserDirProjectsMessage() {
-        return Messages.getString("fileChooserFolderProjectMessage");
+    public static String getFileChooserDirProjectTitle() {
+        return Messages.getString("fileChooserDirProjectTitle");
     }
 
-    public static String getFileChooserDirProjectsTitle() {
-        return Messages.getString("fileChooserFolderProjectTitle");
+    public static String getFileChooserFilterNameAllFiles() {
+        return Messages.getString("fileChooserFilterNameAllFiles");
     }
 
     public static String getFileChooserFilterNameCSV() {
@@ -266,6 +326,10 @@ public class I18N {
         return Messages.getString("fileChooserFilterNameGSIAndTXT");
     }
 
+    public static String getFileChooserFilterNameNIGRA() {
+        return Messages.getString("fileChooserFilterNameNIGRA");
+    }
+
     public static String getFileChooserFilterNameTXT() {
         return Messages.getString("fileChooserFilterNameTXT");
     }
@@ -282,12 +346,20 @@ public class I18N {
         return Messages.getString("fileChooserTidyUpSourceText");
     }
 
+    public static String getGroupTitleGSISettings() {
+        return Messages.getString("groupTitleGSISettings");
+    }
+
     public static String getGroupTitleGeneratorNumberInput() {
         return Messages.getString("groupTitleGeneratorNumberInput");
     }
 
     public static String getGroupTitleGeneratorNumberInputAdvice() {
         return Messages.getString("groupTitleGeneratorNumberInputAdvice");
+    }
+
+    public static String getGroupTitleOptions() {
+        return Messages.getString("groupTitleOptions");
     }
 
     public static String getGroupTitlePathSelection() {
@@ -310,48 +382,64 @@ public class I18N {
         return Messages.getString("groupTitleTidyUpSettings");
     }
 
-    public static String getLabelDestination() {
-        return Messages.getString("labelDestination");
+    public static String getInfoTextRyCONUpdate() {
+        return Messages.getString("infoTextRyCONUpdate");
     }
 
-    public static String getLabelDirBase() {
-        return Messages.getString("labelDirBase");
+    public static String getInfoTitleRyCONUpdate() {
+        return Messages.getString("infoTitleRyCONUpdate");
     }
 
-    public static String getLabelDirJobs() {
-        return Messages.getString("labelJobPath");
+    public static String getLabelTextDestination() {
+        return Messages.getString("labelTextDestination");
     }
 
-    public static String getLabelDirJobsTemplate() {
-        return Messages.getString("labelJobPathDefaultFolder");
+    public static String getLabelTextDirAdmin() {
+        return Messages.getString("labelTextAdminPath");
     }
 
-    public static String getLabelDirProjects() {
-        return Messages.getString("labelProjectPath");
+    public static String getLabelTextDirAdminTemplate() {
+        return Messages.getString("labelTextAdminPathDefaultFolder");
     }
 
-    public static String getLabelDirProjectsTemplate() {
-        return Messages.getString("labelProjectPathDefaultFolder");
+    public static String getLabelTextDirBase() {
+        return Messages.getString("labelTextDirBase");
     }
 
-    public static String getLabelIdentifierFreeStation() {
-        return Messages.getString("labelIdentifierFreeStation");
+    public static String getLabelTextDirBigData() {
+        return Messages.getString("labelTextDirBigData");
     }
 
-    public static String getLabelIdentifierStakeOutPoint() {
-        return Messages.getString("labelIdentifierStakeOutPoint");
+    public static String getLabelTextDirBigDataTemplate() {
+        return Messages.getString("labelTextDirBigDataTemplate");
     }
 
-    public static String getLabelIdentifierStation() {
-        return Messages.getString("labelIdentifierStation");
+    public static String getLabelTextDirProject() {
+        return Messages.getString("labelTextProjectPath");
     }
 
-    public static String getLabelJobAndProjectNumber() {
-        return Messages.getString("labelJobAndProjectNumber");
+    public static String getLabelTextDirProjectTemplate() {
+        return Messages.getString("labelTextProjectPathDefaultFolder");
     }
 
-    public static String getLabelSource() {
-        return Messages.getString("labelSource");
+    public static String getLabelTextIdentifierFreeStation() {
+        return Messages.getString("labelTextIdentifierFreeStation");
+    }
+
+    public static String getLabelTextIdentifierStakeOutPoint() {
+        return Messages.getString("labelTextIdentifierStakeOutPoint");
+    }
+
+    public static String getLabelTextIdentifierStation() {
+        return Messages.getString("labelTextIdentifierStation");
+    }
+
+    public static String getLabelTextProjectNumber() {
+        return Messages.getString("labelTextProjectNumber");
+    }
+
+    public static String getLabelTextSource() {
+        return Messages.getString("labelTextSource");
     }
 
     public static String getLabelTipConverterWidget() {
@@ -423,39 +511,55 @@ public class I18N {
     }
 
     public static String getMsgCreateDirJobAndProjectExist() {
-        return Messages.getString("msgCreateDirJobAndProjectExist");
+        return Messages.getString("msgCreateDirAdminAndProjectExist");
     }
 
     public static String getMsgCreateDirJobAndProjectGenerated() {
-        return Messages.getString("msgCreateDirJobAndProjectGenerated");
+        return Messages.getString("msgCreateDirAdminAndProjectGenerated");
     }
 
     public static String getMsgCreateDirJobAndProjectWarning() {
-        return Messages.getString("msgCreateDirJobAndProjectWarning");
+        return Messages.getString("msgCreateDirAdminAndProjectWarning");
     }
 
     public static String getMsgCreateDirJobExist() {
-        return Messages.getString("msgCreateDirJobExist");
+        return Messages.getString("msgCreateDirAdminExist");
+    }
+
+    public static String getMsgCreateDirJobWarning() {
+        return Messages.getString("msgCreateDirAdminWarning");
     }
 
     public static String getMsgCreateDirProjectExist() {
         return Messages.getString("msgCreateDirProjectExist");
     }
 
+    public static String getMsgCreateDirProjectWarning() {
+        return Messages.getString("msgCreateDirProjectWarning");
+    }
+
+    public static String getMsgDirAdminDefaultNotFound() {
+        return Messages.getString("msgDirAdminDefaultNotFound");
+    }
+
+    public static String getMsgDirAdminNotFound() {
+        return Messages.getString("msgDirAdminNotFound");
+    }
+
     public static String getMsgDirBaseNotFound() {
         return Messages.getString("msgDirBaseNotFound");
     }
 
+    public static String getMsgDirBigDataDefaultNotFound() {
+        return Messages.getString("msgDirBigDataDefaultNotFound");
+    }
+
+    public static String getMsgDirBigDataNotFound() {
+        return Messages.getString("msgDirBigDataNotFound");
+    }
+
     public static String getMsgDirDestinationNotExistWarning() {
         return Messages.getString("msgDirDestinationNotExistWarning");
-    }
-
-    public static String getMsgDirJobDefaultNotFound() {
-        return Messages.getString("msgDirJobDefaultNotFound");
-    }
-
-    public static String getMsgDirJobNotFound() {
-        return Messages.getString("msgDirJobNotFound");
     }
 
     public static String getMsgDirProjectDefaultNotFound() {
@@ -471,11 +575,19 @@ public class I18N {
     }
 
     public static String getMsgEmptyTextFieldWarningJobNumber() {
-        return Messages.getString("msgEmptyTextFieldWarningJobNumber");
+        return Messages.getString("msgEmptyTextFieldWarningProjectNumber");
     }
 
     public static String getMsgFileExist() {
         return Messages.getString("msgFileExist");
+    }
+
+    public static String getMsgFileNotExist() {
+        return Messages.getString("msgFileNotExist");
+    }
+
+    public static String getMsgLevellingError() {
+        return Messages.getString("msgLevellingError");
     }
 
     public static String getMsgLevellingSuccess(boolean singular) {
@@ -504,6 +616,10 @@ public class I18N {
 
     public static String getMsgSplittingSuccess(boolean singular) {
         return prepareString("msgSplittingSuccess", singular);
+    }
+
+    public static String getMsgTidyUpError() {
+        return Messages.getString("msgSplittingError");
     }
 
     public static String getMsgTidyUpSuccess(boolean singular) {
@@ -547,7 +663,7 @@ public class I18N {
     }
 
     public static String getStatusJobAndProjectGenerated() {
-        return Messages.getString("statusJobAndProjectGenerated");
+        return Messages.getString("statusAdminAndProjectGenerated");
     }
 
     public static String getStatusPrepareLevelSuccess(boolean singular) {
@@ -572,6 +688,10 @@ public class I18N {
 
     public static String getTrayMenuItemInfo() {
         return Messages.getString("trayMenuItemInfo");
+    }
+
+    public static String getTrayMenuItemSettings() {
+        return Messages.getString("trayMenuItemSettings");
     }
 
     public static String getTrayMenuItemWebsite() {
@@ -626,93 +746,5 @@ public class I18N {
             return s[1];
         }
 
-    }
-
-    public static String getBtnDefaultSettings() {
-        return Messages.getString("btnDefaultSettings");
-    }
-
-    public static String getBtnDefaultSettingsToolTip() {
-        return Messages.getString("btnDefaultSettingsToolTip");
-    }
-
-    public static String getInfoTitleRyCONUpdate() {
-        return Messages.getString("infoTitleRyCONUpdate");
-    }
-
-    public static String getInfoTextRyCONUpdate() {
-        return Messages.getString("infoTextRyCONUpdate");
-    }
-
-    public static String getTrayMenuItemSettings() {
-        return Messages.getString("trayMenuItemSettings");
-    }
-
-    public static String getBtnOKAndOpenBrowserLabel() {
-        return Messages.getString("btnOKAndOpenBrowserLabel");
-    }
-
-    public static String getBtnOKAndOpenBrowserToolTip() {
-        return Messages.getString("btnOKAndOpenBrowserToolTip");
-    }
-
-    public static String getMsgFileNotExist() {
-        return Messages.getString("msgFileNotExist");
-    }
-
-    public static String getMsgTidyUpError() {
-        return Messages.getString("msgSplittingError");
-    }
-
-    public static String getMsgLevellingError() {
-        return Messages.getString("msgLevellingError");
-    }
-
-    public static String getGroupTitleOptions() {
-        return Messages.getString("groupTitleOptions");
-    }
-
-    public static String getBtnChkBoxCreateOnlyJobFolder() {
-        return Messages.getString("btnChkBoxCreateOnlyJobFolder");
-    }
-
-    public static String getBtnChkBoxCreateOnlyProjectFolder() {
-        return Messages.getString("btnChkBoxCreateOnlyProjectFolder");
-    }
-
-    public static String getBtnChkBoxCreateJobAndProjectFolder() {
-        return Messages.getString("btnChkBoxCreateJobAndProjectFolder");
-    }
-
-    public static String getMsgCreateDirProjectWarning() {
-        return Messages.getString("msgCreateDirProjectWarning");
-    }
-
-    public static String getMsgCreateDirJobWarning() {
-        return Messages.getString("msgCreateDirJobWarning");
-    }
-
-    public static String getGroupTitleGSISettings() {
-        return Messages.getString("groupTitleGSISettings");
-    }
-
-    public static String getBtnUseSpaceAtLineEnd() {
-        return Messages.getString("btnUseSpaceAtLineEnd");
-    }
-
-    public static String getFileChooserFilterNameNIGRA() {
-        return Messages.getString("fileChooserFilterNameNIGRA");
-    }
-
-    public static String getFileChooserFilterNameAllFiles() {
-        return Messages.getString("fileChooserFilterNameAllFiles");
-    }
-
-    public static String getBtnChkBoxCadworkUseZeroHeights() {
-        return Messages.getString("btnChkBoxCadworkUseZeroHeights");
-    }
-
-    public static String getBtnChkBoxCadworkUseCode() {
-        return Messages.getString("btnChkBoxCadworkUseCode");
     }
 } // end of I18N

@@ -77,7 +77,7 @@ public class InputFieldsComposite extends Composite {
         group.setLayoutData(gridData);
 
         Label source = new Label(group, SWT.NONE);
-        source.setText(I18N.getLabelSource());
+        source.setText(I18N.getLabelTextSource());
 
         sourceTextField = new Text(group, SWT.BORDER);
         sourceTextField.addListener(SWT.Traverse, new Listener() {
@@ -118,7 +118,7 @@ public class InputFieldsComposite extends Composite {
         btnSource.setLayoutData(gridData);
 
         Label destination = new Label(group, SWT.NONE);
-        destination.setText(I18N.getLabelDestination());
+        destination.setText(I18N.getLabelTextDestination());
         destination.setLayoutData(new GridData());
 
         destinationTextField = new Text(group, SWT.SINGLE | SWT.BORDER);
