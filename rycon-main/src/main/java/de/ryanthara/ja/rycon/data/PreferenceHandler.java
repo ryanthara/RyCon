@@ -146,8 +146,9 @@ public class PreferenceHandler {
     }
 
     /**
-     * Checks a path which is stored in the user preferences of RyCON. If the path doesn't exist,
-     * the value of the "HOME" preference will be returned.
+     * Checks a path which is stored in the user preferences of RyCON.
+     * <p>
+     * If the path doesn't exists the value of the "HOME" variable of the system will be returned.
      *
      * @param pathToBeChecked
      */

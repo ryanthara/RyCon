@@ -76,7 +76,7 @@ public class GeneratorSettingsWidget {
 
     private void initUI() {
         int height = Main.getRyCONWidgetHeight();
-        int width = Main.getRyCONWidgetWidth();
+        int width = Main.getRyCONWidgetWidth() + 150;
 
         final int style = SWT.BORDER;
 
@@ -371,10 +371,13 @@ public class GeneratorSettingsWidget {
 
             File checkDirBase = new File(textDefaultPath.getText());
             if (!checkDirBase.exists()) {
+                /*
                 MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
                 msgBox.setMessage(I18N.getMsgDirBaseNotFound());
                 msgBox.setText(I18N.getMsgBoxTitleWarning());
                 msgBox.open();
+                */
+                showMessageBox(innerShell, SWT.ICON_WARNING, I18N.getMsgDirBaseNotFound(), I18N.getMsgBoxTitleWarning());
             } else {
                 Main.pref.setUserPref(PreferenceHandler.DIR_BASE, textDefaultPath.getText());
             }
@@ -448,6 +451,13 @@ public class GeneratorSettingsWidget {
             msgBox.setText(I18N.getMsgBoxTitleWarning());
             msgBox.open();
         }
+    }
+
+    private void showMessageBox(Shell innerShell, int icon, String text, String message) {
+        MessageBox messageBox = new MessageBox(innerShell, icon);
+        messageBox.setText(text);
+        messageBox.setMessage(message);
+        messageBox.open();
     }
 
 } // end of GeneratorSettingsWidget

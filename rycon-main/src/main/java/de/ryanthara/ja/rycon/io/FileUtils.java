@@ -62,6 +62,8 @@ public class FileUtils {
         }
     }
 
+    public static boolean
+
     private void copyDirectory(File source, File target) throws IOException {
         if (!target.exists()) {
             if (!target.mkdir()) {
