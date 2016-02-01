@@ -21,7 +21,6 @@ package de.ryanthara.ja.rycon.gui;
 import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.data.I18N;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Text;
 
 import java.io.File;
@@ -58,10 +57,7 @@ public class WidgetHelper {
         File[] files2read = null;
 
         if (TextHelper.checkIsEmpty(source) || TextHelper.checkIsEmpty(destination)) {
-            MessageBox msgBox = new MessageBox(Main.shell, SWT.ICON_WARNING);
-            msgBox.setMessage(I18N.getMsgEmptyTextFieldWarning());
-            msgBox.setText(I18N.getMsgBoxTitleWarning());
-            msgBox.open();
+            GuiHelper.showMessageBox(Main.shell, SWT.ICON_WARNING, I18N.getMsgBoxTitleWarning(), I18N.getMsgEmptyTextFieldWarning());
 
             return new File[0];
         } else if (chosenFiles == null) {
@@ -77,10 +73,7 @@ public class WidgetHelper {
                 if (sourceFile.isFile()) {
                     files2read[i] = sourceFile;
                 } else {
-                    MessageBox msgBox = new MessageBox(Main.shell, SWT.ICON_WARNING);
-                    msgBox.setMessage(I18N.getMsgFileNotExist());
-                    msgBox.setText(I18N.getMsgBoxTitleWarning());
-                    msgBox.open();
+                    GuiHelper.showMessageBox(Main.shell, SWT.ICON_WARNING, I18N.getMsgBoxTitleWarning(), I18N.getMsgFileNotExist());
                 }
             }
 

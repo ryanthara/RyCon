@@ -115,4 +115,4 @@ public class BottomButtonBar extends Composite {
         }
     }
 
-}
+} // end of BottomButtonBar

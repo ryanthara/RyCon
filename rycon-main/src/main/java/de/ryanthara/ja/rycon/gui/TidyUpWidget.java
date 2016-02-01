@@ -40,6 +40,7 @@ import java.util.ArrayList;
  *
  * <h3>Changes:</h3>
  * <ul>
+ *     <li>7: code optimizations, little corrections and additions </li>
  *     <li>6: defeat bug #1, #2 and #3! </li>
  *     <li>5: enable drag and drop handling </li>
  *     <li>4: simplification and improvements, extract input fields and bottom button bar into separate classes </li>
@@ -49,7 +50,7 @@ import java.util.ArrayList;
  * </ul>
  *
  * @author sebastian
- * @version 6
+ * @version 7
  * @since 1
  */
 public class TidyUpWidget {
@@ -196,30 +197,18 @@ public class TidyUpWidget {
      * This method is used from the class InputFieldsComposite!
      */
     private void actionBtnDestination() {
-        DirectoryDialog directoryDialog = new DirectoryDialog(innerShell);
-        directoryDialog.setText(I18N.getFileChooserDirBaseTitle());
-        directoryDialog.setMessage(I18N.getFileChooserDirBaseMessage());
+        String filterPath;
 
         // Set the initial filter path according to anything selected or typed in
         if (inputFieldsComposite.getDestinationTextField().getText() == null) {
-            directoryDialog.setFilterPath(Main.pref.getUserPref(PreferenceHandler.DIR_BASE));
+            filterPath = Main.pref.getUserPref(PreferenceHandler.DIR_BASE);
         } else {
-            directoryDialog.setFilterPath(inputFieldsComposite.getDestinationTextField().getText());
+            filterPath = inputFieldsComposite.getDestinationTextField().getText();
         }
 
-        String path = directoryDialog.open();
+        GuiHelper.showAdvancedDirectoryDialog(innerShell, inputFieldsComposite.getDestinationTextField(),
+              I18N.getFileChooserTidyUpSourceText(), I18N.getFileChooserTidyUpSourceMessage(), filterPath);
 
-        if (path != null) {
-            File checkDirDestination = new File(path);
-            if (!checkDirDestination.exists()) {
-                MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
-                msgBox.setMessage(I18N.getMsgDirDestinationNotExistWarning());
-                msgBox.setText(I18N.getMsgBoxTitleWarning());
-                msgBox.open();
-            } else {
-                inputFieldsComposite.getDestinationTextField().setText(path);
-            }
-        }
     }
 
     private int actionBtnOk() {
@@ -262,34 +251,15 @@ public class TidyUpWidget {
      * This method is used from the class InputFieldsComposite!
      */
     private void actionBtnSource() {
-        FileDialog fileDialog = new FileDialog(innerShell, SWT.MULTI);
-        fileDialog.setFilterPath(Main.pref.getUserPref(PreferenceHandler.DIR_PROJECT));
-        fileDialog.setText(I18N.getFileChooserTidyUpSourceText());
-        fileDialog.setFilterExtensions(acceptableFileSuffixes);
-        fileDialog.setFilterNames(new String[]{I18N.getFileChooserFilterNameGSI()});
 
-        String firstFile = fileDialog.open();
+        String[] filterNames = new String[] {
+                I18N.getFileChooserFilterNameGSI(),
+        };
 
-        if (firstFile != null) {
-            String[] files = fileDialog.getFileNames();
-
-            files2read = new File[files.length];
-
-            // displaying file names without path in text field
-            String concatString = "";
-
-            String workingDir = fileDialog.getFilterPath();
-
-            for (int i = 0; i < files.length; i++) {
-                concatString = concatString.concat(files[i]);
-                concatString = concatString.concat(" ");
-
-                files2read[i] = new File(workingDir + File.separator + files[i]);
-            }
-
-            inputFieldsComposite.getDestinationTextField().setText(fileDialog.getFilterPath());
-            inputFieldsComposite.getSourceTextField().setText(concatString);
-        }
+        files2read = GuiHelper.showAdvancedFileDialog(
+                innerShell, SWT.MULTI, Main.pref.getUserPref(PreferenceHandler.DIR_PROJECT),
+                I18N.getFileChooserTidyUpSourceText(), acceptableFileSuffixes, filterNames,
+                inputFieldsComposite.getSourceTextField(), inputFieldsComposite.getDestinationTextField());
     }
 
     private boolean processFileOperations() {
@@ -298,25 +268,21 @@ public class TidyUpWidget {
         int counter = fileOperations(chkBoxHoldStations.getSelection(), chkBoxHoldControlPoints.getSelection());
 
         if (counter > 0) {
-            MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_INFORMATION);
+            String message;
 
             if (counter == 1) {
-                msgBox.setMessage(String.format(I18N.getMsgTidyUpSuccess(Main.TEXT_SINGULAR), counter));
+                message = String.format(I18N.getMsgTidyUpSuccess(Main.TEXT_SINGULAR), counter);
             } else {
-                msgBox.setMessage(String.format(I18N.getMsgTidyUpSuccess(Main.TEXT_PLURAL), counter));
+                message = String.format(I18N.getMsgTidyUpSuccess(Main.TEXT_PLURAL), counter);
             }
 
-            msgBox.setText(I18N.getMsgBoxTitleSuccess());
-            msgBox.open();
+            GuiHelper.showMessageBox(innerShell, SWT.ICON_INFORMATION, I18N.getMsgBoxTitleSuccess(), message);
 
             // set the counter for status bar information
             Main.countFileOps = counter;
             success = true;
         } else {
-            MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
-            msgBox.setMessage(String.format(I18N.getMsgTidyUpError()));
-            msgBox.setText(I18N.getMsgBoxTitleError());
-            msgBox.open();
+            GuiHelper.showMessageBox(innerShell, SWT.ICON_WARNING, I18N.getMsgBoxTitleError(), String.format(I18N.getMsgTidyUpError()));
             success = false;
         }
 

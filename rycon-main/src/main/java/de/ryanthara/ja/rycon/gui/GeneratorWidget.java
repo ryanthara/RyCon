@@ -41,7 +41,7 @@ import java.io.IOException;
  *
  * <h3>Changes:</h3>
  * <ul>
- *     <li>4: implementation of a new directory structure, code reformat</li>
+ *     <li>4: implementation of a new directory structure, code reformat, optimizations</li>
  *     <li>3: code improvements and clean up </li>
  *     <li>2: basic improvements </li>
  *     <li>1: basic implementation </li>
@@ -53,6 +53,9 @@ import java.io.IOException;
  */
 public class GeneratorWidget {
 
+    private final int TYPE_PROJECT = 1;
+    private final int TYPE_ADMIN = 2;
+    private final int TYPE_BIG_DATA = 3;
     private Button chkBoxCreateAdminFolder;
     private Button chkBoxCreateBigDataFolder;
     private Button chkBoxCreateProjectFolder;
@@ -133,15 +136,12 @@ public class GeneratorWidget {
             @Override
             public void handleEvent(Event event) {
                 if (!inputNumber.getText().trim().equals("")) {
-
                     if ((event.stateMask & SWT.SHIFT) == SWT.SHIFT && event.detail == SWT.TRAVERSE_RETURN) {
                         actionBtnOkAndExit();
                     } else if (event.detail == SWT.TRAVERSE_RETURN) {
                         actionBtnOk();
                     }
-
                 }
-
             }
         });
 
@@ -197,7 +197,6 @@ public class GeneratorWidget {
         gridLayout.numColumns = 2;
         composite.setLayout(gridLayout);
 
-
         Composite compositeLeft = new Composite(composite, SWT.NONE);
         compositeLeft.setLayout(new FillLayout());
 
@@ -210,8 +209,6 @@ public class GeneratorWidget {
                 actionBtnSettings();
             }
         });
-
-        Label blindTextAsPlaceHolder = new Label(compositeLeft, SWT.NONE);
 
         Composite compositeRight = new Composite(composite, SWT.NONE);
         compositeRight.setLayout(new FillLayout());
@@ -257,15 +254,26 @@ public class GeneratorWidget {
         String number = inputNumber.getText();
 
         if (number.trim().equals("")) {
-            MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
-            msgBox.setMessage(I18N.getMsgEmptyTextFieldWarning());
-            msgBox.setText(I18N.getMsgBoxTitleWarning());
-            msgBox.open();
+            GuiHelper.showMessageBox(innerShell, SWT.ICON_WARNING, I18N.getMsgBoxTitleWarning(), I18N.getMsgEmptyTextFieldWarning());
 
             return 0;
         } else {
             if (generateFolders(number)) {
-                Main.statusBar.setStatus(String.format(I18N.getStatusJobAndProjectGenerated(), number, number), StatusBar.OK);
+                if (chkBoxCreateAdminFolder.getSelection() && chkBoxCreateBigDataFolder.getSelection() && chkBoxCreateProjectFolder.getSelection()) {
+                    Main.statusBar.setStatus(String.format(I18N.getStatusFoldersAdminAndBigDataAndProjectGenerated(), number, number, number), StatusBar.OK);
+                } else if (chkBoxCreateAdminFolder.getSelection() && chkBoxCreateBigDataFolder.getSelection()) {
+                    Main.statusBar.setStatus(String.format(I18N.getStatusFoldersAdminAndBigDataGenerated(), number, number), StatusBar.OK);
+                } else if (chkBoxCreateAdminFolder.getSelection() && chkBoxCreateProjectFolder.getSelection()) {
+                    Main.statusBar.setStatus(String.format(I18N.getStatusFoldersAdminAndProjectGenerated(), number, number), StatusBar.OK);
+                } else if (chkBoxCreateBigDataFolder.getSelection() && chkBoxCreateProjectFolder.getSelection()) {
+                    Main.statusBar.setStatus(String.format(I18N.getStatusFoldersBigDataAndProjectGenerated(), number, number), StatusBar.OK);
+                } else if (chkBoxCreateAdminFolder.getSelection()) {
+                    Main.statusBar.setStatus(String.format(I18N.getStatusFolderAdminGenerated(), number), StatusBar.OK);
+                } else if (chkBoxCreateBigDataFolder.getSelection()) {
+                    Main.statusBar.setStatus(String.format(I18N.getStatusFolderBigDataGenerated(), number), StatusBar.OK);
+                } else if (chkBoxCreateProjectFolder.getSelection()) {
+                    Main.statusBar.setStatus(String.format(I18N.getStatusFolderProjectGenerated(), number), StatusBar.OK);
+                }
             }
 
             return 1;
@@ -292,126 +300,136 @@ public class GeneratorWidget {
 
     private boolean generateFolders(String number) {
         boolean success = false;
+        boolean isAdminFolderGenerated = false;
+        boolean isBigDataFolderGenerated = false;
+        boolean isProjectFolderGenerated = false;
 
         if (chkBoxCreateAdminFolder.getSelection()) {
-            boolean jobOK = generateJobFolder(number);
-            boolean projectOK = generateProjectFolder(number);
+           isAdminFolderGenerated = generateAdminFolder(number, TYPE_ADMIN);
+        }
+        if (chkBoxCreateBigDataFolder.getSelection()) {
+            isBigDataFolderGenerated = generateBigDataFolder(number, TYPE_BIG_DATA);
+        }
+        if (chkBoxCreateProjectFolder.getSelection()) {
+            isProjectFolderGenerated = generateProjectFolder(number, TYPE_PROJECT);
+        }
 
-            if (jobOK && projectOK) {
-                MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
-                msgBox.setMessage(String.format(I18N.getMsgCreateDirJobAndProjectGenerated(), number, number));
-                msgBox.setText(I18N.getMsgBoxTitleSuccess());
-                msgBox.open();
-
-                success = true;
-            } else {
-                MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_ERROR);
-                msgBox.setMessage(I18N.getMsgCreateDirJobAndProjectWarning());
-                msgBox.setText(I18N.getMsgBoxTitleError());
-                msgBox.open();
-            }
-        } else if (chkBoxCreateBigDataFolder.getSelection()) {
-            success = generateJobFolder(number);
-        } else if (chkBoxCreateProjectFolder.getSelection()) {
-            success = generateProjectFolder(number);
+        if (isAdminFolderGenerated && isBigDataFolderGenerated && isProjectFolderGenerated) {
+            GuiHelper.showMessageBox(innerShell,SWT.ICON_INFORMATION,
+                    String.format(I18N.getTextDirAdminAndBigDataAndProjectGenerated(), number, number, number),
+                    String.format(I18N.getMsgDirAdminAndBigDataAndProjectGenerated(), number, number, number);
+        } else if (isAdminFolderGenerated && isBigDataFolderGenerated) {
+            GuiHelper.showMessageBox(innerShell,SWT.ICON_INFORMATION,
+                    String.format(I18N.getTextDirAdminAndBigDataGenerated(), number, number),
+                    String.format(I18N.getMsgDirAdminAndBigDataGenerated(), number, number);
+        } else if (isAdminFolderGenerated && isProjectFolderGenerated) {
+            GuiHelper.showMessageBox(innerShell,SWT.ICON_INFORMATION,
+                    I18N.getTextDirAdminAndProjectGenerated(),I18N.getMsgDirAdminAndProjectGenerated());
+        } else if (isBigDataFolderGenerated && isProjectFolderGenerated) {
+            GuiHelper.showMessageBox(innerShell,SWT.ICON_INFORMATION,
+                    String.format(I18N.getTextDirBigDataAndProjectGenerated(), number, number),
+                    String.format(I18N.getMsgDirBigDataAndProjectGenerated(), number, number);
+        } else if (isAdminFolderGenerated) {
+            GuiHelper.showMessageBox(innerShell,SWT.ICON_INFORMATION,
+                    String.format(I18N.getTextDirAdminGenerated(), number),
+                    String.format(I18N.getMsgDirAdminGenerated(), number);
+        } else if (isBigDataFolderGenerated) {
+            GuiHelper.showMessageBox(innerShell,SWT.ICON_INFORMATION,
+                    String.format(I18N.getTextDirBigDataGenerated(), number),
+                    String.format(I18N.getMsgDirBigDataGenerated(), number);
+        } else if (isProjectFolderGenerated) {
+            GuiHelper.showMessageBox(innerShell,SWT.ICON_INFORMATION,
+                    String.format(I18N.getTextDirProjectGenerated(), number),
+                    String.format(I18N.getMsgDirProjectGenerated(), number);
         }
 
         return success;
     }
 
-    private boolean generateJobFolder(String number) {
+    private boolean generateFoldersHelper(String number, String directory, String directoryTemplate, int type) {
         boolean success = false;
 
-        String jobDir = Main.pref.getUserPref(PreferenceHandler.DIR_ADMIN);
-        String jobDirTemplate = Main.pref.getUserPref(PreferenceHandler.DIR_ADMIN_TEMPLATE);
+        File copyDestinationPath = new File(directory + File.separator + number);
 
-        File newJobDir = new File(jobDir + File.separator + number);
-
-        if (newJobDir.exists()) {
+        if (copyDestinationPath.exists()) {
             Main.statusBar.setStatus("", StatusBar.OK);
-            MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
-            msgBox.setMessage(String.format(I18N.getMsgCreateDirJobExist(), number));
-            msgBox.setText(I18N.getMsgBoxTitleWarning());
-            msgBox.open();
+
+            String message = "";
+
+            switch (type) {
+                case TYPE_PROJECT:
+                    message = String.format(I18N.getMsgCreateDirProjectExist(), number);
+                    break;
+                case TYPE_ADMIN:
+                    message = String.format(I18N.getMsgCreateDirAdminExist(), number);
+                    break;
+                case TYPE_BIG_DATA:
+                    message = String.format(I18N.getMsgCreateDirBigDataExist(), number);
+                    break;
+
+            }
+
+            GuiHelper.showMessageBox(innerShell, SWT.ICON_WARNING, I18N.getMsgBoxTitleWarning(), message);
         } else {
             /* maybe later on with java 8 support in the office
-            Path copySourcePathJob = Paths.get(jobDirTemplate);
-            Path copySourcePathProject = Paths.get(projectDirTemplate);
+            Path copySourcePath = Paths.get(directoryTemplate);
 
-            Path copyDestinationPathJob = Paths.get(jobDir + File.separator + number);
-            Path copyDestinationPathProject = Paths.get(projectDir + File.separator + number);
+            Path copyDestinationPath = Paths.get(directory + File.separator + number);
             */
 
-            File copySourcePathJob = new File(jobDirTemplate);
-            File copyDestinationPathJob = new File(jobDir + File.separator + number);
+            File copySourcePath = new File(directoryTemplate);
 
             try {
-                //Files.copy(copySourcePathJob, copyDestinationPathJob);
-                //Files.copy(copySourcePathProject, copyDestinationPathProject);
+                //Files.copy(copySourcePath, copyDestinationPath);
 
                 FileUtils fileUtils = new FileUtils();
-                fileUtils.copy(copySourcePathJob, copyDestinationPathJob);
+                fileUtils.copy(copySourcePath, copyDestinationPath);
 
                 success = true;
             } catch (IOException e) {
                 System.err.println(e.getMessage());
 
-                MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_ERROR);
-                msgBox.setMessage(I18N.getMsgCreateDirJobWarning());
-                msgBox.setText(I18N.getMsgBoxTitleError());
-                msgBox.open();
+                String message = "";
+
+                switch (type) {
+                    case TYPE_PROJECT:
+                        message = String.format(I18N.getMsgCreateDirProjectWarning(), number);
+                        break;
+                    case TYPE_ADMIN:
+                        message = String.format(I18N.getMsgCreateDirAdminWarning(), number);
+                        break;
+                    case TYPE_BIG_DATA:
+                        message = String.format(I18N.getMsgCreateDirBigDataWarning(), number);
+                        break;
+
+                }
+
+                GuiHelper.showMessageBox(innerShell, SWT.ICON_ERROR, I18N.getMsgBoxTitleError(), message);
                 success = false;
             }
         }
         return success;
     }
 
-    private boolean generateProjectFolder(String number) {
-        boolean success = false;
+    private boolean generateAdminFolder(String number, int type) {
+        String dir = Main.pref.getUserPref(PreferenceHandler.DIR_ADMIN);
+        String dirTemplate = Main.pref.getUserPref(PreferenceHandler.DIR_ADMIN_TEMPLATE);
 
-        String projectDir = Main.pref.getUserPref(PreferenceHandler.DIR_PROJECT);
-        String projectDirTemplate = Main.pref.getUserPref(PreferenceHandler.DIR_PROJECT_TEMPLATE);
+        return generateFoldersHelper(number, dir, dirTemplate, type);
+    }
 
-        File newProjectDir = new File(projectDir + File.separator + number);
+    private boolean generateBigDataFolder(String number, int type) {
+        String dir = Main.pref.getUserPref(PreferenceHandler.DIR_BIG_DATA);
+        String dirTemplate = Main.pref.getUserPref(PreferenceHandler.DIR_BIG_DATA_TEMPLATE);
 
-        if (newProjectDir.exists()) {
-            Main.statusBar.setStatus("", StatusBar.OK);
-            MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
-            msgBox.setMessage(String.format(I18N.getMsgCreateDirProjectExist(), number));
-            msgBox.setText(I18N.getMsgBoxTitleWarning());
-            msgBox.open();
-        } else {
-            /* maybe later on with java 8 support in the office
-            Path copySourcePathJob = Paths.get(jobDirTemplate);
-            Path copySourcePathProject = Paths.get(projectDirTemplate);
+        return generateFoldersHelper(number, dir, dirTemplate, type);
+    }
 
-            Path copyDestinationPathJob = Paths.get(jobDir + File.separator + number);
-            Path copyDestinationPathProject = Paths.get(projectDir + File.separator + number);
-            */
+    private boolean generateProjectFolder(String number, int type) {
+        String dir = Main.pref.getUserPref(PreferenceHandler.DIR_PROJECT);
+        String dirTemplate = Main.pref.getUserPref(PreferenceHandler.DIR_PROJECT_TEMPLATE);
 
-            File copySourcePathProject = new File(projectDirTemplate);
-            File copyDestinationPathProject = new File(projectDir + File.separator + number);
-
-            try {
-                //Files.copy(copySourcePathJob, copyDestinationPathJob);
-                //Files.copy(copySourcePathProject, copyDestinationPathProject);
-
-                FileUtils fileUtils = new FileUtils();
-                fileUtils.copy(copySourcePathProject, copyDestinationPathProject);
-
-                success = true;
-            } catch (IOException e) {
-                System.err.println(e.getMessage());
-
-                MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_ERROR);
-                msgBox.setMessage(I18N.getMsgCreateDirProjectWarning());
-                msgBox.setText(I18N.getMsgBoxTitleError());
-                msgBox.open();
-                success = false;
-            }
-
-        }
-        return success;
+        return generateFoldersHelper(number, dir, dirTemplate, type);
     }
 
 }  // end of GeneratorWidget

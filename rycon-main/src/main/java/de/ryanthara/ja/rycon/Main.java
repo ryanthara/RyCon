@@ -22,12 +22,12 @@ import de.ryanthara.ja.rycon.cli.CmdLineInterfaceException;
 import de.ryanthara.ja.rycon.cli.CmdLineInterfaceParser;
 import de.ryanthara.ja.rycon.data.I18N;
 import de.ryanthara.ja.rycon.data.PreferenceHandler;
+import de.ryanthara.ja.rycon.gui.GuiHelper;
 import de.ryanthara.ja.rycon.gui.StatusBar;
 import de.ryanthara.ja.rycon.gui.UpdateDialog;
 import de.ryanthara.ja.rycon.tools.Updater;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
 import java.awt.*;
@@ -204,10 +204,7 @@ public abstract class Main {
                 Display display = new Display();
                 Shell shell = new Shell(display);
 
-                MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR | SWT.YES | SWT.NO);
-                messageBox.setText(I18N.getErrorTitleJavaVersion());
-                messageBox.setMessage(I18N.getErrorTextJavaVersion());
-                int rc = messageBox.open();
+                int rc = GuiHelper.showMessageBox(shell, SWT.ICON_ERROR | SWT.YES | SWT.NO, I18N.getErrorTitleJavaVersion(), I18N.getErrorTextJavaVersion());
 
                 if (rc == SWT.YES) {
                     try {

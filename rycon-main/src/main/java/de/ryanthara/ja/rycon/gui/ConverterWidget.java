@@ -49,6 +49,7 @@ import java.util.List;
  *
  * <h3>Changes:</h3>
  * <ul>
+ *     <li>8: code optimizations, little corrections</li>
  *     <li>7: defeat txt to gsi conversion bug (not listed)</li>
  *     <li>6: implement support for cadwork-files (node.dat) </li>
  *     <li>5: defeat bug #3 </li>
@@ -59,7 +60,7 @@ import java.util.List;
  * </ul>
  *
  * @author sebastian
- * @version 7
+ * @version 8
  * @since 1
  */
 public class ConverterWidget {
@@ -269,30 +270,17 @@ public class ConverterWidget {
      * This method is used from the class InputFieldsComposite!
      */
     private void actionBtnDestination() {
-        DirectoryDialog directoryDialog = new DirectoryDialog(innerShell);
-        directoryDialog.setText(I18N.getFileChooserDirBaseTitle());
-        directoryDialog.setMessage(I18N.getFileChooserDirBaseMessage());
+        String filterPath;
 
         // Set the initial filter path according to anything selected or typed in
         if (inputFieldsComposite.getDestinationTextField().getText() == null) {
-            directoryDialog.setFilterPath(Main.pref.getUserPref(PreferenceHandler.DIR_BASE));
+            filterPath = Main.pref.getUserPref(PreferenceHandler.DIR_BASE);
         } else {
-            directoryDialog.setFilterPath(inputFieldsComposite.getDestinationTextField().getText());
+            filterPath = inputFieldsComposite.getDestinationTextField().getText();
         }
 
-        String path = directoryDialog.open();
-
-        if (path != null) {
-            File checkDirDestination = new File(path);
-            if (!checkDirDestination.exists()) {
-                MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
-                msgBox.setMessage(I18N.getMsgDirDestinationNotExistWarning());
-                msgBox.setText(I18N.getMsgBoxTitleWarning());
-                msgBox.open();
-            } else {
-                inputFieldsComposite.getDestinationTextField().setText(path);
-            }
-        }
+        GuiHelper.showAdvancedDirectoryDialog(innerShell, inputFieldsComposite.getDestinationTextField(),
+                I18N.getFileChooserConverterSourceText(), I18N.getFileChooserConverterSourceMessage(), filterPath);
     }
 
     private int actionBtnOk() {
@@ -453,10 +441,7 @@ public class ConverterWidget {
                     } else {
                         System.err.println("File " + file2read.getName() + " could not be read.");
 
-                        MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_ERROR);
-                        msgBox.setMessage(I18N.getMsgConvertReaderFailed());
-                        msgBox.setText(I18N.getMsgBoxTitleError());
-                        msgBox.open();
+                        GuiHelper.showMessageBox(innerShell, SWT.ICON_ERROR, I18N.getMsgBoxTitleError(), I18N.getMsgConvertReaderFailed());
                     }
                     break;
 
@@ -475,10 +460,7 @@ public class ConverterWidget {
                     } catch (IOException e) {
                         System.err.println("File " + file2read.getName() + " could not be read.");
 
-                        MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_ERROR);
-                        msgBox.setMessage(I18N.getMsgConvertReaderCSVFailed());
-                        msgBox.setText(I18N.getMsgBoxTitleError());
-                        msgBox.open();
+                        GuiHelper.showMessageBox(innerShell, SWT.ICON_ERROR, I18N.getMsgBoxTitleError(), I18N.getMsgConvertReaderCSVFailed());
                     }
                     break;
 
@@ -490,10 +472,7 @@ public class ConverterWidget {
                     } else {
                         System.err.println("File " + file2read.getName() + " could not be read.");
 
-                        MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_ERROR);
-                        msgBox.setMessage(I18N.getMsgConvertReaderFailed());
-                        msgBox.setText(I18N.getMsgBoxTitleError());
-                        msgBox.open();
+                        GuiHelper.showMessageBox(innerShell, SWT.ICON_ERROR, I18N.getMsgBoxTitleError(), I18N.getMsgConvertReaderFailed());
                     }
                     break;
                 case 5:     // CSV format from the geo data server 'Basel Stadt' (http://shop.geo.bs.ch/geoshop_app/geoshop/)
@@ -504,10 +483,7 @@ public class ConverterWidget {
                     } catch (IOException e) {
                         System.err.println("File " + file2read.getName() + " could not be read.");
 
-                        MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_ERROR);
-                        msgBox.setMessage(I18N.getMsgConvertReaderCSVFailed());
-                        msgBox.setText(I18N.getMsgBoxTitleError());
-                        msgBox.open();
+                        GuiHelper.showMessageBox(innerShell, SWT.ICON_ERROR, I18N.getMsgBoxTitleError(), I18N.getMsgConvertReaderCSVFailed());
                     }
                     break;
             }
@@ -840,23 +816,21 @@ public class ConverterWidget {
         }
 
         if (counter > 0) {
-            MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_INFORMATION);
+            String message;
+
             if (counter == 1) {
-                msgBox.setMessage(String.format(I18N.getMsgConvertSuccess(Main.TEXT_SINGULAR), counter));
+                message = String.format(I18N.getMsgConvertSuccess(Main.TEXT_SINGULAR), counter);
             } else {
-                msgBox.setMessage(String.format(I18N.getMsgConvertSuccess(Main.TEXT_PLURAL), counter));
+                message = String.format(I18N.getMsgConvertSuccess(Main.TEXT_PLURAL), counter);
             }
-            msgBox.setText(I18N.getMsgBoxTitleSuccess());
-            msgBox.open();
+
+            GuiHelper.showMessageBox(innerShell, SWT.ICON_INFORMATION, I18N.getMsgBoxTitleSuccess(), message);
 
             // set the counter for status bar information
             Main.countFileOps = counter;
             success = true;
         } else {
-            MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_ERROR);
-            msgBox.setMessage(I18N.getMsgConvertFailed());
-            msgBox.setText(I18N.getMsgBoxTitleError());
-            msgBox.open();
+            GuiHelper.showMessageBox(innerShell, SWT.ICON_ERROR, I18N.getMsgBoxTitleError(), I18N.getMsgConvertFailed());
             success = false;
         }
 
@@ -869,11 +843,10 @@ public class ConverterWidget {
         File file = new File(fileName);
 
         if (file.exists()) {
-            MessageBox mb = new MessageBox(innerShell, SWT.ICON_WARNING | SWT.YES | SWT.NO);
+            int returnValue = GuiHelper.showMessageBox(innerShell, SWT.ICON_WARNING | SWT.YES | SWT.NO,
+                    I18N.getMsgBoxTitleWarning(), String.format(I18N.getMsgFileExist(), fileName));
 
-            mb.setMessage(String.format(I18N.getMsgFileExist(), fileName));
-
-            if (mb.open() == SWT.YES) {
+            if (returnValue == SWT.YES) {
                 LineWriter lineWriter = new LineWriter(fileName);
 
                 return lineWriter.writeFile(writeFile);

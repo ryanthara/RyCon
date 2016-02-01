@@ -148,16 +148,16 @@ public class PreferenceHandler {
     /**
      * Checks a path which is stored in the user preferences of RyCON.
      * <p>
-     * If the path doesn't exists the value of the "HOME" variable of the system will be returned.
+     * If the path doesn't exists, RyCON tries to use the value of the base dir. If base dir doesn't exist, then
+     * the value of the "HOME" variable of the system will be returned.
      *
      * @param pathToBeChecked
      */
     public static String checkUserPrefPathExist(String pathToBeChecked) {
         File f = new File(pathToBeChecked);
-        File baseDir = new File(PreferenceHandler.DIR_BASE);
         if (f.exists()) {
             return pathToBeChecked;
-        } else if (baseDir.exists()) {
+        } else if (new File(PreferenceHandler.DIR_BASE).exists()) {
             return PreferenceHandler.DIR_BASE;
         } else {
             return System.getenv().get("HOME");

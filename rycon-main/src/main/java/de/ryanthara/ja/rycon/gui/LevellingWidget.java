@@ -63,7 +63,7 @@ public class LevellingWidget {
     private File[] files2read = null;
     private InputFieldsComposite inputFieldsComposite;
     private Shell innerShell = null;
-    private final String[] acceptableFileSuffixes = new String[]{"*.gsi", "*.asc"};
+    private final String[] acceptableFileSuffixes = new String[] {"*.gsi", "*.asc"};
 
     /**
      * Class constructor without parameters.
@@ -196,31 +196,17 @@ public class LevellingWidget {
      * This method is used from the class InputFieldsComposite!
      */
     private void actionBtnDestination() {
-        DirectoryDialog directoryDialog = new DirectoryDialog(innerShell);
-        directoryDialog.setText(I18N.getFileChooserDirBaseTitle());
-        directoryDialog.setMessage(I18N.getFileChooserDirBaseMessage());
+        String filterPath;
 
         // Set the initial filter path according to anything selected or typed in
         if (inputFieldsComposite.getDestinationTextField().getText() == null) {
-            directoryDialog.setFilterPath(Main.pref.getUserPref(PreferenceHandler.DIR_BASE));
+            filterPath = Main.pref.getUserPref(PreferenceHandler.DIR_BASE);
         } else {
-            directoryDialog.setFilterPath(inputFieldsComposite.getDestinationTextField().getText());
+            filterPath = inputFieldsComposite.getDestinationTextField().getText();
         }
 
-        String path = directoryDialog.open();
-
-        if (path != null) {
-
-            File checkDirDestination = new File(path);
-            if (!checkDirDestination.exists()) {
-                MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
-                msgBox.setMessage(I18N.getMsgDirDestinationNotExistWarning());
-                msgBox.setText(I18N.getMsgBoxTitleWarning());
-                msgBox.open();
-            } else {
-                inputFieldsComposite.getDestinationTextField().setText(path);
-            }
-        }
+        GuiHelper.showAdvancedDirectoryDialog(innerShell, inputFieldsComposite.getDestinationTextField(),
+              I18N.getFileChooserLevellingSourceText(), I18N.getFileChooserLevellingSourceMessage(), filterPath);
     }
 
     private int actionBtnOk() {
@@ -263,35 +249,15 @@ public class LevellingWidget {
      * This method is used from the class InputFieldsComposite!
      */
     private void actionBtnSource() {
-        FileDialog fileDialog = new FileDialog(innerShell, SWT.MULTI);
-        fileDialog.setFilterPath(Main.pref.getUserPref(PreferenceHandler.DIR_PROJECT));
-        fileDialog.setText(I18N.getFileChooserLevellingSourceText());
-        fileDialog.setFilterExtensions(acceptableFileSuffixes);
-        fileDialog.setFilterNames(new String[]{I18N.getFileChooserFilterNameGSI(), I18N.getFileChooserFilterNameNIGRA()});
+        String[] filterNames = new String[] {
+                I18N.getFileChooserFilterNameGSI(),
+                I18N.getFileChooserFilterNameNIGRA()
+        };
 
-        String firstFile = fileDialog.open();
-
-        if (firstFile != null) {
-            String[] files = fileDialog.getFileNames();
-
-            files2read = new File[files.length];
-
-            // hack for displaying file names without path in text field
-            String concatString = "";
-
-            String workingDir = fileDialog.getFilterPath();
-
-            //for (String element : files) {
-            for (int i = 0; i < files.length; i++) {
-                concatString = concatString.concat(files[i]);
-                concatString = concatString.concat(" ");
-
-                files2read[i] = new File(workingDir + File.separator + files[i]);
-            }
-
-            inputFieldsComposite.getDestinationTextField().setText(fileDialog.getFilterPath());
-            inputFieldsComposite.getSourceTextField().setText(concatString);
-        }
+        files2read = GuiHelper.showAdvancedFileDialog(
+                innerShell, SWT.MULTI, Main.pref.getUserPref(PreferenceHandler.DIR_PROJECT),
+                I18N.getFileChooserSplitterSourceText(), acceptableFileSuffixes, filterNames,
+                inputFieldsComposite.getSourceTextField(), inputFieldsComposite.getDestinationTextField());
     }
 
     private boolean processFileOperations() {
@@ -300,25 +266,21 @@ public class LevellingWidget {
         int counter = fileOperations(chkBoxHoldChangePoint.getSelection());
 
         if (counter > 0) {
-            MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_INFORMATION);
+            String message;
 
             if (counter == 1) {
-                msgBox.setMessage(String.format(I18N.getMsgLevellingSuccess(Main.TEXT_SINGULAR), counter));
+                message = String.format(I18N.getMsgLevellingSuccess(Main.TEXT_SINGULAR), counter);
             } else {
-                msgBox.setMessage(String.format(I18N.getMsgLevellingSuccess(Main.TEXT_PLURAL), counter));
+                message = String.format(I18N.getMsgLevellingSuccess(Main.TEXT_PLURAL), counter);
             }
 
-            msgBox.setText(I18N.getMsgBoxTitleSuccess());
-            msgBox.open();
+            GuiHelper.showMessageBox(innerShell, SWT.ICON_INFORMATION, I18N.getMsgBoxTitleSuccess(), message);
 
             // set the counter for status bar information
             Main.countFileOps = counter;
             success = true;
         } else {
-            MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
-            msgBox.setMessage(String.format(I18N.getMsgLevellingError()));
-            msgBox.setText(I18N.getMsgBoxTitleError());
-            msgBox.open();
+            GuiHelper.showMessageBox(innerShell, SWT.ICON_WARNING, I18N.getMsgBoxTitleError(), String.format(I18N.getMsgLevellingError()));
             success = false;
         }
 
@@ -379,4 +341,4 @@ public class LevellingWidget {
         }
     }
 
-} // end of LevellingWidget
+} // end of LevellingWidget.java

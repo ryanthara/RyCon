@@ -213,4 +213,4 @@ public class InputFieldsComposite extends Composite {
         sourceTextField.setText(text);
     }
 
-}
+} // end of InputFieldsComposite

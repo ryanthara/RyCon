@@ -21,6 +21,7 @@ package de.ryanthara.ja.rycon.gui;
 import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.data.I18N;
 import de.ryanthara.ja.rycon.data.PreferenceHandler;
+import de.ryanthara.ja.rycon.tools.SimpleChecker;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -90,54 +91,41 @@ public class SettingsWidget {
         Main.pref.setDefaultSettingsGenerated(true);
         Main.setSubShellStatus(false);
         Main.statusBar.setStatus("", StatusBar.OK);
-        
-        MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_INFORMATION);
-        msgBox.setMessage(I18N.getMsgSettingsDefaultGenerated());
-        msgBox.setText(I18N.getMsgBoxTitleSuccess());
-        msgBox.open();
 
+        GuiHelper.showMessageBox(innerShell, SWT.ICON_INFORMATION,I18N.getMsgBoxTitleSuccess(), I18N.getMsgSettingsDefaultGenerated());
+        
         widgetDispose();
     }
 
     private void actionBtnOk() {
-        if (!checkEmptyTextFields()) {
+        if (!checkForEmptyTexts()) {
             if (writeSettings()) {
                 Main.pref.setDefaultSettingsGenerated(false);
                 Main.setSubShellStatus(false);
                 Main.statusBar.setStatus("", StatusBar.OK);
 
-                MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_INFORMATION);
-                msgBox.setMessage(I18N.getMsgSettingsSuccess());
-                msgBox.setText(I18N.getMsgBoxTitleSuccess());
-                msgBox.open();
+                GuiHelper.showMessageBox(innerShell, SWT.ICON_INFORMATION, I18N.getMsgBoxTitleSuccess(), I18N.getMsgSettingsSuccess());
 
                 widgetDispose();
             } else {
-                MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_ERROR);
-                msgBox.setMessage(I18N.getMsgSettingsError());
-                msgBox.setText(I18N.getMsgBoxTitleError());
-                msgBox.open();
+                GuiHelper.showMessageBox(innerShell, SWT.ICON_ERROR, I18N.getMsgBoxTitleError(), I18N.getMsgSettingsError());
             }
         } else {
-            MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
-            msgBox.setMessage(I18N.getMsgEmptyTextFieldWarning());
-            msgBox.setText(I18N.getMsgBoxTitleWarning());
-            msgBox.open();
+            GuiHelper.showMessageBox(innerShell, SWT.ICON_WARNING, I18N.getMsgBoxTitleWarning(), I18N.getMsgEmptyTextFieldWarning());
         }
     }
 
-    // TODO implement better checks for valid directories
-    private boolean checkEmptyTextFields() {
-        return  dirBaseTextField.getText().trim().equals("") ||
-                dirAdminTextField.getText().trim().equals("") ||
-                dirAdminTemplateTextField.getText().trim().equals("") ||
-                dirBigDataTextField.getText().trim().equals("") ||
-                dirBigDataTemplateTextField.getText().trim().equals("") ||
-                dirProjectTextField.getText().trim().equals("") ||
-                dirProjectTemplateTextField.getText().trim().equals("") ||
-                identifierFreeStationTextField.getText().trim().equals("") ||
-                identifierControlPointTextField.getText().trim().equals("") ||
-                identifierKnownStationTextField.getText().trim().equals("")
+    private boolean checkForEmptyTexts() {
+        return SimpleChecker.checkIsTextEmpty(dirBaseTextField) ||
+                SimpleChecker.checkIsTextEmpty(dirProjectTextField) ||
+                SimpleChecker.checkIsTextEmpty(dirProjectTemplateTextField) ||
+                SimpleChecker.checkIsTextEmpty(dirAdminTextField) ||
+                SimpleChecker.checkIsTextEmpty(dirAdminTemplateTextField) ||
+                SimpleChecker.checkIsTextEmpty(dirBigDataTextField) ||
+                SimpleChecker.checkIsTextEmpty(dirBigDataTemplateTextField) ||
+                SimpleChecker.checkIsTextEmpty(identifierFreeStationTextField) ||
+                SimpleChecker.checkIsTextEmpty(identifierControlPointTextField) ||
+                SimpleChecker.checkIsTextEmpty(identifierKnownStationTextField)
         ;
     }
 
@@ -162,7 +150,7 @@ public class SettingsWidget {
             @Override
             public void handleEvent(Event event) {
                 // prevent this shortcut for execute when the text fields are empty
-                if (!checkEmptyTextFields()) {
+                if (!checkForEmptyTexts()) {
 
                     if (((event.stateMask & SWT.CTRL) == SWT.CTRL) && (event.detail == SWT.TRAVERSE_RETURN)) {
                         actionBtnOk();
@@ -218,7 +206,7 @@ public class SettingsWidget {
             @Override
             public void handleEvent(Event event) {
                 // prevent this shortcut for execute when the text fields are empty
-                if (!checkEmptyTextFields()) {
+                if (!checkForEmptyTexts()) {
 
                     if (((event.stateMask & SWT.CTRL) == SWT.CTRL) && (event.detail == SWT.TRAVERSE_RETURN)) {
                         actionBtnOk();
@@ -272,7 +260,7 @@ public class SettingsWidget {
             @Override
             public void handleEvent(Event event) {
                 // prevent this shortcut for execute when the text fields are empty
-                if (!checkEmptyTextFields()) {
+                if (!checkForEmptyTexts()) {
 
                     if (((event.stateMask & SWT.CTRL) == SWT.CTRL) && (event.detail == SWT.TRAVERSE_RETURN)) {
                         actionBtnOk();
@@ -326,7 +314,7 @@ public class SettingsWidget {
             @Override
             public void handleEvent(Event event) {
                 // prevent this shortcut for execute when the text fields are empty
-                if (!checkEmptyTextFields()) {
+                if (!checkForEmptyTexts()) {
 
                     if (((event.stateMask & SWT.CTRL) == SWT.CTRL) && (event.detail == SWT.TRAVERSE_RETURN)) {
                         actionBtnOk();
@@ -380,7 +368,7 @@ public class SettingsWidget {
             @Override
             public void handleEvent(Event event) {
                 // prevent this shortcut for execute when the text fields are empty
-                if (!checkEmptyTextFields()) {
+                if (!checkForEmptyTexts()) {
 
                     if (((event.stateMask & SWT.CTRL) == SWT.CTRL) && (event.detail == SWT.TRAVERSE_RETURN)) {
                         actionBtnOk();
@@ -434,7 +422,7 @@ public class SettingsWidget {
             @Override
             public void handleEvent(Event event) {
                 // prevent this shortcut for execute when the text fields are empty
-                if (!checkEmptyTextFields()) {
+                if (!checkForEmptyTexts()) {
 
                     if (((event.stateMask & SWT.CTRL) == SWT.CTRL) && (event.detail == SWT.TRAVERSE_RETURN)) {
                         actionBtnOk();
@@ -488,7 +476,7 @@ public class SettingsWidget {
             @Override
             public void handleEvent(Event event) {
                 // prevent this shortcut for execute when the text fields are empty
-                if (!checkEmptyTextFields()) {
+                if (!checkForEmptyTexts()) {
 
                     if (((event.stateMask & SWT.CTRL) == SWT.CTRL) && (event.detail == SWT.TRAVERSE_RETURN)) {
                         actionBtnOk();
@@ -569,7 +557,7 @@ public class SettingsWidget {
             @Override
             public void handleEvent(Event event) {
                 // prevent this shortcut for execute when the text fields are empty
-                if (!checkEmptyTextFields()) {
+                if (!checkForEmptyTexts()) {
 
                     if (((event.stateMask & SWT.CTRL) == SWT.CTRL) && (event.detail == SWT.TRAVERSE_RETURN)) {
                         actionBtnOk();
@@ -593,7 +581,7 @@ public class SettingsWidget {
             @Override
             public void handleEvent(Event event) {
                 // prevent this shortcut for execute when the text fields are empty
-                if (!checkEmptyTextFields()) {
+                if (!checkForEmptyTexts()) {
 
                     if (((event.stateMask & SWT.CTRL) == SWT.CTRL) && (event.detail == SWT.TRAVERSE_RETURN)) {
                         actionBtnOk();
@@ -617,7 +605,7 @@ public class SettingsWidget {
             @Override
             public void handleEvent(Event event) {
                 // prevent this shortcut for execute when the text fields are empty
-                if (!checkEmptyTextFields()) {
+                if (!checkForEmptyTexts()) {
 
                     if (((event.stateMask & SWT.CTRL) == SWT.CTRL) && (event.detail == SWT.TRAVERSE_RETURN)) {
                         actionBtnOk();
@@ -724,7 +712,7 @@ public class SettingsWidget {
         Main.pref.setUserPref(PreferenceHandler.PARAM_FREE_STATION_STRING, identifierFreeStationTextField.getText());
         Main.pref.setUserPref(PreferenceHandler.PARAM_KNOWN_STATION_STRING, identifierKnownStationTextField.getText());
         
-        // TODO implement write setting success
+        // TODO implement write setting success and checks for valid dirs
         
         return true;
     }

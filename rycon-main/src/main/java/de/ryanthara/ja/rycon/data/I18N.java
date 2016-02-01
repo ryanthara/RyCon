@@ -250,6 +250,14 @@ public class I18N {
         return Messages.getString("errorTitleJavaVersion");
     }
 
+    public static String getFileChooserConverterSourceMessage() {
+        return Messages.getString("fileChooserConverterSourceMessage");
+    }
+
+    public static String getFileChooserConverterSourceText() {
+        return Messages.getString("fileChooserConverterSourceText");
+    }
+
     public static String getFileChooserDirAdminMessage() {
         return Messages.getString("fileChooserDirAdminMessage");
     }
@@ -334,12 +342,25 @@ public class I18N {
         return Messages.getString("fileChooserFilterNameTXT");
     }
 
+    public static String getFileChooserLevellingSourceMessage() {
+        return Messages.getString("fileChooserLevellingSourceMessage");
+
+    }
+
     public static String getFileChooserLevellingSourceText() {
         return Messages.getString("fileChooserLevellingSourceText");
     }
 
+    public static String getFileChooserSplitterSourceMessage() {
+        return Messages.getString("fileChooserSplitterSourceMessage");
+    }
+
     public static String getFileChooserSplitterSourceText() {
         return Messages.getString("fileChooserSplitterSourceText");
+    }
+
+    public static String getFileChooserTidyUpSourceMessage() {
+        return Messages.getString("fileChooserTidyUpSourceMessage");
     }
 
     public static String getFileChooserTidyUpSourceText() {
@@ -447,7 +468,7 @@ public class I18N {
     }
 
     public static String getLabelTipGeneratorWidget() {
-        return Messages.getString("labelTipGeneratorWidgetNumber");
+        return Messages.getString("labelTipGeneratorWidget");
     }
 
     public static String getLabelTipLevellingWidget() {
@@ -510,24 +531,24 @@ public class I18N {
         return prepareString("msgConvertSuccess", singular);
     }
 
-    public static String getMsgCreateDirJobAndProjectExist() {
-        return Messages.getString("msgCreateDirAdminAndProjectExist");
-    }
-
-    public static String getMsgCreateDirJobAndProjectGenerated() {
-        return Messages.getString("msgCreateDirAdminAndProjectGenerated");
-    }
-
-    public static String getMsgCreateDirJobAndProjectWarning() {
+    public static String getMsgCreateDirAdminAndProjectWarning() {
         return Messages.getString("msgCreateDirAdminAndProjectWarning");
     }
 
-    public static String getMsgCreateDirJobExist() {
+    public static String getMsgCreateDirAdminExist() {
         return Messages.getString("msgCreateDirAdminExist");
     }
 
-    public static String getMsgCreateDirJobWarning() {
+    public static String getMsgCreateDirAdminWarning() {
         return Messages.getString("msgCreateDirAdminWarning");
+    }
+
+    public static String getMsgCreateDirBigDataExist() {
+        return Messages.getString("msgCreateDirBigDataExist");
+    }
+
+    public static String getMsgCreateDirBigDataWarning() {
+        return Messages.getString("msgCreateDirBigDataWarning");
     }
 
     public static String getMsgCreateDirProjectExist() {
@@ -562,6 +583,10 @@ public class I18N {
         return Messages.getString("msgDirDestinationNotExistWarning");
     }
 
+    public static String getMsgDirNotFound() {
+        return Messages.getString("msgDirNotFound");
+    }
+
     public static String getMsgDirProjectDefaultNotFound() {
         return Messages.getString("msgDirProjectDefaultNotFound");
     }
@@ -579,11 +604,11 @@ public class I18N {
     }
 
     public static String getMsgFileExist() {
-        return Messages.getString("msgFileExist");
+        return Messages.getString("msgErrorFileExist");
     }
 
     public static String getMsgFileNotExist() {
-        return Messages.getString("msgFileNotExist");
+        return Messages.getString("msgErrorFileExistNot");
     }
 
     public static String getMsgLevellingError() {
@@ -662,8 +687,32 @@ public class I18N {
         return prepareString("statusConvertSuccessful", singular);
     }
 
-    public static String getStatusJobAndProjectGenerated() {
-        return Messages.getString("statusAdminAndProjectGenerated");
+    public static String getStatusFolderAdminGenerated() {
+        return Messages.getString("statusFolderAdminGenerated");
+    }
+
+    public static String getStatusFolderBigDataGenerated() {
+        return Messages.getString("statusFolderBigDataGenerated");
+    }
+
+    public static String getStatusFolderProjectGenerated() {
+        return Messages.getString("statusFolderProjectGenerated");
+    }
+
+    public static String getStatusFoldersAdminAndBigDataAndProjectGenerated() {
+        return Messages.getString("statusFoldersAdminAndBigDataAndProjectGenerated");
+    }
+
+    public static String getStatusFoldersAdminAndBigDataGenerated() {
+        return Messages.getString("statusFoldersAdminAndBigDataGenerated");
+    }
+
+    public static String getStatusFoldersAdminAndProjectGenerated() {
+        return Messages.getString("statusFoldersAdminAndProjectGenerated");
+    }
+
+    public static String getStatusFoldersBigDataAndProjectGenerated() {
+        return Messages.getString("statusFoldersBigDataAndProjectGenerated");
     }
 
     public static String getStatusPrepareLevelSuccess(boolean singular) {
@@ -746,5 +795,61 @@ public class I18N {
             return s[1];
         }
 
+    }
+
+    public static String getMsgDirProjectGenerated() {
+        return Messages.getString("msgDirProjectGenerated");
+    }
+
+    public static String getTextDirProjectGenerated() {
+        return Messages.getString("textDirProjectGenerated");
+    }
+
+    public static String getTextDirBigDataGenerated() {
+        return Messages.getString("textDirBigDataGenerated");
+    }
+
+    public static String getMsgDirBigDataGenerated() {
+        return Messages.getString("msgDirBigDataGenerated");
+    }
+
+    public static String getTextDirAdminGenerated() {
+        return Messages.getString("textDirAdminGenerated");
+    }
+
+    public static String getMsgDirAdminGenerated() {
+        return Messages.getString("msgDirAdminGenerated");
+    }
+
+    public static String getTextDirBigDataAndProjectGenerated() {
+        return Messages.getString("textDirBigDataAndProjectGenerated");
+    }
+
+    public static String getMsgDirBigDataAndProjectGenerated() {
+        return Messages.getString("msgDirBigDataAndProjectGenerated");
+    }
+
+    public static String getTextDirAdminAndProjectGenerated() {
+        return Messages.getString("textDirAdminAndProjectGenerated");
+    }
+
+    public static String getMsgDirAdminAndProjectGenerated() {
+        return Messages.getString("msgDirAdminAndProjectGenerated");
+    }
+
+    public static String getMsgDirAdminAndBigDataGenerated() {
+        return Messages.getString("msgDirAdminAndBigDataGenerated");
+    }
+
+    public static String getTextDirAdminAndBigDataGenerated() {
+        return Messages.getString("textDirAdminAndBigDataGenerated");
+    }
+
+    public static void getTextDirAdminAndBigDataAndProjectGenerated() {
+        return Messages.getString("textDirAdminAndBigDataAndProjectGenerated");
+    }
+
+    public static void getMsgDirAdminAndBigDataAndProjectGenerated() {
+        return Messages.getString("msgDirAdminAndBigDataAndProjectGenerated");
     }
 } // end of I18N

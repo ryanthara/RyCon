@@ -21,6 +21,7 @@ package de.ryanthara.ja.rycon.gui;
 import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.data.I18N;
 import de.ryanthara.ja.rycon.data.PreferenceHandler;
+import de.ryanthara.ja.rycon.tools.SimpleChecker;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -28,8 +29,6 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
-
-import java.io.File;
 
 
 /**
@@ -320,6 +319,7 @@ public class GeneratorSettingsWidget {
                 textBigDataPath, btnBigDataPath,
                 textBigDataPathTemplateFolder, btnBigDataPathTemplateFolder
         };
+
         innerShell.setTabList(controls);
 
         createBottomButtons();
@@ -362,102 +362,73 @@ public class GeneratorSettingsWidget {
         innerShell.dispose();
     }
 
-    // TODO implement functional check
-    private void actionBtnOk() {
-        // checks for text field inputs and valid directories
-        if ((textDefaultPath != null) && (textAdminPath != null) && (textAdminPathTemplateFolder != null) &&
-                (textBigDataPath != null) && (textBigDataPathTemplateFolder != null) &&
-                (textProjectPath != null) && (textProjectPathTemplateFolder != null)) {
+    private boolean checkForEmptyTexts() {
+        return SimpleChecker.checkIsTextEmpty(textDefaultPath) ||
+                SimpleChecker.checkIsTextEmpty(textProjectPath) ||
+                SimpleChecker.checkIsTextEmpty(textProjectPathTemplateFolder) ||
+                SimpleChecker.checkIsTextEmpty(textAdminPath) ||
+                SimpleChecker.checkIsTextEmpty(textAdminPathTemplateFolder) ||
+                SimpleChecker.checkIsTextEmpty(textBigDataPath) ||
+                SimpleChecker.checkIsTextEmpty(textBigDataPathTemplateFolder);
+    }
 
-            File checkDirBase = new File(textDefaultPath.getText());
-            if (!checkDirBase.exists()) {
-                /*
-                MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
-                msgBox.setMessage(I18N.getMsgDirBaseNotFound());
-                msgBox.setText(I18N.getMsgBoxTitleWarning());
-                msgBox.open();
-                */
-                showMessageBox(innerShell, SWT.ICON_WARNING, I18N.getMsgDirBaseNotFound(), I18N.getMsgBoxTitleWarning());
+    private void actionBtnOk() {
+        if (!checkForEmptyTexts()) {
+            int errorOccurred = Integer.MIN_VALUE;
+
+            if (!SimpleChecker.checkIsTextValidFile(textDefaultPath)) {
+                errorOccurred = GuiHelper.showMessageBox(innerShell, SWT.ICON_WARNING, I18N.getMsgBoxTitleWarning(), I18N.getMsgDirBaseNotFound());
             } else {
                 Main.pref.setUserPref(PreferenceHandler.DIR_BASE, textDefaultPath.getText());
             }
 
-            File checkDirProject = new File(textProjectPath.getText());
-            if (!checkDirProject.exists()) {
-                MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
-                msgBox.setMessage(I18N.getMsgDirProjectNotFound());
-                msgBox.setText(I18N.getMsgBoxTitleWarning());
-                msgBox.open();
+            if (!SimpleChecker.checkIsTextValidFile(textProjectPath)) {
+                errorOccurred = GuiHelper.showMessageBox(innerShell, SWT.ICON_WARNING, I18N.getMsgBoxTitleWarning(), I18N.getMsgDirProjectNotFound());
             } else {
                 Main.pref.setUserPref(PreferenceHandler.DIR_PROJECT, textProjectPath.getText());
             }
 
-            File checkDirProjectDefault = new File(textProjectPathTemplateFolder.getText());
-            if (!checkDirProjectDefault.exists()) {
-                MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
-                msgBox.setMessage(I18N.getMsgDirProjectDefaultNotFound());
-                msgBox.setText(I18N.getMsgBoxTitleWarning());
-                msgBox.open();
+            if (!SimpleChecker.checkIsTextValidFile(textProjectPathTemplateFolder)) {
+                errorOccurred = GuiHelper.showMessageBox(innerShell, SWT.ICON_WARNING, I18N.getMsgBoxTitleWarning(), I18N.getMsgDirProjectDefaultNotFound());
             } else {
                 Main.pref.setUserPref(PreferenceHandler.DIR_PROJECT_TEMPLATE, textProjectPathTemplateFolder.getText());
             }
 
-            File checkDirAdmin = new File(textAdminPath.getText());
-            if (!checkDirAdmin.exists()) {
-                MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
-                msgBox.setMessage(I18N.getMsgDirAdminNotFound());
-                msgBox.setText(I18N.getMsgBoxTitleWarning());
-                msgBox.open();
+            if (!SimpleChecker.checkIsTextValidFile(textAdminPath)) {
+                errorOccurred = GuiHelper.showMessageBox(innerShell, SWT.ICON_WARNING, I18N.getMsgBoxTitleWarning(), I18N.getMsgDirAdminNotFound());
             } else {
                 Main.pref.setUserPref(PreferenceHandler.DIR_ADMIN, textAdminPath.getText());
             }
 
-            File checkDirAdminTemplate = new File(textAdminPathTemplateFolder.getText());
-            if (!checkDirAdminTemplate.exists()) {
-                MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
-                msgBox.setMessage(I18N.getMsgDirAdminDefaultNotFound());
-                msgBox.setText(I18N.getMsgBoxTitleWarning());
-                msgBox.open();
+            if (!SimpleChecker.checkIsTextValidFile(textAdminPathTemplateFolder)) {
+                errorOccurred = GuiHelper.showMessageBox(innerShell, SWT.ICON_WARNING, I18N.getMsgBoxTitleWarning(), I18N.getMsgDirAdminDefaultNotFound());
             } else {
                 Main.pref.setUserPref(PreferenceHandler.DIR_ADMIN_TEMPLATE, textAdminPathTemplateFolder.getText());
             }
 
-            File checkDirBigData = new File(textBigDataPath.getText());
-            if (!checkDirBigData.exists()) {
-                MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
-                msgBox.setMessage(I18N.getMsgDirBigDataNotFound());
-                msgBox.setText(I18N.getMsgBoxTitleWarning());
-                msgBox.open();
+            if (!SimpleChecker.checkIsTextValidFile(textBigDataPath)) {
+                errorOccurred = GuiHelper.showMessageBox(innerShell, SWT.ICON_WARNING, I18N.getMsgBoxTitleWarning(), I18N.getMsgDirBigDataNotFound());
             } else {
                 Main.pref.setUserPref(PreferenceHandler.DIR_BIG_DATA, textBigDataPath.getText());
             }
 
-            File checkDirBigDataDefault = new File(textBigDataPathTemplateFolder.getText());
-            if (!checkDirBigDataDefault.exists()) {
-                MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
-                msgBox.setMessage(I18N.getMsgDirBigDataDefaultNotFound());
-                msgBox.setText(I18N.getMsgBoxTitleWarning());
-                msgBox.open();
+            if (!SimpleChecker.checkIsTextValidFile(textBigDataPathTemplateFolder)) {
+                errorOccurred = GuiHelper.showMessageBox(innerShell, SWT.ICON_WARNING, I18N.getMsgBoxTitleWarning(), I18N.getMsgDirBigDataDefaultNotFound());
             } else {
                 Main.pref.setUserPref(PreferenceHandler.DIR_BIG_DATA_TEMPLATE, textBigDataPathTemplateFolder.getText());
             }
 
-            Main.statusBar.setStatus(I18N.getStatusSettingsSaved(), StatusBar.OK);
-            shell.setText(I18N.getWidgetTitleGenerator());
-            innerShell.dispose();
-        } else {
-            MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
-            msgBox.setMessage(I18N.getMsgChooseDirWarning());
-            msgBox.setText(I18N.getMsgBoxTitleWarning());
-            msgBox.open();
-        }
-    }
+            if (errorOccurred == Integer.MIN_VALUE) {
+                Main.statusBar.setStatus(I18N.getStatusSettingsSaved(), StatusBar.OK);
+                shell.setText(I18N.getWidgetTitleGenerator());
 
-    private void showMessageBox(Shell innerShell, int icon, String text, String message) {
-        MessageBox messageBox = new MessageBox(innerShell, icon);
-        messageBox.setText(text);
-        messageBox.setMessage(message);
-        messageBox.open();
+                GuiHelper.showMessageBox(innerShell, SWT.ICON_INFORMATION,I18N.getMsgBoxTitleSuccess(), I18N.getMsgSettingsSuccess());
+
+                innerShell.dispose();
+            }
+        } else {
+            GuiHelper.showMessageBox(innerShell, SWT.ICON_WARNING, I18N.getMsgBoxTitleWarning(), I18N.getMsgChooseDirWarning());
+        }
     }
 
 } // end of GeneratorSettingsWidget

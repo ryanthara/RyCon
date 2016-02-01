@@ -21,10 +21,7 @@ package de.ryanthara.ja.rycon.gui;
 import de.ryanthara.ja.rycon.data.I18N;
 import de.ryanthara.ja.rycon.data.PreferenceHandler;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.DirectoryDialog;
-import org.eclipse.swt.widgets.MessageBox;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.*;
 
 import java.io.File;
 
@@ -59,7 +56,7 @@ public class GuiHelper {
      * @param textField text field object
      * @param title title of the directory dialog
      * @param message message of the directory dialog
-     * @param checkedFilterPath filter path of the director dialog
+     * @param checkedFilterPath filter path of the directory dialog
      * @since 7
      */
     public static void showAdvancedDirectoryDialog(Shell innerShell, Text textField, String title, String message, String checkedFilterPath) {
@@ -73,14 +70,81 @@ public class GuiHelper {
         if (path != null) {
             File checkDirDestination = new File(path);
             if (!checkDirDestination.exists()) {
-                MessageBox msgBox = new MessageBox(innerShell, SWT.ICON_WARNING);
-                msgBox.setMessage(I18N.getMsgDirDestinationNotExistWarning());
-                msgBox.setText(I18N.getMsgBoxTitleWarning());
-                msgBox.open();
+                showMessageBox(innerShell, SWT.ICON_WARNING, I18N.getMsgBoxTitleWarning(), I18N.getMsgDirNotFound());
             } else {
                 textField.setText(path);
             }
         }
+    }
+
+    /**
+     * Shows a file dialog which is used in different classes of RyCON.
+     *
+     * @param innerShell shell object
+     * @param multiSelection allows multi selection
+     * @param filterPath filter path of the file dialog
+     * @param text title of the file dialog
+     * @param filterExtensions allowed extensions
+     * @param filterNames description of allowed extensions
+     * @param source source text field
+     * @param destination destination text field
+     * @return chosen files as String array
+     * @since 7
+     */
+    public static File[] showAdvancedFileDialog(Shell innerShell, int multiSelection, String filterPath, String text,
+                                              String[] filterExtensions, String[] filterNames, Text source, Text destination) {
+
+        File[] files2read = null;
+
+        FileDialog fileDialog = new FileDialog(innerShell, multiSelection);
+        fileDialog.setFilterPath(filterPath);
+        fileDialog.setText(text);
+        fileDialog.setFilterExtensions(filterExtensions);
+        fileDialog.setFilterNames(filterNames);
+
+        String firstFile = fileDialog.open();
+
+        if (firstFile != null) {
+            String[] files = fileDialog.getFileNames();
+
+            files2read = new File[files.length];
+
+            // hack for displaying file names without path in text field
+            String concatString = "";
+
+            String workingDir = fileDialog.getFilterPath();
+
+            //for (String element : files) {
+            for (int i = 0; i < files.length; i++) {
+                concatString = concatString.concat(files[i]);
+                concatString = concatString.concat(" ");
+
+                files2read[i] = new File(workingDir + File.separator + files[i]);
+            }
+
+            destination.setText(fileDialog.getFilterPath());
+            source.setText(concatString);
+        }
+
+        return files2read;
+
+    }
+
+    /**
+     * Shows a swt MessageBox and returns an Integer value as indicator for being shown.
+     * <p>
+     * The boolean is used for error indication in different classe.
+     * @param innerShell
+     * @param icon
+     * @param text
+     * @param message
+     * @return int value
+     */
+    public static int showMessageBox(Shell innerShell, int icon, String text, String message) {
+        MessageBox messageBox = new MessageBox(innerShell, icon);
+        messageBox.setText(text);
+        messageBox.setMessage(message);
+        return messageBox.open();
     }
 
 } // end of GuiHelper
