@@ -559,8 +559,24 @@ public class I18N {
         return Messages.getString("msgCreateDirProjectWarning");
     }
 
+    public static String getMsgDirAdminAndBigDataAndProjectGenerated() {
+        return Messages.getString("msgDirAdminAndBigDataAndProjectGenerated");
+    }
+
+    public static String getMsgDirAdminAndBigDataGenerated() {
+        return Messages.getString("msgDirAdminAndBigDataGenerated");
+    }
+
+    public static String getMsgDirAdminAndProjectGenerated() {
+        return Messages.getString("msgDirAdminAndProjectGenerated");
+    }
+
     public static String getMsgDirAdminDefaultNotFound() {
         return Messages.getString("msgDirAdminDefaultNotFound");
+    }
+
+    public static String getMsgDirAdminGenerated() {
+        return Messages.getString("msgDirAdminGenerated");
     }
 
     public static String getMsgDirAdminNotFound() {
@@ -571,8 +587,16 @@ public class I18N {
         return Messages.getString("msgDirBaseNotFound");
     }
 
+    public static String getMsgDirBigDataAndProjectGenerated() {
+        return Messages.getString("msgDirBigDataAndProjectGenerated");
+    }
+
     public static String getMsgDirBigDataDefaultNotFound() {
         return Messages.getString("msgDirBigDataDefaultNotFound");
+    }
+
+    public static String getMsgDirBigDataGenerated() {
+        return Messages.getString("msgDirBigDataGenerated");
     }
 
     public static String getMsgDirBigDataNotFound() {
@@ -589,6 +613,10 @@ public class I18N {
 
     public static String getMsgDirProjectDefaultNotFound() {
         return Messages.getString("msgDirProjectDefaultNotFound");
+    }
+
+    public static String getMsgDirProjectGenerated() {
+        return Messages.getString("msgDirProjectGenerated");
     }
 
     public static String getMsgDirProjectNotFound() {
@@ -727,6 +755,34 @@ public class I18N {
         return Messages.getString("statusRyCONSettingsSaved");
     }
 
+    public static String getTextDirAdminAndBigDataAndProjectGenerated() {
+        return Messages.getString("textDirAdminAndBigDataAndProjectGenerated");
+    }
+
+    public static String getTextDirAdminAndBigDataGenerated() {
+        return Messages.getString("textDirAdminAndBigDataGenerated");
+    }
+
+    public static String getTextDirAdminAndProjectGenerated() {
+        return Messages.getString("textDirAdminAndProjectGenerated");
+    }
+
+    public static String getTextDirAdminGenerated() {
+        return Messages.getString("textDirAdminGenerated");
+    }
+
+    public static String getTextDirBigDataAndProjectGenerated() {
+        return Messages.getString("textDirBigDataAndProjectGenerated");
+    }
+
+    public static String getTextDirBigDataGenerated() {
+        return Messages.getString("textDirBigDataGenerated");
+    }
+
+    public static String getTextDirProjectGenerated() {
+        return Messages.getString("textDirProjectGenerated");
+    }
+
     public static String getTrayMenuItemExit() {
         return Messages.getString("trayMenuItemExit");
     }
@@ -795,61 +851,5 @@ public class I18N {
             return s[1];
         }
 
-    }
-
-    public static String getMsgDirProjectGenerated() {
-        return Messages.getString("msgDirProjectGenerated");
-    }
-
-    public static String getTextDirProjectGenerated() {
-        return Messages.getString("textDirProjectGenerated");
-    }
-
-    public static String getTextDirBigDataGenerated() {
-        return Messages.getString("textDirBigDataGenerated");
-    }
-
-    public static String getMsgDirBigDataGenerated() {
-        return Messages.getString("msgDirBigDataGenerated");
-    }
-
-    public static String getTextDirAdminGenerated() {
-        return Messages.getString("textDirAdminGenerated");
-    }
-
-    public static String getMsgDirAdminGenerated() {
-        return Messages.getString("msgDirAdminGenerated");
-    }
-
-    public static String getTextDirBigDataAndProjectGenerated() {
-        return Messages.getString("textDirBigDataAndProjectGenerated");
-    }
-
-    public static String getMsgDirBigDataAndProjectGenerated() {
-        return Messages.getString("msgDirBigDataAndProjectGenerated");
-    }
-
-    public static String getTextDirAdminAndProjectGenerated() {
-        return Messages.getString("textDirAdminAndProjectGenerated");
-    }
-
-    public static String getMsgDirAdminAndProjectGenerated() {
-        return Messages.getString("msgDirAdminAndProjectGenerated");
-    }
-
-    public static String getMsgDirAdminAndBigDataGenerated() {
-        return Messages.getString("msgDirAdminAndBigDataGenerated");
-    }
-
-    public static String getTextDirAdminAndBigDataGenerated() {
-        return Messages.getString("textDirAdminAndBigDataGenerated");
-    }
-
-    public static void getTextDirAdminAndBigDataAndProjectGenerated() {
-        return Messages.getString("textDirAdminAndBigDataAndProjectGenerated");
-    }
-
-    public static void getMsgDirAdminAndBigDataAndProjectGenerated() {
-        return Messages.getString("msgDirAdminAndBigDataAndProjectGenerated");
     }
 } // end of I18N
