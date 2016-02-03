@@ -118,16 +118,9 @@ public class RadioHelper {
 
                         if (selectedSlave == slave.length - 1) {
                             ((Button) slave[0]).setSelection(true);
-                        }  else {
-                            ((Button) slave[i + 1]).setSelection(true);
-                        }
-/*
-                        if (selectedSlave == master.length - 1) {
-                            ((Button) slave[0]).setSelection(true);
                         } else {
                             ((Button) slave[i + 1]).setSelection(true);
                         }
-                        */
                     }
                 }
             }

@@ -712,7 +712,7 @@ public class SettingsWidget {
         Main.pref.setUserPref(PreferenceHandler.PARAM_FREE_STATION_STRING, identifierFreeStationTextField.getText());
         Main.pref.setUserPref(PreferenceHandler.PARAM_KNOWN_STATION_STRING, identifierKnownStationTextField.getText());
         
-        // TODO implement write setting success and checks for valid dirs
+        // TODO implement write setting success and checks for valid dirs (maybe with a listener construction?)
         
         return true;
     }

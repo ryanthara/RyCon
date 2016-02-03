@@ -1285,6 +1285,7 @@ public class LeicaGSIFileTools {
 
         private String trimLeadingZeros(String s) {
             String intern = s.replaceFirst("^0+(?!$)", "");  // cut off leading zeros with regex;
+            System.out.println(s + " " + intern);
 
             if (intern.startsWith(".")) {
                 return "0" + intern;

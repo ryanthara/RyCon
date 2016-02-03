@@ -142,14 +142,14 @@ public class ConverterWidget {
 
         groupSource = new Group(compositeSourceTarget, SWT.NONE);
         groupSource.setText(I18N.getGroupTitleSourceFileFormat());
-        groupSource.setLayout(new GridLayout(1, false));
+        groupSource.setLayout(new GridLayout(2, false));
 
         gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
         groupSource.setLayoutData(gridData);
 
         groupTarget = new Group(compositeSourceTarget, SWT.NONE);
         groupTarget.setText(I18N.getGroupTitleTargetFileFormat());
-        groupTarget.setLayout(new GridLayout(1, false));
+        groupTarget.setLayout(new GridLayout(2, false));
 
         gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
         groupTarget.setLayoutData(gridData);

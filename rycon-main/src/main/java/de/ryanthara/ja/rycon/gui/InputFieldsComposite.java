@@ -157,6 +157,13 @@ public class InputFieldsComposite extends Composite {
 
         btnDestination.setToolTipText(I18N.getBtnChoosePathToolTip());
         btnDestination.setLayoutData(new GridData());
+
+        // tabulator key order
+        Control[] controls = new Control[]{
+             sourceTextField, btnSource, destinationTextField, btnDestination
+        };
+
+        group.setTabList(controls);
     }
 
     private void doButtonAction(String target) {
