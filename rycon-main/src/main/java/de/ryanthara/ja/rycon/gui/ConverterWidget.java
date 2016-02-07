@@ -24,8 +24,9 @@ import de.ryanthara.ja.rycon.data.I18N;
 import de.ryanthara.ja.rycon.data.PreferenceHandler;
 import de.ryanthara.ja.rycon.io.LineReader;
 import de.ryanthara.ja.rycon.io.LineWriter;
-import de.ryanthara.ja.rycon.tools.LeicaGSIFileTools;
-import de.ryanthara.ja.rycon.tools.TextFileTools;
+import de.ryanthara.ja.rycon.tools.FileToolsCPlanK;
+import de.ryanthara.ja.rycon.tools.FileToolsLeicaGSI;
+import de.ryanthara.ja.rycon.tools.FileToolsText;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -67,11 +68,11 @@ public class ConverterWidget {
 
     private Button chkBoxCadworkUseCode;
     private Button chkBoxCadworkUseZeroHeights;
-    private Button chkBoxCSVSemiColonDelimiter;
+    private Button chkBoxCSVSemiColonSeparator;
     private Button chkBoxSourceContainsCode;
-    private Button chkBoxTXTSpaceDelimiter;
+    private Button chkBoxTXTSpaceSeparator;
     private Button chkBoxWriteCommentLine;
-    private File[] files2read;
+    private File[] files2read = new File[0];
     private Group groupSource;
     private Group groupTarget;
     private InputFieldsComposite inputFieldsComposite;
@@ -83,6 +84,11 @@ public class ConverterWidget {
      * The user interface is initialized in a separate method, which is called from here.
      */
     public ConverterWidget() {
+
+        // TODO Delete after test
+        FileToolsCPlanK cPlanK = new FileToolsCPlanK();
+        cPlanK.convertGSI2KFile();
+
         initUI();
     }
 
@@ -183,8 +189,8 @@ public class ConverterWidget {
         };
 
         String[] formatSource = {"GSI8", "GSI16", "TXT", "CSV", "cadwork node.dat", "Basel Stadt CSV"};
-        // String[] formatTarget = {"GSI8", "GSI16", "TXT", "CSV", "Excel 2007 (.xlsx)","Excel '97 (.xls)"};
-        String[] formatTarget = {"GSI8", "GSI16", "TXT", "CSV"};
+        // String[] formatTarget = {"GSI8", "GSI16", "TXT", "CSV", "C-PLAN", "Excel 2007 (.xlsx)","Excel '97 (.xls)"};
+        String[] formatTarget = {"GSI8", "GSI16", "TXT", "CSV", "C-PLAN"};
 
         for (int i = 0; i < formatSource.length; i++) {
             Button btnSourceFormats = new Button(groupSource, SWT.RADIO);
@@ -223,13 +229,13 @@ public class ConverterWidget {
         chkBoxSourceContainsCode.setSelection(false);
         chkBoxSourceContainsCode.setText(I18N.getBtnChkBoxSourceContainsCode());
 
-        chkBoxTXTSpaceDelimiter = new Button(group, SWT.CHECK);
-        chkBoxTXTSpaceDelimiter.setSelection(false);
-        chkBoxTXTSpaceDelimiter.setText(I18N.getBtnChkConverterTXTSpaceDelimiter());
+        chkBoxTXTSpaceSeparator = new Button(group, SWT.CHECK);
+        chkBoxTXTSpaceSeparator.setSelection(false);
+        chkBoxTXTSpaceSeparator.setText(I18N.getBtnChkConverterTXTSpaceSeparator());
 
-        chkBoxCSVSemiColonDelimiter = new Button(group, SWT.CHECK);
-        chkBoxCSVSemiColonDelimiter.setSelection(false);
-        chkBoxCSVSemiColonDelimiter.setText(I18N.getBtnChkConverterCSVSemiColonDelimiter());
+        chkBoxCSVSemiColonSeparator = new Button(group, SWT.CHECK);
+        chkBoxCSVSemiColonSeparator.setSelection(false);
+        chkBoxCSVSemiColonSeparator.setText(I18N.getBtnChkConverterCSVSemiColonSeparator());
 
         chkBoxCadworkUseCode = new Button(group, SWT.CHECK);
         chkBoxCadworkUseCode.setSelection(false);
@@ -270,13 +276,14 @@ public class ConverterWidget {
      * This method is used from the class InputFieldsComposite!
      */
     private void actionBtnDestination() {
-        String filterPath;
+        String filterPath = Main.pref.getUserPref(PreferenceHandler.DIR_PROJECT);
 
         // Set the initial filter path according to anything selected or typed in
-        if (inputFieldsComposite.getDestinationTextField().getText() == null) {
-            filterPath = Main.pref.getUserPref(PreferenceHandler.DIR_BASE);
-        } else {
-            filterPath = inputFieldsComposite.getDestinationTextField().getText();
+        if (!inputFieldsComposite.getDestinationTextField().getText().trim().equals("")) {
+            File destinationDir = new File(inputFieldsComposite.getDestinationTextField().getText());
+            if (destinationDir.isDirectory()) {
+                filterPath = inputFieldsComposite.getDestinationTextField().getText();
+            }
         }
 
         GuiHelper.showAdvancedDirectoryDialog(innerShell, inputFieldsComposite.getDestinationTextField(),
@@ -284,10 +291,14 @@ public class ConverterWidget {
     }
 
     private int actionBtnOk() {
-        files2read = WidgetHelper.checkSourceAndDestinationTextFields(
-                inputFieldsComposite.getSourceTextField(),
-                inputFieldsComposite.getDestinationTextField(), files2read);
-
+        if (files2read.length == 0) {
+            files2read = new File[1];
+            files2read[0] = new File(inputFieldsComposite.getSourceTextField().getText());
+        } else {
+            files2read = WidgetHelper.checkSourceAndDestinationTextFields(
+                    inputFieldsComposite.getSourceTextField(),
+                    inputFieldsComposite.getDestinationTextField(), files2read);
+        }
         if ((files2read != null) && (files2read.length > 0)) {
             if (processFileOperations()) {
                 // use counter to display different text on the status bar
@@ -324,7 +335,20 @@ public class ConverterWidget {
      */
     private void actionBtnSource() {
         FileDialog fileDialog = new FileDialog(innerShell, SWT.MULTI);
-        fileDialog.setFilterPath(Main.pref.getUserPref(PreferenceHandler.DIR_PROJECT));
+
+        String filterPath = Main.pref.getUserPref(PreferenceHandler.DIR_PROJECT);
+
+        // Set the initial filter path according to anything pasted or typed in
+        if (!inputFieldsComposite.getSourceTextField().getText().trim().equals("")) {
+            File sourceFile = new File(inputFieldsComposite.getSourceTextField().getText());
+            if (sourceFile.isDirectory()) {
+                filterPath = inputFieldsComposite.getSourceTextField().getText();
+            } else if (sourceFile.isFile()) {
+                GuiHelper.prepareDestinationText(inputFieldsComposite.getDestinationTextField(), sourceFile);
+            }
+        }
+
+        fileDialog.setFilterPath(filterPath);
         fileDialog.setText(I18N.getFileChooserTidyUpSourceText());
         fileDialog.setFilterExtensions(new String[]{"*.gsi", "*.txt", "*.csv", "*.dat"});
         fileDialog.setFilterNames(new String[]{
@@ -424,8 +448,8 @@ public class ConverterWidget {
             ArrayList<String> readFile = null;
             ArrayList<String> writeFile;
 
-            LeicaGSIFileTools gsiTools;
-            TextFileTools textFileTools;
+            FileToolsLeicaGSI gsiTools;
+            FileToolsText fileToolsText;
 
             String separator;
 
@@ -446,15 +470,15 @@ public class ConverterWidget {
                     break;
 
                 case 3:     // CSV format (comma or semicolon separated)
-                    char delimiter = ',';
+                    char separatorCSV = ',';
 
-                    if (chkBoxCSVSemiColonDelimiter.getSelection()) {
-                        delimiter = ';';
+                    if (chkBoxCSVSemiColonSeparator.getSelection()) {
+                        separatorCSV = ';';
                     }
 
                     // use opencsv project for reading -> could be done better?
                     try {
-                        CSVReader reader = new CSVReader(new FileReader(file2read), delimiter);
+                        CSVReader reader = new CSVReader(new FileReader(file2read), separatorCSV);
                         readCSVFile = reader.readAll();
                         readFileSuccess = true;
                     } catch (IOException e) {
@@ -498,7 +522,7 @@ public class ConverterWidget {
 
                             case 1:     // GSI16 format
                                 // process file operations
-                                gsiTools = new LeicaGSIFileTools(readFile);
+                                gsiTools = new FileToolsLeicaGSI(readFile);
                                 writeFile = gsiTools.convertGSI8vsGSI16(Main.getGSI8());
 
                                 // write file line by line
@@ -508,7 +532,7 @@ public class ConverterWidget {
                                 break;
 
                             case 2:     // TXT format (space or tabulator separated)
-                                gsiTools = new LeicaGSIFileTools(readFile);
+                                gsiTools = new FileToolsLeicaGSI(readFile);
                                 writeFile = gsiTools.convertTXT2GSI(Main.getGSI8(),
                                         chkBoxSourceContainsCode.getSelection());
 
@@ -519,7 +543,7 @@ public class ConverterWidget {
                                 break;
 
                             case 3:     // CSV format (comma or semicolon separated)
-                                gsiTools = new LeicaGSIFileTools(readCSVFile);
+                                gsiTools = new FileToolsLeicaGSI(readCSVFile);
                                 writeFile = gsiTools.convertCSV2GSI(Main.getGSI8(),
                                         chkBoxSourceContainsCode.getSelection());
 
@@ -530,7 +554,7 @@ public class ConverterWidget {
                                 break;
 
                             case 4:     // cadwork node.dat from cadwork CAD program
-                                gsiTools = new LeicaGSIFileTools(readFile);
+                                gsiTools = new FileToolsLeicaGSI(readFile);
                                 writeFile = gsiTools.convertCadwork2GSI(Main.getGSI8(),
                                         chkBoxCadworkUseCode.getSelection(),
                                         chkBoxCadworkUseZeroHeights.getSelection());
@@ -541,7 +565,7 @@ public class ConverterWidget {
                                 break;
 
                             case 5:     // CSV format 'Basel Stadt' (semicolon separated)
-                                gsiTools = new LeicaGSIFileTools(readCSVFile);
+                                gsiTools = new FileToolsLeicaGSI(readCSVFile);
                                 writeFile = gsiTools.convertCSVBaselStadt2GSI(Main.getGSI8(),
                                         chkBoxSourceContainsCode.getSelection());
 
@@ -558,7 +582,7 @@ public class ConverterWidget {
                         switch (sourceNumber) {
                             case 0:     // GSI8 format
                                 // process file operations
-                                gsiTools = new LeicaGSIFileTools(readFile);
+                                gsiTools = new FileToolsLeicaGSI(readFile);
                                 writeFile = gsiTools.convertGSI8vsGSI16(Main.getGSI16());
 
                                 // write file line by line
@@ -571,7 +595,7 @@ public class ConverterWidget {
                                 break;
 
                             case 2:     // TXT format (space or tabulator separated)
-                                gsiTools = new LeicaGSIFileTools(readFile);
+                                gsiTools = new FileToolsLeicaGSI(readFile);
                                 writeFile = gsiTools.convertTXT2GSI(Main.getGSI16(),
                                         chkBoxSourceContainsCode.getSelection());
 
@@ -582,7 +606,7 @@ public class ConverterWidget {
                                 break;
 
                             case 3:     // CSV format (comma or semicolon separated)
-                                gsiTools = new LeicaGSIFileTools(readCSVFile);
+                                gsiTools = new FileToolsLeicaGSI(readCSVFile);
                                 writeFile = gsiTools.convertCSV2GSI(Main.getGSI16(),
                                         chkBoxSourceContainsCode.getSelection());
 
@@ -593,7 +617,7 @@ public class ConverterWidget {
                                 break;
 
                             case 4:     // cadwork node.dat from cadwork CAD program
-                                gsiTools = new LeicaGSIFileTools(readFile);
+                                gsiTools = new FileToolsLeicaGSI(readFile);
                                 writeFile = gsiTools.convertCadwork2GSI(Main.getGSI16(),
                                         chkBoxCadworkUseCode.getSelection(),
                                         chkBoxCadworkUseZeroHeights.getSelection());
@@ -604,7 +628,7 @@ public class ConverterWidget {
                                 break;
 
                             case 5:     // CSV format 'Basel Stadt' (semicolon separated)
-                                gsiTools = new LeicaGSIFileTools(readCSVFile);
+                                gsiTools = new FileToolsLeicaGSI(readCSVFile);
                                 writeFile = gsiTools.convertCSVBaselStadt2GSI(Main.getGSI16(),
                                         chkBoxSourceContainsCode.getSelection());
 
@@ -622,14 +646,14 @@ public class ConverterWidget {
                             case 0:     // fall through for GSI8 format
                             case 1:     // GSI16 format
                                 // get separator sign
-                                if (chkBoxTXTSpaceDelimiter.getSelection()) {
-                                    separator = Main.getDelimiterSpace();
+                                if (chkBoxTXTSpaceSeparator.getSelection()) {
+                                    separator = Main.getSeparatorSpace();
                                 } else {
-                                    separator = Main.getDelimiterTab();
+                                    separator = Main.getSeparatorTab();
                                 }
 
                                 // process file operations
-                                gsiTools = new LeicaGSIFileTools(readFile);
+                                gsiTools = new FileToolsLeicaGSI(readFile);
                                 writeFile = gsiTools.convertGSI2TXT(separator, GSIFormat, chkBoxWriteCommentLine.getSelection());
 
                                 // write file line by line
@@ -643,15 +667,15 @@ public class ConverterWidget {
 
                             case 3:     // CSV format (comma or semicolon separated)
                                 // get separator sign
-                                if (chkBoxTXTSpaceDelimiter.getSelection()) {
-                                    separator = Main.getDelimiterSpace();
+                                if (chkBoxTXTSpaceSeparator.getSelection()) {
+                                    separator = Main.getSeparatorSpace();
                                 } else {
-                                    separator = Main.getDelimiterTab();
+                                    separator = Main.getSeparatorTab();
                                 }
 
                                 // process file operations
-                                textFileTools = new TextFileTools(readCSVFile);
-                                writeFile = textFileTools.convertCSV2TXT(separator);
+                                fileToolsText = new FileToolsText(readCSVFile);
+                                writeFile = fileToolsText.convertCSV2TXT(separator);
 
                                 // write file line by line
                                 if (writeFile(file2read, writeFile, ".TXT")) {
@@ -661,18 +685,18 @@ public class ConverterWidget {
 
                             case 4:     // cadwork node.dat from cadwork CAD program
                                 // get separator sign
-                                if (chkBoxTXTSpaceDelimiter.getSelection()) {
-                                    separator = Main.getDelimiterSpace();
+                                if (chkBoxTXTSpaceSeparator.getSelection()) {
+                                    separator = Main.getSeparatorSpace();
                                 } else {
-                                    separator = Main.getDelimiterTab();
+                                    separator = Main.getSeparatorTab();
                                 }
 
                                 // process file operations
-                                gsiTools = new LeicaGSIFileTools(readFile);
+                                gsiTools = new FileToolsLeicaGSI(readFile);
                                 ArrayList<String> stopOver = gsiTools.convertCadwork2GSI(Main.getGSI16(),
                                         chkBoxCadworkUseCode.getSelection(),
                                         chkBoxCadworkUseZeroHeights.getSelection());
-                                LeicaGSIFileTools stopOverFile = new LeicaGSIFileTools(stopOver);
+                                FileToolsLeicaGSI stopOverFile = new FileToolsLeicaGSI(stopOver);
                                 writeFile = stopOverFile.convertGSI2TXT(separator, GSIFormat, chkBoxWriteCommentLine.getSelection());
 
                                 // write file line by line
@@ -683,14 +707,14 @@ public class ConverterWidget {
 
                             case 5:     // CSV format 'Basel Stadt' (semicolon separated)
                                 // get separator sign
-                                if (chkBoxTXTSpaceDelimiter.getSelection()) {
-                                    separator = Main.getDelimiterSpace();
+                                if (chkBoxTXTSpaceSeparator.getSelection()) {
+                                    separator = Main.getSeparatorSpace();
                                 } else {
-                                    separator = Main.getDelimiterTab();
+                                    separator = Main.getSeparatorTab();
                                 }
 
-                                textFileTools = new TextFileTools(readCSVFile);
-                                writeFile = textFileTools.convertCSVBaselStadt2TXT(separator);
+                                fileToolsText = new FileToolsText(readCSVFile);
+                                writeFile = fileToolsText.convertCSVBaselStadt2TXT(separator);
 
                                 // write file line by line
                                 if (writeFile(file2read, writeFile, ".TXT")) {
@@ -707,14 +731,14 @@ public class ConverterWidget {
                             case 1:     // GSI16 format
 
                                 // get separator sign
-                                if (chkBoxCSVSemiColonDelimiter.getSelection()) {
-                                    separator = Main.getDelimiterSemicolon();
+                                if (chkBoxCSVSemiColonSeparator.getSelection()) {
+                                    separator = Main.getSeparatorSemicolon();
                                 } else {
-                                    separator = Main.getDelimiterComma();
+                                    separator = Main.getSeparatorComma();
                                 }
 
                                 // process file operations
-                                gsiTools = new LeicaGSIFileTools(readFile);
+                                gsiTools = new FileToolsLeicaGSI(readFile);
                                 writeFile = gsiTools.convertGSI2CSV(separator, chkBoxWriteCommentLine.getSelection());
 
                                 // write file line by line
@@ -725,15 +749,15 @@ public class ConverterWidget {
 
                             case 2:     // TXT format (space or tabulator separated)
                                 // get separator sign
-                                if (chkBoxCSVSemiColonDelimiter.getSelection()) {
-                                    separator = Main.getDelimiterSemicolon();
+                                if (chkBoxCSVSemiColonSeparator.getSelection()) {
+                                    separator = Main.getSeparatorSemicolon();
                                 } else {
-                                    separator = Main.getDelimiterComma();
+                                    separator = Main.getSeparatorComma();
                                 }
 
                                 // process file operations
-                                textFileTools = new TextFileTools(readFile);
-                                writeFile = textFileTools.convertTXT2CSV(separator);
+                                fileToolsText = new FileToolsText(readFile);
+                                writeFile = fileToolsText.convertTXT2CSV(separator);
 
                                 // write file line by line
                                 if (writeFile(file2read, writeFile, ".CSV")) {
@@ -749,14 +773,14 @@ public class ConverterWidget {
                             
                             case 5:     // CSV format 'Basel Stadt' (semicolon separated)
                                 // get separator sign
-                                if (chkBoxCSVSemiColonDelimiter.getSelection()) {
-                                    separator = Main.getDelimiterSemicolon();
+                                if (chkBoxCSVSemiColonSeparator.getSelection()) {
+                                    separator = Main.getSeparatorSemicolon();
                                 } else {
-                                    separator = Main.getDelimiterComma();
+                                    separator = Main.getSeparatorComma();
                                 }
 
-                                textFileTools = new TextFileTools(readCSVFile);
-                                writeFile = textFileTools.convertCSVBaselStadt2TXT(separator);
+                                fileToolsText = new FileToolsText(readCSVFile);
+                                writeFile = fileToolsText.convertCSVBaselStadt2TXT(separator);
 
                                 // write file line by line
                                 if (writeFile(file2read, writeFile, ".CSV")) {
@@ -767,12 +791,31 @@ public class ConverterWidget {
                         }
                         break;
 
-                    case 4:     // Excel 2007 (.xlsx)
+                    case 4:     // C-PLAN (.K)
+                        switch (sourceNumber) {
+                            case 0:     // fall through for GSI8 format
+                            case 1:     // GSI16 format
+                                break;
+                            case 2:     // TXT format (space or tabulator separated)
+                                break;
+                            case 3:     // CSV format (not possible)
+                                break;
+
+                            case 4:     // cadwork node.dat from cadwork CAD program
+                                break;
+
+                            case 5:     // CSV format 'Basel Stadt' (semicolon separated)
+                                break;
+                        }
+
+                        break;
+
+                    case 5:     // Excel 2007 (.xlsx)
                         switch (sourceNumber) {
                             case 0:     // fall through for GSI8 format
                             case 1:     // GSI16 format
                                 // process file operations
-                                gsiTools = new LeicaGSIFileTools(readFile);
+                                gsiTools = new FileToolsLeicaGSI(readFile);
                                 gsiTools.prepareTableData(chkBoxWriteCommentLine.getSelection());
                                 break;
                             case 2:     // TXT format (space or tabulator separated)
@@ -790,12 +833,12 @@ public class ConverterWidget {
 
                         break;
 
-                    case 5:     // Excel 97 (.xls)
+                    case 6:     // Excel 97 (.xls)
                         switch (sourceNumber) {
                             case 0:     // fall through for GSI8 format
                             case 1:     // GSI16 format
                                 // process file operations
-                                gsiTools = new LeicaGSIFileTools(readFile);
+                                gsiTools = new FileToolsLeicaGSI(readFile);
                                 gsiTools.prepareTableData(chkBoxWriteCommentLine.getSelection());
                                 break;
                             case 2:     // TXT format (space or tabulator separated)

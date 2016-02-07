@@ -23,8 +23,8 @@ import de.ryanthara.ja.rycon.data.I18N;
 import de.ryanthara.ja.rycon.data.PreferenceHandler;
 import de.ryanthara.ja.rycon.io.LineReader;
 import de.ryanthara.ja.rycon.io.LineWriter;
-import de.ryanthara.ja.rycon.tools.LeicaGSIFileTools;
-import de.ryanthara.ja.rycon.tools.TextFileTools;
+import de.ryanthara.ja.rycon.tools.FileToolsLeicaGSI;
+import de.ryanthara.ja.rycon.tools.FileToolsText;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -64,7 +64,7 @@ public class CodeSplitterWidget {
 
     private Button chkBoxWriteCodeZero;
     private Button chkBoxDropCodeBlock;
-    private File[] files2read;
+    private File[] files2read = new File[0];
     private InputFieldsComposite inputFieldsComposite;
     private Shell innerShell = null;
     private final String[] acceptableFileSuffixes = new String[]{"*.gsi", "*.txt"};
@@ -202,14 +202,18 @@ public class CodeSplitterWidget {
         innerShell.dispose();
     }
 
+    /*
+     * This method is used from the class InputFieldsComposite!
+     */
     private void actionBtnDestination() {
-        String filterPath;
+        String filterPath = Main.pref.getUserPref(PreferenceHandler.DIR_PROJECT);
 
         // Set the initial filter path according to anything selected or typed in
-        if (inputFieldsComposite.getDestinationTextField().getText() == null) {
-            filterPath = Main.pref.getUserPref(PreferenceHandler.DIR_BASE);
-        } else {
-            filterPath = inputFieldsComposite.getDestinationTextField().getText();
+        if (!inputFieldsComposite.getDestinationTextField().getText().trim().equals("")) {
+            File destinationDir = new File(inputFieldsComposite.getDestinationTextField().getText());
+            if (destinationDir.isDirectory()) {
+                filterPath = inputFieldsComposite.getDestinationTextField().getText();
+            }
         }
 
         GuiHelper.showAdvancedDirectoryDialog(innerShell, inputFieldsComposite.getDestinationTextField(),
@@ -217,9 +221,14 @@ public class CodeSplitterWidget {
     }
 
     private int actionBtnOk() {
-        files2read = WidgetHelper.checkSourceAndDestinationTextFields(
-                inputFieldsComposite.getSourceTextField(),
-                inputFieldsComposite.getDestinationTextField(), files2read);
+        if (files2read.length == 0) {
+            files2read = new File[1];
+            files2read[0] = new File(inputFieldsComposite.getSourceTextField().getText());
+        } else {
+            files2read = WidgetHelper.checkSourceAndDestinationTextFields(
+                    inputFieldsComposite.getSourceTextField(),
+                    inputFieldsComposite.getDestinationTextField(), files2read);
+        }
 
         if ((files2read != null) && (files2read.length > 0)) {
             if (processFileOperations()) {
@@ -261,10 +270,21 @@ public class CodeSplitterWidget {
                 I18N.getFileChooserFilterNameTXT()
         };
 
+        String filterPath = Main.pref.getUserPref(PreferenceHandler.DIR_PROJECT);
+
+        // Set the initial filter path according to anything pasted or typed in
+        if (!inputFieldsComposite.getSourceTextField().getText().trim().equals("")) {
+            File sourceFile = new File(inputFieldsComposite.getSourceTextField().getText());
+            if (sourceFile.isDirectory()) {
+                filterPath = inputFieldsComposite.getSourceTextField().getText();
+            } else if (sourceFile.isFile()) {
+                GuiHelper.prepareDestinationText(inputFieldsComposite.getDestinationTextField(), sourceFile);
+            }
+        }
+
         files2read = GuiHelper.showAdvancedFileDialog(
-                innerShell, SWT.MULTI, Main.pref.getUserPref(PreferenceHandler.DIR_PROJECT),
-                I18N.getFileChooserSplitterSourceText(), acceptableFileSuffixes, filterNames,
-                inputFieldsComposite.getSourceTextField(), inputFieldsComposite.getDestinationTextField());
+                innerShell, SWT.MULTI, filterPath, I18N.getFileChooserSplitterSourceText(), acceptableFileSuffixes,
+                filterNames, inputFieldsComposite.getSourceTextField(), inputFieldsComposite.getDestinationTextField());
     }
 
     private boolean processFileOperations() {
@@ -309,7 +329,7 @@ public class CodeSplitterWidget {
                 String suffix = file2read.getName().toLowerCase();
 
                 if (suffix.endsWith(".gsi")) {
-                    LeicaGSIFileTools gsiTools = new LeicaGSIFileTools(readFile);
+                    FileToolsLeicaGSI gsiTools = new FileToolsLeicaGSI(readFile);
                     writeFile = gsiTools.processCodeSplit(createCodeColumn, writeFileWithCodeZero);
 
                     Iterator<Integer> codeIterator = gsiTools.getFoundCodes().iterator();
@@ -324,10 +344,10 @@ public class CodeSplitterWidget {
                         }
                     }
                 } else if (suffix.endsWith(".txt")) {
-                    TextFileTools textFileTools = new TextFileTools(readFile);
-                    writeFile = textFileTools.processCodeSplit(createCodeColumn);
+                    FileToolsText fileToolsText = new FileToolsText(readFile);
+                    writeFile = fileToolsText.processCodeSplit(createCodeColumn);
 
-                    Iterator<Integer> codeIterator = textFileTools.getFoundCodes().iterator();
+                    Iterator<Integer> codeIterator = fileToolsText.getFoundCodes().iterator();
 
                     // write file by file with one code
                     for (ArrayList<String> lines : writeFile) {

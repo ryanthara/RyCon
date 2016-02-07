@@ -32,11 +32,12 @@ import java.io.File;
  *
  * <h3>Changes:</h3>
  * <ul>
+ *     <li>2: improvements and new functions </li>
  *     <li>1: basic implementation </li>
  * </ul>
  *
  * @author sebastian
- * @version 1
+ * @version 2
  * @since 7
  */
 public class GuiHelper {
@@ -46,6 +47,16 @@ public class GuiHelper {
      */
     public GuiHelper() {}
 
+    /**
+     * Sets a given file name from the source text field as text into the destination text field.
+     *
+     * @param destinationText destination text field
+     * @param sourceFile file name from source text field
+     * @since 2
+     */
+    public static void prepareDestinationText(Text destinationText, File sourceFile) {
+        destinationText.setText(sourceFile.getName());
+    }
 
     /**
      * Shows a directory dialog which is used in different classes of RyCON.
@@ -57,7 +68,7 @@ public class GuiHelper {
      * @param title title of the directory dialog
      * @param message message of the directory dialog
      * @param checkedFilterPath filter path of the directory dialog
-     * @since 7
+     * @since 2
      */
     public static void showAdvancedDirectoryDialog(Shell innerShell, Text textField, String title, String message, String checkedFilterPath) {
         DirectoryDialog directoryDialog = new DirectoryDialog(innerShell);
@@ -89,7 +100,7 @@ public class GuiHelper {
      * @param source source text field
      * @param destination destination text field
      * @return chosen files as String array
-     * @since 7
+     * @since 2
      */
     public static File[] showAdvancedFileDialog(Shell innerShell, int multiSelection, String filterPath, String text,
                                               String[] filterExtensions, String[] filterNames, Text source, Text destination) {

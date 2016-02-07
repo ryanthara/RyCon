@@ -21,26 +21,30 @@ package de.ryanthara.ja.rycon.gui;
 import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.data.I18N;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
- * This class implements a custom composite with two labels, text fields and buttons for
- * file and directory input used in RyCON's widgets.
+ * This class implements a custom composite with two labels, two text fields and two buttons for
+ * file and directory inputs used in RyCON's widgets.
  *
  * <h3>Changes:</h3>
  * <ul>
+ *     <li>2: little corrections</li>
  *     <li>1: basic implementation </li>
  * </ul>
  *
  * @author sebastian
- * @version 1
+ * @version 2
  * @since 4
  */
 public class InputFieldsComposite extends Composite {
@@ -76,7 +80,7 @@ public class InputFieldsComposite extends Composite {
         gridData.widthHint = Main.getRyCONWidgetWidth();
         group.setLayoutData(gridData);
 
-        Label source = new Label(group, SWT.NONE);
+        final Label source = new Label(group, SWT.NONE);
         source.setText(I18N.getLabelTextSource());
 
         sourceTextField = new Text(group, SWT.BORDER);
@@ -96,6 +100,18 @@ public class InputFieldsComposite extends Composite {
                     doButtonAction("actionBtnSource");
                     destinationTextField.setFocus();
                 }
+            }
+        });
+
+        sourceTextField.addModifyListener(new ModifyListener() {
+            @Override
+            public void modifyText(ModifyEvent modifyEvent) {
+                File sourceFile = new File(sourceTextField.getText());
+
+                if (sourceFile.exists() & sourceFile.isFile()) {
+                      GuiHelper.prepareDestinationText(destinationTextField, sourceFile);
+                }
+
             }
         });
 
