@@ -30,10 +30,10 @@ package de.ryanthara.ja.rycon.data;
  */
 public class Version {
 
-    private final int buildNumber = 20;
-    private final int majorVersion = 0;
-    private final int minorVersion = 98;
-    private final String buildDate = "2015-11-20";
+    private static final int buildNumber = 20;
+    private static final int majorVersion = 0;
+    private static final int minorVersion = 98;
+    private static final String buildDate = "2015-11-20";
 
     /**
      * Returns the build date of RyCON as string.
@@ -49,7 +49,7 @@ public class Version {
      *
      * @return the build number
      */
-    public int getBuildNumber() {
+    public static final int getBuildNumber() {
         return buildNumber;
     }
 
@@ -58,7 +58,7 @@ public class Version {
      *
      * @return the major version number
      */
-    public int getMajorVersionNumber() {
+    public static final int getMajorVersionNumber() {
         return majorVersion;
     }
 
@@ -67,8 +67,16 @@ public class Version {
      *
      * @return the minor version number
      */
-    public int getMinorVersionNumber() {
+    public static final int getMinorVersionNumber() {
         return minorVersion;
+    }
+
+    /**
+     * Returns the current version of RyCON as string value (major.minor).
+     * @return the major.minor version
+     */
+    public static final String getVersion() {
+        return Integer.toString(majorVersion) + "." + Integer.toString(minorVersion);
     }
 
 }
