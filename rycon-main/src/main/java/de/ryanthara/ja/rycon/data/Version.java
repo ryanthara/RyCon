@@ -24,8 +24,14 @@ package de.ryanthara.ja.rycon.data;
  * Every new version change of RyCON has to be filled in here! This is necessary
  * because of the online check for a new version of RyCON.
  *
+ * <h3>Changes:</h3>
+ * <ul>
+ *     <li>2: change to static behaviour </li>
+ *     <li>1: basic implementation </li>
+ * </ul>
+ *
  * @author sebastian
- * @version 1
+ * @version 2
  * @since 1
  */
 public class Version {
@@ -40,7 +46,7 @@ public class Version {
      *
      * @return the build date
      */
-    public String getBuildDate() {
+    public static final String getBuildDate() {
         return buildDate;
     }
 
