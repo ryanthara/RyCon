@@ -65,18 +65,13 @@ import java.util.Collections;
  */
 public class NotificationPopupWidget {
 
-    /**
-     * Constant which shows a popup 4.5 seconds.
-     */
-    public static int DISPLAY_TIME = 4500;
-
     private static int displayTime;
     private static final int FADE_IN_STEP = 30;
     private static final int FADE_OUT_STEP = 8;
     private static final int FADE_TIMER = 50;
     private static final int FINAL_ALPHA = 255;
 
-    private static ArrayList<Shell> activeShells = new ArrayList<Shell>();
+    private static ArrayList<Shell> activeShells = new ArrayList<>();
 
     private static Color backgroundGradient = ColorCache.getColor(177, 211, 243);
     private static Color borderColor  = ColorCache.getColor(40, 73, 97);
@@ -179,8 +174,6 @@ public class NotificationPopupWidget {
         String lines[] = message.split("\n");
         Point longest = null;
 
-        int normalHeight = gc.stringExtent("THW").y;
-
         for (String line : lines) {
             Point extent = gc.stringExtent(line);
 
@@ -197,13 +190,10 @@ public class NotificationPopupWidget {
         // rule 1
         gc.dispose();
 
-        int minHeight = normalHeight * lines.length;
-
         createLabels(composite, type);
 
-        // fixed value for minHeight
-        // TODO better value handling should be done here later
-        minHeight = 100;
+        //int minHeight = normalHeight * lines.length;
+        int minHeight = 100;    // fixed value for minHeight
 
         innerShell.setSize(350, minHeight);
 
@@ -219,7 +209,7 @@ public class NotificationPopupWidget {
 
         // move other existing shells up
         if (!activeShells.isEmpty()) {
-            ArrayList<Shell> modifiableShells = new ArrayList<Shell>(activeShells);
+            ArrayList<Shell> modifiableShells = new ArrayList<>(activeShells);
             Collections.reverse(modifiableShells);
 
             for (Shell shell : modifiableShells) {
@@ -275,7 +265,7 @@ public class NotificationPopupWidget {
 
         textLabel.setForeground(foregroundColor);
         textLabel.setLayoutData(gridData);
-        textLabel.setText(String.format(message));
+        textLabel.setText(message);
 
         // sets the url on the bottom
         Link link = new Link(composite, SWT.NONE);

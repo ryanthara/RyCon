@@ -89,10 +89,6 @@ public abstract class Main {
     private static final int RyCON_WIDGET_WIDTH = 666;
     private static final int RyCON_WIDGET_HEIGHT = 412;
     private static final String APP_NAME = "RyCON";
-    private static final String DELIMITER_COMMA = ",";
-    private static final String DELIMITER_SEMICOLON = ";";
-    private static final String DELIMITER_SPACE = " ";
-    private static final String DELIMITER_TAB = "\t";
     private static final String DIR_BASE = ".";
     private static final String DIR_ADMIN = "./admin";
     private static final String DIR_ADMIN_TEMPLATE = "./admin/template-folder";
@@ -104,6 +100,11 @@ public abstract class Main {
     private static final String PARAM_CONTROL_POINT_STRING = "STKE";
     private static final String PARAM_FREE_STATION_STRING = "FS";
     private static final String PARAM_KNOWN_STATION_STRING = "ST";
+    private static final String SEPARATOR_COMMA = ",";
+    private static final String SEPARATOR_SEMICOLON = ";";
+    private static final String SEPARATOR_SPACE = " ";
+    private static final String SEPARATOR_TAB = "\t";
+
     /**
      * Reference to the global application.
      */
@@ -283,10 +284,7 @@ public abstract class Main {
 
                         display.dispose();
                         System.exit(0);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        System.err.println("Could not open default browser.");
-                    } catch (URISyntaxException e) {
+                    } catch (IOException | URISyntaxException e) {
                         e.printStackTrace();
                         System.err.println("Could not open default browser.");
                     }
@@ -301,43 +299,43 @@ public abstract class Main {
     }
 
     /**
-     * Returns the sign for the comma delimiter as string.
+     * Returns the sign for the comma separator as string.
      *
      * @return comma sign
      * @since 3
      */
-    public static String getDelimiterComma() {
-        return DELIMITER_COMMA;
+    public static String getSeparatorComma() {
+        return SEPARATOR_COMMA;
     }
 
     /**
-     * Returns the sign for the semicolon delimiter as string.
+     * Returns the sign for the semicolon separator as string.
      *
      * @return semicolon sign
      * @since 3
      */
-    public static String getDelimiterSemicolon() {
-        return DELIMITER_SEMICOLON;
+    public static String getSeparatorSemicolon() {
+        return SEPARATOR_SEMICOLON;
     }
 
     /**
-     * Returns the sign for the space delimiter as string.
+     * Returns the sign for the space separator as string.
      *
      * @return space sign
      * @since 3
      */
-    public static String getDelimiterSpace() {
-        return DELIMITER_SPACE;
+    public static String getSeparatorSpace() {
+        return SEPARATOR_SPACE;
     }
 
     /**
-     * Returns the sign for the tab delimiter as string.
+     * Returns the sign for the tab separator as string.
      *
      * @return tab sign
      * @since 3
      */
-    public static String getDelimiterTab() {
-        return DELIMITER_TAB;
+    public static String getSeparatorTab() {
+        return SEPARATOR_TAB;
     }
 
     /**
@@ -372,7 +370,7 @@ public abstract class Main {
 
     /**
      * Returns the path of the big data directory as string value
-     * @return
+     * @return big data directory
      */
     public static String getDirBigData() {
         return DIR_BIG_DATA;
@@ -556,17 +554,12 @@ public abstract class Main {
      * @param uri uri to open in default browser
      */
     public static void openURI(String uri) {
-
         try {
             Desktop.getDesktop().browse(new URI(uri));
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.err.println("Could not open default browser.");
-        } catch (URISyntaxException e) {
+        } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
             System.err.println("Could not open default browser.");
         }
-
     }
 
     /**
@@ -576,11 +569,7 @@ public abstract class Main {
      * @param languageCode language code
      */
     public static void setLocaleTo(String languageCode) {
-        final String lowerCase = languageCode;
-        final String upperCase = languageCode.toUpperCase();
-
-        Locale locale = new Locale(lowerCase, upperCase);
-        Locale.setDefault(locale);
+        Locale.setDefault(new Locale(languageCode, languageCode.toUpperCase()));
     }
 
     /**

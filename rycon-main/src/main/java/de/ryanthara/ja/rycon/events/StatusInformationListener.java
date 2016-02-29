@@ -33,4 +33,4 @@ package de.ryanthara.ja.rycon.events;
  */
 public interface StatusInformationListener extends java.util.EventListener {
     void setStatusText(StatusInformationEvent e);
-}
+} // end of StatusInformationListener

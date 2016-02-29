@@ -163,7 +163,7 @@ class AFont {
  */
 public class FontCache {
 
-    private static ArrayList<AFont> fontMap = new ArrayList<AFont>();
+    private static ArrayList<AFont> fontMap = new ArrayList<>();
 
     /**
      * Disposes all fonts and clear the cache. 

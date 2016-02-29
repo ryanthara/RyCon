@@ -19,8 +19,8 @@ package de.ryanthara.ja.rycon.tools;
 
 import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.data.PreferenceHandler;
+import de.ryanthara.ja.rycon.tools.elements.GSIBlock;
 
-import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -49,33 +49,33 @@ import java.util.*;
  * @version 6
  * @since 1
  */
-public class LeicaGSIFileTools {
+public class FileToolsLeicaGSI {
 
     private boolean isGSI16 = false;
-    private ArrayList<String> readStringLines;
-    private List<String[]> readCSVLines;
-    private TreeSet<Integer> foundCodes = new TreeSet<Integer>();
-    private TreeSet<Integer> foundWordIndices = new TreeSet<Integer>();
+    private ArrayList<String> readStringLines = null;
+    private List<String[]> readCSVLines = null;
+    private TreeSet<Integer> foundCodes = new TreeSet<>();
+    private TreeSet<Integer> foundWordIndices = new TreeSet<>();
 
     /**
      * Class constructor with parameter for the read lines as {@code ArrayList<String>} object.
      * <p>
-     * This constructor is used for read text and GSI file lines.
+     * This constructor is used for reading line based text files without a special separator sign.
      *
      * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
      */
-    public LeicaGSIFileTools(ArrayList<String> readStringLines) {
+    public FileToolsLeicaGSI(ArrayList<String> readStringLines) {
         this.readStringLines = readStringLines;
     }
 
     /**
      * Class constructor with parameter for the read lines as {@code List<String[]>} object.
      * <p>
-     * This constructor is used for read csv file lines.
+     * This constructor is used for reading csv file lines.
      *
      * @param readCSVLines {@code List<String[]>} with lines as {@code String[]}
      */
-    public LeicaGSIFileTools(List<String[]> readCSVLines) {
+    public FileToolsLeicaGSI(List<String[]> readCSVLines) {
         this.readCSVLines = readCSVLines;
     }
 
@@ -91,37 +91,38 @@ public class LeicaGSIFileTools {
      */
     public ArrayList<String> convertCadwork2GSI(boolean isGSI16, boolean useCodeColumn, boolean useZeroHeights) {
         ArrayList<GSIBlock> blocks;
-        ArrayList<ArrayList<GSIBlock>> blocksInLines = new ArrayList<ArrayList<GSIBlock>>();
+        ArrayList<ArrayList<GSIBlock>> blocksInLines = new ArrayList<>();
 
-        readStringLines.remove(0);
-        readStringLines.remove(0);
-        readStringLines.remove(0);
+        // remove not needed headlines
+        for (int i = 0; i < 3; i++) {
+            readStringLines.remove(0);
+        }
 
         int lineCounter = 1;
 
         for (String line : readStringLines) {
-            blocks = new ArrayList<GSIBlock>();
+            blocks = new ArrayList<>();
 
             String[] lineSplit = line.trim().split("\\s+");
 
             // point number
-            blocks.add(new GSIBlock(isGSI16, 11, lineCounter, lineSplit[6]));
+            blocks.add(new GSIBlock(isGSI16, 11, lineCounter, lineSplit[5]));
 
             // use code if necessary
             if (useCodeColumn) {
-                blocks.add(new GSIBlock(isGSI16, 71, lineCounter, lineSplit[5]));
+                blocks.add(new GSIBlock(isGSI16, 71, lineCounter, lineSplit[4]));
             }
 
             // easting and northing
-            blocks.add(new GSIBlock(isGSI16, 81, lineCounter, lineSplit[2]));
-            blocks.add(new GSIBlock(isGSI16, 82, lineCounter, lineSplit[3]));
+            blocks.add(new GSIBlock(isGSI16, 81, lineCounter, lineSplit[1]));
+            blocks.add(new GSIBlock(isGSI16, 82, lineCounter, lineSplit[2]));
 
             // use height if necessary
             if (useZeroHeights) {
-                blocks.add(new GSIBlock(isGSI16, 83, lineCounter, lineSplit[4]));
+                blocks.add(new GSIBlock(isGSI16, 83, lineCounter, lineSplit[3]));
             } else {
                 if (!lineSplit[4].equals("0.000000")) {
-                    blocks.add(new GSIBlock(isGSI16, 83, lineCounter, lineSplit[4]));
+                    blocks.add(new GSIBlock(isGSI16, 83, lineCounter, lineSplit[3]));
                 }
             }
 
@@ -145,7 +146,7 @@ public class LeicaGSIFileTools {
      * @return converted {@code ArrayList<String>} with lines of text format
      */
     public ArrayList<String> convertCSVBaselStadt2GSI(boolean isGSI16, boolean sourceContainsCodeColumn) {
-        ArrayList<String> result = new ArrayList<String>();
+        ArrayList<String> result = new ArrayList<>();
 
         for (String[] stringField : readCSVLines) {
             String line;
@@ -180,7 +181,7 @@ public class LeicaGSIFileTools {
     /**
      * Converts a CSV file (comma or semicolon delimited) into a GSI file.
      * <p>
-     * The format of the GSI file is controlled with a parameter. The delimitor
+     * The format of the GSI file is controlled with a parameter. The separator
      * sign is automatically detected.
      *
      * @param isGSI16 control if GSI8 or GSI16 format is written
@@ -188,7 +189,7 @@ public class LeicaGSIFileTools {
      * @return converted {@code ArrayList<String>} with lines of GSI format
      */
     public ArrayList<String> convertCSV2GSI(boolean isGSI16, boolean sourceContainsCodeColumn) {
-        ArrayList<String> result = new ArrayList<String>();
+        ArrayList<String> result = new ArrayList<>();
 
         // convert the List<String[]> into an ArrayList<String> and use known stuff (-:
         for (String[] stringField : readCSVLines) {
@@ -222,12 +223,12 @@ public class LeicaGSIFileTools {
      * <p>
      * With parameter it is possible to set the separation char (comma or semicolon).
      *
-     * @param delimiter delimiter sign as {@code String}
+     * @param separator separator sign as {@code String}
      * @param writeCommentLine if comment line should be written
      * @return converted {@code ArrayList<String>} with lines of text format
      */
-    public ArrayList<String> convertGSI2CSV(String delimiter, boolean writeCommentLine) {
-        ArrayList<String> result = new ArrayList<String>();
+    public ArrayList<String> convertGSI2CSV(String separator, boolean writeCommentLine) {
+        ArrayList<String> result = new ArrayList<>();
 
         // transform lines into GSI-Blocks
         ArrayList<ArrayList<GSIBlock>> gsiBlocks = blockEncoder(readStringLines);
@@ -243,7 +244,7 @@ public class LeicaGSIFileTools {
                 builder.append(wordIndex.toString());
 
                 if (counter < foundWordIndices.size() - 1) {
-                    builder.append(delimiter);
+                    builder.append(separator);
                 }
 
                 counter++;
@@ -258,12 +259,12 @@ public class LeicaGSIFileTools {
             Iterator<Integer> it = foundWordIndices.iterator();
 
             for (int i = 0; i < foundWordIndices.size(); i++) {
-                Integer wordIndice = it.next();
+                Integer wordIndex = it.next();
                 String intern = "";
 
                 for (GSIBlock block : blocksAsLines) {
                     // check the WI and fill in an empty block of spaces if WI doesn't match to 'column'
-                    if (wordIndice == block.wordIndex) {
+                    if (wordIndex == block.getWordIndex()) {
                         intern = block.toPrintFormatCSV();
                         break; // important if else statement will be added!!!
                     }
@@ -272,7 +273,7 @@ public class LeicaGSIFileTools {
                 newLine = newLine.concat(intern);
 
                 if (i < foundWordIndices.size() - 1) {
-                    newLine = newLine.concat(delimiter);
+                    newLine = newLine.concat(separator);
                 }
             }
             result.add(newLine);
@@ -286,23 +287,23 @@ public class LeicaGSIFileTools {
      * <p>
      * With parameter it is possible to set the separation char (space or tab).
      *
-     * @param delimiter        delimiter sign as {@code String}
-     * @param isGSI16          true if GSI16 format is used
+     * @param separator separator sign as {@code String}
+     * @param isGSI16 true if GSI16 format is used
      * @param writeCommentLine if comment line should be written
      * @return converted {@code ArrayList<String>} with lines of text format
      */
-    public ArrayList<String> convertGSI2TXT(String delimiter, boolean isGSI16, boolean writeCommentLine) {
+    public ArrayList<String> convertGSI2TXT(String separator, boolean isGSI16, boolean writeCommentLine) {
         String commentLine = "";
-        String delim;
-        ArrayList<String> result = new ArrayList<String>();
+        String sep;
+        ArrayList<String> result = new ArrayList<>();
 
         // transform lines into GSI-Blocks
         ArrayList<ArrayList<GSIBlock>> gsiBlocks = blockEncoder(readStringLines);
 
-        if (delimiter.equals(" ")) {
-            delim = "    ";
+        if (separator.equals(" ")) {
+            sep = "    ";
         } else {
-            delim = delimiter;
+            sep = separator;
         }
 
         // prepare comment line if necessary
@@ -320,12 +321,12 @@ public class LeicaGSIFileTools {
 
             int counter = 0;
 
-            for (Integer wordIndice : foundWordIndices) {
-                s = String.format(format, wordIndice.toString());
+            for (Integer wordIndex : foundWordIndices) {
+                s = String.format(format, wordIndex.toString());
                 commentLine = commentLine.concat(s);
 
                 if (counter < foundWordIndices.size() - 1) {
-                    commentLine = commentLine.concat(delim);
+                    commentLine = commentLine.concat(sep);
                 }
                 counter++;
             }
@@ -342,13 +343,13 @@ public class LeicaGSIFileTools {
             Iterator<Integer> it = foundWordIndices.iterator();
 
             for (int i = 0; i < foundWordIndices.size(); i++) {
-                Integer wordIndice = it.next();
+                Integer wordIndex = it.next();
 
                 String intern = "";
 
                 for (GSIBlock block : blocksAsLines) {
                     // check the WI and fill in an empty block of spaces if WI doesn't match to 'column'
-                    if (wordIndice == block.wordIndex) {
+                    if (wordIndex == block.getWordIndex()) {
                         intern = block.toPrintFormatTXT();
                         break; // important!!!
                     } else {
@@ -367,7 +368,7 @@ public class LeicaGSIFileTools {
                 newLine = newLine.concat(intern);
 
                 if (i < foundWordIndices.size() - 1) {
-                    newLine = newLine.concat(delim);
+                    newLine = newLine.concat(sep);
                 }
             }
             result.add(newLine);
@@ -397,14 +398,14 @@ public class LeicaGSIFileTools {
      */
     public ArrayList<String> convertNIGRA2GSI(boolean isGSI16) {
         ArrayList<GSIBlock> blocks;
-        ArrayList<ArrayList<GSIBlock>> blocksInLines = new ArrayList<ArrayList<GSIBlock>>();
+        ArrayList<ArrayList<GSIBlock>> blocksInLines = new ArrayList<>();
         StringTokenizer stringTokenizer;
 
         int lineCounter = 1;
 
         // skip the first 7 lines without any needed information
         for (int i = 5; i < readStringLines.size(); i++) {
-            blocks = new ArrayList<GSIBlock>();
+            blocks = new ArrayList<>();
             String line = readStringLines.get(i);
             stringTokenizer = new StringTokenizer(line);
 
@@ -441,12 +442,12 @@ public class LeicaGSIFileTools {
      */
     public ArrayList<String> convertTXT2GSI(boolean isGSI16, boolean sourceContainsCodeColumn) {
         ArrayList<GSIBlock> blocks;
-        ArrayList<ArrayList<GSIBlock>> blocksInLines = new ArrayList<ArrayList<GSIBlock>>();
+        ArrayList<ArrayList<GSIBlock>> blocksInLines = new ArrayList<>();
 
         int lineCounter = 1;
 
         for (String line : readStringLines) {
-            blocks = new ArrayList<GSIBlock>();
+            blocks = new ArrayList<>();
 
             String[] lineSplit = line.trim().split("\\s+");
             switch (lineSplit.length) {
@@ -502,6 +503,77 @@ public class LeicaGSIFileTools {
     }
 
     /**
+     * Converts a text file from the geodata server Basel Landschaft (switzerland) into a GSI formatted file.
+     * <p>
+     * This method can differ between LFP and HFP files, which has a different structure.
+     * With a parameter it is possible to distinguish between GSI8 and GSI16.
+     *
+     * @param isGSI16 distinguish between GSI8 or GSI16
+     * @param useAnnotationColumn write additional information as annotation column (WI 71)
+     * @return converted {@code ArrayList<String>} with lines of text format
+     */
+    public ArrayList<String> convertTXTBaselLandschaft2GSI(boolean isGSI16, boolean useAnnotationColumn) {
+        ArrayList<GSIBlock> blocks;
+        ArrayList<ArrayList<GSIBlock>> blocksInLines = new ArrayList<>();
+
+        int lineCounter = 1;
+
+        // remove comment line
+        readStringLines.remove(0);
+
+        for (String line : readStringLines) {
+            blocks = new ArrayList<>();
+
+            String[] lineSplit = line.trim().split("\\s+");
+
+            switch (lineSplit.length) {
+
+                case 5:     // HFP file
+                    blocks.add(new GSIBlock(isGSI16, 11, lineCounter, lineSplit[1]));
+
+                    if (useAnnotationColumn) {
+                        blocks.add(new GSIBlock(isGSI16, 71, lineCounter, lineSplit[0]));
+                    }
+
+                    blocks.add(new GSIBlock(isGSI16, 81, lineCounter, lineSplit[2]));
+                    blocks.add(new GSIBlock(isGSI16, 82, lineCounter, lineSplit[3]));
+                    blocks.add(new GSIBlock(isGSI16, 83, lineCounter, lineSplit[4]));
+                    break;
+
+                case 6:     // LFP file
+                    blocks.add(new GSIBlock(isGSI16, 11, lineCounter, lineSplit[1]));
+
+                    if (useAnnotationColumn) {
+                        if (lineSplit[2].equals("NULL")) {
+                            blocks.add(new GSIBlock(isGSI16, 41, lineCounter, "-1"));
+                        } else {
+                            blocks.add(new GSIBlock(isGSI16, 41, lineCounter, lineSplit[2]));
+                        }
+                        blocks.add(new GSIBlock(isGSI16, 71, lineCounter, lineSplit[0]));
+                    }
+
+                    blocks.add(new GSIBlock(isGSI16, 81, lineCounter, lineSplit[3]));
+                    blocks.add(new GSIBlock(isGSI16, 82, lineCounter, lineSplit[4]));
+
+                    // prevent 'NULL' element in height
+                    if (!lineSplit[5].equals("NULL")) {
+                        blocks.add(new GSIBlock(isGSI16, 83, lineCounter, lineSplit[5]));
+                    }
+
+                    break;
+            }
+
+            // check for at least one or more added elements to prevent writing empty lines
+            if (blocks.size() > 0) {
+                lineCounter++;
+                blocksInLines.add(blocks);
+            }
+        }
+
+        return lineTransformation(isGSI16, blocksInLines);
+    }
+
+    /**
      * Returns the found codes as {@code TreeSet<Integer>}.
      * <p>
      * This method is necessary because of the elimination of the code in the string of the read lines.
@@ -510,6 +582,33 @@ public class LeicaGSIFileTools {
      */
     public TreeSet<Integer> getFoundCodes() {
         return foundCodes;
+    }
+
+    /**
+     * Returns the found word indices (WI) as {@code TreeSet<Integer>}.
+     *
+     * @return found word indices as {@code TreeSet<Integer>}
+     */
+    public TreeSet<Integer> getFoundWordIndices() {
+        return foundWordIndices;
+    }
+
+    /**
+     * Encodes a read string line that contains gsi data into an encapsulated <code>ArrayList</code> of
+     * <code>GSIBlock</code>s.
+     * <p>
+     * Depending on the constructor pasted line type, the right encoding will be done.
+     *
+     * @return encoded GSIBlocks
+     */
+    public ArrayList<ArrayList<GSIBlock>> getEncodedGSIBlocks() {
+        if (readCSVLines != null && readCSVLines.size() > 0) {
+            return blockEncoder(convertCSV2GSI(isGSI16,false));
+        } else if (readStringLines != null && readStringLines.size() > 0) {
+            return blockEncoder(readStringLines);
+        } else {
+            return new ArrayList<>();
+        }
     }
 
     /**
@@ -523,23 +622,22 @@ public class LeicaGSIFileTools {
         String commentLine = "";
 
         //This data needs to be written (Object[])
-        Map<String, Object[]> data = new TreeMap<String, Object[]>();
+        Map<String, Object[]> data = new TreeMap<>();
 
         // transform lines into GSI-Blocks
-        ArrayList<ArrayList<GSIBlock>> gsiBlocks = blockEncoder(readStringLines);
+        //ArrayList<ArrayList<GSIBlock>> gsiBlocks = blockEncoder(readStringLines);
 
         // prepare comment line if necessary
         if (writeCommentLine) {
             StringBuffer stringBuffer = new StringBuffer(commentLine);
 
-            for (Integer wordIndice : foundWordIndices) {
+            for (Integer wordIndex : foundWordIndices) {
                 stringBuffer.append("\"");
-                stringBuffer.append(wordIndice.toString());
+                stringBuffer.append(wordIndex.toString());
                 stringBuffer.append("\", ");
             }
 
             stringBuffer.deleteCharAt(stringBuffer.lastIndexOf(", "));
-            System.out.println(stringBuffer.toString());
             commentLine = stringBuffer.toString();
         }
 /*
@@ -549,13 +647,13 @@ public class LeicaGSIFileTools {
             Iterator<Integer> it = foundWordIndices.iterator();
 
             for (int i = 0; i < foundWordIndices.size(); i++) {
-                Integer wordIndice = it.next();
+                Integer wordIndex = it.next();
 
                 String intern = "";
 
                 for (GSIBlock block : blocksAsLines) {
                     // check the WI and fill in an empty block of spaces if WI doesn't match to 'column'
-                    if (wordIndice == block.wordIndex) {
+                    if (wordIndex == block.wordIndex) {
                         intern = block.toPrintFormatTXT();
                         break; // important!!!
                     } else {
@@ -574,7 +672,7 @@ public class LeicaGSIFileTools {
                 newLine = newLine.concat(intern);
 
                 if (i < foundWordIndices.size() - 1) {
-                    newLine = newLine.concat(delim);
+                    newLine = newLine.concat(separator);
                 }
             }
             result.add(newLine);
@@ -593,15 +691,15 @@ public class LeicaGSIFileTools {
      * @return converted {@code ArrayList<ArrayList<String>>} for writing
      */
     public ArrayList<ArrayList<String>> processCodeSplit(boolean dropCode, boolean writeLinesWithoutCode) {
-        ArrayList<GSIHelper> linesWithCode = new ArrayList<GSIHelper>();
-        ArrayList<GSIHelper> linesWithOutCode = new ArrayList<GSIHelper>();
+        ArrayList<GSIHelper> linesWithCode = new ArrayList<>();
+        ArrayList<GSIHelper> linesWithOutCode = new ArrayList<>();
         String newLine = null;
 
         // transform lines into GSI-Blocks
         ArrayList<ArrayList<GSIBlock>> gsiBlocks = blockEncoder(readStringLines);
 
         // one top level for every code
-        ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
+        ArrayList<ArrayList<String>> result = new ArrayList<>();
 
         for (ArrayList<GSIBlock> blocksInLines : gsiBlocks) {
 
@@ -611,14 +709,14 @@ public class LeicaGSIFileTools {
 
             for (GSIBlock block : blocksInLines) {
 
-                switch (block.wordIndex) {
+                switch (block.getWordIndex()) {
 
                     case 11:
                         newLine = block.toString();
                         break;
 
                     case 71:
-                        code = Integer.parseInt(block.dataGSI);
+                        code = Integer.parseInt(block.getDataGSI());
                         if (dropCode) {
                             newLine = newLine != null ? newLine.concat(" " + block.toString()) : null;
                         }
@@ -674,7 +772,7 @@ public class LeicaGSIFileTools {
         if (linesWithCode.size() > 0) {
 
             int code = linesWithCode.get(0).getCode();
-            ArrayList<String> temp = new ArrayList<String>();
+            ArrayList<String> temp = new ArrayList<>();
 
             // fill in the sorted textBlocks into an ArrayList<ArrayList<String>> for writing it out
             for (GSIHelper gsiHelpers : linesWithCode) {
@@ -683,7 +781,7 @@ public class LeicaGSIFileTools {
                     temp.add(gsiHelpers.getLine());
                 } else {
                     result.add(temp);
-                    temp = new ArrayList<String>(); // do not use temp.clear()!!!
+                    temp = new ArrayList<>(); // do not use temp.clear()!!!
                     temp.add(gsiHelpers.getLine());
                 }
 
@@ -696,7 +794,7 @@ public class LeicaGSIFileTools {
 
         // insert lines without code for writing
         if (writeLinesWithoutCode && (linesWithOutCode.size() > 0)){
-            ArrayList<String> temp = new ArrayList<String>();
+            ArrayList<String> temp = new ArrayList<>();
 
             for (GSIHelper gsiHelper : linesWithOutCode) {
                 temp.add(gsiHelper.getLine());
@@ -722,7 +820,7 @@ public class LeicaGSIFileTools {
         int lineCounter = 1;
         String newLine;
 
-        ArrayList<String> result = new ArrayList<String>();
+        ArrayList<String> result = new ArrayList<>();
 
         for (String line : readStringLines) {
             String[] lineSplit = line.trim().split("\\s+");
@@ -814,7 +912,7 @@ public class LeicaGSIFileTools {
         String freeStationIdentifier = "000" + Main.pref.getUserPref(PreferenceHandler.PARAM_FREE_STATION_STRING);
         String stationIdentifier = "000" + Main.pref.getUserPref(PreferenceHandler.PARAM_KNOWN_STATION_STRING);
 
-        ArrayList<String> result = new ArrayList<String>();
+        ArrayList<String> result = new ArrayList<>();
 
         // handle special case / exception when the file starts with one or more free station or (station) lines
         String firstRow = readStringLines.get(0).toUpperCase();
@@ -958,12 +1056,12 @@ public class LeicaGSIFileTools {
 
     private ArrayList<ArrayList<GSIBlock>> blockEncoder(ArrayList<String> lines) {
 
-        ArrayList<GSIBlock> blocks; // full initialisation may be better
-        ArrayList<ArrayList<GSIBlock>> blocksInLines = new ArrayList<ArrayList<GSIBlock>>();
+        ArrayList<GSIBlock> blocks;
+        ArrayList<ArrayList<GSIBlock>> blocksInLines = new ArrayList<>();
 
         // do it over all read lines
         for (String line : lines) {
-            blocks = new ArrayList<GSIBlock>();
+            blocks = new ArrayList<>();
             String[] lineSplit = line.trim().split("\\s+");
 
             // used instead of 'deprecated' StringTokenizer here
@@ -972,14 +1070,14 @@ public class LeicaGSIFileTools {
                 blocks.add(block);
 
                 // detect WIs
-                foundWordIndices.add(block.wordIndex);
+                foundWordIndices.add(block.getWordIndex());
             }
 
             // sort every 'line' of GSI blocks by word index (WI)
             Collections.sort(blocks, new Comparator<GSIBlock>() {
                 @Override
                 public int compare(GSIBlock o1, GSIBlock o2) {
-                    if (o1.wordIndex > o2.wordIndex) {
+                    if (o1.getWordIndex() > o2.getWordIndex()) {
                         return 1;
                     } else {
                         return -1;
@@ -995,7 +1093,7 @@ public class LeicaGSIFileTools {
     }
 
     private ArrayList<String> lineTransformation(boolean isGSI16, ArrayList<ArrayList<GSIBlock>> gsiBlocks) {
-        ArrayList<String> result = new ArrayList<String>();
+        ArrayList<String> result = new ArrayList<>();
 
         for (ArrayList<GSIBlock> blocksInLines : gsiBlocks) {
             String newLine = "";
@@ -1023,278 +1121,6 @@ public class LeicaGSIFileTools {
 
         return result;
     }
-
-    /**
-     * Defines an inner object for better access to elements and so on.
-     * <p>
-     * In the first version this GSIBlock object is used only internally in this class.
-     * Maybe later on, there will be a good reason to make an own public class from it.
-     */
-    private class GSIBlock {
-
-        private final int wordIndex;
-        private String sign = "+";
-        private final String dataGSI;
-        private final String information;
-
-        /**
-         * Constructor which defines the object with parameter.
-         *
-         * @param blockAsString complete block as one String
-         */
-        public GSIBlock(String blockAsString) {
-            if (blockAsString.startsWith("*")) {
-                isGSI16 = true;
-                blockAsString = blockAsString.substring(1, blockAsString.length()); // get rid of the star sign at the line beginning
-            }
-
-            if (blockAsString.length() > 15) {
-                isGSI16 = true;
-            }
-
-            this.wordIndex = new Integer(blockAsString.substring(0, 2));
-            this.information = blockAsString.substring(2, 6);
-            this.sign = blockAsString.substring(6, 7);
-            this.dataGSI = blockAsString.substring(7, blockAsString.length());
-        }
-
-        /**
-         * Constructor with given parameters to build the GSI structure.
-         *
-         * @param isGSI16   true if it is GSI16 format
-         * @param wordIndex word index (WI) of the block
-         * @param number    information for the point number (filled up with zeros)
-         * @param dataGSI         {@code String} to transform into a GSIBlock
-         */
-        public GSIBlock(boolean isGSI16, int wordIndex, int number, String dataGSI) {
-
-            String intern = "";
-
-            int length = 8;
-
-            if (isGSI16) {
-                length = 16;
-            }
-
-            this.wordIndex = wordIndex;
-
-            if (wordIndex == 11) {                                          // point number
-                this.information = String.format("%04d", number);
-                intern = dataGSI;
-            } else if (wordIndex == 71) {                                   // code
-                this.information = "..46";
-                intern = dataGSI;
-            } else if ((wordIndex > 80) || (wordIndex < 90)) {              // coordinates
-                this.information = "..46";
-                if (dataGSI.startsWith("-")) {
-                    this.sign = "-";
-                    intern = dataGSI.substring(1, dataGSI.length());
-                } else if (dataGSI.startsWith("+")) {
-                    intern = dataGSI.substring(1, dataGSI.length());
-                } else {
-                    intern = dataGSI;
-                }
-
-                Double d = Double.parseDouble(intern);
-                if (d == 0d) {
-                    intern = "0";
-                } else {
-                    d = d * 10000.0; // value d in 1/10mm
-
-                    BigDecimal bigDecimal = new BigDecimal(d);
-                    bigDecimal = bigDecimal.setScale(0, BigDecimal.ROUND_HALF_UP);
-
-                    intern = bigDecimal.toString();
-                }
-
-            } else {                                                        // not used other values
-                this.information = "..4.";
-            }
-
-            this.dataGSI = fillWithZeros(length, intern);
-        }
-
-        /**
-         * Constructor with parameters to build the GSI structure.
-         *
-         * @param isGSI16     boolean for indicating a GSI16 file
-         * @param wordIndex   word index (pos 1-2)
-         * @param information information related to data (pos 3-6)
-         * @param sign        sign (+ or -)(pos 7)
-         * @param dataGSI     GSI8 data (pos 8-15) or GSI16 data (pos8-23)
-         */
-        public GSIBlock(boolean isGSI16, int wordIndex, String information, String sign, String dataGSI) {
-            this.wordIndex = wordIndex;
-            this.information = information;
-            this.sign = sign;
-
-            char[] leadingZeros;
-
-            // fill the GSI data up to 8 or 16 signs with leading zeros
-            if (isGSI16) {
-                leadingZeros = new char[16 - dataGSI.length()];
-
-            } else {
-                leadingZeros = new char[8 - dataGSI.length()];
-
-            }
-            Arrays.fill(leadingZeros, '0');
-
-            this.dataGSI = new String(leadingZeros) + dataGSI.substring(0, dataGSI.length());
-        }
-
-        /**
-         * Returns a GSIBlock in a csv format.
-         *
-         * @return formatted {@code String} for CSV output
-         */
-        public String toPrintFormatCSV() {
-            return this.toPrintFormatTXT().trim();
-        }
-
-        /**
-         * Returns a GSIBlock in a printable format.
-         *
-         * @return formatted {@code String} for TXT output
-         */
-        public String toPrintFormatTXT() {
-            String s = this.dataGSI;
-            int length = s.length();
-
-            StringBuilder stringBuilder;
-
-            switch (wordIndex) {
-
-                case 11:        // point number
-                    s = trimLeadingZeros(s);
-                    s = fillWithSpaces(length, s);
-                    break;
-
-                case 21:        // angle Hz
-                case 22:        // angle Vz
-                case 24:        // angle Hz0
-                case 25:        // angle difference (Hz0 - Hz)
-                    s = trimLeadingZeros(s);
-                    s = fillWithSpaces(length, s);
-                    break;
-
-                case 26:        // offset
-                case 27:        // angle Vz0
-                case 28:        // angle difference (Vz0 - Vz)
-
-                    break;
-
-                case 58:        // addition constant in 1/10 mm
-                    stringBuilder = new StringBuilder(s);
-                    s = stringBuilder.insert(length - 4, ".").toString();
-
-                    s = this.sign + trimLeadingZeros(s);
-                    s = fillWithSpaces(length, s);
-                    break;
-
-                case 71:        // comment 1, mostly used for code
-                    s = trimLeadingZeros(s);
-                    s = fillWithSpaces(length, s);
-                    break;
-
-                case 81:        // easting E
-                case 82:        // northing N
-                case 83:        // height H
-                case 84:        // easting E0
-                case 85:        // northing N0
-                case 86:        // height H0
-                case 87:        // target height
-                case 88:        // instrument height
-                    stringBuilder = new StringBuilder(s);
-
-                    if (this.information.endsWith("0")) {       // mm
-                        s = stringBuilder.insert(this.dataGSI.length() - 3, ".").toString();
-                    } else {                                    // 1/10 mm
-                        s = stringBuilder.insert(this.dataGSI.length() - 4, ".").toString();
-                    }
-
-                    // insert sign if sign is negative ('-')
-                    if (this.sign.equals("-")) {
-                        s = this.sign + trimLeadingZeros(s);
-                    } else {
-                        s = trimLeadingZeros(s);
-                    }
-
-                    s = fillWithSpaces(length, s);
-
-                    break;
-
-            }
-
-            return s;
-        }
-
-        /**
-         * Returns a GSIBlock as String in the origin format.
-         *
-         * @return GSIBlock as String
-         */
-        public String toString() {
-            return wordIndex + information + sign + dataGSI;
-        }
-
-        /**
-         * Returns a GSIBlock as String in defined format (GSI8 or GSI16).
-         * <p>
-         * Due to issues of the format, leading zeros are added or values are cut off.
-         *
-         * @param isGSI16 True for GSI16 format
-         * @return GSIBlock as String depending on format GSI8/GSI16
-         */
-        public String toString(boolean isGSI16) {
-            String data;
-            String leadingZeros = "00000000";
-            String result;
-
-            if (isGSI16) {
-                result = wordIndex + information + sign;
-
-                if (dataGSI.length() == 8) {
-                    data = leadingZeros.concat(dataGSI);
-                } else {
-                    data = dataGSI;
-                }
-
-                result = result.concat(data);
-            } else {
-                if (dataGSI.length() == 8) {
-                    result = wordIndex + information + sign + dataGSI;
-                } else {
-                    result = wordIndex + information + sign + dataGSI.substring(dataGSI.length() - 8, dataGSI.length());
-                }
-
-            }
-
-            return result;
-        }
-
-        private String fillWithSpaces(int length, String input) {
-            String format = "%" + length + "." + length + "s";
-            return String.format(format, input);
-        }
-
-        private String fillWithZeros(int length, String input) {
-            String format = "%" + length + "s";
-            return String.format(format, input).replace(' ', '0');
-        }
-
-        private String trimLeadingZeros(String s) {
-            String intern = s.replaceFirst("^0+(?!$)", "");  // cut off leading zeros with regex;
-            System.out.println(s + " " + intern);
-
-            if (intern.startsWith(".")) {
-                return "0" + intern;
-            } else {
-                return intern;
-            }
-        }
-
-    } // end of inner class GSIBlock
 
     /**
      * Defines an inner object for better handling and the ability to sort easily.
@@ -1338,4 +1164,4 @@ public class LeicaGSIFileTools {
 
     } // end of inner class GSIHelper
 
-} // end of LeicaGSIFileTools
+} // end of FileToolsLeicaGSI

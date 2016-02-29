@@ -55,7 +55,7 @@ public class SplashScreen {
      * <p>
      * This will be changed later.
      *
-     * @param display
+     * @param display display object
      */
     public SplashScreen(Display display) {
 

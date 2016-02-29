@@ -105,9 +105,7 @@ public class BottomButtonBar extends Composite {
 
             try {
                 method.invoke(callingObject);
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
+            } catch (IllegalAccessException | InvocationTargetException e) {
                 e.printStackTrace();
             }
         } catch (NoSuchMethodException e) {

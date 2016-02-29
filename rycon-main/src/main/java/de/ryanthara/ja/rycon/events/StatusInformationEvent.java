@@ -40,4 +40,4 @@ public class StatusInformationEvent extends java.util.EventObject {
         this.statusText = statusText;
     }
 
-}
+} // end of StatusInformationEvent

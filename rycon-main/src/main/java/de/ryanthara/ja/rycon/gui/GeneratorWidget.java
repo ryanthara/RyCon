@@ -299,7 +299,6 @@ public class GeneratorWidget {
     }
 
     private boolean generateFolders(String number) {
-        boolean success = false;
         boolean isAdminFolderGenerated = false;
         boolean isBigDataFolderGenerated = false;
         boolean isProjectFolderGenerated = false;
@@ -344,7 +343,7 @@ public class GeneratorWidget {
                     String.format(I18N.getMsgDirProjectGenerated(), number));
         }
 
-        return success;
+        return isAdminFolderGenerated & isBigDataFolderGenerated & isProjectFolderGenerated;
     }
 
     private boolean generateFoldersHelper(String number, String directory, String directoryTemplate, int type) {

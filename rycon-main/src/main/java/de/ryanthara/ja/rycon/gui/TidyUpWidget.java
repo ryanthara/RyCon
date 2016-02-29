@@ -183,7 +183,7 @@ public class TidyUpWidget {
         group.setLayoutData(gridData);
 
         Label tip = new Label(group, SWT.WRAP | SWT.BORDER | SWT.LEFT);
-        tip.setText(String.format(I18N.getLabelTipTidyUpWidget()));
+        tip.setText(I18N.getLabelTipTidyUpWidget());
         tip.setLayoutData(new GridData(SWT.HORIZONTAL, SWT.TOP, true, false, 1, 1));
     }
 
@@ -213,6 +213,11 @@ public class TidyUpWidget {
     }
 
     private int actionBtnOk() {
+        if (inputFieldsComposite.getSourceTextField().getText().equals("") &
+                inputFieldsComposite.getDestinationTextField().getText().equals("")) {
+            return -1;
+        }
+
         if (files2read.length == 0) {
             files2read = new File[1];
             files2read[0] = new File(inputFieldsComposite.getSourceTextField().getText());
@@ -299,7 +304,7 @@ public class TidyUpWidget {
             Main.countFileOps = counter;
             success = true;
         } else {
-            GuiHelper.showMessageBox(innerShell, SWT.ICON_WARNING, I18N.getMsgBoxTitleError(), String.format(I18N.getMsgTidyUpError()));
+            GuiHelper.showMessageBox(innerShell, SWT.ICON_WARNING, I18N.getMsgBoxTitleError(), I18N.getMsgTidyUpError());
             success = false;
         }
 

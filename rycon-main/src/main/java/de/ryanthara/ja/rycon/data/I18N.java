@@ -54,10 +54,6 @@ public class I18N {
         return Messages.getString("btnCancelToolTip");
     }
 
-    public static String getBtnChkBoxCadworkUseCode() {
-        return Messages.getString("btnChkBoxCadworkUseCode");
-    }
-
     public static String getBtnChkBoxCadworkUseZeroHeights() {
         return Messages.getString("btnChkBoxCadworkUseZeroHeights");
     }
@@ -74,16 +70,24 @@ public class I18N {
         return Messages.getString("btnChkBoxCreateProjectFolder");
     }
 
+    public static String getBtnChkBoxKFormatUseSimpleFormat() {
+        return Messages.getString("btnChkBoxKFormatUseSimpleFormat");
+    }
+
     public static String getBtnChkBoxSourceContainsCode() {
         return Messages.getString("btnChkBoxSourceContainsCode");
     }
 
-    public static String getBtnChkConverterCSVSemiColonDelimiter() {
-        return Messages.getString("btnChkConverterCSVSemiColonDelimiter");
+    public static String getBtnChkBoxWriteCodeColumn() {
+        return Messages.getString("btnChkBoxWriteCodeColumn");
     }
 
-    public static String getBtnChkConverterTXTSpaceDelimiter() {
-        return Messages.getString("btnChkConverterTXTSpaceDelimiter");
+    public static String getBtnChkConverterCSVSemiColonSeparator() {
+        return Messages.getString("btnChkConverterCSVSemiColonSeparator");
+    }
+
+    public static String getBtnChkConverterTXTSpaceSeparator() {
+        return Messages.getString("btnChkConverterTXTSpaceSeparator");
     }
 
     public static String getBtnChkConverterWriteCommentLine() {
@@ -110,14 +114,6 @@ public class I18N {
         return Messages.getString("btnChkTidyUpHoldStations");
     }
 
-    public static String getBtnChooseFile() {
-        return Messages.getString("btnChooseFile");
-    }
-
-    public static String getBtnChooseFileToolTip() {
-        return Messages.getString("btnChooseFileToolTip");
-    }
-
     public static String getBtnChooseFiles() {
         return Messages.getString("btnChooseFiles");
     }
@@ -132,14 +128,6 @@ public class I18N {
 
     public static String getBtnChoosePathToolTip() {
         return Messages.getString("btnChoosePathToolTip");
-    }
-
-    public static String getBtnChoosePaths() {
-        return Messages.getString("btnChoosePaths");
-    }
-
-    public static String getBtnChoosePathsToolTip() {
-        return Messages.getString("btnChoosePathsToolTip");
     }
 
     public static String getBtnCleanLabel() {
@@ -312,10 +300,6 @@ public class I18N {
 
     public static String getFileChooserDirProjectTitle() {
         return Messages.getString("fileChooserDirProjectTitle");
-    }
-
-    public static String getFileChooserFilterNameAllFiles() {
-        return Messages.getString("fileChooserFilterNameAllFiles");
     }
 
     public static String getFileChooserFilterNameCSV() {
@@ -531,10 +515,6 @@ public class I18N {
         return prepareString("msgConvertSuccess", singular);
     }
 
-    public static String getMsgCreateDirAdminAndProjectWarning() {
-        return Messages.getString("msgCreateDirAdminAndProjectWarning");
-    }
-
     public static String getMsgCreateDirAdminExist() {
         return Messages.getString("msgCreateDirAdminExist");
     }
@@ -625,10 +605,6 @@ public class I18N {
 
     public static String getMsgEmptyTextFieldWarning() {
         return Messages.getString("msgEmptyTextFieldWarning");
-    }
-
-    public static String getMsgEmptyTextFieldWarningJobNumber() {
-        return Messages.getString("msgEmptyTextFieldWarningProjectNumber");
     }
 
     public static String getMsgFileExist() {
@@ -755,6 +731,10 @@ public class I18N {
         return Messages.getString("statusRyCONSettingsSaved");
     }
 
+    public static String getStrCaplanCommentLine() {
+        return Messages.getString("strCaplanCommentLine");
+    }
+
     public static String getTextDirAdminAndBigDataAndProjectGenerated() {
         return Messages.getString("textDirAdminAndBigDataAndProjectGenerated");
     }
@@ -834,7 +814,7 @@ public class I18N {
     /**
      * Helper for string preparation to differ between singular and plural text.
      * <p>
-     * In the properties file the String "§§" is used as delimiter. The values
+     * In the properties file the String "§§" is used as separator. The values
      * for singular is set with {@code Main.TEXT_SINGULAR} and for plural is
      * set with {@code Main.TEXT_PLURAL}
      *

@@ -48,7 +48,7 @@ import java.util.Iterator;
 public class ColorCache {
 
     private static ColorCache colorCache;
-    private static HashMap<RGB, Color> colorMap = new HashMap<RGB, Color>();
+    private static HashMap<RGB, Color> colorMap = new HashMap<>();
 
     private ColorCache() {
         colorCache = this;
@@ -76,13 +76,11 @@ public class ColorCache {
      * This is necessary because of memory usage. See the <a href="http://www.eclipse.org/articles/swt-design-2/swt-design-2.html">article</a>
      */
     public static void disposeColors() {
-
         Iterator<Color> iterator = colorMap.values().iterator();
 
         while (iterator.hasNext()) {
             iterator.next().dispose();
         }
-
     }
 
     /**
@@ -105,7 +103,6 @@ public class ColorCache {
      * @return the color as {@code Color} object
      */
     public static Color getColor(int r, int g, int b) {
-
         RGB rgb = new RGB(r, g, b);
 
         Color color = colorMap.get(rgb);
@@ -117,7 +114,6 @@ public class ColorCache {
         }
 
         return color;
-
     }
 
     /**
@@ -130,9 +126,7 @@ public class ColorCache {
      * @return the color as {@code Color} object
      */
     public static Color getColorFromRGB(RGB rgb) {
-
         return getColor(rgb.red, rgb.green, rgb.blue);
-
     }
 
     /**
@@ -152,11 +146,9 @@ public class ColorCache {
     }
 
     private static Image createImage(String fileName) {
-
         // TODO the original functionality was implemented with a Classloader and images in a jar file
 
         return new ImageConverter().convertToImage(Main.shell.getDisplay(), fileName);
-
     }
 
 } // end of ImageCache

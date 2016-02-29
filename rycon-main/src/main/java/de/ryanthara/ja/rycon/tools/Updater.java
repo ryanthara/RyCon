@@ -29,6 +29,9 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
@@ -60,15 +63,11 @@ public class Updater {
     public boolean checkForUpdate() {
         boolean success = false;
 
-        InputStream is = null;
-        Version versionHandle = new Version();
-
         try {
             URL updateUrl = new URL(Main.RyCON_UPDATE_URL);
             URLConnection con = updateUrl.openConnection();
 
             if (con.getContentLength() > 0) {
-
                 Scanner scanner = new Scanner(updateUrl.openStream());
 
                 scanner.next();
@@ -84,14 +83,31 @@ public class Updater {
                 scanner.next();
                 String date = scanner.next();
 
+                System.out.println(date);
+                System.out.println(Version.getBuildDate());
+
+                try {
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    Date programDate = sdf.parse(Version.getBuildDate());
+                    Date releaseDate = sdf.parse(date);
+
+                    System.out.println("The local version is older than the online version");
+                    System.out.println(programDate.compareTo(releaseDate));
+
+                } catch (ParseException e) {
+                    System.err.println("Date String can't be parsed.");
+                    e.printStackTrace();
+                }
                 scanner.close();
 
                 success = true;
 
-                if (versionHandle.getBuildNumber() < build ||
-                        (majorVersion < versionHandle.getMajorVersionNumber() && minorVersion < versionHandle.getMinorVersionNumber())) {
+                if (Version.getBuildNumber() < build ||
+                        (majorVersion < Version.getMajorVersionNumber() && minorVersion < Version.getMinorVersionNumber())) {
                     updateAvailable = true;
                 }
+            } else {
+                System.out.println("Online check failed. Please check your network settings");
             }
         } catch (MalformedURLException e) {
             System.err.println("checkForUpdate() failed: MalformedURLException");

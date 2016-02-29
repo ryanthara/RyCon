@@ -145,10 +145,10 @@ public class GuiHelper {
      * Shows a swt MessageBox and returns an Integer value as indicator for being shown.
      * <p>
      * The boolean is used for error indication in different classe.
-     * @param innerShell
-     * @param icon
-     * @param text
-     * @param message
+     * @param innerShell the inner shell object
+     * @param icon the icon of the message box
+     * @param text the headline text of the message box
+     * @param message the message of the message box
      * @return int value
      */
     public static int showMessageBox(Shell innerShell, int icon, String text, String message) {

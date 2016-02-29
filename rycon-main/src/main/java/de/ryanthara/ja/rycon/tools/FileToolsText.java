@@ -27,7 +27,7 @@ import java.util.*;
  *
  * <h3>Changes:</h3>
  * <ul>
- *     <li>5: support for cadwork node.dat files</li>
+ *     <li>5: support for cadwork node.dat files, code clean up</li>
  *     <li>4: support for NIGRA levelling files</li>
  *     <li>3: code improvements and clean up </li>
  *     <li>2: basic improvements </li>
@@ -35,14 +35,14 @@ import java.util.*;
  * </ul>
  *
  * @author sebastian
- * @version 4
+ * @version 5
  * @since 1
  */
-public class TextFileTools {
+public class FileToolsText {
 
     private ArrayList<String> readStringLines;
-    private List<String[]> list;
-    private TreeSet<Integer> foundCodes = new TreeSet<Integer>();
+    private List<String[]> readCSVLines;
+    private TreeSet<Integer> foundCodes = new TreeSet<>();
 
     /**
      * Class Constructor with parameter.
@@ -51,7 +51,7 @@ public class TextFileTools {
      *
      * @param arrayList {@code ArrayList<String>} with lines in text format
      */
-    public TextFileTools(ArrayList<String> arrayList) {
+    public FileToolsText(ArrayList<String> arrayList) {
         this.readStringLines = arrayList;
     }
 
@@ -60,10 +60,149 @@ public class TextFileTools {
      * <p>
      * As parameter the {@code List<String[]>} object with the lines in csv format is used.
      *
-     * @param list {@code List<String[]>} with lines in csv format
+     * @param readCSVLines {@code List<String[]>} with lines in csv format
      */
-    public TextFileTools(List<String[]> list) {
-        this.list = list;
+    public FileToolsText(List<String[]> readCSVLines) {
+        this.readCSVLines = readCSVLines;
+    }
+
+    /**
+     * Converts a CSV file into a TXT file with the given separator sign.
+     *
+     * @param separator separator sign to use for conversion
+     * @return converted TXT file
+     */
+    public ArrayList<String> convertCSV2TXT(String separator) {
+        ArrayList<String> result = new ArrayList<>();
+
+        // convert the List<String[]> into an ArrayList<String> and use known stuff (-:
+        for (String[] stringField : readCSVLines) {
+            String line = "";
+
+            for (String s : stringField) {
+                line = line.concat(s);
+                line = line.concat(separator);
+            }
+
+            line = line.trim();
+            line = line.replace(',', '.');
+
+            // skip empty lines
+            if (!line.equals("")) {
+                result.add(line);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Converts a CSV file from the geodata server Basel Stadt (switzerland) into a txt format file.
+     * <p>
+     * With a parameter it is possible to distinguish between space or tabulator as separator.
+     *
+     * @param separator separator sign as {@code String}
+     * @return converted {@code ArrayList<String>} with lines of text format
+     */
+    public ArrayList<String> convertCSVBaselStadt2TXT(String separator) {
+        ArrayList<String> result = new ArrayList<>();
+
+        for (String[] stringField : readCSVLines) {
+            String line;
+
+            // point number is in column 1
+            line = stringField[0].replaceAll("\\s+", "").trim();
+            line = line.concat(separator);
+
+            // easting (Y) is in column 3
+            line = line.concat(stringField[2]);
+            line = line.concat(separator);
+
+            // northing (X) is in column 4
+            line = line.concat(stringField[3]);
+
+            // height (Z) is in column 5, but not always valued
+            if (!stringField[4].equals("")) {
+                line = line.concat(separator);
+                line = line.concat(stringField[4]);
+            }
+
+            result.add(line.trim());
+        }
+        return result;
+    }
+
+    /**
+     * Converts a text file from the geodata server Basel Landschaft (switzerland) into a TXT formatted file (no code x y z).
+     * <p>
+     * This method can differ between LFP and HFP files, which has a different structure.
+     * With a parameter it is possible to distinguish between tabulator and space divided files.
+     *
+     * @param separator distinguish between tabulator or space as division sign
+     * @param writeCodeColumn use 'Versicherungsart' (LFP) as code column on second position
+     * @return converted {@code ArrayList<String>} with lines of text format
+     */
+    public ArrayList<String> convertTXTBaselLandschaft2TXT(String separator, boolean writeCodeColumn) {
+        ArrayList<String> result = new ArrayList<>();
+
+        readStringLines.remove(0);  // remove comment line
+
+        for (String line : readStringLines) {
+            String s;
+
+            String[] lineSplit = line.trim().split("\\s+");
+
+            switch (lineSplit.length) {
+                case 5:     // HFP file
+                    // point number is in column 2
+                    s = lineSplit[1];
+                    s = s.concat(separator);
+
+                    // easting (Y) is in column 3
+                    s = s.concat(lineSplit[2]);
+                    s = s.concat(separator);
+
+                    // northing (X) is in column 4
+                    s = s.concat(lineSplit[3]);
+                    s = s.concat(separator);
+
+                    // height (Z) is in column 5, and always valued (HFP file)
+                    s = s.concat(lineSplit[4]);
+                    s = s.concat(separator);
+
+                    result.add(s.trim());
+                    break;
+
+                case 6:     // LFP file
+                    // point number is in column 2
+                    s = lineSplit[1];
+                    s = s.concat(separator);
+
+                    // use 'Versicherungsart' as code. It is in column 3
+                    if (writeCodeColumn) {
+                        s = s.concat(lineSplit[2]);
+                        s = s.concat(separator);
+                    }
+
+                    // easting (Y) is in column 4
+                    s = s.concat(lineSplit[3]);
+                    s = s.concat(separator);
+
+                    // northing (X) is in column 5
+                    s = s.concat(lineSplit[4]);
+                    s = s.concat(separator);
+
+                    // height (Z) is in column 6, and not always valued (LFP file)
+                    if (lineSplit[5].equals("NULL")) {
+                        s = s.concat("-9999");
+                    } else {
+                        s = s.concat(lineSplit[5]);
+                    }
+
+                    result.add(s.trim());
+                    break;
+            }
+        }
+        return result;
     }
 
     /**
@@ -90,10 +229,10 @@ public class TextFileTools {
         String newLine;
         StringTokenizer stringTokenizer;
 
-        ArrayList<TextHelper> linesWithCode = new ArrayList<TextHelper>();
+        ArrayList<TextHelper> linesWithCode = new ArrayList<>();
 
         // one top level for every code
-        ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
+        ArrayList<ArrayList<String>> result = new ArrayList<>();
 
         for (String line : readStringLines) {
             stringTokenizer = new StringTokenizer(line);
@@ -141,7 +280,7 @@ public class TextFileTools {
         // helpers for generating a new array for every found code
         // TODO a file without code is not supported
         int code = linesWithCode.get(0).code;
-        ArrayList<String> lineStorage = new ArrayList<String>();
+        ArrayList<String> lineStorage = new ArrayList<>();
 
         // fill in the sorted textBlocks into an ArrayList<ArrayList<String>> for writing it out
         for (TextHelper textBlock : linesWithCode) {
@@ -149,7 +288,7 @@ public class TextFileTools {
                 lineStorage.add(textBlock.block);
             } else {
                 result.add(lineStorage);
-                lineStorage = new ArrayList<String>(); // do not use temp.clear()!!!
+                lineStorage = new ArrayList<>(); // do not use temp.clear()!!!
                 lineStorage.add(textBlock.block);
             }
             code = textBlock.code;
@@ -158,88 +297,6 @@ public class TextFileTools {
         // insert last element
         result.add(lineStorage);
 
-        return result;
-    }
-
-    /**
-     * Converts a CSV file from the geodata server Basel Stadt (switzerland) into a txt format file.
-     * <p>
-     * With a parameter it is possible to distinguish between space or tabulator as separator.
-     *
-     * @param delimiter delimiter sign as {@code String}
-     * @return converted {@code ArrayList<String>} with lines of text format
-     */
-    public ArrayList<String> convertCSVBaselStadt2TXT(String delimiter) {
-        ArrayList<String> result = new ArrayList<String>();
-
-        for (String[] stringField : list) {
-            String line;
-
-            // point number is in column 1
-            line = stringField[0].replaceAll("\\s+", "").trim();
-            line = line.concat(delimiter);
-
-            // easting (Y) is in column 3
-            line = line.concat(stringField[2]);
-            line = line.concat(delimiter);
-
-            // northing (X) is in column 4
-            line = line.concat(stringField[3]);
-
-            // height (Z) is in column 5, but not always valued
-            if (!stringField[4].equals("")) {
-                line = line.concat(delimiter);
-                line = line.concat(stringField[4]);
-            }
-
-            result.add(line.trim());
-        }
-        return result;
-    }
-
-    /**
-     * Converts a CSV file into a TXT file with the given delimiter sign.
-     *
-     * @param delimiter delimiter sign to use for conversion
-     * @return converted TXT file
-     */
-    public ArrayList<String> convertCSV2TXT(String delimiter) {
-        ArrayList<String> result = new ArrayList<String>();
-
-        // convert the List<String[]> into an ArrayList<String> and use known stuff (-:
-        for (String[] stringField : list) {
-            String line = "";
-
-            for (String s : stringField) {
-                line = line.concat(s);
-                line = line.concat(delimiter);
-            }
-
-            line = line.trim();
-            line = line.replace(',', '.');
-
-            // skip empty lines
-            if (!line.equals("")) {
-                result.add(line);
-            }
-        }
-        return result;
-    }
-
-    /**
-     * Converts a TXT file into a CSV file with the given delimiter sign.
-     *
-     * @param delimiter delimiter sign to use for conversion
-     * @return converted CSV file
-     */
-    public ArrayList<String> convertTXT2CSV(String delimiter) {
-        ArrayList<String> result = new ArrayList<String>();
-
-        for (String line : readStringLines) {
-            // get rid off one or more empty signs at the beginning and end of the given string
-            line = line.trim();
-            result.add(line.replaceAll("\\s+", delimiter));
-        }
         return result;
     }
 

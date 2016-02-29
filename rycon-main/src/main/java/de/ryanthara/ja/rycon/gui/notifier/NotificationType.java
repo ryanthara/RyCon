@@ -51,7 +51,7 @@ public enum NotificationType {
 
     private final Image image;
 
-    private NotificationType(Image image) {
+    NotificationType(Image image) {
         this.image = image;
     }
 

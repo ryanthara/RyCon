@@ -42,7 +42,7 @@ var activeTableTab = "activeTableTab";
 <li class="navBarCell1Rev">Class</li>
 <li><a href="class-use/TextFileTools.html">Use</a></li>
 <li><a href="package-tree.html">Tree</a></li>
-<li><a href="../../../../../deprecated-list.html">Deprecated</a></li>
+<li><a href="../../../../../deprecated-readCSVLines.html">Deprecated</a></li>
 <li><a href="../../../../../index-files/index-1.html">Index</a></li>
 <li><a href="../../../../../help-doc.html">Help</a></li>
 </ul>
@@ -176,8 +176,8 @@ extends java.lang.Object</pre>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>private java.util.List&lt;java.lang.String[]&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/ryanthara/ja/rycon/tools/TextFileTools.html#list">list</a></span></code>
-<div class="block">Member for the list of read CSV file lines.</div>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/ryanthara/ja/rycon/tools/TextFileTools.html#readCSVLines">readCSVLines</a></span></code>
+<div class="block">Member for the readCSVLines of read CSV file lines.</div>
 </td>
 </tr>
 </table>
@@ -200,7 +200,7 @@ extends java.lang.Object</pre>
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../de/ryanthara/ja/rycon/tools/TextFileTools.html#TextFileTools-java.util.List-">TextFileTools</a></span>(java.util.List&lt;java.lang.String[]&gt;&nbsp;list)</code>
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../de/ryanthara/ja/rycon/tools/TextFileTools.html#TextFileTools-java.util.List-">TextFileTools</a></span>(java.util.List&lt;java.lang.String[]&gt;&nbsp;readCSVLines)</code>
 <div class="block">Class Constructor with parameter.</div>
 </td>
 </tr>
@@ -233,19 +233,19 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>java.util.ArrayList&lt;java.lang.String&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/ryanthara/ja/rycon/tools/TextFileTools.html#processConversionCSV2TXT-java.lang.String-">processConversionCSV2TXT</a></span>(java.lang.String&nbsp;delimiter)</code>
-<div class="block">Converts a CSV file into a TXT file with the given delimiter sign.</div>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/ryanthara/ja/rycon/tools/TextFileTools.html#processConversionCSV2TXT-java.lang.String-">processConversionCSV2TXT</a></span>(java.lang.String&nbsp;separator)</code>
+<div class="block">Converts a CSV file into a TXT file with the given separator sign.</div>
 </td>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>java.util.ArrayList&lt;java.lang.String&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/ryanthara/ja/rycon/tools/TextFileTools.html#processConversionTXT2CSV-java.lang.String-">processConversionTXT2CSV</a></span>(java.lang.String&nbsp;delimiter)</code>
-<div class="block">Converts a TXT file into a CSV file with the given delimiter sign.</div>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/ryanthara/ja/rycon/tools/TextFileTools.html#processConversionTXT2CSV-java.lang.String-">processConversionTXT2CSV</a></span>(java.lang.String&nbsp;separator)</code>
+<div class="block">Converts a TXT file into a CSV file with the given separator sign.</div>
 </td>
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code>java.util.ArrayList&lt;java.lang.String&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/ryanthara/ja/rycon/tools/TextFileTools.html#processFormatConversionCSVBaselStadt2TXT-java.lang.String-">processFormatConversionCSVBaselStadt2TXT</a></span>(java.lang.String&nbsp;delimiter)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/ryanthara/ja/rycon/tools/TextFileTools.html#processFormatConversionCSVBaselStadt2TXT-java.lang.String-">processFormatConversionCSVBaselStadt2TXT</a></span>(java.lang.String&nbsp;separator)</code>
 <div class="block">Converts a CSV file from the geodata server Basel Stadt (switzerland) into a txt format file.</div>
 </td>
 </tr>
@@ -291,14 +291,14 @@ extends java.lang.Object</pre>
 <div class="block">Member that stores the found codes. This is necessary, because of the code is eliminated from the string line.</div>
 </li>
 </ul>
-<a name="list">
+<a name="readCSVLines">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>list</h4>
-<pre>private&nbsp;java.util.List&lt;java.lang.String[]&gt; list</pre>
-<div class="block">Member for the list of read CSV file lines.</div>
+<h4>readCSVLines</h4>
+<pre>private&nbsp;java.util.List&lt;java.lang.String[]&gt; readCSVLines</pre>
+<div class="block">Member for the readCSVLines of read CSV file lines.</div>
 </li>
 </ul>
 </li>
@@ -331,13 +331,13 @@ extends java.lang.Object</pre>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>TextFileTools</h4>
-<pre>public&nbsp;TextFileTools(java.util.List&lt;java.lang.String[]&gt;&nbsp;list)</pre>
+<pre>public&nbsp;TextFileTools(java.util.List&lt;java.lang.String[]&gt;&nbsp;readCSVLines)</pre>
 <div class="block">Class Constructor with parameter.
  <p>
  As parameter the <code>List&lt;String[]&gt;</code> object with the lines in csv format is used.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>list</code> - <code>List&lt;String[]&gt;</code> with lines in csv format</dd>
+<dd><code>readCSVLines</code> - <code>List&lt;String[]&gt;</code> with lines in csv format</dd>
 </dl>
 </li>
 </ul>
@@ -390,13 +390,13 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>processFormatConversionCSVBaselStadt2TXT</h4>
-<pre>public&nbsp;java.util.ArrayList&lt;java.lang.String&gt;&nbsp;processFormatConversionCSVBaselStadt2TXT(java.lang.String&nbsp;delimiter)</pre>
+<pre>public&nbsp;java.util.ArrayList&lt;java.lang.String&gt;&nbsp;processFormatConversionCSVBaselStadt2TXT(java.lang.String&nbsp;separator)</pre>
 <div class="block">Converts a CSV file from the geodata server Basel Stadt (switzerland) into a txt format file.
  <p>
  With a parameter it is possible to distinguish between space or tabulator as separator.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>delimiter</code> - delimiter sign as <code>String</code></dd>
+<dd><code>separator</code> - separator sign as <code>String</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>converted <code>ArrayList&lt;String&gt;</code> with lines of text format</dd>
 </dl>
@@ -408,11 +408,11 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>processConversionCSV2TXT</h4>
-<pre>public&nbsp;java.util.ArrayList&lt;java.lang.String&gt;&nbsp;processConversionCSV2TXT(java.lang.String&nbsp;delimiter)</pre>
-<div class="block">Converts a CSV file into a TXT file with the given delimiter sign.</div>
+<pre>public&nbsp;java.util.ArrayList&lt;java.lang.String&gt;&nbsp;processConversionCSV2TXT(java.lang.String&nbsp;separator)</pre>
+<div class="block">Converts a CSV file into a TXT file with the given separator sign.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>delimiter</code> - delimiter sign to use for conversion</dd>
+<dd><code>separator</code> - separator sign to use for conversion</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>converted TXT file</dd>
 </dl>
@@ -424,11 +424,11 @@ extends java.lang.Object</pre>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>processConversionTXT2CSV</h4>
-<pre>public&nbsp;java.util.ArrayList&lt;java.lang.String&gt;&nbsp;processConversionTXT2CSV(java.lang.String&nbsp;delimiter)</pre>
-<div class="block">Converts a TXT file into a CSV file with the given delimiter sign.</div>
+<pre>public&nbsp;java.util.ArrayList&lt;java.lang.String&gt;&nbsp;processConversionTXT2CSV(java.lang.String&nbsp;separator)</pre>
+<div class="block">Converts a TXT file into a CSV file with the given separator sign.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>delimiter</code> - delimiter sign to use for conversion</dd>
+<dd><code>separator</code> - separator sign to use for conversion</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>converted CSV file</dd>
 </dl>
@@ -455,7 +455,7 @@ extends java.lang.Object</pre>
 <li class="navBarCell1Rev">Class</li>
 <li><a href="class-use/TextFileTools.html">Use</a></li>
 <li><a href="package-tree.html">Tree</a></li>
-<li><a href="../../../../../deprecated-list.html">Deprecated</a></li>
+<li><a href="../../../../../deprecated-readCSVLines.html">Deprecated</a></li>
 <li><a href="../../../../../index-files/index-1.html">Index</a></li>
 <li><a href="../../../../../help-doc.html">Help</a></li>
 </ul>

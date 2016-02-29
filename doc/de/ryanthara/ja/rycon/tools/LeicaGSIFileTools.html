@@ -42,7 +42,7 @@ var activeTableTab = "activeTableTab";
 <li class="navBarCell1Rev">Class</li>
 <li><a href="class-use/LeicaGSIFileTools.html">Use</a></li>
 <li><a href="package-tree.html">Tree</a></li>
-<li><a href="../../../../../deprecated-list.html">Deprecated</a></li>
+<li><a href="../../../../../deprecated-readCSVLines.html">Deprecated</a></li>
 <li><a href="../../../../../index-files/index-1.html">Index</a></li>
 <li><a href="../../../../../help-doc.html">Help</a></li>
 </ul>
@@ -200,8 +200,8 @@ extends java.lang.Object</pre>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>private java.util.List&lt;java.lang.String[]&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/ryanthara/ja/rycon/tools/LeicaGSIFileTools.html#list">list</a></span></code>
-<div class="block">Member for the list of read CSV file lines.</div>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/ryanthara/ja/rycon/tools/LeicaGSIFileTools.html#readCSVLines">readCSVLines</a></span></code>
+<div class="block">Member for the readCSVLines of read CSV file lines.</div>
 </td>
 </tr>
 </table>
@@ -224,7 +224,7 @@ extends java.lang.Object</pre>
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../de/ryanthara/ja/rycon/tools/LeicaGSIFileTools.html#LeicaGSIFileTools-java.util.List-">LeicaGSIFileTools</a></span>(java.util.List&lt;java.lang.String[]&gt;&nbsp;list)</code>
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../de/ryanthara/ja/rycon/tools/LeicaGSIFileTools.html#LeicaGSIFileTools-java.util.List-">LeicaGSIFileTools</a></span>(java.util.List&lt;java.lang.String[]&gt;&nbsp;readCSVLines)</code>
 <div class="block">Class constructor with parameter for the read lines as <code>List&lt;String[]&gt;</code> object.</div>
 </td>
 </tr>
@@ -278,7 +278,7 @@ extends java.lang.Object</pre>
 <tr id="i5" class="rowColor">
 <td class="colFirst"><code>java.util.ArrayList&lt;java.lang.String&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/ryanthara/ja/rycon/tools/LeicaGSIFileTools.html#processFormatConversionCSV2GSI-boolean-">processFormatConversionCSV2GSI</a></span>(boolean&nbsp;isGSI16)</code>
-<div class="block">Converts a CSV file (comma or semicolon delimited) into a GSI file.</div>
+<div class="block">Converts a CSV file (comma or semicolon separatorited) into a GSI file.</div>
 </td>
 </tr>
 <tr id="i6" class="altColor">
@@ -289,17 +289,17 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i7" class="rowColor">
 <td class="colFirst"><code>java.util.ArrayList&lt;java.lang.String&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/ryanthara/ja/rycon/tools/LeicaGSIFileTools.html#processFormatConversionGSI2CSV-java.lang.String-boolean-">processFormatConversionGSI2CSV</a></span>(java.lang.String&nbsp;delimiter,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/ryanthara/ja/rycon/tools/LeicaGSIFileTools.html#processFormatConversionGSI2CSV-java.lang.String-boolean-">processFormatConversionGSI2CSV</a></span>(java.lang.String&nbsp;separator,
                               boolean&nbsp;writeCommentLine)</code>
-<div class="block">Converts a GSI file into a comma or semicolon delimited csv file.</div>
+<div class="block">Converts a GSI file into a comma or semicolon separatorited csv file.</div>
 </td>
 </tr>
 <tr id="i8" class="altColor">
 <td class="colFirst"><code>java.util.ArrayList&lt;java.lang.String&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/ryanthara/ja/rycon/tools/LeicaGSIFileTools.html#processFormatConversionGSI2TXT-java.lang.String-boolean-boolean-">processFormatConversionGSI2TXT</a></span>(java.lang.String&nbsp;delimiter,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../de/ryanthara/ja/rycon/tools/LeicaGSIFileTools.html#processFormatConversionGSI2TXT-java.lang.String-boolean-boolean-">processFormatConversionGSI2TXT</a></span>(java.lang.String&nbsp;separator,
                               boolean&nbsp;isGSI16,
                               boolean&nbsp;writeCommentLine)</code>
-<div class="block">Converts a GSI file into a space or tab delimited text file.</div>
+<div class="block">Converts a GSI file into a space or tab separatorited text file.</div>
 </td>
 </tr>
 <tr id="i9" class="rowColor">
@@ -383,14 +383,14 @@ extends java.lang.Object</pre>
 <div class="block">Member for indicating that the block is a GSI16 one.</div>
 </li>
 </ul>
-<a name="list">
+<a name="readCSVLines">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>list</h4>
-<pre>private&nbsp;java.util.List&lt;java.lang.String[]&gt; list</pre>
-<div class="block">Member for the list of read CSV file lines.</div>
+<h4>readCSVLines</h4>
+<pre>private&nbsp;java.util.List&lt;java.lang.String[]&gt; readCSVLines</pre>
+<div class="block">Member for the readCSVLines of read CSV file lines.</div>
 </li>
 </ul>
 </li>
@@ -423,13 +423,13 @@ extends java.lang.Object</pre>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>LeicaGSIFileTools</h4>
-<pre>public&nbsp;LeicaGSIFileTools(java.util.List&lt;java.lang.String[]&gt;&nbsp;list)</pre>
+<pre>public&nbsp;LeicaGSIFileTools(java.util.List&lt;java.lang.String[]&gt;&nbsp;readCSVLines)</pre>
 <div class="block">Class constructor with parameter for the read lines as <code>List&lt;String[]&gt;</code> object.
  <p>
  This constructor is used for read csv file lines.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>list</code> - <code>List&lt;String[]&gt;</code> with lines as <code>String[]</code></dd>
+<dd><code>readCSVLines</code> - <code>List&lt;String[]&gt;</code> with lines as <code>String[]</code></dd>
 </dl>
 </li>
 </ul>
@@ -503,9 +503,9 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>processFormatConversionCSV2GSI</h4>
 <pre>public&nbsp;java.util.ArrayList&lt;java.lang.String&gt;&nbsp;processFormatConversionCSV2GSI(boolean&nbsp;isGSI16)</pre>
-<div class="block">Converts a CSV file (comma or semicolon delimited) into a GSI file.
+<div class="block">Converts a CSV file (comma or semicolon separatorited) into a GSI file.
  <p>
- The format of the GSI file is controlled with a parameter. The delimitor
+ The format of the GSI file is controlled with a parameter. The separator
  sign is automatically detected.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -539,14 +539,14 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>processFormatConversionGSI2CSV</h4>
-<pre>public&nbsp;java.util.ArrayList&lt;java.lang.String&gt;&nbsp;processFormatConversionGSI2CSV(java.lang.String&nbsp;delimiter,
+<pre>public&nbsp;java.util.ArrayList&lt;java.lang.String&gt;&nbsp;processFormatConversionGSI2CSV(java.lang.String&nbsp;separator,
                                                                             boolean&nbsp;writeCommentLine)</pre>
-<div class="block">Converts a GSI file into a comma or semicolon delimited csv file.
+<div class="block">Converts a GSI file into a comma or semicolon separatorited csv file.
  <p>
  With parameter it is possible to set the separation char (comma or semicolon).</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>delimiter</code> - delimiter sign as <code>String</code></dd>
+<dd><code>separator</code> - separator sign as <code>String</code></dd>
 <dd><code>writeCommentLine</code> - if comment line should be written</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>converted <code>ArrayList&lt;String&gt;</code> with lines of text format</dd>
@@ -559,15 +559,15 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>processFormatConversionGSI2TXT</h4>
-<pre>public&nbsp;java.util.ArrayList&lt;java.lang.String&gt;&nbsp;processFormatConversionGSI2TXT(java.lang.String&nbsp;delimiter,
+<pre>public&nbsp;java.util.ArrayList&lt;java.lang.String&gt;&nbsp;processFormatConversionGSI2TXT(java.lang.String&nbsp;separator,
                                                                             boolean&nbsp;isGSI16,
                                                                             boolean&nbsp;writeCommentLine)</pre>
-<div class="block">Converts a GSI file into a space or tab delimited text file.
+<div class="block">Converts a GSI file into a space or tab separatorited text file.
  <p>
  With parameter it is possible to set the separation char (space or tab).</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>delimiter</code> - delimiter sign as <code>String</code></dd>
+<dd><code>separator</code> - separator sign as <code>String</code></dd>
 <dd><code>isGSI16</code> - true if GSI16 format is used</dd>
 <dd><code>writeCommentLine</code> - if comment line should be written</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -689,7 +689,7 @@ extends java.lang.Object</pre>
 <li class="navBarCell1Rev">Class</li>
 <li><a href="class-use/LeicaGSIFileTools.html">Use</a></li>
 <li><a href="package-tree.html">Tree</a></li>
-<li><a href="../../../../../deprecated-list.html">Deprecated</a></li>
+<li><a href="../../../../../deprecated-readCSVLines.html">Deprecated</a></li>
 <li><a href="../../../../../index-files/index-1.html">Index</a></li>
 <li><a href="../../../../../help-doc.html">Help</a></li>
 </ul>

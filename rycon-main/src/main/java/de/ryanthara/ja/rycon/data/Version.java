@@ -46,7 +46,7 @@ public class Version {
      *
      * @return the build date
      */
-    public static final String getBuildDate() {
+    public static String getBuildDate() {
         return buildDate;
     }
 
@@ -55,7 +55,7 @@ public class Version {
      *
      * @return the build number
      */
-    public static final int getBuildNumber() {
+    public static int getBuildNumber() {
         return buildNumber;
     }
 
@@ -64,7 +64,7 @@ public class Version {
      *
      * @return the major version number
      */
-    public static final int getMajorVersionNumber() {
+    public static int getMajorVersionNumber() {
         return majorVersion;
     }
 
@@ -73,7 +73,7 @@ public class Version {
      *
      * @return the minor version number
      */
-    public static final int getMinorVersionNumber() {
+    public static int getMinorVersionNumber() {
         return minorVersion;
     }
 
@@ -81,7 +81,7 @@ public class Version {
      * Returns the current version of RyCON as string value (major.minor).
      * @return the major.minor version
      */
-    public static final String getVersion() {
+    public static String getVersion() {
         return Integer.toString(majorVersion) + "." + Integer.toString(minorVersion);
     }
 

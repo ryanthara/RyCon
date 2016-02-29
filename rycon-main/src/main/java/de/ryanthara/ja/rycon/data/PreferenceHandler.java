@@ -136,10 +136,8 @@ public class PreferenceHandler {
     public PreferenceHandler() {
         userPreferences = Preferences.userRoot().node("/de/ryanthara/rycon");
         
-        if (userPreferences.get(PreferenceHandler.GENERATOR, "").equals(Main.getRyCONAppName())) {
-            
-        } else {
-            System.out.println("DEFAULT SETTINGS");
+        if (!userPreferences.get(PreferenceHandler.GENERATOR, "").equals(Main.getRyCONAppName())) {
+            System.out.println("DEFAULT SETTINGS GENERATED");
             createDefaultSettings();
             isDefaultSettingsGenerated = true;
         }
@@ -151,7 +149,7 @@ public class PreferenceHandler {
      * If the path doesn't exists, RyCON tries to use the value of the base dir. If base dir doesn't exist, then
      * the value of the "HOME" variable of the system will be returned.
      *
-     * @param pathToBeChecked
+     * @param pathToBeChecked stored path which has to be checked
      */
     public static String checkUserPrefPathExist(String pathToBeChecked) {
         File f = new File(pathToBeChecked);
@@ -190,11 +188,9 @@ public class PreferenceHandler {
      * after the first start of RyCON. To do this, hit the key 'p' on the keyboard.
      */
     public void createDefaultSettings() {
-        Version version = new Version();
-
         // general settings
         userPreferences.put(GENERATOR, Main.getRyCONAppName());
-        userPreferences.put(BUILD_VERSION, version.getBuildNumber() + version.getBuildDate());
+        userPreferences.put(BUILD_VERSION, Version.getBuildNumber() + Version.getBuildDate());
         userPreferences.put(INFORMATION_STRING, Main.getRyCONWebsite());
 
         // parameters for module #1 - clean up

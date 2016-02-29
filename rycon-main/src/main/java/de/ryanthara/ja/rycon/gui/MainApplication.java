@@ -211,11 +211,9 @@ public class MainApplication extends Main {
         if (tray == null) {
             System.err.println("System tray functionality is not available on your system.");
         } else {
-            Version version = new Version();
-
             final TrayItem item = new TrayItem(tray, SWT.NONE);
             item.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/RyCON_TrayIcon64x64.png"));
-            item.setToolTipText("RyCON: " + version.getBuildNumber() + " <--> " + version.getBuildDate());
+            item.setToolTipText("RyCON: " + Version.getBuildNumber() + " <--> " + Version.getBuildDate());
 
             final Menu menu = new Menu(shell, SWT.POP_UP);
 
@@ -251,7 +249,7 @@ public class MainApplication extends Main {
             new MenuItem(menu, SWT.SEPARATOR);
 
             MenuItem infoItem = new MenuItem(menu, SWT.PUSH);
-            infoItem.setText(I18N.getTrayMenuItemInfo() + version.getBuildNumber() + " (" + version.getBuildDate() + ")");
+            infoItem.setText(I18N.getTrayMenuItemInfo() + Version.getBuildNumber() + " (" + Version.getBuildDate() + ")");
 
             new MenuItem(menu, SWT.SEPARATOR);
 
@@ -468,7 +466,6 @@ public class MainApplication extends Main {
     }
 
     private void applicationStarted() {
-        // TODO popup widget
         if (LICENSE) {
             NotificationPopupWidget.notify(I18N.getLicenseTitleFull(), I18N.getLicenseMsgFull(), NotificationType.values()[1], 4500);
         } else {

@@ -23,7 +23,6 @@ import de.ryanthara.ja.rycon.tools.ImageConverter;
 import org.eclipse.swt.graphics.Image;
 
 import java.util.HashMap;
-import java.util.Iterator;
 
 /**
  * Instances of this class caches images for usage in SWT components.
@@ -44,7 +43,7 @@ import java.util.Iterator;
  */
 public class ImageCache {
 
-    private static HashMap<String, Image> imageMap = new HashMap<String, Image>();
+    private static HashMap<String, Image> imageMap = new HashMap<>();
     private static final String IMAGE_ROOT_PATH = "/de/ryanthara/ja/rycon/gui/icons/";
 
     private static Image createImage(String fileName) {
@@ -81,10 +80,8 @@ public class ImageCache {
      * This is necessary because of memory usage. See this <a href="http://www.eclipse.org/articles/swt-design-2/swt-design-2.html">article</a>.
      */
     public static void dispose() {
-        Iterator<Image> iterator = imageMap.values().iterator();
-
-        while (iterator.hasNext()) {
-            iterator.next().dispose();
+        for (Image image : imageMap.values()) {
+            image.dispose();
         }
     }
 

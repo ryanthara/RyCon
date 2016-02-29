@@ -59,9 +59,10 @@ public class WidgetHelper {
         if (TextHelper.checkIsEmpty(source) || TextHelper.checkIsEmpty(destination)) {
             GuiHelper.showMessageBox(Main.shell, SWT.ICON_WARNING, I18N.getMsgBoxTitleWarning(), I18N.getMsgEmptyTextFieldWarning());
 
-            return new File[0];
+            // return new File[0];
+            files2read = new File[0];
         } else if (chosenFiles == null) {
-              // TODO check for spaces in file names or directory names (not trivial)
+              // TODO check for spaces in file names or directory names (not easy)
             StringTokenizer st = new StringTokenizer(source.getText());
 
             int counter = st.countTokens();
@@ -79,13 +80,12 @@ public class WidgetHelper {
 
             File destinationPath = new File(destination.getText());
 
-            if (destinationPath.isDirectory() && files2read.length > 0) {
-                return files2read;
-            } else {
-                return new File[0];
+            if (!(destinationPath.isDirectory() && files2read.length > 0)) {
+                files2read = new File[0];
             }
         } else if (chosenFiles.length > 0) {
-            return chosenFiles;
+            // return chosenFiles;
+            files2read = chosenFiles;
         }
 
         return files2read;
@@ -103,19 +103,19 @@ public class WidgetHelper {
     public static File[] checkForValidFiles(File[] files, String[] acceptableFileSuffix) {
         ArrayList<File> temp = new ArrayList<>();
 
-        for (int i = 0; i < files.length; i++) {
-            if (files[i].isFile() && files[i].canRead()) {
-                for (int j = 0; j < acceptableFileSuffix.length; j++) {
-                    String reducedSuffix = acceptableFileSuffix[j].toString().substring(2, acceptableFileSuffix[j].length());
+        for (File file : files) {
+            if (file.isFile() && file.canRead()) {
+                for (String anAcceptableFileSuffix : acceptableFileSuffix) {
+                    String reducedSuffix = anAcceptableFileSuffix.substring(2, anAcceptableFileSuffix.length());
 
-                    if (files[i].getName().toLowerCase().endsWith(reducedSuffix)) {
-                        temp.add(files[i]);
+                    if (file.getName().toLowerCase().endsWith(reducedSuffix)) {
+                        temp.add(file);
                     }
                 }
             }
         }
 
-        return temp.toArray(new File[0]);
+        return temp.toArray(new File[temp.size()]);
     }
 
 }

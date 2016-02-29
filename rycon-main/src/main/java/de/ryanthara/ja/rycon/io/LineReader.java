@@ -113,7 +113,7 @@ public class LineReader {
     public boolean readFile(String comment) {
         // some basic initialization
         boolean success = false;
-        lines = new ArrayList<String>();
+        lines = new ArrayList<>();
         BufferedReader bufferedReader;
         FileInputStream fileInputStream = null;
         String line;

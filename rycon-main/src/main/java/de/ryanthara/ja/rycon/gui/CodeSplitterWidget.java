@@ -193,7 +193,7 @@ public class CodeSplitterWidget {
 
         Label tip = new Label(group, SWT.WRAP | SWT.BORDER | SWT.LEFT);
         tip.setLayoutData(new GridData(SWT.HORIZONTAL, SWT.TOP, true, false, 1, 1));
-        tip.setText(String.format(I18N.getLabelTipSplitterWidget()));
+        tip.setText(I18N.getLabelTipSplitterWidget());
     }
 
     private void actionBtnCancel() {
@@ -221,6 +221,11 @@ public class CodeSplitterWidget {
     }
 
     private int actionBtnOk() {
+        if (inputFieldsComposite.getSourceTextField().getText().equals("") &
+                inputFieldsComposite.getDestinationTextField().getText().equals("")) {
+            return -1;
+        }
+
         if (files2read.length == 0) {
             files2read = new File[1];
             files2read[0] = new File(inputFieldsComposite.getSourceTextField().getText());
@@ -307,7 +312,7 @@ public class CodeSplitterWidget {
             Main.countFileOps = counter;
             success = true;
         } else {
-            GuiHelper.showMessageBox(innerShell, SWT.ICON_WARNING, I18N.getMsgBoxTitleError(), String.format(I18N.getMsgSplittingError()));
+            GuiHelper.showMessageBox(innerShell, SWT.ICON_WARNING, I18N.getMsgBoxTitleError(), I18N.getMsgSplittingError());
             success = false;
         }
 
