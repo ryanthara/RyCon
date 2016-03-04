@@ -151,12 +151,12 @@ public class FileToolsText {
 
             String[] lineSplit = line.trim().split("\\s+");
 
+            // point number is in column 2
+            s = lineSplit[1];
+            s = s.concat(separator);
+
             switch (lineSplit.length) {
                 case 5:     // HFP file
-                    // point number is in column 2
-                    s = lineSplit[1];
-                    s = s.concat(separator);
-
                     // easting (Y) is in column 3
                     s = s.concat(lineSplit[2]);
                     s = s.concat(separator);
@@ -173,10 +173,6 @@ public class FileToolsText {
                     break;
 
                 case 6:     // LFP file
-                    // point number is in column 2
-                    s = lineSplit[1];
-                    s = s.concat(separator);
-
                     // use 'Versicherungsart' as code. It is in column 3
                     if (writeCodeColumn) {
                         s = s.concat(lineSplit[2]);
@@ -193,7 +189,7 @@ public class FileToolsText {
 
                     // height (Z) is in column 6, and not always valued (LFP file)
                     if (lineSplit[5].equals("NULL")) {
-                        s = s.concat("-9999");
+                        s = s.concat("-999");
                     } else {
                         s = s.concat(lineSplit[5]);
                     }

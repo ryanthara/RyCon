@@ -175,11 +175,11 @@ public class FileToolsCaplanK {
      *
      * @param useSimpleFormat option to write a reduced K file which is compatible to ZF LaserControl
      * @param writeCommentLine option to write a comment line into the K file with basic information
-     * @param useCodeColumn option to write the code column into the K file
+     * @param writeCodeColumn option to write the code column into the K file
      *
      * @return converted K file as ArrayList<String>
      */
-    public ArrayList<String> convertCadwork2KFile(boolean useSimpleFormat, boolean writeCommentLine, boolean useCodeColumn) {
+    public ArrayList<String> convertCadwork2KFile(boolean useSimpleFormat, boolean writeCommentLine, boolean writeCodeColumn) {
         ArrayList<String> result = new ArrayList<>();
 
         if (writeCommentLine) {
@@ -220,13 +220,12 @@ public class FileToolsCaplanK {
 
             // height H, column 47-59
             String height = String.format("%13s", fillZeroDigits(lineSplit[3], 5));
-            Double d = Double.parseDouble(height);
-            if (d != 0d) {
+            if (Double.parseDouble(height) != 0d) {
                 valencyIndicator += 4;
             }
 
             // code is the same as object type, column 62...
-            if (useCodeColumn) {
+            if (writeCodeColumn) {
                 objectTyp = "|".concat(lineSplit[4]);
             }
 
@@ -386,6 +385,120 @@ public class FileToolsCaplanK {
     }
 
     /**
+     * Converts a CSV file from the geodata server Basel Stadt (switzerland) into a K format file.
+     * <p>
+     * @param useSimpleFormat option to write a reduced K file which is compatible to ZF LaserControl
+     * @param writeCommentLine option to write a comment line into the K file with basic information
+     *
+     * @return converted K file as ArrayList<String>
+     */
+    public ArrayList<String> convertTXTBaselLandschaft2K(boolean useSimpleFormat, boolean writeCodeColumn,
+                                                         boolean writeCommentLine) {
+        ArrayList<String> result = new ArrayList<>();
+
+        readStringLines.remove(0);  // remove comment line
+
+        if (writeCommentLine) {
+            writeCommentLine(result);
+        }
+
+        for (String line : readStringLines) {
+            int valencyIndicator = -1;
+
+            String[] lineSplit = line.trim().split("\\s+");
+
+            StringBuilder stringBuilder = new StringBuilder();
+
+            String valency = this.valency;
+            String freeSpace = this.freeSpace;
+            String objectTyp = this.objectTyp;
+            String northing = this.northing;
+            String easting = this.easting;
+            String height = this.height;
+
+            // identical position for HFP and LFP file
+            // point number is in column 2
+            String s = lineSplit[1];
+
+            // point number (no '*', ',' and ';'), column 1 - 16
+            s = s.replaceAll("\\*", "#");
+            s = s.replaceAll(",", ".");
+            s = s.replaceAll(";", ":");
+
+            String number = String.format("%16s", s);
+
+            switch (lineSplit.length) {
+                case 5:     // HFP file
+                    // easting (Y) is in column 3 -> column 19-32
+                    easting = String.format("%14s", fillZeroDigits(lineSplit[2], 4));
+
+                    // northing (X) is in column 4 -> column 33-46
+                    northing = String.format("%14s", fillZeroDigits(lineSplit[3], 4));
+                    valencyIndicator = 3;
+
+                    // height (Z) is in column 5, and not always valued (LFP file) -> column 47-59
+                    height = String.format("%13s", fillZeroDigits(lineSplit[4], 5));
+                    Double d = Double.parseDouble(height);
+                    if (d != 0d) {
+                        valencyIndicator += 4;
+                    }
+                    break;
+
+                case 6:     // LFP file
+                    // use 'Versicherungsart' as code. It is in column 3 -> column 62...
+                    if (writeCodeColumn) {
+                        objectTyp = "|".concat(lineSplit[2]);
+                    }
+
+                    // easting (Y) is in column 4 -> column 19-32
+                    easting = String.format("%14s", fillZeroDigits(lineSplit[3], 4));
+
+                    // northing (X) is in column 5 -> column 33-46
+                    northing = String.format("%14s", fillZeroDigits(lineSplit[4], 4));
+                    valencyIndicator = 3;
+
+                    // height (Z) is in column 6, and not always valued (LFP file) -> column 47-59
+                    if (lineSplit[5].equals("NULL")) {
+                        height = String.format("%13s", fillZeroDigits("-999", 5));
+                    } else {
+                        height = String.format("%13s", fillZeroDigits(lineSplit[5], 5));
+                        if (Double.parseDouble(height) != 0d) {
+                            valencyIndicator += 4;
+                        }
+                    }
+                    break;
+            }
+            if (valencyIndicator > 0) {
+                valency = " ".concat(Integer.toString(valencyIndicator));
+            }
+
+            // 2. pick up the relevant elements from the blocks from every line, check ZF option
+            // if ZF option is checked, then use only no 7 x y z for K file
+            if (useSimpleFormat) {
+                stringBuilder.append(number);
+                stringBuilder.append(valency);
+                stringBuilder.append(easting);
+                stringBuilder.append(northing);
+                stringBuilder.append(height);
+            } else {
+                stringBuilder.append(number);
+                stringBuilder.append(valency);
+                stringBuilder.append(easting);
+                stringBuilder.append(northing);
+                stringBuilder.append(height);
+                if (!objectTyp.equals("")) {
+                    stringBuilder.append(freeSpace);
+                    stringBuilder.append(objectTyp);
+                }
+            }
+
+            result.add(stringBuilder.toString());
+
+        }
+        return result;
+    }
+
+    /**
      * Writes the comment line into an given ArrayList<String>.
      * @param result ArrayList<String> to write in
      */
@@ -426,6 +539,5 @@ public class FileToolsCaplanK {
 
         return s;
     }
-
 
 } // end of FileToolsCaplanK

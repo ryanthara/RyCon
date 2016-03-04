@@ -43,22 +43,6 @@ import java.io.File;
 public class GuiHelper {
 
     /**
-     * Default constructor.
-     */
-    public GuiHelper() {}
-
-    /**
-     * Sets a given file name from the source text field as text into the destination text field.
-     *
-     * @param destinationText destination text field
-     * @param sourceFile file name from source text field
-     * @since 2
-     */
-    public static void prepareDestinationText(Text destinationText, File sourceFile) {
-        destinationText.setText(sourceFile.getName());
-    }
-
-    /**
      * Shows a directory dialog which is used in different classes of RyCON.
      * <p>
      * The filter path is checked if there is a stored value in the preferences file of RyCON.

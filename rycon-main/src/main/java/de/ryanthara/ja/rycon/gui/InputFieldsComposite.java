@@ -106,10 +106,9 @@ public class InputFieldsComposite extends Composite {
         sourceTextField.addModifyListener(new ModifyListener() {
             @Override
             public void modifyText(ModifyEvent modifyEvent) {
-                File sourceFile = new File(sourceTextField.getText());
-
-                if (sourceFile.exists() & sourceFile.isFile()) {
-                      GuiHelper.prepareDestinationText(destinationTextField, sourceFile);
+                if (TextHelper.checkIfFileExists(sourceTextField)) {
+                    File sourceFile = new File(sourceTextField.getText());
+                    destinationTextField.setText(sourceFile.getName());
                 }
 
             }
@@ -143,13 +142,11 @@ public class InputFieldsComposite extends Composite {
             public void handleEvent(Event event) {
                 // prevent this shortcut for execute when the text fields are empty
                 if (!(sourceTextField.getText().trim().equals("") || (destinationTextField.getText().trim().equals("")))) {
-
                     if (((event.stateMask & SWT.SHIFT) == SWT.SHIFT) && (event.detail == SWT.TRAVERSE_RETURN)) {
                         doButtonAction("actionBtnOk");
                     } else if (((event.stateMask & SWT.CTRL) == SWT.CTRL) && (event.detail == SWT.TRAVERSE_RETURN)) {
                         doButtonAction("actionBtnOkAndExit");
                     }
-
                 } else if (event.detail == SWT.TRAVERSE_RETURN) {
                     doButtonAction("actionBtnDestination");
                     sourceTextField.setFocus();

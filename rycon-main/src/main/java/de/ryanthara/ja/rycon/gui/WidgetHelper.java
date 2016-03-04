@@ -20,6 +20,7 @@ package de.ryanthara.ja.rycon.gui;
 
 import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.data.I18N;
+import de.ryanthara.ja.rycon.io.FileUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Text;
 
@@ -62,17 +63,18 @@ public class WidgetHelper {
             // return new File[0];
             files2read = new File[0];
         } else if (chosenFiles == null) {
-              // TODO check for spaces in file names or directory names (not easy)
+            // TODO check for spaces in file names or directory names (not easy)
             StringTokenizer st = new StringTokenizer(source.getText());
 
             int counter = st.countTokens();
 
             for (int i = 0; i < counter; i++) {
                 String s = st.nextToken();
-                File sourceFile = new File(s);
 
-                if (sourceFile.isFile()) {
-                    files2read[i] = sourceFile;
+                if (FileUtils.checkIsFile(s)) {
+                    if (files2read != null) {
+                        files2read[i] = new File(s);
+                    }
                 } else {
                     GuiHelper.showMessageBox(Main.shell, SWT.ICON_WARNING, I18N.getMsgBoxTitleWarning(), I18N.getMsgFileNotExist());
                 }

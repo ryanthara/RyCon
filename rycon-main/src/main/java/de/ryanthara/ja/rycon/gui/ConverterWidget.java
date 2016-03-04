@@ -348,7 +348,7 @@ public class ConverterWidget {
             if (sourceFile.isDirectory()) {
                 filterPath = inputFieldsComposite.getSourceTextField().getText();
             } else if (sourceFile.isFile()) {
-                GuiHelper.prepareDestinationText(inputFieldsComposite.getDestinationTextField(), sourceFile);
+                inputFieldsComposite.setDestinationTextFieldText(sourceFile.getName());
             }
         }
 
@@ -603,7 +603,7 @@ public class ConverterWidget {
                                 }
                                 break;
 
-                            case 6:     // TXT format 'Basel Landschaft' (different column based text files for LFP and HFP points
+                            case 6:     // TXT format 'Basel Landschaft' (different column based text files for LFP and HFP points)
                                 toolsLeicaGSI = new FileToolsLeicaGSI(readFile);
                                 writeFile = toolsLeicaGSI.convertTXTBaselLandschaft2GSI(Main.getGSI8(), chkBoxWriteCodeColumn.getSelection());
 
@@ -675,7 +675,7 @@ public class ConverterWidget {
                                 }
                                 break;
 
-                            case 6:     // TXT format 'Basel Landschaft' (different column based text files for LFP and HFP points
+                            case 6:     // TXT format 'Basel Landschaft' (different column based text files for LFP and HFP points)
                                 toolsLeicaGSI = new FileToolsLeicaGSI(readFile);
                                 writeFile = toolsLeicaGSI.convertTXTBaselLandschaft2GSI(Main.getGSI16(), chkBoxWriteCodeColumn.getSelection());
 
@@ -768,7 +768,7 @@ public class ConverterWidget {
                                 }
                                 break;
 
-                            case 6:     // TXT format 'Basel Landschaft' (different column based text files for LFP and HFP points
+                            case 6:     // TXT format 'Basel Landschaft' (different column based text files for LFP and HFP points)
                                 // get separator sign
                                 if (chkBoxTXTSpaceSeparator.getSelection()) {
                                     separator = Main.getSeparatorSpace();
@@ -792,7 +792,6 @@ public class ConverterWidget {
                         switch (sourceNumber) {
                             case 0:     // fall through for GSI8 format
                             case 1:     // GSI16 format
-
                                 // get separator sign
                                 if (chkBoxCSVSemiColonSeparator.getSelection()) {
                                     separator = Main.getSeparatorSemicolon();
@@ -864,6 +863,28 @@ public class ConverterWidget {
                                 }
                                 break;
 
+                            case 6:     // TXT format 'Basel Landschaft' (different column based text files for LFP and HFP points)
+                                // get separator sign
+                                if (chkBoxCSVSemiColonSeparator.getSelection()) {
+                                    separator = Main.getSeparatorSemicolon();
+                                } else {
+                                    separator = Main.getSeparatorComma();
+                                }
+
+                                // process file operations
+                                toolsText = new FileToolsText(readFile);
+                                ArrayList<String> stopOver = toolsText.convertTXTBaselLandschaft2TXT(Main.getSeparatorTab(),
+                                        chkBoxWriteCodeColumn.getSelection());
+
+                                FileToolsCSV stopOverFile = new FileToolsCSV(stopOver);
+                                writeFile = stopOverFile.convertTXT2CSV(separator);
+
+                                // write file line by line
+                                if (writeFile(file2read, writeFile, ".CSV")) {
+                                    counter++;
+                                }
+
+                                break;
                         }
                         break;
 
@@ -910,6 +931,19 @@ public class ConverterWidget {
                                 if (writeFile(file2read, writeFile, ".K")) {
                                     counter++;
                                 }
+                                break;
+
+                            case 6:     // TXT format 'Basel Landschaft' (different column based text files for LFP and HFP points)
+                                toolsCaplanK = new FileToolsCaplanK(readFile);
+                                writeFile = toolsCaplanK.convertTXTBaselLandschaft2K(
+                                        chkBoxKFormatUseSimpleFormat.getSelection(), chkBoxWriteCodeColumn.getSelection(),
+                                        chkBoxWriteCommentLine.getSelection());
+
+                                // write file line by line
+                                if (writeFile(file2read, writeFile, ".K")) {
+                                    counter++;
+                                }
+
                                 break;
                         }
 

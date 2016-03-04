@@ -283,7 +283,7 @@ public class CodeSplitterWidget {
             if (sourceFile.isDirectory()) {
                 filterPath = inputFieldsComposite.getSourceTextField().getText();
             } else if (sourceFile.isFile()) {
-                GuiHelper.prepareDestinationText(inputFieldsComposite.getDestinationTextField(), sourceFile);
+                inputFieldsComposite.setDestinationTextFieldText(sourceFile.getName());
             }
         }
 

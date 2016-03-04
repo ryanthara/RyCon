@@ -167,7 +167,7 @@ public class FileToolsLeicaGSI {
             if (!stringField[4].equals("")) {
                 line = line.concat(stringField[4]);
             } else {
-                line = line.concat("-9999");
+                line = line.concat("-999");
             }
 
             result.add(line.trim());
@@ -478,7 +478,7 @@ public class FileToolsLeicaGSI {
                     blocks.add(new GSIBlock(isGSI16, 82, lineCounter, lineSplit[2]));
 
                     // necessary because of Basel Stadt CSV distinguish between points without height
-                    if (!lineSplit[3].equals("-9999")) {
+                    if (!lineSplit[3].equals("-999")) {
                         blocks.add(new GSIBlock(isGSI16, 83, lineCounter, lineSplit[3]));
                     }
                     break;

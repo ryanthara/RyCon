@@ -45,6 +45,32 @@ public class FileUtils {
     }
 
     /**
+     * Checks if a directory exists and is a valid director for a String URL
+     *
+     * @param file directory URL as String to be checked
+     * @return true if is directory and exists
+     */
+    public static boolean checkIsDirectory(String file) {
+        File f = new File(file);
+
+        return f.exists() & f.isDirectory();
+    }
+
+    /**
+     * Checks if a file exists and is a valid file for a String URL
+     *
+     * @param file file URL as String to be checked
+     * @return true if is file and exists
+     */
+    public static boolean checkIsFile(String file) {
+        File f = new File(file);
+
+        return f.exists() & f.isFile();
+    }
+
+
+
+    /**
      * Copies a file or directory and it's subdirectories recursively from source to target location.
      * <p>
      * Alternatively the Apache Commons IO functions can be used for the same task. But at the moment

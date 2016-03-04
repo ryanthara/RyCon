@@ -583,10 +583,6 @@ public class I18N {
         return Messages.getString("msgDirBigDataNotFound");
     }
 
-    public static String getMsgDirDestinationNotExistWarning() {
-        return Messages.getString("msgDirDestinationNotExistWarning");
-    }
-
     public static String getMsgDirNotFound() {
         return Messages.getString("msgDirNotFound");
     }
@@ -648,7 +644,7 @@ public class I18N {
     }
 
     public static String getMsgTidyUpError() {
-        return Messages.getString("msgSplittingError");
+        return Messages.getString("msgTidyUpError");
     }
 
     public static String getMsgTidyUpSuccess(boolean singular) {

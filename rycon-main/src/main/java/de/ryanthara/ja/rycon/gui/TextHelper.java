@@ -18,11 +18,11 @@
 
 package de.ryanthara.ja.rycon.gui;
 
+import de.ryanthara.ja.rycon.io.FileUtils;
 import org.eclipse.swt.widgets.Text;
 
 /**
- * This class enables helper operations like checks for emptyness or valid files
- * to text fields.
+ * This class enables helper operations like checks for being empty or contain valid file objects to text fields.
  * <p>
  * <h3>Changes:</h3>
  * <ul>
@@ -52,31 +52,23 @@ public class TextHelper {
 
 
     /**
-     * Checks if the content of the text field is a directory in the file system.
+     * Checks if the content of the text field is a valid directory in the file system.
      *
-     * @param textField text field which has to be checked
+     * @param textField text field which content has to be checked
      * @return true if directory exist
      */
     public static boolean checkIfDirExists(Text textField) {
-        boolean exist = false;
-
-        String content = textField.getText();
-
-//        if (content !=)
-
-        return exist;
+        return FileUtils.checkIsDirectory(textField.getText());
     }
 
     /**
-     * Checks if the content of the text field is a file in the file system.
+     * Checks if the content of the text field is a valid file in the file system.
      *
-     * @param textField text field which has to be checked
+     * @param textField text field content which has to be checked
      * @return true if file exist
      */
     public static boolean checkIfFileExists(Text textField) {
-        boolean exist = false;
-
-        return exist;
+        return FileUtils.checkIsFile(textField.getText());
     }
 
 } // end of TextHelper
