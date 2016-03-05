@@ -189,7 +189,7 @@ public class FileToolsText {
 
                     // height (Z) is in column 6, and not always valued (LFP file)
                     if (lineSplit[5].equals("NULL")) {
-                        s = s.concat("-999");
+                        s = s.concat("-9999");
                     } else {
                         s = s.concat(lineSplit[5]);
                     }

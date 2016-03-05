@@ -90,9 +90,130 @@ public class FileToolsCaplanK {
         this.readCSVLines = readCSVLines;
     }
 
+
+    /**
+     * Converts a CSV file (nr;x;y;z or nr;code;x;y;z) into a K format file.
+     *
+     * @param useSimpleFormat option to write a reduced K file which is compatible to ZF LaserControl
+     * @param writeCommentLine option to write a comment line into the K file with basic information
+     *
+     * @return converted K file as ArrayList<String>
+     */
+    public ArrayList<String> convertCSV2K(boolean useSimpleFormat, boolean writeCommentLine, boolean writeCodeColumn) {
+        ArrayList<String> result = new ArrayList<>();
+
+        if (writeCommentLine) {
+            writeCommentLine(result);
+        }
+
+        for (String[] stringField : readCSVLines) {
+            int valencyIndicator = 0;
+
+            StringBuilder stringBuilder = new StringBuilder();
+
+            String valency = this.valency;
+            String freeSpace = this.freeSpace;
+            String objectTyp = this.objectTyp;
+            String easting = this.easting;
+            String northing = this.northing;
+            String height = this.height;
+
+            // point number (no '*', ',' and ';'), column 1 - 16
+            String number = stringField[0].replaceAll("\\s+", "").trim();
+            number = number.replaceAll("\\*", "#");
+            number = number.replaceAll(",", ".");
+            number = number.replaceAll(";", ":");
+            number = String.format("%16s", number);
+
+            switch (stringField.length) {
+                case 3:     // contains nr x y
+                    // easting E, column 19-32
+                    easting = String.format("%14s", fillZeroDigits(stringField[1], 4));
+
+                    // northing N, column 33-46
+                    northing = String.format("%14s", fillZeroDigits(stringField[2], 4));
+                    valencyIndicator = 3;
+                    break;
+
+                case 4:     // contains nr x y z
+                    // easting E, column 19-32
+                    easting = String.format("%14s", fillZeroDigits(stringField[1], 4));
+
+                    // northing N, column 33-46
+                    northing = String.format("%14s", fillZeroDigits(stringField[2], 4));
+                    valencyIndicator = 3;
+
+                    // height (Z) is in column 5, but not always valued
+                    height = "";
+                    if (!stringField[4].equals("")) {
+                        // height H, column 47-59
+                        height = String.format("%13s", fillZeroDigits(stringField[3], 5));
+                        Double d = Double.parseDouble(height);
+                        if (d != 0d) {
+                            valencyIndicator += 4;
+                        }
+                    }
+                    break;
+
+                case 5:     // contains nr code x y z
+                    // code is in column 2 and the same as object type, column 62...
+                    if (writeCodeColumn) {
+                        objectTyp = "|".concat(stringField[1]);
+                    }
+
+                    // easting E, column 19-32
+                    easting = String.format("%14s", fillZeroDigits(stringField[2], 4));
+
+                    // northing N, column 33-46
+                    northing = String.format("%14s", fillZeroDigits(stringField[3], 4));
+                    valencyIndicator = 3;
+
+                    // height (Z) is in column 5, but not always valued
+                    height = "";
+                    if (!stringField[4].equals("")) {
+                        // height H, column 47-59
+                        height = String.format("%13s", fillZeroDigits(stringField[4], 5));
+                        Double d = Double.parseDouble(height);
+                        if (d != 0d) {
+                            valencyIndicator += 4;
+                        }
+                    }
+                    break;
+
+            }
+
+            if (valencyIndicator > 0) {
+                valency = " ".concat(Integer.toString(valencyIndicator));
+            }
+
+            // 2. pick up the relevant elements from the blocks from every line, check ZF option
+            // if ZF option is checked, then use only no 7 x y z for K file
+            if (useSimpleFormat) {
+                stringBuilder.append(number);
+                stringBuilder.append(valency);
+                stringBuilder.append(easting);
+                stringBuilder.append(northing);
+                stringBuilder.append(height);
+            } else {
+                stringBuilder.append(number);
+                stringBuilder.append(valency);
+                stringBuilder.append(easting);
+                stringBuilder.append(northing);
+                stringBuilder.append(height);
+                if (!objectTyp.equals("")) {
+                    stringBuilder.append(freeSpace);
+                    stringBuilder.append(objectTyp);
+                }
+            }
+
+            result.add(stringBuilder.toString());
+        }
+        return result;
+    }
+
     /**
      * Converts a CSV file from the geodata server Basel Stadt (switzerland) into a K format file.
-     * <p>
+     *
      * @param useSimpleFormat option to write a reduced K file which is compatible to ZF LaserControl
      * @param writeCommentLine option to write a comment line into the K file with basic information
      *
@@ -115,12 +236,11 @@ public class FileToolsCaplanK {
             String objectTyp = this.objectTyp;
 
             // point number (no '*', ',' and ';'), column 1 - 16
-            String s = stringField[0].replaceAll("\\s+", "").trim();
-            s = s.replaceAll("\\*", "#");
-            s = s.replaceAll(",", ".");
-            s = s.replaceAll(";", ":");
-
-            String number = String.format("%16s", s);
+            String number = stringField[0].replaceAll("\\s+", "").trim();
+            number = number.replaceAll("\\*", "#");
+            number = number.replaceAll(",", ".");
+            number = number.replaceAll(";", ":");
+            number = String.format("%16s", number);
 
             // easting E, column 19-32
             String easting = String.format("%14s", fillZeroDigits(stringField[2], 4));
@@ -202,14 +322,12 @@ public class FileToolsCaplanK {
             String freeSpace = this.freeSpace;
             String objectTyp = this.objectTyp;
 
-            String s = lineSplit[5];
-
             // point number (no '*', ',' and ';'), column 1 - 16
-            s = s.replaceAll("\\*", "#");
-            s = s.replaceAll(",", ".");
-            s = s.replaceAll(";", ":");
-
-            String number = String.format("%16s", s);
+            String number = lineSplit[5];
+            number = number.replaceAll("\\*", "#");
+            number = number.replaceAll(",", ".");
+            number = number.replaceAll(";", ":");
+            number = String.format("%16s", number);
 
             // easting E, column 19-32
             String easting = String.format("%14s", fillZeroDigits(lineSplit[1], 4));
@@ -385,9 +503,129 @@ public class FileToolsCaplanK {
     }
 
     /**
+     * Converts a text file (nr x y z or nr code x y z) into a K format file.
+     * <p>
+     *
+     * @param useSimpleFormat option to write a reduced K file which is compatible to ZF LaserControl
+     * @param writeCommentLine option to write a comment line into the K file with basic information
+     * @param writeCodeColumn option to write a found code into the K file
+     *
+     * @return converted K file as ArrayList<String>
+     */
+    public ArrayList<String> convertTXT2K(boolean useSimpleFormat, boolean writeCommentLine, boolean writeCodeColumn) {
+        ArrayList<String> result = new ArrayList<>();
+
+        if (writeCommentLine) {
+            writeCommentLine(result);
+        }
+
+        for (String line : readStringLines) {
+            int valencyIndicator = -1;
+
+            String[] lineSplit = line.trim().split("\\s+");
+
+            StringBuilder stringBuilder = new StringBuilder();
+
+            String valency = this.valency;
+            String freeSpace = this.freeSpace;
+            String objectTyp = this.objectTyp;
+            String northing = this.northing;
+            String easting = this.easting;
+            String height = this.height;
+
+            // point number is always in column 1 (no '*', ',' and ';'), column 1 - 16
+            String number = lineSplit[0];
+            number = number.replaceAll("\\*", "#");
+            number = number.replaceAll(",", ".");
+            number = number.replaceAll(";", ":");
+            number = String.format("%16s", number);
+
+            switch (lineSplit.length) {
+                case 3:     // line contains no height
+                    // easting (Y) is in column 2 -> column 19-32
+                    easting = String.format("%14s", fillZeroDigits(lineSplit[1], 4));
+
+                    // northing (X) is in column 3 -> column 33-46
+                    northing = String.format("%14s", fillZeroDigits(lineSplit[2], 4));
+                    valencyIndicator = 3;
+                    break;
+
+                case 4:     // line contains no code
+                    // easting (Y) is in column 2 -> column 19-32
+                    easting = String.format("%14s", fillZeroDigits(lineSplit[1], 4));
+
+                    // northing (X) is in column 3 -> column 33-46
+                    northing = String.format("%14s", fillZeroDigits(lineSplit[2], 4));
+                    valencyIndicator = 3;
+
+                    // height (Z) is in column 4 -> column 47-59
+                    height = String.format("%13s", fillZeroDigits(lineSplit[3], 5));
+                    Double d = Double.parseDouble(height);
+                    if (d != 0d) {
+                        valencyIndicator += 4;
+                    }
+                    break;
+
+                case 6:     // line contains code at second position and height
+                    // code is in column 2 -> column 62...
+                    if (writeCodeColumn) {
+                        objectTyp = "|".concat(lineSplit[1]);
+                    }
+
+                    // easting (Y) is in column 4 -> column 19-32
+                    easting = String.format("%14s", fillZeroDigits(lineSplit[2], 4));
+
+                    // northing (X) is in column 5 -> column 33-46
+                    northing = String.format("%14s", fillZeroDigits(lineSplit[3], 4));
+                    valencyIndicator = 3;
+
+                    // height (Z) is in column 6, and not always valued (LFP file) -> column 47-59
+                    if (lineSplit[5].equals("NULL")) {
+                        height = String.format("%13s", fillZeroDigits("-9999", 4));
+                    } else {
+                        height = String.format("%13s", fillZeroDigits(lineSplit[4], 5));
+                        if (Double.parseDouble(height) != 0d) {
+                            valencyIndicator += 4;
+                        }
+                    }
+                    break;
+            }
+            if (valencyIndicator > 0) {
+                valency = " ".concat(Integer.toString(valencyIndicator));
+            }
+
+            // 2. pick up the relevant elements from the blocks from every line, check ZF option
+            // if ZF option is checked, then use only no 7 x y z for K file
+            if (useSimpleFormat) {
+                stringBuilder.append(number);
+                stringBuilder.append(valency);
+                stringBuilder.append(easting);
+                stringBuilder.append(northing);
+                stringBuilder.append(height);
+            } else {
+                stringBuilder.append(number);
+                stringBuilder.append(valency);
+                stringBuilder.append(easting);
+                stringBuilder.append(northing);
+                stringBuilder.append(height);
+                if (!objectTyp.equals("")) {
+                    stringBuilder.append(freeSpace);
+                    stringBuilder.append(objectTyp);
+                }
+            }
+
+            result.add(stringBuilder.toString());
+
+        }
+
+        return result;
+    }
+
+    /**
      * Converts a CSV file from the geodata server Basel Stadt (switzerland) into a K format file.
      * <p>
      * @param useSimpleFormat option to write a reduced K file which is compatible to ZF LaserControl
+     * @param writeCodeColumn option to write a found code into the K file
      * @param writeCommentLine option to write a comment line into the K file with basic information
      *
      * @return converted K file as ArrayList<String>
@@ -416,16 +654,12 @@ public class FileToolsCaplanK {
             String easting = this.easting;
             String height = this.height;
 
-            // identical position for HFP and LFP file
-            // point number is in column 2
-            String s = lineSplit[1];
-
-            // point number (no '*', ',' and ';'), column 1 - 16
-            s = s.replaceAll("\\*", "#");
-            s = s.replaceAll(",", ".");
-            s = s.replaceAll(";", ":");
-
-            String number = String.format("%16s", s);
+            // point number is always in column 1 (no '*', ',' and ';'), column 1 - 16
+            String number = lineSplit[1];
+            number = number.replaceAll("\\*", "#");
+            number = number.replaceAll(",", ".");
+            number = number.replaceAll(";", ":");
+            number = String.format("%16s", number);
 
             switch (lineSplit.length) {
                 case 5:     // HFP file
@@ -459,7 +693,7 @@ public class FileToolsCaplanK {
 
                     // height (Z) is in column 6, and not always valued (LFP file) -> column 47-59
                     if (lineSplit[5].equals("NULL")) {
-                        height = String.format("%13s", fillZeroDigits("-999", 5));
+                        height = String.format("%13s", fillZeroDigits("-9999", 5));
                     } else {
                         height = String.format("%13s", fillZeroDigits(lineSplit[5], 5));
                         if (Double.parseDouble(height) != 0d) {
