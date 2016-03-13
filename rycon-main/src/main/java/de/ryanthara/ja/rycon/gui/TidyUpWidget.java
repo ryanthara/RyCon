@@ -199,16 +199,17 @@ public class TidyUpWidget {
     private void actionBtnDestination() {
         String filterPath = Main.pref.getUserPref(PreferenceHandler.DIR_PROJECT);
 
+        Text input = inputFieldsComposite.getDestinationTextField();
+
         // Set the initial filter path according to anything selected or typed in
-        if (!inputFieldsComposite.getDestinationTextField().getText().trim().equals("")) {
-            File destinationDir = new File(inputFieldsComposite.getDestinationTextField().getText());
-            if (destinationDir.isDirectory()) {
-                filterPath = inputFieldsComposite.getDestinationTextField().getText();
+        if (!TextHelper.checkIsEmpty(input)) {
+            if (TextHelper.checkIfDirExists(input)) {
+                filterPath = input.getText();
             }
         }
 
-        GuiHelper.showAdvancedDirectoryDialog(innerShell, inputFieldsComposite.getDestinationTextField(),
-              I18N.getFileChooserTidyUpSourceText(), I18N.getFileChooserTidyUpSourceMessage(), filterPath);
+        GuiHelper.showAdvancedDirectoryDialog(innerShell, input, I18N.getFileChooserTidyUpSourceText(),
+                I18N.getFileChooserTidyUpSourceMessage(), filterPath);
 
     }
 

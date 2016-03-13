@@ -17,6 +17,8 @@
  */
 package de.ryanthara.ja.rycon.tools;
 
+import de.ryanthara.ja.rycon.tools.elements.GSIBlock;
+
 import java.util.*;
 
 /**
@@ -128,6 +130,187 @@ public class FileToolsText {
 
             result.add(line.trim());
         }
+        return result;
+    }
+
+    /**
+     * Converts a GSI file into a space or tab delimited text file.
+     * <p>
+     * With parameter it is possible to set the separation char (space or tab).
+     *
+     * @param separator separator sign as {@code String}
+     * @param isGSI16 true if GSI16 format is used
+     * @param writeCommentLine if comment line should be written
+     * @return converted {@code ArrayList<String>} with lines of text format
+     */
+    public ArrayList<String> convertGSI2TXT(String separator, boolean isGSI16, boolean writeCommentLine) {
+        String commentLine = "";
+        String sep;
+        ArrayList<String> result = new ArrayList<>();
+
+        FileToolsLeicaGSI gsiTools = new FileToolsLeicaGSI(readStringLines);
+        TreeSet<Integer> foundWordIndices = gsiTools.getFoundWordIndices();
+
+        // transform lines into GSI-Blocks
+        ArrayList<ArrayList<GSIBlock>> gsiBlocks = gsiTools.getEncodedGSIBlocks();
+
+        if (separator.equals(" ")) {
+            sep = "    ";
+        } else {
+            sep = separator;
+        }
+
+        // prepare comment line if necessary
+        if (writeCommentLine) {
+            int length;
+
+            if (isGSI16) {
+                length = 16;
+            } else {
+                length = 8;
+            }
+
+            String format = "%" + length + "." + length + "s";
+            String s;
+
+            int counter = 0;
+
+            for (Integer wordIndex : foundWordIndices) {
+                s = String.format(format, wordIndex.toString());
+                commentLine = commentLine.concat(s);
+
+                if (counter < foundWordIndices.size() - 1) {
+                    commentLine = commentLine.concat(sep);
+                }
+                counter++;
+            }
+
+            StringBuilder builder = new StringBuilder(commentLine);
+            commentLine = builder.replace(0, 5, "# WI:").toString();
+
+            result.add(0, commentLine);
+        }
+
+        for (ArrayList<GSIBlock> blocksAsLines : gsiBlocks) {
+            String newLine = "";
+
+            Iterator<Integer> it = foundWordIndices.iterator();
+
+            for (int i = 0; i < foundWordIndices.size(); i++) {
+                Integer wordIndex = it.next();
+
+                String intern = "";
+
+                for (GSIBlock block : blocksAsLines) {
+                    // check the WI and fill in an empty block of spaces if WI doesn't match to 'column'
+                    if (wordIndex == block.getWordIndex()) {
+                        intern = block.toPrintFormatTXT();
+                        break; // important!!!
+                    } else {
+                        String emptyBlock;
+
+                        if (isGSI16) {
+                            emptyBlock = "                ";
+                        } else {
+                            emptyBlock = "        ";
+                        }
+
+                        intern = emptyBlock;
+                    }
+                }
+
+                newLine = newLine.concat(intern);
+
+                if (i < foundWordIndices.size() - 1) {
+                    newLine = newLine.concat(sep);
+                }
+            }
+            result.add(newLine);
+        }
+        return result;
+    }
+
+    /**
+     * Converts an K formatted file (CAPLAN) to txt formatted file.
+     *
+     * @param separator distinguish between tabulator or space as division sign
+     * @param writeCommentLine writes an comment line into the file
+     * @param writeCodeColumn writes a code column (nr code x y z attr)
+     * @param writeSimpleFormat writes a simple format (nr x y z or nr code x y z)
+     * @return converted {@code ArrayList<String>} with lines of text format
+     */
+    public ArrayList<String> convertK2TXT(String separator, boolean writeCommentLine, boolean writeCodeColumn,
+                                          boolean writeSimpleFormat) {
+
+        ArrayList<String> result = new ArrayList<>();
+
+        if (writeCommentLine) {
+            String commentLine = "";
+
+            if (writeSimpleFormat) {
+                commentLine = "nr" + separator + "x" + separator + "y" + separator + "z";
+            } else if (writeCodeColumn) {
+                commentLine = "nr" + separator + "code" + separator + "x" + separator + "y" + separator + "z" + separator + "attribute";
+            }
+
+            result.add(commentLine);
+        }
+
+        for (String line : readStringLines) {
+            if (!line.startsWith("!")) {    // comment lines starting with '!' are ignored
+                String s = "";
+
+                if (line.length() >= 16) {
+                    s = line.substring(0, 16).trim();       // point number (no '*', ',' and ';'), column 1 - 16
+                }
+
+                if ((line.length() >= 62) && writeSimpleFormat && writeCodeColumn) {
+                    String[] lineSplit = line.substring(61, line.length()).trim().split("\\|+");
+                    String code = lineSplit[0].trim();      // code is the same as object type, column 62...
+
+                    s = s.concat(separator);
+                    s = s.concat(code);
+                } else if (writeCodeColumn) {
+                    s = s.concat(separator);
+                    s = s.concat("NULL");
+                }
+
+                if (line.length() >= 32) {
+                    String easting = line.substring(20, 32).trim();     // easting E, column 19-32
+                    s = s.concat(separator);
+                    s = s.concat(easting);
+                }
+
+                if (line.length() >= 46) {
+                    String northing = line.substring(34, 46).trim();    // northing N, column 33-46
+                    s = s.concat(separator);
+                    s = s.concat(northing);
+                }
+
+                if (line.length() >= 59) {
+                    String height = line.substring(48, 59).trim();      // height H, column 47-59
+                    s = s.concat(separator);
+                    s = s.concat(height);
+                }
+
+                if ((line.length() >= 62) && !writeSimpleFormat && writeCodeColumn) {
+                    String[] lineSplit = line.substring(61, line.length()).trim().split("\\|+");
+
+                    String code = lineSplit[0].trim();              // code is the same as object type, column 62...
+                    s = s.concat(separator);
+                    s = s.concat(code);
+
+                    for (int i = 1; i < lineSplit.length; i++) {
+                        String attr = lineSplit[i].trim();
+                        s = s.concat(separator);
+                        s = s.concat(attr);
+                    }
+                }
+
+                result.add(s.trim());
+            }
+        }
+
         return result;
     }
 

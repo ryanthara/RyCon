@@ -60,21 +60,16 @@ public class WidgetHelper {
         if (TextHelper.checkIsEmpty(source) || TextHelper.checkIsEmpty(destination)) {
             GuiHelper.showMessageBox(Main.shell, SWT.ICON_WARNING, I18N.getMsgBoxTitleWarning(), I18N.getMsgEmptyTextFieldWarning());
 
-            // return new File[0];
             files2read = new File[0];
         } else if (chosenFiles == null) {
             // TODO check for spaces in file names or directory names (not easy)
             StringTokenizer st = new StringTokenizer(source.getText());
 
-            int counter = st.countTokens();
-
-            for (int i = 0; i < counter; i++) {
+            for (int i = 0; i < st.countTokens(); i++) {
                 String s = st.nextToken();
 
                 if (FileUtils.checkIsFile(s)) {
-                    if (files2read != null) {
-                        files2read[i] = new File(s);
-                    }
+                    files2read[i] = new File(s);
                 } else {
                     GuiHelper.showMessageBox(Main.shell, SWT.ICON_WARNING, I18N.getMsgBoxTitleWarning(), I18N.getMsgFileNotExist());
                 }
@@ -86,7 +81,6 @@ public class WidgetHelper {
                 files2read = new File[0];
             }
         } else if (chosenFiles.length > 0) {
-            // return chosenFiles;
             files2read = chosenFiles;
         }
 

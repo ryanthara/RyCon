@@ -17,8 +17,12 @@
  */
 package de.ryanthara.ja.rycon.tools;
 
+import de.ryanthara.ja.rycon.tools.elements.GSIBlock;
+
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.TreeSet;
 
 /**
  * This class implements basic operations on csv based measurement and coordinate files.
@@ -146,7 +150,7 @@ public class FileToolsCSV {
     }
 
     /**
-     * Converts a CSV file from the geodata server Basel Stadt (switzerland) into a CSV format file.
+     * Converts a CSV file from the geodata server Basel Stadt (switzerland) into a CSV formatted file.
      * <p>
      * With a parameter it is possible to distinguish between comma or semicolon as separator.
      *
@@ -179,6 +183,73 @@ public class FileToolsCSV {
 
             result.add(line.trim());
         }
+        return result;
+    }
+
+
+    /**
+     * Converts a GSI file into a comma or semicolon delimited csv file.
+     * <p>
+     * With parameter it is possible to set the separation char (comma or semicolon).
+     *
+     * @param separator separator sign as {@code String}
+     * @param writeCommentLine if comment line should be written
+     * @return converted {@code ArrayList<String>} with lines of text format
+     */
+    public ArrayList<String> convertGSI2CSV(String separator, boolean writeCommentLine) {
+        ArrayList<String> result = new ArrayList<>();
+        FileToolsLeicaGSI gsiTools = new FileToolsLeicaGSI(readStringLines);
+        TreeSet<Integer> foundWordIndices = gsiTools.getFoundWordIndices();
+
+        // transform lines into GSI-Blocks
+        ArrayList<ArrayList<GSIBlock>> gsiBlocks = gsiTools.getEncodedGSIBlocks();
+
+        // prepare comment line if necessary
+        if (writeCommentLine) {
+            StringBuilder builder = new StringBuilder();
+
+            int counter = 0;
+
+            for (Integer wordIndex : foundWordIndices) {
+                builder.append("WI_");
+                builder.append(wordIndex.toString());
+
+                if (counter < foundWordIndices.size() - 1) {
+                    builder.append(separator);
+                }
+
+                counter++;
+            }
+
+            result.add(0, builder.toString());
+        }
+
+        for (ArrayList<GSIBlock> blocksAsLines : gsiBlocks) {
+            String newLine = "";
+
+            Iterator<Integer> it = foundWordIndices.iterator();
+
+            for (int i = 0; i < foundWordIndices.size(); i++) {
+                Integer wordIndex = it.next();
+                String intern = "";
+
+                for (GSIBlock block : blocksAsLines) {
+                    // check the WI and fill in an empty block of spaces if WI doesn't match to 'column'
+                    if (wordIndex == block.getWordIndex()) {
+                        intern = block.toPrintFormatCSV();
+                        break; // important if else statement will be added!!!
+                    }
+                }
+
+                newLine = newLine.concat(intern);
+
+                if (i < foundWordIndices.size() - 1) {
+                    newLine = newLine.concat(separator);
+                }
+            }
+            result.add(newLine);
+        }
+
         return result;
     }
 

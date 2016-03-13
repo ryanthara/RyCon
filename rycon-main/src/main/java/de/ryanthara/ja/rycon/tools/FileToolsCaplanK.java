@@ -109,8 +109,6 @@ public class FileToolsCaplanK {
         for (String[] stringField : readCSVLines) {
             int valencyIndicator = 0;
 
-            StringBuilder stringBuilder = new StringBuilder();
-
             String valency = this.valency;
             String freeSpace = this.freeSpace;
             String objectTyp = this.objectTyp;
@@ -119,11 +117,7 @@ public class FileToolsCaplanK {
             String height = this.height;
 
             // point number (no '*', ',' and ';'), column 1 - 16
-            String number = stringField[0].replaceAll("\\s+", "").trim();
-            number = number.replaceAll("\\*", "#");
-            number = number.replaceAll(",", ".");
-            number = number.replaceAll(";", ":");
-            number = String.format("%16s", number);
+            String number = preparePointNumber(stringField[0].replaceAll("\\s+", "").trim());
 
             switch (stringField.length) {
                 case 3:     // contains nr x y
@@ -188,25 +182,8 @@ public class FileToolsCaplanK {
 
             // 2. pick up the relevant elements from the blocks from every line, check ZF option
             // if ZF option is checked, then use only no 7 x y z for K file
-            if (useSimpleFormat) {
-                stringBuilder.append(number);
-                stringBuilder.append(valency);
-                stringBuilder.append(easting);
-                stringBuilder.append(northing);
-                stringBuilder.append(height);
-            } else {
-                stringBuilder.append(number);
-                stringBuilder.append(valency);
-                stringBuilder.append(easting);
-                stringBuilder.append(northing);
-                stringBuilder.append(height);
-                if (!objectTyp.equals("")) {
-                    stringBuilder.append(freeSpace);
-                    stringBuilder.append(objectTyp);
-                }
-            }
-
-            result.add(stringBuilder.toString());
+            result.add(prepareStringBuilder(useSimpleFormat, number, valency, easting, northing, height,
+                    freeSpace, objectTyp).toString());
         }
         return result;
     }
@@ -229,18 +206,12 @@ public class FileToolsCaplanK {
         for (String[] stringField : readCSVLines) {
             int valencyIndicator;
 
-            StringBuilder stringBuilder = new StringBuilder();
-
             String valency = this.valency;
             String freeSpace = this.freeSpace;
             String objectTyp = this.objectTyp;
 
             // point number (no '*', ',' and ';'), column 1 - 16
-            String number = stringField[0].replaceAll("\\s+", "").trim();
-            number = number.replaceAll("\\*", "#");
-            number = number.replaceAll(",", ".");
-            number = number.replaceAll(";", ":");
-            number = String.format("%16s", number);
+            String number = preparePointNumber(stringField[0].replaceAll("\\s+", "").trim());
 
             // easting E, column 19-32
             String easting = String.format("%14s", fillZeroDigits(stringField[2], 4));
@@ -266,25 +237,8 @@ public class FileToolsCaplanK {
 
             // 2. pick up the relevant elements from the blocks from every line, check ZF option
             // if ZF option is checked, then use only no 7 x y z for K file
-            if (useSimpleFormat) {
-                stringBuilder.append(number);
-                stringBuilder.append(valency);
-                stringBuilder.append(easting);
-                stringBuilder.append(northing);
-                stringBuilder.append(height);
-            } else {
-                stringBuilder.append(number);
-                stringBuilder.append(valency);
-                stringBuilder.append(easting);
-                stringBuilder.append(northing);
-                stringBuilder.append(height);
-                if (!objectTyp.equals("")) {
-                    stringBuilder.append(freeSpace);
-                    stringBuilder.append(objectTyp);
-                }
-            }
-
-            result.add(stringBuilder.toString());
+            result.add(prepareStringBuilder(useSimpleFormat, number, valency, easting, northing, height,
+                    freeSpace, objectTyp).toString());
         }
         return result;
     }
@@ -315,8 +269,6 @@ public class FileToolsCaplanK {
             int valencyIndicator;
 
             String[] lineSplit = line.trim().split("\\s+");
-
-            StringBuilder stringBuilder = new StringBuilder();
 
             String valency = this.valency;
             String freeSpace = this.freeSpace;
@@ -353,25 +305,8 @@ public class FileToolsCaplanK {
 
             // 2. pick up the relevant elements from the blocks from every line, check ZF option
             // if ZF option is checked, then use only no 7 x y z for K file
-            if (useSimpleFormat) {
-                stringBuilder.append(number);
-                stringBuilder.append(valency);
-                stringBuilder.append(easting);
-                stringBuilder.append(northing);
-                stringBuilder.append(height);
-            } else {
-                stringBuilder.append(number);
-                stringBuilder.append(valency);
-                stringBuilder.append(easting);
-                stringBuilder.append(northing);
-                stringBuilder.append(height);
-                if (!objectTyp.equals("")) {
-                    stringBuilder.append(freeSpace);
-                    stringBuilder.append(objectTyp);
-                }
-            }
-
-            result.add(stringBuilder.toString());
+            result.add(prepareStringBuilder(useSimpleFormat, number, valency, easting, northing, height,
+                    freeSpace, objectTyp).toString());
         }
 
         return result;
@@ -472,25 +407,11 @@ public class FileToolsCaplanK {
 
                 // 2. pick up the relevant elements from the blocks from every line, check ZF option
                 // if ZF option is checked, then use only no 7 x y z for K file
-                stringBuilder = new StringBuilder();
+                stringBuilder = prepareStringBuilder(useSimpleFormat, number, valency, easting, northing, height,
+                        freeSpace, objectTyp);
 
-                if (useSimpleFormat) {
-                    stringBuilder.append(number);
-                    stringBuilder.append(valency);
-                    stringBuilder.append(easting);
-                    stringBuilder.append(northing);
-                    stringBuilder.append(height);
-                } else {
-                    stringBuilder.append(number);
-                    stringBuilder.append(valency);
-                    stringBuilder.append(easting);
-                    stringBuilder.append(northing);
-                    stringBuilder.append(height);
-                    if (!objectTyp.equals("") | !attr.equals("")) {
-                        stringBuilder.append(freeSpace);
-                        stringBuilder.append(objectTyp);
-                        stringBuilder.append(attr);
-                    }
+                if (!attr.equals("")) {
+                    stringBuilder.append(attr);
                 }
 
                 // clean up some variables after line reading is finished
@@ -524,8 +445,6 @@ public class FileToolsCaplanK {
 
             String[] lineSplit = line.trim().split("\\s+");
 
-            StringBuilder stringBuilder = new StringBuilder();
-
             String valency = this.valency;
             String freeSpace = this.freeSpace;
             String objectTyp = this.objectTyp;
@@ -534,11 +453,7 @@ public class FileToolsCaplanK {
             String height = this.height;
 
             // point number is always in column 1 (no '*', ',' and ';'), column 1 - 16
-            String number = lineSplit[0];
-            number = number.replaceAll("\\*", "#");
-            number = number.replaceAll(",", ".");
-            number = number.replaceAll(";", ":");
-            number = String.format("%16s", number);
+            String number = preparePointNumber(lineSplit[0]);
 
             switch (lineSplit.length) {
                 case 3:     // line contains no height
@@ -596,26 +511,8 @@ public class FileToolsCaplanK {
 
             // 2. pick up the relevant elements from the blocks from every line, check ZF option
             // if ZF option is checked, then use only no 7 x y z for K file
-            if (useSimpleFormat) {
-                stringBuilder.append(number);
-                stringBuilder.append(valency);
-                stringBuilder.append(easting);
-                stringBuilder.append(northing);
-                stringBuilder.append(height);
-            } else {
-                stringBuilder.append(number);
-                stringBuilder.append(valency);
-                stringBuilder.append(easting);
-                stringBuilder.append(northing);
-                stringBuilder.append(height);
-                if (!objectTyp.equals("")) {
-                    stringBuilder.append(freeSpace);
-                    stringBuilder.append(objectTyp);
-                }
-            }
-
-            result.add(stringBuilder.toString());
-
+            result.add(prepareStringBuilder(useSimpleFormat, number, valency, easting, northing, height,
+                    freeSpace, objectTyp).toString());
         }
 
         return result;
@@ -645,8 +542,6 @@ public class FileToolsCaplanK {
 
             String[] lineSplit = line.trim().split("\\s+");
 
-            StringBuilder stringBuilder = new StringBuilder();
-
             String valency = this.valency;
             String freeSpace = this.freeSpace;
             String objectTyp = this.objectTyp;
@@ -655,11 +550,7 @@ public class FileToolsCaplanK {
             String height = this.height;
 
             // point number is always in column 1 (no '*', ',' and ';'), column 1 - 16
-            String number = lineSplit[1];
-            number = number.replaceAll("\\*", "#");
-            number = number.replaceAll(",", ".");
-            number = number.replaceAll(";", ":");
-            number = String.format("%16s", number);
+            String number = preparePointNumber(lineSplit[1]);
 
             switch (lineSplit.length) {
                 case 5:     // HFP file
@@ -708,26 +599,8 @@ public class FileToolsCaplanK {
 
             // 2. pick up the relevant elements from the blocks from every line, check ZF option
             // if ZF option is checked, then use only no 7 x y z for K file
-            if (useSimpleFormat) {
-                stringBuilder.append(number);
-                stringBuilder.append(valency);
-                stringBuilder.append(easting);
-                stringBuilder.append(northing);
-                stringBuilder.append(height);
-            } else {
-                stringBuilder.append(number);
-                stringBuilder.append(valency);
-                stringBuilder.append(easting);
-                stringBuilder.append(northing);
-                stringBuilder.append(height);
-                if (!objectTyp.equals("")) {
-                    stringBuilder.append(freeSpace);
-                    stringBuilder.append(objectTyp);
-                }
-            }
-
-            result.add(stringBuilder.toString());
-
+            result.add(prepareStringBuilder(useSimpleFormat, number, valency, easting, northing, height,
+                    freeSpace, objectTyp).toString());
         }
         return result;
     }
@@ -772,6 +645,39 @@ public class FileToolsCaplanK {
         }
 
         return s;
+    }
+
+    /*
+     * Eliminates not allowed chars like '*', ',' and ';' from point number
+     */
+    private String preparePointNumber(String number) {
+        String s = number.replaceAll("\\*", "#");
+        s = s.replaceAll(",", ".");
+        s = s.replaceAll(";", ":");
+        return String.format("%16s", s);
+    }
+
+    private StringBuilder prepareStringBuilder(boolean useSimpleFormat, String number, String valency, String easting,
+                                               String northing, String height, String freeSpace, String objectTyp) {
+        StringBuilder stringBuilder = new StringBuilder();
+        if (useSimpleFormat) {
+            stringBuilder.append(number);
+            stringBuilder.append(valency);
+            stringBuilder.append(easting);
+            stringBuilder.append(northing);
+            stringBuilder.append(height);
+        } else {
+            stringBuilder.append(number);
+            stringBuilder.append(valency);
+            stringBuilder.append(easting);
+            stringBuilder.append(northing);
+            stringBuilder.append(height);
+            if (!objectTyp.equals("")) {
+                stringBuilder.append(freeSpace);
+                stringBuilder.append(objectTyp);
+            }
+        }
+        return stringBuilder;
     }
 
 } // end of FileToolsCaplanK

@@ -314,8 +314,8 @@ public class I18N {
         return Messages.getString("fileChooserFilterNameGSI");
     }
 
-    public static String getFileChooserFilterNameGSIAndTXT() {
-        return Messages.getString("fileChooserFilterNameGSIAndTXT");
+    public static String getFileChooserFilterNameK() {
+        return Messages.getString("fileChooserFilterNameK");
     }
 
     public static String getFileChooserFilterNameNIGRA() {
@@ -328,7 +328,6 @@ public class I18N {
 
     public static String getFileChooserLevellingSourceMessage() {
         return Messages.getString("fileChooserLevellingSourceMessage");
-
     }
 
     public static String getFileChooserLevellingSourceText() {
@@ -503,12 +502,32 @@ public class I18N {
         return Messages.getString("msgConvertFailed");
     }
 
+    public static String getMsgConvertReaderBaselLandschaftFailed() {
+        return Messages.getString("msgConvertReaderBaselLandschaftFailed");
+    }
+
+    public static String getMsgConvertReaderBaselStadtFailed() {
+        return Messages.getString("msgConvertReaderBaselStadtFailed");
+    }
+
     public static String getMsgConvertReaderCSVFailed() {
         return Messages.getString("msgConvertReaderCSVFailed");
     }
 
-    public static String getMsgConvertReaderFailed() {
-        return Messages.getString("msgConvertReaderFailed");
+    public static String getMsgConvertReaderCadworkFailed() {
+        return Messages.getString("msgConvertReaderCadworkFailed");
+    }
+
+    public static String getMsgConvertReaderCaplanFailed() {
+        return Messages.getString("msgConvertReaderCaplanFailed");
+    }
+
+    public static String getMsgConvertReaderGSIFailed() {
+        return Messages.getString("msgConvertReaderGSIFailed");
+    }
+
+    public static String getMsgConvertReaderTXTFailed() {
+        return Messages.getString("msgConvertReaderTXTFailed");
     }
 
     public static String getMsgConvertSuccess(boolean singular) {

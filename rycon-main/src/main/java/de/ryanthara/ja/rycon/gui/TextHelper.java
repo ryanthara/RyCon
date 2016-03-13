@@ -50,7 +50,6 @@ public class TextHelper {
         return textField.getText().trim().equals("");
     }
 
-
     /**
      * Checks if the content of the text field is a valid directory in the file system.
      *

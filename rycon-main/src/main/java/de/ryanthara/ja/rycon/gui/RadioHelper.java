@@ -113,8 +113,8 @@ public class RadioHelper {
                 if (button.getSelection()) {
                     selectedSlave = i;
 
-                    if ((selectedSlave == selectedMaster) & (i < 4)) {
-                        ((Button) slave[i]).setSelection(false);
+                    if ((selectedSlave == selectedMaster) & (i < 5)) {  // change number of buttons here,
+                        ((Button) slave[i]).setSelection(false);        //  when a new format is implemented
 
                         if (selectedSlave == slave.length - 1) {
                             ((Button) slave[0]).setSelection(true);

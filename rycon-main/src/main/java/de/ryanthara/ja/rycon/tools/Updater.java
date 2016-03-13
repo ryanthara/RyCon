@@ -22,9 +22,11 @@ import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.data.Version;
 
 import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -42,6 +44,7 @@ import java.util.regex.Pattern;
  *
  * <h3>Changes:</h3>
  * <ul>
+ *     <li>4: ssl check implemented </li>
  *     <li>3: clean up and improvements </li>
  *     <li>2: basic improvements </li>
  *     <li>1: basic implementation </li>
@@ -57,11 +60,38 @@ public class Updater {
 
     /**
      * Performs the check of the RyCON update website.
+     * <p>
+     * Due to JAVA SSL implementations and it's constrainted to store the key in the publick keychaing,
+     * this is a 'hack' to bypass the ssl check easily. This should be done better in a future version.
      *  
      * @return success
      */
     public boolean checkForUpdate() {
         boolean success = false;
+
+        // Create a new trust manager that trust all certificates
+        TrustManager[] trustAllCerts = new TrustManager[]{
+                new X509TrustManager() {
+                    public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                        return null;
+                    }
+                    public void checkClientTrusted(
+                            java.security.cert.X509Certificate[] certs, String authType) {
+                    }
+                    public void checkServerTrusted(
+                            java.security.cert.X509Certificate[] certs, String authType) {
+                    }
+                }
+        };
+
+        // Activate the new trust manager
+        try {
+            SSLContext sc = SSLContext.getInstance("SSL");
+            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+        } catch (Exception e) {
+            System.err.println("Can't activate the trust manager for the ssl connection to www.ryanthara.de");
+        }
 
         try {
             URL updateUrl = new URL(Main.RyCON_UPDATE_URL);
@@ -81,31 +111,32 @@ public class Updater {
                 int build = scanner.nextInt();
 
                 scanner.next();
-                String date = scanner.next();
+                String buildDate = scanner.next();
 
-                System.out.println(date);
-                System.out.println(Version.getBuildDate());
+                int update = 0;
 
                 try {
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                     Date programDate = sdf.parse(Version.getBuildDate());
-                    Date releaseDate = sdf.parse(date);
+                    Date releaseDate = sdf.parse(buildDate);
 
-                    System.out.println("The local version is older than the online version");
-                    System.out.println(programDate.compareTo(releaseDate));
-
+                    update = programDate.compareTo(releaseDate);
                 } catch (ParseException e) {
                     System.err.println("Date String can't be parsed.");
                     e.printStackTrace();
                 }
                 scanner.close();
 
-                success = true;
-
-                if (Version.getBuildNumber() < build ||
-                        (majorVersion < Version.getMajorVersionNumber() && minorVersion < Version.getMinorVersionNumber())) {
+                if (majorVersion > Version.getMajorVersionNumber()) {
+                    updateAvailable = true;
+                } else if (majorVersion == Version.getMajorVersionNumber() & minorVersion > Version.getMinorVersionNumber()) {
+                    updateAvailable = true;
+                } else if (build > Version.getBuildNumber()){
+                    updateAvailable = true;
+                } else if (update < 0) {
                     updateAvailable = true;
                 }
+                success = true;
             } else {
                 System.out.println("Online check failed. Please check your network settings");
             }
@@ -118,31 +149,6 @@ public class Updater {
         }
 
         return success;
-    }
-
-    public boolean checkForUpdate2() {
-        try {
-            String httpsURL = Main.RyCON_UPDATE_URL;
-            URL myurl = new URL(httpsURL);
-            HttpsURLConnection con = (HttpsURLConnection)myurl.openConnection();
-            InputStream ins = con.getInputStream();
-            InputStreamReader isr = new InputStreamReader(ins);
-            BufferedReader in = new BufferedReader(isr);
-
-            String inputLine;
-
-            while ((inputLine = in.readLine()) != null)
-            {
-                System.out.println(inputLine);
-            }
-
-            in.close();
-        } catch (Exception e) {
-            System.out.println("ERROR");
-            System.out.println(e.toString());
-        }
-
-        return true;
     }
 
     /**
