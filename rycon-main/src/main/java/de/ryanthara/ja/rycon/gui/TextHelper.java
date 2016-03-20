@@ -46,7 +46,7 @@ public class TextHelper {
      * @param textField text field to be checked
      * @return true if text field contains an empty string
      */
-    public static boolean checkIsEmpty(Text textField) {
+    static boolean checkIsEmpty(Text textField) {
         return textField.getText().trim().equals("");
     }
 
@@ -56,7 +56,7 @@ public class TextHelper {
      * @param textField text field which content has to be checked
      * @return true if directory exist
      */
-    public static boolean checkIfDirExists(Text textField) {
+    static boolean checkIfDirExists(Text textField) {
         return FileUtils.checkIsDirectory(textField.getText());
     }
 
@@ -66,7 +66,7 @@ public class TextHelper {
      * @param textField text field content which has to be checked
      * @return true if file exist
      */
-    public static boolean checkIfFileExists(Text textField) {
+    static boolean checkIfFileExists(Text textField) {
         return FileUtils.checkIsFile(textField.getText());
     }
 

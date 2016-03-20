@@ -74,7 +74,7 @@ public class CodeSplitterWidget {
      * <p>
      * The user interface is initialized in a separate method, which is called from here.
      */
-    public CodeSplitterWidget() {
+    CodeSplitterWidget() {
         initUI();
     }
 
@@ -86,7 +86,7 @@ public class CodeSplitterWidget {
      *
      * @param droppedFiles file array from drop source
      */
-    public CodeSplitterWidget(File[] droppedFiles) {
+    CodeSplitterWidget(File[] droppedFiles) {
         files2read = WidgetHelper.checkForValidFiles(droppedFiles, acceptableFileSuffixes);
     }
 
@@ -98,7 +98,7 @@ public class CodeSplitterWidget {
      *
      * @return success of file processing.
      */
-    public boolean executeDropInjection() {
+    boolean executeDropInjection() {
         boolean success = false;
 
         if ((files2read != null) && (files2read.length > 0)) {
@@ -152,7 +152,7 @@ public class CodeSplitterWidget {
 
         new BottomButtonBar(this, innerShell, SWT.NONE);
 
-        innerShell.setLocation(ShellCenter.centerShellOnPrimaryMonitor(innerShell));
+        innerShell.setLocation(ShellPositioner.centerShellOnPrimaryMonitor(innerShell));
 
         Main.setSubShellStatus(true);
 
@@ -343,7 +343,8 @@ public class CodeSplitterWidget {
                     // write file by file with one code
                     for (ArrayList<String> lines : writeFile) {
                         int code = codeIterator.next();
-                        String file2write = file2read.toString().substring(0, file2read.toString().length() - 4) + "_CODE-" + code + ".GSI";
+                        String file2write = file2read.toString().substring(0, file2read.toString().length() - 4) + "_" +
+                                Main.getParamCodeString() + "-" + code + ".GSI";
                         LineWriter lineWriter = new LineWriter(file2write);
                         if (lineWriter.writeFile(lines)) {
                             counter++;
@@ -358,7 +359,8 @@ public class CodeSplitterWidget {
                     // write file by file with one code
                     for (ArrayList<String> lines : writeFile) {
                         int code = codeIterator.next();
-                        String file2write = file2read.toString().substring(0, file2read.toString().length() - 4) + "_CODE-" + code + ".TXT";
+                        String file2write = file2read.toString().substring(0, file2read.toString().length() - 4) + "_" +
+                                Main.getParamCodeString() + "-" + code + ".TXT";
                         LineWriter lineWriter = new LineWriter(file2write);
                         if (lineWriter.writeFile(lines)) {
                             counter++;

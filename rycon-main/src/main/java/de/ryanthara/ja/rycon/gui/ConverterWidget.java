@@ -24,10 +24,7 @@ import de.ryanthara.ja.rycon.data.I18N;
 import de.ryanthara.ja.rycon.data.PreferenceHandler;
 import de.ryanthara.ja.rycon.io.LineReader;
 import de.ryanthara.ja.rycon.io.LineWriter;
-import de.ryanthara.ja.rycon.tools.FileToolsCSV;
-import de.ryanthara.ja.rycon.tools.FileToolsCaplanK;
-import de.ryanthara.ja.rycon.tools.FileToolsLeicaGSI;
-import de.ryanthara.ja.rycon.tools.FileToolsText;
+import de.ryanthara.ja.rycon.tools.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -85,7 +82,7 @@ public class ConverterWidget {
      * <p>
      * The user interface is initialized in a separate method, which is called from here.
      */
-    public ConverterWidget() {
+    ConverterWidget() {
         initUI();
     }
 
@@ -126,7 +123,7 @@ public class ConverterWidget {
 
         new BottomButtonBar(this, innerShell, SWT.NONE);
 
-        innerShell.setLocation(ShellCenter.centerShellOnPrimaryMonitor(innerShell));
+        innerShell.setLocation(ShellPositioner.centerShellOnPrimaryMonitor(innerShell));
 
         Main.setSubShellStatus(true);
 
@@ -191,7 +188,7 @@ public class ConverterWidget {
         };
         // String[] formatTarget = {"GSI8", "GSI16", "TXT", "CSV", "CAPLAN", "Excel 2007 (.xlsx)","Excel '97 (.xls)"};
         String[] formatTarget = {
-                "GSI8", "GSI16", "TXT", "CSV", "CAPLAN (.K)"
+                "GSI8", "GSI16", "TXT", "CSV", "CAPLAN (.K)", "LTOP (.KOO)"
         };
 
         for (int i = 0; i < formatSource.length; i++) {
@@ -425,28 +422,36 @@ public class ConverterWidget {
             switch (fileDialog.getFilterIndex()) {
                 case 0: // Leica GSI files
                     RadioHelper.selectBtn(childrenSource, 1);
-                    RadioHelper.selectBtn(childrenTarget, 2);
+                    if (RadioHelper.getSelectedBtn(childrenTarget) == 1) {
+                        RadioHelper.selectBtn(childrenTarget, 2);
+                    }
                     break;
                 case 1: // txt files
                     // prevent button change for geodata Basel Landschaft files
                     if (RadioHelper.getSelectedBtn(childrenSource) != 7) {
                         RadioHelper.selectBtn(childrenSource, 2);
                     }
-                    RadioHelper.selectBtn(childrenTarget, 1);
+                    if (RadioHelper.getSelectedBtn(childrenTarget) == 2) {
+                        RadioHelper.selectBtn(childrenTarget, 1);
+                    }
                     break;
                 case 2: // CSV files
                     // prevent button change for geodata Basel Stadt files
                     if (RadioHelper.getSelectedBtn(childrenSource) != 6) {
                         RadioHelper.selectBtn(childrenSource, 3);
                     }
-                    RadioHelper.selectBtn(childrenTarget, 1);
+                    if (RadioHelper.getSelectedBtn(childrenTarget) == 3) {
+                        RadioHelper.selectBtn(childrenTarget, 1);
+                    }
                     break;
                 case 3: // CAPLAN K files
                     // prevent button change for CAPLAN K files
-                    if (RadioHelper.getSelectedBtn(childrenSource) != 3) {
+                    if (RadioHelper.getSelectedBtn(childrenSource) != 4) {
                         RadioHelper.selectBtn(childrenSource, 4);
                     }
-                    RadioHelper.selectBtn(childrenTarget, 1);
+                    if (RadioHelper.getSelectedBtn(childrenTarget) == 4) {
+                        RadioHelper.selectBtn(childrenTarget, 1);
+                    }
                     break;
                 case 4: // node.dat files
                     // prevent button change for node.dat (cadwork) files
@@ -486,6 +491,7 @@ public class ConverterWidget {
             FileToolsCaplanK toolsCaplanK;
             FileToolsCSV toolsCSV;
             FileToolsLeicaGSI toolsLeicaGSI;
+            FileToolsLTOP toolsLTOP;
             FileToolsText toolsText;
 
             String separator;
@@ -842,7 +848,38 @@ public class ConverterWidget {
                         }
                         break;
 
-                    case 5:     // target format: Excel 2007 (.xlsx)
+                    case 5:     // target format: LTOP KOO format
+                        switch (sourceNumber) {
+                            case 0:     // fall through for GSI8 format
+                            case 1:     // GSI16 format
+                                toolsLTOP = new FileToolsLTOP(readFile);
+                                writeFile = toolsLTOP.convertGSI2KOO();
+                                break;
+                            case 2:     // TXT format (space or tabulator separated)
+                                break;
+                            case 3:     // CSV format (comma or semicolon separated)
+                                break;
+
+                            case 4:     // CAPLAN K format
+                                break;
+
+                            case 5:     // cadwork node.dat from cadwork CAD program
+                                break;
+
+                            case 6:     // LTOP KOO format (not possible)
+
+                            case 7:     // CSV format 'Basel Stadt' (semicolon separated)
+                                break;
+
+                            case 8:     // TXT format 'Basel Landschaft' (different column based text files for LFP and HFP points)
+                                break;
+                        }
+                        if (writeFile2Disk(file2read, writeFile, ".KOO")) {
+                            counter++;
+                        }
+                        break;
+
+                    case 6:     // target format: Excel 2007 (.xlsx)
                         switch (sourceNumber) {
                             case 0:     // fall through for GSI8 format
                             case 1:     // GSI16 format
@@ -871,7 +908,7 @@ public class ConverterWidget {
 
                         break;
 
-                    case 6:     // target format: Excel 97 (.xls)
+                    case 7:     // target format: Excel 97 (.xls)
                         switch (sourceNumber) {
                             case 0:     // fall through for GSI8 format
                             case 1:     // GSI16 format
@@ -930,7 +967,7 @@ public class ConverterWidget {
     }
 
     private boolean writeFile2Disk(File file2read, ArrayList<String> writeFile, String suffix) {
-        String fileName = file2read.toString().substring(0, file2read.toString().length() - 4) + "_CONV" + suffix;
+        String fileName = file2read.toString().substring(0, file2read.toString().length() - 4) + "_" + Main.getParamEditString() + suffix;
 
         File file = new File(fileName);
 

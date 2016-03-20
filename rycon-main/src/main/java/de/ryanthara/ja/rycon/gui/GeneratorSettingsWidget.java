@@ -68,7 +68,7 @@ public class GeneratorSettingsWidget {
      *
      * @param shell shell of the parent widget
      */
-    public GeneratorSettingsWidget(Shell shell) {
+    GeneratorSettingsWidget(Shell shell) {
         this.shell = shell;
         initUI();
     }

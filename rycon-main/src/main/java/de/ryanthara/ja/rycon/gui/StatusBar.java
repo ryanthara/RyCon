@@ -74,7 +74,7 @@ public class StatusBar extends Composite {
     /**
      * Constant value for displaying the warning icon.
      */
-    public static final int WARNING = 15;
+    static final int WARNING = 15;
 
     /**
      * Constructor with parameters for StatusBar.
@@ -110,8 +110,9 @@ public class StatusBar extends Composite {
 
         addStatusInformationListener(new StatusInformationListener() {
             @Override
-            public void setStatusText(StatusInformationEvent e) {
-                message.setText(e.statusText);
+            public void notification(StatusInformationEvent e) {
+                System.out.println("called addStatusInformationListener");
+                message.setText(e.getStatusText());
             }
         });
 
@@ -137,7 +138,7 @@ public class StatusBar extends Composite {
      * @param text status text to be set
      * @param status status icon chosen by static int value from class
      */
-    public void setStatus(String text, int status) {
+    void setStatus(String text, int status) {
         message.setText(text);
 
         switch (status) {

@@ -93,4 +93,4 @@ public class CmdLineInterfaceException extends Exception {
     protected CmdLineInterfaceException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
-}
+} // end of CmdLineInterfaceException

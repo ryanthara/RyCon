@@ -43,7 +43,7 @@ import java.lang.reflect.Method;
  * @version 1
  * @since 4
  */
-public class BottomButtonBar extends Composite {
+class BottomButtonBar extends Composite {
 
     private final Object callingObject;
 
@@ -54,7 +54,7 @@ public class BottomButtonBar extends Composite {
      * @param parent parent composite (e.g. the parent shell)
      * @param style style of the composite
      */
-    public BottomButtonBar(Object callingObject, Composite parent, int style) {
+    BottomButtonBar(Object callingObject, Composite parent, int style) {
         super(parent, style);
         this.callingObject = callingObject;
         createContents();

@@ -47,7 +47,7 @@ import java.lang.reflect.Method;
  * @version 2
  * @since 4
  */
-public class InputFieldsComposite extends Composite {
+class InputFieldsComposite extends Composite {
 
     private final Object callingObject;
     private Text destinationTextField;
@@ -60,7 +60,7 @@ public class InputFieldsComposite extends Composite {
      * @param parent parent composite (e.g. the parent shell)
      * @param style style of the composite
      */
-    public InputFieldsComposite(Object callingObject, Composite parent, int style) {
+    InputFieldsComposite(Object callingObject, Composite parent, int style) {
         super(parent, style);
         this.callingObject = callingObject;
         createContents();
@@ -200,7 +200,7 @@ public class InputFieldsComposite extends Composite {
      *
      * @return destination text field
      */
-    public Text getDestinationTextField() {
+    Text getDestinationTextField() {
         return destinationTextField;
     }
 
@@ -209,7 +209,7 @@ public class InputFieldsComposite extends Composite {
      *
      * @return source text field
      */
-    public Text getSourceTextField() {
+    Text getSourceTextField() {
         return sourceTextField;
     }
 
@@ -218,7 +218,7 @@ public class InputFieldsComposite extends Composite {
      *
      * @param text the text to be set
      */
-    public void setDestinationTextFieldText(String text) {
+    void setDestinationTextFieldText(String text) {
         destinationTextField.setText(text);
     }
 
@@ -227,7 +227,7 @@ public class InputFieldsComposite extends Composite {
      *
      * @param text the text to be set
      */
-    public void setSourceTextFieldText(String text) {
+    void setSourceTextFieldText(String text) {
         sourceTextField.setText(text);
     }
 

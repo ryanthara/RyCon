@@ -67,7 +67,7 @@ public class GeneratorWidget {
      * <p>
      * The user interface is initialized in a separate method, which is called from here.
      */
-    public GeneratorWidget() {
+    GeneratorWidget() {
         initUI();
     }
 
@@ -103,7 +103,7 @@ public class GeneratorWidget {
         createDescription(width);
         createBottomButtons();
 
-        innerShell.setLocation(ShellCenter.centerShellOnPrimaryMonitor(innerShell));
+        innerShell.setLocation(ShellPositioner.centerShellOnPrimaryMonitor(innerShell));
 
         Main.setSubShellStatus(true);
 

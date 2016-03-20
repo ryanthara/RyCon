@@ -54,7 +54,7 @@ public class GuiHelper {
      * @param checkedFilterPath filter path of the directory dialog
      * @since 2
      */
-    public static void showAdvancedDirectoryDialog(Shell innerShell, Text textField, String title, String message, String checkedFilterPath) {
+    static void showAdvancedDirectoryDialog(Shell innerShell, Text textField, String title, String message, String checkedFilterPath) {
         DirectoryDialog directoryDialog = new DirectoryDialog(innerShell);
         directoryDialog.setText(title);
         directoryDialog.setMessage(message);
@@ -86,8 +86,8 @@ public class GuiHelper {
      * @return chosen files as String array
      * @since 2
      */
-    public static File[] showAdvancedFileDialog(Shell innerShell, int multiSelection, String filterPath, String text,
-                                              String[] filterExtensions, String[] filterNames, Text source, Text destination) {
+    static File[] showAdvancedFileDialog(Shell innerShell, int multiSelection, String filterPath, String text,
+                                         String[] filterExtensions, String[] filterNames, Text source, Text destination) {
 
         File[] files2read = null;
 
@@ -128,7 +128,7 @@ public class GuiHelper {
     /**
      * Shows a swt MessageBox and returns an Integer value as indicator for being shown.
      * <p>
-     * The boolean is used for error indication in different classe.
+     * The boolean is used for error indication in different classes.
      * @param innerShell the inner shell object
      * @param icon the icon of the message box
      * @param text the headline text of the message box

@@ -46,7 +46,7 @@ public class RadioHelper {
      * @param control {@code Control[]} object with radio buttons
      * @return number of the selected radio button
      */
-    public static int getSelectedBtn(Control[] control) {
+    static int getSelectedBtn(Control[] control) {
         int number = -1;
 
         for (int i = 0; i < control.length; i++) {
@@ -68,7 +68,7 @@ public class RadioHelper {
      * @param control Control with radio buttons
      * @param number  Button to enable
      */
-    public static void selectBtn(Control[] control, int number) {
+    static void selectBtn(Control[] control, int number) {
         for (int i = 0; i < control.length; i++) {
             Control child = control[i];
             if (child instanceof Button) {
@@ -90,7 +90,7 @@ public class RadioHelper {
      * @param master Radio button group which is selected
      * @param slave  Radio button group which has to be toggled
      */
-    public static void toggleBtn(Control[] master, Control[] slave) {
+    static void toggleBtn(Control[] master, Control[] slave) {
         int selectedMaster = -1;
         int selectedSlave;
 

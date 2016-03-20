@@ -122,26 +122,26 @@ public class FileToolsCaplanK {
             switch (stringField.length) {
                 case 3:     // contains nr x y
                     // easting E, column 19-32
-                    easting = String.format("%14s", fillZeroDigits(stringField[1], 4));
+                    easting = String.format("%14s", NumberHelper.fillDecimalPlace(stringField[1], 4));
 
                     // northing N, column 33-46
-                    northing = String.format("%14s", fillZeroDigits(stringField[2], 4));
+                    northing = String.format("%14s", NumberHelper.fillDecimalPlace(stringField[2], 4));
                     valencyIndicator = 3;
                     break;
 
                 case 4:     // contains nr x y z
                     // easting E, column 19-32
-                    easting = String.format("%14s", fillZeroDigits(stringField[1], 4));
+                    easting = String.format("%14s", NumberHelper.fillDecimalPlace(stringField[1], 4));
 
                     // northing N, column 33-46
-                    northing = String.format("%14s", fillZeroDigits(stringField[2], 4));
+                    northing = String.format("%14s", NumberHelper.fillDecimalPlace(stringField[2], 4));
                     valencyIndicator = 3;
 
                     // height (Z) is in column 5, but not always valued
                     height = "";
                     if (!stringField[4].equals("")) {
                         // height H, column 47-59
-                        height = String.format("%13s", fillZeroDigits(stringField[3], 5));
+                        height = String.format("%13s", NumberHelper.fillDecimalPlace(stringField[3], 5));
                         Double d = Double.parseDouble(height);
                         if (d != 0d) {
                             valencyIndicator += 4;
@@ -156,17 +156,17 @@ public class FileToolsCaplanK {
                     }
 
                     // easting E, column 19-32
-                    easting = String.format("%14s", fillZeroDigits(stringField[2], 4));
+                    easting = String.format("%14s", NumberHelper.fillDecimalPlace(stringField[2], 4));
 
                     // northing N, column 33-46
-                    northing = String.format("%14s", fillZeroDigits(stringField[3], 4));
+                    northing = String.format("%14s", NumberHelper.fillDecimalPlace(stringField[3], 4));
                     valencyIndicator = 3;
 
                     // height (Z) is in column 5, but not always valued
                     height = "";
                     if (!stringField[4].equals("")) {
                         // height H, column 47-59
-                        height = String.format("%13s", fillZeroDigits(stringField[4], 5));
+                        height = String.format("%13s", NumberHelper.fillDecimalPlace(stringField[4], 5));
                         Double d = Double.parseDouble(height);
                         if (d != 0d) {
                             valencyIndicator += 4;
@@ -214,17 +214,17 @@ public class FileToolsCaplanK {
             String number = preparePointNumber(stringField[0].replaceAll("\\s+", "").trim());
 
             // easting E, column 19-32
-            String easting = String.format("%14s", fillZeroDigits(stringField[2], 4));
+            String easting = String.format("%14s", NumberHelper.fillDecimalPlace(stringField[2], 4));
 
             // northing N, column 33-46
-            String northing = String.format("%14s", fillZeroDigits(stringField[3], 4));
+            String northing = String.format("%14s", NumberHelper.fillDecimalPlace(stringField[3], 4));
             valencyIndicator = 3;
 
             // height (Z) is in column 5, but not always valued
             String height = "";
             if (!stringField[4].equals("")) {
                 // height H, column 47-59
-                height = String.format("%13s", fillZeroDigits(stringField[4], 5));
+                height = String.format("%13s", NumberHelper.fillDecimalPlace(stringField[4], 5));
                 Double d = Double.parseDouble(height);
                 if (d != 0d) {
                     valencyIndicator += 4;
@@ -275,21 +275,17 @@ public class FileToolsCaplanK {
             String objectTyp = this.objectTyp;
 
             // point number (no '*', ',' and ';'), column 1 - 16
-            String number = lineSplit[5];
-            number = number.replaceAll("\\*", "#");
-            number = number.replaceAll(",", ".");
-            number = number.replaceAll(";", ":");
-            number = String.format("%16s", number);
+            String number = preparePointNumber(lineSplit[5]);
 
             // easting E, column 19-32
-            String easting = String.format("%14s", fillZeroDigits(lineSplit[1], 4));
+            String easting = String.format("%14s", NumberHelper.fillDecimalPlace(lineSplit[1], 4));
 
             // northing N, column 33-46
-            String northing = String.format("%14s", fillZeroDigits(lineSplit[2], 4));
+            String northing = String.format("%14s", NumberHelper.fillDecimalPlace(lineSplit[2], 4));
             valencyIndicator = 3;
 
             // height H, column 47-59
-            String height = String.format("%13s", fillZeroDigits(lineSplit[3], 5));
+            String height = String.format("%13s", NumberHelper.fillDecimalPlace(lineSplit[3], 5));
             if (Double.parseDouble(height) != 0d) {
                 valencyIndicator += 4;
             }
@@ -350,15 +346,9 @@ public class FileToolsCaplanK {
                 for (GSIBlock block : blocksAsLines) {
                     String s = block.toPrintFormatCSV();
 
-                    int wordIndex = block.getWordIndex();
-
-                    switch (wordIndex) {
+                    switch (block.getWordIndex()) {
                         case 11:        // point number (no '*', ',' and ';'), column 1 - 16
-                            s = s.replaceAll("\\*", "#");
-                            s = s.replaceAll(",", ".");
-                            s = s.replaceAll(";", ":");
-
-                            number = String.format("%16s", s);
+                            number = preparePointNumber(s);
                             break;
                         case 41:        // code is the same as object type, column 62...
                             objectTyp = "|".concat(s);
@@ -375,27 +365,27 @@ public class FileToolsCaplanK {
                             attr = attr.concat("|".concat(s));
                             break;
                         case 81:        // easting E, column 19-32
-                            easting = String.format("%14s", fillZeroDigits(s, 4));
+                            easting = String.format("%14s", NumberHelper.fillDecimalPlace(s, 4));
                             valencyIndicator = 3;
                             break;
                         case 82:        // northing N, column 33-46
-                            northing = String.format("%14s", fillZeroDigits(s, 4));
+                            northing = String.format("%14s", NumberHelper.fillDecimalPlace(s, 4));
                             valencyIndicator = 3;
                             break;
                         case 83:        // height H, column 47-59
-                            height = String.format("%13s", fillZeroDigits(s, 5));
+                            height = String.format("%13s", NumberHelper.fillDecimalPlace(s, 5));
                             valencyIndicator += 4;
                             break;
                         case 84:        // easting E0, column 19-32
-                            easting = String.format("%14s", fillZeroDigits(s, 4));
+                            easting = String.format("%14s", NumberHelper.fillDecimalPlace(s, 4));
                             valencyIndicator = 3;
                             break;
                         case 85:        // northing N0, column 33-46
-                            northing = String.format("%14s", fillZeroDigits(s, 4));
+                            northing = String.format("%14s", NumberHelper.fillDecimalPlace(s, 4));
                             valencyIndicator = 3;
                             break;
                         case 86:        // height H0, column 47-59
-                            height = String.format("%13s", fillZeroDigits(s, 5));
+                            height = String.format("%13s", NumberHelper.fillDecimalPlace(s, 5));
                             valencyIndicator += 4;
                             break;
                     }
@@ -458,23 +448,23 @@ public class FileToolsCaplanK {
             switch (lineSplit.length) {
                 case 3:     // line contains no height
                     // easting (Y) is in column 2 -> column 19-32
-                    easting = String.format("%14s", fillZeroDigits(lineSplit[1], 4));
+                    easting = String.format("%14s", NumberHelper.fillDecimalPlace(lineSplit[1], 4));
 
                     // northing (X) is in column 3 -> column 33-46
-                    northing = String.format("%14s", fillZeroDigits(lineSplit[2], 4));
+                    northing = String.format("%14s", NumberHelper.fillDecimalPlace(lineSplit[2], 4));
                     valencyIndicator = 3;
                     break;
 
                 case 4:     // line contains no code
                     // easting (Y) is in column 2 -> column 19-32
-                    easting = String.format("%14s", fillZeroDigits(lineSplit[1], 4));
+                    easting = String.format("%14s", NumberHelper.fillDecimalPlace(lineSplit[1], 4));
 
                     // northing (X) is in column 3 -> column 33-46
-                    northing = String.format("%14s", fillZeroDigits(lineSplit[2], 4));
+                    northing = String.format("%14s", NumberHelper.fillDecimalPlace(lineSplit[2], 4));
                     valencyIndicator = 3;
 
                     // height (Z) is in column 4 -> column 47-59
-                    height = String.format("%13s", fillZeroDigits(lineSplit[3], 5));
+                    height = String.format("%13s", NumberHelper.fillDecimalPlace(lineSplit[3], 5));
                     Double d = Double.parseDouble(height);
                     if (d != 0d) {
                         valencyIndicator += 4;
@@ -488,17 +478,17 @@ public class FileToolsCaplanK {
                     }
 
                     // easting (Y) is in column 4 -> column 19-32
-                    easting = String.format("%14s", fillZeroDigits(lineSplit[2], 4));
+                    easting = String.format("%14s", NumberHelper.fillDecimalPlace(lineSplit[2], 4));
 
                     // northing (X) is in column 5 -> column 33-46
-                    northing = String.format("%14s", fillZeroDigits(lineSplit[3], 4));
+                    northing = String.format("%14s", NumberHelper.fillDecimalPlace(lineSplit[3], 4));
                     valencyIndicator = 3;
 
                     // height (Z) is in column 6, and not always valued (LFP file) -> column 47-59
                     if (lineSplit[5].equals("NULL")) {
-                        height = String.format("%13s", fillZeroDigits("-9999", 4));
+                        height = String.format("%13s", NumberHelper.fillDecimalPlace("-9999", 4));
                     } else {
-                        height = String.format("%13s", fillZeroDigits(lineSplit[4], 5));
+                        height = String.format("%13s", NumberHelper.fillDecimalPlace(lineSplit[4], 5));
                         if (Double.parseDouble(height) != 0d) {
                             valencyIndicator += 4;
                         }
@@ -555,14 +545,14 @@ public class FileToolsCaplanK {
             switch (lineSplit.length) {
                 case 5:     // HFP file
                     // easting (Y) is in column 3 -> column 19-32
-                    easting = String.format("%14s", fillZeroDigits(lineSplit[2], 4));
+                    easting = String.format("%14s", NumberHelper.fillDecimalPlace(lineSplit[2], 4));
 
                     // northing (X) is in column 4 -> column 33-46
-                    northing = String.format("%14s", fillZeroDigits(lineSplit[3], 4));
+                    northing = String.format("%14s", NumberHelper.fillDecimalPlace(lineSplit[3], 4));
                     valencyIndicator = 3;
 
                     // height (Z) is in column 5, and not always valued (LFP file) -> column 47-59
-                    height = String.format("%13s", fillZeroDigits(lineSplit[4], 5));
+                    height = String.format("%13s", NumberHelper.fillDecimalPlace(lineSplit[4], 5));
                     Double d = Double.parseDouble(height);
                     if (d != 0d) {
                         valencyIndicator += 4;
@@ -576,17 +566,17 @@ public class FileToolsCaplanK {
                     }
 
                     // easting (Y) is in column 4 -> column 19-32
-                    easting = String.format("%14s", fillZeroDigits(lineSplit[3], 4));
+                    easting = String.format("%14s", NumberHelper.fillDecimalPlace(lineSplit[3], 4));
 
                     // northing (X) is in column 5 -> column 33-46
-                    northing = String.format("%14s", fillZeroDigits(lineSplit[4], 4));
+                    northing = String.format("%14s", NumberHelper.fillDecimalPlace(lineSplit[4], 4));
                     valencyIndicator = 3;
 
                     // height (Z) is in column 6, and not always valued (LFP file) -> column 47-59
                     if (lineSplit[5].equals("NULL")) {
-                        height = String.format("%13s", fillZeroDigits("-9999", 5));
+                        height = String.format("%13s", NumberHelper.fillDecimalPlace("-9999", 5));
                     } else {
-                        height = String.format("%13s", fillZeroDigits(lineSplit[5], 5));
+                        height = String.format("%13s", NumberHelper.fillDecimalPlace(lineSplit[5], 5));
                         if (Double.parseDouble(height) != 0d) {
                             valencyIndicator += 4;
                         }
@@ -623,28 +613,6 @@ public class FileToolsCaplanK {
                                             /* timeStyle */ DateFormat.MEDIUM );
         result.add(String.format(I18N.getStrCaplanCommentLine(), Version.getVersion(), df.format(d)));
         result.add(commentLine2);
-    }
-
-    /**
-     * Fills a string value with a number of zeros to a defined last decimal place.
-     *
-     * @param lastDecimalLength length of the last decimal place
-     * @return filled up string value
-     */
-    private String fillZeroDigits(String s, int lastDecimalLength) {
-        int decimalSignPosition = s.lastIndexOf('.');
-        int length = s.length();
-        int numberOfMissingZeros = lastDecimalLength - (length - decimalSignPosition - 1);
-
-        if (numberOfMissingZeros > 0) {
-            for (int i = 0; i < numberOfMissingZeros; i++) {
-                s = s.concat("0");
-            }
-        } else if (numberOfMissingZeros < 0) {
-            s = s.substring(0, length + numberOfMissingZeros);
-        }
-
-        return s;
     }
 
     /*

@@ -171,6 +171,14 @@ public class GSIBlock {
     }
 
     /**
+     * Returns true if GSIBlock is GSI16 format.
+     * @return true if GSIBlock is GSI16 format
+     */
+    public boolean isGSI16() {
+        return isGSI16;
+    }
+
+    /**
      * Returns a GSIBlock in csv format without separation sign. No additional invisible spaces are created.
      *
      * @return formatted {@code String} for CSV output

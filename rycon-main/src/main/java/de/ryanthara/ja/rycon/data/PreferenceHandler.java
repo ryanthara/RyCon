@@ -21,6 +21,8 @@ package de.ryanthara.ja.rycon.data;
 import de.ryanthara.ja.rycon.Main;
 
 import java.io.File;
+import java.util.prefs.PreferenceChangeEvent;
+import java.util.prefs.PreferenceChangeListener;
 import java.util.prefs.Preferences;
 
 
@@ -46,10 +48,10 @@ import java.util.prefs.Preferences;
  * </ul>
  *
  * @author sebastian
- * @version 5
+ * @version 6
  * @since 1
  */
-public class PreferenceHandler {
+public class PreferenceHandler implements PreferenceChangeListener {
 
     /**
      * Member for the preference key of the GSI setting for line ending.
@@ -108,10 +110,20 @@ public class PreferenceHandler {
      */
     public final static String INFORMATION_STRING = "information_string";
     /**
+     * Member for the preference key for the edit string.
+     * @since 6
+     */
+    public final static String PARAM_CODE_STRING = "param_code_string";
+    /**
      * Member for the preference key for the control point identifier string.
      * @since 3
      */
     public final static String PARAM_CONTROL_POINT_STRING = "param_control_point_string";
+    /**
+     * Member for the preference key for the edit string.
+     * @since 6
+     */
+    public final static String PARAM_EDIT_STRING = "param_edit_string";
     /**
      * Member for the preference key for the free station identifier string.
      * @since 3
@@ -127,6 +139,7 @@ public class PreferenceHandler {
      * @since 3
      */
     public final static String USER_LAST_USED_DIR = "user_last_used_dir";
+
     private boolean isDefaultSettingsGenerated = false;
     private Preferences userPreferences;
 
@@ -141,6 +154,9 @@ public class PreferenceHandler {
             createDefaultSettings();
             isDefaultSettingsGenerated = true;
         }
+
+        // add listener to the node and not to an instance of it!
+        Preferences.userRoot().node("/de/ryanthara/rycon").addPreferenceChangeListener(this);
     }
 
     /**
@@ -178,7 +194,9 @@ public class PreferenceHandler {
      *     <li>'DIR_PROJECT' - './project' </li>
      *     <li>'DIR_PROJECT_TEMPLATE' - './project/template-folder' </li>
      *     <li>'GSI_SETTING_LINE_ENDING_WITH_BLANK' -  true </li>
+     *     <li>'PARAM_CODE_STRING' - 'CODE' </li>
      *     <li>'PARAM_CONTROL_POINT_STRING' - 'STKE' </li>
+     *     <li>'PARAM_EDIT_STRING' - 'EDIT' </li>
      *     <li>'PARAM_FREE_STATION_STRING' - 'FS' </li>
      *     <li>'PARAM_STAKE_OUT_STRING' - 'ST' </li>
      *     <li>'USER_LAST_USED_DIR' - '.' </li>
@@ -187,11 +205,13 @@ public class PreferenceHandler {
      * It is <b>highly recommend</b> that the user will overwrite this settings to his preferred values
      * after the first start of RyCON. To do this, hit the key 'p' on the keyboard.
      */
-    public void createDefaultSettings() {
+    private void createDefaultSettings() {
         // general settings
         userPreferences.put(GENERATOR, Main.getRyCONAppName());
         userPreferences.put(BUILD_VERSION, Version.getBuildNumber() + Version.getBuildDate());
         userPreferences.put(INFORMATION_STRING, Main.getRyCONWebsite());
+        userPreferences.put(PARAM_CODE_STRING, Main.getParamCodeString());
+        userPreferences.put(PARAM_EDIT_STRING, Main.getParamEditString());
 
         // parameters for module #1 - clean up
         userPreferences.put(PARAM_CONTROL_POINT_STRING, Main.getParamControlPointString());
@@ -232,6 +252,19 @@ public class PreferenceHandler {
      */
     public boolean isDefaultSettingsGenerated() {
         return isDefaultSettingsGenerated;
+    }
+
+    /**
+     * This method gets called when a preference is added, removed or when
+     * its value is changed.
+     * <p>
+     *
+     * @param evt A PreferenceChangeEvent object describing the event source
+     *            and the preference that has changed.
+     */
+    @Override
+    public void preferenceChange(PreferenceChangeEvent evt) {
+        System.out.println("called preferenceChange");
     }
 
     /**

@@ -92,7 +92,7 @@ public class SplashScreen {
 
         shell.pack();
 
-        shell.setLocation(ShellCenter.centerShellOnPrimaryMonitor(shell));
+        shell.setLocation(ShellPositioner.centerShellOnPrimaryMonitor(shell));
         shell.open();
 
         display.asyncExec(new Runnable() {

@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.Shell;
  * @version 2
  * @since 1
  */
-public class ShellCenter {
+public class ShellPositioner {
 
     /**
      * Calculates the centered shell location and returns it als <code>Point</code> object.
@@ -60,4 +60,4 @@ public class ShellCenter {
         return new Point(x, y);
     }
 
-} // end of ShellCenter
+} // end of ShellPositioner

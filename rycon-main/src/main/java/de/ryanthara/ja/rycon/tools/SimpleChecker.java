@@ -25,7 +25,7 @@ import java.io.File;
 /**
  * This class provides simple checking routines in RyCON.
  * <p>
- * The methodes are called static from different classes.
+ * The methods are called static from different classes.
  *
  * <h3>Changes:</h3>
  * <ul>
@@ -50,7 +50,7 @@ public class SimpleChecker {
      * @return success of the check
      */
     public static boolean checkIsTextEmpty(Text textField) {
-        return textField != null & textField.getText().trim().equals("");
+        return textField != null & (textField != null && textField.getText().trim().equals(""));
     }
 
     /**

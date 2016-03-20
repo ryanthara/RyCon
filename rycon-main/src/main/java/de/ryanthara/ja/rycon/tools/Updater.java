@@ -61,7 +61,7 @@ public class Updater {
     /**
      * Performs the check of the RyCON update website.
      * <p>
-     * Due to JAVA SSL implementations and it's constrainted to store the key in the publick keychaing,
+     * Due to JAVA SSL implementations and it's constrained to store the key in the public keychain,
      * this is a 'hack' to bypass the ssl check easily. This should be done better in a future version.
      *  
      * @return success
@@ -188,4 +188,4 @@ public class Updater {
         return updateAvailable;
     }
     
-}
+} // end of Updater

@@ -71,7 +71,7 @@ public class LevellingWidget {
      * <p>
      * The user interface is initialized in a separate method, which is called from here.
      */
-    public LevellingWidget() {
+    LevellingWidget() {
         initUI();
     }
 
@@ -83,7 +83,7 @@ public class LevellingWidget {
      *
      * @param droppedFiles file array from drop source
      */
-    public LevellingWidget(File[] droppedFiles) {
+    LevellingWidget(File[] droppedFiles) {
         files2read = WidgetHelper.checkForValidFiles(droppedFiles, acceptableFileSuffixes);
     }
 
@@ -95,7 +95,7 @@ public class LevellingWidget {
      *
      * @return success of file processing.
      */
-    public boolean executeDropInjection() {
+    boolean executeDropInjection() {
         boolean success = false;
 
         if ((files2read != null) && (files2read.length > 0)) {
@@ -147,7 +147,7 @@ public class LevellingWidget {
 
         new BottomButtonBar(this, innerShell, SWT.NONE);
 
-        innerShell.setLocation(ShellCenter.centerShellOnPrimaryMonitor(innerShell));
+        innerShell.setLocation(ShellPositioner.centerShellOnPrimaryMonitor(innerShell));
 
         Main.setSubShellStatus(true);
 

@@ -40,4 +40,4 @@ public class SpreadsheetTools {
      */
     public SpreadsheetTools() {}
 
-}
+} // end of SpreadsheetTools

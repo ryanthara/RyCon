@@ -86,7 +86,7 @@ public class ImageConverter {
      * @param bufferedImage the BufferedImage to convert
      * @return converted BufferedImage as ImageData
      */
-    public ImageData convertToImageData(BufferedImage bufferedImage) {
+    private ImageData convertToImageData(BufferedImage bufferedImage) {
         if (bufferedImage.getColorModel() instanceof DirectColorModel) {
             DirectColorModel colorModel = (DirectColorModel) bufferedImage.getColorModel();
             PaletteData palette = new PaletteData(colorModel.getRedMask(), colorModel.getGreenMask(), colorModel.getBlueMask());

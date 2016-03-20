@@ -16,7 +16,7 @@
  * this package. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import de.ryanthara.ja.rycon.gui.RyCONLauncher;
+import de.ryanthara.ja.rycon.gui.MainApplication;
 
 /**
  * This class is the entry point of the program.
@@ -33,5 +33,5 @@ import de.ryanthara.ja.rycon.gui.RyCONLauncher;
  * @version 1
  * @since 1
  */
-//public class RyCON extends MainApplication {} // end of RyCON
-public class RyCON extends RyCONLauncher {} // end of RyCON
+public class RyCON extends MainApplication {} // end of RyCON
+//public class RyCON extends RyCONLauncher {} // end of RyCON

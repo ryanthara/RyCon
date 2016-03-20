@@ -18,19 +18,24 @@
 
 package de.ryanthara.ja.rycon.events;
 
+import java.util.EventListener;
+
 /**
  * This class implements a custom event listener which is used for updating the
  * status bar with an event driven mechanism.
  *
  * <h3>Changes:</h3>
  * <ul>
+ *     <li>2: reorganisation and clean up </li>
  *     <li>1: basic implementation </li>
  * </ul>
  *
  * @author sebastian
- * @version 1
+ * @version 2
  * @since 7
  */
-public interface StatusInformationListener extends java.util.EventListener {
-    void setStatusText(StatusInformationEvent e);
+public interface StatusInformationListener extends EventListener {
+
+    void notification (StatusInformationEvent event);
+
 } // end of StatusInformationListener

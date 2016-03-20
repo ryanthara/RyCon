@@ -350,8 +350,12 @@ public class I18N {
         return Messages.getString("fileChooserTidyUpSourceText");
     }
 
-    public static String getGroupTitleGSISettings() {
-        return Messages.getString("groupTitleGSISettings");
+    public static String getGroupTitleFormatSettings() {
+        return Messages.getString("groupTitleFormatSettings");
+    }
+
+    public static String getGroupTitleGeneralSettings() {
+        return Messages.getString("groupTitleGeneralSettings");
     }
 
     public static String getGroupTitleGeneratorNumberInput() {
@@ -394,6 +398,10 @@ public class I18N {
         return Messages.getString("infoTitleRyCONUpdate");
     }
 
+    public static String getLabelTextCodeStringLabel() {
+        return Messages.getString("labelTextCodeStringLabel");
+    }
+
     public static String getLabelTextDestination() {
         return Messages.getString("labelTextDestination");
     }
@@ -424,6 +432,10 @@ public class I18N {
 
     public static String getLabelTextDirProjectTemplate() {
         return Messages.getString("labelTextProjectPathDefaultFolder");
+    }
+
+    public static String getLabelTextEditStringLabel() {
+        return Messages.getString("labelTextEditStringLabel");
     }
 
     public static String getLabelTextIdentifierFreeStation() {
@@ -750,6 +762,10 @@ public class I18N {
         return Messages.getString("strCaplanCommentLine");
     }
 
+    public static String getStrLTOPCommentLine() {
+        return Messages.getString("strLTOPCommentLine");
+    }
+
     public static String getTextDirAdminAndBigDataAndProjectGenerated() {
         return Messages.getString("textDirAdminAndBigDataAndProjectGenerated");
     }
@@ -847,4 +863,5 @@ public class I18N {
         }
 
     }
+
 } // end of I18N

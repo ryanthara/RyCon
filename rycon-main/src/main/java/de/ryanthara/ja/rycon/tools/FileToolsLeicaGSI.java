@@ -489,7 +489,7 @@ public class FileToolsLeicaGSI {
      *
      * @return found word indices as {@code TreeSet<Integer>}
      */
-    public TreeSet<Integer> getFoundWordIndices() {
+    TreeSet<Integer> getFoundWordIndices() {
         return foundWordIndices;
     }
 
@@ -501,7 +501,7 @@ public class FileToolsLeicaGSI {
      *
      * @return encoded GSIBlocks
      */
-    public ArrayList<ArrayList<GSIBlock>> getEncodedGSIBlocks() {
+    ArrayList<ArrayList<GSIBlock>> getEncodedGSIBlocks() {
         if (readCSVLines != null && readCSVLines.size() > 0) {
             return blockEncoder(convertCSV2GSI(isGSI16,false));
         } else if (readStringLines != null && readStringLines.size() > 0) {
@@ -783,7 +783,7 @@ public class FileToolsLeicaGSI {
              * @param line line to check
              * @return true if it is a target line
              */
-            boolean isTargetLine(String line) {
+            private boolean isTargetLine(String line) {
                 if (isGSI16) {
                     return (line.split("0000000000000000").length - 1) == 3;
                 } else {
@@ -796,7 +796,7 @@ public class FileToolsLeicaGSI {
              * @param string string to get a defined substring from
              * @return substring
              */
-            String numberConvert(String string) {
+            private String numberConvert(String string) {
                 if (isGSI16) {
                     return string.substring(8, 24);
                 } else {
@@ -1035,7 +1035,7 @@ public class FileToolsLeicaGSI {
          * @param code code of the {@code GSIBlocks}
          * @param line {@code String} of the {@code GSIBlocks}
          */
-        public GSIHelper(int code, String line) {
+        GSIHelper(int code, String line) {
             this.code = code;
             this.line = line;
         }

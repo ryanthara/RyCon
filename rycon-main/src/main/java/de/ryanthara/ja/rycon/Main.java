@@ -97,7 +97,9 @@ public abstract class Main {
     private static final String DIR_PROJECT = "./projects";
     private static final String DIR_PROJECT_TEMPLATE = "./projects/template-folder";
     private static final String GSI_SETTING_LINE_ENDING_WITH_BLANK = "true";
+    private static final String PARAM_CODE_STRING = "CODE";
     private static final String PARAM_CONTROL_POINT_STRING = "STKE";
+    private static final String PARAM_EDIT_STRING = "EDIT";
     private static final String PARAM_FREE_STATION_STRING = "FS";
     private static final String PARAM_KNOWN_STATION_STRING = "ST";
     private static final String SEPARATOR_COMMA = ",";
@@ -161,7 +163,7 @@ public abstract class Main {
      * @param args command line interface arguments
      * @since 5
      */
-    public static void checkCommandLineInterfaceArguments(String... args) {
+    protected static void checkCommandLineInterfaceArguments(String... args) {
         CmdLineInterfaceParser parser = new CmdLineInterfaceParser();
 
         try {
@@ -191,7 +193,7 @@ public abstract class Main {
      * @since 2
      * @return current JAVA version
      */
-    public static String checkJavaVersion() {
+    protected static String checkJavaVersion() {
         String version = System.getProperty("java.version");
 
         if (version != null) {
@@ -237,11 +239,10 @@ public abstract class Main {
      *
      * @return success
      */
-    public static boolean checkLicense() {
+    protected static boolean checkLicense() {
         // TODO default implementation
-        boolean success = false;
         LICENSE = true;
-        return success;
+        return false;
     }
 
     /**
@@ -256,7 +257,7 @@ public abstract class Main {
      * 
      * @since 3
      */
-    public static void checkRyCONVersion() {
+    protected static void checkRyCONVersion() {
         Updater updater = new Updater();
         boolean updateSuccessful = false;
 
@@ -296,46 +297,6 @@ public abstract class Main {
                 display.dispose();
             }
         }
-    }
-
-    /**
-     * Returns the sign for the comma separator as string.
-     *
-     * @return comma sign
-     * @since 3
-     */
-    public static String getSeparatorComma() {
-        return SEPARATOR_COMMA;
-    }
-
-    /**
-     * Returns the sign for the semicolon separator as string.
-     *
-     * @return semicolon sign
-     * @since 3
-     */
-    public static String getSeparatorSemicolon() {
-        return SEPARATOR_SEMICOLON;
-    }
-
-    /**
-     * Returns the sign for the space separator as string.
-     *
-     * @return space sign
-     * @since 3
-     */
-    public static String getSeparatorSpace() {
-        return SEPARATOR_SPACE;
-    }
-
-    /**
-     * Returns the sign for the tab separator as string.
-     *
-     * @return tab sign
-     * @since 3
-     */
-    public static String getSeparatorTab() {
-        return SEPARATOR_TAB;
     }
 
     /**
@@ -379,7 +340,7 @@ public abstract class Main {
     public static String getDirBigDataTemplate() {
         return DIR_BIG_DATA_TEMPLATE;
     }
-    
+
     /**
      * Returns the path of the project directory as string value.
      *
@@ -419,7 +380,7 @@ public abstract class Main {
     public static boolean getGSI8() {
         return GSI8;
     }
-
+    
     /**
      * Returns true or false as String for indicating a blank at the end of a gsi format line.
      * @return true or false
@@ -429,6 +390,16 @@ public abstract class Main {
         return GSI_SETTING_LINE_ENDING_WITH_BLANK;
     }
 
+
+    /**
+     * Returns the value of the code string ('CODE').
+     *
+     * @return code string
+     * @since 8
+     */
+    public static String getParamCodeString() {
+        return PARAM_CODE_STRING;
+    }
     /**
      * Returns the value of the control point string ('STKE').
      *
@@ -437,6 +408,16 @@ public abstract class Main {
      */
     public static String getParamControlPointString() {
         return PARAM_CONTROL_POINT_STRING;
+    }
+
+    /**
+     * Returns the value of the edit string ('EDIT').
+     *
+     * @return edit string
+     * @since 8
+     */
+    public static String getParamEditString() {
+        return PARAM_EDIT_STRING;
     }
 
     /**
@@ -501,7 +482,7 @@ public abstract class Main {
      *
      * @return height of a grid cell as {@code int} value
      */
-    public static int getRyCON_GRID_HEIGHT() {
+    protected static int getRyCON_GRID_HEIGHT() {
         return RyCON_GRID_HEIGHT;
     }
 
@@ -510,8 +491,48 @@ public abstract class Main {
      *
      * @return width of a grid cell as {@code int} value
      */
-    public static int getRyCON_GRID_WIDTH() {
+    protected static int getRyCON_GRID_WIDTH() {
         return RyCON_GRID_WIDTH;
+    }
+
+    /**
+     * Returns the sign for the comma separator as string.
+     *
+     * @return comma sign
+     * @since 3
+     */
+    public static String getSeparatorComma() {
+        return SEPARATOR_COMMA;
+    }
+
+    /**
+     * Returns the sign for the semicolon separator as string.
+     *
+     * @return semicolon sign
+     * @since 3
+     */
+    public static String getSeparatorSemicolon() {
+        return SEPARATOR_SEMICOLON;
+    }
+
+    /**
+     * Returns the sign for the space separator as string.
+     *
+     * @return space sign
+     * @since 3
+     */
+    public static String getSeparatorSpace() {
+        return SEPARATOR_SPACE;
+    }
+
+    /**
+     * Returns the sign for the tab separator as string.
+     *
+     * @return tab sign
+     * @since 3
+     */
+    public static String getSeparatorTab() {
+        return SEPARATOR_TAB;
     }
 
     /**
@@ -535,7 +556,7 @@ public abstract class Main {
     /**
      * Initializes access to {@code Settings} with {@code Main.pref} in normal context.
      */
-    public static void initApplicationPreferences() {
+    protected static void initApplicationPreferences() {
         Main.pref = new PreferenceHandler();
     }
 
@@ -563,21 +584,21 @@ public abstract class Main {
     }
 
     /**
-     * Sets the locale to a given language code in alpha-2 or alpha-3 language code.
-     *
-     * @see {url http://docs.oracle.com/javase/7/docs/api/java/util/Locale.html}
-     * @param languageCode language code
-     */
-    public static void setLocaleTo(String languageCode) {
-        Locale.setDefault(new Locale(languageCode, languageCode.toUpperCase()));
-    }
-
-    /**
      * Sets the status to indicate an open settings widget.
      *
      * @param isSettingsWidgetOpen settings widget open status
      */
     public static void setIsSettingsWidgetOpen(boolean isSettingsWidgetOpen) {
         isSettingsWidgetOpenStatus = isSettingsWidgetOpen;
+    }
+
+    /**
+     * Sets the locale to a given language code in alpha-2 or alpha-3 language code.
+     *
+     * @see {url http://docs.oracle.com/javase/7/docs/api/java/util/Locale.html}
+     * @param languageCode language code
+     */
+    private static void setLocaleTo(String languageCode) {
+        Locale.setDefault(new Locale(languageCode, languageCode.toUpperCase()));
     }
 }  // end of Main

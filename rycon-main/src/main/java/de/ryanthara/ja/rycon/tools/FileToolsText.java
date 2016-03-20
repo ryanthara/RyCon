@@ -500,7 +500,7 @@ public class FileToolsText {
          * @param code  code as integer value
          * @param block complete block as String
          */
-        public TextHelper(int code, String block) {
+        TextHelper(int code, String block) {
 
             this.code = code;
             this.block = block;

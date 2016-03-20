@@ -44,7 +44,7 @@ import java.util.StringTokenizer;
  * @version 3
  * @since 4
  */
-public class WidgetHelper {
+class WidgetHelper {
 
     /**
      * Checks the source and destination text fields for valid files and returns the valid chosen files as file object.
@@ -54,7 +54,7 @@ public class WidgetHelper {
      * @param chosenFiles the chosen files to be checked
      * @return the valid chosen files
      */
-    public static File[] checkSourceAndDestinationTextFields(Text source, Text destination, File[] chosenFiles) {
+    static File[] checkSourceAndDestinationTextFields(Text source, Text destination, File[] chosenFiles) {
         File[] files2read = null;
 
         if (TextHelper.checkIsEmpty(source) || TextHelper.checkIsEmpty(destination)) {
@@ -62,8 +62,8 @@ public class WidgetHelper {
 
             files2read = new File[0];
         } else if (chosenFiles == null) {
-            // TODO check for spaces in file names or directory names (not easy)
             StringTokenizer st = new StringTokenizer(source.getText());
+            files2read = new File[st.countTokens()];
 
             for (int i = 0; i < st.countTokens(); i++) {
                 String s = st.nextToken();
@@ -94,9 +94,9 @@ public class WidgetHelper {
      *
      * @param files file array to be checked
      * @param acceptableFileSuffix string array with the acceptable file suffixes to be accepted
-     * @return check file array with only valid and readable file obejcts
+     * @return check file array with only valid and readable file objects
      */
-    public static File[] checkForValidFiles(File[] files, String[] acceptableFileSuffix) {
+    static File[] checkForValidFiles(File[] files, String[] acceptableFileSuffix) {
         ArrayList<File> temp = new ArrayList<>();
 
         for (File file : files) {
@@ -114,4 +114,4 @@ public class WidgetHelper {
         return temp.toArray(new File[temp.size()]);
     }
 
-}
+} // end of WidgetHelper

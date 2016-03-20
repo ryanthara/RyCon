@@ -18,6 +18,8 @@
 
 package de.ryanthara.ja.rycon.events;
 
+import java.util.EventObject;
+
 /**
  * This class implements a custom event object which is used for updating the
  * status bar with an event driven mechanism.
@@ -31,13 +33,23 @@ package de.ryanthara.ja.rycon.events;
  * @version 1
  * @since 7
  */
-public class StatusInformationEvent extends java.util.EventObject {
+public class StatusInformationEvent extends EventObject {
 
-    public String statusText;
+    private String statusText;
 
     public StatusInformationEvent(Object source, String statusText) {
         super(source);
         this.statusText = statusText;
+    }
+
+    public String getStatusText() {
+        return statusText;
+    }
+
+    @Override
+    public String toString() {
+        return this.getClass().getName() + "status text = " + statusText + " on " + source;
+
     }
 
 } // end of StatusInformationEvent

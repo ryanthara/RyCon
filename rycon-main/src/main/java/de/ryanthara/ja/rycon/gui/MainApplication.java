@@ -169,7 +169,7 @@ public class MainApplication extends Main {
         // size depends on the grid size
         shell.setSize(3 * getRyCON_GRID_WIDTH() + 20, 2 * getRyCON_GRID_HEIGHT() + 100);
 
-        shell.setLocation(ShellCenter.centerShellOnPrimaryMonitor(shell));
+        shell.setLocation(ShellPositioner.centerShellOnPrimaryMonitor(shell));
 
         shell.addShellListener(new ShellAdapter() {
             /**

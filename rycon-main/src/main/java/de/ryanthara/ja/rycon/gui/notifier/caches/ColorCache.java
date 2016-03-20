@@ -50,7 +50,7 @@ public class ColorCache {
     private static ColorCache colorCache;
     private static HashMap<RGB, Color> colorMap = new HashMap<>();
 
-    private ColorCache() {
+    public ColorCache() {
         colorCache = this;
     }
 
