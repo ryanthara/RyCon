@@ -121,7 +121,7 @@ public class FileToolsLeicaGSI {
             if (useZeroHeights) {
                 blocks.add(new GSIBlock(isGSI16, 83, lineCounter, lineSplit[3]));
             } else {
-                if (!lineSplit[4].equals("0.000000")) {
+                if (!lineSplit[3].equals("0.000000")) {
                     blocks.add(new GSIBlock(isGSI16, 83, lineCounter, lineSplit[3]));
                 }
             }
@@ -509,75 +509,6 @@ public class FileToolsLeicaGSI {
         } else {
             return new ArrayList<>();
         }
-    }
-
-    /**
-     * Prepares the read GSI data for table output.
-     * <p>
-     *
-     */
-    public void prepareTableData(boolean writeCommentLine) {
-
-        int row = 1;
-        String commentLine = "";
-
-        //This data needs to be written (Object[])
-        Map<String, Object[]> data = new TreeMap<>();
-
-        // transform lines into GSI-Blocks
-        //ArrayList<ArrayList<GSIBlock>> gsiBlocks = blockEncoder(readStringLines);
-
-        // prepare comment line if necessary
-        if (writeCommentLine) {
-            StringBuffer stringBuffer = new StringBuffer(commentLine);
-
-            for (Integer wordIndex : foundWordIndices) {
-                stringBuffer.append("\"");
-                stringBuffer.append(wordIndex.toString());
-                stringBuffer.append("\", ");
-            }
-
-            stringBuffer.deleteCharAt(stringBuffer.lastIndexOf(", "));
-            commentLine = stringBuffer.toString();
-        }
-/*
-        for (ArrayList<GSIBlock> blocksAsLines : gsiBlocks) {
-            String newLine = "";
-
-            Iterator<Integer> it = foundWordIndices.iterator();
-
-            for (int i = 0; i < foundWordIndices.size(); i++) {
-                Integer wordIndex = it.next();
-
-                String intern = "";
-
-                for (GSIBlock block : blocksAsLines) {
-                    // check the WI and fill in an empty block of spaces if WI doesn't match to 'column'
-                    if (wordIndex == block.wordIndex) {
-                        intern = block.toPrintFormatTXT();
-                        break; // important!!!
-                    } else {
-                        String emptyBlock;
-
-                        if (isGSI16) {
-                            emptyBlock = "                ";
-                        } else {
-                            emptyBlock = "        ";
-                        }
-
-                        intern = emptyBlock;
-                    }
-                }
-
-                newLine = newLine.concat(intern);
-
-                if (i < foundWordIndices.size() - 1) {
-                    newLine = newLine.concat(separator);
-                }
-            }
-            result.add(newLine);
-        }
-*/
     }
 
     /**

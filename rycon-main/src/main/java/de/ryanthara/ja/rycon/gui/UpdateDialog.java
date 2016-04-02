@@ -109,7 +109,7 @@ public class UpdateDialog extends Dialog {
      * @param parent a shell which will be the parent of the new instance
      * @param style the style of dialog to construct
      */
-    public UpdateDialog(Shell parent, int style) {
+    private UpdateDialog(Shell parent, int style) {
         super(parent, style);
         image = parent.getDisplay().getSystemImage(SWT.ICON_INFORMATION);
         message = "";

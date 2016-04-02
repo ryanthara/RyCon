@@ -86,188 +86,6 @@ public class ConverterWidget {
         initUI();
     }
 
-    private void initUI() {
-        int height = Main.getRyCONWidgetHeight();
-        int width = Main.getRyCONWidgetWidth();
-
-        GridLayout gridLayout = new GridLayout(1, true);
-        gridLayout.marginHeight = 5;
-        gridLayout.marginWidth = 5;
-
-        GridData gridData = new GridData(SWT.FILL, SWT.CENTER, true, true);
-        gridData.heightHint = height;
-        gridData.widthHint = width;
-
-        innerShell = new Shell(Main.shell, SWT.CLOSE | SWT.DIALOG_TRIM | SWT.MAX | SWT.TITLE | SWT.APPLICATION_MODAL);
-        innerShell.addListener(SWT.Close, new Listener() {
-            public void handleEvent(Event event) {
-                actionBtnCancel();
-            }
-        });
-        innerShell.setText(I18N.getWidgetTitleConverter());
-        innerShell.setSize(width, height);
-        innerShell.setLayout(gridLayout);
-        innerShell.setLayoutData(gridData);
-
-        gridLayout = new GridLayout(1, true);
-        gridLayout.marginHeight = 0;
-        gridLayout.marginWidth = 0;
-
-        createCompositeSourceTarget();
-
-        inputFieldsComposite = new InputFieldsComposite(this, innerShell, SWT.NONE);
-        inputFieldsComposite.setLayout(gridLayout);
-
-        createOptions(width);
-        createDescription(width);
-
-        new BottomButtonBar(this, innerShell, SWT.NONE);
-
-        innerShell.setLocation(ShellPositioner.centerShellOnPrimaryMonitor(innerShell));
-
-        Main.setSubShellStatus(true);
-
-        innerShell.pack();
-        innerShell.open();
-    }
-
-    private void createCompositeSourceTarget() {
-        Composite compositeSourceTarget = new Composite(innerShell, SWT.NONE);
-        GridLayout gridLayout = new GridLayout(2, true);
-        gridLayout.marginHeight = 0;
-        gridLayout.marginWidth = 0;
-        compositeSourceTarget.setLayout(gridLayout);
-
-        GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
-        compositeSourceTarget.setLayoutData(gridData);
-
-        groupSource = new Group(compositeSourceTarget, SWT.NONE);
-        groupSource.setText(I18N.getGroupTitleSourceFileFormat());
-        groupSource.setLayout(new GridLayout(2, false));
-
-        gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
-        groupSource.setLayoutData(gridData);
-
-        groupTarget = new Group(compositeSourceTarget, SWT.NONE);
-        groupTarget.setText(I18N.getGroupTitleTargetFileFormat());
-        groupTarget.setLayout(new GridLayout(2, false));
-
-        gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
-        groupTarget.setLayoutData(gridData);
-
-        SelectionListener selectionListenerSource = new SelectionAdapter() {
-            public void widgetSelected(SelectionEvent e) {
-                // control of double fired events
-                boolean isSelected = ((Button) e.getSource()).getSelection();
-                if (isSelected) {
-                    Control[] childrenSource = groupSource.getChildren();
-                    Control[] childrenTarget = groupTarget.getChildren();
-
-                    RadioHelper.toggleBtn(childrenSource, childrenTarget);
-                }
-            }
-        };
-
-        SelectionListener selectionListenerTarget = new SelectionAdapter() {
-            public void widgetSelected(SelectionEvent e) {
-                // control of double fired events
-                boolean isSelected = ((Button) e.getSource()).getSelection();
-                if (isSelected) {
-                    Control[] childrenSource = groupSource.getChildren();
-                    Control[] childrenTarget = groupTarget.getChildren();
-
-                    RadioHelper.toggleBtn(childrenTarget, childrenSource);
-                }
-
-            }
-        };
-
-        String[] formatSource = {
-                "GSI8", "GSI16", "TXT", "CSV", "CAPLAN (.K)", "cadwork (node.dat)",
-                "Basel Stadt (.CSV)", "Basel Landschaft (.TXT)"
-        };
-        // String[] formatTarget = {"GSI8", "GSI16", "TXT", "CSV", "CAPLAN", "Excel 2007 (.xlsx)","Excel '97 (.xls)"};
-        String[] formatTarget = {
-                "GSI8", "GSI16", "TXT", "CSV", "CAPLAN (.K)", "LTOP (.KOO)"
-        };
-
-        for (int i = 0; i < formatSource.length; i++) {
-            Button btnSourceFormats = new Button(groupSource, SWT.RADIO);
-            btnSourceFormats.addSelectionListener(selectionListenerSource);
-            btnSourceFormats.setText(formatSource[i]);
-
-            if (i == 1) {
-                btnSourceFormats.setSelection(true);
-            }
-        }
-
-        for (int i = 0; i < formatTarget.length; i++) {
-            Button btnTargetFormats = new Button(groupTarget, SWT.RADIO);
-            btnTargetFormats.addSelectionListener(selectionListenerTarget);
-            btnTargetFormats.setText(formatTarget[i]);
-
-            if (i == 2) {
-                btnTargetFormats.setSelection(true);
-            }
-        }
-    }
-
-    private void createOptions(int width) {
-        Group group = new Group(innerShell, SWT.NONE);
-        group.setText(I18N.getGroupTitleOptions());
-
-        GridLayout gridLayout = new GridLayout(1, true);
-        group.setLayout(gridLayout);
-
-        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
-        gridData.widthHint = width - 24;
-        group.setLayoutData(gridData);
-
-        chkBoxSourceContainsCode = new Button(group, SWT.CHECK);
-        chkBoxSourceContainsCode.setSelection(false);
-        chkBoxSourceContainsCode.setText(I18N.getBtnChkBoxSourceContainsCode());
-
-        chkBoxTXTSpaceSeparator = new Button(group, SWT.CHECK);
-        chkBoxTXTSpaceSeparator.setSelection(false);
-        chkBoxTXTSpaceSeparator.setText(I18N.getBtnChkConverterTXTSpaceSeparator());
-
-        chkBoxCSVSemiColonSeparator = new Button(group, SWT.CHECK);
-        chkBoxCSVSemiColonSeparator.setSelection(false);
-        chkBoxCSVSemiColonSeparator.setText(I18N.getBtnChkConverterCSVSemiColonSeparator());
-
-        chkBoxCadworkUseZeroHeights = new Button(group, SWT.CHECK);
-        chkBoxCadworkUseZeroHeights.setSelection(false);
-        chkBoxCadworkUseZeroHeights.setText(I18N.getBtnChkBoxCadworkUseZeroHeights());
-
-        chkBoxKFormatUseSimpleFormat = new Button(group, SWT.CHECK);
-        chkBoxKFormatUseSimpleFormat.setSelection(true);
-        chkBoxKFormatUseSimpleFormat.setText(I18N.getBtnChkBoxKFormatUseSimpleFormat());
-
-        chkBoxWriteCommentLine = new Button(group, SWT.CHECK);
-        chkBoxWriteCommentLine.setSelection(false);
-        chkBoxWriteCommentLine.setText(I18N.getBtnChkConverterWriteCommentLine());
-
-        chkBoxWriteCodeColumn = new Button(group, SWT.CHECK);
-        chkBoxWriteCodeColumn.setSelection(false);
-        chkBoxWriteCodeColumn.setText(I18N.getBtnChkBoxWriteCodeColumn());
-    }
-
-    private void createDescription(int width) {
-        Group group = new Group(innerShell, SWT.NONE);
-        group.setText(I18N.getGroupTitleGeneratorNumberInputAdvice());
-
-        GridLayout gridLayout = new GridLayout(1, true);
-        group.setLayout(gridLayout);
-
-        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
-        gridData.widthHint = width - 24;
-        group.setLayoutData(gridData);
-
-        Label tip = new Label(group, SWT.WRAP | SWT.BORDER | SWT.LEFT);
-        tip.setText(I18N.getLabelTipConverterWidget());
-        tip.setLayoutData(new GridData(SWT.HORIZONTAL, SWT.TOP, true, false, 1, 1));
-    }
-
     private void actionBtnCancel() {
         Main.setSubShellStatus(false);
         Main.statusBar.setStatus("", StatusBar.OK);
@@ -458,10 +276,191 @@ public class ConverterWidget {
                     if (RadioHelper.getSelectedBtn(childrenSource) != 5) {
                         RadioHelper.selectBtn(childrenSource, 5);
                     }
-                    RadioHelper.selectBtn(childrenTarget, 1);
                     break;
             }
         }
+    }
+
+    private void createCompositeSourceTarget() {
+        Composite compositeSourceTarget = new Composite(innerShell, SWT.NONE);
+        GridLayout gridLayout = new GridLayout(2, true);
+        gridLayout.marginHeight = 0;
+        gridLayout.marginWidth = 0;
+        compositeSourceTarget.setLayout(gridLayout);
+
+        GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
+        compositeSourceTarget.setLayoutData(gridData);
+
+        groupSource = new Group(compositeSourceTarget, SWT.NONE);
+        groupSource.setText(I18N.getGroupTitleSourceFileFormat());
+        groupSource.setLayout(new GridLayout(2, false));
+
+        gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
+        groupSource.setLayoutData(gridData);
+
+        groupTarget = new Group(compositeSourceTarget, SWT.NONE);
+        groupTarget.setText(I18N.getGroupTitleTargetFileFormat());
+        groupTarget.setLayout(new GridLayout(2, false));
+
+        gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
+        groupTarget.setLayoutData(gridData);
+
+        SelectionListener selectionListenerSource = new SelectionAdapter() {
+            public void widgetSelected(SelectionEvent e) {
+                // control of double fired events
+                boolean isSelected = ((Button) e.getSource()).getSelection();
+                if (isSelected) {
+                    Control[] childrenSource = groupSource.getChildren();
+                    Control[] childrenTarget = groupTarget.getChildren();
+
+                    RadioHelper.toggleBtn(childrenSource, childrenTarget);
+                }
+            }
+        };
+
+        SelectionListener selectionListenerTarget = new SelectionAdapter() {
+            public void widgetSelected(SelectionEvent e) {
+                // control of double fired events
+                boolean isSelected = ((Button) e.getSource()).getSelection();
+                if (isSelected) {
+                    Control[] childrenSource = groupSource.getChildren();
+                    Control[] childrenTarget = groupTarget.getChildren();
+
+                    RadioHelper.toggleBtn(childrenTarget, childrenSource);
+                }
+
+            }
+        };
+
+        String[] formatSource = {
+                "GSI8", "GSI16", "TXT", "CSV", "CAPLAN (.K)", "cadwork (node.dat)",
+                "Basel Stadt (.CSV)", "Basel Landschaft (.TXT)"
+        };
+
+        String[] formatTarget = {
+                "GSI8", "GSI16", "TXT", "CSV", "CAPLAN (.K)", "LTOP (.KOO)", "Excel 2007 (.xlsx)","Excel '97 (.xls)"
+        };
+
+        for (int i = 0; i < formatSource.length; i++) {
+            Button btnSourceFormats = new Button(groupSource, SWT.RADIO);
+            btnSourceFormats.addSelectionListener(selectionListenerSource);
+            btnSourceFormats.setText(formatSource[i]);
+
+            if (i == 1) {
+                btnSourceFormats.setSelection(true);
+            }
+        }
+
+        for (int i = 0; i < formatTarget.length; i++) {
+            Button btnTargetFormats = new Button(groupTarget, SWT.RADIO);
+            btnTargetFormats.addSelectionListener(selectionListenerTarget);
+            btnTargetFormats.setText(formatTarget[i]);
+
+            if (i == 2) {
+                btnTargetFormats.setSelection(true);
+            }
+        }
+    }
+
+    private void createDescription(int width) {
+        Group group = new Group(innerShell, SWT.NONE);
+        group.setText(I18N.getGroupTitleGeneratorNumberInputAdvice());
+
+        GridLayout gridLayout = new GridLayout(1, true);
+        group.setLayout(gridLayout);
+
+        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
+        gridData.widthHint = width - 24;
+        group.setLayoutData(gridData);
+
+        Label tip = new Label(group, SWT.WRAP | SWT.BORDER | SWT.LEFT);
+        tip.setText(I18N.getLabelTipConverterWidget());
+        tip.setLayoutData(new GridData(SWT.HORIZONTAL, SWT.TOP, true, false, 1, 1));
+    }
+
+    private void createOptions(int width) {
+        Group group = new Group(innerShell, SWT.NONE);
+        group.setText(I18N.getGroupTitleOptions());
+
+        GridLayout gridLayout = new GridLayout(1, true);
+        group.setLayout(gridLayout);
+
+        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
+        gridData.widthHint = width - 24;
+        group.setLayoutData(gridData);
+
+        chkBoxSourceContainsCode = new Button(group, SWT.CHECK);
+        chkBoxSourceContainsCode.setSelection(false);
+        chkBoxSourceContainsCode.setText(I18N.getBtnChkBoxSourceContainsCode());
+
+        chkBoxTXTSpaceSeparator = new Button(group, SWT.CHECK);
+        chkBoxTXTSpaceSeparator.setSelection(false);
+        chkBoxTXTSpaceSeparator.setText(I18N.getBtnChkConverterTXTSpaceSeparator());
+
+        chkBoxCSVSemiColonSeparator = new Button(group, SWT.CHECK);
+        chkBoxCSVSemiColonSeparator.setSelection(false);
+        chkBoxCSVSemiColonSeparator.setText(I18N.getBtnChkConverterCSVSemiColonSeparator());
+
+        chkBoxCadworkUseZeroHeights = new Button(group, SWT.CHECK);
+        chkBoxCadworkUseZeroHeights.setSelection(false);
+        chkBoxCadworkUseZeroHeights.setText(I18N.getBtnChkBoxCadworkUseZeroHeights());
+
+        chkBoxKFormatUseSimpleFormat = new Button(group, SWT.CHECK);
+        chkBoxKFormatUseSimpleFormat.setSelection(true);
+        chkBoxKFormatUseSimpleFormat.setText(I18N.getBtnChkBoxKFormatUseSimpleFormat());
+
+        chkBoxWriteCommentLine = new Button(group, SWT.CHECK);
+        chkBoxWriteCommentLine.setSelection(false);
+        chkBoxWriteCommentLine.setText(I18N.getBtnChkConverterWriteCommentLine());
+
+        chkBoxWriteCodeColumn = new Button(group, SWT.CHECK);
+        chkBoxWriteCodeColumn.setSelection(false);
+        chkBoxWriteCodeColumn.setText(I18N.getBtnChkBoxWriteCodeColumn());
+    }
+
+    private void initUI() {
+        int height = Main.getRyCONWidgetHeight();
+        int width = Main.getRyCONWidgetWidth();
+
+        GridLayout gridLayout = new GridLayout(1, true);
+        gridLayout.marginHeight = 5;
+        gridLayout.marginWidth = 5;
+
+        GridData gridData = new GridData(SWT.FILL, SWT.CENTER, true, true);
+        gridData.heightHint = height;
+        gridData.widthHint = width;
+
+        innerShell = new Shell(Main.shell, SWT.CLOSE | SWT.DIALOG_TRIM | SWT.MAX | SWT.TITLE | SWT.APPLICATION_MODAL);
+        innerShell.addListener(SWT.Close, new Listener() {
+            public void handleEvent(Event event) {
+                actionBtnCancel();
+            }
+        });
+        innerShell.setText(I18N.getWidgetTitleConverter());
+        innerShell.setSize(width, height);
+        innerShell.setLayout(gridLayout);
+        innerShell.setLayoutData(gridData);
+
+        gridLayout = new GridLayout(1, true);
+        gridLayout.marginHeight = 0;
+        gridLayout.marginWidth = 0;
+
+        createCompositeSourceTarget();
+
+        inputFieldsComposite = new InputFieldsComposite(this, innerShell, SWT.NONE);
+        inputFieldsComposite.setLayout(gridLayout);
+
+        createOptions(width);
+        createDescription(width);
+
+        new BottomButtonBar(this, innerShell, SWT.NONE);
+
+        innerShell.setLocation(ShellPositioner.centerShellOnPrimaryMonitor(innerShell));
+
+        Main.setSubShellStatus(true);
+
+        innerShell.pack();
+        innerShell.open();
     }
 
     private boolean processFileOperations() {
@@ -482,27 +481,14 @@ public class ConverterWidget {
         for (File file2read : files2read) {
             boolean readFileSuccess = false;
 
-            LineReader lineReader;
-
             List<String[]> readCSVFile = null;
             ArrayList<String> readFile = null;
-            ArrayList<String> writeFile = null;
-
-            FileToolsCaplanK toolsCaplanK;
-            FileToolsCSV toolsCSV;
-            FileToolsLeicaGSI toolsLeicaGSI;
-            FileToolsLTOP toolsLTOP;
-            FileToolsText toolsText;
-
-            String separator;
 
             // read files
             switch (sourceNumber) {
                 case 0:     // fall through for GSI8 format
                 case 1:     // GSI16 format
-                    lineReader = new LineReader(file2read);
-                    if (lineReader.readFile()) {
-                        readFile = lineReader.getLines();
+                    if ((readFile = readLineBasedFile(file2read)) != null) {
                         readFileSuccess = true;
                     } else {
                         readErrorHandler(file2read, I18N.getMsgConvertReaderGSIFailed());
@@ -510,9 +496,7 @@ public class ConverterWidget {
                     break;
 
                 case 2:     // TXT format (tabulator or space separated)
-                    lineReader = new LineReader(file2read);
-                    if (lineReader.readFile()) {
-                        readFile = lineReader.getLines();
+                    if ((readFile = readLineBasedFile(file2read)) != null) {
                         readFileSuccess = true;
                     } else {
                         readErrorHandler(file2read, I18N.getMsgConvertReaderTXTFailed());
@@ -520,11 +504,7 @@ public class ConverterWidget {
                     break;
 
                 case 3:     // CSV format (comma or semicolon separated)
-                    char separatorCSV = ',';
-
-                    if (chkBoxCSVSemiColonSeparator.getSelection()) {
-                        separatorCSV = ';';
-                    }
+                    char separatorCSV = chkBoxCSVSemiColonSeparator.getSelection() ? ';' : ',';
 
                     // use opencsv project for reading -> could this be done better?
                     try {
@@ -537,9 +517,7 @@ public class ConverterWidget {
                     break;
 
                 case 4:     // cadwork node.dat format from the cadwork CAD program
-                    lineReader = new LineReader(file2read);
-                    if (lineReader.readFile()) {
-                        readFile = lineReader.getLines();
+                    if ((readFile = readLineBasedFile(file2read)) != null) {
                         readFileSuccess = true;
                     } else {
                         readErrorHandler(file2read, I18N.getMsgConvertReaderCadworkFailed());
@@ -547,9 +525,7 @@ public class ConverterWidget {
                     break;
 
                 case 5:     // CAPLAN K format file
-                    lineReader = new LineReader(file2read);
-                    if (lineReader.readFile()) {
-                        readFile = lineReader.getLines();
+                    if ((readFile = readLineBasedFile(file2read)) != null) {
                         readFileSuccess = true;
                     } else {
                         readErrorHandler(file2read, I18N.getMsgConvertReaderCaplanFailed());
@@ -567,9 +543,7 @@ public class ConverterWidget {
                     break;
 
                 case 7:     // TXT format from the geodata server 'Basel Landschaft' (https://www.geo.bl.ch/)
-                    lineReader = new LineReader(file2read);
-                    if (lineReader.readFile()) {
-                        readFile = lineReader.getLines();
+                    if ((readFile = readLineBasedFile(file2read)) != null) {
                         readFileSuccess = true;
                     } else {
                         readErrorHandler(file2read, I18N.getMsgConvertReaderBaselLandschaftFailed());
@@ -578,9 +552,18 @@ public class ConverterWidget {
             }
 
             if (readFileSuccess) {  // write files
-
                 // helper for conversion
                 ArrayList<String> stopOver;
+                ArrayList<String> writeFile = null;
+
+                FileToolsCaplanK toolsCaplanK;
+                FileToolsCSV toolsCSV;
+                FileToolsLeicaGSI toolsLeicaGSI;
+                FileToolsLTOP toolsLTOP;
+                FileToolsSpreadsheet spreadsheet = null;
+                FileToolsText toolsText;
+
+                String separator;
 
                 switch (targetNumber) {
                     case 0:     // target format: GSI8 format
@@ -686,11 +669,8 @@ public class ConverterWidget {
                         break;
 
                     case 2:     // target format: TXT format (space or tabulator separated)
-                        if (chkBoxTXTSpaceSeparator.getSelection()) {
-                            separator = Main.getSeparatorSpace();
-                        } else {
-                            separator = Main.getSeparatorTab();
-                        }
+                        separator = chkBoxTXTSpaceSeparator.getSelection() ? Main.getSeparatorSpace() : Main.getSeparatorTab();
+
                         switch (sourceNumber) {
                             case 0:     // fall through for GSI8 format
                             case 1:     // GSI16 format
@@ -736,14 +716,10 @@ public class ConverterWidget {
                         break;
 
                     case 3:     // target format: CSV format (comma or semicolon separated)
-
                         FileToolsCSV stopOverFile;  // helper for converting
 
-                        if (chkBoxCSVSemiColonSeparator.getSelection()) {
-                            separator = Main.getSeparatorSemicolon();
-                        } else {
-                            separator = Main.getSeparatorComma();
-                        }
+                        separator = chkBoxCSVSemiColonSeparator.getSelection() ? Main.getSeparatorSemicolon() : Main.getSeparatorComma();
+
                         switch (sourceNumber) {
                             case 0:     // fall through for GSI8 format
                             case 1:     // GSI16 format
@@ -818,7 +794,6 @@ public class ConverterWidget {
                                 break;
 
                             case 4:     // CAPLAN K format (not possible)
-
                                 break;
 
                             case 5:     // cadwork node.dat from cadwork CAD program
@@ -855,23 +830,35 @@ public class ConverterWidget {
                                 toolsLTOP = new FileToolsLTOP(readFile);
                                 writeFile = toolsLTOP.convertGSI2KOO();
                                 break;
+
                             case 2:     // TXT format (space or tabulator separated)
+                                toolsLTOP = new FileToolsLTOP(readFile);
+                                writeFile = toolsLTOP.convertTXT2KOO();
                                 break;
+
                             case 3:     // CSV format (comma or semicolon separated)
+                                toolsLTOP = new FileToolsLTOP(readCSVFile);
+                                writeFile = toolsLTOP.convertCSV2KOO();
                                 break;
 
                             case 4:     // CAPLAN K format
+                                toolsLTOP = new FileToolsLTOP(readFile);
+                                writeFile = toolsLTOP.convertK2KOO();
                                 break;
 
                             case 5:     // cadwork node.dat from cadwork CAD program
+                                toolsLTOP = new FileToolsLTOP(readFile);
+                                writeFile = toolsLTOP.convertCadwork2KOO(chkBoxCadworkUseZeroHeights.getSelection());
                                 break;
 
-                            case 6:     // LTOP KOO format (not possible)
-
-                            case 7:     // CSV format 'Basel Stadt' (semicolon separated)
+                            case 6:     // CSV format 'Basel Stadt' (semicolon separated)
+                                toolsLTOP = new FileToolsLTOP(readCSVFile);
+                                writeFile = toolsLTOP.convertCSVBaselStadt2KOO();
                                 break;
 
-                            case 8:     // TXT format 'Basel Landschaft' (different column based text files for LFP and HFP points)
+                            case 7:     // TXT format 'Basel Landschaft' (different column based text files for LFP and HFP points)
+                                toolsLTOP = new FileToolsLTOP(readFile);
+                                writeFile = toolsLTOP.convertTXTBaselLandschaft2KOO();
                                 break;
                         }
                         if (writeFile2Disk(file2read, writeFile, ".KOO")) {
@@ -883,27 +870,41 @@ public class ConverterWidget {
                         switch (sourceNumber) {
                             case 0:     // fall through for GSI8 format
                             case 1:     // GSI16 format
-                                // process file operations
-                                toolsLeicaGSI = new FileToolsLeicaGSI(readFile);
-                                toolsLeicaGSI.prepareTableData(chkBoxWriteCommentLine.getSelection());
+                                spreadsheet = new FileToolsSpreadsheet(readFile);
+                                spreadsheet.convertGSI2XLSX(file2read.getName());
                                 break;
                             case 2:     // TXT format (space or tabulator separated)
+                                spreadsheet = new FileToolsSpreadsheet(readFile);
+                                spreadsheet.convertTXT2XLSX();
                                 break;
                             case 3:     // CSV format (comma or semicolon separated)
+                                spreadsheet = new FileToolsSpreadsheet(readCSVFile);
+                                spreadsheet.convertCSV2XLSX();
                                 break;
 
                             case 4:     // CAPLAN K format
+                                spreadsheet = new FileToolsSpreadsheet(readFile);
+                                spreadsheet.convertK2XLSX();
                                 break;
 
                             case 5:     // cadwork node.dat from cadwork CAD program
+                                spreadsheet = new FileToolsSpreadsheet(readFile);
+                                spreadsheet.convertCadwork2XLSX();
                                 break;
 
                             case 6:     // CSV format 'Basel Stadt' (semicolon separated)
+                                spreadsheet = new FileToolsSpreadsheet(readCSVFile);
+                                spreadsheet.convertCSVBaselStadt2XLSX();
                                 break;
 
                             case 7:     // TXT format 'Basel Landschaft' (different column based text files for LFP and HFP points)
-                               break;
+                                spreadsheet = new FileToolsSpreadsheet(readFile);
+                                spreadsheet.convertTXTBaseStadt2XLSX();
+                                break;
 
+                        }
+                        if (writeSpreadsheet2Disk(file2read, spreadsheet, ".xlsx")) {
+                            counter++;
                         }
 
                         break;
@@ -912,26 +913,40 @@ public class ConverterWidget {
                         switch (sourceNumber) {
                             case 0:     // fall through for GSI8 format
                             case 1:     // GSI16 format
-                                // process file operations
-                                toolsLeicaGSI = new FileToolsLeicaGSI(readFile);
-                                toolsLeicaGSI.prepareTableData(chkBoxWriteCommentLine.getSelection());
+                                spreadsheet = new FileToolsSpreadsheet(readFile);
+                                spreadsheet.convertGSI2XLS(file2read.getName(), chkBoxWriteCommentLine.getSelection());
                                 break;
                             case 2:     // TXT format (space or tabulator separated)
+                                spreadsheet = new FileToolsSpreadsheet(readFile);
+                                spreadsheet.convertTXT2XLS();
                                 break;
                             case 3:     // CSV format (comma or semicolon separated)
+                                spreadsheet = new FileToolsSpreadsheet(readCSVFile);
+                                spreadsheet.convertCSV2XLS();
                                 break;
 
                             case 4:     // CAPLAN K format
-
+                                spreadsheet = new FileToolsSpreadsheet(readFile);
+                                spreadsheet.convertK2XLS();
                                 break;
+
                             case 5:     // cadwork node.dat from cadwork CAD program
+                                spreadsheet = new FileToolsSpreadsheet(readFile);
+                                spreadsheet.convertCadwork2XLS();
                                 break;
 
                             case 6:     // CSV format 'Basel Stadt' (semicolon separated)
+                                spreadsheet = new FileToolsSpreadsheet(readCSVFile);
+                                spreadsheet.convertCSVBaselStadt2XLS();
                                 break;
 
                             case 7:     // TXT format 'Basel Landschaft' (different column based text files for LFP and HFP points)
+                                spreadsheet = new FileToolsSpreadsheet(readFile);
+                                spreadsheet.convertTXTBaseStadt2XLS();
                                 break;
+                        }
+                        if (writeSpreadsheet2Disk(file2read, spreadsheet, ".xls")) {
+                            counter++;
                         }
                         break;
 
@@ -966,12 +981,20 @@ public class ConverterWidget {
         GuiHelper.showMessageBox(innerShell, SWT.ICON_ERROR, I18N.getMsgBoxTitleError(), message);
     }
 
-    private boolean writeFile2Disk(File file2read, ArrayList<String> writeFile, String suffix) {
-        String fileName = file2read.toString().substring(0, file2read.toString().length() - 4) + "_" + Main.getParamEditString() + suffix;
+    private ArrayList<String> readLineBasedFile(File file2read) {
+        LineReader lineReader = new LineReader(file2read);
+        if (lineReader.readFile()) {
+            return lineReader.getLines();
+        } else {
+            return null;
+        }
+    }
 
-        File file = new File(fileName);
+    private boolean writeFile2Disk(File file, ArrayList<String> writeFile, String suffix) {
+        String fileName = prepareOutputFileName(file, suffix);
+        File f = new File(fileName);
 
-        if (file.exists()) {
+        if (f.exists()) {
             int returnValue = GuiHelper.showMessageBox(innerShell, SWT.ICON_WARNING | SWT.YES | SWT.NO,
                     I18N.getMsgBoxTitleWarning(), String.format(I18N.getMsgFileExist(), fileName));
 
@@ -986,6 +1009,42 @@ public class ConverterWidget {
         } else {
             return new LineWriter(fileName).writeFile(writeFile);
         }
+    }
+
+    private boolean writeSpreadsheet2Disk(File file, FileToolsSpreadsheet spreadsheet, String suffix) {
+        String fileName = prepareOutputFileName(file, suffix);
+        File f = new File(fileName);
+
+        if (f.exists()) {
+            int returnValue = GuiHelper.showMessageBox(innerShell, SWT.ICON_WARNING | SWT.YES | SWT.NO,
+                    I18N.getMsgBoxTitleWarning(), String.format(I18N.getMsgFileExist(), fileName));
+
+            if (returnValue == SWT.YES) {
+                if (suffix.equalsIgnoreCase(".xls")) {
+                    return spreadsheet.writeXLS(f);
+                } else if (suffix.equalsIgnoreCase(".xlsx")) {
+                    return spreadsheet.writeXLSX(f);
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+
+        } else {
+            if (suffix.equalsIgnoreCase(".xls")) {
+                return spreadsheet.writeXLS(f);
+            } else if (suffix.equalsIgnoreCase(".xlsx")) {
+                return spreadsheet.writeXLSX(f);
+            } else {
+                return false;
+            }
+        }
+
+    }
+
+    private String prepareOutputFileName(File file, String suffix) {
+        return file.toString().substring(0, file.toString().length() - 4) + "_" + Main.getParamEditString() + suffix;
     }
 
 } // end of ConverterWidget

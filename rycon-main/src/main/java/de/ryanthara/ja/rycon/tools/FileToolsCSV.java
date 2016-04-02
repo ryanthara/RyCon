@@ -43,17 +43,17 @@ import java.util.TreeSet;
 public class FileToolsCSV {
 
     private ArrayList<String> readStringLines;
-    private List<String[]> list;
+    private List<String[]> readCSVLines;
 
     /**
      * Class Constructor with parameter.
      * <p>
      * As parameter the {@code ArrayList<String>} object with the lines in text format is used.
      *
-     * @param arrayList {@code ArrayList<String>} with lines in text format
+     * @param readStringLines {@code ArrayList<String>} with lines in text format
      */
-    public FileToolsCSV(ArrayList<String> arrayList) {
-        this.readStringLines = arrayList;
+    public FileToolsCSV(ArrayList<String> readStringLines) {
+        this.readStringLines = readStringLines;
     }
 
     /**
@@ -61,10 +61,10 @@ public class FileToolsCSV {
      * <p>
      * As parameter the {@code List<String[]>} object with the lines in csv format is used.
      *
-     * @param list {@code List<String[]>} with lines in csv format
+     * @param readCSVLines {@code List<String[]>} with lines in csv format
      */
-    public FileToolsCSV(List<String[]> list) {
-        this.list = list;
+    public FileToolsCSV(List<String[]> readCSVLines) {
+        this.readCSVLines = readCSVLines;
     }
 
     /**
@@ -139,7 +139,7 @@ public class FileToolsCSV {
             if (useZeroHeights) {
                 s = s.concat(lineSplit[3]);
             } else {
-                if (!lineSplit[4].equals("0.000000")) {
+                if (!lineSplit[3].equals("0.000000")) {
                     s = s.concat(lineSplit[3]);
                 }
             }
@@ -161,7 +161,7 @@ public class FileToolsCSV {
     public ArrayList<String> convertCSVBaselStadt2CSV(String separator) {
         ArrayList<String> result = new ArrayList<>();
 
-        for (String[] stringField : list) {
+        for (String[] stringField : readCSVLines) {
             String line;
 
             // point number is in column 1

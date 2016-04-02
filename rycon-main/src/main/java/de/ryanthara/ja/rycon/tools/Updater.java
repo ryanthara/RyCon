@@ -129,7 +129,7 @@ public class Updater {
 
                 if (majorVersion > Version.getMajorVersionNumber()) {
                     updateAvailable = true;
-                } else if (majorVersion == Version.getMajorVersionNumber() & minorVersion > Version.getMinorVersionNumber()) {
+                } else if (majorVersion == Version.getMajorVersionNumber() && minorVersion > Version.getMinorVersionNumber()) {
                     updateAvailable = true;
                 } else if (build > Version.getBuildNumber()){
                     updateAvailable = true;
