@@ -16,9 +16,7 @@
  * this package. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.ryanthara.ja.rycon.data;
-
-import de.ryanthara.ja.rycon.tools.Messages;
+package de.ryanthara.ja.rycon.i18n;
 
 /**
  * This class implements multi-language support to RyCON.
@@ -840,6 +838,10 @@ public class I18N {
 
     public static String getWidgetTitleTidyUp() {
         return Messages.getString("widgetTitleTidyUp");
+    }
+
+    public static String getWordIndexDescription(int wordIndex) {
+        return GSIWordIndices.getWordIndexDescription(wordIndex);
     }
 
     /**

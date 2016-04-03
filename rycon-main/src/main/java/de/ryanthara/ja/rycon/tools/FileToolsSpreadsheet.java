@@ -18,12 +18,10 @@
 
 package de.ryanthara.ja.rycon.tools;
 
+import de.ryanthara.ja.rycon.i18n.I18N;
 import de.ryanthara.ja.rycon.tools.elements.GSIBlock;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.WorkbookUtil;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -52,8 +50,17 @@ public class FileToolsSpreadsheet {
 
     private ArrayList<String> readStringLines;
     private List<String[]> readCSVLines;
-
     private Workbook workbook;
+
+    /**
+     * Member which helps distinguish between XLS and XLSX file format.
+     */
+    public static boolean isXLS = true;
+
+    /**
+     * Member which helps distinguish between XLS and XLSX file format.
+     */
+    public static boolean isXLSX = false;
 
     /**
      * Class Constructor with parameter.
@@ -77,38 +84,37 @@ public class FileToolsSpreadsheet {
         this.readCSVLines = readCSVLines;
     }
 
-    public boolean convertCSV2XLS() {
+    public boolean convertCSV2Excel() {
         return false;
     }
 
-    public boolean convertCSV2XLSX() {
+    public boolean convertCSVBaselStadt2Excel() {
         return false;
     }
 
-    public boolean convertCSVBaselStadt2XLS() {
+    public boolean convertCadwork2Excel() {
         return false;
     }
 
-    public boolean convertCSVBaselStadt2XLSX() {
-        return false;
-    }
-
-    public boolean convertCadwork2XLS() {
-        return false;
-    }
-
-    public boolean convertCadwork2XLSX() {
-        return false;
-    }
-
-    public boolean convertGSI2XLS(String sheetName, boolean writeCommentRow) {
+    public boolean convertGSI2Excel(boolean isExcel, String sheetName, boolean writeCommentRow) {
 
         // general preparation of the workbook
-        workbook = new HSSFWorkbook();
+        if (isExcel) {
+            workbook = new HSSFWorkbook();
+        } else {
+            workbook = new XSSFWorkbook();
+        }
+
         String safeName = WorkbookUtil.createSafeSheetName(sheetName);
-        Sheet sheet1 = workbook.createSheet(safeName);
-        Row row = null;
-        Cell cell = null;
+        Sheet sheet = workbook.createSheet(safeName);
+        Row row;
+        Cell cell;
+        CellStyle cellStyle;
+
+        DataFormat format = workbook.createDataFormat();
+
+        short rowNumber = 0;
+        short cellNumber = 0;
 
         // preparation of the read gsi file
         FileToolsLeicaGSI gsiTools = new FileToolsLeicaGSI(readStringLines);
@@ -116,153 +122,132 @@ public class FileToolsSpreadsheet {
 
         // write comment row
         if (writeCommentRow) {
+            row = sheet.createRow(rowNumber);
+            rowNumber++;
 
+            for (int wordIndex: gsiTools.getFoundWordIndices()) {
+                cell = row.createCell(cellNumber);
+                cellNumber++;
+
+                cell.setCellValue(I18N.getWordIndexDescription(wordIndex));
+            }
         }
-
-        short rowNumber = 0;
 
         // fill gsi content into rows and cells
         for (ArrayList<GSIBlock> blocksAsLines : blocksInLines) {
 
-            // create a row
-            row = sheet1.createRow(rowNumber);
+            row = sheet.createRow(rowNumber);
             rowNumber++;
 
-            short cellNumber = 0;
+            cellNumber = 0;
+
             for (GSIBlock block : blocksAsLines) {
-                switch (block.getWordIndex()) {
-                    /*
-                    GENERAL
-                    11	Point number (includes block number)
-                    12	Instrument serial no
-                    13	Instrument type
-                    18	Time format 1: pos. 8-9 year, 10-11 sec, 12-14 msec
-                    19	Time format 2 : pos, 8-9 month 10-11 day, 12-13 hour, 14-15 min
-                     */
-
-                    case 11:
-                    case 19:
-                        break;
-
-                    /*
-                    ANGLES
-                    21	Horizontal Circle (Hz)
-                    22	Vertical Angle (V)
-                    25	Horizontal circle difference (Hz0-Hz)
-
-                     */
-                    case 21:
-                    case 22:
-                        break;
-                    case 25:
-                        break;
-
-                    /*
-                    DISTANCE
-                    31	Slope Distance
-                    32	Horizontal Distance
-                    33	Height Difference
-                     */
-                    case 31:
-                    case 33:
-                        break;
-
-                    /*
-                    CODE BLOCK
-                    41	Code number ( include block number)
-                    42 – 49	Information 1-8
-                     */
-                    case 41:
-                        break;
-                    case 42:
-                    case 49:
-                        break;
-
-                    /*
-                    DISTANCE (additional information)
-                    51	Constants(ppm, mm)
-                    52	Number of measurements, standard deviation
-                    53	Deviation
-                    58	Signal strength
-                    59	Reflector constant (1/10 mm)ppm
-                     */
-                    case 51:
-                    case 53:
-                        break;
-                    case 58:
-                    case 59:
-                        break;
-
-                    /*
-                    POINT CODING
-                    71	Point Code
-                    72 – 79	Attribute 1-8
-                     */
-                    case 71:
-                        break;
-                    case 72:
-                    case 79:
-                        break;
-
-                    /*
-                    COORDINATES
-                    81	Easting (Target)
-                    82	Northing (Target)
-                    83	Elevation (Target)
-                    84	Station Easting (Eo)
-                    85	Station Northing (No)
-                    86	Station Elevation (Ho)
-                    87	Reflector height (above ground)
-                    88	Instrument height (above ground)
-                     */
-                    case 81:
-                    case 88:
-                        break;
-                }
 
                 cell = row.createCell(cellNumber);
                 cellNumber++;
-                cell.setCellValue(block.toPrintFormatCSV());
+
+                switch (block.getWordIndex()) {
+                    // GENERAL
+                    case 11:    // Point number (includes block number)
+                    case 12:    // Instrument serial no
+                    case 13:    // Instrument type
+                    case 18:    // Time format 1: pos. 8-9 year, 10-11 sec, 12-14 msec
+                    case 19:    // Time format 2 : pos, 8-9 month 10-11 day, 12-13 hour, 14-15 min
+                        cell.setCellValue(block.toPrintFormatCSV());
+                        break;
+
+                    // ANGLES
+                    case 21:    // Horizontal Circle (Hz)
+                    case 22:    // Vertical Angle (V)
+                    case 25:    // Horizontal circle difference (Hz0-Hz)
+                        cell.setCellValue(Double.parseDouble(block.toPrintFormatCSV()));
+                        break;
+
+                    // DISTANCE
+                    case 31:    // Slope Distance
+                    case 32:    // Horizontal Distance
+                    case 33:    // Height Difference
+                        cell.setCellValue(Double.parseDouble(block.toPrintFormatCSV()));
+                        break;
+
+                    // CODE BLOCK
+                    case 41:    // Code number ( include block number)
+                    case 42:    // Information 1
+                    case 43:    // Information 2
+                    case 44:    // Information 3
+                    case 45:    // Information 4
+                    case 46:    // Information 5
+                    case 47:    // Information 6
+                    case 48:    // Information 7
+                    case 49:    // Information 8
+                        cell.setCellValue(block.toPrintFormatCSV());
+                        break;
+
+                    // DISTANCE (additional information)
+                    case 51:    // Constants(ppm, mm)
+                    case 52:    // Number of measurements, standard deviation
+                    case 53:    // Deviation
+                    case 58:    // Signal strength
+                    case 59:    // Reflector constant (1/10 mm)ppm
+                        cell.setCellValue(block.toPrintFormatCSV());
+                        break;
+
+                    // POINT CODING
+                    case 71:    // Point Code
+                    case 72:    // Attribute 1
+                    case 73:    // Attribute 2
+                    case 74:    // Attribute 3
+                    case 75:    // Attribute 4
+                    case 76:    // Attribute 5
+                    case 77:    // Attribute 6
+                    case 78:    // Attribute 7
+                    case 79:    // Attribute 8
+                        cell.setCellValue(block.toPrintFormatCSV());
+                        break;
+
+                    // COORDINATES
+                    case 81:    // Easting (Target)
+                    case 82:    // Northing (Target)
+                    case 83:    // Elevation (Target)
+                    case 84:    // Station Easting (E0)
+                    case 85:    // Station Northing (N0)
+                    case 86:    // Station Elevation (H0)
+                        cell.setCellValue(Double.parseDouble(block.toPrintFormatCSV()));
+                        cellStyle = workbook.createCellStyle();
+                        cellStyle.setDataFormat(format.getFormat("#,##0.0000"));
+                        cellStyle.setVerticalAlignment(CellStyle.ALIGN_RIGHT);
+                        cell.setCellStyle(cellStyle);
+                        break;
+                    case 87:    // Reflector height (above ground)
+                    case 88:    // Instrument height (above ground)
+                        cell.setCellValue(Double.parseDouble(block.toPrintFormatCSV()));
+                        cellStyle = workbook.createCellStyle();
+                        cellStyle.setDataFormat(format.getFormat("#,##0.000"));
+                        cellStyle.setVerticalAlignment(CellStyle.ALIGN_RIGHT);
+                        cell.setCellStyle(cellStyle);
+                        break;
+                }
 
              }
+        }
+
+        //adjust column width to fit the content
+        for (int i = 0; i < blocksInLines.size(); i++) {
+            sheet.autoSizeColumn((short)i);
         }
 
         return false;
     }
 
-    public boolean convertGSI2XLSX(String sheetName) {
-        workbook = new XSSFWorkbook();
-
-        String safeName = WorkbookUtil.createSafeSheetName(sheetName);
-        Sheet sheet1 = workbook.createSheet(safeName);
-
-        // prepare table data
-
-
+    public boolean convertK2Excel() {
         return false;
     }
 
-    public boolean convertK2XLS() {
+    public boolean convertTXT2Excel() {
         return false;
     }
 
-    public boolean convertK2XLSX() {
-        return false;
-    }
-
-    public boolean convertTXT2XLS() {
-        return false;
-    }
-
-    public boolean convertTXT2XLSX() {
-        return false;
-    }
-
-    public boolean convertTXTBaseStadt2XLS() {
-        return false;
-    }
-
-    public boolean convertTXTBaseStadt2XLSX() {
+    public boolean convertTXTBaseStadt2Excel() {
         return false;
     }
 

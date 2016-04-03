@@ -16,7 +16,7 @@
  * this package. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.ryanthara.ja.rycon.tools;
+package de.ryanthara.ja.rycon.i18n;
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -37,7 +37,7 @@ import java.util.ResourceBundle;
  * @since 1
  *
  */
-public class Messages {
+class Messages {
 
     private static final String BUNDLE_NAME = "de/ryanthara/ja/rycon/gui/RyCON";
     private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
@@ -48,7 +48,7 @@ public class Messages {
      * @param key key to look up
      * @return matched text
      */
-    public static String getString(String key) {
+    static String getString(String key) {
         try {
             return RESOURCE_BUNDLE.getString(key);
         } catch (MissingResourceException e) {

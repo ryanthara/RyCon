@@ -19,8 +19,8 @@
 package de.ryanthara.ja.rycon.gui;
 
 import de.ryanthara.ja.rycon.Main;
-import de.ryanthara.ja.rycon.data.I18N;
 import de.ryanthara.ja.rycon.data.PreferenceHandler;
+import de.ryanthara.ja.rycon.i18n.I18N;
 import de.ryanthara.ja.rycon.tools.SimpleChecker;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;

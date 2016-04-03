@@ -20,8 +20,8 @@ package de.ryanthara.ja.rycon.gui;
 
 import com.opencsv.CSVReader;
 import de.ryanthara.ja.rycon.Main;
-import de.ryanthara.ja.rycon.data.I18N;
 import de.ryanthara.ja.rycon.data.PreferenceHandler;
+import de.ryanthara.ja.rycon.i18n.I18N;
 import de.ryanthara.ja.rycon.io.LineReader;
 import de.ryanthara.ja.rycon.io.LineWriter;
 import de.ryanthara.ja.rycon.tools.*;
@@ -871,35 +871,36 @@ public class ConverterWidget {
                             case 0:     // fall through for GSI8 format
                             case 1:     // GSI16 format
                                 spreadsheet = new FileToolsSpreadsheet(readFile);
-                                spreadsheet.convertGSI2XLSX(file2read.getName());
+                                spreadsheet.convertGSI2Excel(FileToolsSpreadsheet.isXLSX, file2read.getName(),
+                                        chkBoxWriteCommentLine.getSelection());
                                 break;
                             case 2:     // TXT format (space or tabulator separated)
                                 spreadsheet = new FileToolsSpreadsheet(readFile);
-                                spreadsheet.convertTXT2XLSX();
+                                spreadsheet.convertTXT2Excel();
                                 break;
                             case 3:     // CSV format (comma or semicolon separated)
                                 spreadsheet = new FileToolsSpreadsheet(readCSVFile);
-                                spreadsheet.convertCSV2XLSX();
+                                spreadsheet.convertCSV2Excel();
                                 break;
 
                             case 4:     // CAPLAN K format
                                 spreadsheet = new FileToolsSpreadsheet(readFile);
-                                spreadsheet.convertK2XLSX();
+                                spreadsheet.convertK2Excel();
                                 break;
 
                             case 5:     // cadwork node.dat from cadwork CAD program
                                 spreadsheet = new FileToolsSpreadsheet(readFile);
-                                spreadsheet.convertCadwork2XLSX();
+                                spreadsheet.convertCadwork2Excel();
                                 break;
 
                             case 6:     // CSV format 'Basel Stadt' (semicolon separated)
                                 spreadsheet = new FileToolsSpreadsheet(readCSVFile);
-                                spreadsheet.convertCSVBaselStadt2XLSX();
+                                spreadsheet.convertCSVBaselStadt2Excel();
                                 break;
 
                             case 7:     // TXT format 'Basel Landschaft' (different column based text files for LFP and HFP points)
                                 spreadsheet = new FileToolsSpreadsheet(readFile);
-                                spreadsheet.convertTXTBaseStadt2XLSX();
+                                spreadsheet.convertTXTBaseStadt2Excel();
                                 break;
 
                         }
@@ -914,35 +915,36 @@ public class ConverterWidget {
                             case 0:     // fall through for GSI8 format
                             case 1:     // GSI16 format
                                 spreadsheet = new FileToolsSpreadsheet(readFile);
-                                spreadsheet.convertGSI2XLS(file2read.getName(), chkBoxWriteCommentLine.getSelection());
+                                spreadsheet.convertGSI2Excel(FileToolsSpreadsheet.isXLS, file2read.getName(),
+                                        chkBoxWriteCommentLine.getSelection());
                                 break;
                             case 2:     // TXT format (space or tabulator separated)
                                 spreadsheet = new FileToolsSpreadsheet(readFile);
-                                spreadsheet.convertTXT2XLS();
+                                spreadsheet.convertTXT2Excel();
                                 break;
                             case 3:     // CSV format (comma or semicolon separated)
                                 spreadsheet = new FileToolsSpreadsheet(readCSVFile);
-                                spreadsheet.convertCSV2XLS();
+                                spreadsheet.convertCSV2Excel();
                                 break;
 
                             case 4:     // CAPLAN K format
                                 spreadsheet = new FileToolsSpreadsheet(readFile);
-                                spreadsheet.convertK2XLS();
+                                spreadsheet.convertK2Excel();
                                 break;
 
                             case 5:     // cadwork node.dat from cadwork CAD program
                                 spreadsheet = new FileToolsSpreadsheet(readFile);
-                                spreadsheet.convertCadwork2XLS();
+                                spreadsheet.convertCadwork2Excel();
                                 break;
 
                             case 6:     // CSV format 'Basel Stadt' (semicolon separated)
                                 spreadsheet = new FileToolsSpreadsheet(readCSVFile);
-                                spreadsheet.convertCSVBaselStadt2XLS();
+                                spreadsheet.convertCSVBaselStadt2Excel();
                                 break;
 
                             case 7:     // TXT format 'Basel Landschaft' (different column based text files for LFP and HFP points)
                                 spreadsheet = new FileToolsSpreadsheet(readFile);
-                                spreadsheet.convertTXTBaseStadt2XLS();
+                                spreadsheet.convertTXTBaseStadt2Excel();
                                 break;
                         }
                         if (writeSpreadsheet2Disk(file2read, spreadsheet, ".xls")) {

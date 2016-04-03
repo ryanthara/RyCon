@@ -20,11 +20,11 @@ package de.ryanthara.ja.rycon;
 
 import de.ryanthara.ja.rycon.cli.CmdLineInterfaceException;
 import de.ryanthara.ja.rycon.cli.CmdLineInterfaceParser;
-import de.ryanthara.ja.rycon.data.I18N;
 import de.ryanthara.ja.rycon.data.PreferenceHandler;
 import de.ryanthara.ja.rycon.gui.GuiHelper;
 import de.ryanthara.ja.rycon.gui.StatusBar;
 import de.ryanthara.ja.rycon.gui.UpdateDialog;
+import de.ryanthara.ja.rycon.i18n.I18N;
 import de.ryanthara.ja.rycon.tools.Updater;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;

@@ -19,7 +19,7 @@
 package de.ryanthara.ja.rycon.gui;
 
 import de.ryanthara.ja.rycon.Main;
-import de.ryanthara.ja.rycon.data.I18N;
+import de.ryanthara.ja.rycon.i18n.I18N;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;

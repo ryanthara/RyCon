@@ -19,8 +19,8 @@
 package de.ryanthara.ja.rycon.gui;
 
 import de.ryanthara.ja.rycon.Main;
-import de.ryanthara.ja.rycon.data.I18N;
 import de.ryanthara.ja.rycon.data.PreferenceHandler;
+import de.ryanthara.ja.rycon.i18n.I18N;
 import de.ryanthara.ja.rycon.io.LineReader;
 import de.ryanthara.ja.rycon.io.LineWriter;
 import de.ryanthara.ja.rycon.tools.FileToolsLeicaGSI;

@@ -17,8 +17,8 @@
  */
 package de.ryanthara.ja.rycon.tools;
 
-import de.ryanthara.ja.rycon.data.I18N;
 import de.ryanthara.ja.rycon.data.Version;
+import de.ryanthara.ja.rycon.i18n.I18N;
 import de.ryanthara.ja.rycon.tools.elements.GSIBlock;
 
 import java.text.DateFormat;
