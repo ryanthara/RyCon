@@ -63,7 +63,6 @@ public class FileToolsCaplanK {
     private final String height = "             ";
     private final String freeSpace = " ";
     private final String objectTyp = "";
-    private final String attr = "";
 
     private ArrayList<String> readStringLines;
     private List<String[]> readCSVLines;
@@ -189,6 +188,111 @@ public class FileToolsCaplanK {
     }
 
     /**
+     * Converts a Leica GSI file into CAPLAN K file.
+     * <p>
+     *
+     * @param useSimpleFormat option to write a reduced K file which is compatible to ZF LaserControl
+     * @param writeCommentLine option to write a comment line into the K file with basic information
+     * @return converted K file as ArrayList<String>
+     */
+    public ArrayList<String> convertGSI2KFile(boolean useSimpleFormat, boolean writeCommentLine) {
+        ArrayList<String> result = new ArrayList<>();
+        FileToolsLeicaGSI gsiTools = new FileToolsLeicaGSI(readStringLines);
+
+        if (writeCommentLine) {
+            writeCommentLine(result);
+        }
+
+        // 1. convert lines into GSI-Blocks with BlockEncoder
+        ArrayList<ArrayList<GSIBlock>> blocksInLines = gsiTools.getEncodedGSIBlocks();
+
+        for (ArrayList<GSIBlock> blocksAsLines : blocksInLines) {
+            StringBuilder stringBuilder = new StringBuilder();
+
+            // prevent wrong output with empty strings of defined length from class
+            String number = "";
+            String valency = this.valency;
+            String easting = this.easting;
+            String northing = this.northing;
+            String height = this.height;
+            String freeSpace = this.freeSpace;
+            String objectTyp = this.objectTyp;
+            String attr = "";
+
+            for (int i = 0; i < gsiTools.getFoundWordIndices().size(); i++) {
+                int valencyIndicator = 0;
+
+                for (GSIBlock block : blocksAsLines) {
+                    String s = block.toPrintFormatCSV();
+
+                    switch (block.getWordIndex()) {
+                        case 11:        // point number (no '*', ',' and ';'), column 1 - 16
+                            number = preparePointNumber(s);
+                            break;
+                        case 41:        // code is the same as object type, column 62...
+                            objectTyp = "|".concat(s);
+                            break;
+                        case 71:        // comment 1, used as Attr1
+                        case 72:        // comment 2, used as Attr2
+                        case 73:        // comment 3, used as Attr3
+                        case 74:        // comment 4, used as Attr4
+                        case 75:        // comment 5, used as Attr5
+                        case 76:        // comment 6, used as Attr6
+                        case 77:        // comment 7, used as Attr7
+                        case 78:        // comment 8, used as Attr8
+                        case 79:        // comment 9, used as Attr9
+                            attr = attr.concat("|".concat(s));
+                            break;
+                        case 81:        // easting E, column 19-32
+                            easting = String.format("%14s", NumberHelper.fillDecimalPlace(s, 4));
+                            valencyIndicator = 3;
+                            break;
+                        case 82:        // northing N, column 33-46
+                            northing = String.format("%14s", NumberHelper.fillDecimalPlace(s, 4));
+                            valencyIndicator = 3;
+                            break;
+                        case 83:        // height H, column 47-59
+                            height = String.format("%13s", NumberHelper.fillDecimalPlace(s, 5));
+                            valencyIndicator += 4;
+                            break;
+                        case 84:        // easting E0, column 19-32
+                            easting = String.format("%14s", NumberHelper.fillDecimalPlace(s, 4));
+                            valencyIndicator = 3;
+                            break;
+                        case 85:        // northing N0, column 33-46
+                            northing = String.format("%14s", NumberHelper.fillDecimalPlace(s, 4));
+                            valencyIndicator = 3;
+                            break;
+                        case 86:        // height H0, column 47-59
+                            height = String.format("%13s", NumberHelper.fillDecimalPlace(s, 5));
+                            valencyIndicator += 4;
+                            break;
+                    }
+
+                    if (valencyIndicator > 0) {
+                        valency = " ".concat(Integer.toString(valencyIndicator));
+                    }
+                }
+
+                // 2. pick up the relevant elements from the blocks from every line, check ZF option
+                // if ZF option is checked, then use only no 7 x y z for K file
+                stringBuilder = prepareStringBuilder(useSimpleFormat, number, valency, easting, northing, height,
+                        freeSpace, objectTyp);
+
+                if ((!useSimpleFormat) && (!attr.equals(""))) {
+                    stringBuilder.append(attr);
+                }
+
+                // clean up some variables after line reading is finished
+                attr = "";
+            }
+            result.add(stringBuilder.toString());
+        }
+
+        return result;
+    }
+
+    /**
      * Converts a CSV file from the geodata server Basel Stadt (switzerland) into a K format file.
      *
      * @param useSimpleFormat option to write a reduced K file which is compatible to ZF LaserControl
@@ -202,6 +306,9 @@ public class FileToolsCaplanK {
         if (writeCommentLine) {
             writeCommentLine(result);
         }
+
+        // remove comment line
+        readCSVLines.remove(0);
 
         for (String[] stringField : readCSVLines) {
             int valencyIndicator;
@@ -303,111 +410,6 @@ public class FileToolsCaplanK {
             // if ZF option is checked, then use only no 7 x y z for K file
             result.add(prepareStringBuilder(useSimpleFormat, number, valency, easting, northing, height,
                     freeSpace, objectTyp).toString());
-        }
-
-        return result;
-    }
-
-    /**
-     * Converts a Leica GSI file into CAPLAN K file.
-     * <p>
-     *
-     * @param useSimpleFormat option to write a reduced K file which is compatible to ZF LaserControl
-     * @param writeCommentLine option to write a comment line into the K file with basic information
-     * @return converted K file as ArrayList<String>
-     */
-    public ArrayList<String> convertGSI2KFile(boolean useSimpleFormat, boolean writeCommentLine) {
-        ArrayList<String> result = new ArrayList<>();
-        FileToolsLeicaGSI gsiTools = new FileToolsLeicaGSI(readStringLines);
-
-        if (writeCommentLine) {
-            writeCommentLine(result);
-        }
-
-        // 1. convert lines into GSI-Blocks with BlockEncoder
-        ArrayList<ArrayList<GSIBlock>> blocksInLines = gsiTools.getEncodedGSIBlocks();
-
-        for (ArrayList<GSIBlock> blocksAsLines : blocksInLines) {
-            StringBuilder stringBuilder = new StringBuilder();
-
-            // prevent wrong output with empty strings of defined length from class
-            String number = "";
-            String valency = this.valency;
-            String easting = this.easting;
-            String northing = this.northing;
-            String height = this.height;
-            String freeSpace = this.freeSpace;
-            String objectTyp = this.objectTyp;
-            String attr = this.attr;
-
-            for (int i = 0; i < gsiTools.getFoundWordIndices().size(); i++) {
-                int valencyIndicator = 0;
-
-                for (GSIBlock block : blocksAsLines) {
-                    String s = block.toPrintFormatCSV();
-
-                    switch (block.getWordIndex()) {
-                        case 11:        // point number (no '*', ',' and ';'), column 1 - 16
-                            number = preparePointNumber(s);
-                            break;
-                        case 41:        // code is the same as object type, column 62...
-                            objectTyp = "|".concat(s);
-                            break;
-                        case 71:        // comment 1, used as Attr1
-                        case 72:        // comment 2, used as Attr2
-                        case 73:        // comment 3, used as Attr3
-                        case 74:        // comment 4, used as Attr4
-                        case 75:        // comment 5, used as Attr5
-                        case 76:        // comment 6, used as Attr6
-                        case 77:        // comment 7, used as Attr7
-                        case 78:        // comment 8, used as Attr8
-                        case 79:        // comment 9, used as Attr9
-                            attr = attr.concat("|".concat(s));
-                            break;
-                        case 81:        // easting E, column 19-32
-                            easting = String.format("%14s", NumberHelper.fillDecimalPlace(s, 4));
-                            valencyIndicator = 3;
-                            break;
-                        case 82:        // northing N, column 33-46
-                            northing = String.format("%14s", NumberHelper.fillDecimalPlace(s, 4));
-                            valencyIndicator = 3;
-                            break;
-                        case 83:        // height H, column 47-59
-                            height = String.format("%13s", NumberHelper.fillDecimalPlace(s, 5));
-                            valencyIndicator += 4;
-                            break;
-                        case 84:        // easting E0, column 19-32
-                            easting = String.format("%14s", NumberHelper.fillDecimalPlace(s, 4));
-                            valencyIndicator = 3;
-                            break;
-                        case 85:        // northing N0, column 33-46
-                            northing = String.format("%14s", NumberHelper.fillDecimalPlace(s, 4));
-                            valencyIndicator = 3;
-                            break;
-                        case 86:        // height H0, column 47-59
-                            height = String.format("%13s", NumberHelper.fillDecimalPlace(s, 5));
-                            valencyIndicator += 4;
-                            break;
-                    }
-
-                    if (valencyIndicator > 0) {
-                        valency = " ".concat(Integer.toString(valencyIndicator));
-                    }
-                }
-
-                // 2. pick up the relevant elements from the blocks from every line, check ZF option
-                // if ZF option is checked, then use only no 7 x y z for K file
-                stringBuilder = prepareStringBuilder(useSimpleFormat, number, valency, easting, northing, height,
-                        freeSpace, objectTyp);
-
-                if (!attr.equals("")) {
-                    stringBuilder.append(attr);
-                }
-
-                // clean up some variables after line reading is finished
-                attr = "";
-            }
-            result.add(stringBuilder.toString());
         }
 
         return result;

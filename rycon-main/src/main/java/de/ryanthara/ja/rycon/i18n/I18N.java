@@ -228,6 +228,10 @@ public class I18N {
         return Messages.getString("btnUseSpaceAtLineEnd");
     }
 
+    public static String getDescription(String description) {
+        return CaplanKDescription.getDescription(description);
+    }
+
     public static String getErrorTextJavaVersion() {
         return Messages.getString("errorTextJavaVersion");
     }

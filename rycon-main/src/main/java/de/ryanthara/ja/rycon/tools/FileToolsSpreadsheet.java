@@ -48,19 +48,17 @@ import java.util.List;
  */
 public class FileToolsSpreadsheet {
 
-    private ArrayList<String> readStringLines;
-    private List<String[]> readCSVLines;
-    private Workbook workbook;
-
     /**
      * Member which helps distinguish between XLS and XLSX file format.
      */
     public static boolean isXLS = true;
-
     /**
      * Member which helps distinguish between XLS and XLSX file format.
      */
     public static boolean isXLSX = false;
+    private ArrayList<String> readStringLines;
+    private List<String[]> readCSVLines;
+    private Workbook workbook;
 
     /**
      * Class Constructor with parameter.
@@ -84,20 +82,239 @@ public class FileToolsSpreadsheet {
         this.readCSVLines = readCSVLines;
     }
 
-    public boolean convertCSV2Excel() {
-        return false;
+    /**
+     * Converts a CSV file element by element into an Excel file.
+     * @param isExcel selector to distinguish between XLS and XLSX file extension
+     * @param sheetName name of the sheet (file name from input file)
+     * @return success conversion success
+     */
+    public boolean convertCSV2Excel(boolean isExcel, String sheetName) {
+        // general preparation of the workbook
+        if (isExcel) {
+            workbook = new HSSFWorkbook();
+        } else {
+            workbook = new XSSFWorkbook();
+        }
+
+        String safeName = WorkbookUtil.createSafeSheetName(sheetName);
+        Sheet sheet = workbook.createSheet(safeName);
+        Row row;
+        Cell cell;
+
+        short rowNumber = 0;
+        short cellNumber;
+        short countColumns = 0;
+
+        for (String[] csvLine : readCSVLines) {
+            row = sheet.createRow(rowNumber);
+            rowNumber++;
+
+            cellNumber = 0;
+
+            for (String element : csvLine) {
+                cell = row.createCell(cellNumber);
+                cellNumber++;
+                cell.setCellValue(element);
+            }
+
+            if (cellNumber > countColumns) {
+                countColumns = cellNumber;
+            }
+
+        }
+
+        // adjust column width to fit the content
+        for (int i = 0; i < countColumns; i++) {
+            sheet.autoSizeColumn((short)i);
+        }
+
+        return rowNumber > 1;
     }
 
-    public boolean convertCSVBaselStadt2Excel() {
-        return false;
+    /**
+     * Converts a CSV file from the geodata server Basel Stadt (Switzerland) into a an Excel file.
+     * <p>
+     * @param isExcel selector to distinguish between XLS and XLSX file extension
+     * @param sheetName name of the sheet (file name from input file)
+     * @param writeCommentRow write comment row
+     * @return success conversion success
+     */
+    public boolean convertCSVBaselStadt2Excel(boolean isExcel, String sheetName, boolean writeCommentRow) {
+        // general preparation of the workbook
+        if (isExcel) {
+            workbook = new HSSFWorkbook();
+        } else {
+            workbook = new XSSFWorkbook();
+        }
+
+        String safeName = WorkbookUtil.createSafeSheetName(sheetName);
+        Sheet sheet = workbook.createSheet(safeName);
+        Row row;
+        Cell cell;
+        CellStyle cellStyle;
+
+        DataFormat format = workbook.createDataFormat();
+
+        short rowNumber = 0;
+        short cellNumber = 0;
+
+        // write comment row
+        if (writeCommentRow) {
+            row = sheet.createRow(rowNumber);
+            rowNumber++;
+
+            String[] commentLine = readCSVLines.get(0);
+
+            for (String description : commentLine) {
+                cell = row.createCell(cellNumber);
+                cellNumber++;
+                cell.setCellValue(description);
+            }
+        }
+
+        // remove furthermore the still not needed comment line
+        readCSVLines.remove(0);
+
+        for (String[] csvLine : readCSVLines) {
+            row = sheet.createRow(rowNumber);
+            rowNumber++;
+
+            cellNumber = 0;
+
+            for (int i = 0; i < csvLine.length; i++) {
+                cell = row.createCell(cellNumber);
+                cellNumber++;
+
+                switch (i) {
+                    case 0:
+                    case 1:
+                        cell.setCellValue(csvLine[i]);
+                        break;
+                    case 2:
+                    case 3:
+                    case 4:
+                    case 5:
+                        if (csvLine[i].equalsIgnoreCase("")) {
+                            cell.setCellValue(csvLine[i]);
+                        } else {
+                            cell.setCellValue(Double.parseDouble(csvLine[i]));
+                            cellStyle = workbook.createCellStyle();
+                            cellStyle.setDataFormat(format.getFormat("#,##0.000"));
+                            cellStyle.setVerticalAlignment(CellStyle.ALIGN_RIGHT);
+                            cell.setCellStyle(cellStyle);
+                        }
+                        break;
+                    case 6:
+                    case 7:
+                    case 8:
+                    case 9:
+                    case 10:
+                        cell.setCellValue(csvLine[i]);
+                        break;
+                }
+            }
+        }
+
+        // adjust column width to fit the content
+        for (int i = 0; i < readCSVLines.get(0).length; i++) {
+            sheet.autoSizeColumn((short)i);
+        }
+
+        return rowNumber > 1;
     }
 
-    public boolean convertCadwork2Excel() {
-        return false;
+    /**
+     * Converts a Cadwork node.dat file into an Excel file.
+     * @param isExcel selector to distinguish between XLS and XLSX file extension
+     * @param sheetName name of the sheet (file name from input file)
+     * @return success conversion
+     */
+    public boolean convertCadwork2Excel(boolean isExcel, String sheetName, boolean writeCommentRow) {
+        // general preparation of the workbook
+        if (isExcel) {
+            workbook = new HSSFWorkbook();
+        } else {
+            workbook = new XSSFWorkbook();
+        }
+
+        String safeName = WorkbookUtil.createSafeSheetName(sheetName);
+        String[] lineSplit;
+        Sheet sheet = workbook.createSheet(safeName);
+        Row row;
+        Cell cell;
+
+        short rowNumber = 0;
+        short cellNumber = 0;
+
+        // remove not needed headlines
+        for (int i = 0; i < 3; i++) {
+            readStringLines.remove(0);
+        }
+
+        // write comment row
+        if (writeCommentRow) {
+            row = sheet.createRow(rowNumber);
+            rowNumber++;
+
+            lineSplit = readStringLines.get(0).trim().split("\\s+");
+
+            for (String description: lineSplit) {
+                cell = row.createCell(cellNumber);
+                cellNumber++;
+                cell.setCellValue(description);
+            }
+        }
+
+        // remove furthermore the still not needed comment line
+        readStringLines.remove(0);
+
+        for (String line : readStringLines) {
+            row = sheet.createRow(rowNumber);
+            rowNumber++;
+
+            cellNumber = 0;
+
+            lineSplit = line.trim().split("\\s+");
+
+            cell = row.createCell(cellNumber);      // No
+            cell.setCellValue(lineSplit[0]);
+            cellNumber++;
+
+            cell = row.createCell(cellNumber);      // X
+            cell.setCellValue(lineSplit[1]);
+            cellNumber++;
+
+            cell = row.createCell(cellNumber);      // Y
+            cell.setCellValue(lineSplit[2]);
+            cellNumber++;
+
+            cell = row.createCell(cellNumber);      // Z
+            cell.setCellValue(lineSplit[3]);
+            cellNumber++;
+
+            cell = row.createCell(cellNumber);      // Code
+            cell.setCellValue(lineSplit[4]);
+            cellNumber++;
+
+            cell = row.createCell(cellNumber);      // Name
+            cell.setCellValue(lineSplit[5]);
+        }
+
+        // adjust column width to fit the content
+        for (int i = 0; i < 5; i++) {
+            sheet.autoSizeColumn((short)i);
+        }
+
+        return rowNumber > 1;
     }
 
+    /**
+     * Converts a GSI file element by element into an Excel file.
+     * @param isExcel selector to distinguish between XLS and XLSX file extension
+     * @param sheetName name of the sheet (file name from input file)
+     * @return success conversion success
+     */
     public boolean convertGSI2Excel(boolean isExcel, String sheetName, boolean writeCommentRow) {
-
         // general preparation of the workbook
         if (isExcel) {
             workbook = new HSSFWorkbook();
@@ -135,7 +352,6 @@ public class FileToolsSpreadsheet {
 
         // fill gsi content into rows and cells
         for (ArrayList<GSIBlock> blocksAsLines : blocksInLines) {
-
             row = sheet.createRow(rowNumber);
             rowNumber++;
 
@@ -227,34 +443,336 @@ public class FileToolsSpreadsheet {
                         cell.setCellStyle(cellStyle);
                         break;
                 }
-
              }
         }
 
-        //adjust column width to fit the content
+        // adjust column width to fit the content
         for (int i = 0; i < blocksInLines.size(); i++) {
             sheet.autoSizeColumn((short)i);
         }
 
-        return false;
+        // check number of written lines
+        return rowNumber > 1;
     }
 
-    public boolean convertK2Excel() {
-        return false;
+    /**
+     * Converts a K file element by element into an Excel file.
+     * @param isExcel selector to distinguish between XLS and XLSX file extension
+     * @param sheetName name of the sheet (file name from input file)
+     * @param writeCommentRow write comment row
+     * @return success conversion success
+     */
+    public boolean convertK2Excel(boolean isExcel, String sheetName, boolean writeCommentRow) {
+        // general preparation of the workbook
+        if (isExcel) {
+            workbook = new HSSFWorkbook();
+        } else {
+            workbook = new XSSFWorkbook();
+        }
+
+        String safeName = WorkbookUtil.createSafeSheetName(sheetName);
+        Sheet sheet = workbook.createSheet(safeName);
+        Row row;
+        Cell cell;
+        CellStyle cellStyle;
+
+        DataFormat format = workbook.createDataFormat();
+
+        short rowNumber = 0;
+        short cellNumber;
+        short countColumns = 0;
+
+        for (String line : readStringLines) {
+            row = sheet.createRow(rowNumber);
+            rowNumber++;
+
+            cellNumber = 0;
+
+            if (!line.startsWith("!")) {    // comment lines starting with '!' are ignored
+                String s = "";
+
+                if (line.length() >= 16) {
+                    cell = row.createCell(cellNumber);
+                    cell.setCellValue(line.substring(0, 16).trim());       // point number (no '*', ',' and ';'), column 1 - 16
+                    cellNumber++;
+                }
+
+                if (line.length() >= 32) {
+                    cell = row.createCell(cellNumber);
+
+                    if (!(s = line.substring(20, 32).trim()).equals("")) {      // easting E, column 19-32
+                        cell.setCellValue(Double.parseDouble(s));
+                        cellStyle = workbook.createCellStyle();
+                        cellStyle.setDataFormat(format.getFormat("#,##0.0000"));
+                        cellStyle.setVerticalAlignment(CellStyle.ALIGN_RIGHT);
+                        cell.setCellStyle(cellStyle);
+                    } else {
+                        cell.setCellValue("");
+                    }
+
+                    cellNumber++;
+                }
+
+                if (line.length() >= 46) {
+                    cell = row.createCell(cellNumber);
+
+                    if (!(s = line.substring(34, 46).trim()).equals("")) {      // northing N, column 33-46
+                        cell.setCellValue(Double.parseDouble(s));
+                        cellStyle = workbook.createCellStyle();
+                        cellStyle.setDataFormat(format.getFormat("#,##0.0000"));
+                        cellStyle.setVerticalAlignment(CellStyle.ALIGN_RIGHT);
+                        cell.setCellStyle(cellStyle);
+                    } else {
+                        cell.setCellValue("");
+                    }
+
+                    cellNumber++;
+                }
+
+                if (line.length() >= 59) {
+                    cell = row.createCell(cellNumber);
+
+                    if (!(s = line.substring(48, 59).trim()).equals("")) {      // height H, column 47-59
+                        cell.setCellValue(Double.parseDouble(s));
+                        cellStyle = workbook.createCellStyle();
+                        cellStyle.setDataFormat(format.getFormat("#,##0.0000"));
+                        cellStyle.setVerticalAlignment(CellStyle.ALIGN_RIGHT);
+                        cell.setCellStyle(cellStyle);
+                    } else {
+                        cell.setCellValue("");
+                    }
+
+                    cellNumber++;
+                }
+
+                if (line.length() >= 62) {
+                    String[] lineSplit = line.substring(61, line.length()).trim().split("\\|+");
+
+                    cell = row.createCell(cellNumber);
+                    cell.setCellValue(lineSplit[0].trim());              // code is the same as object type, column 62...
+                    cellNumber++;
+
+                    for (int i = 1; i < lineSplit.length; i++) {
+                        cell = row.createCell(cellNumber);
+                        cell.setCellValue(lineSplit[i].trim());
+                        cellNumber++;
+                    }
+                }
+
+                if (cellNumber > countColumns) {
+                    countColumns = cellNumber;
+                }
+
+            }
+        }
+
+        // adjust column width to fit the content
+        for (int i = 0; i < countColumns; i++) {
+            sheet.autoSizeColumn((short)i);
+        }
+
+        return rowNumber > 1;
     }
 
-    public boolean convertTXT2Excel() {
-        return false;
+    /**
+     * Converts a TXT file element by element into an Excel file.
+     * @param isExcel selector to distinguish between XLS and XLSX file extension
+     * @param sheetName name of the sheet (file name from input file)
+     * @return success conversion success
+     */
+    public boolean convertTXT2Excel(boolean isExcel, String sheetName) {
+        // general preparation of the workbook
+        if (isExcel) {
+            workbook = new HSSFWorkbook();
+        } else {
+            workbook = new XSSFWorkbook();
+        }
+
+        String safeName = WorkbookUtil.createSafeSheetName(sheetName);
+        Sheet sheet = workbook.createSheet(safeName);
+        Row row;
+        Cell cell;
+
+        short rowNumber = 0;
+        short cellNumber;
+        short countColumns = 0;
+
+        for (String line : readStringLines) {
+            String[] lineSplit = line.trim().split("\\s+");
+
+            row = sheet.createRow(rowNumber);
+            rowNumber++;
+
+            cellNumber = 0;
+
+            for (String element : lineSplit) {
+                cell = row.createCell(cellNumber);
+                cellNumber++;
+                cell.setCellValue(element);
+                if (cellNumber > countColumns) {
+                    countColumns = cellNumber;
+                }
+
+            }
+        }
+
+        // adjust column width to fit the content
+        for (int i = 0; i < countColumns; i++) {
+            sheet.autoSizeColumn((short) i);
+        }
+
+        return rowNumber > 1;
     }
 
-    public boolean convertTXTBaseStadt2Excel() {
-        return false;
+    /**
+     * Converts a txt file from the geodata server Basel Landschaft (Switzerland) element by element into an Excel file.
+     * @param isExcel selector to distinguish between XLS and XLSX file extension
+     * @param sheetName name of the sheet (file name from input file)
+     * @param writeCommentRow write comment row
+     * @return success conversion success
+     */
+    public boolean convertTXTBaselLand2Excel(boolean isExcel, String sheetName, boolean writeCommentRow) {
+        // general preparation of the workbook
+        if (isExcel) {
+            workbook = new HSSFWorkbook();
+        } else {
+            workbook = new XSSFWorkbook();
+        }
+
+        String safeName = WorkbookUtil.createSafeSheetName(sheetName);
+        Sheet sheet = workbook.createSheet(safeName);
+        Row row;
+        Cell cell;
+        CellStyle cellStyle;
+
+        DataFormat format = workbook.createDataFormat();
+
+        short rowNumber = 0;
+        short cellNumber = 0;
+        short countColumns = 0;
+
+        // write comment row
+        if (writeCommentRow) {
+            row = sheet.createRow(rowNumber);
+            rowNumber++;
+
+            String[] lineSplit = readStringLines.get(0).trim().split("\\s+");
+
+            for (String description: lineSplit) {
+                cell = row.createCell(cellNumber);
+                cellNumber++;
+                cell.setCellValue(description);
+            }
+        }
+
+        // remove furthermore the still not needed comment line
+        readStringLines.remove(0);
+
+        for (String line : readStringLines) {
+            row = sheet.createRow(rowNumber);
+            rowNumber++;
+
+            String[] lineSplit = line.trim().split("\\s+");
+
+            cellNumber = 0;
+
+            switch (lineSplit.length) {
+                case 5:     // HFP file
+                    cell = row.createCell(cellNumber);      // Art
+                    cell.setCellValue(lineSplit[0]);
+                    cellNumber++;
+
+                    cell = row.createCell(cellNumber);      // Number
+                    cell.setCellValue(lineSplit[1]);
+                    cellNumber++;
+
+                    cell = row.createCell(cellNumber);      // X
+                    cell.setCellValue(Double.parseDouble(lineSplit[2]));
+                    cellStyle = workbook.createCellStyle();
+                    cellStyle.setDataFormat(format.getFormat("#,##0.000"));
+                    cellStyle.setVerticalAlignment(CellStyle.ALIGN_RIGHT);
+                    cell.setCellStyle(cellStyle);
+                    cellNumber++;
+
+                    cell = row.createCell(cellNumber);      // Y
+                    cell.setCellValue(Double.parseDouble(lineSplit[3]));
+                    cellStyle = workbook.createCellStyle();
+                    cellStyle.setDataFormat(format.getFormat("#,##0.000"));
+                    cellStyle.setVerticalAlignment(CellStyle.ALIGN_RIGHT);
+                    cell.setCellStyle(cellStyle);
+                    cellNumber++;
+
+                    cell = row.createCell(cellNumber);      // Z
+                    if (lineSplit[4].equalsIgnoreCase("NULL")) {
+                        cell.setCellValue("NULL");
+                    } else {
+                        cell.setCellValue(Double.parseDouble(lineSplit[4]));
+                        cellStyle = workbook.createCellStyle();
+                        cellStyle.setDataFormat(format.getFormat("#,##0.000"));
+                        cellStyle.setVerticalAlignment(CellStyle.ALIGN_RIGHT);
+                        cell.setCellStyle(cellStyle);
+                    }
+
+                    countColumns = 5;
+                    break;
+                case 6:     // LFP file
+                    cell = row.createCell(cellNumber);      // Art
+                    cell.setCellValue(lineSplit[0]);
+                    cellNumber++;
+
+                    cell = row.createCell(cellNumber);      // Number
+                    cell.setCellValue(lineSplit[1]);
+                    cellNumber++;
+
+                    cell = row.createCell(cellNumber);      // VArt
+                    cell.setCellValue(lineSplit[2]);
+                    cellNumber++;
+
+                    cell = row.createCell(cellNumber);      // X
+                    cell.setCellValue(Double.parseDouble(lineSplit[3]));
+                    cellStyle = workbook.createCellStyle();
+                    cellStyle.setDataFormat(format.getFormat("#,##0.000"));
+                    cellStyle.setVerticalAlignment(CellStyle.ALIGN_RIGHT);
+                    cell.setCellStyle(cellStyle);
+                    cellNumber++;
+
+                    cell = row.createCell(cellNumber);      // Y
+                    cell.setCellValue(Double.parseDouble(lineSplit[4]));
+                    cellStyle = workbook.createCellStyle();
+                    cellStyle.setDataFormat(format.getFormat("#,##0.000"));
+                    cellStyle.setVerticalAlignment(CellStyle.ALIGN_RIGHT);
+                    cell.setCellStyle(cellStyle);
+                    cellNumber++;
+
+                    cell = row.createCell(cellNumber);      // Z
+                    if (lineSplit[5].equalsIgnoreCase("NULL")) {
+                        cell.setCellValue("NULL");
+                    } else {
+                        cell.setCellValue(Double.parseDouble(lineSplit[5]));
+                        cellStyle = workbook.createCellStyle();
+                        cellStyle.setDataFormat(format.getFormat("#,##0.000"));
+                        cellStyle.setVerticalAlignment(CellStyle.ALIGN_RIGHT);
+                        cell.setCellStyle(cellStyle);
+                    }
+
+                    countColumns = 6;
+                    break;
+            }
+        }
+
+        // adjust column width to fit the content
+        for (int i = 0; i < countColumns; i++) {
+            sheet.autoSizeColumn((short) i);
+        }
+
+        return rowNumber > 1;
     }
 
-    public Workbook getWorkbook() {
-        return this.workbook;
-    }
-
+    /**
+     * Writes the converted XLS file into the file system.
+     * @param writeFile file to be written
+     * @return success write success
+     */
     public boolean writeXLS(File writeFile) {
         try {
             FileOutputStream fileOut = new FileOutputStream(writeFile);
@@ -270,6 +788,11 @@ public class FileToolsSpreadsheet {
         return false;
     }
 
+    /**
+     * Writes the converted XLSX file into the file system.
+     * @param writeFile file to be written
+     * @return success write success
+     */
     public boolean writeXLSX(File writeFile) {
         try {
             FileOutputStream fileOut = new FileOutputStream(writeFile);
@@ -278,7 +801,7 @@ public class FileToolsSpreadsheet {
             fileOut.close();
             return true;
         } catch (IOException e) {
-            System.err.println("Error while writing XLS file to disk.");
+            System.err.println("Error while writing XLSX file to disk.");
             e.printStackTrace();
         }
         return false;

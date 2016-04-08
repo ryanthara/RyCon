@@ -22,9 +22,9 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 /**
- * This class manages the strings of the GSI Word Indices for multi-language support in RyCON.
+ * This class manages the strings of the Caplan K description for multi-language support in RyCON.
  * <p>
- * The strings are stored in Resource Bundle LeicaGSIWordIndices and loaded from this class.
+ * The strings are stored in Resource Bundle CaplanKDescription and loaded from this class.
  *
  * <h3>Changes:</h3>
  * <ul>
@@ -37,23 +37,22 @@ import java.util.ResourceBundle;
  * @since 9
  *
  */
-class GSIWordIndices {
+class CaplanKDescription {
 
-    private static final String BUNDLE_NAME = "de/ryanthara/ja/rycon/tools/LeicaGSIWordIndices";
+    private static final String BUNDLE_NAME = "de/ryanthara/ja/rycon/tools/CaplanKDescription";
     private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 
     /**
-     * Returns the key-text-pair for the word index description.
+     * Returns the key-text-pair for the description.
      *
      * @param wordIndex key to look up
      * @return matched text
      */
-    static String getWordIndexDescription(int wordIndex) {
+    static String getDescription(String description) {
         try {
-            String key = "WI" + wordIndex;
-            return RESOURCE_BUNDLE.getString(key);
+            return RESOURCE_BUNDLE.getString(description);
         } catch (MissingResourceException e) {
-            return '!' + Integer.toString(wordIndex) + '!';
+            return '!' + description + '!';
         }
     }
 

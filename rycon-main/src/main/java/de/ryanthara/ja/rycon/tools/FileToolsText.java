@@ -108,6 +108,9 @@ public class FileToolsText {
     public ArrayList<String> convertCSVBaselStadt2TXT(String separator) {
         ArrayList<String> result = new ArrayList<>();
 
+        // remove comment line
+        readCSVLines.remove(0);
+
         for (String[] stringField : readCSVLines) {
             String line;
 

@@ -161,6 +161,9 @@ public class FileToolsCSV {
     public ArrayList<String> convertCSVBaselStadt2CSV(String separator) {
         ArrayList<String> result = new ArrayList<>();
 
+        // remove comment line
+        readCSVLines.remove(0);
+
         for (String[] stringField : readCSVLines) {
             String line;
 

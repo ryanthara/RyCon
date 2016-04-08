@@ -152,6 +152,9 @@ public class FileToolsLTOP {
 
         writeHeadline(result);
 
+        // remove comment line
+        readCSVLines.remove(0);
+
         for (String[] stringField : readCSVLines) {
             // prevent wrong output with empty strings of defined length from class
             pointType = this.pointType;
