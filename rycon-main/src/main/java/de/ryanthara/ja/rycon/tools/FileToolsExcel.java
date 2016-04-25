@@ -15,7 +15,6 @@
  * You should have received a copy of the GNU General Public License along with
  * this package. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package de.ryanthara.ja.rycon.tools;
 
 import de.ryanthara.ja.rycon.i18n.I18N;
@@ -32,10 +31,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class implements basic operations on spreadsheets output operations like xls, xlsx, ... files.
+ * This class implements basic operations on spreadsheet output operations for Microsoft xls, xlsx, ... files.
  * <p>
  * Therefore a couple of methods and helpers are implemented to do the conversions and
- * operations on the given files. Later on, there will be support for open document format too.
+ * operations on the given files.
  * <p>
  * <h3>Changes:</h3>
  * <ul>
@@ -46,7 +45,7 @@ import java.util.List;
  * @version 1
  * @since 9
  */
-public class FileToolsSpreadsheet {
+public class FileToolsExcel {
 
     /**
      * Member which helps distinguish between XLS and XLSX file format.
@@ -67,7 +66,7 @@ public class FileToolsSpreadsheet {
      *
      * @param readStringLines {@code ArrayList<String>} with lines in text format
      */
-    public FileToolsSpreadsheet(ArrayList<String> readStringLines) {
+    public FileToolsExcel(ArrayList<String> readStringLines) {
         this.readStringLines = readStringLines;
     }
 
@@ -78,7 +77,7 @@ public class FileToolsSpreadsheet {
      *
      * @param readCSVLines {@code List<String[]>} with lines as {@code String[]}
      */
-    public FileToolsSpreadsheet(List<String[]> readCSVLines) {
+    public FileToolsExcel(List<String[]> readCSVLines) {
         this.readCSVLines = readCSVLines;
     }
 
@@ -309,6 +308,154 @@ public class FileToolsSpreadsheet {
     }
 
     /**
+     * Converts a K file element by element into an Excel file.
+     * @param isExcel selector to distinguish between XLS and XLSX file extension
+     * @param sheetName name of the sheet (file name from input file)
+     * @param writeCommentRow write comment row
+     * @return success conversion success
+     */
+    public boolean convertCaplan2Excel(boolean isExcel, String sheetName, boolean writeCommentRow) {
+        // general preparation of the workbook
+        if (isExcel) {
+            workbook = new HSSFWorkbook();
+        } else {
+            workbook = new XSSFWorkbook();
+        }
+
+        String safeName = WorkbookUtil.createSafeSheetName(sheetName);
+        Sheet sheet = workbook.createSheet(safeName);
+        Row row;
+        Cell cell;
+        CellStyle cellStyle;
+
+        DataFormat format = workbook.createDataFormat();
+
+        short rowNumber = 0;
+        short cellNumber = 0;
+        short countColumns = 0;
+
+        // write comment row
+        if (writeCommentRow) {
+            row = sheet.createRow(rowNumber);
+            rowNumber++;
+
+            cell = row.createCell(cellNumber);
+            cell.setCellValue(I18N.getCaplanColumnTyp("pointNumber"));
+            cellNumber++;
+
+            cell = row.createCell(cellNumber);
+            cell.setCellValue(I18N.getCaplanColumnTyp("easting"));
+            cellNumber++;
+
+            cell = row.createCell(cellNumber);
+            cell.setCellValue(I18N.getCaplanColumnTyp("northing"));
+            cellNumber++;
+
+            cell = row.createCell(cellNumber);
+            cell.setCellValue(I18N.getCaplanColumnTyp("height"));
+            cellNumber++;
+
+            cell = row.createCell(cellNumber);
+            cell.setCellValue(I18N.getCaplanColumnTyp("object"));
+            cellNumber++;
+
+            cell = row.createCell(cellNumber);
+            cell.setCellValue(I18N.getCaplanColumnTyp("attribute"));
+        }
+
+        for (String line : readStringLines) {
+            row = sheet.createRow(rowNumber);
+            rowNumber++;
+
+            cellNumber = 0;
+
+            if (!line.startsWith("!")) {    // comment lines starting with '!' are ignored
+                String s;
+
+                if (line.length() >= 16) {
+                    cell = row.createCell(cellNumber);
+                    cell.setCellValue(line.substring(0, 16).trim());       // point number (no '*', ',' and ';'), column 1 - 16
+                    cellNumber++;
+                }
+
+                if (line.length() >= 32) {
+                    cell = row.createCell(cellNumber);
+
+                    if (!(s = line.substring(20, 32).trim()).equals("")) {      // easting E, column 19-32
+                        cell.setCellValue(Double.parseDouble(s));
+                        cellStyle = workbook.createCellStyle();
+                        cellStyle.setDataFormat(format.getFormat("#,##0.0000"));
+                        cellStyle.setVerticalAlignment(CellStyle.ALIGN_RIGHT);
+                        cell.setCellStyle(cellStyle);
+                    } else {
+                        cell.setCellValue("");
+                    }
+
+                    cellNumber++;
+                }
+
+                if (line.length() >= 46) {
+                    cell = row.createCell(cellNumber);
+
+                    if (!(s = line.substring(34, 46).trim()).equals("")) {      // northing N, column 33-46
+                        cell.setCellValue(Double.parseDouble(s));
+                        cellStyle = workbook.createCellStyle();
+                        cellStyle.setDataFormat(format.getFormat("#,##0.0000"));
+                        cellStyle.setVerticalAlignment(CellStyle.ALIGN_RIGHT);
+                        cell.setCellStyle(cellStyle);
+                    } else {
+                        cell.setCellValue("");
+                    }
+
+                    cellNumber++;
+                }
+
+                if (line.length() >= 59) {
+                    cell = row.createCell(cellNumber);
+
+                    if (!(s = line.substring(48, 59).trim()).equals("")) {      // height H, column 47-59
+                        cell.setCellValue(Double.parseDouble(s));
+                        cellStyle = workbook.createCellStyle();
+                        cellStyle.setDataFormat(format.getFormat("#,##0.0000"));
+                        cellStyle.setVerticalAlignment(CellStyle.ALIGN_RIGHT);
+                        cell.setCellStyle(cellStyle);
+                    } else {
+                        cell.setCellValue("");
+                    }
+
+                    cellNumber++;
+                }
+
+                if (line.length() >= 62) {
+                    String[] lineSplit = line.substring(61, line.length()).trim().split("\\|+");
+
+                    cell = row.createCell(cellNumber);
+                    cell.setCellValue(lineSplit[0].trim());              // code is the same as object type, column 62...
+                    cellNumber++;
+
+                    for (int i = 1; i < lineSplit.length; i++) {
+                        cell = row.createCell(cellNumber);
+                        cell.setCellValue(lineSplit[i].trim());
+                        cellNumber++;
+                    }
+                }
+
+                if (cellNumber > countColumns) {
+                    countColumns = cellNumber;
+                }
+
+            }
+        }
+
+        // adjust column width to fit the content
+        for (int i = 0; i < countColumns; i++) {
+            sheet.autoSizeColumn((short)i);
+        }
+
+        return rowNumber > 1;
+    }
+
+    /**
      * Converts a GSI file element by element into an Excel file.
      * @param isExcel selector to distinguish between XLS and XLSX file extension
      * @param sheetName name of the sheet (file name from input file)
@@ -452,125 +599,6 @@ public class FileToolsSpreadsheet {
         }
 
         // check number of written lines
-        return rowNumber > 1;
-    }
-
-    /**
-     * Converts a K file element by element into an Excel file.
-     * @param isExcel selector to distinguish between XLS and XLSX file extension
-     * @param sheetName name of the sheet (file name from input file)
-     * @param writeCommentRow write comment row
-     * @return success conversion success
-     */
-    public boolean convertK2Excel(boolean isExcel, String sheetName, boolean writeCommentRow) {
-        // general preparation of the workbook
-        if (isExcel) {
-            workbook = new HSSFWorkbook();
-        } else {
-            workbook = new XSSFWorkbook();
-        }
-
-        String safeName = WorkbookUtil.createSafeSheetName(sheetName);
-        Sheet sheet = workbook.createSheet(safeName);
-        Row row;
-        Cell cell;
-        CellStyle cellStyle;
-
-        DataFormat format = workbook.createDataFormat();
-
-        short rowNumber = 0;
-        short cellNumber;
-        short countColumns = 0;
-
-        for (String line : readStringLines) {
-            row = sheet.createRow(rowNumber);
-            rowNumber++;
-
-            cellNumber = 0;
-
-            if (!line.startsWith("!")) {    // comment lines starting with '!' are ignored
-                String s = "";
-
-                if (line.length() >= 16) {
-                    cell = row.createCell(cellNumber);
-                    cell.setCellValue(line.substring(0, 16).trim());       // point number (no '*', ',' and ';'), column 1 - 16
-                    cellNumber++;
-                }
-
-                if (line.length() >= 32) {
-                    cell = row.createCell(cellNumber);
-
-                    if (!(s = line.substring(20, 32).trim()).equals("")) {      // easting E, column 19-32
-                        cell.setCellValue(Double.parseDouble(s));
-                        cellStyle = workbook.createCellStyle();
-                        cellStyle.setDataFormat(format.getFormat("#,##0.0000"));
-                        cellStyle.setVerticalAlignment(CellStyle.ALIGN_RIGHT);
-                        cell.setCellStyle(cellStyle);
-                    } else {
-                        cell.setCellValue("");
-                    }
-
-                    cellNumber++;
-                }
-
-                if (line.length() >= 46) {
-                    cell = row.createCell(cellNumber);
-
-                    if (!(s = line.substring(34, 46).trim()).equals("")) {      // northing N, column 33-46
-                        cell.setCellValue(Double.parseDouble(s));
-                        cellStyle = workbook.createCellStyle();
-                        cellStyle.setDataFormat(format.getFormat("#,##0.0000"));
-                        cellStyle.setVerticalAlignment(CellStyle.ALIGN_RIGHT);
-                        cell.setCellStyle(cellStyle);
-                    } else {
-                        cell.setCellValue("");
-                    }
-
-                    cellNumber++;
-                }
-
-                if (line.length() >= 59) {
-                    cell = row.createCell(cellNumber);
-
-                    if (!(s = line.substring(48, 59).trim()).equals("")) {      // height H, column 47-59
-                        cell.setCellValue(Double.parseDouble(s));
-                        cellStyle = workbook.createCellStyle();
-                        cellStyle.setDataFormat(format.getFormat("#,##0.0000"));
-                        cellStyle.setVerticalAlignment(CellStyle.ALIGN_RIGHT);
-                        cell.setCellStyle(cellStyle);
-                    } else {
-                        cell.setCellValue("");
-                    }
-
-                    cellNumber++;
-                }
-
-                if (line.length() >= 62) {
-                    String[] lineSplit = line.substring(61, line.length()).trim().split("\\|+");
-
-                    cell = row.createCell(cellNumber);
-                    cell.setCellValue(lineSplit[0].trim());              // code is the same as object type, column 62...
-                    cellNumber++;
-
-                    for (int i = 1; i < lineSplit.length; i++) {
-                        cell = row.createCell(cellNumber);
-                        cell.setCellValue(lineSplit[i].trim());
-                        cellNumber++;
-                    }
-                }
-
-                if (cellNumber > countColumns) {
-                    countColumns = cellNumber;
-                }
-
-            }
-        }
-
-        // adjust column width to fit the content
-        for (int i = 0; i < countColumns; i++) {
-            sheet.autoSizeColumn((short)i);
-        }
-
         return rowNumber > 1;
     }
 
@@ -807,4 +835,4 @@ public class FileToolsSpreadsheet {
         return false;
     }
 
-} // end of FileToolsSpreadsheet
+} // end of FileToolsExcel

@@ -228,8 +228,8 @@ public class I18N {
         return Messages.getString("btnUseSpaceAtLineEnd");
     }
 
-    public static String getDescription(String description) {
-        return CaplanKDescription.getDescription(description);
+    public static String getCaplanColumnTyp(String columnType) {
+        return CaplanKDescription.getDescription(columnType);
     }
 
     public static String getErrorTextJavaVersion() {

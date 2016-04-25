@@ -37,10 +37,10 @@ import java.net.URISyntaxException;
 import java.util.Locale;
 
 /**
- * Abstract class for holding values, constants and objects for the complete RyCON application.
+ * Main implements values, constants and objects for the complete RyCON application as an abstract class.
  * <p>
- * This class was implemented after version 1 of RyCON to get easier access to different things.
- * The main idea to do this comes from the code of JOSM.
+ * This class has been implemented after version 1 of RyCON to get easier access to different things. The main idea to do
+ * this step was influenced by the code base of JOSM, which is a most popular java written editor for OpenStreetMap data.
  *
  * <h3>Changes:</h3>
  * <ul>
@@ -59,7 +59,7 @@ import java.util.Locale;
 public abstract class Main {
 
     /**
-     * Member for the URL of the RyCON update check website.
+     * Member for the URL of the RyCON update check website. RyCON uses https connection of course.
      *
      * @since 3
      */

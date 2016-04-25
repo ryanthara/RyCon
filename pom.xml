@@ -94,7 +94,7 @@
     <!-- define properties -->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <rycon.version>0.9.9-SNAPSHOT</rycon.version>
+        <rycon.version>0.9-SNAPSHOT</rycon.version>
         <targetJdk>1.7</targetJdk>
     </properties>
 
@@ -176,15 +176,14 @@
                     <!--<version>1.7.1</version>-->
                     <version>2.4.3</version>
                 </plugin>
-
                 <!-- a cross-platform tool for wrapping Java applications distributed as jars in
                 lightweight Windows native executables.  -->
                 <plugin>
                     <groupId>com.akathist.maven.plugins.launch4j</groupId>
                     <artifactId>launch4j-maven-plugin</artifactId>
                     <version>1.7.8</version>
+                    <!--<version>1.7.9</version>-->
                 </plugin>
-
                 <!-- give a build number -->
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>

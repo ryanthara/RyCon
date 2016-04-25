@@ -17,18 +17,18 @@ package de.ryanthara.ja.rycon.cli;
  *
  * <h3>Changes:</h3>
  * <ul>
+ *     <li>2: code clean up </li>
  *     <li>1: basic implementation </li>
  * </ul>
  *
  * @author sebastian
- * @version 1
+ * @version 2
  * @since 6
  */
 public class CmdLineInterfaceParser {
 
     private boolean containsIllegalArgument = false;
     private String alphaLanguageCode;
-    private String usage = "usage: java -jar RyCON_[].jar --help --locale=[alpha-2 or alpha-3 language code]";
 
     /**
      * Returns the parsed alpha-2 or alpha-3 language code as string.
@@ -52,31 +52,24 @@ public class CmdLineInterfaceParser {
         if (args != null && args.length > 0) {
             for (String s : args) {
                 if (s.toLowerCase().equals("--help")) {
-                    printHelp();
+                    System.out.println();
+                    System.out.println("usage: java -jar RyCON_[version].jar");
+                    System.out.println(" --help                     shows this help");
+                    System.out.println(" --locale=<language code>   alpha-2 or alpha-3 language code (e.g. en or de");
+                    System.out.println();
                 } else if (s.toLowerCase().contains("--locale=")) {
                     alphaLanguageCode = s.toLowerCase().substring(9, s.length());
                 } else {
                     containsIllegalArgument = true;
-                    printErrorMessage(s);
+                    System.err.println("RyCON: illegal option " + s);
                 }
             }
 
             if (containsIllegalArgument) {
-                System.out.println(usage);
+                String usage = "usage: java -jar RyCON_[].jar --help --locale=[alpha-2 or alpha-3 language code]";
+                System.err.println(usage);
             }
         }
     }
 
-    private void printErrorMessage(String argument) {
-        System.out.println("RyCON: illegal option " + argument);
-    }
-
-    private void printHelp() {
-        System.out.println();
-        System.out.println("usage: java -jar RyCON_[version].jar");
-        System.out.println(" --help                     shows this help");
-        System.out.println(" --locale=<language code>   alpha-2 or alpha-3 language code (e.g. en or de");
-        System.out.println();
-    }
-
-}
+} // end of CmdLineInterfaceParser

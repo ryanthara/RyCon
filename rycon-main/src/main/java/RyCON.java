@@ -19,15 +19,15 @@
 import de.ryanthara.ja.rycon.gui.MainApplication;
 
 /**
- * This class is the entry point of the program.
+ * RyCON is the entry point of the program.
  * <p>
- * This is used to show a nice name for Mac OS X users, because of at the moment there is
- * no Info.plist file used for RyCON. This is going to be changed in a nearby version.
+ * This class is used to show the name 'RyCON' for Mac OS X users, because of there is
+ * no Info.plist file used at the moment. This will be changed in a future version of RyCON.
  * <p>
- * For more information see <a href="https://developer.apple.com/library/mac/documentation/Java/Conceptual/Java14Development/00-Intro/JavaDevelopment.html#//apple_ref/doc/uid/TP40001911-SW1">Apple documentation about java</a>
+ * For more information see the <a href="https://developer.apple.com/library/mac/documentation/Java/Conceptual/Java14Development/00-Intro/JavaDevelopment.html#//apple_ref/doc/uid/TP40001911-SW1">Apple documentation about java</a> on the web.
  * <p>
- * Because of the fact that there are a lot of user who has java version 6 or 7
- * running, RyCON uses no functions of java version 8 in versions lower than 2.
+ * Because of the fact that there are a lot of users who has java version 7 running,
+ * RyCON doesn't use any functions of java version 8. However, RyCON runs under java version 7 or higher.
  *
  * @author sebastian
  * @version 1

@@ -1,0 +1,78 @@
+<!--
+  Bold elements are required.
+  Underlined values are the default when the element is not specified.
+  %VAR% expands environment/special variables and registry keys.
+-->
+<launch4jConfig>
+    <headerType>gui|console</headerType>
+    <outfile>file.exe</outfile>
+    <jar>file</jar>
+    <dontWrapJar>true|false</dontWrapJar>
+    <errTitle>application name</errTitle>
+    <downloadUrl>http://java.com/download</downloadUrl>
+    <supportUrl>url</supportUrl>
+    <cmdLine>text</cmdLine>
+    <chdir>path</chdir>
+    <priority>normal|idle|high</priority>
+    <stayAlive>true|false</stayAlive>
+    <restartOnCrash>true|false</restartOnCrash>
+    <icon>file</icon>
+    <obj>header object file</obj>
+    ...
+    <lib>w32api lib</lib>
+    ...
+    <var>var=text (%VAR%)</var>
+    ...
+    <classPath>
+        <mainClass>main class</mainClass>
+        <cp>classpath (%VAR%)</cp>
+        ...
+    </classPath>
+    <singleInstance>
+        <mutexName>text</mutexName>
+        <windowTitle>text</windowTitle>
+    </singleInstance>
+    <jre>
+        <!-- Specify path or minVersion or both. -->
+        <path>bundled JRE path (%VAR%)</path>
+        <bundledJre64Bit>true|false</bundledJre64Bit>
+        <bundledJreAsFallback>true|false</bundledJreAsFallback>
+        <minVersion>x.x.x[_xx]</minVersion>
+        <maxVersion>x.x.x[_xx]</maxVersion>
+        <jdkPreference>jreOnly|preferJre|preferJdk|jdkOnly</jdkPreference>
+        <runtimeBits>64|64/32|32/64|32</runtimeBits>
+        <!-- Heap sizes in MB and % of available memory. -->
+        <initialHeapSize>MB</initialHeapSize>
+        <initialHeapPercent>%</initialHeapPercent>
+        <maxHeapSize>MB</maxHeapSize>
+        <maxHeapPercent>%</maxHeapPercent>
+        <opt>text (%VAR%)</opt>
+        ...
+    </jre>
+    <splash>
+        <file>file</file>
+        <waitForWindow>true|false</waitForWindow>
+        <timeout>seconds [60]</timeout>
+        <timeoutErr>true|false</timeoutErr>
+    </splash>
+    <versionInfo>
+        <fileVersion>x.x.x.x</fileVersion>
+        <txtFileVersion>text</txtFileVersion>
+        <fileDescription>text</fileDescription>
+        <copyright>text</copyright>
+        <productVersion>x.x.x.x</productVersion>
+        <txtProductVersion>text</txtProductVersion>
+        <productName>text</productName>
+        <companyName>text</companyName>
+        <internalName>filename</internalName>
+        <originalFilename>filename.exe</originalFilename>
+    </versionInfo>
+    <messages>
+        <startupErr>text</startupErr>
+        <bundledJreErr>text</bundledJreErr>
+        <jreVersionErr>text</jreVersionErr>
+        <launcherErr>text</launcherErr>
+        <!-- Used by console header only. -->
+        <instanceAlreadyExistsMsg>text</instanceAlreadyExistsMsg>
+    </messages>
+</launch4jConfig>
