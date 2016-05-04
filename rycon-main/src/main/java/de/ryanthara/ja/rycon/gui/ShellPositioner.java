@@ -24,7 +24,7 @@ import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
 
 /**
- * This class implements a simple functionality to center RyCONs widgets.
+ * ShellPositioner implements a simple functionality to center RyCONs widgets.
  * <p>
  * This is done because of there is no simple method in SWT.
  *
@@ -41,9 +41,9 @@ import org.eclipse.swt.widgets.Shell;
 public class ShellPositioner {
 
     /**
-     * Calculates the centered shell location and returns it als <code>Point</code> object.
+     * Calculate the centered shell location and return it als <code>Point</code> object.
      * <p>
-     * The centered shell location depends on the screen size and the shell size. For calculation
+     * The centered shell location depends on the screen size and the shell size. To calculate
      * these parameters are read from the display and shell objects from the calling widget.
      * The coordinates of the centered shell location represents the upper left corner of the widget.
      *

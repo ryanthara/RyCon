@@ -23,7 +23,7 @@ import org.eclipse.swt.widgets.Text;
 import java.io.File;
 
 /**
- * This class provides simple checking routines in RyCON.
+ * SimpleChecker provides a set of simple check routines in RyCON.
  * <p>
  * The methods are called static from different classes.
  *
@@ -40,12 +40,8 @@ import java.io.File;
 public class SimpleChecker {
 
     /**
-     * Class constructor without parameters.
-     */
-    public SimpleChecker() {}
-
-    /**
-     * Checks a swt text (text field) for not being empty.
+     * Check a swt text (text field) for not being empty.
+     *
      * @param textField text to be checked
      * @return success of the check
      */
@@ -54,15 +50,14 @@ public class SimpleChecker {
     }
 
     /**
-     * Checks the content string of a swt text (text field) for being a valid file in the file system.
+     * Check the content string of a swt text (text field) for being a valid file in the file system.
+     *
      * @param textField text to be checked
      * @return success of the check
      */
     public static boolean checkIsTextValidFile(Text textField) {
         if (!checkIsTextEmpty(textField)) {
-
-            File f = new File(textField.getText());
-            return f.exists();
+            return new File(textField.getText()).exists();
         } else {
             return false;
         }

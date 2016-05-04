@@ -23,23 +23,22 @@ import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 
 /**
- * This class implements basic helper operations on numbers.
- * <p>
- * Therefore a couple of methods and helpers are implemented.
+ * NumberHelper implements basic helper operations on numbers.
  *
  * <h3>Changes:</h3>
  * <ul>
+ *     <li>2: code improvements, documantation updates</li>
  *     <li>1: basic implementation </li>
  * </ul>
  *
  * @author sebastian
- * @version 1
+ * @version 2
  * @since 8
  */
 class NumberHelper {
 
     /**
-     * Fills a double value as string with a number of zeros to a defined last decimal place.
+     * Fill a double value as string with a number of zeros to a defined last decimal place.
      *
      * @param lastDecimalLength length of the last decimal place
      * @return filled up string value
@@ -54,6 +53,18 @@ class NumberHelper {
         DecimalFormat df = new DecimalFormat("");
 
         switch (lastDecimalLength) {
+            case 1:
+                df = new DecimalFormat("#0.0", otherSymbols);
+                break;
+
+            case 2:
+                df = new DecimalFormat("#0.00", otherSymbols);
+                break;
+
+            case 3:
+                df = new DecimalFormat("#0.000", otherSymbols);
+                break;
+
             case 4:
                 df = new DecimalFormat("#0.0000", otherSymbols);
                 break;

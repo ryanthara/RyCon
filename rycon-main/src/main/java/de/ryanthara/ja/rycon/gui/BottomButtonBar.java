@@ -31,8 +31,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
- * This class implements a custom composite with three buttons (Cancel, OK and OK and EXIT) which is used
- * on the bottom of RyCON's widgets.
+ * BottomButtonBar implements a custom composite with three buttons ('Cancel', 'OK' and 'OK and EXIT')
+ * which is used on the bottom of RyCON's widgets.
  *
  * <h3>Changes:</h3>
  * <ul>
@@ -51,8 +51,8 @@ class BottomButtonBar extends Composite {
      * Class constructor with parameters.
      *
      * @param callingObject reference to the calling object
-     * @param parent parent composite (e.g. the parent shell)
-     * @param style style of the composite
+     * @param parent        parent composite (e.g. the parent shell)
+     * @param style         style of the composite
      */
     BottomButtonBar(Object callingObject, Composite parent, int style) {
         super(parent, style);

@@ -22,7 +22,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Control;
 
 /**
- * This class implements functionality for radio buttons.
+ * RadioHelper implements functionality for radio buttons.
  * <p>
  * The access to simple functions is implemented with static access.
  *
@@ -39,7 +39,7 @@ import org.eclipse.swt.widgets.Control;
 public class RadioHelper {
 
     /**
-     * Returns the number of a selected radio button from a given control group.
+     * Return the number of a selected radio button from a given control group.
      * <p>
      * Pay attention to the fact, that the first button in the field has the number '0'.
      *
@@ -63,7 +63,7 @@ public class RadioHelper {
     }
 
     /**
-     * Enables one radio button and disable all the others in the given control group.
+     * Enable one radio button and disable all the others in the given control group.
      *
      * @param control Control with radio buttons
      * @param number  Button to enable
@@ -83,7 +83,7 @@ public class RadioHelper {
     }
 
     /**
-     * Toggles radio buttons vice versa on two given control groups.
+     * Toggle radio buttons vice versa on two given control groups.
      * <p>
      * With this helper the slave button will be toggled to a different index.
      *
@@ -113,8 +113,8 @@ public class RadioHelper {
                 if (button.getSelection()) {
                     selectedSlave = i;
 
-                    if ((selectedSlave == selectedMaster) & (i < 5)) {  // change number of buttons here,
-                        ((Button) slave[i]).setSelection(false);        //  when a new format is implemented
+                    if ((selectedSlave == selectedMaster) & (i < 5)) {  // change number of buttons here, when a new
+                        ((Button) slave[i]).setSelection(false);        // format is implemented on both sides!
 
                         if (selectedSlave == slave.length - 1) {
                             ((Button) slave[0]).setSelection(true);

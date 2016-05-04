@@ -22,7 +22,7 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 /**
- * This class manages the strings of the Caplan K description for multi-language support in RyCON.
+ * CaplanKDescription manages the strings of the Caplan K description for multi-language support in RyCON.
  * <p>
  * The strings are stored in Resource Bundle CaplanKDescription and loaded from this class.
  *
@@ -35,7 +35,6 @@ import java.util.ResourceBundle;
  * @author sebastian
  * @version 2
  * @since 9
- *
  */
 class CaplanKDescription {
 
@@ -43,9 +42,9 @@ class CaplanKDescription {
     private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 
     /**
-     * Returns the key-text-pair for the description.
+     * Return the key-text-pair for the description.
      *
-     * @param wordIndex key to look up
+     * @param description key to look up
      * @return matched text
      */
     static String getDescription(String description) {

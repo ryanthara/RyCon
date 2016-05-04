@@ -47,7 +47,7 @@ import java.net.URISyntaxException;
 import java.util.StringTokenizer;
 
 /**
- * This class implements an update dialog. 
+ * UpdateDialog implements an update dialog for RyCON.
  * <p>
  * If there is a new version of RyCON available this dialog will show a message and 
  * a short 'what's new' section. The user can open the default browser of the system
@@ -91,7 +91,7 @@ public class UpdateDialog extends Dialog {
     public static final int CLOSE_AND_OPEN_BROWSER = 101;
     
     /**
-     * Constructs a new instance of this class given only its parent.
+     * Construct a new instance of this class given only its parent.
      * <p>
      * The Constructor passes default styles.
      *
@@ -102,12 +102,12 @@ public class UpdateDialog extends Dialog {
     }
 
     /**
-     * Constructs a new instance of this class given its parent and a style.
+     * Construct a new instance of this class given its parent and a style.
      * <p>
      * The Constructor passes default styles.
      *
-     * @param parent a shell which will be the parent of the new instance
-     * @param style the style of dialog to construct
+     * @param parent    a shell which will be the parent of the new instance
+     * @param style     the style of dialog to construct
      */
     private UpdateDialog(Shell parent, int style) {
         super(parent, style);
@@ -116,10 +116,9 @@ public class UpdateDialog extends Dialog {
     }
 
     /**
-     * Sets the update dialog's message. The message will be visible on the dialog while it is open.
+     * Set the update dialog's message. The message will be visible on the dialog while it is open.
      *
      * @param message the message to be shown
-     * 
      * @exception java.lang.IllegalArgumentException ERROR_NULL_ARGUMENT - if the string is null
      */
     public void setMessage(String message) {
@@ -130,10 +129,9 @@ public class UpdateDialog extends Dialog {
     }
 
     /**
-     * Sets the what's new info for displaying.
+     * Set the what's new info for displaying.
      *
      * @param whatsNewInfo the info to be set
-     *
      * @exception java.lang.IllegalArgumentException ERROR_NULL_ARGUMENT - if the string is null
      */
     public void setWhatsNewInfo(String whatsNewInfo) {
@@ -144,7 +142,7 @@ public class UpdateDialog extends Dialog {
     }
     
     /**
-     * Opens the dialog and show the content. 
+     * Open the dialog and show the content.
      */
     public int open () {
         shell = new Shell(getParent(), SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL);
@@ -206,8 +204,8 @@ public class UpdateDialog extends Dialog {
         textLabel.setText(message);
 
         /*
-         * necessary for line break because of the label is in a composite and then
-         * the line break has to be forced
+         * this is necessary for line break because of the label is in a composite and then
+         * the line break has to be forced!
          * see: http://book.javanb.com/swt-the-standard-widget-toolkit/ch15lev1sec12.html
          */
         textLabel.addListener(SWT.Resize, new Listener() {

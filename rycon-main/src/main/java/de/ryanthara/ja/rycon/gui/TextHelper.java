@@ -22,8 +22,8 @@ import de.ryanthara.ja.rycon.io.FileUtils;
 import org.eclipse.swt.widgets.Text;
 
 /**
- * This class enables helper operations like checks for being empty or contain valid file objects to text fields.
- * <p>
+ * TextHelper enables helper operations like checks for being empty or contain valid file objects to text fields.
+ *
  * <h3>Changes:</h3>
  * <ul>
  *     <li>1: basic implementation </li>
@@ -51,7 +51,7 @@ public class TextHelper {
     }
 
     /**
-     * Checks if the content of the text field is a valid directory in the file system.
+     * Check if the content of the text field is a valid directory in the file system.
      *
      * @param textField text field which content has to be checked
      * @return true if directory exist
@@ -61,7 +61,7 @@ public class TextHelper {
     }
 
     /**
-     * Checks if the content of the text field is a valid file in the file system.
+     * Check if the content of the text field is a valid file in the file system.
      *
      * @param textField text field content which has to be checked
      * @return true if file exist

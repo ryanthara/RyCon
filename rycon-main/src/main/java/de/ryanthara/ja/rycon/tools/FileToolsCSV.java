@@ -30,7 +30,7 @@ import java.util.TreeSet;
  * Therefore a couple of methods and helpers are implemented to do the conversions and
  * operations on the given text files. During the development of RyCON the text and csv
  * file operations are split into separate classes.
- * <p>
+ *
  * <h3>Changes:</h3>
  * <ul>
  * <li>1: basic implementation </li>
@@ -68,7 +68,7 @@ public class FileToolsCSV {
     }
 
     /**
-     * Converts a text file from cadwork (node.dat) into a CSV file with the given separator sign.
+     * Convert a text file from cadwork (node.dat) into a CSV file with a given separator sign.
      *
      * @param separator        separator sign to use for conversion
      * @param writeCommentLine writes an comment line with information about the column content
@@ -150,12 +150,11 @@ public class FileToolsCSV {
     }
 
     /**
-     * Converts a CSV file from the geodata server Basel Stadt (switzerland) into a CSV formatted file.
+     * Convert a CSV file from the geodata server Basel Stadt (switzerland) into a CSV formatted file.
      * <p>
      * With a parameter it is possible to distinguish between comma or semicolon as separator.
      *
      * @param separator separator sign as {@code String}
-     *
      * @return converted {@code ArrayList<String>} with lines of CSV format
      */
     public ArrayList<String> convertCSVBaselStadt2CSV(String separator) {
@@ -191,12 +190,12 @@ public class FileToolsCSV {
 
 
     /**
-     * Converts a GSI file into a comma or semicolon delimited csv file.
+     * Convert a GSI file into a comma or semicolon delimited csv file.
      * <p>
      * With parameter it is possible to set the separation char (comma or semicolon).
      *
-     * @param separator separator sign as {@code String}
-     * @param writeCommentLine if comment line should be written
+     * @param separator         separator sign as {@code String}
+     * @param writeCommentLine  if comment line should be written
      * @return converted {@code ArrayList<String>} with lines of text format
      */
     public ArrayList<String> convertGSI2CSV(String separator, boolean writeCommentLine) {
@@ -257,10 +256,9 @@ public class FileToolsCSV {
     }
 
     /**
-     * Converts a TXT file into a CSV file with the given separator sign.
+     * Convert a TXT file into a CSV file with the given separator sign.
      *
      * @param separator separator sign to use for conversion
-     *
      * @return converted CSV file
      */
     public ArrayList<String> convertTXT2CSV(String separator) {
@@ -274,5 +272,4 @@ public class FileToolsCSV {
         return result;
     }
 
-
-}
+} // end of FileToolsCSV

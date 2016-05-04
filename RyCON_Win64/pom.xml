@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <!-- coordinates -->
     <artifactId>RyCON_Win64</artifactId>
-    <version>${rycon.version}</version>
+    <version>0.9.11</version>
     <packaging>jar</packaging>
     <name>RyCON for Windows (64-bit)</name>
 
     <!-- inherit all the things which are global for RyCON -->
     <parent>
         <groupId>de.ryanthara.ja.rycon</groupId>
+        <version>0.9.11</version>
         <artifactId>rycon-build</artifactId>
-        <version>${rycon.version}</version>
         <relativePath>../rycon-build/pom.xml</relativePath>
     </parent>
 
@@ -145,4 +143,5 @@
             <version>4.5.2</version>
         </dependency>
     </dependencies>
+
 </project>

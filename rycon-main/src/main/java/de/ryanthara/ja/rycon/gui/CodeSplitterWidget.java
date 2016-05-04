@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- * This class implements a complete widget and it's functionality.
+ * CodeSplitterWidget implements a complete widget and it's functionality.
  * <p>
  * The CodeSplitterWidget of RyCON is used to split measurement files (GSI or text format)
  * by code into several files. Each generated file contains only lines of one code. The code
@@ -91,7 +91,7 @@ public class CodeSplitterWidget {
     }
 
     /**
-     * Executes the drop action as injection.
+     * Execute the drop action as injection.
      * <p>
      * The file processing will be done without a graphical user interface
      * and the result is only shown on the status bar.

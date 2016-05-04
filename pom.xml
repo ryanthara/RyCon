@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <!-- coordinates -->
     <groupId>de.ryanthara.ja.rycon</groupId>
     <!-- version numbering with properties -->
-    <version>${rycon.version}</version>
+    <version>0.9.11</version>
     <artifactId>RyCON</artifactId>
     <packaging>pom</packaging>
     <name>RyCON</name>
@@ -53,7 +51,6 @@
             <id>maven-eclipse-repo</id>
             <url>http://maven-eclipse.github.io/maven</url>
         </repository>
-
         <repository>
             <id>local-repository</id>
             <releases>
@@ -80,7 +77,7 @@
     <distributionManagement>
         <repository>
             <id>absolute directory</id>
-            <url>file:///Users/sebastian/Coder/deploy</url>
+            <url>file:///Users/sebastian/Coder/deploy/</url>
         </repository>
     </distributionManagement>
 
@@ -88,13 +85,12 @@
     <scm>
         <connection>scm:git:https://github.com/ryanthara/RyCon</connection>
         <developerConnection>scm:git:git@github.com:ryanthara/RyCon.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>0.9.11</tag>
     </scm>
 
     <!-- define properties -->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <rycon.version>0.9-SNAPSHOT</rycon.version>
         <targetJdk>1.7</targetJdk>
     </properties>
 
@@ -204,6 +200,37 @@
                     <artifactId>native2ascii-maven-plugin</artifactId>
                     <version>1.0-beta-1</version>
                 </plugin>
+
+                <!-- copy jar's after build -->
+                <plugin>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <version>1.8</version>
+                    <configuration>
+                        <target>
+                            <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_aix_ppc/target/RyCON_aix_ppc.jar" tofile="/Users/sebastian/Coder/deploy/RyCON_${version}_aix_ppc.jar"/>
+                            <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_aix_ppc64/target/RyCON_aix_ppc64.jar" tofile="/Users/sebastian/Coder/deploy/RyCON_${version}_aix_ppc64.jar"/>
+                            <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_hpux_ia64/target/RyCON_hpux_ia64.jar" tofile="/Users/sebastian/Coder/deploy/RyCON_${version}_hpux_ia64.jar"/>
+                            <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_Linux_ppc/target/RyCON_Linux_ppc.jar" tofile="/Users/sebastian/Coder/deploy/RyCON_${version}_Linux_ppc.jar"/>
+                            <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_Linux_ppc64/target/RyCON_Linux_ppc64.jar" tofile="/Users/sebastian/Coder/deploy/RyCON_${version}_Linux_ppc64.jar"/>
+                            <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_Linux_x86/target/RyCON_Linux_x86.jar" tofile="/Users/sebastian/Coder/deploy/RyCON_${version}_Linux_x86.jar"/>
+                            <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_Linux_x86-64/target/RyCON_Linux_x86-64.jar" tofile="/Users/sebastian/Coder/deploy/RyCON_${version}_Linux_x86-64.jar"/>
+                            <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_MacOSX32/target/RyCON_MacOSX32.app-app.zip" tofile="/Users/sebastian/Coder/deploy/RyCON_${version}_MacOSX32.app-app.zip"/>
+                            <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_MacOSX64/target/RyCON_MacOSX64.app-app.zip" tofile="/Users/sebastian/Coder/deploy/RyCON_${version}_MacOSX64.app-app.zip"/>
+                            <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_Solaris_sparc/target/RyCON_Solaris_sparc.jar" tofile="/Users/sebastian/Coder/deploy/RyCON_${version}_Linux_ppc.jar"/>
+                            <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_Solaris_x86/target/RyCON_Solaris_x86.jar" tofile="/Users/sebastian/Coder/deploy/RyCON_${version}_Solaris_x86.jar"/>
+                            <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_Win32/target/RyCON_Windows32.exe" tofile="/Users/sebastian/Coder/deploy/RyCON_${version}_Windows32.exe"/>
+                            <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_Win64/target/RyCON_Windows64.exe" tofile="/Users/sebastian/Coder/deploy/RyCON_${version}_Windows64.exe"/>
+                        </target>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>run</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>
@@ -219,7 +246,7 @@
         <module>rycon-main</module>
         <module>RyCON_aix_ppc</module>
         <module>RyCON_aix_ppc64</module>
-        <module>RyCON_hpux-ia64</module>
+        <module>RyCON_hpux_ia64</module>
         <module>RyCON_Linux_ppc</module>
         <module>RyCON_Linux_ppc64</module>
         <module>RyCON_Linux_x86</module>

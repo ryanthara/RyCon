@@ -33,7 +33,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 /**
- * This class implements a complete widget and it's functionality.
+ * TidyUpWidget implements a complete widget and it's functionality.
  * <p>
  * With the TidyUpWidget of RyCON it is possible to clean up coordinate and
  * measurement files with a simple 'intelligence'.
@@ -84,7 +84,7 @@ public class TidyUpWidget {
     }
 
     /**
-     * Executes the drop action as injection.
+     * Execute the drop action as injection.
      * <p>
      * The file processing will be done without a graphical user interface
      * and the result is only shown on the status bar.

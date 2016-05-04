@@ -21,9 +21,9 @@ package de.ryanthara.ja.rycon.io;
 import java.io.*;
 
 /**
- * This class implements basic file io-operations for copying, etc to RyCON.
+ * FileUtils implements basic file io-operations for copying, etc. to RyCON.
  * <p>
- * Because of the fact that there are a lot of user who has java version 6 or 7
+ * Because of the fact that there are a lot of user who has java version 7
  * running, RyCON uses no functions of java version 8 in versions lower than 2.
  *
  * <h3>Changes:</h3>
@@ -39,13 +39,7 @@ import java.io.*;
 public class FileUtils {
 
     /**
-     * Class Constructor.
-     */
-    public FileUtils() {
-    }
-
-    /**
-     * Checks if a directory exists and is a valid director for a String URL
+     * Check if a directory exists and is a valid directory for a given String URL.
      *
      * @param file directory URL as String to be checked
      * @return true if is directory and exists
@@ -57,7 +51,7 @@ public class FileUtils {
     }
 
     /**
-     * Checks if a file exists and is a valid file for a String URL
+     * Check if a file exists and is a valid file for a given String URL.
      *
      * @param file file URL as String to be checked
      * @return true if is file and exists
@@ -68,10 +62,8 @@ public class FileUtils {
         return f.exists() & f.isFile();
     }
 
-
-
     /**
-     * Copies a file or directory and it's subdirectories recursively from source to target location.
+     * Copy a file or directory and it's subdirectories recursively from source to target location.
      * <p>
      * Alternatively the Apache Commons IO functions can be used for the same task. But at the moment
      * RyCON tries to use at less external libraries as necessary.
@@ -95,9 +87,7 @@ public class FileUtils {
             }
         }
 
-        String files[] = source.list();
-
-        for (String file : files) {
+        for (String file : source.list()) {
             File sourceFile = new File(source, file);
             File targetFile = new File(target, file);
             copy(sourceFile, targetFile);

@@ -34,7 +34,7 @@ import java.util.ArrayList;
 
 
 /**
- * This class implements a complete widget and it's functionality.
+ * LevellingWidget implements a complete widget and it's functionality.
  * <p>
  * The LevellingWidget of RyCON is used to convert levelling files for cad import.
  * Therefore a GSI based levelling file is prepared to a coordinate file with
@@ -88,7 +88,7 @@ public class LevellingWidget {
     }
 
     /**
-     * Executes the drop action as injection.
+     * Execute the drop action as injection.
      * <p>
      * The file processing will be done without a graphical user interface
      * and the result is only shown on the status bar.

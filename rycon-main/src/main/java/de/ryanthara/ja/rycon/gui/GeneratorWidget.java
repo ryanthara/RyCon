@@ -34,7 +34,7 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * This class implements a complete widget and it's functionality.
+ * GeneratorWidget implements a complete widget and it's functionality.
  * <p>
  * The GeneratorWidget of RyCON is used to generate folders and substructures
  * in a default path by a given point number.

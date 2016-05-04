@@ -27,7 +27,7 @@ import java.util.prefs.Preferences;
 
 
 /**
- * This class brought the functionality for handling system and user settings to RyCON.
+ * PreferenceHandler brought the functionality for handling system and user settings to RyCON.
  * <p>
  * The less needed configuration settings of RyCON are stored with the mechanism of the 
  * JAVA Preferences API in the system and user area of your computer.
@@ -55,85 +55,102 @@ public class PreferenceHandler implements PreferenceChangeListener {
 
     /**
      * Member for the preference key of the GSI setting for line ending.
-     * Maybe only a problem with the Autocad import tool of RAPP AG.
+     * <p>
+     * Maybe only a problem with the Autocad import tool of RAPP INFRA AG.
      * @since 5
      */
     public final static String GSI_SETTING_LINE_ENDING_WITH_BLANK = "gsi_setting_line_ending_with_blank";
+
     /**
      * Member for the preference key of the build and version number value.
      * @since 3
      */
     public final static String BUILD_VERSION = "build_version";
+
     /**
      * Member for the preference key of the base directory value.
      * @since 3
      */
     public final static String DIR_BASE = "dir_base";
+
     /**
      * Member for the preference key of the big data directory value.
      * @since 6
      */
     public final static String DIR_BIG_DATA = "dir_big_data";
+
     /**
      * Member for the preference key of the big data template directory value.
      * @since 6
      */
     public final static String DIR_BIG_DATA_TEMPLATE = "dir_big_data_template";
+
     /**
      * Member for the preference key of the admin directory value.
      * @since 3
      */
     public final static String DIR_ADMIN = "dir_admin";
+
     /**
      * Member for the preference key of the admin template directory value.
      * @since 3
      */
     public final static String DIR_ADMIN_TEMPLATE = "dir_admin_template";
+
     /**
      * Member for the preference key of the project directory value.
      * @since 3
      */
     public final static String DIR_PROJECT = "dir_projects";
+
     /**
      * Member for the preference key of the project template directory value.
      * @since 3
      */
     public final static String DIR_PROJECT_TEMPLATE = "dir_projects_template";
+
     /**
      * Member for the preference key of the generator value.
      * @since 3
      */
     public final static String GENERATOR = "generator";
+
     /**
      * Member for the preference key of the information string value.
      * @since 3
      */
     public final static String INFORMATION_STRING = "information_string";
+
     /**
      * Member for the preference key for the edit string.
      * @since 6
      */
     public final static String PARAM_CODE_STRING = "param_code_string";
+
     /**
      * Member for the preference key for the control point identifier string.
      * @since 3
      */
     public final static String PARAM_CONTROL_POINT_STRING = "param_control_point_string";
+
     /**
      * Member for the preference key for the edit string.
      * @since 6
      */
     public final static String PARAM_EDIT_STRING = "param_edit_string";
+
     /**
      * Member for the preference key for the free station identifier string.
      * @since 3
      */
     public final static String PARAM_FREE_STATION_STRING = "param_free_station_string";
+
     /**
      * Member for the preference key for the free station identifier string.
      * @since 3
      */
     public final static String PARAM_KNOWN_STATION_STRING = "param_known_station_string";
+
     /**
      * Member for the preference key for the last used directory.
      * @since 3
@@ -160,10 +177,10 @@ public class PreferenceHandler implements PreferenceChangeListener {
     }
 
     /**
-     * Checks a path which is stored in the user preferences of RyCON.
+     * Check a path which is stored in the user preferences of RyCON.
      * <p>
-     * If the path doesn't exists, RyCON tries to use the value of the base dir. If base dir doesn't exist, then
-     * the value of the "HOME" variable of the system will be returned.
+     * If the path doesn't exists, RyCON tries to use the value of the base dir. If the base dir doesn't exist,
+     * then the value of the "HOME" variable of the system will be returned.
      *
      * @param pathToBeChecked stored path which has to be checked
      */
@@ -179,7 +196,7 @@ public class PreferenceHandler implements PreferenceChangeListener {
     }
 
     /**
-     * Fills in the default values for RyCON into user preferences.
+     * Fill in the default values for RyCON into user preferences.
      * <p>
      * Default settings are generated for the following parameters (parameter name - value).
      * <ul>
@@ -237,7 +254,8 @@ public class PreferenceHandler implements PreferenceChangeListener {
     }
 
     /**
-     * Returns a system preference by given name.
+     * Return a system preference by given name.
+     *
      * @param prefName name of the system preference to be read
      * @return system preference as String
      * @since 3
@@ -247,7 +265,8 @@ public class PreferenceHandler implements PreferenceChangeListener {
     }
 
     /**
-     * Returns true if a file with default settings was generated.
+     * Return true if a file with default settings was generated.
+     *
      * @return success
      */
     public boolean isDefaultSettingsGenerated() {
@@ -268,7 +287,8 @@ public class PreferenceHandler implements PreferenceChangeListener {
     }
 
     /**
-     * Sets the value for defaultSettingsGenerated from outside this class.
+     * Set the value for defaultSettingsGenerated from outside this class.
+     *
      * @param defaultSettingsGenerated value to be set
      */
     public void setDefaultSettingsGenerated(boolean defaultSettingsGenerated) {
@@ -276,7 +296,8 @@ public class PreferenceHandler implements PreferenceChangeListener {
     }
 
     /**
-     * Sets a defined system preference by name and value. 
+     * Set a defined system preference by name and value.
+     *
      * @param prefName name of the system preference to be set
      * @param value value to be set
      * @since 3

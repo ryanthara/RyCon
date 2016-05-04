@@ -38,12 +38,13 @@ import java.util.Scanner;
 import java.util.regex.Pattern;
 
 /**
- * This class holds all the update functionality for RyCON.
+ * Updater holds all the update functionality for RyCON.
  * <p>
- * This class checks the RyCON website (URL 'https://code.ryanthara.de/RyCON') for a new version.
+ * This class checks the RyCON website (URL 'https://code.ryanthara.de/RyCON') for a new RyCON version.
  *
  * <h3>Changes:</h3>
  * <ul>
+ *     <li>5: patch level support implemented </li>
  *     <li>4: ssl check implemented </li>
  *     <li>3: clean up and improvements </li>
  *     <li>2: basic improvements </li>
@@ -51,7 +52,7 @@ import java.util.regex.Pattern;
  * </ul>
  *
  * @author sebastian
- * @version 2
+ * @version 5
  * @since 3
  */
 public class Updater {
@@ -59,9 +60,9 @@ public class Updater {
     private boolean updateAvailable = false;
 
     /**
-     * Performs the check of the RyCON update website.
+     * Perform the check of the RyCON update website.
      * <p>
-     * Due to JAVA SSL implementations and it's constrained to store the key in the public keychain,
+     * Due to JAVA's SSL implementations and it's constrained to store the key in the public keychain,
      * this is a 'hack' to bypass the ssl check easily. This should be done better in a future version.
      *  
      * @return success
@@ -91,6 +92,7 @@ public class Updater {
             HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
         } catch (Exception e) {
             System.err.println("Can't activate the trust manager for the ssl connection to www.ryanthara.de");
+            e.printStackTrace();
         }
 
         try {
@@ -104,11 +106,12 @@ public class Updater {
                 String majorMinor = scanner.next();
 
                 String[] segments = majorMinor.split(Pattern.quote("."));
-                int majorVersion = Integer.parseInt(segments[0]);
-                int minorVersion = Integer.parseInt(segments[1]);
+                short majorRelease = Short.parseShort(segments[0]);
+                short minorRelease = Short.parseShort(segments[1]);
+                short patchLevel = Short.parseShort(segments[2]);
 
                 scanner.next();
-                int build = scanner.nextInt();
+                short build = scanner.nextShort();
 
                 scanner.next();
                 String buildDate = scanner.next();
@@ -127,9 +130,12 @@ public class Updater {
                 }
                 scanner.close();
 
-                if (majorVersion > Version.getMajorVersionNumber()) {
+                if (majorRelease > Version.getMajorRelease()) {
                     updateAvailable = true;
-                } else if (majorVersion == Version.getMajorVersionNumber() && minorVersion > Version.getMinorVersionNumber()) {
+                } else if (majorRelease == Version.getMajorRelease() && minorRelease > Version.getMinorRelease()) {
+                    updateAvailable = true;
+                } else if (majorRelease == Version.getMajorRelease() && minorRelease == Version.getMinorRelease()
+                        && patchLevel > Version.getPatchLevel()) {
                     updateAvailable = true;
                 } else if (build > Version.getBuildNumber()){
                     updateAvailable = true;
@@ -138,7 +144,7 @@ public class Updater {
                 }
                 success = true;
             } else {
-                System.out.println("Online check failed. Please check your network settings");
+                System.err.println("Online check failed. Please check your network settings");
             }
         } catch (MalformedURLException e) {
             System.err.println("checkForUpdate() failed: MalformedURLException");
@@ -152,7 +158,7 @@ public class Updater {
     }
 
     /**
-     * Picks the latest news from the RyCON website.
+     * Pick the latest news from a text file on the RyCON website and return the content as {code String}.
      *
      * @return latest news from the update site
      */
@@ -178,7 +184,7 @@ public class Updater {
     }
 
     /**
-     * Returns true if an update is available.
+     * Return true if an update is available.
      * <p>
      * The check for an update is done in {@see checkForUpdate}
      *

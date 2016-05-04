@@ -26,7 +26,7 @@ import org.eclipse.swt.widgets.*;
 import java.io.File;
 
 /**
- * This class brings gui helper functionality to RyCON.
+ * GuiHelper brings gui helper functionality to RyCON.
  * <p>
  * Some gui elements and tools are used in different classes. These methods are combined as little helpers here.
  *
@@ -43,14 +43,14 @@ import java.io.File;
 public class GuiHelper {
 
     /**
-     * Shows a directory dialog which is used in different classes of RyCON.
+     * Show a directory dialog which is used in different classes of RyCON.
      * <p>
      * The filter path is checked if there is a stored value in the preferences file of RyCON.
      *
-     * @param innerShell shell object
-     * @param textField text field object
-     * @param title title of the directory dialog
-     * @param message message of the directory dialog
+     * @param innerShell        shell object
+     * @param textField         text field object
+     * @param title             title of the directory dialog
+     * @param message           message of the directory dialog
      * @param checkedFilterPath filter path of the directory dialog
      * @since 2
      */
@@ -73,16 +73,16 @@ public class GuiHelper {
     }
 
     /**
-     * Shows a file dialog which is used in different classes of RyCON.
+     * Show a file dialog which is used in different classes of RyCON.
      *
-     * @param innerShell shell object
-     * @param multiSelection allows multi selection
-     * @param filterPath filter path of the file dialog
-     * @param text title of the file dialog
-     * @param filterExtensions allowed extensions
-     * @param filterNames description of allowed extensions
-     * @param source source text field
-     * @param destination destination text field
+     * @param innerShell        shell object
+     * @param multiSelection    allows multi selection
+     * @param filterPath        filter path of the file dialog
+     * @param text              title of the file dialog
+     * @param filterExtensions  allowed extensions
+     * @param filterNames       description of allowed extensions
+     * @param source            source text field
+     * @param destination       destination text field
      * @return chosen files as String array
      * @since 2
      */
@@ -127,12 +127,11 @@ public class GuiHelper {
 
     /**
      * Shows a swt MessageBox and returns an Integer value as indicator for being shown.
-     * <p>
-     * The boolean is used for error indication in different classes.
-     * @param innerShell the inner shell object
-     * @param icon the icon of the message box
-     * @param text the headline text of the message box
-     * @param message the message of the message box
+     *
+     * @param innerShell    the inner shell object
+     * @param icon          the icon of the message box
+     * @param text          the headline text of the message box
+     * @param message       the message of the message box
      * @return int value
      */
     public static int showMessageBox(Shell innerShell, int icon, String text, String message) {

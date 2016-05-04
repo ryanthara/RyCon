@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 /**
- * This class implements functionality which is used by all main widgets of RyCON.
+ * WidgetHelper implements functionality which is used by all main widgets of RyCON.
  * <p>
  * Later on, here will be more flexible stuff implemented.
  *
@@ -47,11 +47,11 @@ import java.util.StringTokenizer;
 class WidgetHelper {
 
     /**
-     * Checks the source and destination text fields for valid files and returns the valid chosen files as file object.
+     * Check the source and destination text fields for valid files and returns the valid chosen files as file object.
      *
-     * @param source the source text field
-     * @param destination the destination text field
-     * @param chosenFiles the chosen files to be checked
+     * @param source        the source text field
+     * @param destination   the destination text field
+     * @param chosenFiles   the chosen files to be checked
      * @return the valid chosen files
      */
     static File[] checkSourceAndDestinationTextFields(Text source, Text destination, File[] chosenFiles) {
@@ -88,12 +88,12 @@ class WidgetHelper {
     }
 
     /**
-     * Checks the content of an file array for valid files.
+     * Check the content of an file array for valid files.
      * <p>
      * Non readable file objects and directories will be not included in the returned file array.
      *
-     * @param files file array to be checked
-     * @param acceptableFileSuffix string array with the acceptable file suffixes to be accepted
+     * @param files                 file array to be checked
+     * @param acceptableFileSuffix  string array with the acceptable file suffixes to be accepted
      * @return check file array with only valid and readable file objects
      */
     static File[] checkForValidFiles(File[] files, String[] acceptableFileSuffix) {

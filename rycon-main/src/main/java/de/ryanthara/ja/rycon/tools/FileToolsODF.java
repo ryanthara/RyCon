@@ -28,11 +28,11 @@ import java.util.List;
 
 
 /**
- * This class implements basic operations on spreadsheet output operations for Open Document Format files.
+ * FileToolsODF implements basic operations on spreadsheet output operations for Open Document Format files.
  * <p>
  * Therefore a couple of methods and helpers are implemented to do the conversions and
- * operations on the given files.
- * <p>
+ * operations on the given files. At the moment there is no internal RyCON format used.
+ *
  * <h3>Changes:</h3>
  * <ul>
  * <li>1: basic implementation </li>
@@ -71,10 +71,9 @@ public class FileToolsODF {
     }
 
     /**
-     * Converts a CSV file element by element into an Open Document Format spreadsheet file.
+     * Convert a CSV file element by element into an Open Document Format spreadsheet file.
      *
      * @param sheetName name of the sheet (file name from input file)
-     *
      * @return success conversion success
      */
     public boolean convertCSV2ODS(String sheetName) {
@@ -108,11 +107,10 @@ public class FileToolsODF {
     }
 
     /**
-     * Converts a CSV file from the geodata server Basel Stadt (Switzerland) into an Open Document Format spreadsheet file.
+     * Convert a CSV file from the geodata server Basel Stadt (Switzerland) into an Open Document Format spreadsheet file.
      *
      * @param sheetName       name of the sheet (file name from input file)
      * @param writeCommentRow write comment row
-     *
      * @return success conversion success
      */
     public boolean convertCSVBaselStadt2ODS(String sheetName, boolean writeCommentRow) {
@@ -187,11 +185,10 @@ public class FileToolsODF {
     }
 
     /**
-     * Converts a Cadwork node.dat file into an Open Document Format spreadsheet file.
+     * Convert a Cadwork node.dat file into an Open Document Format spreadsheet file.
      *
      * @param sheetName       name of the sheet (file name from input file)
      * @param writeCommentRow write comment row
-     *
      * @return success conversion
      */
     public boolean convertCadwork2ODS(String sheetName, boolean writeCommentRow) {
@@ -266,11 +263,10 @@ public class FileToolsODF {
     }
 
     /**
-     * Converts a K file element by element into an Open Document Format spreadsheet file.
+     * Convert a K file element by element into an Open Document Format spreadsheet file.
      *
      * @param sheetName       name of the sheet (file name from input file)
      * @param writeCommentRow write comment row
-     *
      * @return success conversion success
      */
     public boolean convertCaplan2ODS(String sheetName, boolean writeCommentRow) {
@@ -390,10 +386,9 @@ public class FileToolsODF {
     }
 
     /**
-     * Converts a GSI file element by element into an Open Document Format spreadsheet file.
+     * Convert a Leica GSI file element by element into an Open Document Format spreadsheet file.
      *
      * @param sheetName name of the sheet (file name from input file)
-     *
      * @return success conversion success
      */
     public boolean convertGSI2ODS(String sheetName, boolean writeCommentRow) {
@@ -519,10 +514,9 @@ public class FileToolsODF {
     }
 
     /**
-     * Converts a TXT file element by element into an Open Document Format spreadsheet file.
+     * Convert a TXT file element by element into an Open Document Format spreadsheet file.
      *
      * @param sheetName name of the sheet (file name from input file)
-     *
      * @return success conversion success
      */
     public boolean convertTXT2ODS(String sheetName) {
@@ -557,12 +551,11 @@ public class FileToolsODF {
     }
 
     /**
-     * Converts a txt file from the geodata server Basel Landschaft (Switzerland) element by element into an
+     * Convert a txt file from the geodata server Basel Landschaft (Switzerland) element by element into an
      * Open Document Format spreadsheet file.
      *
      * @param sheetName       name of the sheet (file name from input file)
      * @param writeCommentRow write comment row
-     *
      * @return success conversion success
      */
     public boolean convertTXTBaselLandschaft2ODS(String sheetName, boolean writeCommentRow) {
@@ -671,10 +664,9 @@ public class FileToolsODF {
     }
 
     /**
-     * Writes the Open Document Format Spreadsheet file to the filesystem.
+     * Write the Open Document Format Spreadsheet file to the filesystem.
      *
      * @param fileName output filename
-     *
      * @return file writing success
      */
     public boolean writeODS(String fileName) {

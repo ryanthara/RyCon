@@ -45,7 +45,7 @@ import java.awt.image.IndexColorModel;
 import java.awt.image.WritableRaster;
 
 /**
- * This class converts images between AWT, Swing and SWT with support for Apple retina
+ * ImageConverter converts images between AWT, Swing and SWT with support for Apple retina
  * displays. These high resolution displays need special image preparation.
  * <p>
  * This converter depends on the ImageConverter.class by Michael Karneim from
@@ -55,7 +55,7 @@ import java.awt.image.WritableRaster;
  * The functions for retina support are added from IconLoader by Konstantin Bulenkov
  * from http://bulenkov.com/2013/06/23/retina-support-in-oracle-jdk-1-7/ with jar.
  * <p>
- * From me there are a couple of additional methods implemented.
+ * A couple of additional methods was implemented for RyCON.
  *
  * <h3>Changes:</h3>
  * <ul>
@@ -70,7 +70,7 @@ import java.awt.image.WritableRaster;
 public class ImageConverter {
 
     /**
-     * Converts an image (GIF, JPG, PGN, ...) to {@code Image} object from swt
+     * Convert an image (GIF, JPG, PGN, ...) to {@code Image} object from swt
      * {@link org.eclipse.swt.graphics.Image}.
      *
      * @param display Display object on which the image is loaded (swt dependency)
@@ -82,7 +82,7 @@ public class ImageConverter {
     }
 
     /**
-     * Converts a {@code BufferedImage} object to an {@code ImageData} object.
+     * Convert a {@code BufferedImage} object to an {@code ImageData} object.
      * @param bufferedImage the BufferedImage to convert
      * @return converted BufferedImage as ImageData
      */

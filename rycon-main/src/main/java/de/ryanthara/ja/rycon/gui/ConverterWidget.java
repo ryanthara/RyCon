@@ -40,7 +40,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class implements a complete widget and it's functionality.
+ * ConverterWidget implements a complete widget and it's functionality.
  * <p>
  * The ConverterWidget of RyCON is used to convert measurement and coordinate
  * files into different formats. RyCON can be used to convert special formats
@@ -1061,7 +1061,6 @@ public class ConverterWidget {
             } else {
                 return false;
             }
-
         } else {
             return new LineWriter(fileName).writeFile(writeFile);
         }
@@ -1083,7 +1082,6 @@ public class ConverterWidget {
             } else {
                 return false;
             }
-
         } else {
             if (suffix.equalsIgnoreCase(".xls")) {
                 return toolsExcel.writeXLS(f);
@@ -1095,7 +1093,17 @@ public class ConverterWidget {
 
     private boolean writeODS2Disk(File file, FileToolsODF toolsODF, String suffix) {
         String fileName = prepareOutputFileName(file, suffix);
-        return toolsODF.writeODS(fileName);
+        File f = new File(fileName);
+
+        if (f.exists()) {
+            int returnValue = GuiHelper.showMessageBox(innerShell, SWT.ICON_WARNING | SWT.YES | SWT.NO,
+                    I18N.getMsgBoxTitleWarning(), String.format(I18N.getMsgFileExist(), fileName));
+
+            return returnValue == SWT.YES && toolsODF.writeODS(fileName);
+        } else {
+            return toolsODF.writeODS(fileName);
+        }
+
     }
 
     private String prepareOutputFileName(File file, String suffix) {

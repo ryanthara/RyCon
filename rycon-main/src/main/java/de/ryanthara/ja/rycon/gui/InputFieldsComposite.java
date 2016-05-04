@@ -34,7 +34,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
- * This class implements a custom composite with two labels, two text fields and two buttons for
+ * InputFieldsComposite implements a custom composite with two labels, two text fields and two buttons for
  * file and directory inputs used in RyCON's widgets.
  *
  * <h3>Changes:</h3>
@@ -196,7 +196,7 @@ class InputFieldsComposite extends Composite {
     }
 
     /**
-     * Returns the complete destination text field as an object for full access to it.
+     * Return the complete destination text field as an object for full access to it.
      *
      * @return destination text field
      */
@@ -205,7 +205,7 @@ class InputFieldsComposite extends Composite {
     }
 
     /**
-     * Returns the complete source text field as an object for full access to it.
+     * Return the complete source text field as an object for full access to it.
      *
      * @return source text field
      */
@@ -214,7 +214,7 @@ class InputFieldsComposite extends Composite {
     }
 
     /**
-     * Sets the text of the destination text field.
+     * Set the text of the destination text field.
      *
      * @param text the text to be set
      */
@@ -223,7 +223,7 @@ class InputFieldsComposite extends Composite {
     }
 
     /**
-     * Sets the text of the source text field.
+     * Set the text of the source text field.
      *
      * @param text the text to be set
      */

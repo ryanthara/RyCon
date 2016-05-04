@@ -32,7 +32,7 @@ import org.eclipse.swt.widgets.*;
 
 
 /**
- * This class implements a complete widget and it's functionality.
+ * GeneratorSettingsWidget implements a complete widget and it's functionality.
  * <p>
  * The GeneratorSettingsWidget of RyCON is used to set preferences for the generator
  * functionality.

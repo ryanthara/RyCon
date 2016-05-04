@@ -69,7 +69,7 @@ public class FileToolsText {
     }
 
     /**
-     * Converts a CSV file into a TXT file with the given separator sign.
+     * Convert a CSV file into a TXT file with a given separator sign.
      *
      * @param separator separator sign to use for conversion
      * @return converted TXT file
@@ -98,7 +98,7 @@ public class FileToolsText {
     }
 
     /**
-     * Converts a CSV file from the geodata server Basel Stadt (switzerland) into a txt format file.
+     * Convert a CSV file from the geodata server Basel Stadt (switzerland) into a txt format file.
      * <p>
      * With a parameter it is possible to distinguish between space or tabulator as separator.
      *
@@ -137,13 +137,13 @@ public class FileToolsText {
     }
 
     /**
-     * Converts a GSI file into a space or tab delimited text file.
+     * Convert a GSI file into a space or tab delimited text file.
      * <p>
      * With parameter it is possible to set the separation char (space or tab).
      *
-     * @param separator separator sign as {@code String}
-     * @param isGSI16 true if GSI16 format is used
-     * @param writeCommentLine if comment line should be written
+     * @param separator         separator sign as {@code String}
+     * @param isGSI16           true if GSI16 format is used
+     * @param writeCommentLine  if comment line should be written
      * @return converted {@code ArrayList<String>} with lines of text format
      */
     public ArrayList<String> convertGSI2TXT(String separator, boolean isGSI16, boolean writeCommentLine) {
@@ -234,11 +234,11 @@ public class FileToolsText {
     }
 
     /**
-     * Converts an K formatted file (CAPLAN) to txt formatted file.
+     * Convert an K formatted file (CAPLAN) to txt formatted file.
      *
-     * @param separator distinguish between tabulator or space as division sign
-     * @param writeCommentLine writes an comment line into the file
-     * @param writeCodeColumn writes a code column (nr code x y z attr)
+     * @param separator         distinguish between tabulator or space as division sign
+     * @param writeCommentLine  writes an comment line into the file
+     * @param writeCodeColumn   writes a code column (nr code x y z attr)
      * @param writeSimpleFormat writes a simple format (nr x y z or nr code x y z)
      * @return converted {@code ArrayList<String>} with lines of text format
      */
@@ -318,13 +318,13 @@ public class FileToolsText {
     }
 
     /**
-     * Converts a text file from the geodata server Basel Landschaft (switzerland) into a TXT formatted file (no code x y z).
+     * Convert a text file from the geodata server Basel Landschaft (switzerland) into a TXT formatted file (no code x y z).
      * <p>
-     * This method can differ between LFP and HFP files, which has a different structure.
+     * This method can differ between LFP and HFP files, which has a given different structure.
      * With a parameter it is possible to distinguish between tabulator and space divided files.
      *
-     * @param separator distinguish between tabulator or space as division sign
-     * @param writeCodeColumn use 'Versicherungsart' (LFP) as code column on second position
+     * @param separator         distinguish between tabulator or space as division sign
+     * @param writeCodeColumn   use 'Versicherungsart' (LFP) as code column on second position
      * @return converted {@code ArrayList<String>} with lines of text format
      */
     public ArrayList<String> convertTXTBaselLandschaft2TXT(String separator, boolean writeCodeColumn) {
@@ -388,7 +388,7 @@ public class FileToolsText {
     }
 
     /**
-     * Returns the found codes as an integer array.
+     * Return the found codes as an integer array.
      * <p>
      * This is necessary because of the elimination of the code in the string line.
      *
@@ -399,7 +399,7 @@ public class FileToolsText {
     }
 
     /**
-     * Splits a code based file into separate files by code.
+     * Split a code based file into separate files by code.
      * <p>
      * A separate file is generated for every existing code. Lines without code will ignored.
      * RyCON need a text file format that is nr, code, x, y, z and divided by blank or tab.
@@ -483,10 +483,10 @@ public class FileToolsText {
     }
 
     /**
-     * Defines an inner object for better access to elements and so on.
+     * Define an inner object for better access to read text elements.
      * <p>
      * In the first version this TextHelper object is used only internally in this class.
-     * Maybe later on, there will be a good reason to make an own public class from it.
+     * Maybe later on, there will be a good reason to make an own class from it.
      *
      * @author sebastian
      * @version 1
@@ -504,14 +504,12 @@ public class FileToolsText {
          * @param block complete block as String
          */
         TextHelper(int code, String block) {
-
             this.code = code;
             this.block = block;
-
         }
 
         /**
-         * Returns the code and the block to String.
+         * Return the code and the block to String.
          *
          * @return code and block as String
          */
@@ -519,6 +517,6 @@ public class FileToolsText {
             return code + " " + block;
         }
 
-    } // end of TextHelper
+    } // end of inner class TextHelper
 
 }  // end of TextFileTools

@@ -18,19 +18,14 @@
 
 package de.ryanthara.ja.rycon.io;
 
-import de.ryanthara.ja.rycon.Main;
-
 import java.io.*;
 import java.util.ArrayList;
 
 /**
- * This class reads a file line by line.
+ * LineReader reads a file line by line and stores it's values in an {code ArrayList<String>}.
  * <p>
  * A couple of things are implemented as additional functionality. At the moment,
  * there is no thread safety implemented or planed.
- * <p>
- * The demo and open source version of RyCON will be limited to read only 20 lines
- * and show a notification window always on top.
  *
  * <h3>Changes:</h3>
  * <ul>
@@ -60,29 +55,31 @@ public class LineReader {
     }
 
     /**
-     * Returns the number of read lines.
+     * Return the number of read lines.
      * <p>
      * By default the value is set to -1, which shows, that no line has been read.
      *
      * @return number of read lines
      */
+    // TODO Implement the usage of the count read lines to the status bar
     public int getCountReadLines() {
         return countReadLines;
     }
 
     /**
-     * Returns the number of stored lines.
+     * Return the number of stored lines.
      * <p>
      * By default the value is set to -1, which shows, that no read line has been stored to the {@code ArrayList<String>}.
      *
      * @return number of stored lines
      */
+    // TODO Implement the usage of the stored read lines to the status bar (better not dropped lines?)
     public int getCountStoredLines() {
         return countStoredLines;
     }
 
     /**
-     * Returns the read lines as an {@code ArrayList<String>} object.
+     * Return the read lines as an {@code ArrayList<String>} object.
      * <p>
      * The {@code ArrayList<String>} contains every read line, first line on top.s
      *
@@ -93,7 +90,7 @@ public class LineReader {
     }
 
     /**
-     * Reads a file line by line and returns the read success.
+     * Read a file line by line and return the read success.
      *
      * @return success of file reading
      */
@@ -102,7 +99,7 @@ public class LineReader {
     }
 
     /**
-     * Reads a file line by line and returns the read success.
+     * Read a file line by line and returns the read success.
      * <p>
      * Additionally with the parameter 'comment', there is the possibility to use
      * a {@code String} as comment sign. These lines will be ignored and not read.
@@ -110,7 +107,7 @@ public class LineReader {
      * @param comment String for comment signs
      * @return success of file reading
      */
-    public boolean readFile(String comment) {
+    private boolean readFile(String comment) {
         // some basic initialization
         boolean success = false;
         lines = new ArrayList<>();
@@ -144,15 +141,6 @@ public class LineReader {
                                 }
                             }
                         }
-
-                        // TODO here is the limitation of the demo version
-                        if (!Main.LICENSE) {
-                            if (countReadLines > 20) {
-                                success = true;
-                                break;
-                            }
-                        }
-
                     }
                     // hack to get rid of the -1 initialization
                     countReadLines++;

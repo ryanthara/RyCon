@@ -27,7 +27,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * This class implements basic operations on text based measurement and coordinate files for LTOP.
+ * FileToolsLTOP implements basic operations on text based measurement and coordinate files for LTOP.
  * <p>
  * Therefore a couple of methods and helpers are implemented to do the conversions and
  * operations on the given text files.
@@ -85,7 +85,7 @@ public class FileToolsLTOP {
     }
 
     /**
-     * Converts an CSV coordinate file (nr x y z) into an KOO file for LTOP.
+     * Convert a CSV coordinate file (nr x y z) into a KOO file for LTOP.
      *
      * @return converted KOO file
      */
@@ -96,7 +96,7 @@ public class FileToolsLTOP {
         String number, pointType, emptySpaceTY, toleranceCategory, emptySpaceTK, easting,
                 northing, emptySpaceX, height, emptySpaceH, geoid, emptySpaceGEOID, eta, xi;
 
-        writeHeadline(result);
+        writeCommendLine(result);
 
         for (String[] stringField : readCSVLines) {
             // prevent wrong output with empty strings of defined length from class
@@ -139,7 +139,7 @@ public class FileToolsLTOP {
     }
 
     /**
-     * Converts an CSV coordinate file from the geodata server Basel Stadt into an KOO file for LTOP.
+     * Convert a CSV coordinate file from the geodata server Basel Stadt into a KOO file for LTOP.
      *
      * @return converted KOO file
      */
@@ -150,7 +150,7 @@ public class FileToolsLTOP {
         String number, pointType, emptySpaceTY, toleranceCategory, emptySpaceTK, easting,
                 northing, emptySpaceX, height, emptySpaceH, geoid, emptySpaceGEOID, eta, xi;
 
-        writeHeadline(result);
+        writeCommendLine(result);
 
         // remove comment line
         readCSVLines.remove(0);
@@ -196,8 +196,7 @@ public class FileToolsLTOP {
     }
 
     /**
-     * Converts an cadwork node.dat coordinate file into an KOO file for LTOP.
-     * <p>
+     * Convert a cadwork node.dat coordinate file into a KOO file for LTOP.
      *
      * @return converted KOO file
      */
@@ -214,7 +213,7 @@ public class FileToolsLTOP {
             readStringLines.remove(0);
         }
 
-        writeHeadline(result);
+        writeCommendLine(result);
 
         for (String line : readStringLines) {
             // prevent wrong output with empty strings of defined length from class
@@ -263,9 +262,9 @@ public class FileToolsLTOP {
     }
 
     /**
-     * Converts an Leica GSI coordinate file into an KOO file for LTOP.
+     * Convert a Leica GSI coordinate file into a KOO file for LTOP.
      * <p>
-     * The WIs 81 till 86 are supported.
+     * In this RyCON version only the WIs 81 till 86 are supported.
      *
      * @return converted KOO file
      */
@@ -277,7 +276,7 @@ public class FileToolsLTOP {
         String number, pointType, emptySpaceTY, toleranceCategory, emptySpaceTK, easting,
                 northing, emptySpaceX, height, emptySpaceH, geoid, emptySpaceGEOID, eta, xi;
 
-        writeHeadline(result);
+        writeCommendLine(result);
 
         // 1. convert lines into GSI-Blocks with BlockEncoder
         ArrayList<ArrayList<GSIBlock>> blocksInLines = gsiTools.getEncodedGSIBlocks();
@@ -343,7 +342,7 @@ public class FileToolsLTOP {
     }
 
     /**
-     * Converts an CAPLAN K coordinate file into an KOO file for LTOP.
+     * Convert a CAPLAN K coordinate file into a KOO file for LTOP.
      *
      * @return converted KOO file
      */
@@ -354,7 +353,7 @@ public class FileToolsLTOP {
         String number, pointType, emptySpaceTY, toleranceCategory, emptySpaceTK, easting,
                 northing, emptySpaceX, height, emptySpaceH, geoid, emptySpaceGEOID, eta, xi;
 
-        writeHeadline(result);
+        writeCommendLine(result);
 
         for (String line : readStringLines) {
             // prevent wrong output with empty strings of defined length from class
@@ -404,7 +403,7 @@ public class FileToolsLTOP {
     }
 
     /**
-     * Converts an TXT coordinate file from the geodata server Basel Landschaft into an KOO file for LTOP.
+     * Convert a TXT coordinate file from the geodata server Basel Landschaft into a KOO file for LTOP.
      *
      * @return converted KOO file
      */
@@ -415,7 +414,7 @@ public class FileToolsLTOP {
         String number, pointType, emptySpaceTY, toleranceCategory, emptySpaceTK, easting,
                 northing, emptySpaceX, height, emptySpaceH, geoid, emptySpaceGEOID, eta, xi;
 
-        writeHeadline(result);
+        writeCommendLine(result);
 
         for (String line : readStringLines) {
             // prevent wrong output with empty strings of defined length from class
@@ -465,7 +464,7 @@ public class FileToolsLTOP {
     }
 
     /**
-     * Converts an TXT coordinate file from the geodata server Basel Landschaft into an KOO file for LTOP.
+     * Convert a TXT coordinate file from the geodata server Basel Landschaft into a KOO file for LTOP.
      *
      * @return converted KOO file
      */
@@ -476,7 +475,7 @@ public class FileToolsLTOP {
         String number, pointType, emptySpaceTY, toleranceCategory, emptySpaceTK, easting,
                 northing, emptySpaceX, height, emptySpaceH, geoid, emptySpaceGEOID, eta, xi;
 
-        writeHeadline(result);
+        writeCommendLine(result);
 
         // remove comment line
         readStringLines.remove(0);
@@ -557,10 +556,11 @@ public class FileToolsLTOP {
     }
 
     /**
-     * Writes the comment line into an given ArrayList<String>.
+     * Write the comment line into a given ArrayList<String>.
+     *
      * @param result ArrayList<String> to write in
      */
-    private void writeHeadline(ArrayList<String> result) {
+    private void writeCommendLine(ArrayList<String> result) {
         // insert RyCON version, date and time
         Date d = new Date();
         DateFormat df;

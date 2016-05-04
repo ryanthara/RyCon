@@ -31,11 +31,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class implements basic operations on spreadsheet output operations for Microsoft xls, xlsx, ... files.
+ * FileToolsExcel implements basic operations on spreadsheet output operations for Microsoft xls, xlsx, ... files.
  * <p>
  * Therefore a couple of methods and helpers are implemented to do the conversions and
  * operations on the given files.
- * <p>
+ *
  * <h3>Changes:</h3>
  * <ul>
  * <li>1: basic implementation </li>
@@ -47,17 +47,19 @@ import java.util.List;
  */
 public class FileToolsExcel {
 
+    private ArrayList<String> readStringLines;
+    private List<String[]> readCSVLines;
+    private Workbook workbook;
+
     /**
      * Member which helps distinguish between XLS and XLSX file format.
      */
     public static boolean isXLS = true;
+
     /**
      * Member which helps distinguish between XLS and XLSX file format.
      */
     public static boolean isXLSX = false;
-    private ArrayList<String> readStringLines;
-    private List<String[]> readCSVLines;
-    private Workbook workbook;
 
     /**
      * Class Constructor with parameter.
@@ -82,14 +84,15 @@ public class FileToolsExcel {
     }
 
     /**
-     * Converts a CSV file element by element into an Excel file.
-     * @param isExcel selector to distinguish between XLS and XLSX file extension
+     * Convert a CSV file element by element into an Excel file.
+     *
+     * @param isXLS selector to distinguish between XLS and XLSX file extension
      * @param sheetName name of the sheet (file name from input file)
      * @return success conversion success
      */
-    public boolean convertCSV2Excel(boolean isExcel, String sheetName) {
+    public boolean convertCSV2Excel(boolean isXLS, String sheetName) {
         // general preparation of the workbook
-        if (isExcel) {
+        if (isXLS) {
             workbook = new HSSFWorkbook();
         } else {
             workbook = new XSSFWorkbook();
@@ -131,16 +134,16 @@ public class FileToolsExcel {
     }
 
     /**
-     * Converts a CSV file from the geodata server Basel Stadt (Switzerland) into a an Excel file.
-     * <p>
-     * @param isExcel selector to distinguish between XLS and XLSX file extension
+     * Convert a CSV file from the geodata server Basel Stadt (Switzerland) into a an Excel file.
+     *
+     * @param isXLS selector to distinguish between XLS and XLSX file extension
      * @param sheetName name of the sheet (file name from input file)
      * @param writeCommentRow write comment row
      * @return success conversion success
      */
-    public boolean convertCSVBaselStadt2Excel(boolean isExcel, String sheetName, boolean writeCommentRow) {
+    public boolean convertCSVBaselStadt2Excel(boolean isXLS, String sheetName, boolean writeCommentRow) {
         // general preparation of the workbook
-        if (isExcel) {
+        if (isXLS) {
             workbook = new HSSFWorkbook();
         } else {
             workbook = new XSSFWorkbook();
@@ -223,14 +226,15 @@ public class FileToolsExcel {
     }
 
     /**
-     * Converts a Cadwork node.dat file into an Excel file.
-     * @param isExcel selector to distinguish between XLS and XLSX file extension
+     * Convert a Cadwork node.dat file into an Excel file.
+     *
+     * @param isXLS selector to distinguish between XLS and XLSX file extension
      * @param sheetName name of the sheet (file name from input file)
      * @return success conversion
      */
-    public boolean convertCadwork2Excel(boolean isExcel, String sheetName, boolean writeCommentRow) {
+    public boolean convertCadwork2Excel(boolean isXLS, String sheetName, boolean writeCommentRow) {
         // general preparation of the workbook
-        if (isExcel) {
+        if (isXLS) {
             workbook = new HSSFWorkbook();
         } else {
             workbook = new XSSFWorkbook();
@@ -308,15 +312,16 @@ public class FileToolsExcel {
     }
 
     /**
-     * Converts a K file element by element into an Excel file.
-     * @param isExcel selector to distinguish between XLS and XLSX file extension
+     * Convert a K file element by element into an Excel file.
+     *
+     * @param isXLS selector to distinguish between XLS and XLSX file extension
      * @param sheetName name of the sheet (file name from input file)
      * @param writeCommentRow write comment row
      * @return success conversion success
      */
-    public boolean convertCaplan2Excel(boolean isExcel, String sheetName, boolean writeCommentRow) {
+    public boolean convertCaplan2Excel(boolean isXLS, String sheetName, boolean writeCommentRow) {
         // general preparation of the workbook
-        if (isExcel) {
+        if (isXLS) {
             workbook = new HSSFWorkbook();
         } else {
             workbook = new XSSFWorkbook();
@@ -456,14 +461,14 @@ public class FileToolsExcel {
     }
 
     /**
-     * Converts a GSI file element by element into an Excel file.
-     * @param isExcel selector to distinguish between XLS and XLSX file extension
+     * Convert a GSI file element by element into an Excel file.
+     * @param isXLS selector to distinguish between XLS and XLSX file extension
      * @param sheetName name of the sheet (file name from input file)
      * @return success conversion success
      */
-    public boolean convertGSI2Excel(boolean isExcel, String sheetName, boolean writeCommentRow) {
+    public boolean convertGSI2Excel(boolean isXLS, String sheetName, boolean writeCommentRow) {
         // general preparation of the workbook
-        if (isExcel) {
+        if (isXLS) {
             workbook = new HSSFWorkbook();
         } else {
             workbook = new XSSFWorkbook();
@@ -603,14 +608,15 @@ public class FileToolsExcel {
     }
 
     /**
-     * Converts a TXT file element by element into an Excel file.
-     * @param isExcel selector to distinguish between XLS and XLSX file extension
+     * Convert a TXT file element by element into an Excel file.
+     *
+     * @param isXLS selector to distinguish between XLS and XLSX file extension
      * @param sheetName name of the sheet (file name from input file)
      * @return success conversion success
      */
-    public boolean convertTXT2Excel(boolean isExcel, String sheetName) {
+    public boolean convertTXT2Excel(boolean isXLS, String sheetName) {
         // general preparation of the workbook
-        if (isExcel) {
+        if (isXLS) {
             workbook = new HSSFWorkbook();
         } else {
             workbook = new XSSFWorkbook();
@@ -653,15 +659,16 @@ public class FileToolsExcel {
     }
 
     /**
-     * Converts a txt file from the geodata server Basel Landschaft (Switzerland) element by element into an Excel file.
-     * @param isExcel selector to distinguish between XLS and XLSX file extension
+     * Convert a txt file from the geodata server Basel Landschaft (Switzerland) element by element into an Excel file.
+     *
+     * @param isXLS selector to distinguish between XLS and XLSX file extension
      * @param sheetName name of the sheet (file name from input file)
      * @param writeCommentRow write comment row
      * @return success conversion success
      */
-    public boolean convertTXTBaselLand2Excel(boolean isExcel, String sheetName, boolean writeCommentRow) {
+    public boolean convertTXTBaselLand2Excel(boolean isXLS, String sheetName, boolean writeCommentRow) {
         // general preparation of the workbook
-        if (isExcel) {
+        if (isXLS) {
             workbook = new HSSFWorkbook();
         } else {
             workbook = new XSSFWorkbook();
@@ -797,7 +804,8 @@ public class FileToolsExcel {
     }
 
     /**
-     * Writes the converted XLS file into the file system.
+     * Write the converted XLS file to the file system.
+     *
      * @param writeFile file to be written
      * @return success write success
      */
@@ -817,7 +825,8 @@ public class FileToolsExcel {
     }
 
     /**
-     * Writes the converted XLSX file into the file system.
+     * Write the converted XLSX file to the file system.
+     *
      * @param writeFile file to be written
      * @return success write success
      */

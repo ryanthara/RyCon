@@ -30,7 +30,7 @@ import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
 
 /**
- * This class displays a splash screen while RyCON is starting.
+ * SplashScreen displays a splash screen while RyCON is starting.
  * <p>
  * This is necessary because of a bug in Cocoa from Apple when 
  * starting a SWT-jar which needs -XstartOnFirstThread option!

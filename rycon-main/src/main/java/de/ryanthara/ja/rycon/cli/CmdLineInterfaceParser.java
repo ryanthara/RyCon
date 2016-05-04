@@ -1,7 +1,7 @@
 package de.ryanthara.ja.rycon.cli;
 
 /**
- * This class is used to parse command line interface values for RyCON.
+ * CmdLineInterfaceParser is used to parse command line interface values for RyCON.
  *
  * <p>
  * RyCON options can be set with a few command line arguments. At the moment there
@@ -12,8 +12,8 @@ package de.ryanthara.ja.rycon.cli;
  * </code>
  *
  * <p>
- * The language of RyCON is set by ISO 639 alpha-2 or alpha-3 language code values. For example 'en' for english or
- * 'de' for german.
+ * The language of RyCON is set by ISO 639 alpha-2 or alpha-3 language code values. For example 'en' for english
+ * or 'de' for german.
  *
  * <h3>Changes:</h3>
  * <ul>
@@ -31,7 +31,7 @@ public class CmdLineInterfaceParser {
     private String alphaLanguageCode;
 
     /**
-     * Returns the parsed alpha-2 or alpha-3 language code as string.
+     * Return the parsed alpha-2 or alpha-3 language code as string.
      *
      * @return the alpha-2 or -3 language code
      */
@@ -40,8 +40,7 @@ public class CmdLineInterfaceParser {
     }
 
     /**
-     * Parses the command line interface arguments of RyCON and tries to set the locale to a given value.
-     *
+     * Parse the command line interface arguments of RyCON and tries to set the locale to a given value.
      * <p>
      * The arguments are only parsed and not controlled for being valid.
      *

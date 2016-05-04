@@ -3,7 +3,7 @@ package de.ryanthara.ja.rycon.cli;
 import java.security.PrivilegedActionException;
 
 /**
- * This class defines an exception for command line interface operations.
+ * CmdLineInterfaceException defines an exception for command line interface operations.
  *
  * <h3>Changes:</h3>
  * <ul>

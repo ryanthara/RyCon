@@ -34,7 +34,7 @@ import org.eclipse.swt.widgets.Label;
 import java.util.Vector;
 
 /**
- * This class defines a status bar and it's functionality.
+ * StatusBar defines a status bar and it's functionality.
  * <p>
  * The status bar shows a text which can be changed by method call and an icon
  * which shows three conditions for the actual status of the program. The status bar
@@ -131,12 +131,12 @@ public class StatusBar extends Composite {
     }
 
     /**
-     * Displays a text and the status with an icon on the status bar.
+     * Display a text and the status with an icon on the status bar.
      * <p>
      * The status icon can be set to OK, WARNING, ERROR.
      *
-     * @param text status text to be set
-     * @param status status icon chosen by static int value from class
+     * @param text      status text to be set
+     * @param status    status icon chosen by static int value from class
      */
     void setStatus(String text, int status) {
         message.setText(text);
@@ -158,10 +158,20 @@ public class StatusBar extends Composite {
         layout(true);
     }
 
+    /**
+     * Add the {@link StatusInformationListener} method.
+     *
+     * @param listener the {@link StatusInformationListener} to be added
+     */
     public void addStatusInformationListener(StatusInformationListener listener) {
         statusInformationListeners.addElement(listener);
     }
 
+    /**
+     * Remove the {@link StatusInformationListener} method.
+     *
+     * @param listener the {@link StatusInformationListener} to be removed
+     */
     public void removeStatusInformationListener(StatusInformationListener listener) {
         statusInformationListeners.removeElement(listener);
     }

@@ -22,7 +22,7 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 /**
- * This class manages the strings for multi-language support in RyCON.
+ * Messages handles character string for multi-language support in RyCON.
  * <p>
  * The strings are stored in Resource Bundle RyCON and loaded from this class.
  *
@@ -43,7 +43,7 @@ class Messages {
     private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 
     /**
-     * Returns the key-text-pair.
+     * Return the key-text-pair which represents the character string.
      *
      * @param key key to look up
      * @return matched text

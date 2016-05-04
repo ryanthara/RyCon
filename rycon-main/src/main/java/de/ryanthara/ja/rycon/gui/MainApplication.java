@@ -20,8 +20,6 @@ package de.ryanthara.ja.rycon.gui;
 
 import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.data.Version;
-import de.ryanthara.ja.rycon.gui.notifier.NotificationPopupWidget;
-import de.ryanthara.ja.rycon.gui.notifier.NotificationType;
 import de.ryanthara.ja.rycon.i18n.I18N;
 import de.ryanthara.ja.rycon.tools.ImageConverter;
 import org.eclipse.swt.SWT;
@@ -36,7 +34,7 @@ import org.eclipse.swt.widgets.*;
 import java.io.File;
 
 /**
- * This class is the main application of RyCON.
+ * MainApplication is the main application class of RyCON.
  * <p>
  * This class initializes the main window of RyCON and setup the
  * background functionality which is done by the extension of the
@@ -80,7 +78,7 @@ public class MainApplication extends Main {
      *     <li>Clean files...</li>
      *     <li>Split files by code...</li>
      *     <li>Levelling to cad-import...</li>
-     * </ul>*
+     * </ul>
      */
     private void initUI() {
         Display.setAppName(Main.getRyCONAppName());
@@ -184,7 +182,6 @@ public class MainApplication extends Main {
 
                 // do a couple of things only when RyCON is started
                 if (firstStart) {
-                    applicationStarted();
                     firstStart = false;
                 }
             }
@@ -449,7 +446,7 @@ public class MainApplication extends Main {
     }
 
     /**
-     * Main application startup
+     * Main application startup.
      *
      * @param args command line arguments
      */
@@ -457,20 +454,11 @@ public class MainApplication extends Main {
         checkCommandLineInterfaceArguments(args);
         checkJavaVersion();
         checkRyCONVersion();
-        checkLicense();
         initApplicationPreferences();
 
         // to provide illegal thread access -> https://github.com/udoprog/c10t-swt/issues/1
         // add -XstartOnFirstThread as an java option on VM parameter on OS X
         new MainApplication();
-    }
-
-    private void applicationStarted() {
-        if (LICENSE) {
-            NotificationPopupWidget.notify(I18N.getLicenseTitleFull(), I18N.getLicenseMsgFull(), NotificationType.values()[1], 4500);
-        } else {
-            NotificationPopupWidget.notify(I18N.getLicenseTitleDemo(), I18N.getLicenseMsgDemo(), NotificationType.values()[0], Integer.MAX_VALUE);
-        }
     }
 
     private void actionBtn1() {

@@ -19,7 +19,7 @@
 package de.ryanthara.ja.rycon.i18n;
 
 /**
- * This class implements multi-language support to RyCON.
+ * I18N implements multi-language support to RyCON.
  * <p>
  * In the first version of RyCON there are support for the following languages.
  * <ul>
@@ -28,11 +28,13 @@ package de.ryanthara.ja.rycon.i18n;
  *     <li>... </li>
  * </ul>
  * <p>
- * Every translated text in the program is prepared as <code>String</code> object here.
+ * Every translated text in the program is prepared as a <code>String</code> object here.
  * The singular and plural words are controlled with parameters.
  * <p>
- * Because of the fact that there are a lot of user who has java version 6 or 7
+ * Because of the fact that there are a lot of user who has java version 7
  * running, RyCON uses no functions of java version 8 in versions lower than 2.
+ * <p>
+ * Most of the content of this class is self explaining. Due to this there is less javadoc comment.
  *
  * @author sebastian
  * @version 1
@@ -40,14 +42,29 @@ package de.ryanthara.ja.rycon.i18n;
  */
 public class I18N {
 
+    /**
+     * Return the application title of RyCON.
+     *
+     * @return application title
+     */
     public static String getApplicationTitle() {
         return Messages.getString("applicationTitle");
     }
 
+    /**
+     * Return the cancel button text.
+     *
+     * @return the cancel button text
+     */
     public static String getBtnCancelLabel() {
         return Messages.getString("btnCancel");
     }
 
+    /**
+     * Return the cancel button tooltip text.
+     *
+     * @return the cancel button tooltip text
+     */
     public static String getBtnCancelLabelToolTip() {
         return Messages.getString("btnCancelToolTip");
     }
@@ -480,22 +497,6 @@ public class I18N {
         return Messages.getString("labelTipTidyUpWidget");
     }
 
-    public static String getLicenseMsgDemo() {
-        return Messages.getString("licenseMsgDemo");
-    }
-
-    public static String getLicenseMsgFull() {
-        return Messages.getString("licenseMsgFull");
-    }
-
-    public static String getLicenseTitleDemo() {
-        return Messages.getString("licenseTitleDemo");
-    }
-
-    public static String getLicenseTitleFull() {
-        return Messages.getString("licenseTitleFull");
-    }
-
     public static String getMsgBoxTitleError() {
         return Messages.getString("msgBoxTitleError");
     }
@@ -855,19 +856,17 @@ public class I18N {
      * for singular is set with {@code Main.TEXT_SINGULAR} and for plural is
      * set with {@code Main.TEXT_PLURAL}
      *
-     * @param property property to get the text from
-     * @param singular set to get a singular or plural text back
+     * @param property  property to get the text from
+     * @param singular  set to get a singular or plural text back
      * @return singular or plural string message
      */
     private static String prepareString(String property, boolean singular) {
-
         String[] s = Messages.getString(property).split("§§");
         if (singular) {
             return s[0];
         } else {
             return s[1];
         }
-
     }
 
 } // end of I18N

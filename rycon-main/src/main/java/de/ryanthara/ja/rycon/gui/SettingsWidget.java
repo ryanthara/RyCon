@@ -31,7 +31,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
 /**
- * This class implements a complete widget and it's functionality.
+ * SettingsWidget implements a complete widget and it's functionality.
  * <p>
  * With the SettingsWidget of RyCON it is possible to set up the options of RyCON and
  * write the configuration file.
@@ -685,7 +685,6 @@ public class SettingsWidget {
                     I18N.getFileChooserDirAdminTemplateMessage(), dirAdminTemplateTextField.getText());
         } else {
             GuiHelper.showAdvancedDirectoryDialog(innerShell, dirAdminTemplateTextField, I18N.getFileChooserDirAdminTemplateTitle(),
-                    //I18N.getFileChooserDirAdminTemplateMessage(), Main.pref.getUserPref(PreferenceHandler.DIR_ADMIN_TEMPLATE));
                     I18N.getFileChooserDirAdminTemplateMessage(), dirBaseTextField.getText());
         }
         dirBigDataTextField.setFocus();
@@ -697,7 +696,6 @@ public class SettingsWidget {
                     I18N.getFileChooserDirAdminMessage(), dirAdminTextField.getText());
         } else {
             GuiHelper.showAdvancedDirectoryDialog(innerShell, dirAdminTextField, I18N.getFileChooserDirAdminTitle(),
-                    //I18N.getFileChooserDirAdminMessage(), Main.pref.getUserPref(PreferenceHandler.DIR_ADMIN));
                     I18N.getFileChooserDirAdminMessage(), dirBaseTextField.getText());
         }
         dirAdminTemplateTextField.setFocus();
@@ -720,7 +718,6 @@ public class SettingsWidget {
                     I18N.getFileChooserDirBigDataTemplateMessage(), dirBigDataTemplateTextField.getText());
         } else {
             GuiHelper.showAdvancedDirectoryDialog(innerShell, dirBigDataTemplateTextField, I18N.getFileChooserDirBigDataTemplateTitle(),
-                    //I18N.getFileChooserDirBigDataTemplateMessage(), Main.pref.getUserPref(PreferenceHandler.DIR_BIG_DATA_TEMPLATE));
                     I18N.getFileChooserDirBigDataTemplateMessage(), dirBaseTextField.getText());
         }
         identifierFreeStationTextField.setFocus();
@@ -732,7 +729,6 @@ public class SettingsWidget {
                     I18N.getFileChooserDirBigDataMessage(), dirBigDataTextField.getText());
         } else {
             GuiHelper.showAdvancedDirectoryDialog(innerShell, dirBigDataTextField, I18N.getFileChooserDirBigDataTitle(),
-                    //I18N.getFileChooserDirBigDataMessage(), Main.pref.getUserPref(PreferenceHandler.DIR_BIG_DATA));
                     I18N.getFileChooserDirBigDataMessage(), dirBaseTextField.getText());
         }
         dirBigDataTemplateTextField.setFocus();
@@ -744,7 +740,6 @@ public class SettingsWidget {
                     I18N.getFileChooserDirProjectTemplateMessage(), dirProjectTemplateTextField.getText());
         } else {
             GuiHelper.showAdvancedDirectoryDialog(innerShell, dirProjectTemplateTextField, I18N.getFileChooserDirProjectTemplateTitle(),
-                    //I18N.getFileChooserDirProjectTemplateMessage(), Main.pref.getUserPref(PreferenceHandler.DIR_PROJECT_TEMPLATE));
                     I18N.getFileChooserDirProjectTemplateMessage(), dirBaseTextField.getText());
         }
         dirAdminTextField.setFocus();
@@ -756,7 +751,6 @@ public class SettingsWidget {
                     I18N.getFileChooserDirProjectMessage(), dirProjectTextField.getText());
         } else {
             GuiHelper.showAdvancedDirectoryDialog(innerShell, dirProjectTextField, I18N.getFileChooserDirProjectTitle(),
-                    //I18N.getFileChooserDirProjectMessage(), Main.pref.getUserPref(PreferenceHandler.DIR_PROJECT));
                     I18N.getFileChooserDirProjectMessage(), dirBaseTextField.getText());
         }
         dirProjectTemplateTextField.setFocus();

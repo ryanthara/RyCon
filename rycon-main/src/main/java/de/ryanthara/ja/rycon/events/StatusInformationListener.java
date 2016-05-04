@@ -21,7 +21,7 @@ package de.ryanthara.ja.rycon.events;
 import java.util.EventListener;
 
 /**
- * This class implements a custom event listener which is used for updating the
+ * StatusInformationListener implements a custom event listener which is used for updating the
  * status bar with an event driven mechanism.
  *
  * <h3>Changes:</h3>

@@ -21,7 +21,7 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 
 /**
- * This class defines an element of type GSI as 'block'.
+ * GSIBlock defines an element of type GSI as 'block'.
  * <p>
  * The Leica Geo Serial Interface (GSI) is a general purpose, serial data
  * interface for bi-directional communication between TPS Total Stations,
@@ -30,7 +30,6 @@ import java.util.Arrays;
  * The GSI interface is composed in a sequence of blocks, ending with a
  * terminator (CR or CR/LF). The later introduced enhanced GSI16 format
  * starts every line with a <code>*</code> sign.
- * <p>
  *
  * <h3>Changes:</h3>
  * <ul>
@@ -52,7 +51,7 @@ public class GSIBlock {
     private final String information;
 
     /**
-     * Constructor which defines the GSIBlock with parameter.
+     * Constructor which defines the GSIBlock with string parameter.
      *
      * @param blockAsString complete block as one string
      */
@@ -73,7 +72,7 @@ public class GSIBlock {
     }
 
     /**
-     * Returns the gsi data as string
+     * Return the gsi data as string
      * @return gsi data as string
      */
     public String getDataGSI() {
@@ -138,7 +137,7 @@ public class GSIBlock {
     }
 
     /**
-     * Returns the word index as integer value.
+     * Return the word index as integer value.
      * @return word index as integer value
      */
     public int getWordIndex() {
@@ -171,7 +170,8 @@ public class GSIBlock {
     }
 
     /**
-     * Returns true if GSIBlock is GSI16 format.
+     * Return true if GSIBlock is GSI16 format.
+     *
      * @return true if GSIBlock is GSI16 format
      */
     public boolean isGSI16() {
@@ -179,7 +179,7 @@ public class GSIBlock {
     }
 
     /**
-     * Returns a GSIBlock in csv format without separation sign. No additional invisible spaces are created.
+     * Return a GSIBlock in csv format without separation sign. No additional invisible spaces are created.
      *
      * @return formatted {@code String} for CSV output
      */
@@ -188,7 +188,7 @@ public class GSIBlock {
     }
 
     /**
-     * Returns a GSIBlock in a printable format filled up with invisible spaces to a defined length (e.g. 16 characters).
+     * Return a GSIBlock in a printable format filled up with invisible spaces to a defined length (e.g. 16 characters).
      *
      * @return formatted {@code String} for column based TXT output
      */
@@ -269,7 +269,7 @@ public class GSIBlock {
     }
 
     /**
-     * Returns a GSIBlock as String in the origin format.
+     * Return a GSIBlock as String in the origin format.
      *
      * @return GSIBlock as String
      */
@@ -278,7 +278,7 @@ public class GSIBlock {
     }
 
     /**
-     * Returns a GSIBlock as String in defined format (GSI8 or GSI16).
+     * Return a GSIBlock as String in defined format (GSI8 or GSI16).
      * <p>
      * Due to issues of the format, leading zeros are added or values are cut off.
      *

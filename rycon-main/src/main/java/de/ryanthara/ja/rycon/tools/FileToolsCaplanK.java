@@ -91,11 +91,10 @@ public class FileToolsCaplanK {
 
 
     /**
-     * Converts a CSV file (nr;x;y;z or nr;code;x;y;z) into a K format file.
+     * Convert a CSV file (nr;x;y;z or nr;code;x;y;z) into a K format file.
      *
-     * @param useSimpleFormat option to write a reduced K file which is compatible to ZF LaserControl
-     * @param writeCommentLine option to write a comment line into the K file with basic information
-     *
+     * @param useSimpleFormat   option to write a reduced K file which is compatible to ZF LaserControl
+     * @param writeCommentLine  option to write a comment line into the K file with basic information
      * @return converted K file as ArrayList<String>
      */
     public ArrayList<String> convertCSV2K(boolean useSimpleFormat, boolean writeCommentLine, boolean writeCodeColumn) {
@@ -188,11 +187,10 @@ public class FileToolsCaplanK {
     }
 
     /**
-     * Converts a Leica GSI file into CAPLAN K file.
-     * <p>
+     * Convert a Leica GSI file into CAPLAN K file.
      *
-     * @param useSimpleFormat option to write a reduced K file which is compatible to ZF LaserControl
-     * @param writeCommentLine option to write a comment line into the K file with basic information
+     * @param useSimpleFormat   option to write a reduced K file which is compatible to ZF LaserControl
+     * @param writeCommentLine  option to write a comment line into the K file with basic information
      * @return converted K file as ArrayList<String>
      */
     public ArrayList<String> convertGSI2KFile(boolean useSimpleFormat, boolean writeCommentLine) {
@@ -293,11 +291,10 @@ public class FileToolsCaplanK {
     }
 
     /**
-     * Converts a CSV file from the geodata server Basel Stadt (switzerland) into a K format file.
+     * Convert a CSV file from the geodata server Basel Stadt (switzerland) into a K format file.
      *
-     * @param useSimpleFormat option to write a reduced K file which is compatible to ZF LaserControl
-     * @param writeCommentLine option to write a comment line into the K file with basic information
-     *
+     * @param useSimpleFormat   option to write a reduced K file which is compatible to ZF LaserControl
+     * @param writeCommentLine  option to write a comment line into the K file with basic information
      * @return converted K file as ArrayList<String>
      */
     public ArrayList<String> convertCSVBaselStadt2K(boolean useSimpleFormat, boolean writeCommentLine) {
@@ -351,13 +348,11 @@ public class FileToolsCaplanK {
     }
 
     /**
-     * Converts a cadwork node.dat file into K file.
-     * <p>
+     * Convert a cadwork node.dat file into K file.
      *
-     * @param useSimpleFormat option to write a reduced K file which is compatible to ZF LaserControl
-     * @param writeCommentLine option to write a comment line into the K file with basic information
-     * @param writeCodeColumn option to write the code column into the K file
-     *
+     * @param useSimpleFormat   option to write a reduced K file which is compatible to ZF LaserControl
+     * @param writeCommentLine  option to write a comment line into the K file with basic information
+     * @param writeCodeColumn   option to write the code column into the K file
      * @return converted K file as ArrayList<String>
      */
     public ArrayList<String> convertCadwork2KFile(boolean useSimpleFormat, boolean writeCommentLine, boolean writeCodeColumn) {
@@ -416,13 +411,11 @@ public class FileToolsCaplanK {
     }
 
     /**
-     * Converts a text file (nr x y z or nr code x y z) into a K format file.
-     * <p>
+     * Convert a text file (nr x y z or nr code x y z) into a K format file.
      *
-     * @param useSimpleFormat option to write a reduced K file which is compatible to ZF LaserControl
-     * @param writeCommentLine option to write a comment line into the K file with basic information
-     * @param writeCodeColumn option to write a found code into the K file
-     *
+     * @param useSimpleFormat   option to write a reduced K file which is compatible to ZF LaserControl
+     * @param writeCommentLine  option to write a comment line into the K file with basic information
+     * @param writeCodeColumn   option to write a found code into the K file
      * @return converted K file as ArrayList<String>
      */
     public ArrayList<String> convertTXT2K(boolean useSimpleFormat, boolean writeCommentLine, boolean writeCodeColumn) {
@@ -511,12 +504,11 @@ public class FileToolsCaplanK {
     }
 
     /**
-     * Converts a CSV file from the geodata server Basel Stadt (switzerland) into a K format file.
-     * <p>
-     * @param useSimpleFormat option to write a reduced K file which is compatible to ZF LaserControl
-     * @param writeCodeColumn option to write a found code into the K file
-     * @param writeCommentLine option to write a comment line into the K file with basic information
+     * Convert a CSV file from the geodata server Basel Stadt (switzerland) into a K format file.
      *
+     * @param useSimpleFormat   option to write a reduced K file which is compatible to ZF LaserControl
+     * @param writeCodeColumn   option to write a found code into the K file
+     * @param writeCommentLine  option to write a comment line into the K file with basic information
      * @return converted K file as ArrayList<String>
      */
     public ArrayList<String> convertTXTBaselLandschaft2K(boolean useSimpleFormat, boolean writeCodeColumn,
@@ -598,7 +590,8 @@ public class FileToolsCaplanK {
     }
 
     /**
-     * Writes the comment line into an given ArrayList<String>.
+     * Write the comment line into an given ArrayList<String>.
+     *
      * @param result ArrayList<String> to write in
      */
     private void writeCommentLine(ArrayList<String> result) {

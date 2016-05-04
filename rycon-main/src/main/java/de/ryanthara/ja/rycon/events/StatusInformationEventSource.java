@@ -21,7 +21,7 @@ package de.ryanthara.ja.rycon.events;
 import java.util.ArrayList;
 
 /**
- * This class implements a custom event object source which is used for updating the
+ * StatusInformationEventSource implements a custom event object source which is used for updating the
  * status bar with an event driven mechanism.
  *
  * <h3>Changes:</h3>

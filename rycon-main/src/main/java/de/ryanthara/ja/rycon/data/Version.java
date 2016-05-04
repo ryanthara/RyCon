@@ -19,30 +19,32 @@
 package de.ryanthara.ja.rycon.data;
 
 /**
- * This class implements all static information about the current RyCON version.
+ * Version implements all static information about the current RyCON version.
  * <p>
  * Every new version change of RyCON has to be filled in here! This is necessary
  * because of the online check for a new version of RyCON.
  *
  * <h3>Changes:</h3>
  * <ul>
+ *     <li>3: introduce patch level </li>
  *     <li>2: change to static behaviour </li>
  *     <li>1: basic implementation </li>
  * </ul>
  *
  * @author sebastian
- * @version 2
+ * @version 3
  * @since 1
  */
 public class Version {
 
-    private static final int buildNumber = 24;
-    private static final int majorVersion = 0;
-    private static final int minorVersion = 99;
-    private static final String buildDate = "2016-03-25";
+    private static final short buildNumber = 25;
+    private static final short majorRelease = 0;
+    private static final short minorRelease = 9;
+    private static final short patchLevel = 11;
+    private static final String buildDate = "2016-05-01";
 
     /**
-     * Returns the build date of RyCON as string.
+     * Return the build date of RyCON as string.
      *
      * @return the build date
      */
@@ -51,38 +53,48 @@ public class Version {
     }
 
     /**
-     * Returns the current build number of RyCON as integer value.
+     * Return the current build number of RyCON as integer value.
      *
      * @return the build number
      */
-    public static int getBuildNumber() {
+    public static short getBuildNumber() {
         return buildNumber;
     }
 
     /**
-     * Returns the current major version number of RyCON as integer value.
+     * Return the current major release number of RyCON as short value.
      *
-     * @return the major version number
+     * @return the major release number
      */
-    public static int getMajorVersionNumber() {
-        return majorVersion;
+    public static short getMajorRelease() {
+        return majorRelease;
     }
 
     /**
-     * Returns the current minor version number of RyCON as integer value.
+     * Return the current minor release number of RyCON as short value.
      *
-     * @return the minor version number
+     * @return the minor release number
      */
-    public static int getMinorVersionNumber() {
-        return minorVersion;
+    public static short getMinorRelease() {
+        return minorRelease;
     }
 
     /**
-     * Returns the current version of RyCON as string value (major.minor).
-     * @return the major.minor version
+     * Return the current patch level number of RyCON as short value.
+     *
+     * @return the patch level
+     */
+    public static short getPatchLevel() {
+        return patchLevel;
+    }
+
+    /**
+     * Return the current version of RyCON as string value (major.minor.patch).
+     *
+     * @return the major.minor.patch as version string
      */
     public static String getVersion() {
-        return Integer.toString(majorVersion) + "." + Integer.toString(minorVersion);
+        return Short.toString(majorRelease) + "." + Short.toString(minorRelease) + "." + Short.toString(patchLevel);
     }
 
 }

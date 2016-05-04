@@ -33,7 +33,6 @@ import java.util.*;
  * The GSI interface is composed in a sequence of blocks, ending with a
  * terminator (CR or CR/LF). The later introduced enhanced GSI16 format
  * starts every line with a <code>*</code> sign.
- * <p>
  *
  * <h3>Changes:</h3>
  * <ul>
@@ -477,7 +476,7 @@ public class FileToolsLeicaGSI {
     }
 
     /**
-     * Returns the found codes as {@code TreeSet<Integer>}.
+     * Return the found codes as {@code TreeSet<Integer>}.
      * <p>
      * This method is necessary because of the elimination of the code in the string of the read lines.
      *
@@ -488,7 +487,7 @@ public class FileToolsLeicaGSI {
     }
 
     /**
-     * Returns the found word indices (WI) as {@code TreeSet<Integer>}.
+     * Return the found word indices (WI) as {@code TreeSet<Integer>}.
      *
      * @return found word indices as {@code TreeSet<Integer>}
      */
@@ -726,7 +725,7 @@ public class FileToolsLeicaGSI {
             }
 
             /**
-             * Returns the number of a given line (substring operations)
+             * Return the number of a given line (substring operations)
              * @param string string to get a defined substring from
              * @return substring
              */
@@ -975,7 +974,7 @@ public class FileToolsLeicaGSI {
         }
 
         /**
-         * Returns the code as Integer value.
+         * Return the code as Integer value.
          *
          * @return code as Integer value
          */
@@ -984,7 +983,7 @@ public class FileToolsLeicaGSI {
         }
 
         /**
-         * Returns the line as String.
+         * Return the line as String.
          *
          * @return line as String
          */

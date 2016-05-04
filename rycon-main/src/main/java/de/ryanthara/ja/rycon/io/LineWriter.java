@@ -22,7 +22,7 @@ import java.io.*;
 import java.util.ArrayList;
 
 /**
- * This class writes an {@code ArrayList<String>} line by line to a file.
+ * LineWriter writes an {@code ArrayList<String>} line by line to a file.
  * <p>
  * A couple of things are implemented as additional functionality. At the moment,
  * there is no thread safety implemented or planed.
@@ -43,6 +43,8 @@ public class LineWriter {
     private final File file;
 
     /**
+     * Constructor with the filename as {code String} parameter.
+     *
      * @param fileName filename as {@code String}
      */
     public LineWriter(String fileName) {
@@ -50,24 +52,23 @@ public class LineWriter {
     }
 
     /**
-     * Returns the number of written lines.
+     * Return the number of written lines.
      *
      * @return number of written lines
      */
+    // TODO Implement the usage/displaying of the written lines to the status bar
     public int getCountWrittenLines() {
         return writtenLines;
     }
 
     /**
-     * Writes a given {@code ArrayList<String>} line by line to the file system.
+     * Write a given {@code ArrayList<String>} line by line to the file system.
      *
      * @param lines given list to write to file system
      * @return success
      */
     public boolean writeFile(ArrayList<String> lines) {
-
         boolean success = false;
-
         PrintWriter pw = null;
 
         try {
