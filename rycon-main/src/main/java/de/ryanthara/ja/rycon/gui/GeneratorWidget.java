@@ -314,31 +314,31 @@ public class GeneratorWidget {
         }
 
         if (isAdminFolderGenerated && isBigDataFolderGenerated && isProjectFolderGenerated) {
-            GuiHelper.showMessageBox(innerShell,SWT.ICON_INFORMATION,
-                    String.format(I18N.getTextDirAdminAndBigDataAndProjectGenerated(), number),
-                    String.format(I18N.getMsgDirAdminAndBigDataAndProjectGenerated(), number));
+            GuiHelper.showMessageBox(innerShell, SWT.ICON_INFORMATION,
+                    String.format(I18N.getTextDirAdminAndBigDataAndProjectGenerated(), number, number, number),
+                    String.format(I18N.getMsgDirAdminAndBigDataAndProjectGenerated(), number, number, number));
         } else if (isAdminFolderGenerated && isBigDataFolderGenerated) {
-            GuiHelper.showMessageBox(innerShell,SWT.ICON_INFORMATION,
-                    String.format(I18N.getTextDirAdminAndBigDataGenerated(), number),
-                    String.format(I18N.getMsgDirAdminAndBigDataGenerated(), number));
+            GuiHelper.showMessageBox(innerShell, SWT.ICON_INFORMATION,
+                    String.format(I18N.getTextDirAdminAndBigDataGenerated(), number, number),
+                    String.format(I18N.getMsgDirAdminAndBigDataGenerated(), number, number));
         } else if (isAdminFolderGenerated && isProjectFolderGenerated) {
-            GuiHelper.showMessageBox(innerShell,SWT.ICON_INFORMATION,
-                    String.format(I18N.getTextDirAdminAndProjectGenerated(), number),
-                    String.format(I18N.getMsgDirAdminAndProjectGenerated(), number));
+            GuiHelper.showMessageBox(innerShell, SWT.ICON_INFORMATION,
+                    String.format(I18N.getTextDirAdminAndProjectGenerated(), number, number),
+                    String.format(I18N.getMsgDirAdminAndProjectGenerated(), number, number));
         } else if (isBigDataFolderGenerated && isProjectFolderGenerated) {
-            GuiHelper.showMessageBox(innerShell,SWT.ICON_INFORMATION,
-                    String.format(I18N.getTextDirBigDataAndProjectGenerated(), number),
-                    String.format(I18N.getMsgDirBigDataAndProjectGenerated(), number));
+            GuiHelper.showMessageBox(innerShell, SWT.ICON_INFORMATION,
+                    String.format(I18N.getTextDirBigDataAndProjectGenerated(), number, number),
+                    String.format(I18N.getMsgDirBigDataAndProjectGenerated(), number, number));
         } else if (isAdminFolderGenerated) {
-            GuiHelper.showMessageBox(innerShell,SWT.ICON_INFORMATION,
+            GuiHelper.showMessageBox(innerShell, SWT.ICON_INFORMATION,
                     String.format(I18N.getTextDirAdminGenerated(), number),
                     String.format(I18N.getMsgDirAdminGenerated(), number));
         } else if (isBigDataFolderGenerated) {
-            GuiHelper.showMessageBox(innerShell,SWT.ICON_INFORMATION,
+            GuiHelper.showMessageBox(innerShell, SWT.ICON_INFORMATION,
                     String.format(I18N.getTextDirBigDataGenerated(), number),
                     String.format(I18N.getMsgDirBigDataGenerated(), number));
         } else if (isProjectFolderGenerated) {
-            GuiHelper.showMessageBox(innerShell,SWT.ICON_INFORMATION,
+            GuiHelper.showMessageBox(innerShell, SWT.ICON_INFORMATION,
                     String.format(I18N.getTextDirProjectGenerated(), number),
                     String.format(I18N.getMsgDirProjectGenerated(), number));
         }
