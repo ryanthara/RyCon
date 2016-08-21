@@ -83,7 +83,7 @@ public class FileUtils {
     private void copyDirectory(File source, File target) throws IOException {
         if (!target.exists()) {
             if (!target.mkdir()) {
-                System.err.println("copying dirs and files failed. Directory couldn't be created.");
+                System.err.println("copying directories and files failed. Directory couldn't be created.");
             }
         }
 
@@ -95,20 +95,8 @@ public class FileUtils {
     }
 
     private void copyFile(File source, File target) throws IOException {
-        InputStream in = new InputStream() {
-            @Override
-            public int read() throws IOException {
-                return 0;
-            }
-        };
-        OutputStream out = new OutputStream() {
-            @Override
-            public void write(int b) throws IOException {}
-        };
-
-        try {
-            in = new FileInputStream(source);
-            out = new FileOutputStream(target);
+        try (InputStream in = new FileInputStream(source);
+             OutputStream out = new FileOutputStream(target)) {
 
             byte[] buffer = new byte[1024];
 
@@ -117,9 +105,6 @@ public class FileUtils {
             while ((length = in.read(buffer)) > 0) {
                 out.write(buffer, 0, length);
             }
-        } finally {
-            in.close();
-            out.close();
         }
     }
 

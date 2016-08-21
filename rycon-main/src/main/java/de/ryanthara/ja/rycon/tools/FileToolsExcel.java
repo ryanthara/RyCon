@@ -47,6 +47,8 @@ import java.util.List;
  */
 public class FileToolsExcel {
 
+    private FileToolsLeicaGSI toolsLeicaGSI;
+
     private ArrayList<String> readStringLines;
     private List<String[]> readCSVLines;
     private Workbook workbook;
@@ -54,17 +56,15 @@ public class FileToolsExcel {
     /**
      * Member which helps distinguish between XLS and XLSX file format.
      */
-    public static boolean isXLS = true;
+    public static final boolean isXLS = true;
 
     /**
      * Member which helps distinguish between XLS and XLSX file format.
      */
-    public static boolean isXLSX = false;
+    public static final boolean isXLSX = false;
 
     /**
-     * Class Constructor with parameter.
-     * <p>
-     * As parameter the {@code ArrayList<String>} object with the lines in text format is used.
+     * Class constructor for read line based text files in different formats.
      *
      * @param readStringLines {@code ArrayList<String>} with lines in text format
      */
@@ -73,9 +73,19 @@ public class FileToolsExcel {
     }
 
     /**
-     * Class constructor with parameter for the read lines as {@code List<String[]>} object.
+     * Class constructor for read line based Leica GSI files.
      * <p>
-     * This constructor is used for reading csv file lines.
+     * Due to some details of the Leica GSI format it is easier to get access to the {@link FileToolsLeicaGSI} object
+     * instead of having a couple of more parameters.
+     *
+     * @param toolsLeicaGSI {@link FileToolsLeicaGSI} object
+     */
+    public FileToolsExcel(FileToolsLeicaGSI toolsLeicaGSI) {
+        this.toolsLeicaGSI = toolsLeicaGSI;
+    }
+
+    /**
+     * Class constructor for read line based CSV files.
      *
      * @param readCSVLines {@code List<String[]>} with lines as {@code String[]}
      */
@@ -122,7 +132,6 @@ public class FileToolsExcel {
             if (cellNumber > countColumns) {
                 countColumns = cellNumber;
             }
-
         }
 
         // adjust column width to fit the content
@@ -160,7 +169,6 @@ public class FileToolsExcel {
         short rowNumber = 0;
         short cellNumber = 0;
 
-        // write comment row
         if (writeCommentRow) {
             row = sheet.createRow(rowNumber);
             rowNumber++;
@@ -213,6 +221,9 @@ public class FileToolsExcel {
                     case 10:
                         cell.setCellValue(csvLine[i]);
                         break;
+
+                    default:
+                        System.err.println("Error in convertCSVBaselStadt2Excel: unknown element found or to much columns");
                 }
             }
         }
@@ -254,12 +265,11 @@ public class FileToolsExcel {
             readStringLines.remove(0);
         }
 
-        // write comment row
         if (writeCommentRow) {
             row = sheet.createRow(rowNumber);
             rowNumber++;
 
-            lineSplit = readStringLines.get(0).trim().split("\\s+");
+            lineSplit = readStringLines.get(0).trim().split("\\t", -1);
 
             for (String description: lineSplit) {
                 cell = row.createCell(cellNumber);
@@ -277,7 +287,7 @@ public class FileToolsExcel {
 
             cellNumber = 0;
 
-            lineSplit = line.trim().split("\\s+");
+            lineSplit = line.trim().split("\\t", -1);
 
             cell = row.createCell(cellNumber);      // No
             cell.setCellValue(lineSplit[0]);
@@ -339,7 +349,6 @@ public class FileToolsExcel {
         short cellNumber = 0;
         short countColumns = 0;
 
-        // write comment row
         if (writeCommentRow) {
             row = sheet.createRow(rowNumber);
             rowNumber++;
@@ -462,6 +471,7 @@ public class FileToolsExcel {
 
     /**
      * Convert a GSI file element by element into an Excel file.
+     *
      * @param isXLS selector to distinguish between XLS and XLSX file extension
      * @param sheetName name of the sheet (file name from input file)
      * @return success conversion success
@@ -485,16 +495,11 @@ public class FileToolsExcel {
         short rowNumber = 0;
         short cellNumber = 0;
 
-        // preparation of the read gsi file
-        FileToolsLeicaGSI gsiTools = new FileToolsLeicaGSI(readStringLines);
-        ArrayList<ArrayList<GSIBlock>> blocksInLines = gsiTools.getEncodedGSIBlocks();
-
-        // write comment row
         if (writeCommentRow) {
             row = sheet.createRow(rowNumber);
             rowNumber++;
 
-            for (int wordIndex: gsiTools.getFoundWordIndices()) {
+            for (int wordIndex : toolsLeicaGSI.getFoundWordIndices()) {
                 cell = row.createCell(cellNumber);
                 cellNumber++;
 
@@ -503,14 +508,13 @@ public class FileToolsExcel {
         }
 
         // fill gsi content into rows and cells
-        for (ArrayList<GSIBlock> blocksAsLines : blocksInLines) {
+        for (ArrayList<GSIBlock> blocksAsLines : toolsLeicaGSI.getEncodedLinesOfGSIBlocks()) {
             row = sheet.createRow(rowNumber);
             rowNumber++;
 
             cellNumber = 0;
 
             for (GSIBlock block : blocksAsLines) {
-
                 cell = row.createCell(cellNumber);
                 cellNumber++;
 
@@ -595,11 +599,11 @@ public class FileToolsExcel {
                         cell.setCellStyle(cellStyle);
                         break;
                 }
-             }
+            }
         }
 
         // adjust column width to fit the content
-        for (int i = 0; i < blocksInLines.size(); i++) {
+        for (int i = 0; i < toolsLeicaGSI.getEncodedLinesOfGSIBlocks().size(); i++) {
             sheet.autoSizeColumn((short)i);
         }
 
@@ -686,12 +690,11 @@ public class FileToolsExcel {
         short cellNumber = 0;
         short countColumns = 0;
 
-        // write comment row
         if (writeCommentRow) {
             row = sheet.createRow(rowNumber);
             rowNumber++;
 
-            String[] lineSplit = readStringLines.get(0).trim().split("\\s+");
+            String[] lineSplit = readStringLines.get(0).trim().split("\\t", -1);
 
             for (String description: lineSplit) {
                 cell = row.createCell(cellNumber);
@@ -707,7 +710,7 @@ public class FileToolsExcel {
             row = sheet.createRow(rowNumber);
             rowNumber++;
 
-            String[] lineSplit = line.trim().split("\\s+");
+            String[] lineSplit = line.trim().split("\\t", -1);
 
             cellNumber = 0;
 
@@ -810,8 +813,7 @@ public class FileToolsExcel {
      * @return success write success
      */
     public boolean writeXLS(File writeFile) {
-        try {
-            FileOutputStream fileOut = new FileOutputStream(writeFile);
+        try (FileOutputStream fileOut = new FileOutputStream(writeFile)) {
             workbook.write(fileOut);
 
             fileOut.close();
@@ -831,8 +833,8 @@ public class FileToolsExcel {
      * @return success write success
      */
     public boolean writeXLSX(File writeFile) {
-        try {
-            FileOutputStream fileOut = new FileOutputStream(writeFile);
+        try (FileOutputStream fileOut = new FileOutputStream(writeFile)) {
+
             workbook.write(fileOut);
 
             fileOut.close();
@@ -841,6 +843,7 @@ public class FileToolsExcel {
             System.err.println("Error while writing XLSX file to disk.");
             e.printStackTrace();
         }
+
         return false;
     }
 

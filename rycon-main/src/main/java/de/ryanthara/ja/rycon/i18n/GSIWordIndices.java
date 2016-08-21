@@ -36,7 +36,7 @@ import java.util.ResourceBundle;
  * @version 2
  * @since 9
  */
-class GSIWordIndices {
+public class GSIWordIndices {
 
     private static final String BUNDLE_NAME = "de/ryanthara/ja/rycon/tools/LeicaGSIWordIndices";
     private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
@@ -47,7 +47,7 @@ class GSIWordIndices {
      * @param wordIndex key to look up
      * @return matched text
      */
-    static String getWordIndexDescription(int wordIndex) {
+    public static String getWordIndexDescription(int wordIndex) {
         try {
             String key = "WI" + wordIndex;
             return RESOURCE_BUNDLE.getString(key);

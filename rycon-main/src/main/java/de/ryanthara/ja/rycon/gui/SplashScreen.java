@@ -48,7 +48,7 @@ import org.eclipse.swt.widgets.Shell;
 public class SplashScreen {
     
     private int splashPos = 0;
-    private final int SPLASH_MAX = 100;
+    private static final int SPLASH_MAX = 100;
 
     /**
      * Constructor with most of the functionality.

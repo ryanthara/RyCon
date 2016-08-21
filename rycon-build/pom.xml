@@ -10,7 +10,7 @@
     <!-- inherit all the things which are global for RyCON -->
     <parent>
         <groupId>de.ryanthara.ja.rycon</groupId>
-        <version>0.9.11</version>
+        <version>0.9.12-SNAPSHOT</version>
         <artifactId>RyCON</artifactId>
         <relativePath>../pom.xml</relativePath>
     </parent>

@@ -29,15 +29,32 @@ import java.io.File;
  *
  * <h3>Changes:</h3>
  * <ul>
+ *     <li>2: add some checks </li>
  *     <li>1: basic implementation </li>
  * </ul>
  *
  * @author sebastian
- * @version 1
+ * @version 2
  * @since 7
  *
  */
 public class SimpleChecker {
+
+    /**
+     * Check the content of a text (text field) for being a valid double value.
+     *
+     * @param textField text to be checked
+     * @return success of the check
+     */
+    public static boolean checkIsDoubleValue(Text textField) {
+        try {
+            Double d = Double.parseDouble(textField.getText());
+            return true;
+        } catch (NumberFormatException ex) {
+            System.err.println("Text field contains value that can't be parsed into a double value!");
+            return false;
+        }
+    }
 
     /**
      * Check a swt text (text field) for not being empty.

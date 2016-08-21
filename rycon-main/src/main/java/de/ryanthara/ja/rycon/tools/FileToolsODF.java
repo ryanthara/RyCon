@@ -44,14 +44,14 @@ import java.util.List;
  */
 public class FileToolsODF {
 
+    private FileToolsLeicaGSI toolsLeicaGSI;
+
     private ArrayList<String> readStringLines;
     private List<String[]> readCSVLines;
     private SpreadsheetDocument spreadsheetDocument;
 
     /**
-     * Class Constructor with parameter.
-     * <p>
-     * As parameter the {@code ArrayList<String>} object with the lines in text format is used.
+     * Class constructor for read line based text files in different formats.
      *
      * @param readStringLines {@code ArrayList<String>} with lines in text format
      */
@@ -60,9 +60,19 @@ public class FileToolsODF {
     }
 
     /**
-     * Class constructor with parameter for the read lines as {@code List<String[]>} object.
+     * Class constructor for read line based Leica GSI files.
      * <p>
-     * This constructor is used for reading csv file lines.
+     * Due to some details of the Leica GSI format it is easier to get access to the {@link FileToolsLeicaGSI} object
+     * instead of having a couple of more parameters.
+     *
+     * @param toolsLeicaGSI {@link FileToolsLeicaGSI} object
+     */
+    public FileToolsODF(FileToolsLeicaGSI toolsLeicaGSI) {
+        this.toolsLeicaGSI = toolsLeicaGSI;
+    }
+
+    /**
+     * Class constructor for read line based CSV files.
      *
      * @param readCSVLines {@code List<String[]>} with lines as {@code String[]}
      */
@@ -127,7 +137,6 @@ public class FileToolsODF {
 
             Cell cell;
 
-            // write comment row
             if (writeCommentRow) {
                 String[] commentLine = readCSVLines.get(0);
 
@@ -186,6 +195,8 @@ public class FileToolsODF {
 
     /**
      * Convert a Cadwork node.dat file into an Open Document Format spreadsheet file.
+     * <p>
+     * Cadwork node.dat files are tab separated.
      *
      * @param sheetName       name of the sheet (file name from input file)
      * @param writeCommentRow write comment row
@@ -211,9 +222,8 @@ public class FileToolsODF {
                 readStringLines.remove(0);
             }
 
-            // write comment row
             if (writeCommentRow) {
-                lineSplit = readStringLines.get(0).trim().split("\\s+");
+                lineSplit = readStringLines.get(0).trim().split("\\t", -1);
 
                 for (String description : lineSplit) {
                     cell = table.getCellByPosition(colIndex, rowIndex);
@@ -229,7 +239,7 @@ public class FileToolsODF {
             for (String line : readStringLines) {
                 colIndex = 0;
 
-                lineSplit = line.trim().split("\\s+");
+                lineSplit = line.trim().split("\\t", -1);
 
                 cell = table.getCellByPosition(colIndex, rowIndex);      // No
                 cell.setStringValue(lineSplit[0]);
@@ -283,7 +293,6 @@ public class FileToolsODF {
 
             Cell cell;
 
-            // write comment row
             if (writeCommentRow) {
                 cell = table.getCellByPosition(colIndex, rowIndex);
                 cell.setStringValue(I18N.getCaplanColumnTyp("pointNumber"));
@@ -405,13 +414,8 @@ public class FileToolsODF {
 
             Cell cell;
 
-            // preparation of the read gsi file
-            FileToolsLeicaGSI gsiTools = new FileToolsLeicaGSI(readStringLines);
-            ArrayList<ArrayList<GSIBlock>> blocksInLines = gsiTools.getEncodedGSIBlocks();
-
-            // write comment row
             if (writeCommentRow) {
-                for (int wordIndex : gsiTools.getFoundWordIndices()) {
+                for (int wordIndex : toolsLeicaGSI.getFoundWordIndices()) {
                     cell = table.getCellByPosition(colIndex, 0);
                     colIndex++;
 
@@ -421,7 +425,7 @@ public class FileToolsODF {
             }
 
             // fill gsi content into rows and cells
-            for (ArrayList<GSIBlock> blocksAsLines : blocksInLines) {
+            for (ArrayList<GSIBlock> blocksAsLines : toolsLeicaGSI.getEncodedLinesOfGSIBlocks()) {
                 colIndex = 0;
                 for (GSIBlock block : blocksAsLines) {
                     cell = table.getCellByPosition(colIndex, rowIndex);
@@ -572,9 +576,8 @@ public class FileToolsODF {
 
             Cell cell;
 
-            // write comment row
             if (writeCommentRow) {
-                String[] lineSplit = readStringLines.get(0).trim().split("\\s+");
+                String[] lineSplit = readStringLines.get(0).trim().split("\\t", -1);
 
                 for (String description : lineSplit) {
                     cell = table.getCellByPosition(colIndex, rowIndex);
@@ -588,7 +591,7 @@ public class FileToolsODF {
             readStringLines.remove(0);
 
             for (String line : readStringLines) {
-                String[] lineSplit = line.trim().split("\\s+");
+                String[] lineSplit = line.trim().split("\\t", -1);
 
                 colIndex = 0;
 
@@ -652,6 +655,10 @@ public class FileToolsODF {
                             cell.setFormatString("#,##0.000");
                         }
                         break;
+
+                    default:
+                        System.err.println("Error in convertTXTBaselLandschaft2ODS: line length doesn't match 5 or 6 elements");
+
                 }
                 rowIndex++;
             }

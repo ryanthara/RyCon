@@ -44,10 +44,11 @@ import java.util.List;
  * <p>
  * The ConverterWidget of RyCON is used to convert measurement and coordinate
  * files into different formats. RyCON can be used to convert special formats
- * e.g. coordinate files from governmental services in switzerland
+ * e.g. coordinate files from governmental services in Switzerland
  *
  * <h3>Changes:</h3>
  * <ul>
+ *     <li>9: implement support for LTOP-MES format and M5-Format, code improvements, and some details more</li>
  *     <li>8: code optimizations, little corrections</li>
  *     <li>7: defeat txt to gsi conversion bug (not listed)</li>
  *     <li>6: implement support for cadwork-files (node.dat) </li>
@@ -67,6 +68,8 @@ public class ConverterWidget {
     private Button chkBoxCadworkUseZeroHeights;
     private Button chkBoxCSVSemiColonSeparator;
     private Button chkBoxKFormatUseSimpleFormat;
+    private Button chkBoxLTOPEliminateDuplicatePoints;
+    private Button chkBoxLTOPSortOutputFileByNumber;
     private Button chkBoxSourceContainsCode;
     private Button chkBoxTXTSpaceSeparator;
     private Button chkBoxWriteCodeColumn;
@@ -338,8 +341,8 @@ public class ConverterWidget {
         };
 
         String[] formatTarget = {
-                "GSI8", "GSI16", "TXT", "CSV", "CAPLAN (.K)", "LTOP (.KOO)", "Excel 2007 (.xlsx)", "Excel '97 (.xls)",
-                "Open Document  Format (.ods)"
+                "GSI8", "GSI16", "TXT", "CSV", "CAPLAN (.K)", "Zeiss (.M5)", "LTOP (.KOO)", "LTOP (.MES)",
+                "Excel 2007 (.xlsx)", "Excel '97 (.xls)", "Open Document  Format (.ods)"
         };
 
         for (int i = 0; i < formatSource.length; i++) {
@@ -409,6 +412,14 @@ public class ConverterWidget {
         chkBoxKFormatUseSimpleFormat = new Button(group, SWT.CHECK);
         chkBoxKFormatUseSimpleFormat.setSelection(true);
         chkBoxKFormatUseSimpleFormat.setText(I18N.getBtnChkBoxKFormatUseSimpleFormat());
+
+        chkBoxLTOPEliminateDuplicatePoints = new Button(group, SWT.CHECK);
+        chkBoxLTOPEliminateDuplicatePoints.setSelection(true);
+        chkBoxLTOPEliminateDuplicatePoints.setText(I18N.getBtnChkBoxLTOPEliminateDuplicatePoints());
+
+        chkBoxLTOPSortOutputFileByNumber = new Button(group, SWT.CHECK);
+        chkBoxLTOPSortOutputFileByNumber.setSelection(true);
+        chkBoxLTOPSortOutputFileByNumber.setText(I18N.getBtnChkBoxLTOPSortOutputFileByNumber());
 
         chkBoxWriteCommentLine = new Button(group, SWT.CHECK);
         chkBoxWriteCommentLine.setSelection(false);
@@ -482,6 +493,8 @@ public class ConverterWidget {
         for (File file2read : files2read) {
             boolean readFileSuccess = false;
 
+            FileToolsLeicaGSI toolsLeicaGSI = null;
+
             List<String[]> readCSVFile = null;
             ArrayList<String> readFile = null;
 
@@ -490,6 +503,7 @@ public class ConverterWidget {
                 case 0:     // fall through for GSI8 format
                 case 1:     // GSI16 format
                     if ((readFile = readLineBasedFile(file2read)) != null) {
+                        toolsLeicaGSI = new FileToolsLeicaGSI(readFile);
                         readFileSuccess = true;
                     } else {
                         readErrorHandler(file2read, I18N.getMsgConvertReaderGSIFailed());
@@ -559,7 +573,6 @@ public class ConverterWidget {
 
                 FileToolsCaplanK toolsCaplanK;
                 FileToolsCSV toolsCSV;
-                FileToolsLeicaGSI toolsLeicaGSI;
                 FileToolsLTOP toolsLTOP;
                 FileToolsODF toolsODF = null;
                 FileToolsExcel toolsExcel = null;
@@ -568,48 +581,44 @@ public class ConverterWidget {
                 String separator;
 
                 switch (targetNumber) {
-                    case 0:     // target format: GSI8 format
+                    /*
+                    Target format: GSI 8
+                     */
+                    case 0:
                         switch (sourceNumber) {
                             case 0:     // GSI8 format (not possible)
                                 break;
 
                             case 1:     // GSI16 format
-                                toolsLeicaGSI = new FileToolsLeicaGSI(readFile);
                                 writeFile = toolsLeicaGSI.convertGSI8vsGSI16(Main.getGSI8());
                                 break;
 
                             case 2:     // TXT format (space or tabulator separated)
-                                toolsLeicaGSI = new FileToolsLeicaGSI(readFile);
                                 writeFile = toolsLeicaGSI.convertTXT2GSI(Main.getGSI8(),
                                         chkBoxSourceContainsCode.getSelection());
                                 break;
 
                             case 3:     // CSV format (comma or semicolon separated)
-                                toolsLeicaGSI = new FileToolsLeicaGSI(readCSVFile);
                                 writeFile = toolsLeicaGSI.convertCSV2GSI(Main.getGSI8(),
                                         chkBoxSourceContainsCode.getSelection());
                                 break;
 
                             case 4:     // CAPLAN K format
-                                toolsLeicaGSI = new FileToolsLeicaGSI(readFile);
                                 writeFile = toolsLeicaGSI.convertK2GSI(Main.getGSI8());
                                 break;
 
                             case 5:     // cadwork node.dat from cadwork CAD program
-                                toolsLeicaGSI = new FileToolsLeicaGSI(readFile);
                                 writeFile = toolsLeicaGSI.convertCadwork2GSI(Main.getGSI8(),
                                         chkBoxWriteCodeColumn.getSelection(),
                                         chkBoxCadworkUseZeroHeights.getSelection());
                                 break;
 
                             case 6:     // CSV format 'Basel Stadt' (semicolon separated)
-                                toolsLeicaGSI = new FileToolsLeicaGSI(readCSVFile);
                                 writeFile = toolsLeicaGSI.convertCSVBaselStadt2GSI(Main.getGSI8(),
                                         chkBoxSourceContainsCode.getSelection());
                                 break;
 
                             case 7:     // TXT format 'Basel Landschaft' (different column based text files for LFP and HFP points)
-                                toolsLeicaGSI = new FileToolsLeicaGSI(readFile);
                                 writeFile = toolsLeicaGSI.convertTXTBaselLandschaft2GSI(Main.getGSI8(), chkBoxWriteCodeColumn.getSelection());
                                 break;
 
@@ -619,10 +628,12 @@ public class ConverterWidget {
                         }
                         break;
 
-                    case 1:     // target format: GSI16 format
+                    /*
+                    Target format: GSI16
+                     */
+                    case 1:
                         switch (sourceNumber) {
                             case 0:     // GSI8 format
-                                toolsLeicaGSI = new FileToolsLeicaGSI(readFile);
                                 writeFile = toolsLeicaGSI.convertGSI8vsGSI16(Main.getGSI16());
                                 break;
 
@@ -630,37 +641,31 @@ public class ConverterWidget {
                                 break;
 
                             case 2:     // TXT format (space or tabulator separated)
-                                toolsLeicaGSI = new FileToolsLeicaGSI(readFile);
                                 writeFile = toolsLeicaGSI.convertTXT2GSI(Main.getGSI16(),
                                         chkBoxSourceContainsCode.getSelection());
                                 break;
 
                             case 3:     // CSV format (comma or semicolon separated)
-                                toolsLeicaGSI = new FileToolsLeicaGSI(readCSVFile);
                                 writeFile = toolsLeicaGSI.convertCSV2GSI(Main.getGSI16(),
                                         chkBoxSourceContainsCode.getSelection());
                                 break;
 
                             case 4:     // CAPLAN K format
-                                toolsLeicaGSI = new FileToolsLeicaGSI(readFile);
                                 writeFile = toolsLeicaGSI.convertK2GSI(Main.getGSI16());
                                 break;
 
                             case 5:     // cadwork node.dat from cadwork CAD program
-                                toolsLeicaGSI = new FileToolsLeicaGSI(readFile);
                                 writeFile = toolsLeicaGSI.convertCadwork2GSI(Main.getGSI16(),
                                         chkBoxWriteCodeColumn.getSelection(),
                                         chkBoxCadworkUseZeroHeights.getSelection());
                                 break;
 
                             case 6:     // CSV format 'Basel Stadt' (semicolon separated)
-                                toolsLeicaGSI = new FileToolsLeicaGSI(readCSVFile);
                                 writeFile = toolsLeicaGSI.convertCSVBaselStadt2GSI(Main.getGSI16(),
                                         chkBoxSourceContainsCode.getSelection());
                                 break;
 
                             case 7:     // TXT format 'Basel Landschaft' (different column based text files for LFP and HFP points)
-                                toolsLeicaGSI = new FileToolsLeicaGSI(readFile);
                                 writeFile = toolsLeicaGSI.convertTXTBaselLandschaft2GSI(Main.getGSI16(), chkBoxWriteCodeColumn.getSelection());
                                 break;
 
@@ -670,13 +675,16 @@ public class ConverterWidget {
                         }
                         break;
 
-                    case 2:     // target format: TXT format (space or tabulator separated)
+                    /*
+                    Target format: TXT format (space or tabulator separated)
+                     */
+                    case 2:
                         separator = chkBoxTXTSpaceSeparator.getSelection() ? Main.getSeparatorSpace() : Main.getSeparatorTab();
 
                         switch (sourceNumber) {
                             case 0:     // fall through for GSI8 format
                             case 1:     // GSI16 format
-                                toolsText = new FileToolsText(readFile);
+                                toolsText = new FileToolsText(toolsLeicaGSI);
                                 writeFile = toolsText.convertGSI2TXT(separator, GSIFormat, chkBoxWriteCommentLine.getSelection());
                                 break;
 
@@ -717,7 +725,10 @@ public class ConverterWidget {
                         }
                         break;
 
-                    case 3:     // target format: CSV format (comma or semicolon separated)
+                    /*
+                    Target format: CSV format (comma or semicolon separated)
+                     */
+                    case 3:
                         FileToolsCSV stopOverFile;  // helper for converting
 
                         separator = chkBoxCSVSemiColonSeparator.getSelection() ? Main.getSeparatorSemicolon() : Main.getSeparatorComma();
@@ -725,7 +736,7 @@ public class ConverterWidget {
                         switch (sourceNumber) {
                             case 0:     // fall through for GSI8 format
                             case 1:     // GSI16 format
-                                toolsCSV = new FileToolsCSV(readFile);
+                                toolsCSV = new FileToolsCSV(toolsLeicaGSI);
                                 writeFile = toolsCSV.convertGSI2CSV(separator, chkBoxWriteCommentLine.getSelection());
                                 break;
 
@@ -771,12 +782,15 @@ public class ConverterWidget {
                         }
                         break;
 
-                    case 4:     // target format: CAPLAN (.K)
+                    /*
+                    Target format: CAPLAN (.K)
+                     */
+                    case 4:
                         switch (sourceNumber) {
                             case 0:     // fall through for GSI8 format
                             case 1:     // GSI16 format
-                                toolsCaplanK = new FileToolsCaplanK(readFile);
-                                writeFile = toolsCaplanK.convertGSI2KFile(
+                                toolsCaplanK = new FileToolsCaplanK(toolsLeicaGSI);
+                                writeFile = toolsCaplanK.convertGSI2K(
                                         chkBoxKFormatUseSimpleFormat.getSelection(),
                                         chkBoxWriteCommentLine.getSelection());
                                 break;
@@ -800,7 +814,7 @@ public class ConverterWidget {
 
                             case 5:     // cadwork node.dat from cadwork CAD program
                                 toolsCaplanK = new FileToolsCaplanK(readFile);
-                                writeFile = toolsCaplanK.convertCadwork2KFile(
+                                writeFile = toolsCaplanK.convertCadwork2K(
                                         chkBoxKFormatUseSimpleFormat.getSelection(),
                                         chkBoxWriteCommentLine.getSelection(),
                                         chkBoxWriteCodeColumn.getSelection());
@@ -825,42 +839,68 @@ public class ConverterWidget {
                         }
                         break;
 
-                    case 5:     // target format: LTOP KOO format
+                    /*
+                    Target format:  Zeiss M5
+                     */
+                    case 5:
+                        switch (sourceNumber) {
+                            case 0:
+                            case 1:
+                                break;
+                        }
+                        if (writeFile2Disk(file2read, writeFile, ".M5")) {
+                            counter++;
+                        }
+                        break;
+
+                    /*
+                    Target format: LTOP KOO format
+                     */
+                    case 6:
                         switch (sourceNumber) {
                             case 0:     // fall through for GSI8 format
                             case 1:     // GSI16 format
-                                toolsLTOP = new FileToolsLTOP(readFile);
-                                writeFile = toolsLTOP.convertGSI2KOO();
+                                toolsLTOP = new FileToolsLTOP(toolsLeicaGSI);
+                                writeFile = toolsLTOP.convertGSI2KOO(
+                                        chkBoxLTOPEliminateDuplicatePoints.getSelection(),
+                                        chkBoxLTOPSortOutputFileByNumber.getSelection());
                                 break;
 
                             case 2:     // TXT format (space or tabulator separated)
                                 toolsLTOP = new FileToolsLTOP(readFile);
-                                writeFile = toolsLTOP.convertTXT2KOO();
+                                writeFile = toolsLTOP.convertTXT2KOO(chkBoxLTOPEliminateDuplicatePoints.getSelection(),
+                                        chkBoxLTOPSortOutputFileByNumber.getSelection());
                                 break;
 
                             case 3:     // CSV format (comma or semicolon separated)
                                 toolsLTOP = new FileToolsLTOP(readCSVFile);
-                                writeFile = toolsLTOP.convertCSV2KOO();
+                                writeFile = toolsLTOP.convertCSV2KOO(chkBoxLTOPEliminateDuplicatePoints.getSelection(),
+                                        chkBoxLTOPSortOutputFileByNumber.getSelection());
                                 break;
 
                             case 4:     // CAPLAN K format
                                 toolsLTOP = new FileToolsLTOP(readFile);
-                                writeFile = toolsLTOP.convertK2KOO();
+                                writeFile = toolsLTOP.convertK2KOO(chkBoxLTOPEliminateDuplicatePoints.getSelection(),
+                                        chkBoxLTOPSortOutputFileByNumber.getSelection());
                                 break;
 
                             case 5:     // cadwork node.dat from cadwork CAD program
                                 toolsLTOP = new FileToolsLTOP(readFile);
-                                writeFile = toolsLTOP.convertCadwork2KOO(chkBoxCadworkUseZeroHeights.getSelection());
+                                writeFile = toolsLTOP.convertCadwork2KOO(chkBoxCadworkUseZeroHeights.getSelection(),
+                                        chkBoxLTOPEliminateDuplicatePoints.getSelection(),
+                                        chkBoxLTOPSortOutputFileByNumber.getSelection());
                                 break;
 
                             case 6:     // CSV format 'Basel Stadt' (semicolon separated)
                                 toolsLTOP = new FileToolsLTOP(readCSVFile);
-                                writeFile = toolsLTOP.convertCSVBaselStadt2KOO();
+                                writeFile = toolsLTOP.convertCSVBaselStadt2KOO(chkBoxLTOPEliminateDuplicatePoints.getSelection(),
+                                        chkBoxLTOPSortOutputFileByNumber.getSelection());
                                 break;
 
                             case 7:     // TXT format 'Basel Landschaft' (different column based text files for LFP and HFP points)
                                 toolsLTOP = new FileToolsLTOP(readFile);
-                                writeFile = toolsLTOP.convertTXTBaselLandschaft2KOO();
+                                writeFile = toolsLTOP.convertTXTBaselLandschaft2KOO(chkBoxLTOPEliminateDuplicatePoints.getSelection(),
+                                        chkBoxLTOPSortOutputFileByNumber.getSelection());
                                 break;
                         }
                         if (writeFile2Disk(file2read, writeFile, ".KOO")) {
@@ -868,11 +908,31 @@ public class ConverterWidget {
                         }
                         break;
 
-                    case 6:     // target format: Excel 2007 (.xlsx)
+                    /*
+                    Target format: LTOP MES format
+                     */
+                    case 7:
                         switch (sourceNumber) {
                             case 0:     // fall through for GSI8 format
                             case 1:     // GSI16 format
-                                toolsExcel = new FileToolsExcel(readFile);
+                                toolsLTOP = new FileToolsLTOP(toolsLeicaGSI);
+                                writeFile = toolsLTOP.convertGSI2MES(Boolean.parseBoolean(Main.pref.getUserPref(
+                                        PreferenceHandler.CONVERTER_SETTING_LTOP_USE_ZENITH_DISTANCE)));
+                        break;
+                        }
+                        if (writeFile2Disk(file2read, writeFile, ".MES")) {
+                            counter++;
+                        }
+                        break;
+
+                    /*
+                    Target format: Excel 2007 (.xlsx)
+                     */
+                    case 8:
+                        switch (sourceNumber) {
+                            case 0:     // fall through for GSI8 format
+                            case 1:     // GSI16 format
+                                toolsExcel = new FileToolsExcel(toolsLeicaGSI);
                                 toolsExcel.convertGSI2Excel(FileToolsExcel.isXLSX, file2read.getName(),
                                         chkBoxWriteCommentLine.getSelection());
                                 break;
@@ -916,11 +976,14 @@ public class ConverterWidget {
 
                         break;
 
-                    case 7:     // target format: Excel 97 (.xls)
+                    /*
+                    Target format: Excel 97 (.xls)
+                     */
+                    case 9:
                         switch (sourceNumber) {
                             case 0:     // fall through for GSI8 format
                             case 1:     // GSI16 format
-                                toolsExcel = new FileToolsExcel(readFile);
+                                toolsExcel = new FileToolsExcel(toolsLeicaGSI);
                                 toolsExcel.convertGSI2Excel(FileToolsExcel.isXLS, file2read.getName(),
                                         chkBoxWriteCommentLine.getSelection());
                                 break;
@@ -964,11 +1027,14 @@ public class ConverterWidget {
                         }
                         break;
 
-                    case 8:     // target format: Open Document  Format (ODF) toolsExcel
+                    /*
+                    Target format: Open Document Format (ODF spreadsheet format .ODS)
+                     */
+                    case 10:
                         switch (sourceNumber) {
                             case 0:     // fall through for GSI8 format
                             case 1:     // GSI16 format
-                                toolsODF = new FileToolsODF(readFile);
+                                toolsODF = new FileToolsODF(toolsLeicaGSI);
                                 toolsODF.convertGSI2ODS(file2read.getName(), chkBoxWriteCommentLine.getSelection());
                                 break;
 

@@ -41,7 +41,7 @@ public class Version {
     private static final short majorRelease = 0;
     private static final short minorRelease = 9;
     private static final short patchLevel = 11;
-    private static final String buildDate = "2016-05-01";
+    private static final String buildDate = "2016-05-03";
 
     /**
      * Return the build date of RyCON as string.

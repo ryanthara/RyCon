@@ -19,6 +19,7 @@
 package de.ryanthara.ja.rycon.gui;
 
 import de.ryanthara.ja.rycon.Main;
+import de.ryanthara.ja.rycon.data.PreferenceHandler;
 import de.ryanthara.ja.rycon.data.Version;
 import de.ryanthara.ja.rycon.i18n.I18N;
 import de.ryanthara.ja.rycon.tools.ImageConverter;
@@ -28,6 +29,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 
@@ -42,6 +44,7 @@ import java.io.File;
  *
  * <h3>Changes:</h3>
  * <ul>
+ *     <li>4: implement a first version of window positioning of the RyCON main window</li>
  *     <li>4: enable drag and drop handling </li>
  *     <li>3: code improvements and clean up </li>
  *     <li>2: basic improvements </li>
@@ -49,7 +52,7 @@ import java.io.File;
  * </ul>
  *
  * @author sebastian
- * @version 4
+ * @version 5
  * @since 1
  * @see de.ryanthara.ja.rycon.Main
  */
@@ -71,208 +74,49 @@ public class MainApplication extends Main {
     }
 
     /**
-     * Implements the user interface (UI) and all its components.
-     * <p>
-     * Drag and drop is implemented on the buttons of the following modules.
-     * <ul>
-     *     <li>Clean files...</li>
-     *     <li>Split files by code...</li>
-     *     <li>Levelling to cad-import...</li>
-     * </ul>
+     * Main application startup.
+     *
+     * @param args command line arguments
      */
-    private void initUI() {
-        Display.setAppName(Main.getRyCONAppName());
-        display = new Display();
+    public static void main(String[] args) {
+        checkCommandLineInterfaceArguments(args);
+        checkJavaVersion();
+        checkRyCONVersion();
+        initApplicationPreferences();
 
-        // initialize a shell and make it global
-        Shell shell = new Shell(display, SWT.DIALOG_TRIM);
-        Main.shell = shell;
-
-        createTrayIcon();
-
-        // Dock icon for OS X and Windows task bar
-        shell.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/RyCON_blank256x256.png"));
-        shell.setText(I18N.getApplicationTitle());
-
-        FormLayout formLayout = new FormLayout();
-        shell.setLayout(formLayout);
-
-        // 3 x 2 grid for the buttons
-        Composite compositeGrid = new Composite(shell, SWT.NONE);
-
-        GridLayout gridLayout = new GridLayout();
-        gridLayout.numColumns = 3;
-        gridLayout.makeColumnsEqualWidth = true;
-
-        compositeGrid.setLayout(gridLayout);
-
-        // listen to keyboard inputs. There is no modifier key used!
-        display.addFilter(SWT.KeyDown, new Listener() {
-            @Override
-            public void handleEvent(Event event) {
-                if (!getSubShellStatus()) {
-                    switch (event.keyCode) {
-                        case '1':
-                            actionBtn1();
-                            break;
-                        case '2':
-                            actionBtn2();
-                            break;
-                        case '3':
-                            actionBtn3();
-                            break;
-                        case '4':
-                            actionBtn4();
-                            break;
-                        case '5':
-                            actionBtn5();
-                            break;
-                        case '6':
-                            actionBtn6();
-                            break;
-                        case 'p':
-                            new SettingsWidget();
-                            break;
-                    }
-                }
-            }
-        });
-
-        enableDNDSupport();
-
-        createButton1CleanTool(compositeGrid);
-        createButton2SplitTool(compositeGrid);
-        createButton3LevelTool(compositeGrid);
-        createButton4ConvertTool(compositeGrid);
-        createButton5ProjectTool(compositeGrid);
-        createButton6Exit(compositeGrid);
-
-        StatusBar statusBar = new StatusBar(shell, SWT.NONE);
-        statusBar.setStatus(I18N.getStatusRyCONInitialized(), StatusBar.OK);
-        Main.statusBar = statusBar;
-
-        FormData formDataStatus = new FormData();
-        formDataStatus.width = 3 * getRyCON_GRID_WIDTH() + 2; // width of the status bar!
-        formDataStatus.bottom = new FormAttachment(100, -8);
-        formDataStatus.left = new FormAttachment(0, 8);
-
-        statusBar.setLayoutData(formDataStatus);
-
-        if (pref.isDefaultSettingsGenerated()) {
-            statusBar.setStatus(I18N.getMsgNewConfigFileGenerated(), StatusBar.WARNING);
-        }
-
-        shell.pack();
-
-        // size depends on the grid size
-        shell.setSize(3 * getRyCON_GRID_WIDTH() + 20, 2 * getRyCON_GRID_HEIGHT() + 100);
-
-        shell.setLocation(ShellPositioner.centerShellOnPrimaryMonitor(shell));
-
-        shell.addShellListener(new ShellAdapter() {
-            /**
-             * Sent when a shell becomes the active window.
-             * The default behavior is to do nothing.
-             *
-             * @param e an event containing information about the activation
-             */
-            @Override
-            public void shellActivated(ShellEvent e) {
-                super.shellActivated(e);
-
-                // do a couple of things only when RyCON is started
-                if (firstStart) {
-                    firstStart = false;
-                }
-            }
-        });
-
-        shell.open();
-
-        if (pref.isDefaultSettingsGenerated()) {
-            new SettingsWidget();
-        }
-
-        while (!shell.isDisposed()) {
-            if (!display.readAndDispatch()) {
-                display.sleep();
-            }
-        }
-
-        display.dispose();
+        // to provide illegal thread access -> https://github.com/udoprog/c10t-swt/issues/1
+        // add -XstartOnFirstThread as an java option on VM parameter on OS X
+        new MainApplication();
     }
 
-    private void createTrayIcon() {
-        final Tray tray = display.getSystemTray();
-
-        if (tray == null) {
-            System.err.println("System tray functionality is not available on your system.");
-        } else {
-            final TrayItem item = new TrayItem(tray, SWT.NONE);
-            item.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/RyCON_TrayIcon64x64.png"));
-            item.setToolTipText("RyCON: " + Version.getBuildNumber() + " <--> " + Version.getBuildDate());
-
-            final Menu menu = new Menu(shell, SWT.POP_UP);
-
-            MenuItem webItem = new MenuItem(menu, SWT.PUSH);
-            webItem.setText(I18N.getTrayMenuItemWebsite());
-            webItem.addListener(SWT.Selection, new Listener() {
-                @Override
-                public void handleEvent(Event event) {
-                    Main.openURI(Main.RyCON_WEBSITE);
-                }
-            });
-
-            MenuItem helpItem = new MenuItem(menu, SWT.PUSH);
-            helpItem.setText(I18N.getTrayMenuItemHelp());
-            helpItem.addListener(SWT.Selection, new Listener() {
-                @Override
-                public void handleEvent(Event event) {
-                    Main.openURI(Main.RyCON_WEBSITE_HELP);
-                }
-            });
-
-            MenuItem settingsItem = new MenuItem(menu, SWT.PUSH);
-            settingsItem.setText(I18N.getTrayMenuItemSettings());
-            settingsItem.addListener(SWT.Selection, new Listener() {
-                @Override
-                public void handleEvent(Event event) {
-                    if (!Main.isSettingsWidgetOpen()) {
-                        new SettingsWidget();
-                    }
-                }
-            });
-
-            new MenuItem(menu, SWT.SEPARATOR);
-
-            MenuItem infoItem = new MenuItem(menu, SWT.PUSH);
-            infoItem.setText(I18N.getTrayMenuItemInfo() + Version.getBuildNumber() + " (" + Version.getBuildDate() + ")");
-
-            new MenuItem(menu, SWT.SEPARATOR);
-
-            MenuItem exitItem = new MenuItem(menu, SWT.PUSH);
-            exitItem.setText(I18N.getTrayMenuItemExit());
-            exitItem.addListener(SWT.Selection, new Listener() {
-                @Override
-                public void handleEvent(Event event) {
-                    actionBtn6();
-                }
-            });
-
-            item.addListener (SWT.MenuDetect, new Listener () {
-                public void handleEvent (Event event) {
-                    menu.setVisible (true);
-                }
-            });
-        }
+    private void actionBtn1() {
+        new TidyUpWidget();
+        statusBar.setStatus(I18N.getStatus1CleanInitialized(), StatusBar.OK);
     }
 
-    private void enableDNDSupport() {
-        operations = DND.DROP_MOVE | DND.DROP_COPY | DND.DROP_DEFAULT;
-        fileTransfer = FileTransfer.getInstance();
-        types = new Transfer[] {
-                fileTransfer
-        };
+    private void actionBtn2() {
+        new CodeSplitterWidget();
+        statusBar.setStatus(I18N.getStatus2SplitterInitialized(), StatusBar.OK);
+    }
+
+    private void actionBtn3() {
+        new LevellingWidget();
+        statusBar.setStatus(I18N.getStatus3LevelInitialized(), StatusBar.OK);
+    }
+
+    private void actionBtn4() {
+        new ConverterWidget();
+        statusBar.setStatus(I18N.getStatus4ConverterInitialized(), StatusBar.OK);
+    }
+
+    private void actionBtn5() {
+        new GeneratorWidget();
+        statusBar.setStatus(I18N.getStatus5GeneratorInitialized(), StatusBar.OK);
+    }
+
+    private void actionBtn6() {
+        statusBar.setStatus(I18N.getStatus6ExitInitialized(), StatusBar.OK);
+        shell.getDisplay().dispose();
     }
 
     private void createButton1CleanTool(Composite composite) {
@@ -445,50 +289,242 @@ public class MainApplication extends Main {
         btnExit.setLayoutData(gridData);
     }
 
+    private void createTrayIcon() {
+        final Tray tray = display.getSystemTray();
+
+        if (tray == null) {
+            System.err.println("System tray functionality is not available on your system.");
+        } else {
+            final TrayItem item = new TrayItem(tray, SWT.NONE);
+            item.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/RyCON_TrayIcon64x64.png"));
+            item.setToolTipText("RyCON: " + Version.getBuildNumber() + " <--> " + Version.getBuildDate());
+
+            final Menu menu = new Menu(shell, SWT.POP_UP);
+
+            MenuItem webItem = new MenuItem(menu, SWT.PUSH);
+            webItem.setText(I18N.getTrayMenuItemWebsite());
+            webItem.addListener(SWT.Selection, new Listener() {
+                @Override
+                public void handleEvent(Event event) {
+                    Main.openURI(Main.RyCON_WEBSITE);
+                }
+            });
+
+            MenuItem helpItem = new MenuItem(menu, SWT.PUSH);
+            helpItem.setText(I18N.getTrayMenuItemHelp());
+            helpItem.addListener(SWT.Selection, new Listener() {
+                @Override
+                public void handleEvent(Event event) {
+                    Main.openURI(Main.RyCON_WEBSITE_HELP);
+                }
+            });
+
+            MenuItem settingsItem = new MenuItem(menu, SWT.PUSH);
+            settingsItem.setText(I18N.getTrayMenuItemSettings());
+            settingsItem.addListener(SWT.Selection, new Listener() {
+                @Override
+                public void handleEvent(Event event) {
+                    if (!Main.isSettingsWidgetOpen()) {
+                        new SettingsWidget();
+                    }
+                }
+            });
+
+            new MenuItem(menu, SWT.SEPARATOR);
+
+            MenuItem infoItem = new MenuItem(menu, SWT.PUSH);
+            infoItem.setText(I18N.getTrayMenuItemInfo() + Version.getBuildNumber() + " (" + Version.getBuildDate() + ")");
+
+            new MenuItem(menu, SWT.SEPARATOR);
+
+            MenuItem exitItem = new MenuItem(menu, SWT.PUSH);
+            exitItem.setText(I18N.getTrayMenuItemExit());
+            exitItem.addListener(SWT.Selection, new Listener() {
+                @Override
+                public void handleEvent(Event event) {
+                    actionBtn6();
+                }
+            });
+
+            item.addListener (SWT.MenuDetect, new Listener () {
+                public void handleEvent (Event event) {
+                    menu.setVisible (true);
+                }
+            });
+        }
+    }
+
+    private void enableDNDSupport() {
+        operations = DND.DROP_MOVE | DND.DROP_COPY | DND.DROP_DEFAULT;
+        fileTransfer = FileTransfer.getInstance();
+        types = new Transfer[] {
+                fileTransfer
+        };
+    }
+
     /**
-     * Main application startup.
-     *
-     * @param args command line arguments
+     * Implements the user interface (UI) and all its components.
+     * <p>
+     * Drag and drop is implemented on the buttons of the following modules.
+     * <ul>
+     *     <li>Clean files...</li>
+     *     <li>Split files by code...</li>
+     *     <li>Levelling to cad-import...</li>
+     * </ul>
      */
-    public static void main(String[] args) {
-        checkCommandLineInterfaceArguments(args);
-        checkJavaVersion();
-        checkRyCONVersion();
-        initApplicationPreferences();
+    private void initUI() {
+        Display.setAppName(Main.getRyCONAppName());
+        display = new Display();
 
-        // to provide illegal thread access -> https://github.com/udoprog/c10t-swt/issues/1
-        // add -XstartOnFirstThread as an java option on VM parameter on OS X
-        new MainApplication();
-    }
+        // initialize a shell and make it global
+        final Shell shell = new Shell(display, SWT.DIALOG_TRIM);
+        Main.shell = shell;
 
-    private void actionBtn1() {
-        new TidyUpWidget();
-        statusBar.setStatus(I18N.getStatus1CleanInitialized(), StatusBar.OK);
-    }
+        createTrayIcon();
 
-    private void actionBtn2() {
-        new CodeSplitterWidget();
-        statusBar.setStatus(I18N.getStatus2SplitterInitialized(), StatusBar.OK);
-    }
+        // Dock icon for OS X and Windows task bar
+        shell.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/RyCON_blank256x256.png"));
+        shell.setText(I18N.getApplicationTitle());
 
-    private void actionBtn3() {
-        new LevellingWidget();
-        statusBar.setStatus(I18N.getStatus3LevelInitialized(), StatusBar.OK);
-    }
+        FormLayout formLayout = new FormLayout();
+        shell.setLayout(formLayout);
 
-    private void actionBtn4() {
-        new ConverterWidget();
-        statusBar.setStatus(I18N.getStatus4ConverterInitialized(), StatusBar.OK);
-    }
+        // 3 x 2 grid for the buttons
+        Composite compositeGrid = new Composite(shell, SWT.NONE);
 
-    private void actionBtn5() {
-        new GeneratorWidget();
-        statusBar.setStatus(I18N.getStatus5GeneratorInitialized(), StatusBar.OK);
-    }
+        GridLayout gridLayout = new GridLayout();
+        gridLayout.numColumns = 3;
+        gridLayout.makeColumnsEqualWidth = true;
 
-    private void actionBtn6() {
-        statusBar.setStatus(I18N.getStatus6ExitInitialized(), StatusBar.OK);
-        shell.getDisplay().dispose();
+        compositeGrid.setLayout(gridLayout);
+
+        // listen to keyboard inputs. There is no modifier key used!
+        display.addFilter(SWT.KeyDown, new Listener() {
+            @Override
+            public void handleEvent(Event event) {
+                if (!getSubShellStatus()) {
+                    switch (event.keyCode) {
+                        case '1':
+                            actionBtn1();
+                            break;
+                        case '2':
+                            actionBtn2();
+                            break;
+                        case '3':
+                            actionBtn3();
+                            break;
+                        case '4':
+                            actionBtn4();
+                            break;
+                        case '5':
+                            actionBtn5();
+                            break;
+                        case '6':
+                            actionBtn6();
+                            break;
+                        case 'c':
+                            shell.setLocation(ShellPositioner.centerShellOnPrimaryMonitor(shell));
+                            break;
+                        case 'p':
+                            new SettingsWidget();
+                            break;
+                    }
+                }
+            }
+        });
+
+        enableDNDSupport();
+
+        createButton1CleanTool(compositeGrid);
+        createButton2SplitTool(compositeGrid);
+        createButton3LevelTool(compositeGrid);
+        createButton4ConvertTool(compositeGrid);
+        createButton5ProjectTool(compositeGrid);
+        createButton6Exit(compositeGrid);
+
+        StatusBar statusBar = new StatusBar(shell, SWT.NONE);
+        statusBar.setStatus(I18N.getStatusRyCONInitialized(), StatusBar.OK);
+        Main.statusBar = statusBar;
+
+        FormData formDataStatus = new FormData();
+        formDataStatus.width = 3 * getRyCON_GRID_WIDTH() + 2; // width of the status bar!
+        formDataStatus.bottom = new FormAttachment(100, -8);
+        formDataStatus.left = new FormAttachment(0, 8);
+
+        statusBar.setLayoutData(formDataStatus);
+
+        if (pref.isDefaultSettingsGenerated()) {
+            statusBar.setStatus(I18N.getMsgNewConfigFileGenerated(), StatusBar.WARNING);
+        }
+
+        shell.pack();
+
+        // size depends on the grid size
+        shell.setSize(3 * getRyCON_GRID_WIDTH() + 20, 2 * getRyCON_GRID_HEIGHT() + 100);
+
+        // set the window position (last position or centered)
+        shell.setLocation(ShellPositioner.positShell(shell));
+
+        shell.addShellListener(new ShellAdapter() {
+            /**
+             * Sent when a shell becomes the active window.
+             * The default behavior is to do nothing.
+             *
+             * @param e an event containing information about the activation
+             */
+            @Override
+            public void shellActivated(ShellEvent e) {
+                super.shellActivated(e);
+
+                // do a couple of things only when RyCON is started
+                if (firstStart) {
+                    firstStart = false;
+                }
+            }
+        });
+
+        shell.addListener (SWT.Move,  new Listener () {
+            public void handleEvent (Event e) {
+                saveWindowPosition();
+            }
+        });
+
+        shell.open();
+
+        if (pref.isDefaultSettingsGenerated()) {
+            new SettingsWidget();
+        }
+
+        while (!shell.isDisposed()) {
+            if (!display.readAndDispatch()) {
+                display.sleep();
+            }
+        }
+
+        display.dispose();
+    }  // end of initUI()
+
+    private void saveWindowPosition() {
+        // find out on which display RyCON is visible
+        Monitor[] monitors = shell.getDisplay().getMonitors();
+
+        if (monitors.length == 1) {         // only one display
+            Main.pref.setUserPref(PreferenceHandler.LAST_USED_DISPLAY, "0");
+            Main.pref.setUserPref(PreferenceHandler.LAST_POS_PRIMARY_MONITOR,
+                    Integer.toString(shell.getLocation().x).concat(",").concat(Integer.toString(shell.getLocation().y)));
+        } else if (monitors.length > 1) {   // multi display solutions
+            // Monitor activeMonitor = null;
+            Rectangle r = shell.getBounds();
+            for (int i = 0; i < monitors.length; i++) {
+                if (monitors[i].getBounds().intersects(r)) {
+                    // activeMonitor = monitors[i];
+                    Main.pref.setUserPref(PreferenceHandler.LAST_USED_DISPLAY, Integer.toString(i));
+                    Main.pref.setUserPref(PreferenceHandler.LAST_POS_SECONDARY_MONITOR,
+                            Integer.toString(shell.getLocation().x).concat(",").concat(Integer.toString(shell.getLocation().y)));
+                }
+            }
+
+        }
     }
 
 } // end of MainApplication

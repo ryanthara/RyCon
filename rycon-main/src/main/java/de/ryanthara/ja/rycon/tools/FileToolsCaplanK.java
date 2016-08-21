@@ -27,7 +27,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * This class implements several basic operations on CAPLAN K files.
+ * This class implements several basic operations for conversion to or from CAPLAN K files.
  * <p>
  * The CAPLAN K file format is a line based and column orientated file format developed
  * by Cremer Programmentwicklung GmbH to store coordinates in different formats.
@@ -47,30 +47,31 @@ import java.util.List;
  *
  * <h3>Changes:</h3>
  * <ul>
+ *     <li>2: code improvements, clean up, less detail and precision </li>
  *     <li>1: basic implementation </li>
  * </ul>
  *
  * @author sebastian
- * @version 1
+ * @version 2
  * @since 7
  */
 public class FileToolsCaplanK {
 
     // prevent wrong output with empty strings of defined length
-    private final String valency = "  ";
-    private final String easting = "              ";
-    private final String northing = "              ";
-    private final String height = "             ";
-    private final String freeSpace = " ";
-    private final String objectTyp = "";
+    private static final String valency = "  ";
+    private static final String easting = "              ";
+    private static final String northing = "              ";
+    private static final String height = "             ";
+    private static final String freeSpace = " ";
+    private static final String objectTyp = "";
+
+    private FileToolsLeicaGSI toolsLeicaGSI;
 
     private ArrayList<String> readStringLines;
     private List<String[]> readCSVLines;
 
     /**
-     * Class constructor with parameter for the read lines as {@code ArrayList<String>} object.
-     * <p>
-     * This constructor is used for reading line based text files without a special separator sign.
+     * Class constructor for read line based text files in different formats.
      *
      * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
      */
@@ -79,9 +80,19 @@ public class FileToolsCaplanK {
     }
 
     /**
-     * Class constructor with parameter for the read lines as {@code List<String[]>} object.
+     * Class constructor for read line based Leica GSI files.
      * <p>
-     * This constructor is used for reading csv file lines.
+     * Due to some details of the Leica GSI format it is easier to get access to the {@link FileToolsLeicaGSI} object
+     * instead of having a couple of more parameters.
+     *
+     * @param toolsLeicaGSI {@link FileToolsLeicaGSI} object
+     */
+    public FileToolsCaplanK(FileToolsLeicaGSI toolsLeicaGSI) {
+        this.toolsLeicaGSI = toolsLeicaGSI;
+    }
+
+    /**
+     * Class constructor for read line based CSV files.
      *
      * @param readCSVLines {@code List<String[]>} with lines as {@code String[]}
      */
@@ -107,12 +118,12 @@ public class FileToolsCaplanK {
         for (String[] stringField : readCSVLines) {
             int valencyIndicator = 0;
 
-            String valency = this.valency;
-            String freeSpace = this.freeSpace;
-            String objectTyp = this.objectTyp;
-            String easting = this.easting;
-            String northing = this.northing;
-            String height = this.height;
+            String valency = FileToolsCaplanK.valency;
+            String freeSpace = FileToolsCaplanK.freeSpace;
+            String objectTyp = FileToolsCaplanK.objectTyp;
+            String easting = FileToolsCaplanK.easting;
+            String northing = FileToolsCaplanK.northing;
+            String height = FileToolsCaplanK.height;
 
             // point number (no '*', ',' and ';'), column 1 - 16
             String number = preparePointNumber(stringField[0].replaceAll("\\s+", "").trim());
@@ -178,8 +189,10 @@ public class FileToolsCaplanK {
                 valency = " ".concat(Integer.toString(valencyIndicator));
             }
 
-            // 2. pick up the relevant elements from the blocks from every line, check ZF option
-            // if ZF option is checked, then use only no 7 x y z for K file
+            /*
+            pick up the relevant elements from the blocks from every line, check ZF option
+            if ZF option is checked, then use only no 7 x y z for K file
+             */
             result.add(prepareStringBuilder(useSimpleFormat, number, valency, easting, northing, height,
                     freeSpace, objectTyp).toString());
         }
@@ -193,31 +206,27 @@ public class FileToolsCaplanK {
      * @param writeCommentLine  option to write a comment line into the K file with basic information
      * @return converted K file as ArrayList<String>
      */
-    public ArrayList<String> convertGSI2KFile(boolean useSimpleFormat, boolean writeCommentLine) {
+    public ArrayList<String> convertGSI2K(boolean useSimpleFormat, boolean writeCommentLine) {
         ArrayList<String> result = new ArrayList<>();
-        FileToolsLeicaGSI gsiTools = new FileToolsLeicaGSI(readStringLines);
 
         if (writeCommentLine) {
             writeCommentLine(result);
         }
 
-        // 1. convert lines into GSI-Blocks with BlockEncoder
-        ArrayList<ArrayList<GSIBlock>> blocksInLines = gsiTools.getEncodedGSIBlocks();
-
-        for (ArrayList<GSIBlock> blocksAsLines : blocksInLines) {
+        for (ArrayList<GSIBlock> blocksAsLines : toolsLeicaGSI.getEncodedLinesOfGSIBlocks()) {
             StringBuilder stringBuilder = new StringBuilder();
 
             // prevent wrong output with empty strings of defined length from class
             String number = "";
-            String valency = this.valency;
-            String easting = this.easting;
-            String northing = this.northing;
-            String height = this.height;
-            String freeSpace = this.freeSpace;
-            String objectTyp = this.objectTyp;
+            String valency = FileToolsCaplanK.valency;
+            String easting = FileToolsCaplanK.easting;
+            String northing = FileToolsCaplanK.northing;
+            String height = FileToolsCaplanK.height;
+            String freeSpace = FileToolsCaplanK.freeSpace;
+            String objectTyp = FileToolsCaplanK.objectTyp;
             String attr = "";
 
-            for (int i = 0; i < gsiTools.getFoundWordIndices().size(); i++) {
+            for (int i = 0; i < toolsLeicaGSI.getFoundWordIndices().size(); i++) {
                 int valencyIndicator = 0;
 
                 for (GSIBlock block : blocksAsLines) {
@@ -272,8 +281,10 @@ public class FileToolsCaplanK {
                     }
                 }
 
-                // 2. pick up the relevant elements from the blocks from every line, check ZF option
-                // if ZF option is checked, then use only no 7 x y z for K file
+                /*
+                pick up the relevant elements from the blocks from every line, check ZF option
+                if ZF option is checked, then use only no 7 x y z for K file
+                 */
                 stringBuilder = prepareStringBuilder(useSimpleFormat, number, valency, easting, northing, height,
                         freeSpace, objectTyp);
 
@@ -291,7 +302,7 @@ public class FileToolsCaplanK {
     }
 
     /**
-     * Convert a CSV file from the geodata server Basel Stadt (switzerland) into a K format file.
+     * Convert a CSV file from the geodata server Basel Stadt (Switzerland) into a K format file.
      *
      * @param useSimpleFormat   option to write a reduced K file which is compatible to ZF LaserControl
      * @param writeCommentLine  option to write a comment line into the K file with basic information
@@ -310,9 +321,9 @@ public class FileToolsCaplanK {
         for (String[] stringField : readCSVLines) {
             int valencyIndicator;
 
-            String valency = this.valency;
-            String freeSpace = this.freeSpace;
-            String objectTyp = this.objectTyp;
+            String valency = FileToolsCaplanK.valency;
+            String freeSpace = FileToolsCaplanK.freeSpace;
+            String objectTyp = FileToolsCaplanK.objectTyp;
 
             // point number (no '*', ',' and ';'), column 1 - 16
             String number = preparePointNumber(stringField[0].replaceAll("\\s+", "").trim());
@@ -339,8 +350,10 @@ public class FileToolsCaplanK {
                 valency = " ".concat(Integer.toString(valencyIndicator));
             }
 
-            // 2. pick up the relevant elements from the blocks from every line, check ZF option
-            // if ZF option is checked, then use only no 7 x y z for K file
+            /*
+            pick up the relevant elements from the blocks from every line, check ZF option
+            if ZF option is checked, then use only no 7 x y z for K file
+             */
             result.add(prepareStringBuilder(useSimpleFormat, number, valency, easting, northing, height,
                     freeSpace, objectTyp).toString());
         }
@@ -348,14 +361,14 @@ public class FileToolsCaplanK {
     }
 
     /**
-     * Convert a cadwork node.dat file into K file.
+     * Convert a cadwork node.dat file into a K file.
      *
      * @param useSimpleFormat   option to write a reduced K file which is compatible to ZF LaserControl
      * @param writeCommentLine  option to write a comment line into the K file with basic information
      * @param writeCodeColumn   option to write the code column into the K file
      * @return converted K file as ArrayList<String>
      */
-    public ArrayList<String> convertCadwork2KFile(boolean useSimpleFormat, boolean writeCommentLine, boolean writeCodeColumn) {
+    public ArrayList<String> convertCadwork2K(boolean useSimpleFormat, boolean writeCommentLine, boolean writeCodeColumn) {
         ArrayList<String> result = new ArrayList<>();
 
         if (writeCommentLine) {
@@ -370,11 +383,11 @@ public class FileToolsCaplanK {
         for (String line : readStringLines) {
             int valencyIndicator;
 
-            String[] lineSplit = line.trim().split("\\s+");
+            String[] lineSplit = line.trim().split("\\t", -1);
 
-            String valency = this.valency;
-            String freeSpace = this.freeSpace;
-            String objectTyp = this.objectTyp;
+            String valency = FileToolsCaplanK.valency;
+            String freeSpace = FileToolsCaplanK.freeSpace;
+            String objectTyp = FileToolsCaplanK.objectTyp;
 
             // point number (no '*', ',' and ';'), column 1 - 16
             String number = preparePointNumber(lineSplit[5]);
@@ -401,8 +414,10 @@ public class FileToolsCaplanK {
                 valency = " ".concat(Integer.toString(valencyIndicator));
             }
 
-            // 2. pick up the relevant elements from the blocks from every line, check ZF option
-            // if ZF option is checked, then use only no 7 x y z for K file
+            /*
+            pick up the relevant elements from the blocks from every line, check ZF option
+            if ZF option is checked, then use only no 7 x y z for K file
+             */
             result.add(prepareStringBuilder(useSimpleFormat, number, valency, easting, northing, height,
                     freeSpace, objectTyp).toString());
         }
@@ -430,12 +445,12 @@ public class FileToolsCaplanK {
 
             String[] lineSplit = line.trim().split("\\s+");
 
-            String valency = this.valency;
-            String freeSpace = this.freeSpace;
-            String objectTyp = this.objectTyp;
-            String northing = this.northing;
-            String easting = this.easting;
-            String height = this.height;
+            String valency = FileToolsCaplanK.valency;
+            String freeSpace = FileToolsCaplanK.freeSpace;
+            String objectTyp = FileToolsCaplanK.objectTyp;
+            String northing = FileToolsCaplanK.northing;
+            String easting = FileToolsCaplanK.easting;
+            String height = FileToolsCaplanK.height;
 
             // point number is always in column 1 (no '*', ',' and ';'), column 1 - 16
             String number = preparePointNumber(lineSplit[0]);
@@ -494,8 +509,10 @@ public class FileToolsCaplanK {
                 valency = " ".concat(Integer.toString(valencyIndicator));
             }
 
-            // 2. pick up the relevant elements from the blocks from every line, check ZF option
-            // if ZF option is checked, then use only no 7 x y z for K file
+            /*
+            pick up the relevant elements from the blocks from every line, check ZF option
+            if ZF option is checked, then use only no 7 x y z for K file
+             */
             result.add(prepareStringBuilder(useSimpleFormat, number, valency, easting, northing, height,
                     freeSpace, objectTyp).toString());
         }
@@ -504,7 +521,7 @@ public class FileToolsCaplanK {
     }
 
     /**
-     * Convert a CSV file from the geodata server Basel Stadt (switzerland) into a K format file.
+     * Convert a CSV file from the geodata server Basel Stadt (Switzerland) into a K format file.
      *
      * @param useSimpleFormat   option to write a reduced K file which is compatible to ZF LaserControl
      * @param writeCodeColumn   option to write a found code into the K file
@@ -515,7 +532,8 @@ public class FileToolsCaplanK {
                                                          boolean writeCommentLine) {
         ArrayList<String> result = new ArrayList<>();
 
-        readStringLines.remove(0);  // remove comment line
+        // remove not needed headlines
+        readStringLines.remove(0);
 
         if (writeCommentLine) {
             writeCommentLine(result);
@@ -524,14 +542,14 @@ public class FileToolsCaplanK {
         for (String line : readStringLines) {
             int valencyIndicator = -1;
 
-            String[] lineSplit = line.trim().split("\\s+");
+            String[] lineSplit = line.trim().split("\\t", -1);
 
-            String valency = this.valency;
-            String freeSpace = this.freeSpace;
-            String objectTyp = this.objectTyp;
-            String northing = this.northing;
-            String easting = this.easting;
-            String height = this.height;
+            String valency = FileToolsCaplanK.valency;
+            String freeSpace = FileToolsCaplanK.freeSpace;
+            String objectTyp = FileToolsCaplanK.objectTyp;
+            String northing = FileToolsCaplanK.northing;
+            String easting = FileToolsCaplanK.easting;
+            String height = FileToolsCaplanK.height;
 
             // point number is always in column 1 (no '*', ',' and ';'), column 1 - 16
             String number = preparePointNumber(lineSplit[1]);
@@ -581,8 +599,10 @@ public class FileToolsCaplanK {
                 valency = " ".concat(Integer.toString(valencyIndicator));
             }
 
-            // 2. pick up the relevant elements from the blocks from every line, check ZF option
-            // if ZF option is checked, then use only no 7 x y z for K file
+            /*
+            2. pick up the relevant elements from the blocks from every line, check ZF option
+            if ZF option is checked, then use only no 7 x y z for K file
+             */
             result.add(prepareStringBuilder(useSimpleFormat, number, valency, easting, northing, height,
                     freeSpace, objectTyp).toString());
         }
@@ -611,7 +631,7 @@ public class FileToolsCaplanK {
     }
 
     /*
-     * Eliminates not allowed chars like '*', ',' and ';' from point number
+     * Eliminate not allowed chars like '*', ',' and ';' from point number
      */
     private String preparePointNumber(String number) {
         String s = number.replaceAll("\\*", "#");

@@ -39,6 +39,9 @@ class NumberHelper {
 
     /**
      * Fill a double value as string with a number of zeros to a defined last decimal place.
+     * <p>
+     * This method can be used for 1 till 5 last decimal digits. If a value greater than 5 is used,
+     * the default value 4 is used.
      *
      * @param lastDecimalLength length of the last decimal place
      * @return filled up string value
@@ -72,6 +75,10 @@ class NumberHelper {
             case 5:
                 df = new DecimalFormat( "#0.00000", otherSymbols);
                 break;
+
+            default:
+                df = new DecimalFormat( "#0.0000", otherSymbols);
+
         }
 
         return df.format(d);

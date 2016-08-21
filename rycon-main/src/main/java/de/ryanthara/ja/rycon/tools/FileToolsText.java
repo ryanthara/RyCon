@@ -42,14 +42,14 @@ import java.util.*;
  */
 public class FileToolsText {
 
+    private FileToolsLeicaGSI toolsLeicaGSI = null;
+
     private ArrayList<String> readStringLines;
     private List<String[]> readCSVLines;
     private TreeSet<Integer> foundCodes = new TreeSet<>();
 
     /**
-     * Class Constructor with parameter.
-     * <p>
-     * As parameter the {@code ArrayList<String>} object with the lines in text format is used.
+     * Class constructor for read line based text files in different formats.
      *
      * @param arrayList {@code ArrayList<String>} with lines in text format
      */
@@ -58,9 +58,19 @@ public class FileToolsText {
     }
 
     /**
-     * Class Constructor with parameter.
+     * Class constructor for read line based Leica GSI files.
      * <p>
-     * As parameter the {@code List<String[]>} object with the lines in csv format is used.
+     * Due to some details of the Leica GSI format it is easier to get access to the {@link FileToolsLeicaGSI} object
+     * instead of having a couple of more parameters.
+     *
+     * @param toolsLeicaGSI {@link FileToolsLeicaGSI} object
+     */
+    public FileToolsText(FileToolsLeicaGSI toolsLeicaGSI) {
+        this.toolsLeicaGSI = toolsLeicaGSI;
+    }
+
+    /**
+     * Class constructor for read line based CSV files.
      *
      * @param readCSVLines {@code List<String[]>} with lines in csv format
      */
@@ -98,7 +108,7 @@ public class FileToolsText {
     }
 
     /**
-     * Convert a CSV file from the geodata server Basel Stadt (switzerland) into a txt format file.
+     * Convert a CSV file from the geodata server Basel Stadt (Switzerland) into a txt format file.
      * <p>
      * With a parameter it is possible to distinguish between space or tabulator as separator.
      *
@@ -148,30 +158,16 @@ public class FileToolsText {
      */
     public ArrayList<String> convertGSI2TXT(String separator, boolean isGSI16, boolean writeCommentLine) {
         String commentLine = "";
-        String sep;
         ArrayList<String> result = new ArrayList<>();
 
-        FileToolsLeicaGSI gsiTools = new FileToolsLeicaGSI(readStringLines);
-        TreeSet<Integer> foundWordIndices = gsiTools.getFoundWordIndices();
+        String sep = separator.equals(" ") ? "    " : separator;
 
-        // transform lines into GSI-Blocks
-        ArrayList<ArrayList<GSIBlock>> gsiBlocks = gsiTools.getEncodedGSIBlocks();
+        TreeSet<Integer> foundWordIndices = toolsLeicaGSI.getFoundWordIndices();
 
-        if (separator.equals(" ")) {
-            sep = "    ";
-        } else {
-            sep = separator;
-        }
-
-        // prepare comment line if necessary
         if (writeCommentLine) {
             int length;
 
-            if (isGSI16) {
-                length = 16;
-            } else {
-                length = 8;
-            }
+            length = isGSI16 ? 16 : 8;
 
             String format = "%" + length + "." + length + "s";
             String s;
@@ -194,7 +190,7 @@ public class FileToolsText {
             result.add(0, commentLine);
         }
 
-        for (ArrayList<GSIBlock> blocksAsLines : gsiBlocks) {
+        for (ArrayList<GSIBlock> blocksAsLines : toolsLeicaGSI.getEncodedLinesOfGSIBlocks()) {
             String newLine = "";
 
             Iterator<Integer> it = foundWordIndices.iterator();
@@ -318,7 +314,7 @@ public class FileToolsText {
     }
 
     /**
-     * Convert a text file from the geodata server Basel Landschaft (switzerland) into a TXT formatted file (no code x y z).
+     * Convert a text file from the geodata server Basel Landschaft (Switzerland) into a TXT formatted file (no code x y z).
      * <p>
      * This method can differ between LFP and HFP files, which has a given different structure.
      * With a parameter it is possible to distinguish between tabulator and space divided files.
@@ -330,12 +326,13 @@ public class FileToolsText {
     public ArrayList<String> convertTXTBaselLandschaft2TXT(String separator, boolean writeCodeColumn) {
         ArrayList<String> result = new ArrayList<>();
 
-        readStringLines.remove(0);  // remove comment line
+        // remove comment line
+        readStringLines.remove(0);
 
         for (String line : readStringLines) {
             String s;
 
-            String[] lineSplit = line.trim().split("\\s+");
+            String[] lineSplit = line.trim().split("\\t", -1);
 
             // point number is in column 2
             s = lineSplit[1];
@@ -382,6 +379,9 @@ public class FileToolsText {
 
                     result.add(s.trim());
                     break;
+
+                default:
+                    System.err.println("Error in convertTXTBaselLandschaft2TXT: line length doesn't match 5 or 6 elements");
             }
         }
         return result;
@@ -492,7 +492,7 @@ public class FileToolsText {
      * @version 1
      * @since 2
      */
-    private class TextHelper {
+    private static class TextHelper {
 
         final int code;
         final String block;

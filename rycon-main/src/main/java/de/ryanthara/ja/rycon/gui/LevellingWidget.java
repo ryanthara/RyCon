@@ -324,24 +324,24 @@ public class LevellingWidget {
 
                 String[] fileNameAndSuffix = file2read.getName().split("\\.(?=[^\\.]+$)");
 
+                FileToolsLeicaGSI gsiTools = new FileToolsLeicaGSI(readFile);
+                ArrayList<String> writeFile;
+                String file2write;
+
                 if (fileNameAndSuffix[1].equalsIgnoreCase("GSI")) {
-                    FileToolsLeicaGSI gsiTools = new FileToolsLeicaGSI(readFile);
-                    ArrayList<String> writeFile = gsiTools.processLevelling2Cad(holdChangePoints);
-                    String file2write = file2read.toString().substring(0, file2read.toString().length() - 4) + "_LEVEL.GSI";
-                    LineWriter lineWriter = new LineWriter(file2write);
-                    if (lineWriter.writeFile(writeFile)) {
-                        counter++;
-                    }
+                    writeFile = gsiTools.processLevelling2Cad(holdChangePoints);
+                    file2write = file2read.toString().substring(0, file2read.toString().length() - 4) + "_LEVEL.GSI";
                 } else if (fileNameAndSuffix[1].equalsIgnoreCase("ASC")) {
-                    FileToolsLeicaGSI gsiFileTools = new FileToolsLeicaGSI(readFile);
-                    ArrayList<String> writeFile = gsiFileTools.convertNIGRA2GSI(Main.getGSI16());
-                    String file2write = file2read.toString().substring(0, file2read.toString().length() - 4) + "_LEVEL.GSI";
-                    LineWriter lineWriter = new LineWriter(file2write);
-                    if (lineWriter.writeFile(writeFile)) {
-                        counter++;
-                    }
+                    writeFile = gsiTools.convertNIGRA2GSI(Main.getGSI16());
+                    file2write = file2read.toString().substring(0, file2read.toString().length() - 4) + "_LEVEL.GSI";
                 } else {
                     System.err.println("File " + file2read.getName() + " is not supported (yet).");
+                    break;
+                }
+
+                LineWriter lineWriter = new LineWriter(file2write);
+                if (lineWriter.writeFile(writeFile)) {
+                    counter++;
                 }
 
             } else {

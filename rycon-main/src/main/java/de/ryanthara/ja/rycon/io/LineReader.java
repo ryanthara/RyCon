@@ -19,6 +19,7 @@
 package de.ryanthara.ja.rycon.io;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 /**
@@ -111,7 +112,6 @@ public class LineReader {
         // some basic initialization
         boolean success = false;
         lines = new ArrayList<>();
-        BufferedReader bufferedReader;
         FileInputStream fileInputStream = null;
         String line;
 
@@ -125,28 +125,29 @@ public class LineReader {
 
                 try {
                     fileInputStream.getChannel().lock(0, Long.MAX_VALUE, true);
-                    bufferedReader = new BufferedReader(new InputStreamReader(fileInputStream));
+                    try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(fileInputStream, StandardCharsets.UTF_8))) {
 
-                    // read the lines into an ArrayList
-                    while ((line = bufferedReader.readLine()) != null) {
-                        countReadLines++;
-                        if (!line.trim().equals("")) {
-                            if (comment == null) {
-                                lines.add(line);
-                                countStoredLines++;
-                            } else {
-                                if (!line.startsWith(comment)) {
+                        // read the lines into an ArrayList
+                        while ((line = bufferedReader.readLine()) != null) {
+                            countReadLines++;
+                            if (!line.trim().equals("")) {
+                                if (comment == null) {
                                     lines.add(line);
                                     countStoredLines++;
+                                } else {
+                                    if (!line.startsWith(comment)) {
+                                        lines.add(line);
+                                        countStoredLines++;
+                                    }
                                 }
                             }
                         }
-                    }
-                    // hack to get rid of the -1 initialization
-                    countReadLines++;
-                    countStoredLines++;
+                        // hack to get rid of the -1 initialization
+                        countReadLines++;
+                        countStoredLines++;
 
-                    success = true;
+                        success = true;
+                    }
 
                 } catch (IOException e) {
                     System.err.println("File " + file.getName() + " could not be locked.");

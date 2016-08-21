@@ -25,30 +25,31 @@ import java.util.List;
 import java.util.TreeSet;
 
 /**
- * This class implements basic operations on csv based measurement and coordinate files.
+ * This class implements basic operations on CSV based measurement and coordinate files.
  * <p>
  * Therefore a couple of methods and helpers are implemented to do the conversions and
  * operations on the given text files. During the development of RyCON the text and csv
- * file operations are split into separate classes.
+ * file operations were split into separate classes.
  *
  * <h3>Changes:</h3>
  * <ul>
- * <li>1: basic implementation </li>
+ *  <li>2: code improvements, optimizations and less new functions </li>
+ *  <li>1: basic implementation </li>
  * </ul>
  *
  * @author sebastian
- * @version 1
+ * @version 2
  * @since 1
  */
 public class FileToolsCSV {
+
+    private FileToolsLeicaGSI toolsLeicaGSI;
 
     private ArrayList<String> readStringLines;
     private List<String[]> readCSVLines;
 
     /**
-     * Class Constructor with parameter.
-     * <p>
-     * As parameter the {@code ArrayList<String>} object with the lines in text format is used.
+     * Class constructor for read line based text files in different formats.
      *
      * @param readStringLines {@code ArrayList<String>} with lines in text format
      */
@@ -57,9 +58,19 @@ public class FileToolsCSV {
     }
 
     /**
-     * Class Constructor with parameter.
+     * Class constructor for read line based Leica GSI files.
      * <p>
-     * As parameter the {@code List<String[]>} object with the lines in csv format is used.
+     * Due to some details of the Leica GSI format it is easier to get access to the {@link FileToolsLeicaGSI} object
+     * instead of having a couple of more parameters.
+     *
+     * @param toolsLeicaGSI {@link FileToolsLeicaGSI} object
+     */
+    public FileToolsCSV(FileToolsLeicaGSI toolsLeicaGSI) {
+        this.toolsLeicaGSI = toolsLeicaGSI;
+    }
+
+    /**
+     * Class constructor for read line based CSV files.
      *
      * @param readCSVLines {@code List<String[]>} with lines in csv format
      */
@@ -72,8 +83,8 @@ public class FileToolsCSV {
      *
      * @param separator        separator sign to use for conversion
      * @param writeCommentLine writes an comment line with information about the column content
-     * @param useCodeColumn    Use the code column from node.dat
-     * @param useZeroHeights   Use heights with zero (0.000) values
+     * @param useCodeColumn    use the code column from node.dat
+     * @param useZeroHeights   use heights with zero (0.000) values
      *
      * @return converted CSV file
      */
@@ -86,7 +97,7 @@ public class FileToolsCSV {
             readStringLines.remove(0);
             readStringLines.remove(0);
 
-            String[] lineSplit = readStringLines.get(0).trim().split("\\s+");
+            String[] lineSplit = readStringLines.get(0).trim().split("\\t", -1);
 
             // point number
             String commentLine = lineSplit[5];
@@ -117,7 +128,7 @@ public class FileToolsCSV {
 
         for (String line : readStringLines) {
             String s;
-            String[] lineSplit = line.trim().split("\\s+");
+            String[] lineSplit = line.trim().split("\\t, -1");
 
             // point number
             s = lineSplit[5];
@@ -150,7 +161,7 @@ public class FileToolsCSV {
     }
 
     /**
-     * Convert a CSV file from the geodata server Basel Stadt (switzerland) into a CSV formatted file.
+     * Convert a CSV file from the geodata server Basel Stadt (Switzerland) into a CSV formatted file.
      * <p>
      * With a parameter it is possible to distinguish between comma or semicolon as separator.
      *
@@ -190,7 +201,7 @@ public class FileToolsCSV {
 
 
     /**
-     * Convert a GSI file into a comma or semicolon delimited csv file.
+     * Convert a GSI file into a comma or semicolon delimited CSV file.
      * <p>
      * With parameter it is possible to set the separation char (comma or semicolon).
      *
@@ -200,11 +211,7 @@ public class FileToolsCSV {
      */
     public ArrayList<String> convertGSI2CSV(String separator, boolean writeCommentLine) {
         ArrayList<String> result = new ArrayList<>();
-        FileToolsLeicaGSI gsiTools = new FileToolsLeicaGSI(readStringLines);
-        TreeSet<Integer> foundWordIndices = gsiTools.getFoundWordIndices();
-
-        // transform lines into GSI-Blocks
-        ArrayList<ArrayList<GSIBlock>> gsiBlocks = gsiTools.getEncodedGSIBlocks();
+        TreeSet<Integer> foundWordIndices = toolsLeicaGSI.getFoundWordIndices();
 
         // prepare comment line if necessary
         if (writeCommentLine) {
@@ -226,7 +233,7 @@ public class FileToolsCSV {
             result.add(0, builder.toString());
         }
 
-        for (ArrayList<GSIBlock> blocksAsLines : gsiBlocks) {
+        for (ArrayList<GSIBlock> blocksAsLines : toolsLeicaGSI.getEncodedLinesOfGSIBlocks()) {
             String newLine = "";
 
             Iterator<Integer> it = foundWordIndices.iterator();
@@ -265,7 +272,6 @@ public class FileToolsCSV {
         ArrayList<String> result = new ArrayList<>();
 
         for (String line : readStringLines) {
-            // get rid off one or more empty signs at the beginning and end of the given string
             line = line.trim();
             result.add(line.replaceAll("\\s+", separator));
         }

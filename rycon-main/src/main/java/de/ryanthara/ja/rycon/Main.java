@@ -83,12 +83,17 @@ public abstract class Main {
      * @since 3
      */
     public static final String RyCON_WHATS_NEW_URL = "https://code.ryanthara.de/content/3-RyCON/_whats.new";
-
+    /**
+     * Member that is used for indicating that a text is in singular.
+     */
+    public static final boolean TEXT_SINGULAR = true;
+    /**
+     * Member that is used for indicating that a text is in plural.
+     */
+    public static final boolean TEXT_PLURAL = false;
     // a couple of private members are used for storing values
     private static final boolean GSI8 = false;
     private static final boolean GSI16 = true;
-    private static boolean isSettingsWidgetOpenStatus = false;
-    private static boolean isSubShellOpenStatus = false;
     /*
      * The width of a grid cell. Window size and others are calculated from these values.
      * RyCON grid uses golden rectangle cut with an aspect ratio of 1.618:1
@@ -105,7 +110,11 @@ public abstract class Main {
     private static final String DIR_BIG_DATA_TEMPLATE = "./big_data/template-folder";
     private static final String DIR_PROJECT = "./projects";
     private static final String DIR_PROJECT_TEMPLATE = "./projects/template-folder";
+    private static final String CONVERTER_SETTING_ELIMINATE_ZERO_COORDINATE = "true";
+    private static final String CONVERTER_SETTING_LTOP_USE_ZENITH_DISTANCE = "false";
+    private static final String CONVERTER_SETTING_POINT_IDENTICAL_DISTANCE = "3";
     private static final String GSI_SETTING_LINE_ENDING_WITH_BLANK = "true";
+    private static final String LAST_USED_DISPLAY = "-1";
     private static final String PARAM_CODE_STRING = "CODE";
     private static final String PARAM_CONTROL_POINT_STRING = "STKE";
     private static final String PARAM_EDIT_STRING = "EDIT";
@@ -115,41 +124,31 @@ public abstract class Main {
     private static final String SEPARATOR_SEMICOLON = ";";
     private static final String SEPARATOR_SPACE = " ";
     private static final String SEPARATOR_TAB = "\t";
-
+    private static final String LAST_POS_PRIMARY_MONITOR = "-9999, -9999";
+    private static final String LAST_POS_SECONDARY_MONITOR = "-9998, -9998,";
     /**
      * The reference to the global application class.
      */
     public static Main main;
-
     /**
      * Contain a value for application wide count of processed file operations.
      */
     public static int countFileOps = -1;
-
-    /**
-     * Member that is used for indicating that a text is in singular.
-     */
-    public static boolean TEXT_SINGULAR = true;
-
-    /**
-     * Member that is used for indicating that a text is in plural.
-     */
-    public static boolean TEXT_PLURAL = false;
-
     /**
      * The reference to the global application preferences handler.
      */
     public static PreferenceHandler pref;
-
     /**
      * The reference to the global application shell.
      */
     public static Shell shell;
-
     /**
      * The reference to the global application status bar.
      */
     public static StatusBar statusBar;
+    private static boolean isSettingsWidgetOpenStatus = false;
+    private static boolean isSubShellOpenStatus = false;
+    private static String converter_setting_eliminate_zero_coordinate;
 
     /**
      * Construct a new {@code Main} object with all it's functionality.
@@ -388,6 +387,30 @@ public abstract class Main {
     }
 
     /**
+     * Return the value of the primary position string.
+     * @return primary position string
+     */
+    public static String getLastPosPrimaryMonitor() {
+        return LAST_POS_PRIMARY_MONITOR;
+    }
+
+    /**
+     * Return the value of the secondary position string.
+     * @return secondary position string
+     */
+    public static String getLastPosSecondaryMonitor() {
+        return LAST_POS_SECONDARY_MONITOR;
+    }
+
+    /**
+     * Return the number of the last used display RyCON was shown on.
+     * @return last used display
+     */
+    public static String getLastUsedDisplay() {
+        return LAST_USED_DISPLAY;
+    }
+
+    /**
      * Return the value of the code string ('CODE').
      *
      * @return code string
@@ -418,6 +441,16 @@ public abstract class Main {
     }
 
     /**
+     * Return the value of the eliminate zero coordinates flag.
+     *
+     * @return eliminate zero coordinates
+     * @since 8
+     */
+    public static String getParamEliminateZeroCoordinates() {
+        return CONVERTER_SETTING_ELIMINATE_ZERO_COORDINATE;
+    }
+
+    /**
      * Return the value of the free station string ('FS').
      *
      * @return free station string
@@ -435,6 +468,25 @@ public abstract class Main {
      */
     public static String getParamKnownStationString() {
         return PARAM_KNOWN_STATION_STRING;
+    }
+
+    /**
+     * Return the value of the LTOP use zenith distance flag.
+     *
+     * @return LTOP use zenith distance instead of height angle
+     * @since 8
+     */
+    public static String getParamLTOPUseZenithDistance() {
+        return CONVERTER_SETTING_LTOP_USE_ZENITH_DISTANCE;
+    }
+
+    /**
+     * Return the value for the minimum distance in which two points may be equal. (e.g. two points within 3cm may be
+     * the same points)
+     * @return minimum distance for points to be equal
+     */
+    public static String getPointIdenticalDistance() {
+        return CONVERTER_SETTING_POINT_IDENTICAL_DISTANCE;
     }
 
     /**

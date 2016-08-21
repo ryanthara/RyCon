@@ -53,9 +53,9 @@ import java.io.IOException;
  */
 public class GeneratorWidget {
 
-    private final int TYPE_PROJECT = 1;
-    private final int TYPE_ADMIN = 2;
-    private final int TYPE_BIG_DATA = 3;
+    private static final int TYPE_PROJECT = 1;
+    private static final int TYPE_ADMIN = 2;
+    private static final int TYPE_BIG_DATA = 3;
     private Button chkBoxCreateAdminFolder;
     private Button chkBoxCreateBigDataFolder;
     private Button chkBoxCreateProjectFolder;

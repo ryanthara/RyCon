@@ -23,9 +23,9 @@ package de.ryanthara.ja.rycon.i18n;
  * <p>
  * In the first version of RyCON there are support for the following languages.
  * <ul>
- *     <li>english - since version 1 </li>
- *     <li>german - since version 1 </li>
- *     <li>... </li>
+ * <li>english - since version 1 </li>
+ * <li>german - since version 1 </li>
+ * <li>... </li>
  * </ul>
  * <p>
  * Every translated text in the program is prepared as a <code>String</code> object here.
@@ -87,6 +87,14 @@ public class I18N {
 
     public static String getBtnChkBoxKFormatUseSimpleFormat() {
         return Messages.getString("btnChkBoxKFormatUseSimpleFormat");
+    }
+
+    public static String getBtnChkBoxLTOPEliminateDuplicatePoints() {
+        return Messages.getString("btnChkBoxLTOPEliminateDuplicatePoints");
+    }
+
+    public static String getBtnChkBoxLTOPUseZenithDistance() {
+        return Messages.getString("btnChkBoxLTOPUseZenithDistance");
     }
 
     public static String getBtnChkBoxSourceContainsCode() {
@@ -167,6 +175,10 @@ public class I18N {
 
     public static String getBtnDefaultSettingsToolTip() {
         return Messages.getString("btnDefaultSettingsToolTip");
+    }
+
+    public static String getBtnEliminateZeroCoordinate() {
+        return Messages.getString("btnEliminateZeroCoordinate");
     }
 
     public static String getBtnExitLabel() {
@@ -367,6 +379,10 @@ public class I18N {
 
     public static String getFileChooserTidyUpSourceText() {
         return Messages.getString("fileChooserTidyUpSourceText");
+    }
+
+    public static String getGroupTitleConverterSettings() {
+        return Messages.getString("groupTitleConverterSettings");
     }
 
     public static String getGroupTitleFormatSettings() {
@@ -856,8 +872,9 @@ public class I18N {
      * for singular is set with {@code Main.TEXT_SINGULAR} and for plural is
      * set with {@code Main.TEXT_PLURAL}
      *
-     * @param property  property to get the text from
-     * @param singular  set to get a singular or plural text back
+     * @param property property to get the text from
+     * @param singular set to get a singular or plural text back
+     *
      * @return singular or plural string message
      */
     private static String prepareString(String property, boolean singular) {
@@ -869,4 +886,11 @@ public class I18N {
         }
     }
 
+    public static String getBtnChkBoxLTOPSortOutputFileByNumber() {
+        return Messages.getString("btnChkBoxLTOPSortOutputFileByNumber");
+    }
+
+    public static String getLabelTextMinimumPointDistanceLabel() {
+        return Messages.getString("labelTextMinimumPointDistanceLabel");
+    }
 } // end of I18N

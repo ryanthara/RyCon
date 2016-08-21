@@ -35,14 +35,14 @@ import org.eclipse.swt.widgets.*;
  * <p>
  * With the SettingsWidget of RyCON it is possible to set up the options of RyCON and
  * write the configuration file.
- *
+ * <p>
  * <h3>Changes:</h3>
  * <ul>
- *     <li>5: implementation of a new directory structure, code reformat, optimizations</li>
- *     <li>4: defeat bug #1 and #3 </li>
- *     <li>3: code improvements and clean up </li>
- *     <li>2: basic improvements </li>
- *     <li>1: basic implementation </li>
+ * <li>5: implementation of a new directory structure, code reformat, optimizations</li>
+ * <li>4: defeat bug #1 and #3 </li>
+ * <li>3: code improvements and clean up </li>
+ * <li>2: basic improvements </li>
+ * <li>1: basic implementation </li>
  * </ul>
  *
  * @author sebastian
@@ -52,8 +52,12 @@ import org.eclipse.swt.widgets.*;
 public class SettingsWidget {
 
     private Button chkBoxUseSpaceAtLineEnd;
+    private Button chkBoxEliminateZeroCoordinates;
+    private Button chkBoxLTOPUseZenithDistance;
     private Group groupFormat;
     private Group groupGeneral;
+    private Group groupConverterWidget;
+    private Group groupTidyUpWidget;
     private Shell innerShell = null;
     private Text dirBaseTextField;
     private Text dirAdminTextField;
@@ -67,6 +71,7 @@ public class SettingsWidget {
     private Text identifierEditStringTextField;
     private Text identifierFreeStationTextField;
     private Text identifierKnownStationTextField;
+    private Text pointIdenticalDistance;
 
     /**
      * Class constructor without parameters.
@@ -99,15 +104,16 @@ public class SettingsWidget {
         identifierEditStringTextField.setText(Main.getParamEditString());
         identifierFreeStationTextField.setText(Main.getParamFreeStationString());
         identifierKnownStationTextField.setText(Main.getParamKnownStationString());
+        pointIdenticalDistance.setText(Main.getPointIdenticalDistance());
 
         Main.pref.setDefaultSettingsGenerated(true);
     }
 
     private void actionBtnOk() {
-        if (!checkForEmptyTextFields()) {
+        if (!checkForEmptyTextFields() & checkForValidInputs()) {
             if (writeSettings()) {
                 if (Main.pref.isDefaultSettingsGenerated()) {
-                    GuiHelper.showMessageBox(innerShell, SWT.ICON_INFORMATION,I18N.getMsgBoxTitleSuccess(), I18N.getMsgSettingsDefaultGenerated());
+                    GuiHelper.showMessageBox(innerShell, SWT.ICON_INFORMATION, I18N.getMsgBoxTitleSuccess(), I18N.getMsgSettingsDefaultGenerated());
                     Main.pref.setDefaultSettingsGenerated(true);
                 } else {
                     GuiHelper.showMessageBox(innerShell, SWT.ICON_INFORMATION, I18N.getMsgBoxTitleSuccess(), I18N.getMsgSettingsSuccess());
@@ -124,20 +130,24 @@ public class SettingsWidget {
         }
     }
 
+    private boolean checkForValidInputs() {
+        return SimpleChecker.checkIsDoubleValue(pointIdenticalDistance);
+    }
+
     private boolean checkForEmptyTextFields() {
-        return SimpleChecker.checkIsTextEmpty(dirBaseTextField) ||
-                SimpleChecker.checkIsTextEmpty(dirProjectTextField) ||
-                SimpleChecker.checkIsTextEmpty(dirProjectTemplateTextField) ||
-                SimpleChecker.checkIsTextEmpty(dirAdminTextField) ||
-                SimpleChecker.checkIsTextEmpty(dirAdminTemplateTextField) ||
-                SimpleChecker.checkIsTextEmpty(dirBigDataTextField) ||
-                SimpleChecker.checkIsTextEmpty(dirBigDataTemplateTextField) ||
-                SimpleChecker.checkIsTextEmpty(identifierCodeStringTextField) ||
-                SimpleChecker.checkIsTextEmpty(identifierEditStringTextField) ||
-                SimpleChecker.checkIsTextEmpty(identifierFreeStationTextField) ||
-                SimpleChecker.checkIsTextEmpty(identifierControlPointTextField) ||
-                SimpleChecker.checkIsTextEmpty(identifierKnownStationTextField)
-        ;
+        return SimpleChecker.checkIsTextEmpty(dirBaseTextField) |
+                SimpleChecker.checkIsTextEmpty(dirProjectTextField) |
+                SimpleChecker.checkIsTextEmpty(dirProjectTemplateTextField) |
+                SimpleChecker.checkIsTextEmpty(dirAdminTextField) |
+                SimpleChecker.checkIsTextEmpty(dirAdminTemplateTextField) |
+                SimpleChecker.checkIsTextEmpty(dirBigDataTextField) |
+                SimpleChecker.checkIsTextEmpty(dirBigDataTemplateTextField) |
+                SimpleChecker.checkIsTextEmpty(identifierCodeStringTextField) |
+                SimpleChecker.checkIsTextEmpty(identifierEditStringTextField) |
+                SimpleChecker.checkIsTextEmpty(identifierFreeStationTextField) |
+                SimpleChecker.checkIsTextEmpty(identifierControlPointTextField) |
+                SimpleChecker.checkIsTextEmpty(identifierKnownStationTextField) |
+                SimpleChecker.checkIsTextEmpty(pointIdenticalDistance);
     }
 
     private void createBottomButtons() {
@@ -178,17 +188,17 @@ public class SettingsWidget {
         compositeBottomBtns.setLayoutData(gridData);
     }
 
-    private void createCompositeGeneralSettings(int width) {
-        Composite compositeGeneralSettings = new Composite(innerShell, SWT.NONE);
+    private void createCompositeGeneralAndFormatSettings(int width) {
+        Composite compositeGeneralAndFormat = new Composite(innerShell, SWT.NONE);
         GridLayout gridLayout = new GridLayout(2, true);
         gridLayout.marginHeight = 0;
         gridLayout.marginWidth = 0;
-        compositeGeneralSettings.setLayout(gridLayout);
+        compositeGeneralAndFormat.setLayout(gridLayout);
 
         GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
-        compositeGeneralSettings.setLayoutData(gridData);
+        compositeGeneralAndFormat.setLayoutData(gridData);
 
-        groupGeneral = new Group(compositeGeneralSettings, SWT.NONE);
+        groupGeneral = new Group(compositeGeneralAndFormat, SWT.NONE);
         groupGeneral.setText(I18N.getGroupTitleGeneralSettings());
         groupGeneral.setLayout(new GridLayout(1, false));
 
@@ -197,7 +207,7 @@ public class SettingsWidget {
         GridData gridData2 = new GridData(SWT.FILL, SWT.FILL, true, true);
         groupGeneral.setLayoutData(gridData2);
 
-        groupFormat = new Group(compositeGeneralSettings, SWT.NONE);
+        groupFormat = new Group(compositeGeneralAndFormat, SWT.NONE);
         groupFormat.setText(I18N.getGroupTitleFormatSettings());
         groupFormat.setLayout(new GridLayout(1, false));
 
@@ -205,6 +215,93 @@ public class SettingsWidget {
         groupFormat.setLayoutData(gridData2);
 
         createGroupFormat(width / 2);
+    }
+
+    private void createCompositeWidgetSettings(int width) {
+        Composite compositeWidgetSettings = new Composite(innerShell, SWT.NONE);
+        GridLayout gridLayout = new GridLayout(2, true);
+        gridLayout.marginHeight = 0;
+        gridLayout.marginWidth = 0;
+        compositeWidgetSettings.setLayout(gridLayout);
+
+        GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
+        compositeWidgetSettings.setLayoutData(gridData);
+
+        groupTidyUpWidget = new Group(compositeWidgetSettings, SWT.NONE);
+        groupTidyUpWidget.setText(I18N.getGroupTitleTidyUpSettings());
+        groupTidyUpWidget.setLayout(new GridLayout(1, false));
+
+        createGroupTidyUp(width / 2);
+
+        GridData gridData2 = new GridData(SWT.FILL, SWT.FILL, true, true);
+        groupTidyUpWidget.setLayoutData(gridData2);
+
+        groupConverterWidget = new Group(compositeWidgetSettings, SWT.NONE);
+        groupConverterWidget.setText(I18N.getGroupTitleConverterSettings());
+        groupConverterWidget.setLayout(new GridLayout(1, false));
+
+        gridData2 = new GridData(SWT.FILL, SWT.FILL, true, true);
+        groupConverterWidget.setLayoutData(gridData2);
+
+        createGroupConverter(width / 2);
+    }
+
+    private void createGroupConverter(int width) {
+        Composite composite = new Composite(groupConverterWidget, SWT.NONE);
+
+        GridLayout gridLayout = new GridLayout(1, true);
+        composite.setLayout(gridLayout);
+
+        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
+        gridData.grabExcessVerticalSpace = true;
+        gridData.verticalAlignment = GridData.FILL_VERTICAL;
+        gridData.widthHint = width - 24;
+        composite.setLayoutData(gridData);
+
+        chkBoxEliminateZeroCoordinates = new Button(composite, SWT.CHECK);
+        chkBoxEliminateZeroCoordinates.setSelection(Boolean.parseBoolean(Main.pref.getUserPref(PreferenceHandler.CONVERTER_SETTING_ELIMINATE_ZERO_COORDINATE)));
+        chkBoxEliminateZeroCoordinates.setText(I18N.getBtnEliminateZeroCoordinate());
+
+        GridData gridData2 = new GridData(GridData.FILL, GridData.CENTER, true, true);
+        gridData2.grabExcessVerticalSpace = true;
+        gridData2.verticalAlignment = GridData.FILL_VERTICAL;
+        gridData2.widthHint = width - 24;
+        composite.setLayoutData(gridData2);
+
+        chkBoxLTOPUseZenithDistance = new Button(composite, SWT.CHECK);
+        chkBoxLTOPUseZenithDistance.setSelection(Boolean.parseBoolean(Main.pref.getUserPref(PreferenceHandler.CONVERTER_SETTING_LTOP_USE_ZENITH_DISTANCE)));
+        chkBoxLTOPUseZenithDistance.setText(I18N.getBtnChkBoxLTOPUseZenithDistance());
+
+        Composite composite2 = new Composite(groupConverterWidget, SWT.NONE);
+
+        GridLayout gridLayout2 = new GridLayout(2, true);
+        composite2.setLayout(gridLayout2);
+
+        Label minimumPointDistanceLabel = new Label(composite2, SWT.NONE);
+        minimumPointDistanceLabel.setText(I18N.getLabelTextMinimumPointDistanceLabel());
+
+        GridData gridData2_1 = new GridData(GridData.FILL, GridData.CENTER, true, true);
+        gridData2_1.widthHint = width - 24;
+        composite2.setLayoutData(gridData2_1);
+
+        pointIdenticalDistance = new Text(composite2, SWT.BORDER);
+        pointIdenticalDistance.setText(Main.pref.getUserPref(PreferenceHandler.CONVERTER_SETTING_POINT_IDENTICAL_DISTANCE));
+        pointIdenticalDistance.addListener(SWT.Traverse, new Listener() {
+            @Override
+            public void handleEvent(Event event) {
+                // prevent this shortcut for execute when the text fields are empty
+                if (!checkForEmptyTextFields()) {
+                    if (((event.stateMask & SWT.CTRL) == SWT.CTRL) && (event.detail == SWT.TRAVERSE_RETURN)) {
+                        actionBtnOk();
+                    }
+                }
+            }
+        });
+
+        GridData gridData2_2 = new GridData();
+        gridData2_2.widthHint = 50;
+        gridData2_2.grabExcessHorizontalSpace = true;
+        identifierCodeStringTextField.setLayoutData(gridData2_2);
     }
 
     private void createGroupFormat(int width) {
@@ -559,21 +656,20 @@ public class SettingsWidget {
     }
 
     private void createGroupTidyUp(int width) {
-        Group group = new Group(innerShell, SWT.NONE);
-        group.setText(I18N.getGroupTitleTidyUpSettings());
+        Composite composite = new Composite(groupTidyUpWidget, SWT.NONE);
 
         GridLayout gridLayout = new GridLayout();
         gridLayout.numColumns = 2;
-        group.setLayout(gridLayout);
+        composite.setLayout(gridLayout);
 
         GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
         gridData.widthHint = width - 24;
-        group.setLayoutData(gridData);
+        composite.setLayoutData(gridData);
 
-        Label freeStationLabel = new Label(group, SWT.NONE);
+        Label freeStationLabel = new Label(composite, SWT.NONE);
         freeStationLabel.setText(I18N.getLabelTextIdentifierFreeStation());
 
-        identifierFreeStationTextField = new Text(group, SWT.BORDER);
+        identifierFreeStationTextField = new Text(composite, SWT.BORDER);
         identifierFreeStationTextField.setText(Main.pref.getUserPref(PreferenceHandler.PARAM_FREE_STATION_STRING));
         identifierFreeStationTextField.addListener(SWT.Traverse, new Listener() {
             @Override
@@ -592,10 +688,10 @@ public class SettingsWidget {
         gridData.grabExcessHorizontalSpace = false;
         identifierFreeStationTextField.setLayoutData(gridData);
 
-        Label stationLabel = new Label(group, SWT.NONE);
+        Label stationLabel = new Label(composite, SWT.NONE);
         stationLabel.setText(I18N.getLabelTextIdentifierStation());
 
-        identifierKnownStationTextField = new Text(group, SWT.BORDER);
+        identifierKnownStationTextField = new Text(composite, SWT.BORDER);
         identifierKnownStationTextField.setText(Main.pref.getUserPref(PreferenceHandler.PARAM_KNOWN_STATION_STRING));
         identifierKnownStationTextField.addListener(SWT.Traverse, new Listener() {
             @Override
@@ -616,10 +712,10 @@ public class SettingsWidget {
         gridData.grabExcessHorizontalSpace = false;
         identifierKnownStationTextField.setLayoutData(gridData);
 
-        Label stakeOutLabel = new Label(group, SWT.NONE);
+        Label stakeOutLabel = new Label(composite, SWT.NONE);
         stakeOutLabel.setText(I18N.getLabelTextIdentifierStakeOutPoint());
 
-        identifierControlPointTextField = new Text(group, SWT.BORDER);
+        identifierControlPointTextField = new Text(composite, SWT.BORDER);
         identifierControlPointTextField.setText(Main.pref.getUserPref(PreferenceHandler.PARAM_CONTROL_POINT_STRING));
         identifierControlPointTextField.addListener(SWT.Traverse, new Listener() {
             @Override
@@ -665,8 +761,10 @@ public class SettingsWidget {
         innerShell.setLayoutData(gridData);
 
         createGroupPaths(width);
-        createCompositeGeneralSettings(width);
-        createGroupTidyUp(width);
+
+        createCompositeGeneralAndFormatSettings(width);
+        createCompositeWidgetSettings(width);
+
         createBottomButtons();
 
         innerShell.setLocation(ShellPositioner.centerShellOnPrimaryMonitor(innerShell));
@@ -762,6 +860,21 @@ public class SettingsWidget {
     }
 
     private boolean writeSettings() {
+        // general settings
+        Main.pref.setUserPref(PreferenceHandler.PARAM_CODE_STRING, identifierCodeStringTextField.getText());
+        Main.pref.setUserPref(PreferenceHandler.PARAM_EDIT_STRING, identifierEditStringTextField.getText());
+
+        // parameters for module #1 - clean up
+        Main.pref.setUserPref(PreferenceHandler.PARAM_CONTROL_POINT_STRING, identifierControlPointTextField.getText());
+        Main.pref.setUserPref(PreferenceHandler.PARAM_FREE_STATION_STRING, identifierFreeStationTextField.getText());
+        Main.pref.setUserPref(PreferenceHandler.PARAM_KNOWN_STATION_STRING, identifierKnownStationTextField.getText());
+
+        // parameters for module #4 - converter
+        Main.pref.setUserPref(PreferenceHandler.CONVERTER_SETTING_ELIMINATE_ZERO_COORDINATE, Boolean.toString(chkBoxEliminateZeroCoordinates.getSelection()));
+        Main.pref.setUserPref(PreferenceHandler.CONVERTER_SETTING_LTOP_USE_ZENITH_DISTANCE, Boolean.toString(chkBoxLTOPUseZenithDistance.getSelection()));
+        Main.pref.setUserPref(PreferenceHandler.CONVERTER_SETTING_POINT_IDENTICAL_DISTANCE, pointIdenticalDistance.getText());
+
+        // paths for module #5 - project generation
         Main.pref.setUserPref(PreferenceHandler.DIR_BASE, dirBaseTextField.getText());
         Main.pref.setUserPref(PreferenceHandler.DIR_ADMIN, dirAdminTextField.getText());
         Main.pref.setUserPref(PreferenceHandler.DIR_ADMIN_TEMPLATE, dirAdminTemplateTextField.getText());
@@ -770,15 +883,9 @@ public class SettingsWidget {
         Main.pref.setUserPref(PreferenceHandler.DIR_PROJECT, dirProjectTextField.getText());
         Main.pref.setUserPref(PreferenceHandler.DIR_PROJECT_TEMPLATE, dirProjectTemplateTextField.getText());
 
+        // GSI file format settings
         Main.pref.setUserPref(PreferenceHandler.GSI_SETTING_LINE_ENDING_WITH_BLANK, Boolean.toString(chkBoxUseSpaceAtLineEnd.getSelection()));
 
-        Main.pref.setUserPref(PreferenceHandler.PARAM_CODE_STRING, identifierCodeStringTextField.getText());
-        Main.pref.setUserPref(PreferenceHandler.PARAM_EDIT_STRING, identifierEditStringTextField.getText());
-
-        Main.pref.setUserPref(PreferenceHandler.PARAM_CONTROL_POINT_STRING, identifierControlPointTextField.getText());
-        Main.pref.setUserPref(PreferenceHandler.PARAM_FREE_STATION_STRING, identifierFreeStationTextField.getText());
-        Main.pref.setUserPref(PreferenceHandler.PARAM_KNOWN_STATION_STRING, identifierKnownStationTextField.getText());
-        
         // TODO implement write setting success and checks for valid dirs
         // TODO(maybe with a listener construction?)
 

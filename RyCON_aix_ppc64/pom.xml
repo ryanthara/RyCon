@@ -4,7 +4,7 @@
 
     <!-- coordinates -->
     <artifactId>RyCON_aix_ppc64</artifactId>
-    <version>0.9.11</version>
+    <version>0.9.12-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>RyCON for aix (ppc, 64-bit)</name>
 
@@ -12,7 +12,7 @@
     <parent>
         <groupId>de.ryanthara.ja.rycon</groupId>
         <artifactId>rycon-build</artifactId>
-        <version>0.9.11</version>
+        <version>0.9.12-SNAPSHOT</version>
         <relativePath>../rycon-build/pom.xml</relativePath>
     </parent>
 
