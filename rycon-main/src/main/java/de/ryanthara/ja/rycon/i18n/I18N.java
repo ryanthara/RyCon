@@ -93,6 +93,10 @@ public class I18N {
         return Messages.getString("btnChkBoxLTOPEliminateDuplicatePoints");
     }
 
+    public static String getBtnChkBoxLTOPSortOutputFileByNumber() {
+        return Messages.getString("btnChkBoxLTOPSortOutputFileByNumber");
+    }
+
     public static String getBtnChkBoxLTOPUseZenithDistance() {
         return Messages.getString("btnChkBoxLTOPUseZenithDistance");
     }
@@ -357,6 +361,10 @@ public class I18N {
         return Messages.getString("fileChooserFilterNameTXT");
     }
 
+    public static String getFileChooserFilterNameZeiss() {
+        return Messages.getString("fileChooserFilterNameZeiss");
+    }
+
     public static String getFileChooserLevellingSourceMessage() {
         return Messages.getString("fileChooserLevellingSourceMessage");
     }
@@ -485,6 +493,10 @@ public class I18N {
         return Messages.getString("labelTextIdentifierStation");
     }
 
+    public static String getLabelTextMinimumPointDistanceLabel() {
+        return Messages.getString("labelTextMinimumPointDistanceLabel");
+    }
+
     public static String getLabelTextProjectNumber() {
         return Messages.getString("labelTextProjectNumber");
     }
@@ -559,6 +571,10 @@ public class I18N {
 
     public static String getMsgConvertReaderTXTFailed() {
         return Messages.getString("msgConvertReaderTXTFailed");
+    }
+
+    public static String getMsgConvertReaderZeissFailed() {
+        return Messages.getString("msgConvertReaderZeissFailed");
     }
 
     public static String getMsgConvertSuccess(boolean singular) {
@@ -884,13 +900,5 @@ public class I18N {
         } else {
             return s[1];
         }
-    }
-
-    public static String getBtnChkBoxLTOPSortOutputFileByNumber() {
-        return Messages.getString("btnChkBoxLTOPSortOutputFileByNumber");
-    }
-
-    public static String getLabelTextMinimumPointDistanceLabel() {
-        return Messages.getString("labelTextMinimumPointDistanceLabel");
     }
 } // end of I18N

@@ -387,6 +387,12 @@ public class FileToolsText {
         return result;
     }
 
+    public ArrayList<String> convertZeiss2TXT(String separator) {
+        ArrayList<String> result = new ArrayList<>();
+
+        return result;
+    }
+
     /**
      * Return the found codes as an integer array.
      * <p>

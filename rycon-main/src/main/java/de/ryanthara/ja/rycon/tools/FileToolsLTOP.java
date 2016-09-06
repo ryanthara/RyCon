@@ -112,6 +112,7 @@ public class FileToolsLTOP {
      */
     public ArrayList<String> convertCSV2KOO(boolean eliminateDuplicates, boolean sortOutputFile) {
         ArrayList<String> result = new ArrayList<>();
+        ArrayList<RyPoint> ryPoints = new ArrayList<>();
         String number, pointType, toleranceCategory, easting, northing, height, geoid, eta, xi;
         String resultLine;
 
@@ -144,10 +145,18 @@ public class FileToolsLTOP {
             resultLine = prepareStringForKOO(number, pointType, toleranceCategory, easting, northing,
                     height, geoid, eta, xi);
 
+            // fill elements in a special object structure for duplicate elimination
+            if (eliminateDuplicates) {
+                fillRyPoints(ryPoints, easting, northing, height, resultLine);
+            }
+
             if (!resultLine.isEmpty()) {
                 result.add(resultLine);
             }
         }
+
+        result = eliminateDuplicates ? eliminateDuplicatePoints(ryPoints) : result;
+
         return sortOutputFile ? sortResult(result) : result;
     }
 
@@ -161,6 +170,7 @@ public class FileToolsLTOP {
      */
     public ArrayList<String> convertCSVBaselStadt2KOO(boolean eliminateDuplicates, boolean sortOutputFile) {
         ArrayList<String> result = new ArrayList<>();
+        ArrayList<RyPoint> ryPoints = new ArrayList<>();
         String number, pointType, toleranceCategory, easting, northing, height, geoid, eta, xi;
         String resultLine;
 
@@ -196,10 +206,17 @@ public class FileToolsLTOP {
             resultLine = prepareStringForKOO(number, pointType, toleranceCategory, easting, northing,
                     height, geoid, eta, xi);
 
+            // fill elements in a special object structure for duplicate elimination
+            if (eliminateDuplicates) {
+                fillRyPoints(ryPoints, easting, northing, height, resultLine);
+            }
+
             if (!resultLine.isEmpty()) {
                 result.add(resultLine);
             }
         }
+        result = eliminateDuplicates ? eliminateDuplicatePoints(ryPoints) : result;
+
         return sortOutputFile ? sortResult(result) : result;
     }
 
@@ -209,10 +226,12 @@ public class FileToolsLTOP {
      * @param useZeroHeights      use zero value for not given height values
      * @param eliminateDuplicates eliminate duplicate coordinates within 3cm radius
      * @param sortOutputFile      sort an output file by point number
+     *
      * @return converted KOO file
      */
     public ArrayList<String> convertCadwork2KOO(boolean useZeroHeights, boolean eliminateDuplicates, boolean sortOutputFile) {
         ArrayList<String> result = new ArrayList<>();
+        ArrayList<RyPoint> ryPoints = new ArrayList<>();
         String number, pointType, toleranceCategory, easting, northing, height, geoid, eta, xi;
         String resultLine;
 
@@ -257,12 +276,20 @@ public class FileToolsLTOP {
                 // pick up the relevant elements from the blocks from every line
                 resultLine = prepareStringForKOO(number, pointType, toleranceCategory, easting, northing,
                         height, geoid, eta, xi);
+                // fill elements in a special object structure for duplicate elimination
+                if (eliminateDuplicates) {
+                    fillRyPoints(ryPoints, easting, northing, height, resultLine);
+                }
+
 
                 if (!resultLine.isEmpty()) {
                     result.add(resultLine);
                 }
             }
         }
+
+        result = eliminateDuplicates ? eliminateDuplicatePoints(ryPoints) : result;
+
         return sortOutputFile ? sortResult(result) : result;
     }
 
@@ -333,19 +360,7 @@ public class FileToolsLTOP {
 
             // fill elements in a special object structure for duplicate elimination
             if (eliminateDuplicates) {
-                double x = Double.NaN, y = Double.NaN, z = Double.NaN;
-
-                try {
-                    x = Double.parseDouble(easting);
-                    y = Double.parseDouble(northing);
-                    z = Double.parseDouble(height);
-
-                } catch (NumberFormatException e) {
-                    System.err.println("Can't convert string to double in FileToolsLTOP:convertGSI2KOO()");
-                    System.err.println("Wrong line: " + resultLine);
-                }
-
-                ryPoints.add(new RyPoint(number, x, y, z, resultLine));
+                fillRyPoints(ryPoints, easting, northing, height, resultLine);
             }
 
             if (!resultLine.isEmpty()) {
@@ -353,9 +368,7 @@ public class FileToolsLTOP {
             }
         }
 
-        System.out.println(ryPoints.size());
-
-        result = eliminateDuplicates ? eliminateDuplicatePoints(result) : result;
+        result = eliminateDuplicates ? eliminateDuplicatePoints(ryPoints) : result;
 
         return sortOutputFile ? sortResult(result) : result;
     }
@@ -475,7 +488,7 @@ public class FileToolsLTOP {
                     if (useZenithDistance) {
                         verticalAngle = String.format("%12s", NumberHelper.fillDecimalPlace(Double.toString(d), 5));
                     } else {
-                        double heightAngle = 100d - d.doubleValue();
+                        double heightAngle = 100d - d;
                         verticalAngle = String.format("%12s", NumberHelper.fillDecimalPlace(Double.toString(heightAngle), 5));
                     }
 
@@ -544,6 +557,7 @@ public class FileToolsLTOP {
      */
     public ArrayList<String> convertK2KOO(boolean eliminateDuplicates, boolean sortOutputFile) {
         ArrayList<String> result = new ArrayList<>();
+        ArrayList<RyPoint> ryPoints = new ArrayList<>();
         String number, pointType, toleranceCategory, easting, northing, height, geoid, eta, xi;
         String resultLine;
 
@@ -584,6 +598,11 @@ public class FileToolsLTOP {
                     resultLine = prepareStringForKOO(number, pointType, toleranceCategory, easting, northing,
                             height, geoid, eta, xi);
 
+                    // fill elements in a special object structure for duplicate elimination
+                    if (eliminateDuplicates) {
+                        fillRyPoints(ryPoints, easting, northing, height, resultLine);
+                    }
+
                     if (!resultLine.isEmpty()) {
                         result.add(resultLine);
                     }
@@ -591,6 +610,9 @@ public class FileToolsLTOP {
 
             }
         }
+
+        result = eliminateDuplicates ? eliminateDuplicatePoints(ryPoints) : result;
+
         return sortOutputFile ? sortResult(result) : result;
     }
 
@@ -604,6 +626,7 @@ public class FileToolsLTOP {
      */
     public ArrayList<String> convertTXT2KOO(boolean eliminateDuplicates, boolean sortOutputFile) {
         ArrayList<String> result = new ArrayList<>();
+        ArrayList<RyPoint> ryPoints = new ArrayList<>();
         String number, pointType, toleranceCategory, easting, northing, height, geoid, eta, xi;
         String resultLine;
 
@@ -645,11 +668,19 @@ public class FileToolsLTOP {
                 resultLine = prepareStringForKOO(number, pointType, toleranceCategory, easting, northing,
                         height, geoid, eta, xi);
 
+                // fill elements in a special object structure for duplicate elimination
+                if (eliminateDuplicates) {
+                    fillRyPoints(ryPoints, easting, northing, height, resultLine);
+                }
+
                 if (!resultLine.isEmpty()) {
                     result.add(resultLine);
                 }
             }
         }
+
+        result = eliminateDuplicates ? eliminateDuplicatePoints(ryPoints) : result;
+
         return sortOutputFile ? sortResult(result) : result;
     }
 
@@ -663,6 +694,7 @@ public class FileToolsLTOP {
      */
     public ArrayList<String> convertTXTBaselLandschaft2KOO(boolean eliminateDuplicates, boolean sortOutputFile) {
         ArrayList<String> result = new ArrayList<>();
+        ArrayList<RyPoint> ryPoints = new ArrayList<>();
 
         String number, pointType, toleranceCategory, easting, northing, height, geoid, eta, xi;
         String resultLine;
@@ -712,12 +744,107 @@ public class FileToolsLTOP {
                 resultLine = prepareStringForKOO(number, pointType, toleranceCategory, easting, northing,
                         height, geoid, eta, xi);
 
+                // fill elements in a special object structure for duplicate elimination
+                if (eliminateDuplicates) {
+                    fillRyPoints(ryPoints, easting, northing, height, resultLine);
+                }
+
                 if (!resultLine.isEmpty()) {
                     result.add(resultLine);
                 }
             }
         }
+
+        result = eliminateDuplicates ? eliminateDuplicatePoints(ryPoints) : result;
+
         return sortOutputFile ? sortResult(result) : result;
+    }
+
+    public ArrayList<String> convertZeiss2KOO(boolean selection, boolean selection1) {
+        ArrayList<String> result = new ArrayList<>();
+        return result;
+    }
+
+    /**
+     * Eliminate duplicate points from an ArrayList<String>.
+     * <p>
+     * Points are identical if the 3D distance is less than 3cm and the point number is the same. The point number is
+     * used for find wrong numbered points.
+     *
+     * @param arrayList unsorted ArrayList<String>
+     *
+     * @return sorted ArrayList<String>
+     */
+    private ArrayList<String> eliminateDuplicatePoints(ArrayList<RyPoint> arrayList) {
+        ArrayList<String> result = new ArrayList<>();
+
+        // set minDistance to default value and try to parse the settings value
+        double d = 0.03;
+
+        try {
+            d = Double.parseDouble(Main.pref.getUserPref(PreferenceHandler.CONVERTER_SETTING_POINT_IDENTICAL_DISTANCE));
+        } catch (NumberFormatException e) {
+            System.err.println("Can't convert maximum distance to double in eliminateDuplicatePoints()");
+            e.printStackTrace();
+        }
+
+        final double minDistance = d;
+
+        // sort the tree set of RyPoints
+        TreeSet<RyPoint> set = new TreeSet<>(new Comparator<RyPoint>() {
+            @Override
+            //public int compare(ArrayList<RyPoint> p1, ArrayList<RyPoint> p2) {
+            public int compare(RyPoint pt1, RyPoint pt2) {
+                /*
+                Compare at the three distances x, y and z before calculating the slope distance because of reducing
+                calculation time and therefore increase the speed.
+
+                Points are equal if they are in a slope distance of 'maxDistance' and have the same number!
+                 */
+                if ((pt1.getSlopeDistance(pt2) < minDistance) & (pt1.getNumber().equalsIgnoreCase(pt2.getNumber()))) {
+                    System.out.println(pt1.getNumber() + " : " + pt2.getNumber() + " " + pt1.getSlopeDistance(pt2));
+                    return 0;
+                } else {
+                    return 1;
+                }
+            }
+        });
+
+        // add the ArrayList anc check for duplicate points
+        set.addAll(arrayList);
+
+        // bring back the points into an ArrayList<String>
+        for (RyPoint ryPoint : set) {
+            if (!ryPoint.getPrintLine().trim().equalsIgnoreCase("")) {
+                result.add(ryPoint.getPrintLine());
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Fill the ArrayList<RyPoint> with ryPoint objects.
+     *
+     * @param ryPoints   the ArrayList<RyPoint>
+     * @param easting    easting value
+     * @param northing   northing value
+     * @param height     height value
+     * @param resultLine result line as string
+     */
+    private void fillRyPoints(ArrayList<RyPoint> ryPoints, String easting, String northing, String height, String resultLine) {
+        double x = Double.NaN, y = Double.NaN, z = Double.NaN;
+
+        try {
+            x = Double.parseDouble(easting);
+            y = Double.parseDouble(northing);
+            z = Double.parseDouble(height);
+        } catch (NumberFormatException e) {
+            System.err.println("Can't convert string to double in FileToolsLTOP:fillRyPoints()");
+            System.err.println("Wrong line: " + resultLine);
+        }
+
+        ryPoints.add(new RyPoint(number, x, y, z, resultLine));
     }
 
     private String prepareStringForKOO(String number, String pointType, String toleranceCategory,
@@ -734,93 +861,28 @@ public class FileToolsLTOP {
             }
         }
 
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(number);
-        stringBuilder.append(pointType);
-        stringBuilder.append(emptySpace8);
-        stringBuilder.append(toleranceCategory);
-        stringBuilder.append(emptySpace8);
-        stringBuilder.append(easting);
-        stringBuilder.append(northing);
-        stringBuilder.append(emptySpace4);
-        stringBuilder.append(height);
-        stringBuilder.append(emptySpace6);
-        stringBuilder.append(geoid);
-        stringBuilder.append(emptySpace6);
-        stringBuilder.append(eta);
-        stringBuilder.append(xi);
-
-        return stringBuilder.toString();
+        return number +
+                pointType +
+                emptySpace8 +
+                toleranceCategory +
+                emptySpace8 +
+                easting +
+                northing +
+                emptySpace4 +
+                height +
+                emptySpace6 +
+                geoid +
+                emptySpace6 +
+                eta +
+                xi;
     }
-
-    /**
-     * Eliminiates duplicate points from an ArrayList<String>.
-     * <p>
-     * Points are identical if the 3D distance is less than 3cm and the point number is the same. The point number is
-     * used for find wrong numbered points.
-     *
-     * @param arrayList unsorted ArrayList<String>
-     * @return          sorted ArrayList<String>
-     */
-    private ArrayList<String> eliminateDuplicatePoints(ArrayList<String> arrayList) {
-
-        Collections.sort(arrayList, new Comparator<String>() {
-            @Override
-            public int compare(String s1, String s2) {
-                return s1.compareToIgnoreCase(s2);
-            }
-        });
-        /*
-        Set<String> uniqueEntries = new HashSet<String>();
-
-        for (Iterator iter = arrayList.iterator(); iter.hasNext();) {
-            String element = (String)iter.next();
-
-
-
-            System.out.println(element);
-
-        }
-
-
-        uniqueEntries.clear();
-        */
-
-        Collections.sort(arrayList, new Comparator<String>() {
-            @Override
-            public int compare(String s1, String s2) {
-                String[] stringField1 = new String[4];
-                String[] stringField2 = new String[4];
-
-                if (stringField1.length == 4 & stringField2.length == 4) {
-
-                    String number1 = stringField1[0].trim();
-                    String number2 = stringField2[0].trim();
-/*
-                    double dx = Double.parseDouble(stringField1[1].trim()) - Double.parseDouble(stringField2[1].trim());
-                    double dy = Double.parseDouble(stringField1[2].trim()) - Double.parseDouble(stringField2[2].trim());
-                    double dz = Double.parseDouble(stringField1[3].trim()) - Double.parseDouble(stringField2[3].trim());
-
-                    double distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
-
-                    if ((distance < 0.03) & number1.equalsIgnoreCase(number2)){
-                        return 0;
-                    }
-                    */
-                }
-
-                return 1;
-            }
-        });
-        return arrayList;
-    }
-
 
     /**
      * Sorts an ArrayList<String> by 'first token'.
      *
      * @param arrayList unsorted ArrayList<String>
-     * @return          sorted ArrayList<String>
+     *
+     * @return sorted ArrayList<String>
      */
     private ArrayList<String> sortResult(ArrayList<String> arrayList) {
         Collections.sort(arrayList, new Comparator<String>() {

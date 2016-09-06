@@ -806,6 +806,10 @@ public class FileToolsExcel {
         return rowNumber > 1;
     }
 
+    public void convertZeiss2Excel(boolean isXLSX, String name, boolean selection) {
+        ArrayList<String> result = new ArrayList<>();
+    }
+
     /**
      * Write the converted XLS file to the file system.
      *

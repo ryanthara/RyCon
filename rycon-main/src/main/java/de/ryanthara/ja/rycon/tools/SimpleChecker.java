@@ -48,7 +48,7 @@ public class SimpleChecker {
      */
     public static boolean checkIsDoubleValue(Text textField) {
         try {
-            Double d = Double.parseDouble(textField.getText());
+            Double.parseDouble(textField.getText());
             return true;
         } catch (NumberFormatException ex) {
             System.err.println("Text field contains value that can't be parsed into a double value!");
@@ -73,11 +73,7 @@ public class SimpleChecker {
      * @return success of the check
      */
     public static boolean checkIsTextValidFile(Text textField) {
-        if (!checkIsTextEmpty(textField)) {
-            return new File(textField.getText()).exists();
-        } else {
-            return false;
-        }
+        return !checkIsTextEmpty(textField) && new File(textField.getText()).exists();
     }
 
 } // end of SimpleChecker

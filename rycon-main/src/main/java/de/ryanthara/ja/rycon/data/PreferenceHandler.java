@@ -68,7 +68,9 @@ public class PreferenceHandler implements PreferenceChangeListener {
     public static final String CONVERTER_SETTING_LTOP_USE_ZENITH_DISTANCE = "converter_setting_ltop_use_zenith_distance";
 
     /**
-     * Member for the preference key of the minimum distance for identify two points beeing equal.
+     * Member for the preference key of the minimum distance for identify two points being equal.
+     *
+     * @since 6
      */
     public static final String CONVERTER_SETTING_POINT_IDENTICAL_DISTANCE = "converter_setting_point_identical_distance";
 

@@ -315,6 +315,7 @@ public class TidyUpWidget {
     private int fileOperations(boolean holdStations, boolean holdControlPoints) {
         int counter = 0;
         LineReader lineReader;
+        String editString = Main.pref.getUserPref(PreferenceHandler.PARAM_EDIT_STRING);
 
         for (File file2read : files2read) {
             lineReader = new LineReader(file2read);
@@ -328,7 +329,7 @@ public class TidyUpWidget {
                 writeFile = gsiTools.processTidyUp(holdStations, holdControlPoints);
 
                 // write file line by line
-                String file2write = file2read.toString().substring(0, file2read.toString().length() - 4) + "_EDIT.GSI";
+                String file2write = file2read.toString().substring(0, file2read.toString().length() - 4) + "_" + editString + ".GSI";
                 LineWriter lineWriter = new LineWriter(file2write);
                 if (lineWriter.writeFile(writeFile)) {
                     counter++;

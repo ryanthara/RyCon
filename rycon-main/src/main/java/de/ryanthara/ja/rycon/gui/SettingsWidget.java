@@ -211,10 +211,10 @@ public class SettingsWidget {
         groupFormat.setText(I18N.getGroupTitleFormatSettings());
         groupFormat.setLayout(new GridLayout(1, false));
 
+        createGroupFormat(width / 2);
+
         gridData2 = new GridData(SWT.FILL, SWT.FILL, true, true);
         groupFormat.setLayoutData(gridData2);
-
-        createGroupFormat(width / 2);
     }
 
     private void createCompositeWidgetSettings(int width) {
@@ -240,10 +240,10 @@ public class SettingsWidget {
         groupConverterWidget.setText(I18N.getGroupTitleConverterSettings());
         groupConverterWidget.setLayout(new GridLayout(1, false));
 
+        createGroupConverter(width / 2);
+
         gridData2 = new GridData(SWT.FILL, SWT.FILL, true, true);
         groupConverterWidget.setLayoutData(gridData2);
-
-        createGroupConverter(width / 2);
     }
 
     private void createGroupConverter(int width) {
@@ -262,27 +262,21 @@ public class SettingsWidget {
         chkBoxEliminateZeroCoordinates.setSelection(Boolean.parseBoolean(Main.pref.getUserPref(PreferenceHandler.CONVERTER_SETTING_ELIMINATE_ZERO_COORDINATE)));
         chkBoxEliminateZeroCoordinates.setText(I18N.getBtnEliminateZeroCoordinate());
 
-        GridData gridData2 = new GridData(GridData.FILL, GridData.CENTER, true, true);
-        gridData2.grabExcessVerticalSpace = true;
-        gridData2.verticalAlignment = GridData.FILL_VERTICAL;
-        gridData2.widthHint = width - 24;
-        composite.setLayoutData(gridData2);
-
         chkBoxLTOPUseZenithDistance = new Button(composite, SWT.CHECK);
         chkBoxLTOPUseZenithDistance.setSelection(Boolean.parseBoolean(Main.pref.getUserPref(PreferenceHandler.CONVERTER_SETTING_LTOP_USE_ZENITH_DISTANCE)));
         chkBoxLTOPUseZenithDistance.setText(I18N.getBtnChkBoxLTOPUseZenithDistance());
 
         Composite composite2 = new Composite(groupConverterWidget, SWT.NONE);
 
-        GridLayout gridLayout2 = new GridLayout(2, true);
-        composite2.setLayout(gridLayout2);
+        gridLayout = new GridLayout(2, true);
+        composite2.setLayout(gridLayout);
+
+        gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
+        gridData.widthHint = width - 24;
+        composite2.setLayoutData(gridData);
 
         Label minimumPointDistanceLabel = new Label(composite2, SWT.NONE);
         minimumPointDistanceLabel.setText(I18N.getLabelTextMinimumPointDistanceLabel());
-
-        GridData gridData2_1 = new GridData(GridData.FILL, GridData.CENTER, true, true);
-        gridData2_1.widthHint = width - 24;
-        composite2.setLayoutData(gridData2_1);
 
         pointIdenticalDistance = new Text(composite2, SWT.BORDER);
         pointIdenticalDistance.setText(Main.pref.getUserPref(PreferenceHandler.CONVERTER_SETTING_POINT_IDENTICAL_DISTANCE));
@@ -298,10 +292,11 @@ public class SettingsWidget {
             }
         });
 
-        GridData gridData2_2 = new GridData();
-        gridData2_2.widthHint = 50;
-        gridData2_2.grabExcessHorizontalSpace = true;
-        identifierCodeStringTextField.setLayoutData(gridData2_2);
+        gridData = new GridData();
+        gridData.widthHint = 50;
+        gridData.grabExcessHorizontalSpace = false;
+        pointIdenticalDistance.setLayoutData(gridData);
+
     }
 
     private void createGroupFormat(int width) {

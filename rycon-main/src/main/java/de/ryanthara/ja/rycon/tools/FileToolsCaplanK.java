@@ -609,6 +609,11 @@ public class FileToolsCaplanK {
         return result;
     }
 
+    public ArrayList<String> convertZeiss2K(boolean selection, boolean selection1, boolean selection2) {
+        ArrayList<String> result = new ArrayList<>();
+        return result;
+    }
+
     /**
      * Write the comment line into an given ArrayList<String>.
      *

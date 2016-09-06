@@ -108,7 +108,14 @@ public class GSIBlock {
                 intern = dataGSI;
             }
 
-            Double d = Double.parseDouble(intern);
+            Double d = null;
+            try {
+                d = Double.parseDouble(intern);
+            } catch (NumberFormatException e) {
+                System.err.println("Error while parsing String to double in GSIBlock:GSIBlock()");
+                e.printStackTrace();
+            }
+
             if (d == 0d) {
                 intern = "0";
             } else {

@@ -27,7 +27,7 @@ import java.util.Locale;
  *
  * <h3>Changes:</h3>
  * <ul>
- *     <li>2: code improvements, documantation updates</li>
+ *     <li>2: code improvements, documentation updates</li>
  *     <li>1: basic implementation </li>
  * </ul>
  *
@@ -53,7 +53,7 @@ class NumberHelper {
         DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols(Locale.getDefault());
         otherSymbols.setDecimalSeparator('.');
 
-        DecimalFormat df = new DecimalFormat("");
+        DecimalFormat df;
 
         switch (lastDecimalLength) {
             case 1:

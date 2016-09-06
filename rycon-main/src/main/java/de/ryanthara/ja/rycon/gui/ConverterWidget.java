@@ -45,18 +45,18 @@ import java.util.List;
  * The ConverterWidget of RyCON is used to convert measurement and coordinate
  * files into different formats. RyCON can be used to convert special formats
  * e.g. coordinate files from governmental services in Switzerland
- *
+ * <p>
  * <h3>Changes:</h3>
  * <ul>
- *     <li>9: implement support for LTOP-MES format and M5-Format, code improvements, and some details more</li>
- *     <li>8: code optimizations, little corrections</li>
- *     <li>7: defeat txt to gsi conversion bug (not listed)</li>
- *     <li>6: implement support for cadwork-files (node.dat) </li>
- *     <li>5: defeat bug #3 </li>
- *     <li>4: simplification and improvements, extract input fields and bottom button bar into separate classes </li>
- *     <li>3: code improvements and clean up </li>
- *     <li>2: basic improvements </li>
- *     <li>1: basic implementation </li>
+ * <li>9: implement support for LTOP-MES format and M5-Format, code improvements, and some details more</li>
+ * <li>8: code optimizations, little corrections</li>
+ * <li>7: defeat txt to gsi conversion bug (not listed)</li>
+ * <li>6: implement support for cadwork-files (node.dat) </li>
+ * <li>5: defeat bug #3 </li>
+ * <li>4: simplification and improvements, extract input fields and bottom button bar into separate classes </li>
+ * <li>3: code improvements and clean up </li>
+ * <li>2: basic improvements </li>
+ * <li>1: basic implementation </li>
  * </ul>
  *
  * @author sebastian
@@ -179,13 +179,14 @@ public class ConverterWidget {
 
         fileDialog.setFilterPath(filterPath);
         fileDialog.setText(I18N.getFileChooserTidyUpSourceText());
-        fileDialog.setFilterExtensions(new String[]{"*.gsi", "*.txt", "*.csv", "*.K", "*.dat"});
+        fileDialog.setFilterExtensions(new String[]{"*.gsi", "*.txt", "*.csv", "*.K", "*.dat", "*.REC"});
         fileDialog.setFilterNames(new String[]{
                 I18N.getFileChooserFilterNameGSI(),
                 I18N.getFileChooserFilterNameTXT(),
                 I18N.getFileChooserFilterNameCSV(),
                 I18N.getFileChooserFilterNameK(),
-                I18N.getFileChooserFilterNameCadwork()});
+                I18N.getFileChooserFilterNameCadwork(),
+                I18N.getFileChooserFilterNameZeiss()});
 
         // determine filter index by source group selection
         int selectedBtnSource = RadioHelper.getSelectedBtn(groupSource.getChildren());
@@ -204,12 +205,15 @@ public class ConverterWidget {
                 fileDialog.setFilterIndex(3);   // K
                 break;
             case 5:
-                fileDialog.setFilterIndex(4);   // dat
+                fileDialog.setFilterIndex(5);   // Zeiss (*.REC)
                 break;
             case 6:
-                fileDialog.setFilterIndex(2);   // CSV Basel Stadt
+                fileDialog.setFilterIndex(4);   // dat
                 break;
             case 7:
+                fileDialog.setFilterIndex(2);   // CSV Basel Stadt
+                break;
+            case 8:
                 fileDialog.setFilterIndex(1);   // TXT Basel Landschaft
                 break;
         }
@@ -336,12 +340,12 @@ public class ConverterWidget {
         };
 
         String[] formatSource = {
-                "GSI8", "GSI16", "TXT", "CSV", "CAPLAN (.K)", "cadwork (node.dat)",
+                "GSI8", "GSI16", "TXT", "CSV", "CAPLAN (.K)", "Zeiss (.REC)", "cadwork (node.dat)",
                 "Basel Stadt (.CSV)", "Basel Landschaft (.TXT)"
         };
 
         String[] formatTarget = {
-                "GSI8", "GSI16", "TXT", "CSV", "CAPLAN (.K)", "Zeiss (.M5)", "LTOP (.KOO)", "LTOP (.MES)",
+                "GSI8", "GSI16", "TXT", "CSV", "CAPLAN (.K)", "Zeiss (.REC)", "LTOP (.KOO)", "LTOP (.MES)",
                 "Excel 2007 (.xlsx)", "Excel '97 (.xls)", "Open Document  Format (.ods)"
         };
 
@@ -475,6 +479,10 @@ public class ConverterWidget {
         innerShell.open();
     }
 
+    private String prepareOutputFileName(File file, String suffix) {
+        return file.toString().substring(0, file.toString().length() - 4) + "_" + Main.getParamEditString() + suffix;
+    }
+
     private boolean processFileOperations() {
         boolean success;
         boolean GSIFormat;
@@ -493,8 +501,6 @@ public class ConverterWidget {
         for (File file2read : files2read) {
             boolean readFileSuccess = false;
 
-            FileToolsLeicaGSI toolsLeicaGSI = null;
-
             List<String[]> readCSVFile = null;
             ArrayList<String> readFile = null;
 
@@ -503,7 +509,6 @@ public class ConverterWidget {
                 case 0:     // fall through for GSI8 format
                 case 1:     // GSI16 format
                     if ((readFile = readLineBasedFile(file2read)) != null) {
-                        toolsLeicaGSI = new FileToolsLeicaGSI(readFile);
                         readFileSuccess = true;
                     } else {
                         readErrorHandler(file2read, I18N.getMsgConvertReaderGSIFailed());
@@ -531,15 +536,7 @@ public class ConverterWidget {
                     }
                     break;
 
-                case 4:     // cadwork node.dat format from the cadwork CAD program
-                    if ((readFile = readLineBasedFile(file2read)) != null) {
-                        readFileSuccess = true;
-                    } else {
-                        readErrorHandler(file2read, I18N.getMsgConvertReaderCadworkFailed());
-                    }
-                    break;
-
-                case 5:     // CAPLAN K format file
+                case 4:     // CAPLAN K format file
                     if ((readFile = readLineBasedFile(file2read)) != null) {
                         readFileSuccess = true;
                     } else {
@@ -547,7 +544,23 @@ public class ConverterWidget {
                     }
                     break;
 
-                case 6:     // CSV format from the geodata server 'Basel Stadt' (http://shop.geo.bs.ch/geoshop_app/geoshop/)
+                case 5:     // Zeiss M5 format and it's dialects
+                    if ((readFile = readLineBasedFile(file2read)) != null) {
+                        readFileSuccess = true;
+                    } else {
+                        readErrorHandler(file2read, I18N.getMsgConvertReaderZeissFailed());
+                    }
+                    break;
+
+                case 6:     // cadwork node.dat format from the cadwork CAD program
+                    if ((readFile = readLineBasedFile(file2read)) != null) {
+                        readFileSuccess = true;
+                    } else {
+                        readErrorHandler(file2read, I18N.getMsgConvertReaderCadworkFailed());
+                    }
+                    break;
+
+                case 7:     // CSV format from the geodata server 'Basel Stadt' (http://shop.geo.bs.ch/geoshop_app/geoshop/)
                     try {
                         CSVReader reader = new CSVReader(new FileReader(file2read), ';', '"', 0); // not skip first line!
                         readCSVFile = reader.readAll();
@@ -557,7 +570,7 @@ public class ConverterWidget {
                     }
                     break;
 
-                case 7:     // TXT format from the geodata server 'Basel Landschaft' (https://www.geo.bl.ch/)
+                case 8:     // TXT format from the geodata server 'Basel Landschaft' (https://www.geo.bl.ch/)
                     if ((readFile = readLineBasedFile(file2read)) != null) {
                         readFileSuccess = true;
                     } else {
@@ -573,9 +586,10 @@ public class ConverterWidget {
 
                 FileToolsCaplanK toolsCaplanK;
                 FileToolsCSV toolsCSV;
+                FileToolsExcel toolsExcel = null;
+                FileToolsLeicaGSI toolsLeicaGSI = new FileToolsLeicaGSI(readFile);
                 FileToolsLTOP toolsLTOP;
                 FileToolsODF toolsODF = null;
-                FileToolsExcel toolsExcel = null;
                 FileToolsText toolsText;
 
                 String separator;
@@ -607,18 +621,22 @@ public class ConverterWidget {
                                 writeFile = toolsLeicaGSI.convertK2GSI(Main.getGSI8());
                                 break;
 
-                            case 5:     // cadwork node.dat from cadwork CAD program
+                            case 5:     // Zeiss M5 format and it's dialects
+                                writeFile = toolsLeicaGSI.convertZeiss2GSI(Main.getGSI8());
+                                break;
+
+                            case 6:     // cadwork node.dat from cadwork CAD program
                                 writeFile = toolsLeicaGSI.convertCadwork2GSI(Main.getGSI8(),
                                         chkBoxWriteCodeColumn.getSelection(),
                                         chkBoxCadworkUseZeroHeights.getSelection());
                                 break;
 
-                            case 6:     // CSV format 'Basel Stadt' (semicolon separated)
+                            case 7:     // CSV format 'Basel Stadt' (semicolon separated)
                                 writeFile = toolsLeicaGSI.convertCSVBaselStadt2GSI(Main.getGSI8(),
                                         chkBoxSourceContainsCode.getSelection());
                                 break;
 
-                            case 7:     // TXT format 'Basel Landschaft' (different column based text files for LFP and HFP points)
+                            case 8:     // TXT format 'Basel Landschaft' (different column based text files for LFP and HFP points)
                                 writeFile = toolsLeicaGSI.convertTXTBaselLandschaft2GSI(Main.getGSI8(), chkBoxWriteCodeColumn.getSelection());
                                 break;
 
@@ -654,18 +672,22 @@ public class ConverterWidget {
                                 writeFile = toolsLeicaGSI.convertK2GSI(Main.getGSI16());
                                 break;
 
-                            case 5:     // cadwork node.dat from cadwork CAD program
+                            case 5:     // Zeiss M5 format and it's dialects
+                                writeFile = toolsLeicaGSI.convertZeiss2GSI(Main.getGSI16());
+                                break;
+
+                            case 6:     // cadwork node.dat from cadwork CAD program
                                 writeFile = toolsLeicaGSI.convertCadwork2GSI(Main.getGSI16(),
                                         chkBoxWriteCodeColumn.getSelection(),
                                         chkBoxCadworkUseZeroHeights.getSelection());
                                 break;
 
-                            case 6:     // CSV format 'Basel Stadt' (semicolon separated)
+                            case 7:     // CSV format 'Basel Stadt' (semicolon separated)
                                 writeFile = toolsLeicaGSI.convertCSVBaselStadt2GSI(Main.getGSI16(),
                                         chkBoxSourceContainsCode.getSelection());
                                 break;
 
-                            case 7:     // TXT format 'Basel Landschaft' (different column based text files for LFP and HFP points)
+                            case 8:     // TXT format 'Basel Landschaft' (different column based text files for LFP and HFP points)
                                 writeFile = toolsLeicaGSI.convertTXTBaselLandschaft2GSI(Main.getGSI16(), chkBoxWriteCodeColumn.getSelection());
                                 break;
 
@@ -702,7 +724,12 @@ public class ConverterWidget {
                                         chkBoxWriteCodeColumn.getSelection(), chkBoxKFormatUseSimpleFormat.getSelection());
                                 break;
 
-                            case 5:     // cadwork node.dat from cadwork CAD program
+                            case 5:     // Zeiss M5 format and it's dialects
+                                toolsText = new FileToolsText(readFile);
+                                writeFile = toolsText.convertZeiss2TXT(separator);
+                                break;
+
+                            case 6:     // cadwork node.dat from cadwork CAD program
                                 toolsLeicaGSI = new FileToolsLeicaGSI(readFile);
                                 stopOver = toolsLeicaGSI.convertCadwork2GSI(Main.getGSI16(),
                                         chkBoxWriteCodeColumn.getSelection(), chkBoxCadworkUseZeroHeights.getSelection());
@@ -710,12 +737,12 @@ public class ConverterWidget {
                                 writeFile = stopOverFile.convertGSI2TXT(separator, GSIFormat, chkBoxWriteCommentLine.getSelection());
                                 break;
 
-                            case 6:     // CSV format 'Basel Stadt' (semicolon separated)
+                            case 7:     // CSV format 'Basel Stadt' (semicolon separated)
                                 toolsText = new FileToolsText(readCSVFile);
                                 writeFile = toolsText.convertCSVBaselStadt2TXT(separator);
                                 break;
 
-                            case 7:     // TXT format 'Basel Landschaft' (different column based text files for LFP and HFP points)
+                            case 8:     // TXT format 'Basel Landschaft' (different column based text files for LFP and HFP points)
                                 toolsText = new FileToolsText(readFile);
                                 writeFile = toolsText.convertTXTBaselLandschaft2TXT(separator, chkBoxWriteCodeColumn.getSelection());
                                 break;
@@ -757,18 +784,25 @@ public class ConverterWidget {
                                 writeFile = stopOverFile.convertTXT2CSV(separator);
                                 break;
 
-                            case 5:     // cadwork node.dat from cadwork CAD program
+                            case 5:     // Zeiss M5 format and it's dialects
+                                toolsText = new FileToolsText(readFile);
+                                stopOver = toolsText.convertZeiss2TXT(separator);
+                                stopOverFile = new FileToolsCSV(stopOver);
+                                writeFile = stopOverFile.convertTXT2CSV(separator);
+                                break;
+
+                            case 6:     // cadwork node.dat from cadwork CAD program
                                 toolsCSV = new FileToolsCSV(readFile);
                                 writeFile = toolsCSV.convertCadwork2CSV(separator, chkBoxWriteCommentLine.getSelection(),
                                         chkBoxWriteCodeColumn.getSelection(), chkBoxCadworkUseZeroHeights.getSelection());
                                 break;
 
-                            case 6:     // CSV format 'Basel Stadt' (semicolon separated)
+                            case 7:     // CSV format 'Basel Stadt' (semicolon separated)
                                 toolsCSV = new FileToolsCSV(readCSVFile);
                                 writeFile = toolsCSV.convertCSVBaselStadt2CSV(separator);
                                 break;
 
-                            case 7:     // TXT format 'Basel Landschaft' (different column based text files for LFP and HFP points)
+                            case 8:     // TXT format 'Basel Landschaft' (different column based text files for LFP and HFP points)
                                 toolsText = new FileToolsText(readFile);
                                 stopOver = toolsText.convertTXTBaselLandschaft2TXT(Main.getSeparatorTab(),
                                         chkBoxWriteCodeColumn.getSelection());
@@ -812,7 +846,15 @@ public class ConverterWidget {
                             case 4:     // CAPLAN K format (not possible)
                                 break;
 
-                            case 5:     // cadwork node.dat from cadwork CAD program
+                            case 5:     // Zeiss M5 format and it's dialects
+                                toolsCaplanK = new FileToolsCaplanK(readFile);
+                                writeFile = toolsCaplanK.convertZeiss2K(
+                                        chkBoxKFormatUseSimpleFormat.getSelection(),
+                                        chkBoxWriteCodeColumn.getSelection(),
+                                        chkBoxWriteCommentLine.getSelection());
+                                break;
+
+                            case 6:     // cadwork node.dat from cadwork CAD program
                                 toolsCaplanK = new FileToolsCaplanK(readFile);
                                 writeFile = toolsCaplanK.convertCadwork2K(
                                         chkBoxKFormatUseSimpleFormat.getSelection(),
@@ -820,14 +862,14 @@ public class ConverterWidget {
                                         chkBoxWriteCodeColumn.getSelection());
                                 break;
 
-                            case 6:     // CSV format 'Basel Stadt' (semicolon separated)
+                            case 7:     // CSV format 'Basel Stadt' (semicolon separated)
                                 toolsCaplanK = new FileToolsCaplanK(readCSVFile);
                                 writeFile = toolsCaplanK.convertCSVBaselStadt2K(
                                         chkBoxKFormatUseSimpleFormat.getSelection(),
                                         chkBoxWriteCommentLine.getSelection());
                                 break;
 
-                            case 7:     // TXT format 'Basel Landschaft' (different column based text files for LFP and HFP points)
+                            case 8:     // TXT format 'Basel Landschaft' (different column based text files for LFP and HFP points)
                                 toolsCaplanK = new FileToolsCaplanK(readFile);
                                 writeFile = toolsCaplanK.convertTXTBaselLandschaft2K(
                                         chkBoxKFormatUseSimpleFormat.getSelection(), chkBoxWriteCodeColumn.getSelection(),
@@ -844,11 +886,26 @@ public class ConverterWidget {
                      */
                     case 5:
                         switch (sourceNumber) {
-                            case 0:
-                            case 1:
+                            case 0:     // GSI8 format
+                                break;
+                            case 1:     // GSI16 format
+                                break;
+                            case 2:     // TXT format
+                                break;
+                            case 3:     // CSV format (comma or semicolon separated)
+                                break;
+                            case 4:     // CAPLAN K format
+                                break;
+                            case 5:     // Zeiss M5 format and it's dialects (not possible or into dialects?)
+                                break;
+                            case 6:     // cadwork node.dat from cadwork CAD program
+                                break;
+                            case 7:     // CSV format 'Basel Stadt' (semicolon separated)
+                                break;
+                            case 8:     // TXT format 'Basel Landschaft' (different column based text files for LFP and HFP points)
                                 break;
                         }
-                        if (writeFile2Disk(file2read, writeFile, ".M5")) {
+                        if (writeFile2Disk(file2read, writeFile, ".REC")) {
                             counter++;
                         }
                         break;
@@ -884,20 +941,26 @@ public class ConverterWidget {
                                         chkBoxLTOPSortOutputFileByNumber.getSelection());
                                 break;
 
-                            case 5:     // cadwork node.dat from cadwork CAD program
+                            case 5:     // Zeiss M5 format and it's dialects
+                                toolsLTOP = new FileToolsLTOP(readFile);
+                                writeFile = toolsLTOP.convertZeiss2KOO(chkBoxLTOPEliminateDuplicatePoints.getSelection(),
+                                        chkBoxLTOPSortOutputFileByNumber.getSelection());
+                                break;
+
+                            case 6:     // cadwork node.dat from cadwork CAD program
                                 toolsLTOP = new FileToolsLTOP(readFile);
                                 writeFile = toolsLTOP.convertCadwork2KOO(chkBoxCadworkUseZeroHeights.getSelection(),
                                         chkBoxLTOPEliminateDuplicatePoints.getSelection(),
                                         chkBoxLTOPSortOutputFileByNumber.getSelection());
                                 break;
 
-                            case 6:     // CSV format 'Basel Stadt' (semicolon separated)
+                            case 7:     // CSV format 'Basel Stadt' (semicolon separated)
                                 toolsLTOP = new FileToolsLTOP(readCSVFile);
                                 writeFile = toolsLTOP.convertCSVBaselStadt2KOO(chkBoxLTOPEliminateDuplicatePoints.getSelection(),
                                         chkBoxLTOPSortOutputFileByNumber.getSelection());
                                 break;
 
-                            case 7:     // TXT format 'Basel Landschaft' (different column based text files for LFP and HFP points)
+                            case 8:     // TXT format 'Basel Landschaft' (different column based text files for LFP and HFP points)
                                 toolsLTOP = new FileToolsLTOP(readFile);
                                 writeFile = toolsLTOP.convertTXTBaselLandschaft2KOO(chkBoxLTOPEliminateDuplicatePoints.getSelection(),
                                         chkBoxLTOPSortOutputFileByNumber.getSelection());
@@ -918,7 +981,11 @@ public class ConverterWidget {
                                 toolsLTOP = new FileToolsLTOP(toolsLeicaGSI);
                                 writeFile = toolsLTOP.convertGSI2MES(Boolean.parseBoolean(Main.pref.getUserPref(
                                         PreferenceHandler.CONVERTER_SETTING_LTOP_USE_ZENITH_DISTANCE)));
-                        break;
+                                break;
+
+                            case 5:     // Zeiss M5 format and it's dialects
+                                break;
+
                         }
                         if (writeFile2Disk(file2read, writeFile, ".MES")) {
                             counter++;
@@ -951,19 +1018,25 @@ public class ConverterWidget {
                                         chkBoxWriteCommentLine.getSelection());
                                 break;
 
-                            case 5:     // cadwork node.dat from cadwork CAD program
+                            case 5:     // Zeiss M5 format and it's dialects
+                                toolsExcel = new FileToolsExcel(readFile);
+                                toolsExcel.convertZeiss2Excel(FileToolsExcel.isXLSX, file2read.getName(),
+                                        chkBoxWriteCommentLine.getSelection());
+                                break;
+
+                            case 6:     // cadwork node.dat from cadwork CAD program
                                 toolsExcel = new FileToolsExcel(readFile);
                                 toolsExcel.convertCadwork2Excel(FileToolsExcel.isXLSX, file2read.getName(),
                                         chkBoxWriteCommentLine.getSelection());
                                 break;
 
-                            case 6:     // CSV format 'Basel Stadt' (semicolon separated)
+                            case 7:     // CSV format 'Basel Stadt' (semicolon separated)
                                 toolsExcel = new FileToolsExcel(readCSVFile);
                                 toolsExcel.convertCSVBaselStadt2Excel(FileToolsExcel.isXLSX, file2read.getName(),
                                         chkBoxWriteCommentLine.getSelection());
                                 break;
 
-                            case 7:     // TXT format 'Basel Landschaft' (different column based text files for LFP and HFP points)
+                            case 8:     // TXT format 'Basel Landschaft' (different column based text files for LFP and HFP points)
                                 toolsExcel = new FileToolsExcel(readFile);
                                 toolsExcel.convertTXTBaselLand2Excel(FileToolsExcel.isXLSX, file2read.getName(),
                                         chkBoxWriteCommentLine.getSelection());
@@ -1004,19 +1077,25 @@ public class ConverterWidget {
                                         chkBoxWriteCommentLine.getSelection());
                                 break;
 
-                            case 5:     // cadwork node.dat from cadwork CAD program
+                            case 5:     // Zeiss M5 format and it's dialects
+                                toolsExcel = new FileToolsExcel(readFile);
+                                toolsExcel.convertZeiss2Excel(FileToolsExcel.isXLS, file2read.getName(),
+                                        chkBoxWriteCommentLine.getSelection());
+                                break;
+
+                            case 6:     // cadwork node.dat from cadwork CAD program
                                 toolsExcel = new FileToolsExcel(readFile);
                                 toolsExcel.convertCadwork2Excel(FileToolsExcel.isXLS, file2read.getName(),
                                         chkBoxWriteCommentLine.getSelection());
                                 break;
 
-                            case 6:     // CSV format 'Basel Stadt' (semicolon separated)
+                            case 7:     // CSV format 'Basel Stadt' (semicolon separated)
                                 toolsExcel = new FileToolsExcel(readCSVFile);
                                 toolsExcel.convertCSVBaselStadt2Excel(FileToolsExcel.isXLS, file2read.getName(),
                                         chkBoxWriteCommentLine.getSelection());
                                 break;
 
-                            case 7:     // TXT format 'Basel Landschaft' (different column based text files for LFP and HFP points)
+                            case 8:     // TXT format 'Basel Landschaft' (different column based text files for LFP and HFP points)
                                 toolsExcel = new FileToolsExcel(readFile);
                                 toolsExcel.convertTXTBaselLand2Excel(FileToolsExcel.isXLS, file2read.getName(),
                                         chkBoxWriteCommentLine.getSelection());
@@ -1053,17 +1132,22 @@ public class ConverterWidget {
                                 toolsODF.convertCaplan2ODS(file2read.getName(), chkBoxWriteCommentLine.getSelection());
                                 break;
 
-                            case 5:     // cadwork node.dat from cadwork CAD program
+                            case 5:     // Zeiss M5 format and it's dialects
+                                toolsODF = new FileToolsODF(readFile);
+                                toolsODF.convertZeiss2ODS(file2read.getName(), chkBoxWriteCommentLine.getSelection());
+                                break;
+
+                            case 6:     // cadwork node.dat from cadwork CAD program
                                 toolsODF = new FileToolsODF(readFile);
                                 toolsODF.convertCadwork2ODS(file2read.getName(), chkBoxWriteCommentLine.getSelection());
                                 break;
 
-                            case 6:     // CSV format 'Basel Stadt' (semicolon separated)
+                            case 7:     // CSV format 'Basel Stadt' (semicolon separated)
                                 toolsODF = new FileToolsODF(readCSVFile);
                                 toolsODF.convertCSVBaselStadt2ODS(file2read.getName(), chkBoxWriteCommentLine.getSelection());
                                 break;
 
-                            case 7:     // TXT format 'Basel Landschaft' (different column based text files for LFP and HFP points)
+                            case 8:     // TXT format 'Basel Landschaft' (different column based text files for LFP and HFP points)
                                 toolsODF = new FileToolsODF(readFile);
                                 toolsODF.convertTXTBaselLandschaft2ODS(file2read.getName(), chkBoxWriteCommentLine.getSelection());
                                 break;
@@ -1112,26 +1196,6 @@ public class ConverterWidget {
         }
     }
 
-    private boolean writeFile2Disk(File file, ArrayList<String> writeFile, String suffix) {
-        String fileName = prepareOutputFileName(file, suffix);
-        File f = new File(fileName);
-
-        if (f.exists()) {
-            int returnValue = GuiHelper.showMessageBox(innerShell, SWT.ICON_WARNING | SWT.YES | SWT.NO,
-                    I18N.getMsgBoxTitleWarning(), String.format(I18N.getMsgFileExist(), fileName));
-
-            if (returnValue == SWT.YES) {
-                LineWriter lineWriter = new LineWriter(fileName);
-
-                return lineWriter.writeFile(writeFile);
-            } else {
-                return false;
-            }
-        } else {
-            return new LineWriter(fileName).writeFile(writeFile);
-        }
-    }
-
     private boolean writeExcel2Disk(File file, FileToolsExcel toolsExcel, String suffix) {
         String fileName = prepareOutputFileName(file, suffix);
         File f = new File(fileName);
@@ -1157,6 +1221,26 @@ public class ConverterWidget {
 
     }
 
+    private boolean writeFile2Disk(File file, ArrayList<String> writeFile, String suffix) {
+        String fileName = prepareOutputFileName(file, suffix);
+        File f = new File(fileName);
+
+        if (f.exists()) {
+            int returnValue = GuiHelper.showMessageBox(innerShell, SWT.ICON_WARNING | SWT.YES | SWT.NO,
+                    I18N.getMsgBoxTitleWarning(), String.format(I18N.getMsgFileExist(), fileName));
+
+            if (returnValue == SWT.YES) {
+                LineWriter lineWriter = new LineWriter(fileName);
+
+                return lineWriter.writeFile(writeFile);
+            } else {
+                return false;
+            }
+        } else {
+            return new LineWriter(fileName).writeFile(writeFile);
+        }
+    }
+
     private boolean writeODS2Disk(File file, FileToolsODF toolsODF, String suffix) {
         String fileName = prepareOutputFileName(file, suffix);
         File f = new File(fileName);
@@ -1170,10 +1254,6 @@ public class ConverterWidget {
             return toolsODF.writeODS(fileName);
         }
 
-    }
-
-    private String prepareOutputFileName(File file, String suffix) {
-        return file.toString().substring(0, file.toString().length() - 4) + "_" + Main.getParamEditString() + suffix;
     }
 
 } // end of ConverterWidget

@@ -670,6 +670,10 @@ public class FileToolsODF {
         return rowIndex > 1;
     }
 
+    public void convertZeiss2ODS(String name, boolean selection) {
+        ArrayList<String> result = new ArrayList<>();
+    }
+
     /**
      * Write the Open Document Format Spreadsheet file to the filesystem.
      *
