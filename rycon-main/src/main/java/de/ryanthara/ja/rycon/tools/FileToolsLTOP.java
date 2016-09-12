@@ -802,7 +802,6 @@ public class FileToolsLTOP {
                 Points are equal if they are in a slope distance of 'maxDistance' and have the same number!
                  */
                 if ((pt1.getSlopeDistance(pt2) < minDistance) & (pt1.getNumber().equalsIgnoreCase(pt2.getNumber()))) {
-                    System.out.println(pt1.getNumber() + " : " + pt2.getNumber() + " " + pt1.getSlopeDistance(pt2));
                     return 0;
                 } else {
                     return 1;
