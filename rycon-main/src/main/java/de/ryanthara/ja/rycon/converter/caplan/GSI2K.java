@@ -17,6 +17,10 @@
  */
 package de.ryanthara.ja.rycon.converter.caplan;
 
+import de.ryanthara.ja.rycon.tools.FileToolsLeicaGSI;
+import de.ryanthara.ja.rycon.tools.NumberHelper;
+import de.ryanthara.ja.rycon.tools.elements.GSIBlock;
+
 import java.util.ArrayList;
 
 /**
@@ -29,7 +33,17 @@ import java.util.ArrayList;
  */
 public class GSI2K {
 
-    private ArrayList<String> readStringLines;
+    /**
+     * Class constructor for read line based Leica GSI files.
+     * <p>
+     * Due to some details of the Leica GSI format it is easier to get access to the {@link FileToolsLeicaGSI} object
+     * instead of having a couple of more parameters.
+     *
+     * @param toolsLeicaGSI {@link FileToolsLeicaGSI} object
+     */
+    public GSI2K(FileToolsLeicaGSI toolsLeicaGSI) {
+        this.toolsLeicaGSI = toolsLeicaGSI;
+    }
 
     /**
      * Class constructor for read line based text files.
@@ -40,5 +54,107 @@ public class GSI2K {
         this.readStringLines = readStringLines;
     }
 
+    /**
+     * Converts a Leica GSI file into CAPLAN K file.
+     *
+     * @param useSimpleFormat  option to write a reduced K file which is compatible to ZF LaserControl
+     * @param writeCommentLine option to write a comment line into the K file with basic information
+     *
+     * @return converted K file as ArrayList<String>
+     */
+    public ArrayList<String> convertGSI2K(boolean useSimpleFormat, boolean writeCommentLine) {
+        ArrayList<String> result = new ArrayList<>();
+
+        if (writeCommentLine) {
+            BaseToolsCaplanK.writeCommentLine(result);
+        }
+
+        for (ArrayList<GSIBlock> blocksAsLines : toolsLeicaGSI.getEncodedLinesOfGSIBlocks()) {
+            StringBuilder stringBuilder = new StringBuilder();
+
+            // prevent wrong output with empty strings of defined length from class
+            String number = "";
+            String valency = BaseToolsCaplanK.valency;
+            String easting = BaseToolsCaplanK.easting;
+            String northing = BaseToolsCaplanK.northing;
+            String height = BaseToolsCaplanK.height;
+            String freeSpace = BaseToolsCaplanK.freeSpace;
+            String objectTyp = BaseToolsCaplanK.objectTyp;
+            String attr = "";
+
+            for (int i = 0; i < toolsLeicaGSI.getFoundWordIndices().size(); i++) {
+                int valencyIndicator = 0;
+
+                for (GSIBlock block : blocksAsLines) {
+                    String s = block.toPrintFormatCSV();
+
+                    switch (block.getWordIndex()) {
+                        case 11:        // point number (no '*', ',' and ';'), column 1 - 16
+                            number = BaseToolsCaplanK.preparePointNumber(s);
+                            break;
+                        case 41:        // code is the same as object type, column 62...
+                            objectTyp = "|".concat(s);
+                            break;
+                        case 71:        // comment 1, used as Attr1
+                        case 72:        // comment 2, used as Attr2
+                        case 73:        // comment 3, used as Attr3
+                        case 74:        // comment 4, used as Attr4
+                        case 75:        // comment 5, used as Attr5
+                        case 76:        // comment 6, used as Attr6
+                        case 77:        // comment 7, used as Attr7
+                        case 78:        // comment 8, used as Attr8
+                        case 79:        // comment 9, used as Attr9
+                            attr = attr.concat("|".concat(s));
+                            break;
+                        case 81:        // easting E, column 19-32
+                            easting = String.format("%14s", NumberHelper.fillDecimalPlace(s, 4));
+                            valencyIndicator = 3;
+                            break;
+                        case 82:        // northing N, column 33-46
+                            northing = String.format("%14s", NumberHelper.fillDecimalPlace(s, 4));
+                            valencyIndicator = 3;
+                            break;
+                        case 83:        // height H, column 47-59
+                            height = String.format("%13s", NumberHelper.fillDecimalPlace(s, 5));
+                            valencyIndicator += 4;
+                            break;
+                        case 84:        // easting E0, column 19-32
+                            easting = String.format("%14s", NumberHelper.fillDecimalPlace(s, 4));
+                            valencyIndicator = 3;
+                            break;
+                        case 85:        // northing N0, column 33-46
+                            northing = String.format("%14s", NumberHelper.fillDecimalPlace(s, 4));
+                            valencyIndicator = 3;
+                            break;
+                        case 86:        // height H0, column 47-59
+                            height = String.format("%13s", NumberHelper.fillDecimalPlace(s, 5));
+                            valencyIndicator += 4;
+                            break;
+                    }
+
+                    if (valencyIndicator > 0) {
+                        valency = " ".concat(Integer.toString(valencyIndicator));
+                    }
+                }
+
+                /*
+                pick up the relevant elements from the blocks from every line, check ZF option
+                if ZF option is checked, then use only no 7 x y z for K file
+                 */
+                stringBuilder = BaseToolsCaplanK.prepareStringBuilder(useSimpleFormat, number, valency, easting, northing, height,
+                        freeSpace, objectTyp);
+
+                if ((!useSimpleFormat) && (!attr.equals(""))) {
+                    stringBuilder.append(attr);
+                }
+
+                // clean up some variables after line reading is finished
+                attr = "";
+            }
+            result.add(stringBuilder.toString());
+        }
+
+        return result;
+    }
 
 } // end of GSI2K

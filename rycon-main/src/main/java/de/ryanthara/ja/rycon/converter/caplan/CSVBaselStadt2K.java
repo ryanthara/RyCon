@@ -17,8 +17,85 @@
  */
 package de.ryanthara.ja.rycon.converter.caplan;
 
+import de.ryanthara.ja.rycon.tools.NumberHelper;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by sebastian on 07.09.16.
  */
 public class CSVBaselStadt2K {
-}
+
+    private List<String[]> readCSVLines = null;
+
+    /**
+     * Class constructor for read line based CSV files.
+     *
+     * @param readCSVLines {@code List<String[]>} with lines as {@code String[]}
+     */
+    public CSVBaselStadt2K(List<String[]> readCSVLines) {
+        this.readCSVLines = readCSVLines;
+    }
+
+    /**
+     * Converts a CSV file from the geodata server Basel Stadt (Switzerland) into a K format file.
+     *
+     * @param useSimpleFormat  option to write a reduced K file which is compatible to ZF LaserControl
+     * @param writeCommentLine option to write a comment line into the K file with basic information
+     *
+     * @return converted K file as ArrayList<String>
+     */
+    public ArrayList<String> convertCSVBaselStadt2K(boolean useSimpleFormat, boolean writeCommentLine) {
+        ArrayList<String> result = new ArrayList<>();
+
+        if (writeCommentLine) {
+            BaseToolsCaplanK.writeCommentLine(result);
+        }
+
+        // remove comment line
+        readCSVLines.remove(0);
+
+        for (String[] stringField : readCSVLines) {
+            int valencyIndicator;
+
+            String valency = BaseToolsCaplanK.valency;
+            String freeSpace = BaseToolsCaplanK.freeSpace;
+            String objectTyp = BaseToolsCaplanK.objectTyp;
+
+            // point number (no '*', ',' and ';'), column 1 - 16
+            String number = BaseToolsCaplanK.preparePointNumber(stringField[0].replaceAll("\\s+", "").trim());
+
+            // easting E, column 19-32
+            String easting = String.format("%14s", NumberHelper.fillDecimalPlace(stringField[2], 4));
+
+            // northing N, column 33-46
+            String northing = String.format("%14s", NumberHelper.fillDecimalPlace(stringField[3], 4));
+            valencyIndicator = 3;
+
+            // height (Z) is in column 5, but not always valued
+            String height = "";
+            if (!stringField[4].equals("")) {
+                // height H, column 47-59
+                height = String.format("%13s", NumberHelper.fillDecimalPlace(stringField[4], 5));
+                Double d = Double.parseDouble(height);
+                if (d != 0d) {
+                    valencyIndicator += 4;
+                }
+            }
+
+            if (valencyIndicator > 0) {
+                valency = " ".concat(Integer.toString(valencyIndicator));
+            }
+
+            /*
+            pick up the relevant elements from the blocks from every line, check ZF option
+            if ZF option is checked, then use only no 7 x y z for K file
+             */
+            result.add(BaseToolsCaplanK.prepareStringBuilder(useSimpleFormat, number, valency, easting, northing, height,
+                    freeSpace, objectTyp).toString());
+        }
+        return result;
+    }
+
+} // end of CSVBaselStadt2K

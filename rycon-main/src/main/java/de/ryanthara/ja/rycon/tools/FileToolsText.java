@@ -24,14 +24,14 @@ import java.util.*;
  * <p>
  * Therefore a couple of methods and helpers are implemented to do the conversions and
  * operations on the given text files.
- *
+ * <p>
  * <h3>Changes:</h3>
  * <ul>
- *     <li>5: support for cadwork node.dat files, code clean up</li>
- *     <li>4: support for NIGRA levelling files</li>
- *     <li>3: code improvements and clean up </li>
- *     <li>2: basic improvements </li>
- *     <li>1: basic implementation </li>
+ * <li>5: support for cadwork node.dat files, code clean up</li>
+ * <li>4: support for NIGRA levelling files</li>
+ * <li>3: code improvements and clean up </li>
+ * <li>2: basic improvements </li>
+ * <li>1: basic implementation </li>
  * </ul>
  *
  * @author sebastian
@@ -39,7 +39,6 @@ import java.util.*;
  * @since 1
  */
 public class FileToolsText {
-
 
     private ArrayList<String> readStringLines;
     private TreeSet<Integer> foundCodes = new TreeSet<>();
@@ -71,6 +70,7 @@ public class FileToolsText {
      * RyCON need a text file format that is nr, code, x, y, z and divided by blank or tab.
      *
      * @param dropCode if code column should dropped out of the result
+     *
      * @return converted {@code ArrayList<ArrayList<String>>} for writing
      */
     public ArrayList<ArrayList<String>> processCodeSplit(boolean dropCode) {

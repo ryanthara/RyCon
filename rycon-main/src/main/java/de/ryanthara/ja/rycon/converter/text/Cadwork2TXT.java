@@ -8,7 +8,8 @@ import java.util.ArrayList;
  * @author sebastian
  * @version 1
  * @since 12
- */public class Cadwork2TXT {
+ */
+public class Cadwork2TXT {
 
     private ArrayList<String> readStringLines;
 

@@ -17,8 +17,90 @@
  */
 package de.ryanthara.ja.rycon.converter.caplan;
 
+import de.ryanthara.ja.rycon.tools.NumberHelper;
+
+import java.util.ArrayList;
+
 /**
  * Created by sebastian on 07.09.16.
  */
 public class Cadwork2K {
-}
+
+    private ArrayList<String> readStringLines;
+
+    /**
+     * Class constructor for read line based text files.
+     *
+     * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
+     */
+    public Cadwork2K(ArrayList<String> readStringLines) {
+        this.readStringLines = readStringLines;
+    }
+
+    /**
+     * Converts a cadwork node.dat file into a Caplan K file.
+     *
+     * @param useSimpleFormat  option to write a reduced K file which is compatible to ZF LaserControl
+     * @param writeCommentLine option to write a comment line into the K file with basic information
+     * @param writeCodeColumn  option to write the code column into the K file
+     *
+     * @return converted Caplan K file as ArrayList<String>
+     */
+    public ArrayList<String> convertCadwork2K(boolean useSimpleFormat, boolean writeCommentLine, boolean writeCodeColumn) {
+        ArrayList<String> result = new ArrayList<>();
+
+        if (writeCommentLine) {
+            BaseToolsCaplanK.writeCommentLine(result);
+        }
+
+        // remove not needed headlines
+        for (int i = 0; i < 3; i++) {
+            readStringLines.remove(0);
+        }
+
+        for (String line : readStringLines) {
+            int valencyIndicator;
+
+            String[] lineSplit = line.trim().split("\\t", -1);
+
+            String valency = BaseToolsCaplanK.valency;
+            String freeSpace = BaseToolsCaplanK.freeSpace;
+            String objectTyp = BaseToolsCaplanK.objectTyp;
+
+            // point number (no '*', ',' and ';'), column 1 - 16
+            String number = BaseToolsCaplanK.preparePointNumber(lineSplit[5]);
+
+            // easting E, column 19-32
+            String easting = String.format("%14s", NumberHelper.fillDecimalPlace(lineSplit[1], 4));
+
+            // northing N, column 33-46
+            String northing = String.format("%14s", NumberHelper.fillDecimalPlace(lineSplit[2], 4));
+            valencyIndicator = 3;
+
+            // height H, column 47-59
+            String height = String.format("%13s", NumberHelper.fillDecimalPlace(lineSplit[3], 5));
+            if (Double.parseDouble(height) != 0d) {
+                valencyIndicator += 4;
+            }
+
+            // code is the same as object type, column 62...
+            if (writeCodeColumn) {
+                objectTyp = "|".concat(lineSplit[4]);
+            }
+
+            if (valencyIndicator > 0) {
+                valency = " ".concat(Integer.toString(valencyIndicator));
+            }
+
+            /*
+            pick up the relevant elements from the blocks from every line, check ZF option
+            if ZF option is checked, then use only no 7 x y z for K file
+             */
+            result.add(BaseToolsCaplanK.prepareStringBuilder(useSimpleFormat, number, valency, easting, northing, height,
+                    freeSpace, objectTyp).toString());
+        }
+
+        return result;
+    }
+
+} // end of Cadwork2K

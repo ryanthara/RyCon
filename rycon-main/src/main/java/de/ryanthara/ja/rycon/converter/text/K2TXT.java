@@ -30,6 +30,9 @@ public class K2TXT {
 
     private ArrayList<String> readStringLines;
 
+    /**
+     * @param readStringLines
+     */
     public K2TXT(ArrayList<String> readStringLines) {
         this.readStringLines = readStringLines;
     }

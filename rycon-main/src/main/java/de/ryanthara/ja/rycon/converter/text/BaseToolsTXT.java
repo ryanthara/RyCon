@@ -18,11 +18,17 @@
 package de.ryanthara.ja.rycon.converter.text;
 
 /**
- * This class implements several basic operations on text based measurement and coordinate files.
+ * This class implements basic operations on text based measurement and coordinate files.
+ * <p>
+ * Therefore a couple of methods and helpers are implemented to do the conversions and
+ * operations on the given text files.
  *
  * @author sebastian
  * @version 12
  * @since 1
  */
 public class BaseToolsTXT {
+
+
+
 }

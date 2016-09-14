@@ -34,7 +34,6 @@ import java.util.TreeSet;
  */
 public class GSI2TXT {
 
-    private ArrayList<String> readStringLines;
     /**
      * Class constructor for read line based GSI files.
      *

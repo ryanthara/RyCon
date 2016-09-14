@@ -1,7 +1,7 @@
 /*
  * License: GPL. Copyright 2016- (C) by Sebastian Aust (https://www.ryanthara.de/)
  *
- * This file is part of the package de.ryanthara.ja.rycon.tools
+ * This file is part of the package de.ryanthara.ja.rycon.converter.odf
  *
  * This package is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -15,39 +15,42 @@
  * You should have received a copy of the GNU General Public License along with
  * this package. If not, see <http://www.gnu.org/licenses/>.
  */
-package de.ryanthara.ja.rycon.converter.csv;
+package de.ryanthara.ja.rycon.converter.odf;
+
+import org.odftoolkit.simple.SpreadsheetDocument;
 
 import java.util.ArrayList;
 
 /**
- * Created by sebastian on 12.09.16.
+ * Created by sebastian on 14.09.16.
  */
-public class TXTBaselLandschaft2CSV {
+public class Zeiss2ODF {
 
     private ArrayList<String> readStringLines;
+    private SpreadsheetDocument spreadsheetDocument;
 
     /**
      * Class constructor for read line based text files in different formats.
      *
      * @param readStringLines {@code ArrayList<String>} with lines in text format
      */
-    public TXTBaselLandschaft2CSV(ArrayList<String> readStringLines) {
+    public Zeiss2ODF(ArrayList<String> readStringLines) {
         this.readStringLines = readStringLines;
     }
 
-    /**
-     * Convert a text formatted file from the geodata server Basel Landschaft (Switzerland) into a CSV formatted file.
-     * <p>
-     * With a parameter it is possible to distinguish between comma or semicolon as separator.
-     *
-     * @param separator separator sign as {@code String}
-     *
-     * @return converted {@code ArrayList<String>} with lines of CSV format
-     */
-    public ArrayList<String> convertTXTBaselLandschaft2CSV(String separator) {
+    public boolean convertZeiss2ODS(String name, boolean selection) {
         ArrayList<String> result = new ArrayList<>();
 
-        return result;
+        return false;
     }
 
-} // end of TXTBaselLandschaft2CSV
+    /**
+     * Returns the SpreadsheetDocument for writing it to a file.
+     *
+     * @return SpreadsheetDocument
+     */
+    public SpreadsheetDocument getSpreadsheetDocument() {
+        return this.spreadsheetDocument;
+    }
+
+} // end of Zeiss2ODF

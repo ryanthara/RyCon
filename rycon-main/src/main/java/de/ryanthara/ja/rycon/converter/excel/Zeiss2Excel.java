@@ -1,7 +1,7 @@
 /*
  * License: GPL. Copyright 2016- (C) by Sebastian Aust (https://www.ryanthara.de/)
  *
- * This file is part of the package de.ryanthara.ja.rycon.tools
+ * This file is part of the package de.ryanthara.ja.rycon.converter.excel
  *
  * This package is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -15,39 +15,49 @@
  * You should have received a copy of the GNU General Public License along with
  * this package. If not, see <http://www.gnu.org/licenses/>.
  */
-package de.ryanthara.ja.rycon.converter.csv;
+package de.ryanthara.ja.rycon.converter.excel;
+
+import org.apache.poi.ss.usermodel.Workbook;
 
 import java.util.ArrayList;
 
 /**
- * Created by sebastian on 12.09.16.
+ * Created by sebastian on 13.09.16.
  */
-public class TXTBaselLandschaft2CSV {
+public class Zeiss2Excel {
 
     private ArrayList<String> readStringLines;
+    private Workbook workbook = null;
 
     /**
      * Class constructor for read line based text files in different formats.
      *
      * @param readStringLines {@code ArrayList<String>} with lines in text format
      */
-    public TXTBaselLandschaft2CSV(ArrayList<String> readStringLines) {
+    public Zeiss2Excel(ArrayList<String> readStringLines) {
         this.readStringLines = readStringLines;
     }
 
     /**
-     * Convert a text formatted file from the geodata server Basel Landschaft (Switzerland) into a CSV formatted file.
-     * <p>
-     * With a parameter it is possible to distinguish between comma or semicolon as separator.
+     * Convert a Zeiss REC file element by element into an Excel file.
      *
-     * @param separator separator sign as {@code String}
+     * @param isXLS           selector to distinguish between XLS and XLSX file extension
+     * @param sheetName       name of the sheet (file name from input file)
+     * @param writeCommentRow write comment row
      *
-     * @return converted {@code ArrayList<String>} with lines of CSV format
+     * @return success conversion success
      */
-    public ArrayList<String> convertTXTBaselLandschaft2CSV(String separator) {
-        ArrayList<String> result = new ArrayList<>();
-
-        return result;
+    public boolean convertZeiss2Excel(boolean isXLS, String sheetName, boolean writeCommentRow) {
+        return false;
     }
 
-} // end of TXTBaselLandschaft2CSV
+    /**
+     * Returns the Workbook for writing it to a file.
+     *
+     * @return Workbook
+     */
+    public Workbook getWorkbook() {
+        return this.workbook;
+    }
+
+} // end of Zeiss2Excel

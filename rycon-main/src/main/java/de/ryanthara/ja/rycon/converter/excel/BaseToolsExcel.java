@@ -21,4 +21,15 @@ package de.ryanthara.ja.rycon.converter.excel;
  * Created by sebastian on 07.09.16.
  */
 public class BaseToolsExcel {
-}
+
+    /**
+     * Member which helps distinguish between XLS and XLSX file format.
+     */
+    public static final boolean isXLS = true;
+
+    /**
+     * Member which helps distinguish between XLS and XLSX file format.
+     */
+    public static final boolean isXLSX = false;
+
+} // end of BaseToolsExcel

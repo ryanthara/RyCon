@@ -17,8 +17,124 @@
  */
 package de.ryanthara.ja.rycon.converter.caplan;
 
+import de.ryanthara.ja.rycon.tools.NumberHelper;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by sebastian on 07.09.16.
  */
 public class CSV2K {
-}
+
+    private List<String[]> readCSVLines = null;
+
+    /**
+     * Class constructor for read line based CSV files.
+     *
+     * @param readCSVLines {@code List<String[]>} with lines as {@code String[]}
+     */
+    public CSV2K(List<String[]> readCSVLines) {
+        this.readCSVLines = readCSVLines;
+    }
+
+    /**
+     * Convert a CSV file (nr;x;y;z or nr;code;x;y;z) into a K format file.
+     *
+     * @param useSimpleFormat  option to write a reduced K file which is compatible to ZF LaserControl
+     * @param writeCommentLine option to write a comment line into the K file with basic information
+     *
+     * @return converted K file as ArrayList<String>
+     */
+    public ArrayList<String> convertCSV2K(boolean useSimpleFormat, boolean writeCommentLine, boolean writeCodeColumn) {
+        ArrayList<String> result = new ArrayList<>();
+
+        if (writeCommentLine) {
+            BaseToolsCaplanK.writeCommentLine(result);
+        }
+
+        for (String[] stringField : readCSVLines) {
+            int valencyIndicator = 0;
+
+            String valency = BaseToolsCaplanK.valency;
+            String freeSpace = BaseToolsCaplanK.freeSpace;
+            String objectTyp = BaseToolsCaplanK.objectTyp;
+            String easting = BaseToolsCaplanK.easting;
+            String northing = BaseToolsCaplanK.northing;
+            String height = BaseToolsCaplanK.height;
+
+            // point number (no '*', ',' and ';'), column 1 - 16
+            String number = BaseToolsCaplanK.preparePointNumber(stringField[0].replaceAll("\\s+", "").trim());
+
+            switch (stringField.length) {
+                case 3:     // contains nr x y
+                    // easting E, column 19-32
+                    easting = String.format("%14s", NumberHelper.fillDecimalPlace(stringField[1], 4));
+
+                    // northing N, column 33-46
+                    northing = String.format("%14s", NumberHelper.fillDecimalPlace(stringField[2], 4));
+                    valencyIndicator = 3;
+                    break;
+
+                case 4:     // contains nr x y z
+                    // easting E, column 19-32
+                    easting = String.format("%14s", NumberHelper.fillDecimalPlace(stringField[1], 4));
+
+                    // northing N, column 33-46
+                    northing = String.format("%14s", NumberHelper.fillDecimalPlace(stringField[2], 4));
+                    valencyIndicator = 3;
+
+                    // height (Z) is in column 5, but not always valued
+                    height = "";
+                    if (!stringField[4].equals("")) {
+                        // height H, column 47-59
+                        height = String.format("%13s", NumberHelper.fillDecimalPlace(stringField[3], 5));
+                        Double d = Double.parseDouble(height);
+                        if (d != 0d) {
+                            valencyIndicator += 4;
+                        }
+                    }
+                    break;
+
+                case 5:     // contains nr code x y z
+                    // code is in column 2 and the same as object type, column 62...
+                    if (writeCodeColumn) {
+                        objectTyp = "|".concat(stringField[1]);
+                    }
+
+                    // easting E, column 19-32
+                    easting = String.format("%14s", NumberHelper.fillDecimalPlace(stringField[2], 4));
+
+                    // northing N, column 33-46
+                    northing = String.format("%14s", NumberHelper.fillDecimalPlace(stringField[3], 4));
+                    valencyIndicator = 3;
+
+                    // height (Z) is in column 5, but not always valued
+                    height = "";
+                    if (!stringField[4].equals("")) {
+                        // height H, column 47-59
+                        height = String.format("%13s", NumberHelper.fillDecimalPlace(stringField[4], 5));
+                        Double d = Double.parseDouble(height);
+                        if (d != 0d) {
+                            valencyIndicator += 4;
+                        }
+                    }
+                    break;
+
+            }
+
+            if (valencyIndicator > 0) {
+                valency = " ".concat(Integer.toString(valencyIndicator));
+            }
+
+            /*
+            pick up the relevant elements from the blocks from every line, check ZF option
+            if ZF option is checked, then use only no 7 x y z for K file
+             */
+            result.add(BaseToolsCaplanK.prepareStringBuilder(useSimpleFormat, number, valency, easting, northing, height,
+                    freeSpace, objectTyp).toString());
+        }
+        return result;
+    }
+
+} // end of CSV2K

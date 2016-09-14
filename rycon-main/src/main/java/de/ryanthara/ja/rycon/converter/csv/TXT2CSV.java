@@ -17,9 +17,41 @@
  */
 package de.ryanthara.ja.rycon.converter.csv;
 
+import java.util.ArrayList;
+
 /**
  * Created by sebastian on 12.09.16.
  */
 public class TXT2CSV {
+
+    private ArrayList<String> readStringLines;
+
+    /**
+     * Class constructor for read line based text files in different formats.
+     *
+     * @param readStringLines {@code ArrayList<String>} with lines in text format
+     */
+    public TXT2CSV(ArrayList<String> readStringLines) {
+        this.readStringLines = readStringLines;
+    }
+
+    /**
+     * Converts a TXT file into a CSV file with the given separator sign.
+     * <p>
+     * Due to some reasons the text file could not use white space characters in point numbers or code blocks.
+     *
+     * @param separator separator sign to use for conversion
+     * @return converted CSV file
+     */
+    public ArrayList<String> convertTXT2CSV(String separator) {
+        ArrayList<String> result = new ArrayList<>();
+
+        for (String line : readStringLines) {
+            line = line.trim();
+            result.add(line.replaceAll("\\s+", separator));
+        }
+        return result;
+    }
+
 
 } // end of TXT2CSV

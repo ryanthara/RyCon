@@ -17,8 +17,120 @@
  */
 package de.ryanthara.ja.rycon.converter.caplan;
 
+import de.ryanthara.ja.rycon.tools.NumberHelper;
+
+import java.util.ArrayList;
+
 /**
  * Created by sebastian on 07.09.16.
  */
 public class TXT2K {
-}
+
+    private ArrayList<String> readStringLines;
+
+    /**
+     * Class constructor for read line based text files.
+     *
+     * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
+     */
+    public TXT2K(ArrayList<String> readStringLines) {
+        this.readStringLines = readStringLines;
+    }
+
+    /**
+     * Converts a text file (nr x y z or nr code x y z) into a K format file.
+     *
+     * @param useSimpleFormat  option to write a reduced K file which is compatible to ZF LaserControl
+     * @param writeCommentLine option to write a comment line into the K file with basic information
+     * @param writeCodeColumn  option to write a found code into the K file
+     *
+     * @return converted K file as ArrayList<String>
+     */
+    public ArrayList<String> convertTXT2K(boolean useSimpleFormat, boolean writeCommentLine, boolean writeCodeColumn) {
+        ArrayList<String> result = new ArrayList<>();
+
+        if (writeCommentLine) {
+            BaseToolsCaplanK.writeCommentLine(result);
+        }
+
+        for (String line : readStringLines) {
+            int valencyIndicator = -1;
+
+            String[] lineSplit = line.trim().split("\\s+");
+
+            String valency = BaseToolsCaplanK.valency;
+            String freeSpace = BaseToolsCaplanK.freeSpace;
+            String objectTyp = BaseToolsCaplanK.objectTyp;
+            String northing = BaseToolsCaplanK.northing;
+            String easting = BaseToolsCaplanK.easting;
+            String height = BaseToolsCaplanK.height;
+
+            // point number is always in column 1 (no '*', ',' and ';'), column 1 - 16
+            String number = BaseToolsCaplanK.preparePointNumber(lineSplit[0]);
+
+            switch (lineSplit.length) {
+                case 3:     // line contains no height
+                    // easting (Y) is in column 2 -> column 19-32
+                    easting = String.format("%14s", NumberHelper.fillDecimalPlace(lineSplit[1], 4));
+
+                    // northing (X) is in column 3 -> column 33-46
+                    northing = String.format("%14s", NumberHelper.fillDecimalPlace(lineSplit[2], 4));
+                    valencyIndicator = 3;
+                    break;
+
+                case 4:     // line contains no code
+                    // easting (Y) is in column 2 -> column 19-32
+                    easting = String.format("%14s", NumberHelper.fillDecimalPlace(lineSplit[1], 4));
+
+                    // northing (X) is in column 3 -> column 33-46
+                    northing = String.format("%14s", NumberHelper.fillDecimalPlace(lineSplit[2], 4));
+                    valencyIndicator = 3;
+
+                    // height (Z) is in column 4 -> column 47-59
+                    height = String.format("%13s", NumberHelper.fillDecimalPlace(lineSplit[3], 5));
+                    Double d = Double.parseDouble(height);
+                    if (d != 0d) {
+                        valencyIndicator += 4;
+                    }
+                    break;
+
+                case 6:     // line contains code at second position and height
+                    // code is in column 2 -> column 62...
+                    if (writeCodeColumn) {
+                        objectTyp = "|".concat(lineSplit[1]);
+                    }
+
+                    // easting (Y) is in column 4 -> column 19-32
+                    easting = String.format("%14s", NumberHelper.fillDecimalPlace(lineSplit[2], 4));
+
+                    // northing (X) is in column 5 -> column 33-46
+                    northing = String.format("%14s", NumberHelper.fillDecimalPlace(lineSplit[3], 4));
+                    valencyIndicator = 3;
+
+                    // height (Z) is in column 6, and not always valued (LFP file) -> column 47-59
+                    if (lineSplit[5].equals("NULL")) {
+                        height = String.format("%13s", NumberHelper.fillDecimalPlace("-9999", 4));
+                    } else {
+                        height = String.format("%13s", NumberHelper.fillDecimalPlace(lineSplit[4], 5));
+                        if (Double.parseDouble(height) != 0d) {
+                            valencyIndicator += 4;
+                        }
+                    }
+                    break;
+            }
+            if (valencyIndicator > 0) {
+                valency = " ".concat(Integer.toString(valencyIndicator));
+            }
+
+            /*
+            pick up the relevant elements from the blocks from every line, check ZF option
+            if ZF option is checked, then use only no 7 x y z for K file
+             */
+            result.add(BaseToolsCaplanK.prepareStringBuilder(useSimpleFormat, number, valency, easting, northing, height,
+                    freeSpace, objectTyp).toString());
+        }
+
+        return result;
+    }
+
+} // end of TXT2K

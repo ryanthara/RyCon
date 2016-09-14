@@ -15,39 +15,29 @@
  * You should have received a copy of the GNU General Public License along with
  * this package. If not, see <http://www.gnu.org/licenses/>.
  */
-package de.ryanthara.ja.rycon.converter.csv;
+package de.ryanthara.ja.rycon.converter.ltop;
 
 import java.util.ArrayList;
 
 /**
- * Created by sebastian on 12.09.16.
+ * Created by sebastian on 13.09.16.
  */
-public class TXTBaselLandschaft2CSV {
+public class Zeiss2LTOP {
 
     private ArrayList<String> readStringLines;
 
     /**
-     * Class constructor for read line based text files in different formats.
+     * Class constructor for read line based text files.
      *
-     * @param readStringLines {@code ArrayList<String>} with lines in text format
+     * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
      */
-    public TXTBaselLandschaft2CSV(ArrayList<String> readStringLines) {
+    public Zeiss2LTOP(ArrayList<String> readStringLines) {
         this.readStringLines = readStringLines;
     }
 
-    /**
-     * Convert a text formatted file from the geodata server Basel Landschaft (Switzerland) into a CSV formatted file.
-     * <p>
-     * With a parameter it is possible to distinguish between comma or semicolon as separator.
-     *
-     * @param separator separator sign as {@code String}
-     *
-     * @return converted {@code ArrayList<String>} with lines of CSV format
-     */
-    public ArrayList<String> convertTXTBaselLandschaft2CSV(String separator) {
+    public ArrayList<String> convertZeiss2KOO(boolean selection, boolean selection1) {
         ArrayList<String> result = new ArrayList<>();
-
         return result;
     }
 
-} // end of TXTBaselLandschaft2CSV
+} // end of Zeiss2LTOP

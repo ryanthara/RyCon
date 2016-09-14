@@ -17,10 +17,63 @@
  */
 package de.ryanthara.ja.rycon.converter.csv;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by sebastian on 12.09.16.
  */
 public class CSVBaselStadt2CSV {
 
+    private List<String[]> readCSVLines;
+
+    /**
+     * Class constructor for read line based CSV files.
+     *
+     * @param readCSVLines {@code List<String[]>} with lines in csv format
+     */
+    public CSVBaselStadt2CSV(List<String[]> readCSVLines) {
+        this.readCSVLines = readCSVLines;
+    }
+
+    /**
+     * Convert a CSV file from the geodata server Basel Stadt (Switzerland) into a CSV formatted file.
+     * <p>
+     * With a parameter it is possible to distinguish between comma or semicolon as separator.
+     *
+     * @param separator separator sign as {@code String}
+     *
+     * @return converted {@code ArrayList<String>} with lines of CSV format
+     */
+    public ArrayList<String> convertCSVBaselStadt2CSV(String separator) {
+        ArrayList<String> result = new ArrayList<>();
+
+        // remove comment line
+        readCSVLines.remove(0);
+
+        for (String[] stringField : readCSVLines) {
+            String line;
+
+            // point number is in column 1
+            line = stringField[0].replaceAll("\\s+", "").trim();
+            line = line.concat(separator);
+
+            // easting (Y) is in column 3
+            line = line.concat(stringField[2]);
+            line = line.concat(separator);
+
+            // northing (X) is in column 4
+            line = line.concat(stringField[3]);
+
+            // height (Z) is in column 5, but not always valued
+            if (!stringField[4].equals("")) {
+                line = line.concat(separator);
+                line = line.concat(stringField[4]);
+            }
+
+            result.add(line.trim());
+        }
+        return result;
+    }
 
 } // end of CSVBaselStadt2CSV

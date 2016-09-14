@@ -23,19 +23,13 @@ import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 
 /**
- * NumberHelper implements basic helper operations on numbers.
- *
- * <h3>Changes:</h3>
- * <ul>
- *     <li>2: code improvements, documentation updates</li>
- *     <li>1: basic implementation </li>
- * </ul>
+ * NumberHelper implements basic helper operations for numbers.
  *
  * @author sebastian
  * @version 2
  * @since 8
  */
-class NumberHelper {
+public class NumberHelper {
 
     /**
      * Fill a double value as string with a number of zeros to a defined last decimal place.
@@ -44,9 +38,10 @@ class NumberHelper {
      * the default value 4 is used.
      *
      * @param lastDecimalLength length of the last decimal place
+     *
      * @return filled up string value
      */
-    static String fillDecimalPlace(String doubleAsString, int lastDecimalLength) {
+    public static String fillDecimalPlace(String doubleAsString, int lastDecimalLength) {
         double d = Double.parseDouble(doubleAsString);
 
         // change the decimal separator sign to '.'
@@ -73,11 +68,11 @@ class NumberHelper {
                 break;
 
             case 5:
-                df = new DecimalFormat( "#0.00000", otherSymbols);
+                df = new DecimalFormat("#0.00000", otherSymbols);
                 break;
 
             default:
-                df = new DecimalFormat( "#0.0000", otherSymbols);
+                df = new DecimalFormat("#0.0000", otherSymbols);
 
         }
 

@@ -17,9 +17,31 @@
  */
 package de.ryanthara.ja.rycon.converter.csv;
 
+import java.util.ArrayList;
+
 /**
  * Created by sebastian on 12.09.16.
  */
 public class K2CSV {
+
+    public ArrayList<String> readStringLines;
+
+    public K2CSV(ArrayList<String> readStringLines) {
+        this.readStringLines = readStringLines;
+    }
+
+    /**
+     * Convert a text file (nr x y z or nr code x y z) into a K format file.
+     *
+     * @param separator         used separator sign
+     * @param writeCommentLine  option to write a comment line into the K file with basic information
+     * @param writeCodeColumn   option to write a found code into the K file
+     * @param useSimpleFormat   option to write a reduced K file which is compatible to ZF LaserControl
+     *
+     * @return converted K file as ArrayList<String>
+     */
+    public ArrayList<String> convertK2CSV(String separator, boolean useSimpleFormat, boolean writeCommentLine, boolean writeCodeColumn) {
+        return null;
+    }
 
 } // end of K2CSV
