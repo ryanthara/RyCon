@@ -22,15 +22,19 @@ import org.odftoolkit.simple.SpreadsheetDocument;
 import java.util.ArrayList;
 
 /**
- * Created by sebastian on 14.09.16.
- */
-public class Zeiss2ODF {
+ * This class provides functions to convert measurement files from Zeiss REC format
+ * and it's dialects (R4, R5, REC500 and M5) into OpenDocument spreadsheet files.
+ *
+ * @author sebastian
+ * @version 1
+ * @since 12
+ */public class Zeiss2ODF {
 
     private ArrayList<String> readStringLines;
     private SpreadsheetDocument spreadsheetDocument;
 
     /**
-     * Class constructor for read line based text files in different formats.
+     * Class constructor for read line based Zeiss REC files in different dialects.
      *
      * @param readStringLines {@code ArrayList<String>} with lines in text format
      */
@@ -38,6 +42,16 @@ public class Zeiss2ODF {
         this.readStringLines = readStringLines;
     }
 
+    /**
+     Converts a Zeiss REC file (R4, R5, M5 or REC500) into a text formatted file.
+     * <p>
+     * This method can differ between different Zeiss REC dialects because of the
+     * different structure and line length.
+     *
+     * @param name
+     * @param selection
+     * @return
+     */
     public boolean convertZeiss2ODS(String name, boolean selection) {
         ArrayList<String> result = new ArrayList<>();
 

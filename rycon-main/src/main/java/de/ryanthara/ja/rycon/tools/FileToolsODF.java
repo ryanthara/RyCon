@@ -21,10 +21,7 @@ import org.odftoolkit.simple.SpreadsheetDocument;
 
 
 /**
- * FileToolsODF implements basic operations on spreadsheet output operations for Open Document Format files.
- * <p>
- * Therefore a couple of methods and helpers are implemented to do the conversions and
- * operations on the given files. At the moment there is no internal RyCON format used.
+ * FileToolsODF implements basic file operations to write Open Document Format spreadsheet files.
  *
  * @author sebastian
  * @version 2

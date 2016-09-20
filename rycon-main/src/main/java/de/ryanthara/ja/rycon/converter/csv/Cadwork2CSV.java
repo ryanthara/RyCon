@@ -20,23 +20,28 @@ package de.ryanthara.ja.rycon.converter.csv;
 import java.util.ArrayList;
 
 /**
- * Created by sebastian on 12.09.16.
+ * This class provides functions to convert coordinate files from Cadwork CAD program (node.dat) into
+ * comma separated values files (CSV) with different separation signs.
+ *
+ * @author sebastian
+ * @version 1
+ * @since 12
  */
 public class Cadwork2CSV {
 
     private ArrayList<String> readStringLines;
 
     /**
-     * Class constructor for read line based text files in different formats.
+     * Class constructor for read line based text files from Cadwork CAD program in node.dat file format.
      *
-     * @param readStringLines {@code ArrayList<String>} with lines in text format
+     * @param readStringLines {@code ArrayList<String>} with read lines from node.dat file
      */
     public Cadwork2CSV(ArrayList<String> readStringLines) {
         this.readStringLines = readStringLines;
     }
 
     /**
-     * Convert a text file from cadwork (node.dat) into a CSV file with a given separator sign.
+     * Converts a coordinate file from Cadwork (node.dat) into a CSV file with a given separator sign.
      *
      * @param separator        separator sign to use for conversion
      * @param writeCommentLine writes an comment line with information about the column content

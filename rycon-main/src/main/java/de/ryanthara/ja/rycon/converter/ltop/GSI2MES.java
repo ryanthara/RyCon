@@ -17,6 +17,7 @@
  */
 package de.ryanthara.ja.rycon.converter.ltop;
 
+import de.ryanthara.ja.rycon.converter.gsi.BaseToolsGSI;
 import de.ryanthara.ja.rycon.tools.NumberHelper;
 import de.ryanthara.ja.rycon.tools.elements.GSIBlock;
 
@@ -27,7 +28,7 @@ import java.util.ArrayList;
  */
 public class GSI2MES {
 
-    private ArrayList<String> readStringLines;
+    private BaseToolsGSI baseToolsGSI;
 
     /**
      * Class constructor for read line based text files.
@@ -35,14 +36,14 @@ public class GSI2MES {
      * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
      */
     public GSI2MES(ArrayList<String> readStringLines) {
-        this.readStringLines = readStringLines;
+        baseToolsGSI = new BaseToolsGSI(readStringLines);
     }
 
     /**
      * Converts a Leica GSI file with polar measurement elements into a LTOP MES file.
      * <p>
      * RyCON can differ between GSI8 and GSI16 files automatically. The first version of this function can't
-     * middle between first and second face. (2ALL measurements are needed).
+     * middle between first and second face. (2ALL measurements or first face measurements are needed).
      *
      * @param useZenithDistance true if zenith distance should be used instead of height angle for vertical angle
      *
@@ -60,7 +61,7 @@ public class GSI2MES {
 
         BaseToolsLTOP.writeCommendLine(result, BaseToolsLTOP.measurementLineIdentifier);
 
-        for (ArrayList<GSIBlock> blocksAsLine : toolsLeicaGSI.getEncodedLinesOfGSIBlocks()) {
+        for (ArrayList<GSIBlock> blocksAsLine : baseToolsGSI.getEncodedLinesOfGSIBlocks()) {
             /*
             110001+0000FS01 84..16+61720467 85..16+23483343 86..16+02593776 88..16+00000000
             110002+00009004 21.322+21956015 22.322+09463619 31..06+00253959 51..1.+0005+344 87..16+00000000

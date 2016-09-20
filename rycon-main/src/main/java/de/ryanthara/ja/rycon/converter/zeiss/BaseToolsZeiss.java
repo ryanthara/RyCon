@@ -18,10 +18,46 @@
 package de.ryanthara.ja.rycon.converter.zeiss;
 
 /**
- * Created by sebastian on 07.09.16.
+ * This class implements several basic operations for conversion to or from Zeiss REC files.
+ * <p>
+ * The Zeiss REC file format and it's dialects (R4, R5, REC500 and M5) are a line based and column orientated
+ * file format developed by Zeiss to store coordinates and measurement information in text based files.
+ * <p>
+ * Example file in M5 format:
+ *
+ * ----+----1----+----2----+----3----+----4----+----5----+----6----+----7----+----8----+----9----+---10----+---11----+----12
+ * !-------------------------------------------------------------------------------
+ * ! Folgende Daten wurden von RyCON Build xxx am 03.02.2016 erzeugt.
+ * !-------------------------------------------------------------------------------
+ * For M5|Adr     1|TI  Berechn. PunK              |                      |                      |                      |
+ * For M5|Adr     2|PI1 2154H                      |th 1.600          m   |                      |                      |
+ * For M5|Adr     3|PI1 2154H                      |Hz 34.9078        gon |V1 106.3481       gon |D  89.893         m   |
+ *
+ * @author sebastian
+ * @version 1
+ * @since 12
  */
 public class BaseToolsZeiss {
 
+    /**
+     * Member for indicating R4 dialect for output files.
+     */
+    public static final String R4 = "R4";
+
+    /**
+     * Member for indicating R4 dialect for output files.
+     */
+    public static final String R5 = "R5";
+
+    /**
+     * Member for indicating R4 dialect for output files.
+     */
+    public static final String REC500 = "REC500";
+
+    /**
+     * Member for indicating R4 dialect for output files.
+     */
+    public static final String M5 = "M5";
 
 
 } // end of BaseToolsZeiss

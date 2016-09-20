@@ -21,7 +21,7 @@ import java.util.ArrayList;
 
 /**
  * This class provides functions to convert measurement files from Zeiss REC format
- * and it's dialects (REC500, R4, R5 and M5) into Caplan K files.
+ * and it's dialects (R4, R5, REC500 and M5) into Caplan K files.
  *
  * @author sebastian
  * @version 1
@@ -34,7 +34,7 @@ public class Zeiss2K {
     /**
      * Class constructor for read line base text files in the Zeiss REC format and it's dialects.
      * <p>
-     * The differentiation of the content is done by the called method.
+     * The differentiation of the content is done by the called method and it's content analyze functionality.
      *
      * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
      */
@@ -43,7 +43,7 @@ public class Zeiss2K {
     }
 
     /**
-     * Converts a measurement file from Zeiss REC format (REC500, R4, R5 or M5) into a Caplan K formatted file.
+     * Converts a measurement file from Zeiss REC format (REC500, R4, R5 or M5) into a Caplan K file.
      *
      * @param useSimpleFormat  output file with a simple structure
      * @param writeCodeColumn  write code column to output file
@@ -53,6 +53,16 @@ public class Zeiss2K {
      */
     public ArrayList<String> convertZeiss2K(boolean useSimpleFormat, boolean writeCodeColumn, boolean writeCommentLine) {
         ArrayList<String> result = new ArrayList<>();
+
+        if (writeCommentLine) {
+            BaseToolsCaplanK.writeCommentLine(result);
+        }
+
+        for (String line : readStringLines) {
+
+        }
+
+
         return result;
     }
 }

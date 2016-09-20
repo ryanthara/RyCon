@@ -17,6 +17,7 @@
  */
 package de.ryanthara.ja.rycon.converter.excel;
 
+import de.ryanthara.ja.rycon.converter.gsi.BaseToolsGSI;
 import de.ryanthara.ja.rycon.i18n.I18N;
 import de.ryanthara.ja.rycon.tools.elements.GSIBlock;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -31,7 +32,7 @@ import java.util.ArrayList;
  */
 public class GSI2Excel {
 
-    private ArrayList<String> readStringLines;
+    private BaseToolsGSI baseToolsGSI;
     private Workbook workbook;
 
     /**
@@ -40,11 +41,11 @@ public class GSI2Excel {
      * @param readStringLines {@code ArrayList<String>} with lines in text format
      */
     public GSI2Excel(ArrayList<String> readStringLines) {
-        this.readStringLines = readStringLines;
+        baseToolsGSI = new BaseToolsGSI(readStringLines);
     }
 
     /**
-     * Convert a GSI file element by element into an Excel file.
+     * Converts a GSI file element by element into an Excel file.
      *
      * @param isXLS     selector to distinguish between XLS and XLSX file extension
      * @param sheetName name of the sheet (file name from input file)
@@ -74,7 +75,7 @@ public class GSI2Excel {
             row = sheet.createRow(rowNumber);
             rowNumber++;
 
-            for (int wordIndex : toolsLeicaGSI.getFoundWordIndices()) {
+            for (int wordIndex : baseToolsGSI.getFoundWordIndices()) {
                 cell = row.createCell(cellNumber);
                 cellNumber++;
 
@@ -83,7 +84,7 @@ public class GSI2Excel {
         }
 
         // fill gsi content into rows and cells
-        for (ArrayList<GSIBlock> blocksAsLines : toolsLeicaGSI.getEncodedLinesOfGSIBlocks()) {
+        for (ArrayList<GSIBlock> blocksAsLines : baseToolsGSI.getEncodedLinesOfGSIBlocks()) {
             row = sheet.createRow(rowNumber);
             rowNumber++;
 
@@ -178,7 +179,7 @@ public class GSI2Excel {
         }
 
         // adjust column width to fit the content
-        for (int i = 0; i < toolsLeicaGSI.getEncodedLinesOfGSIBlocks().size(); i++) {
+        for (int i = 0; i < baseToolsGSI.getEncodedLinesOfGSIBlocks().size(); i++) {
             sheet.autoSizeColumn((short) i);
         }
 

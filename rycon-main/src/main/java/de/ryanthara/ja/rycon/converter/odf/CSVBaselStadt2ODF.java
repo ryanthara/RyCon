@@ -24,15 +24,19 @@ import org.odftoolkit.simple.table.Table;
 import java.util.List;
 
 /**
- * Created by sebastian on 13.09.16.
- */
-public class CSVBaselStadt2ODF {
+ * This class provides functions to convert a csv formatted coordinate file from the geodata server
+ * Basel Stadt (Switzerland) into an Open Document Format spreadsheet file.
+ *
+ * @author sebastian
+ * @version 1
+ * @since 12
+ */public class CSVBaselStadt2ODF {
 
     private List<String[]> readCSVLines;
     private SpreadsheetDocument spreadsheetDocument;
 
     /**
-     * Class constructor for read line based CSV files.
+     * Class constructor for read line based CSV files from the geodata server Basel Stadt (Switzerland).
      *
      * @param readCSVLines {@code List<String[]>} with lines as {@code String[]}
      */
@@ -119,7 +123,7 @@ public class CSVBaselStadt2ODF {
     }
 
     /**
-     * Returns the SpreadsheetDocument for writing it to a file.
+     * Returns the SpreadsheetDocument object for writing it to a file.
      *
      * @return SpreadsheetDocument
      */

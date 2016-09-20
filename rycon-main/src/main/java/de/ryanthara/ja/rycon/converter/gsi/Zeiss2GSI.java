@@ -23,7 +23,7 @@ import java.util.ArrayList;
 
 /**
  * This class provides functions to convert measurement files from Zeiss REC format
- * and it's dialects (REC500, R4, R5 and M5) into Leica GSI8 or GSI16 formatted files.
+ * and it's dialects (R4, R5, REC500 and M5) into Leica GSI8 or GSI16 formatted files.
  *
  * @author sebastian
  * @version 1
@@ -254,9 +254,7 @@ public class Zeiss2GSI {
             }
         }
 
-        BaseToolsGSI baseToolsGSI = new BaseToolsGSI();
-
-        return baseToolsGSI.lineTransformation(isGSI16, blocksInLines);
+        return BaseToolsGSI.lineTransformation(isGSI16, blocksInLines);
     }
 
 } // end of Zeiss2GSI

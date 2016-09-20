@@ -17,6 +17,7 @@
  */
 package de.ryanthara.ja.rycon.converter.ltop;
 
+import de.ryanthara.ja.rycon.converter.gsi.BaseToolsGSI;
 import de.ryanthara.ja.rycon.tools.NumberHelper;
 import de.ryanthara.ja.rycon.tools.elements.GSIBlock;
 import de.ryanthara.ja.rycon.tools.elements.RyPoint;
@@ -28,7 +29,7 @@ import java.util.ArrayList;
  */
 public class GSI2LTOP {
 
-    private ArrayList<String> readStringLines;
+    private BaseToolsGSI baseToolsGSI;
 
     /**
      * Class constructor for read line based text files.
@@ -36,11 +37,11 @@ public class GSI2LTOP {
      * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
      */
     public GSI2LTOP(ArrayList<String> readStringLines) {
-        this.readStringLines = readStringLines;
+        baseToolsGSI = new BaseToolsGSI(readStringLines);
     }
 
     /**
-     * Convert a Leica GSI coordinate file into a KOO file for LTOP.
+     * Converts a Leica GSI coordinate file into a KOO file for LTOP.
      * <p>
      * In this RyCON version only the WIs 81 till 86 are supported.
      *
@@ -58,7 +59,7 @@ public class GSI2LTOP {
 
         BaseToolsLTOP.writeCommendLine(result, BaseToolsLTOP.cartesianCoordsIdentifier);
 
-        for (ArrayList<GSIBlock> blocksAsLine : toolsLeicaGSI.getEncodedLinesOfGSIBlocks()) {
+        for (ArrayList<GSIBlock> blocksAsLine : baseToolsGSI.getEncodedLinesOfGSIBlocks()) {
             // prevent wrong output with empty strings of defined length from class
             number = BaseToolsLTOP.number;
             pointType = BaseToolsLTOP.pointType;
@@ -70,7 +71,7 @@ public class GSI2LTOP {
             eta = BaseToolsLTOP.eta;
             xi = BaseToolsLTOP.xi;
 
-            for (int i = 0; i < toolsLeicaGSI.getFoundWordIndices().size(); i++) {
+            for (int i = 0; i < baseToolsGSI.getFoundWordIndices().size(); i++) {
                 for (GSIBlock block : blocksAsLine) {
                     String s = block.toPrintFormatCSV();
 

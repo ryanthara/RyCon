@@ -26,6 +26,7 @@ import de.ryanthara.ja.rycon.converter.gsi.*;
 import de.ryanthara.ja.rycon.converter.ltop.*;
 import de.ryanthara.ja.rycon.converter.odf.*;
 import de.ryanthara.ja.rycon.converter.text.*;
+import de.ryanthara.ja.rycon.converter.zeiss.*;
 import de.ryanthara.ja.rycon.data.PreferenceHandler;
 import de.ryanthara.ja.rycon.i18n.I18N;
 import de.ryanthara.ja.rycon.io.LineReader;
@@ -576,9 +577,7 @@ public class ConverterWidget {
             }
 
             if (readFileSuccess) {  // write files
-                // helper for conversion
                 ArrayList<String> writeFile = null;
-
                 String separator;
 
                 switch (targetNumber) {
@@ -706,7 +705,7 @@ public class ConverterWidget {
                     Target format: TXT format (space or tabulator separated)
                      */
                     case 2:
-                        separator = chkBoxTXTSpaceSeparator.getSelection() ? Main.getSeparatorSpace() : Main.getSeparatorTab();
+                        separator = chkBoxTXTSpaceSeparator.getSelection() ? BaseToolsTXT.SEPARATOR_SPACE : BaseToolsTXT.SEPARATOR_TAB;
 
                         switch (sourceNumber) {
                             case 0:     // fall through for GSI8 format
@@ -729,14 +728,14 @@ public class ConverterWidget {
                                         chkBoxWriteCodeColumn.getSelection(), chkBoxKFormatUseSimpleFormat.getSelection());
                                 break;
 
-                            case 5:     // Zeiss M5 format and it's dialects
+                            case 5:     // Zeiss REC format and it's dialects
                                 Zeiss2TXT zeiss2TXT = new Zeiss2TXT(readFile);
                                 writeFile = zeiss2TXT.convertZeiss2TXT(separator);
                                 break;
 
                             case 6:     // cadwork node.dat from cadwork CAD program
                                 Cadwork2TXT cadwork2TXT = new Cadwork2TXT(readFile);
-                                writeFile = cadwork2TXT.convertCadwork2TXT(chkBoxWriteCodeColumn.getSelection(),
+                                writeFile = cadwork2TXT.convertCadwork2TXT(separator, chkBoxWriteCodeColumn.getSelection(),
                                         chkBoxCadworkUseZeroHeights.getSelection());
                                 break;
 
@@ -759,7 +758,7 @@ public class ConverterWidget {
                     Target format: CSV format (comma or semicolon separated)
                      */
                     case 3:
-                        separator = chkBoxCSVSemiColonSeparator.getSelection() ? Main.getSeparatorSemicolon() : Main.getSeparatorComma();
+                        separator = chkBoxCSVSemiColonSeparator.getSelection() ? BaseToolsCSV.SEPARATOR_SEMICOLON: BaseToolsCSV.SEPARATOR_COMMA;
 
                         switch (sourceNumber) {
                             case 0:     // fall through for GSI8 format
@@ -782,7 +781,7 @@ public class ConverterWidget {
                                         chkBoxWriteCodeColumn.getSelection(), chkBoxKFormatUseSimpleFormat.getSelection());
                                 break;
 
-                            case 5:     // Zeiss M5 format and it's dialects
+                            case 5:     // Zeiss REC format and it's dialects
                                 Zeiss2CSV zeiss2CSV = new Zeiss2CSV(readFile);
                                 zeiss2CSV.convertZeiss2CSV(separator, chkBoxWriteCommentLine.getSelection(),
                                         chkBoxWriteCodeColumn.getSelection(), chkBoxKFormatUseSimpleFormat.getSelection());
@@ -839,7 +838,7 @@ public class ConverterWidget {
                             case 4:     // CAPLAN K format (not possible)
                                 break;
 
-                            case 5:     // Zeiss M5 format and it's dialects
+                            case 5:     // Zeiss REC format and it's dialects
                                 Zeiss2K zeiss2K = new Zeiss2K(readFile);
                                 writeFile = zeiss2K.convertZeiss2K(
                                         chkBoxKFormatUseSimpleFormat.getSelection(),
@@ -878,24 +877,38 @@ public class ConverterWidget {
                     Target format: Zeiss REC
                      */
                     case 5:
+                        String dialect = BaseToolsZeiss.M5;
                         switch (sourceNumber) {
-                            case 0:     // GSI8 format
-                                break;
+                            case 0:     // fall through for GSI8 format
                             case 1:     // GSI16 format
+                                GSI2Zeiss gsi2Zeiss = new GSI2Zeiss(readFile);
+                                writeFile = gsi2Zeiss.convertGSI2REC(dialect);
                                 break;
                             case 2:     // TXT format
+                                TXT2Zeiss txt2Zeiss = new TXT2Zeiss(readFile);
+                                writeFile = txt2Zeiss.convertTXT2REC(dialect);
                                 break;
                             case 3:     // CSV format (comma or semicolon separated)
+                                CSV2Zeiss csv2Zeiss = new CSV2Zeiss(readCSVFile);
+                                writeFile = csv2Zeiss.convertCSV2REC(dialect);
                                 break;
                             case 4:     // CAPLAN K format
+                                K2Zeiss k2Zeiss = new K2Zeiss(readFile);
+                                writeFile = k2Zeiss.convertK2REC(dialect);
                                 break;
-                            case 5:     // Zeiss M5 format and it's dialects (not possible or into dialects?)
+                            case 5:     // Zeiss REC format and it's dialects (not possible or into dialects?)
                                 break;
                             case 6:     // cadwork node.dat from cadwork CAD program
+                                Cadwork2Zeiss cadwork2Zeiss = new Cadwork2Zeiss(readFile);
+                                writeFile = cadwork2Zeiss.convertCadwork2REC(dialect);
                                 break;
                             case 7:     // CSV format 'Basel Stadt' (semicolon separated)
+                                CSVBaselStadt2Zeiss csvBaselStadt2Zeiss = new CSVBaselStadt2Zeiss(readCSVFile);
+                                writeFile = csvBaselStadt2Zeiss.convertCSVBaselStadt2REC(dialect);
                                 break;
                             case 8:     // TXT format 'Basel Landschaft' (different column based text files for LFP and HFP points)
+                                TXTBaselLandschaft2Zeiss txtBaselLandschaft2Zeiss = new TXTBaselLandschaft2Zeiss(readFile);
+                                writeFile = txtBaselLandschaft2Zeiss.convertTXTBaselLandschaft2REC(dialect);
                                 break;
                         }
                         if (writeFile2Disk(file2read, writeFile, ".REC")) {
@@ -934,7 +947,7 @@ public class ConverterWidget {
                                         chkBoxLTOPSortOutputFileByNumber.getSelection());
                                 break;
 
-                            case 5:     // Zeiss M5 format and it's dialects
+                            case 5:     // Zeiss REC format and it's dialects
                                 Zeiss2LTOP zeiss2LTOP = new Zeiss2LTOP(readFile);
                                 writeFile = zeiss2LTOP.convertZeiss2KOO(chkBoxLTOPEliminateDuplicatePoints.getSelection(),
                                         chkBoxLTOPSortOutputFileByNumber.getSelection());
@@ -976,7 +989,10 @@ public class ConverterWidget {
                                         PreferenceHandler.CONVERTER_SETTING_LTOP_USE_ZENITH_DISTANCE)));
                                 break;
 
-                            case 5:     // Zeiss M5 format and it's dialects
+                            case 5:     // Zeiss REC format and it's dialects
+                                Zeiss2LTOP zeiss2LTOP = new Zeiss2LTOP(readFile);
+                                writeFile = zeiss2LTOP.convertZeiss2MES(Boolean.parseBoolean(Main.pref.getUserPref(
+                                        PreferenceHandler.CONVERTER_SETTING_LTOP_USE_ZENITH_DISTANCE)));
                                 break;
 
                         }
@@ -1056,7 +1072,6 @@ public class ConverterWidget {
                         if (writeExcel2Disk(file2read, workbook, ".xlsx")) {
                             counter++;
                         }
-
                         break;
 
                     /*

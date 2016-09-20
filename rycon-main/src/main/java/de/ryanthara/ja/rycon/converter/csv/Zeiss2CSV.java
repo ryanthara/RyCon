@@ -20,12 +20,23 @@ package de.ryanthara.ja.rycon.converter.csv;
 import java.util.ArrayList;
 
 /**
- * Created by sebastian on 12.09.16.
- */
-public class Zeiss2CSV {
+ * This class provides functions to convert measurement files from Zeiss REC format
+ * and it's dialects (R4, R5, REC500 and M5) into comma separated values (CSV) files.
+ *
+ * @author sebastian
+ * @version 1
+ * @since 12
+ */public class Zeiss2CSV {
 
     private ArrayList<String> readStringLines;
 
+    /**
+     * Class constructor for read line based Zeiss REC files in different dialects.
+     * <p>
+     * The differentiation of the content is done by the called method.
+     *
+     * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
+     */
     public Zeiss2CSV(ArrayList<String> readStringLines) {
         this.readStringLines = readStringLines;
     }

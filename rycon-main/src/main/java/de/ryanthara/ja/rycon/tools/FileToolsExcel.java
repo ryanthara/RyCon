@@ -24,10 +24,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 /**
- * FileToolsExcel implements basic operations on spreadsheet output operations for Microsoft xls, xlsx, ... files.
- * <p>
- * Therefore a couple of methods and helpers are implemented to do the conversions and
- * operations on the given files.
+ * FileToolsExcel implements basic file operations to write Microsoft xls, xlsx, ... files.
  *
  * @author sebastian
  * @version 2

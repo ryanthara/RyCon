@@ -22,9 +22,12 @@ import de.ryanthara.ja.rycon.tools.NumberHelper;
 import java.util.ArrayList;
 
 /**
- * Created by sebastian on 07.09.16.
- */
-public class TXT2K {
+ * This class provides functions to convert text formatted coordinate files into Caplan K files.
+ *
+ * @author sebastian
+ * @version 1
+ * @since 12
+ */public class TXT2K {
 
     private ArrayList<String> readStringLines;
 
@@ -38,7 +41,7 @@ public class TXT2K {
     }
 
     /**
-     * Converts a text file (nr x y z or nr code x y z) into a K format file.
+     * Converts a text file (nr x y z or nr code x y z) into a Caplan K file.
      *
      * @param useSimpleFormat  option to write a reduced K file which is compatible to ZF LaserControl
      * @param writeCommentLine option to write a comment line into the K file with basic information
@@ -66,7 +69,7 @@ public class TXT2K {
             String height = BaseToolsCaplanK.height;
 
             // point number is always in column 1 (no '*', ',' and ';'), column 1 - 16
-            String number = BaseToolsCaplanK.preparePointNumber(lineSplit[0]);
+            String number = BaseToolsCaplanK.cleanPointNumberString(lineSplit[0]);
 
             switch (lineSplit.length) {
                 case 3:     // line contains no height

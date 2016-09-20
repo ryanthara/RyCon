@@ -112,9 +112,7 @@ public class TXTBaselLandschaft2GSI {
             }
         }
 
-        BaseToolsGSI baseToolsGSI = new BaseToolsGSI();
-
-        return baseToolsGSI.lineTransformation(isGSI16, blocksInLines);
+        return BaseToolsGSI.lineTransformation(isGSI16, blocksInLines);
     }
 
 } // end of TXTBaselLandschaft2GSI

@@ -20,8 +20,8 @@ package de.ryanthara.ja.rycon.converter.text;
 import java.util.ArrayList;
 
 /**
- * This class provides functions to convert txt formatted coordinate files from the geodata server
- * Basel Landschaft (Switzerland) into text formatted files.
+ * This class provides functions to convert a txt formatted coordinate file from the geodata server
+ * Basel Landschaft (Switzerland) into a text formatted file.
  *
  * @author sebastian
  * @version 1
@@ -41,7 +41,8 @@ public class TXTBaselLandschaft2TXT {
     }
 
     /**
-     * Convert a text file from the geodata server Basel Landschaft (Switzerland) into a TXT formatted file (no code x y z).
+     * Converts a text file from the geodata server Basel Landschaft (Switzerland)
+     * into a text formatted file (no code x y z).
      * <p>
      * This method can differ between LFP and HFP files, which has a given different structure.
      * With a parameter it is possible to distinguish between tabulator and space divided files.

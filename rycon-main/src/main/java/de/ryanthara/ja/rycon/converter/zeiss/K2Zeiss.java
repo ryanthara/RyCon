@@ -1,7 +1,7 @@
 /*
  * License: GPL. Copyright 2016- (C) by Sebastian Aust (https://www.ryanthara.de/)
  *
- * This file is part of the package de.ryanthara.ja.rycon.tools
+ * This file is part of the package de.ryanthara.ja.rycon.converter.zeiss
  *
  * This package is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -15,47 +15,46 @@
  * You should have received a copy of the GNU General Public License along with
  * this package. If not, see <http://www.gnu.org/licenses/>.
  */
-package de.ryanthara.ja.rycon.converter.csv;
+package de.ryanthara.ja.rycon.converter.zeiss;
 
 import java.util.ArrayList;
 
 /**
- * This class provides functions to convert a text formatted measurement or coordinate file
- * into a comma separated values file (csv format).
- *
- * @author sebastian
- * @version 1
- * @since 12
+ * Created by sebastian on 15.09.16.
  */
-public class TXT2CSV {
-
-    private ArrayList<String> readStringLines;
+public class K2Zeiss {
+    private final ArrayList<String> readStringLines;
 
     /**
      * Class constructor for read line based text files in different formats.
      *
      * @param readStringLines {@code ArrayList<String>} with lines in text format
      */
-    public TXT2CSV(ArrayList<String> readStringLines) {
+    public K2Zeiss(ArrayList<String> readStringLines) {
         this.readStringLines = readStringLines;
     }
 
     /**
-     * Converts a text formatted file into a CSV file with the given separator sign.
-     * <p>
-     * Due to some reasons the text file could not use white space characters in point numbers or code blocks.
+     * Converts an Caplan K formatted measurement or coordinate based file into an Zeiss REC formatted file.
      *
-     * @param separator separator sign to use for conversion
-     * @return converted CSV file
+     * @param dialect dialect of the target file
+     * @return string lines of the target file
      */
-    public ArrayList<String> convertTXT2CSV(String separator) {
-        ArrayList<String> result = new ArrayList<>();
+    public ArrayList<String> convertK2REC(String dialect) {
+        ArrayList<String> result = null;
 
-        for (String line : readStringLines) {
-            line = line.trim();
-            result.add(line.replaceAll("\\s+", separator));
+        switch (dialect) {
+            case "R4":
+                break;
+            case "R5":
+                break;
+            case "REC500":
+                break;
+            case "M5":
+                break;
         }
+
         return result;
     }
 
-} // end of TXT2CSV
+} // end of K2Zeiss

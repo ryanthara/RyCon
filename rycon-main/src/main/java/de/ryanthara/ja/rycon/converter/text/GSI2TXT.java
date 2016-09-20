@@ -26,7 +26,7 @@ import java.util.TreeSet;
 
 /**
  * This class provides functions to convert Leica GSI formatted files into
- * text formatted measurement or coordinate files.
+ * a text formatted measurement or coordinate file.
  *
  * @author sebastian
  * @version 1
@@ -34,17 +34,19 @@ import java.util.TreeSet;
  */
 public class GSI2TXT {
 
+    private BaseToolsGSI baseToolsGSI;
+
     /**
      * Class constructor for read line based GSI files.
      *
      * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
      */
     public GSI2TXT(ArrayList<String> readStringLines) {
-        this.readStringLines = readStringLines;
+        baseToolsGSI = new BaseToolsGSI(readStringLines);
     }
 
     /**
-     * Convert a GSI file into a space or tab delimited text file.
+     * Converts a GSI file into a space or tab delimited text file.
      * <p>
      * With parameter it is possible to set the separation char (space or tab).
      *
@@ -56,8 +58,6 @@ public class GSI2TXT {
     public ArrayList<String> convertGSI2TXT(String separator, boolean isGSI16, boolean writeCommentLine) {
         String commentLine = "";
         ArrayList<String> result = new ArrayList<>();
-
-        BaseToolsGSI baseToolsGSI = new BaseToolsGSI();
 
         String sep = separator.equals(" ") ? "    " : separator;
 

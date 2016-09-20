@@ -21,23 +21,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by sebastian on 12.09.16.
+ * This class provides functions to convert a csv formatted coordinate file from the geodata server
+ * Basel Stadt (Switzerland) into a comma separated values file (CSV) with different separation signs.
+ *
+ * @author sebastian
+ * @version 1
+ * @since 12
  */
 public class CSVBaselStadt2CSV {
 
     private List<String[]> readCSVLines;
 
     /**
-     * Class constructor for read line based CSV files.
+     * Class constructor for read line based CSV files from the geodata server Basel Stadt (Switzerland).
      *
-     * @param readCSVLines {@code List<String[]>} with lines in csv format
+     * @param readCSVLines {@code List<String[]>} with lines as {@code String[]}
      */
     public CSVBaselStadt2CSV(List<String[]> readCSVLines) {
         this.readCSVLines = readCSVLines;
     }
 
     /**
-     * Convert a CSV file from the geodata server Basel Stadt (Switzerland) into a CSV formatted file.
+     * Converts a comma separated coordinate file from the geodata server Basel Stadt (Switzerland)
+     * into a CSV file.
      * <p>
      * With a parameter it is possible to distinguish between comma or semicolon as separator.
      *

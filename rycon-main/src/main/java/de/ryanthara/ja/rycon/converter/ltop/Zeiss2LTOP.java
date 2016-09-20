@@ -20,14 +20,18 @@ package de.ryanthara.ja.rycon.converter.ltop;
 import java.util.ArrayList;
 
 /**
- * Created by sebastian on 13.09.16.
- */
-public class Zeiss2LTOP {
+ * This class provides functions to convert measurement files from Zeiss REC format
+ * and it's dialects (R4, R5, REC500 and M5) into KOO and MES files for LTOP.
+ *
+ * @author sebastian
+ * @version 1
+ * @since 12
+ */public class Zeiss2LTOP {
 
     private ArrayList<String> readStringLines;
 
     /**
-     * Class constructor for read line based text files.
+     * Class constructor for read line based Zeiss REC files in different dialects.
      *
      * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
      */
@@ -35,7 +39,25 @@ public class Zeiss2LTOP {
         this.readStringLines = readStringLines;
     }
 
-    public ArrayList<String> convertZeiss2KOO(boolean selection, boolean selection1) {
+    /**
+     * Converts a Zeiss REC file into a KOO file for LTOP.
+     *
+     * @param eliminateDuplicates   eliminate duplicate points from KOO file
+     * @param sortFileByNumber      sort KOO file by point number
+     * @return converted KOO file
+     */
+    public ArrayList<String> convertZeiss2KOO(boolean eliminateDuplicates, boolean sortFileByNumber) {
+        ArrayList<String> result = new ArrayList<>();
+        return result;
+    }
+
+    /**
+     * Converts a Zeiss REC file into a MES file for LTOP.
+     *
+     * @param useZenithDistance use zenith distance instead of height angle
+     * @return converted MES file
+     */
+    public ArrayList<String> convertZeiss2MES(boolean useZenithDistance) {
         ArrayList<String> result = new ArrayList<>();
         return result;
     }

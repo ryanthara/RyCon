@@ -22,7 +22,12 @@ import de.ryanthara.ja.rycon.tools.NumberHelper;
 import java.util.ArrayList;
 
 /**
- * Created by sebastian on 07.09.16.
+ * This class provides functions to convert text formatted coordinate files from the geodata server
+ * Basel Landschaft (Switzerland) into Caplan K formatted files.
+ *
+ * @author sebastian
+ * @version 1
+ * @since 12
  */
 public class TXTBaselLandschaft2K {
 
@@ -38,7 +43,7 @@ public class TXTBaselLandschaft2K {
     }
 
     /**
-     * Convert a CSV file from the geodata server Basel Stadt (Switzerland) into a K format file.
+     * Converts a CSV file from the geodata server Basel Stadt (Switzerland) into a K formatted file.
      *
      * @param useSimpleFormat  option to write a reduced K file which is compatible to ZF LaserControl
      * @param writeCodeColumn  option to write a found code into the K file
@@ -70,7 +75,7 @@ public class TXTBaselLandschaft2K {
             String height = BaseToolsCaplanK.height;
 
             // point number is always in column 1 (no '*', ',' and ';'), column 1 - 16
-            String number = BaseToolsCaplanK.preparePointNumber(lineSplit[1]);
+            String number = BaseToolsCaplanK.cleanPointNumberString(lineSplit[1]);
 
             switch (lineSplit.length) {
                 case 5:     // HFP file

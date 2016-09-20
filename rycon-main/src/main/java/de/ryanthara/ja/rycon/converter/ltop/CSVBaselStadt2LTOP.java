@@ -24,14 +24,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by sebastian on 13.09.16.
- */
-public class CSVBaselStadt2LTOP {
+ * This class provides functions to convert a csv formatted coordinate file from the geodata server
+ * Basel Stadt (Switzerland) into a KOO file for LTOP.
+ *
+ * @author sebastian
+ * @version 1
+ * @since 12
+ */public class CSVBaselStadt2LTOP {
 
     private List<String[]> readCSVLines = null;
 
     /**
-     * Class constructor for read line based CSV files.
+     * Class constructor for read line based CSV files from the geodata server Basel Stadt (Switzerland).
      *
      * @param readCSVLines {@code List<String[]>} with lines as {@code String[]}
      */

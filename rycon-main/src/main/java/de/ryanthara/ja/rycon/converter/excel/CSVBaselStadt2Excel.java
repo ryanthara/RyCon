@@ -33,7 +33,7 @@ public class CSVBaselStadt2Excel {
     private Workbook workbook = null;
 
     /**
-     * Class constructor for read line based CSV files.
+     * Class constructor for read line based CSV files from the geodata server Basel Stadt (Switzerland).
      *
      * @param readCSVLines {@code List<String[]>} with lines as {@code String[]}
      */
@@ -42,7 +42,8 @@ public class CSVBaselStadt2Excel {
     }
 
     /**
-     * Converts a CSV file from the geodata server Basel Stadt (Switzerland) into a an Excel file.
+     * Converts a comma separated coordinate file from the geodata server Basel Stadt (Switzerland)
+     * into a Zeiss REC formatted file.
      *
      * @param isXLS           selector to distinguish between XLS and XLSX file extension
      * @param sheetName       name of the sheet (file name from input file)

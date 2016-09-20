@@ -20,12 +20,22 @@ package de.ryanthara.ja.rycon.converter.csv;
 import java.util.ArrayList;
 
 /**
- * Created by sebastian on 12.09.16.
+ * This class provides functions to convert measurement or coordinate files from Caplan K format
+ * into a comma separated values file (csv format).
+ *
+ * @author sebastian
+ * @version 1
+ * @since 12
  */
 public class K2CSV {
 
     public ArrayList<String> readStringLines;
 
+    /**
+     * Class constructor for read line based Caplan K file.
+     *
+     * @param readStringLines {@code ArrayList<String>} with lines in Caplan K format
+     */
     public K2CSV(ArrayList<String> readStringLines) {
         this.readStringLines = readStringLines;
     }

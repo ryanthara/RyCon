@@ -104,9 +104,7 @@ public class K2GSI {
             }
         }
 
-        BaseToolsGSI baseToolsGSI = new BaseToolsGSI();
-
-        return baseToolsGSI.lineTransformation(isGSI16, blocksInLines);
+        return BaseToolsGSI.lineTransformation(isGSI16, blocksInLines);
     }
 
 } // end of K2GSI

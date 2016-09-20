@@ -28,7 +28,12 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.util.ArrayList;
 
 /**
- * Created by sebastian on 13.09.16.
+ * This class provides functions to convert coordinate files from Cadwork CAD program into Microsoft Excel files
+ * in XLS or XLSX format.
+ *
+ * @author sebastian
+ * @version 1
+ * @since 12
  */
 public class Cadwork2Excel {
 
@@ -36,16 +41,16 @@ public class Cadwork2Excel {
     private Workbook workbook;
 
     /**
-     * Class constructor for read line based text files in different formats.
+     * Class constructor for read line based text files from Cadwork CAD program in node.dat file format.
      *
-     * @param readStringLines {@code ArrayList<String>} with lines in text format
+     * @param readStringLines {@code ArrayList<String>} with read lines from node.dat file
      */
     public Cadwork2Excel(ArrayList<String> readStringLines) {
         this.readStringLines = readStringLines;
     }
 
     /**
-     * Converts a Cadwork node.dat file into an Excel file.
+     * Converts a coordinate file from Cadwork (node.dat) into a Microsoft Excel file.
      *
      * @param isXLS     selector to distinguish between XLS and XLSX file extension
      * @param sheetName name of the sheet (file name from input file)

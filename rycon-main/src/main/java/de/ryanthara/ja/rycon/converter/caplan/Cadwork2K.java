@@ -22,23 +22,28 @@ import de.ryanthara.ja.rycon.tools.NumberHelper;
 import java.util.ArrayList;
 
 /**
- * Created by sebastian on 07.09.16.
+ * This class provides functions to convert a coordinate file from Cadwork CAD program (node.dat)
+ * into a Caplan K file.
+ *
+ * @author sebastian
+ * @version 1
+ * @since 12
  */
 public class Cadwork2K {
 
     private ArrayList<String> readStringLines;
 
     /**
-     * Class constructor for read line based text files.
+     * Class constructor for read line based text files from Cadwork CAD program in node.dat file format.
      *
-     * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
+     * @param readStringLines {@code ArrayList<String>} with read lines from node.dat file
      */
     public Cadwork2K(ArrayList<String> readStringLines) {
         this.readStringLines = readStringLines;
     }
 
     /**
-     * Converts a cadwork node.dat file into a Caplan K file.
+     * Converts a coordinate file from Cadwork CAD program (node.dat) into a Caplan K file.
      *
      * @param useSimpleFormat  option to write a reduced K file which is compatible to ZF LaserControl
      * @param writeCommentLine option to write a comment line into the K file with basic information
@@ -68,7 +73,7 @@ public class Cadwork2K {
             String objectTyp = BaseToolsCaplanK.objectTyp;
 
             // point number (no '*', ',' and ';'), column 1 - 16
-            String number = BaseToolsCaplanK.preparePointNumber(lineSplit[5]);
+            String number = BaseToolsCaplanK.cleanPointNumberString(lineSplit[5]);
 
             // easting E, column 19-32
             String easting = String.format("%14s", NumberHelper.fillDecimalPlace(lineSplit[1], 4));

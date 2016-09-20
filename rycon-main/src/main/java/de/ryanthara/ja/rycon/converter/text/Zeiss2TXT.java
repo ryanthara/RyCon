@@ -21,7 +21,7 @@ import java.util.ArrayList;
 
 /**
  * This class provides functions to convert measurement files from Zeiss REC format
- * and it's dialects (REC500, R4, R5 and M5) into text formatted files.
+ * and it's dialects (R4, R5, REC500and M5) into text formatted files.
  *
  * @author sebastian
  * @version 1
@@ -44,7 +44,7 @@ public class Zeiss2TXT {
 
 
     /**
-     * Convert a Zeiss REC file (R4, R5, M5 or REC500) into a text formatted file.
+     * Converts a Zeiss REC file (R4, R5, M5 or REC500) into a text formatted file.
      * <p>
      * This method can differ between different Zeiss REC dialects because of the
      * different structure and line length.

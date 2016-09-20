@@ -17,14 +17,14 @@
  */
 package de.ryanthara.ja.rycon.converter.caplan;
 
-import de.ryanthara.ja.rycon.tools.FileToolsLeicaGSI;
+import de.ryanthara.ja.rycon.converter.gsi.BaseToolsGSI;
 import de.ryanthara.ja.rycon.tools.NumberHelper;
 import de.ryanthara.ja.rycon.tools.elements.GSIBlock;
 
 import java.util.ArrayList;
 
 /**
- * This class provides functions to convert measurement files from Leica GSI format (GSI8 and GSI16)
+ * This class provides functions to convert coordinate and measurement files from Leica GSI format (GSI8 and GSI16)
  * into Caplan K files.
  *
  * @author sebastian
@@ -33,29 +33,21 @@ import java.util.ArrayList;
  */
 public class GSI2K {
 
-    /**
-     * Class constructor for read line based Leica GSI files.
-     * <p>
-     * Due to some details of the Leica GSI format it is easier to get access to the {@link FileToolsLeicaGSI} object
-     * instead of having a couple of more parameters.
-     *
-     * @param toolsLeicaGSI {@link FileToolsLeicaGSI} object
-     */
-    public GSI2K(FileToolsLeicaGSI toolsLeicaGSI) {
-        this.toolsLeicaGSI = toolsLeicaGSI;
-    }
+    private BaseToolsGSI baseToolsGSI;
 
     /**
-     * Class constructor for read line based text files.
+     * Class constructor for read line based text files in the Leica GSI format.
+     * <p>
+     * The differentiation of the content is done by the called method and it's content analyze functionality.
      *
      * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
      */
     public GSI2K(ArrayList<String> readStringLines) {
-        this.readStringLines = readStringLines;
+        baseToolsGSI = new BaseToolsGSI(readStringLines);
     }
 
     /**
-     * Converts a Leica GSI file into CAPLAN K file.
+     * Converts a Leica GSI file into a CAPLAN K file.
      *
      * @param useSimpleFormat  option to write a reduced K file which is compatible to ZF LaserControl
      * @param writeCommentLine option to write a comment line into the K file with basic information
@@ -69,7 +61,7 @@ public class GSI2K {
             BaseToolsCaplanK.writeCommentLine(result);
         }
 
-        for (ArrayList<GSIBlock> blocksAsLines : toolsLeicaGSI.getEncodedLinesOfGSIBlocks()) {
+        for (ArrayList<GSIBlock> blocksAsLines : baseToolsGSI.getEncodedLinesOfGSIBlocks()) {
             StringBuilder stringBuilder = new StringBuilder();
 
             // prevent wrong output with empty strings of defined length from class
@@ -82,7 +74,7 @@ public class GSI2K {
             String objectTyp = BaseToolsCaplanK.objectTyp;
             String attr = "";
 
-            for (int i = 0; i < toolsLeicaGSI.getFoundWordIndices().size(); i++) {
+            for (int i = 0; i < baseToolsGSI.getFoundWordIndices().size(); i++) {
                 int valencyIndicator = 0;
 
                 for (GSIBlock block : blocksAsLines) {
@@ -90,7 +82,7 @@ public class GSI2K {
 
                     switch (block.getWordIndex()) {
                         case 11:        // point number (no '*', ',' and ';'), column 1 - 16
-                            number = BaseToolsCaplanK.preparePointNumber(s);
+                            number = BaseToolsCaplanK.cleanPointNumberString(s);
                             break;
                         case 41:        // code is the same as object type, column 62...
                             objectTyp = "|".concat(s);

@@ -19,6 +19,7 @@
 package de.ryanthara.ja.rycon.gui;
 
 import de.ryanthara.ja.rycon.Main;
+import de.ryanthara.ja.rycon.converter.gsi.Nigra2GSI;
 import de.ryanthara.ja.rycon.data.PreferenceHandler;
 import de.ryanthara.ja.rycon.i18n.I18N;
 import de.ryanthara.ja.rycon.io.LineReader;
@@ -322,17 +323,18 @@ public class LevellingWidget {
                 // read
                 ArrayList<String> readFile = lineReader.getLines();
 
-                String[] fileNameAndSuffix = file2read.getName().split("\\.(?=[^\\.]+$)");
+                String[] fileNameAndSuffix = file2read.getName().split("\\.(?=[^.]+$)");
 
-                FileToolsLeicaGSI gsiTools = new FileToolsLeicaGSI(readFile);
                 ArrayList<String> writeFile;
                 String file2write;
 
                 if (fileNameAndSuffix[1].equalsIgnoreCase("GSI")) {
-                    writeFile = gsiTools.processLevelling2Cad(holdChangePoints);
+                    FileToolsLeicaGSI fileToolsLeicaGSI = new FileToolsLeicaGSI(readFile);
+                    writeFile = fileToolsLeicaGSI.processLevelling2Cad(holdChangePoints);
                     file2write = file2read.toString().substring(0, file2read.toString().length() - 4) + "_LEVEL.GSI";
                 } else if (fileNameAndSuffix[1].equalsIgnoreCase("ASC")) {
-                    writeFile = gsiTools.convertNIGRA2GSI(Main.getGSI16());
+                    Nigra2GSI nigra2GSI = new Nigra2GSI(readFile);
+                    writeFile = nigra2GSI.convertNIGRA2GSI(Main.getGSI16());
                     file2write = file2read.toString().substring(0, file2read.toString().length() - 4) + "_LEVEL.GSI";
                 } else {
                     System.err.println("File " + file2read.getName() + " is not supported (yet).");

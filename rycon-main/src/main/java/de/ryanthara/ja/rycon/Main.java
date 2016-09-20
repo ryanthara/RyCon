@@ -39,21 +39,12 @@ import java.util.Locale;
 /**
  * Main implements values, constants and objects for the complete RyCON application as an abstract class.
  * <p>
- * This class was implemented after version 1 of RyCON to get easier access to different things. The main idea to do
- * this step was influenced by the code base of JOSM, which is a most popular java written editor for OpenStreetMap data.
- *
- * <h3>Changes:</h3>
- * <ul>
- *     <li>6: implementation of a new directory structure, code reformat</li>
- *     <li>5: implement command line interface (cli) handling </li>
- *     <li>4: defeat bug #3 </li>
- *     <li>3: code improvements and clean up </li>
- *     <li>2: basic improvements </li>
- *     <li>1: basic implementation </li>
- * </ul>
+ * This class was implemented after version 1 of RyCON to get easier access to different things.
+ * The main idea to do this step was influenced by the code base of JOSM, which is the most popular
+ * java written editor for OpenStreetMap data.
  *
  * @author sebastian
- * @version 6
+ * @version 7
  * @since 2
  */
 public abstract class Main {
@@ -120,10 +111,6 @@ public abstract class Main {
     private static final String PARAM_EDIT_STRING = "EDIT";
     private static final String PARAM_FREE_STATION_STRING = "FS";
     private static final String PARAM_KNOWN_STATION_STRING = "ST";
-    private static final String SEPARATOR_COMMA = ",";
-    private static final String SEPARATOR_SEMICOLON = ";";
-    private static final String SEPARATOR_SPACE = " ";
-    private static final String SEPARATOR_TAB = "\t";
     private static final String LAST_POS_PRIMARY_MONITOR = "-9999, -9999";
     private static final String LAST_POS_SECONDARY_MONITOR = "-9998, -9998,";
     /**
@@ -148,7 +135,6 @@ public abstract class Main {
     public static StatusBar statusBar;
     private static boolean isSettingsWidgetOpenStatus = false;
     private static boolean isSubShellOpenStatus = false;
-    private static String converter_setting_eliminate_zero_coordinate;
 
     /**
      * Construct a new {@code Main} object with all it's functionality.
@@ -167,6 +153,7 @@ public abstract class Main {
      * --locale=<LOCALE>    <LOCALE> in ISO 639 alpha-2 or alpha-3 language code (e.g. de for GERMAN, en for ENGLISH)
      *
      * @param args command line interface arguments
+     *
      * @since 5
      */
     protected static void checkCommandLineInterfaceArguments(String... args) {
@@ -187,15 +174,16 @@ public abstract class Main {
     /**
      * Check the current JAVA version.
      * <p>
-     * During the startup of RyCON the version of the installed JRE is checked. 
-     * RyCON can be started only if a minimum version of a JRE is installed on 
+     * During the startup of RyCON the version of the installed JRE is checked.
+     * RyCON can be started only if a minimum version of a JRE is installed on
      * the system. This is due to swt dependencies and java dependencies.
      * <p>
      * At minimum a JRE version of 1.7 is necessary and must be installed on the
      * target system.
-     * 
-     * @since 2
+     *
      * @return current JAVA version
+     *
+     * @since 2
      */
     protected static String checkJavaVersion() {
         String version = System.getProperty("java.version");
@@ -203,9 +191,9 @@ public abstract class Main {
         if (version != null) {
             // safe check
             int pos = version.indexOf('.');
-            pos = version.indexOf('.', pos+1);
-            double ver = Double.parseDouble (version.substring (0, pos));
-            
+            pos = version.indexOf('.', pos + 1);
+            double ver = Double.parseDouble(version.substring(0, pos));
+
             if (ver < 1.7) {
                 Display display = new Display();
                 Shell shell = new Shell(display);
@@ -243,7 +231,7 @@ public abstract class Main {
      * and an update is offered. This update has to be installed manually.
      * <p>
      * At the moment it is not planned to force an automatic update via Java Webstart functions or special routines.
-     * 
+     *
      * @since 3
      */
     protected static void checkRyCONVersion() {
@@ -261,7 +249,7 @@ public abstract class Main {
             if (updater.isUpdateAvailable()) {
                 Display display = new Display();
                 Shell shell = new Shell(display);
-                
+
                 UpdateDialog updateDialog = new UpdateDialog(shell);
                 updateDialog.setText(I18N.getInfoTitleRyCONUpdate());
                 updateDialog.setMessage(I18N.getInfoTextRyCONUpdate());
@@ -292,6 +280,7 @@ public abstract class Main {
      * Return the path of the admin directory as string value.
      *
      * @return admin directory path
+     *
      * @since 3
      */
     public static String getDirAdmin() {
@@ -302,6 +291,7 @@ public abstract class Main {
      * Return the path of the admin template directory as string value.
      *
      * @return admin template directory path
+     *
      * @since 3
      */
     public static String getDirAdminTemplate() {
@@ -312,6 +302,7 @@ public abstract class Main {
      * Return the path of the base directory as string value.
      *
      * @return base directory path
+     *
      * @since 3
      */
     public static String getDirBase() {
@@ -340,6 +331,7 @@ public abstract class Main {
      * Return the path of the project directory as string value.
      *
      * @return project directory path
+     *
      * @since 3
      */
     public static String getDirProject() {
@@ -350,6 +342,7 @@ public abstract class Main {
      * Return the path of the project template directory as string value.
      *
      * @return project template directory
+     *
      * @since 3
      */
     public static String getDirProjectTemplate() {
@@ -360,6 +353,7 @@ public abstract class Main {
      * Return true as the indicator for GSI16.
      *
      * @return true as indicator for GSI16 format
+     *
      * @since 3
      */
     public static boolean getGSI16() {
@@ -370,16 +364,18 @@ public abstract class Main {
      * Return false as the indicator for GSI8.
      *
      * @return false as indicator for GSI8 format
+     *
      * @since 3
      */
     public static boolean getGSI8() {
         return GSI8;
     }
-    
+
     /**
      * Return true or false as String for indicating a blank at the end of a gsi format line.
      *
      * @return true or false
+     *
      * @since 4
      */
     public static String getGSISettingLineEnding() {
@@ -388,6 +384,7 @@ public abstract class Main {
 
     /**
      * Return the value of the primary position string.
+     *
      * @return primary position string
      */
     public static String getLastPosPrimaryMonitor() {
@@ -396,6 +393,7 @@ public abstract class Main {
 
     /**
      * Return the value of the secondary position string.
+     *
      * @return secondary position string
      */
     public static String getLastPosSecondaryMonitor() {
@@ -404,6 +402,7 @@ public abstract class Main {
 
     /**
      * Return the number of the last used display RyCON was shown on.
+     *
      * @return last used display
      */
     public static String getLastUsedDisplay() {
@@ -414,6 +413,7 @@ public abstract class Main {
      * Return the value of the code string ('CODE').
      *
      * @return code string
+     *
      * @since 8
      */
     public static String getParamCodeString() {
@@ -424,6 +424,7 @@ public abstract class Main {
      * Return the value of the control point string ('STKE').
      *
      * @return control point string
+     *
      * @since 3
      */
     public static String getParamControlPointString() {
@@ -434,6 +435,7 @@ public abstract class Main {
      * Return the value of the edit string ('EDIT').
      *
      * @return edit string
+     *
      * @since 8
      */
     public static String getParamEditString() {
@@ -444,6 +446,7 @@ public abstract class Main {
      * Return the value of the eliminate zero coordinates flag.
      *
      * @return eliminate zero coordinates
+     *
      * @since 8
      */
     public static String getParamEliminateZeroCoordinates() {
@@ -454,6 +457,7 @@ public abstract class Main {
      * Return the value of the free station string ('FS').
      *
      * @return free station string
+     *
      * @since 3
      */
     public static String getParamFreeStationString() {
@@ -464,6 +468,7 @@ public abstract class Main {
      * Return the value of the known station string ('ST').
      *
      * @return known station string
+     *
      * @since 3
      */
     public static String getParamKnownStationString() {
@@ -474,6 +479,7 @@ public abstract class Main {
      * Return the value of the LTOP use zenith distance flag.
      *
      * @return LTOP use zenith distance instead of height angle
+     *
      * @since 8
      */
     public static String getParamLTOPUseZenithDistance() {
@@ -483,6 +489,7 @@ public abstract class Main {
     /**
      * Return the value for the minimum distance in which two points may be equal. (e.g. two points within 3cm may be
      * the same points)
+     *
      * @return minimum distance for points to be equal
      */
     public static String getPointIdenticalDistance() {
@@ -493,6 +500,7 @@ public abstract class Main {
      * Return the app name ('RyCON') as String.
      *
      * @return the app name ('RyCON')
+     *
      * @since 3
      */
     public static String getRyCONAppName() {
@@ -542,46 +550,6 @@ public abstract class Main {
      */
     protected static int getRyCON_GRID_WIDTH() {
         return RyCON_GRID_WIDTH;
-    }
-
-    /**
-     * Return the sign for the comma separator as string.
-     *
-     * @return comma sign
-     * @since 3
-     */
-    public static String getSeparatorComma() {
-        return SEPARATOR_COMMA;
-    }
-
-    /**
-     * Return the sign for the semicolon separator as string.
-     *
-     * @return semicolon sign
-     * @since 3
-     */
-    public static String getSeparatorSemicolon() {
-        return SEPARATOR_SEMICOLON;
-    }
-
-    /**
-     * Return the sign for the space separator as string.
-     *
-     * @return space sign
-     * @since 3
-     */
-    public static String getSeparatorSpace() {
-        return SEPARATOR_SPACE;
-    }
-
-    /**
-     * Return the sign for the tab separator as string.
-     *
-     * @return tab sign
-     * @since 3
-     */
-    public static String getSeparatorTab() {
-        return SEPARATOR_TAB;
     }
 
     /**
@@ -644,8 +612,9 @@ public abstract class Main {
     /**
      * Set the locale to a given language code in alpha-2 or alpha-3 language code.
      *
-     * @see {url http://docs.oracle.com/javase/7/docs/api/java/util/Locale.html}
      * @param languageCode language code
+     *
+     * @see {url http://docs.oracle.com/javase/7/docs/api/java/util/Locale.html}
      */
     private static void setLocaleTo(String languageCode) {
         Locale.setDefault(new Locale(languageCode, languageCode.toUpperCase()));

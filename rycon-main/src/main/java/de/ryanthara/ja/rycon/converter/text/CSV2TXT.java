@@ -21,8 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class provides functions to convert CSV formatted files into
- * text formatted measurement or coordinate files.
+ * This class provides functions to convert a CSV formatted measurement or coordinate file into a text formatted file.
  *
  * @author sebastian
  * @version 1
@@ -30,7 +29,7 @@ import java.util.List;
  */
 public class CSV2TXT {
 
-    private List<String[]> readCSVLines = null;
+    private List<String[]> readCSVLines;
 
     /**
      * Class constructor for read line based CSV files.
@@ -43,8 +42,11 @@ public class CSV2TXT {
 
     /**
      * Converts a CSV file into a TXT file with a given separator sign.
+     * <p>
+     * The number of columns are quite equal.
      *
      * @param separator separator sign to use for conversion
+     *
      * @return converted TXT file
      */
     public ArrayList<String> convertCSV2TXT(String separator) {

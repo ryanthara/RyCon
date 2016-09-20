@@ -21,8 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class provides functions to convert csv formatted coordinate files from the geodata server
- * Basel Stadt (Switzerland) into text formatted files.
+ * This class provides functions to convert a csv formatted coordinate file from the geodata server
+ * Basel Stadt (Switzerland) into a text formatted file.
  *
  * @author sebastian
  * @version 1
@@ -33,7 +33,7 @@ public class CSVBaselStadt2TXT {
     private List<String[]> readCSVLines = null;
 
     /**
-     * Class constructor for read line based CSV files.
+     * Class constructor for read line based CSV files from the geodata server Basel Stadt (Switzerland).
      *
      * @param readCSVLines {@code List<String[]>} with lines as {@code String[]}
      */
@@ -42,7 +42,7 @@ public class CSVBaselStadt2TXT {
     }
 
     /**
-     * Converts a CSV file from the geodata server Basel Stadt (Switzerland) into a txt format file.
+     * Converts a CSV file from the geodata server Basel Stadt (Switzerland) into a text formatted file.
      * <p>
      * With a parameter it is possible to distinguish between space or tabulator as separator.
      *

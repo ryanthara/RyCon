@@ -34,7 +34,7 @@ import java.util.TreeSet;
  */
 public class GSI2CSV {
 
-    private ArrayList<String> readStringLines;
+    private BaseToolsGSI baseToolsGSI;
 
     /**
      * Class constructor for read line based text files in different formats.
@@ -42,11 +42,11 @@ public class GSI2CSV {
      * @param readStringLines {@code ArrayList<String>} with lines in text format
      */
     public GSI2CSV(ArrayList<String> readStringLines) {
-        this.readStringLines = readStringLines;
+        baseToolsGSI = new BaseToolsGSI(readStringLines);
     }
 
     /**
-     * Convert a GSI file into a comma or semicolon delimited CSV file.
+     * Converts a GSI file into a comma or semicolon delimited CSV file.
      * <p>
      * With parameter it is possible to set the separation char (comma or semicolon).
      *
@@ -57,7 +57,6 @@ public class GSI2CSV {
      */
     public ArrayList<String> convertGSI2CSV(String separator, boolean writeCommentLine) {
         ArrayList<String> result = new ArrayList<>();
-        BaseToolsGSI baseToolsGSI = new BaseToolsGSI();
         TreeSet<Integer> foundWordIndices = baseToolsGSI.getFoundWordIndices();
 
         // prepare comment line if necessary

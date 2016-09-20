@@ -22,9 +22,13 @@ import org.apache.poi.ss.usermodel.Workbook;
 import java.util.ArrayList;
 
 /**
- * Created by sebastian on 13.09.16.
- */
-public class Zeiss2Excel {
+ * This class provides functions to convert measurement files from Zeiss REC format
+ * and it's dialects (R4, R5, REC500 and M5) into Microsoft Excel (XLS and XLSX) files.
+ *
+ * @author sebastian
+ * @version 1
+ * @since 12
+ */public class Zeiss2Excel {
 
     private ArrayList<String> readStringLines;
     private Workbook workbook = null;

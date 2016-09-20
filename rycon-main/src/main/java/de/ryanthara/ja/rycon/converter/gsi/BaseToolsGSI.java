@@ -40,17 +40,92 @@ import java.util.*;
  */
 public class BaseToolsGSI {
 
-    private boolean isGSI16 = false;
-
-    private ArrayList<String> readStringLines = null;
-    private List<String[]> readCSVLines = null;
+    private ArrayList<String> readStringLines;
     private TreeSet<Integer> foundWordIndices;
 
     /**
-     * Default constructor without additional functions.
+     * Class constructor for read line based text files in different formats.
+     *
+     * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
      */
-    public BaseToolsGSI() {
+    public BaseToolsGSI(ArrayList<String> readStringLines) {
+        this.readStringLines = readStringLines;
         foundWordIndices = new TreeSet<>();
+    }
+
+    /**
+     * Transforms a line of encoded {@code GSIBlock} into a string line and fill it up into an
+     * {@code ArrayList<String>} for file writing.
+     *
+     * @param isGSI16          distinguish between GSI8 or GSI16 output format
+     * @param encodedGSIBlocks ArrayList<ArrayList<GSIBlock>> of encoded GSIBlocks
+     *
+     * @return transformed string line with GSI content
+     */
+    static ArrayList<String> lineTransformation(boolean isGSI16, ArrayList<ArrayList<GSIBlock>> encodedGSIBlocks) {
+        ArrayList<String> result = new ArrayList<>();
+
+        for (ArrayList<GSIBlock> blocksInLines : encodedGSIBlocks) {
+            String newLine = "";
+
+            if (isGSI16) {
+                newLine = "*";
+            }
+
+            int counter = 0;
+
+            for (GSIBlock block : blocksInLines) {
+                newLine = newLine.concat(block.toString(isGSI16));
+
+                if (counter < blocksInLines.size()) {
+                    newLine = newLine.concat(" ");
+                }
+
+                counter++;
+            }
+
+            newLine = prepareLineEnding(newLine);
+
+            result.add(newLine);
+        }
+
+        return result;
+    }
+
+    /**
+     * Prepares the line ending with an additional white space character.
+     * <p>
+     * For some reasons (e.g. self written Autocad VBA tools) it is necessary to add an additional white space
+     * at the line ending. This is done with this helper.
+     *
+     * @param stringToPrepare string to prepare
+     *
+     * @return prepared string
+     */
+    public static String prepareLineEnding(String stringToPrepare) {
+        boolean concatBlankAtLineEnding = Boolean.parseBoolean(Main.pref.getUserPref(PreferenceHandler.GSI_SETTING_LINE_ENDING_WITH_BLANK));
+
+        if (concatBlankAtLineEnding) {
+            if (!stringToPrepare.endsWith(" ")) {
+                stringToPrepare = stringToPrepare.concat(" ");
+            }
+        }
+
+        return stringToPrepare;
+    }
+
+    /**
+     * Encodes a read string line that contains gsi data into an encapsulated <code>ArrayList</code> of
+     * <code>GSIBlock</code>s.
+     *
+     * @return encoded GSIBlocks
+     */
+    public ArrayList<ArrayList<GSIBlock>> getEncodedLinesOfGSIBlocks() {
+        if (readStringLines != null && readStringLines.size() > 0) {
+            return blockEncoder(readStringLines);
+        } else {
+            return new ArrayList<>();
+        }
     }
 
     /**
@@ -69,7 +144,7 @@ public class BaseToolsGSI {
      *
      * @return encoded ArrayList of GSIBlocks
      */
-    ArrayList<ArrayList<GSIBlock>> blockEncoder(ArrayList<String> lines) {
+    private ArrayList<ArrayList<GSIBlock>> blockEncoder(ArrayList<String> lines) {
         ArrayList<GSIBlock> blocks;
         ArrayList<ArrayList<GSIBlock>> blocksInLines = new ArrayList<>();
 
@@ -114,71 +189,6 @@ public class BaseToolsGSI {
         }
 
         return blocksInLines;
-    }
-
-    /**
-     * Encodes a read string line that contains gsi data into an encapsulated <code>ArrayList</code> of
-     * <code>GSIBlock</code>s.
-     * <p>
-     * Depending on the constructor pasted line type, the right encoding will be done.
-     *
-     * @return encoded GSIBlocks
-     */
-    public ArrayList<ArrayList<GSIBlock>> getEncodedLinesOfGSIBlocks() {
-        if (readCSVLines != null && readCSVLines.size() > 0) {
-            CSV2GSI csv2GSI = new CSV2GSI(readCSVLines);
-            return blockEncoder(csv2GSI.convertCSV2GSI(isGSI16, false));
-        } else if (readStringLines != null && readStringLines.size() > 0) {
-            return blockEncoder(readStringLines);
-        } else {
-            return new ArrayList<>();
-        }
-    }
-
-    public ArrayList<String> lineTransformation(boolean isGSI16, ArrayList<ArrayList<GSIBlock>> encodedGSIBlocks) {
-        ArrayList<String> result = new ArrayList<>();
-
-        for (ArrayList<GSIBlock> blocksInLines : encodedGSIBlocks) {
-            String newLine = "";
-
-            if (isGSI16) {
-                newLine = "*";
-            }
-
-            int counter = 0;
-
-            for (GSIBlock block : blocksInLines) {
-                newLine = newLine.concat(block.toString(isGSI16));
-
-                if (counter < blocksInLines.size()) {
-                    newLine = newLine.concat(" ");
-                }
-
-                counter++;
-            }
-
-            newLine = prepareLineEnding(newLine);
-
-            result.add(newLine);
-        }
-
-        return result;
-    }
-
-    /*
-     * For some reasons (e.g. self written Autocad VBA tools) it is necessary to add an additional white space
-     * at the line ending. This is done with this helper.
-     */
-    private String prepareLineEnding(String stringToPrepare) {
-        boolean concatBlankAtLineEnding = Boolean.parseBoolean(Main.pref.getUserPref(PreferenceHandler.GSI_SETTING_LINE_ENDING_WITH_BLANK));
-
-        if (concatBlankAtLineEnding) {
-            if (!stringToPrepare.endsWith(" ")) {
-                stringToPrepare = stringToPrepare.concat(" ");
-            }
-        }
-
-        return stringToPrepare;
     }
 
 } // end of BaseToolsGSI

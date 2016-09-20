@@ -26,44 +26,67 @@ import java.util.Date;
 
 /**
  * This class provides basic and helper functions that are used for converting different
- * file formats into text based Caplan K formatted measurement files.
+ * file formats into text based Caplan K formatted coordinate or measurement files.
  * <p>
  * The CAPLAN K file format is a line based and column orientated file format developed
- * by Cremer Programmentwicklung GmbH to store coordinates in different formats.
+ * by Cremer Programmentwicklung GmbH to store coordinates from different formats.
  * <p>
- * Example file:
+ * Example K file:
  * <p>
  * ----+----1----+----2----+----3----+----4----+----5----+----6----+----7----+----8
  * !-------------------------------------------------------------------------------
  * ! The following data was created by RyCON Build xxx on 2016-09-06.
  * !-------------------------------------------------------------------------------
- * GB1 7  2612259.5681  1256789.1990    256.90815 |10
- * GB2 7  2612259.5681  1256789.1990    256.90815 |10
- * 1003 7  2612259.5681  1256789.1990    256.90815 |10|Att1|Att2
- * 1062 7  2612259.5681  1256789.1990    256.90815 |10
+ *      GB1 7  2612259.5681  1256789.1990    256.90815 |10
+ *      GB2 7  2612259.5681  1256789.1990    256.90815 |10
+ *     1003 7  2612259.5681  1256789.1990    256.90815 |10|Att1|Att2
+ *     1062 7  2612259.5681  1256789.1990    256.90815 |10
  * TF 1067G 4  2612259.5681  1256789.1990    256.90815 |10
  * NG 2156U 3  2612259.5681  1256789.1990      0.00000 |10
  *
  * @author sebastian
- * @version 1
+ * @version 2
  * @since 12
  */
-public class BaseToolsCaplanK {
+class BaseToolsCaplanK {
 
     // prevent wrong output with empty strings of defined length
+    /**
+     * Default string with defined length for the valency value.
+     */
     public static final String valency = "  ";
-    public static final String easting = "              ";
-    public static final String northing = "              ";
-    public static final String height = "             ";
-    public static final String freeSpace = " ";
-    public static final String objectTyp = "";
 
     /**
-     * Eliminates not allowed chars like '*', ',' and ';' from point number string.
-     *
-     * @param number number to be checked
+     * Default string with defined length for the easting coordinate.
      */
-    public static String preparePointNumber(String number) {
+    public static final String easting = "              ";
+
+    /**
+     * Default string with defined length for the northing coordinate.
+     */
+    public static final String northing = "              ";
+
+    /**
+     * Default string with defined length for the height coordinate.
+     */
+    public static final String height = "             ";
+
+    /**
+     * Default string with defined length for the free space sign.
+     */
+    static final String freeSpace = " ";
+
+    /**
+     * Default string with defined length for the object type.
+     */
+    static final String objectTyp = "";
+
+    /**
+     * Eliminates not allowed chars like '*', ',' and ';' from the point number string.
+     *
+     * @param number number to be checked and cleaned
+     */
+    static String cleanPointNumberString(String number) {
         String s = number.replaceAll("\\*", "#");
         s = s.replaceAll(",", ".");
         s = s.replaceAll(";", ":");
@@ -71,19 +94,21 @@ public class BaseToolsCaplanK {
     }
 
     /**
-     * @param useSimpleFormat
-     * @param number
-     * @param valency
-     * @param easting
-     * @param northing
-     * @param height
-     * @param freeSpace
-     * @param objectTyp
+     * Prepares an output line as a string with a defined format and defined values.
      *
-     * @return
+     * @param useSimpleFormat   write simple formatted output file
+     * @param number            point number
+     * @param valency           valency value
+     * @param easting           easting coordinate
+     * @param northing          northing coordinate
+     * @param height            height coordinate
+     * @param freeSpace         free space delimiter
+     * @param objectTyp         object typ
+     *
+     * @return prepared output string
      */
-    public static StringBuilder prepareStringBuilder(boolean useSimpleFormat, String number, String valency, String easting,
-                                                     String northing, String height, String freeSpace, String objectTyp) {
+    static StringBuilder prepareStringBuilder(boolean useSimpleFormat, String number, String valency, String easting,
+                                              String northing, String height, String freeSpace, String objectTyp) {
         StringBuilder stringBuilder = new StringBuilder();
         if (useSimpleFormat) {
             stringBuilder.append(number);
@@ -106,7 +131,7 @@ public class BaseToolsCaplanK {
     }
 
     /**
-     * Write the comment line into an given ArrayList<String>.
+     * Writes the comment line into a given {@code ArrayList<String>} object.
      *
      * @param result ArrayList<String> to write in
      */

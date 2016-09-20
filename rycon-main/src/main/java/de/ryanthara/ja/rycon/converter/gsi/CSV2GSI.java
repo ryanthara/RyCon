@@ -21,8 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class provides functions to convert csv formatted measurement or coordinate files into
- * Leica GSI8 or GSI16 formatted files.
+ * This class provides functions to convert a csv formatted measurement or coordinate file into
+ * a Leica GSI8 or GSI16 files.
  *
  * @author sebastian
  * @version 1

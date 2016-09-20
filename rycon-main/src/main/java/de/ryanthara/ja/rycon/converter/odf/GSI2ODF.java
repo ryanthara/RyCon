@@ -17,6 +17,7 @@
  */
 package de.ryanthara.ja.rycon.converter.odf;
 
+import de.ryanthara.ja.rycon.converter.gsi.BaseToolsGSI;
 import de.ryanthara.ja.rycon.i18n.I18N;
 import de.ryanthara.ja.rycon.tools.elements.GSIBlock;
 import org.odftoolkit.simple.SpreadsheetDocument;
@@ -30,7 +31,7 @@ import java.util.ArrayList;
  */
 public class GSI2ODF {
 
-    private ArrayList<String> readStringLines;
+    private BaseToolsGSI baseToolsGSI;
     private SpreadsheetDocument spreadsheetDocument;
 
     /**
@@ -39,11 +40,11 @@ public class GSI2ODF {
      * @param readStringLines {@code ArrayList<String>} with lines in text format
      */
     public GSI2ODF(ArrayList<String> readStringLines) {
-        this.readStringLines = readStringLines;
+        baseToolsGSI = new BaseToolsGSI(readStringLines);
     }
 
     /**
-     * Convert a Leica GSI file element by element into an Open Document Format spreadsheet file.
+     * Converts a Leica GSI file element by element into an Open Document Format spreadsheet file.
      *
      * @param sheetName name of the sheet (file name from input file)
      *
@@ -64,7 +65,7 @@ public class GSI2ODF {
             Cell cell;
 
             if (writeCommentRow) {
-                for (int wordIndex : toolsLeicaGSI.getFoundWordIndices()) {
+                for (int wordIndex : baseToolsGSI.getFoundWordIndices()) {
                     cell = table.getCellByPosition(colIndex, 0);
                     colIndex++;
 
@@ -74,7 +75,7 @@ public class GSI2ODF {
             }
 
             // fill gsi content into rows and cells
-            for (ArrayList<GSIBlock> blocksAsLines : toolsLeicaGSI.getEncodedLinesOfGSIBlocks()) {
+            for (ArrayList<GSIBlock> blocksAsLines : baseToolsGSI.getEncodedLinesOfGSIBlocks()) {
                 colIndex = 0;
                 for (GSIBlock block : blocksAsLines) {
                     cell = table.getCellByPosition(colIndex, rowIndex);

@@ -47,8 +47,8 @@ public class GSI8vsGSI16 {
      * @return converted GSI file
      */
     public ArrayList<String> convertGSI8vsGSI16(boolean isGSI16) {
-        BaseToolsGSI baseToolsGSI = new BaseToolsGSI();
-        return baseToolsGSI.lineTransformation(isGSI16, baseToolsGSI.blockEncoder(readStringLines));
+        BaseToolsGSI baseToolsGSI = new BaseToolsGSI(readStringLines);
+        return BaseToolsGSI.lineTransformation(isGSI16, baseToolsGSI.getEncodedLinesOfGSIBlocks());
     }
 
 } // end of GSI8vsGSI16

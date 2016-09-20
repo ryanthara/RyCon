@@ -20,7 +20,7 @@ package de.ryanthara.ja.rycon.converter.text;
 import java.util.ArrayList;
 
 /**
- * This class provides functions to convert Caplan K formatted measurement files into text formatted files.
+ * This class provides functions to convert a Caplan K formatted measurement file into text formatted file.
  *
  * @author sebastian
  * @version 1
@@ -38,7 +38,7 @@ public class K2TXT {
     }
 
     /**
-     * Convert an K formatted file (CAPLAN) to txt formatted file.
+     * Converts a Caplan K file to a text formatted file.
      *
      * @param separator         distinguish between tabulator or space as division sign
      * @param writeCommentLine  writes an comment line into the file

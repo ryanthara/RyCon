@@ -18,7 +18,7 @@
 package de.ryanthara.ja.rycon.converter.text;
 
 /**
- * This class implements basic operations on text based measurement and coordinate files.
+ * This class implements basic operations for text based measurement and coordinate files.
  * <p>
  * Therefore a couple of methods and helpers are implemented to do the conversions and
  * operations on the given text files.
@@ -29,6 +29,14 @@ package de.ryanthara.ja.rycon.converter.text;
  */
 public class BaseToolsTXT {
 
+    /**
+     * Use white space (' ') as separator sign.
+     */
+    public static final String SEPARATOR_SPACE = " ";
 
+    /**
+     * Use the tabulator ('\t') as separator sign.
+     */
+    public static final String SEPARATOR_TAB = "\t";
 
-}
+} // end of BaseToolsTXT

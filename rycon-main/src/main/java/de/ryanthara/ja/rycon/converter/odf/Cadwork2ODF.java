@@ -24,7 +24,11 @@ import org.odftoolkit.simple.table.Table;
 import java.util.ArrayList;
 
 /**
- * Created by sebastian on 13.09.16.
+ * This class provides functions to convert coordinate files from Cadwork CAD program into OpenDocument spreadsheet files.
+ *
+ * @author sebastian
+ * @version 1
+ * @since 12
  */
 public class Cadwork2ODF {
 
@@ -32,16 +36,16 @@ public class Cadwork2ODF {
     private SpreadsheetDocument spreadsheetDocument;
 
     /**
-     * Class constructor for read line based text files in different formats.
+     * Class constructor for read line based text files from Cadwork CAD program in node.dat file format.
      *
-     * @param readStringLines {@code ArrayList<String>} with lines in text format
+     * @param readStringLines {@code ArrayList<String>} with read lines from node.dat file
      */
     public Cadwork2ODF(ArrayList<String> readStringLines) {
         this.readStringLines = readStringLines;
     }
 
     /**
-     * Converts a Cadwork node.dat file into an Open Document Format spreadsheet file.
+     * Converts a coordinate file from Cadwork (node.dat) into an Open Document Format spreadsheet file.
      * <p>
      * Cadwork node.dat files are tab separated.
      *

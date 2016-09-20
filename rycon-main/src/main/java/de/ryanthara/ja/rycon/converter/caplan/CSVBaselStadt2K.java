@@ -23,14 +23,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by sebastian on 07.09.16.
+ * This class provides functions to convert csv formatted coordinate files from the geodata server
+ * Basel Stadt (Switzerland) into comma separated files (CSV).
+ *
+ * @author sebastian
+ * @version 1
+ * @since 12
  */
 public class CSVBaselStadt2K {
 
     private List<String[]> readCSVLines = null;
 
     /**
-     * Class constructor for read line based CSV files.
+     * Class constructor for read line based CSV files from the geodata server Basel Stadt (Switzerland).
      *
      * @param readCSVLines {@code List<String[]>} with lines as {@code String[]}
      */
@@ -39,12 +44,13 @@ public class CSVBaselStadt2K {
     }
 
     /**
-     * Converts a CSV file from the geodata server Basel Stadt (Switzerland) into a K format file.
+     * Converts a comma separated coordinate file from the geodata server Basel Stadt (Switzerland)
+     * into a Zeiss REC file.
      *
      * @param useSimpleFormat  option to write a reduced K file which is compatible to ZF LaserControl
      * @param writeCommentLine option to write a comment line into the K file with basic information
      *
-     * @return converted K file as ArrayList<String>
+     * @return converted K file as {@code ArrayList<String>}
      */
     public ArrayList<String> convertCSVBaselStadt2K(boolean useSimpleFormat, boolean writeCommentLine) {
         ArrayList<String> result = new ArrayList<>();
@@ -64,7 +70,7 @@ public class CSVBaselStadt2K {
             String objectTyp = BaseToolsCaplanK.objectTyp;
 
             // point number (no '*', ',' and ';'), column 1 - 16
-            String number = BaseToolsCaplanK.preparePointNumber(stringField[0].replaceAll("\\s+", "").trim());
+            String number = BaseToolsCaplanK.cleanPointNumberString(stringField[0].replaceAll("\\s+", "").trim());
 
             // easting E, column 19-32
             String easting = String.format("%14s", NumberHelper.fillDecimalPlace(stringField[2], 4));

@@ -23,9 +23,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by sebastian on 07.09.16.
- */
-public class CSV2K {
+ * This class provides functions to convert comma separated coordinate files (CSV format) into Caplan K files.
+ *
+ * @author sebastian
+ * @version 1
+ * @since 12
+ */public class CSV2K {
 
     private List<String[]> readCSVLines = null;
 
@@ -39,7 +42,7 @@ public class CSV2K {
     }
 
     /**
-     * Convert a CSV file (nr;x;y;z or nr;code;x;y;z) into a K format file.
+     * Converts a CSV file (nr;x;y;z or nr;code;x;y;z) into a Caplan K file.
      *
      * @param useSimpleFormat  option to write a reduced K file which is compatible to ZF LaserControl
      * @param writeCommentLine option to write a comment line into the K file with basic information
@@ -64,7 +67,7 @@ public class CSV2K {
             String height = BaseToolsCaplanK.height;
 
             // point number (no '*', ',' and ';'), column 1 - 16
-            String number = BaseToolsCaplanK.preparePointNumber(stringField[0].replaceAll("\\s+", "").trim());
+            String number = BaseToolsCaplanK.cleanPointNumberString(stringField[0].replaceAll("\\s+", "").trim());
 
             switch (stringField.length) {
                 case 3:     // contains nr x y

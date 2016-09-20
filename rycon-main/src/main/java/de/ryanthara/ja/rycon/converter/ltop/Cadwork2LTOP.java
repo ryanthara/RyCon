@@ -23,23 +23,28 @@ import de.ryanthara.ja.rycon.tools.elements.RyPoint;
 import java.util.ArrayList;
 
 /**
- * Created by sebastian on 13.09.16.
+ * This class provides functions to convert coordinate files from Cadwork CAD program into KOO files for LTOP.
+ *
+ * @author sebastian
+ * @version 1
+ * @since 12
  */
 public class Cadwork2LTOP {
 
     private ArrayList<String> readStringLines;
 
     /**
-     * Class constructor for read line based text files.
+     * Class constructor for read line based text files from Cadwork CAD program in node.dat file format.
      *
-     * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
+     * @param readStringLines {@code ArrayList<String>} with read lines from node.dat file
      */
     public Cadwork2LTOP(ArrayList<String> readStringLines) {
         this.readStringLines = readStringLines;
     }
 
     /**
-     * Converts a cadwork node.dat coordinate file into a KOO file for LTOP.
+     * Converts a cadwork node.dat coordinate file into a .
+     * Converts a coordinate file from Cadwork (node.dat) into a KOO file for LTOP.
      *
      * @param useZeroHeights      use zero value for not given height values
      * @param eliminateDuplicates eliminate duplicate coordinates within 3cm radius

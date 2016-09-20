@@ -18,7 +18,25 @@
 package de.ryanthara.ja.rycon.converter.csv;
 
 /**
- * Created by sebastian on 07.09.16.
+ * This class implements basic operations on comma separated values (CSV) measurement and coordinate files.
+ * <p>
+ * Therefore a couple of methods and helpers are implemented to do the conversions and
+ * operations on the given csv files.
+ *
+ * @author sebastian
+ * @version 12
+ * @since 1
  */
 public class BaseToolsCSV {
-}
+
+    /**
+     * Use the comma (',') as separator sign.
+     */
+    public static final String SEPARATOR_COMMA = ",";
+
+    /**
+     * Use the semicolon (';') as separator sign.
+     */
+    public static final String SEPARATOR_SEMICOLON = ";";
+
+} // end of BaseToolsCSV

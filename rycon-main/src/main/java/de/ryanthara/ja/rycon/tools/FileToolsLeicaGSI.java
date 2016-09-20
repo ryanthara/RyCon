@@ -34,19 +34,9 @@ import java.util.*;
  * The GSI interface is composed in a sequence of blocks, ending with a
  * terminator (CR or CR/LF). The later introduced enhanced GSI16 format
  * starts every line with a <code>*</code> sign.
- * <p>
- * <h3>Changes:</h3>
- * <ul>
- * <li>6: precise the header clean up for conversion from ASCII to GSI after changes in NIGRA WIN line endings</li>
- * <li>5: NIGRA support implemented for dnd-support of the levelling widget</li>
- * <li>4: defeat bug #3 blank sign at line ending in GSI file and bug #1</li>
- * <li>3: code improvements and clean up </li>
- * <li>2: basic improvements </li>
- * <li>1: basic implementation </li>
- * </ul>
  *
  * @author sebastian
- * @version 6
+ * @version 7
  * @since 1
  */
 public class FileToolsLeicaGSI {
@@ -54,7 +44,6 @@ public class FileToolsLeicaGSI {
     private boolean isGSI16 = false;
     private ArrayList<String> readStringLines = null;
     private TreeSet<Integer> foundCodes = new TreeSet<>();
-    private TreeSet<Integer> foundWordIndices = new TreeSet<>();
 
     /**
      * Class constructor for read line based text files in different formats.
@@ -64,53 +53,6 @@ public class FileToolsLeicaGSI {
     public FileToolsLeicaGSI(ArrayList<String> readStringLines) {
         this.readStringLines = readStringLines;
     }
-
-    /**
-     * Convert a NIGRA height listing (*.ASC) into a Leica GSI file.
-     *
-     * @param isGSI16 true if GSI16 format is used
-     *
-     * @return converted GSI format file
-     *
-     * @since 5
-     */
-    public ArrayList<String> convertNIGRA2GSI(boolean isGSI16) {
-        ArrayList<GSIBlock> blocks;
-        ArrayList<ArrayList<GSIBlock>> blocksInLines = new ArrayList<>();
-        StringTokenizer stringTokenizer;
-
-        int lineCounter = 1;
-
-        // skip the first 7 lines without any needed information
-        for (int i = 5; i < readStringLines.size(); i++) {
-            blocks = new ArrayList<>();
-            String line = readStringLines.get(i);
-            stringTokenizer = new StringTokenizer(line);
-
-            if (stringTokenizer.countTokens() > 2) {
-                String number = stringTokenizer.nextToken();
-                String easting = Integer.toString(i);
-                String northing = Integer.toString(i);
-                String height = stringTokenizer.nextToken();
-
-                blocks.add(new GSIBlock(isGSI16, 11, lineCounter, number));
-                blocks.add(new GSIBlock(isGSI16, 81, lineCounter, easting));
-                blocks.add(new GSIBlock(isGSI16, 82, lineCounter, northing));
-                blocks.add(new GSIBlock(isGSI16, 83, lineCounter, height));
-            }
-
-            // check for at least one or more added elements to prevent writing empty lines
-            if (blocks.size() > 0) {
-                lineCounter++;
-                blocksInLines.add(blocks);
-            }
-        }
-
-        BaseToolsGSI baseToolsGSI = new BaseToolsGSI();
-
-        return baseToolsGSI.lineTransformation(isGSI16, blocksInLines);
-    }
-
 
     /**
      * Return the found codes as {@code TreeSet<Integer>}.
@@ -140,7 +82,8 @@ public class FileToolsLeicaGSI {
         String newLine = null;
 
         // transform lines into GSI-Blocks
-        ArrayList<ArrayList<GSIBlock>> gsiBlocks = blockEncoder(readStringLines);
+        BaseToolsGSI baseToolsGSI = new BaseToolsGSI(readStringLines);
+        ArrayList<ArrayList<GSIBlock>> gsiBlocks = baseToolsGSI.getEncodedLinesOfGSIBlocks();
 
         // one top level for every code
         ArrayList<ArrayList<String>> result = new ArrayList<>();
@@ -184,7 +127,7 @@ public class FileToolsLeicaGSI {
                 }
             }
 
-            newLine = prepareLineEnding(newLine);
+            newLine = BaseToolsGSI.prepareLineEnding(newLine);
 
             // split lines with and without code
             if (((code != -1) & (newLine != null)) & validCheckHelperValue > 1) {
@@ -321,7 +264,7 @@ public class FileToolsLeicaGSI {
                         String leveledRounded = leveled.substring(0, 4) + "26" + leveled.substring(6, 7) + "0" + leveled.substring(7, leveled.length() - 1);
 
                         newLine = newLine.concat(" " + leveledRounded);
-                        newLine = prepareLineEnding(newLine);
+                        newLine = BaseToolsGSI.prepareLineEnding(newLine);
 
                         result.add(newLine);
                         lineCounter++;
@@ -491,7 +434,7 @@ public class FileToolsLeicaGSI {
         for (int i = 0; i < helperArray.length; i++) {
             int value = helperArray[i];
 
-            String resultLine = prepareLineEnding(readStringLines.get(i));
+            String resultLine = BaseToolsGSI.prepareLineEnding(readStringLines.get(i));
 
             if (value == 9) {
                 result.add(resultLine);
@@ -511,65 +454,6 @@ public class FileToolsLeicaGSI {
         }
 
         return result;
-    }
-
-    private ArrayList<ArrayList<GSIBlock>> blockEncoder(ArrayList<String> lines) {
-        ArrayList<GSIBlock> blocks;
-        ArrayList<ArrayList<GSIBlock>> blocksInLines = new ArrayList<>();
-
-        for (String line : lines) {
-            int size;
-            blocks = new ArrayList<>();
-
-            if (line.startsWith("*")) {
-                size = 24;
-                line = line.substring(1, line.length());
-            } else {
-                size = 16;
-            }
-
-            // split read line into separate Strings
-            List<String> lineSplit = new ArrayList<>((line.length() + size - 1) / size);
-            for (int i = 0; i < line.length(); i += size) {
-                lineSplit.add(line.substring(i, Math.min(line.length(), i + size)));
-            }
-
-            // used instead of 'deprecated' StringTokenizer here
-            for (String blockAsString : lineSplit) {
-                GSIBlock block = new GSIBlock(blockAsString);
-                blocks.add(block);
-                foundWordIndices.add(block.getWordIndex());
-            }
-
-            // sort every 'line' of GSI blocks by word index (WI)
-            Collections.sort(blocks, new Comparator<GSIBlock>() {
-                @Override
-                public int compare(GSIBlock o1, GSIBlock o2) {
-                    if (o1.getWordIndex() > o2.getWordIndex()) {
-                        return 1;
-                    } else {
-                        return -1;
-                    }
-                }
-            });
-
-            // fill in the sorted 'line' of blocks into an array
-            blocksInLines.add(blocks);
-        }
-
-        return blocksInLines;
-    }
-
-    private String prepareLineEnding(String stringToPrepare) {
-        boolean concatBlankAtLineEnding = Boolean.parseBoolean(Main.pref.getUserPref(PreferenceHandler.GSI_SETTING_LINE_ENDING_WITH_BLANK));
-
-        if (concatBlankAtLineEnding) {
-            if (!stringToPrepare.endsWith(" ")) {
-                stringToPrepare = stringToPrepare.concat(" ");
-            }
-        }
-
-        return stringToPrepare;
     }
 
     /**

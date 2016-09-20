@@ -33,16 +33,16 @@ public class Cadwork2GSI {
     private ArrayList<String> readStringLines;
 
     /**
-     * Class constructor for read line based coordinate files from cadwork CAD program.
+     * Class constructor for read line based text files from Cadwork CAD program in node.dat file format.
      *
-     * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
+     * @param readStringLines {@code ArrayList<String>} with read lines from node.dat file
      */
     public Cadwork2GSI(ArrayList<String> readStringLines) {
         this.readStringLines = readStringLines;
     }
 
     /**
-     * Converts a cadwork node.dat file into GSI8 or GS16 format.
+     * Converts a coordinate file from Cadwork (node.dat) into a Leica GSI8 or GS16 formatted file.
      * <p>
      * Due to issues data precision is going to be lost.
      *
@@ -96,9 +96,7 @@ public class Cadwork2GSI {
             }
         }
 
-        BaseToolsGSI baseToolsGSI = new BaseToolsGSI();
-
-        return baseToolsGSI.lineTransformation(isGSI16, blocksInLines);
+        return BaseToolsGSI.lineTransformation(isGSI16, blocksInLines);
     }
 
 } // end of Cadwork2GSI

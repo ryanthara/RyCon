@@ -24,15 +24,6 @@ import java.util.*;
  * <p>
  * Therefore a couple of methods and helpers are implemented to do the conversions and
  * operations on the given text files.
- * <p>
- * <h3>Changes:</h3>
- * <ul>
- * <li>5: support for cadwork node.dat files, code clean up</li>
- * <li>4: support for NIGRA levelling files</li>
- * <li>3: code improvements and clean up </li>
- * <li>2: basic improvements </li>
- * <li>1: basic implementation </li>
- * </ul>
  *
  * @author sebastian
  * @version 5
@@ -53,7 +44,7 @@ public class FileToolsText {
     }
 
     /**
-     * Return the found codes as an integer array.
+     * Returns the found codes as an integer array.
      * <p>
      * This is necessary because of the elimination of the code in the string line.
      *
@@ -64,7 +55,7 @@ public class FileToolsText {
     }
 
     /**
-     * Split a code based file into separate files by code.
+     * Splits a code based file into separate files by code.
      * <p>
      * A separate file is generated for every existing code. Lines without code will ignored.
      * RyCON need a text file format that is nr, code, x, y, z and divided by blank or tab.
@@ -149,7 +140,7 @@ public class FileToolsText {
     }
 
     /**
-     * Define an inner object for better access to read text elements.
+     * Defines an inner object for better access to read text elements.
      * <p>
      * In the first version this TextHelper object is used only internally in this class.
      * Maybe later on, there will be a good reason to make an own class from it.
