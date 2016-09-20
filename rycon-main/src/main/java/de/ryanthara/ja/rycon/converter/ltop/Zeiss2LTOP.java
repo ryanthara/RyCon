@@ -40,7 +40,7 @@ import java.util.ArrayList;
     }
 
     /**
-     * Converts a Zeiss REC file into a KOO file for LTOP.
+     * Converts a Zeiss REC file (R4, R5, M5 or REC500) into a KOO file for LTOP.
      *
      * @param eliminateDuplicates   eliminate duplicate points from KOO file
      * @param sortFileByNumber      sort KOO file by point number
@@ -48,6 +48,10 @@ import java.util.ArrayList;
      */
     public ArrayList<String> convertZeiss2KOO(boolean eliminateDuplicates, boolean sortFileByNumber) {
         ArrayList<String> result = new ArrayList<>();
+
+
+
+
         return result;
     }
 

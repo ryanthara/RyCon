@@ -43,7 +43,7 @@ public class Zeiss2K {
     }
 
     /**
-     * Converts a measurement file from Zeiss REC format (REC500, R4, R5 or M5) into a Caplan K file.
+     * Converts a measurement file from Zeiss REC format (R4, R5, REC500 or M5) into a Caplan K file.
      *
      * @param useSimpleFormat  output file with a simple structure
      * @param writeCodeColumn  write code column to output file

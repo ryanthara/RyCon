@@ -17,6 +17,7 @@
  */
 package de.ryanthara.ja.rycon.converter.gsi;
 
+import de.ryanthara.ja.rycon.converter.zeiss.BaseToolsZeiss;
 import de.ryanthara.ja.rycon.tools.elements.GSIBlock;
 
 import java.util.ArrayList;
@@ -45,7 +46,7 @@ public class Zeiss2GSI {
     }
 
     /**
-     * Convert a Zeiss REC file (R4, R5, M5 or REC500) into a GSI formatted file.
+     * Converts a Zeiss REC file (R4, R5, M5 or REC500) into a Leica GSI formatted file.
      * <p>
      * This method can differ between different Zeiss REC dialects because of the
      * different structure and line length.
@@ -81,81 +82,80 @@ public class Zeiss2GSI {
                 if (line.startsWith("For")) { // R4, R5 or M5
                     // differ dialect with special kind of substring variable (a, b) with different values
                     if (line.startsWith("For R4") || line.startsWith("For_R4")) {
-                        ptIDA = 7;
-                        ptIDB = 9;
-                        ptC = 10;
-                        ptD = 17;
-                        wb1A = 18;
-                        wb1B = 20;
-                        wb1C = 21;
-                        wb1D = 32;
-                        wb1E = 33;
-                        wb1F = 37;
-                        wb2A = 38;
-                        wb2B = 40;
-                        wb2C = 41;
-                        wb2D = 51;
-                        wb2E = 54;
-                        wb2F = 56;
-                        wb3A = 58;
-                        wb3B = 60;
-                        wb3C = 61;
-                        wb3D = 72;
-                        wb3E = 73;
-                        wb3F = 77;
+                        final int[] R4 = BaseToolsZeiss.R4_LINE_POSITIONS;
+                        ptIDA = R4[0];
+                        ptIDB = R4[1];
+                        ptC = R4[2];
+                        ptD = R4[3];
+                        wb1A = R4[4];
+                        wb1B = R4[5];
+                        wb1C = R4[6];
+                        wb1D = R4[7];
+                        wb1E = R4[8];
+                        wb1F = R4[9];
+                        wb2B = R4[10];
+                        wb2A = R4[11];
+                        wb2C = R4[12];
+                        wb2D = R4[13];
+                        wb2E = R4[14];
+                        wb2F = R4[15];
+                        wb3A = R4[16];
+                        wb3B = R4[17];
+                        wb3C = R4[18];
+                        wb3D = R4[19];
+                        wb3E = R4[20];
+                        wb3F = R4[21];
                     } else if (line.startsWith("For R5") || line.startsWith("For_R5")) {
-                        ptIDA = 16;
-                        ptIDB = 18;
-                        ptC = 19;
-                        ptD = 26;
-                        wb1A = 27;
-                        wb1B = 29;
-                        wb1C = 30;
-                        wb1D = 41;
-                        wb1E = 42;
-                        wb1F = 46;
-                        wb2A = 47;
-                        wb2B = 49;
-                        wb2C = 50;
-                        wb2D = 61;
-                        wb2E = 62;
-                        wb2F = 66;
-                        wb3A = 67;
-                        wb3B = 69;
-                        wb3C = 70;
-                        wb3D = 81;
-                        wb3E = 82;
-                        wb3F = 86;
-
-                        // special for R5
-                        lineNumber = line.substring(11, 14).trim();
+                        final int[] R5 = BaseToolsZeiss.R5_LINE_POSITIONS;
+                        lineNumber = line.substring(R5[0], R5[1]).trim();
+                        ptIDA = R5[2];
+                        ptIDB = R5[3];
+                        ptC = R5[4];
+                        ptD = R5[5];
+                        wb1A = R5[6];
+                        wb1B = R5[7];
+                        wb1C = R5[8];
+                        wb1D = R5[9];
+                        wb1E = R5[10];
+                        wb1F = R5[11];
+                        wb2B = R5[12];
+                        wb2A = R5[13];
+                        wb2C = R5[14];
+                        wb2D = R5[15];
+                        wb2E = R5[16];
+                        wb2F = R5[17];
+                        wb3A = R5[18];
+                        wb3B = R5[19];
+                        wb3C = R5[20];
+                        wb3D = R5[21];
+                        wb3E = R5[22];
+                        wb3F = R5[23];
                     } else if (line.startsWith("For M5") || line.startsWith("For_M5")) {
-                        ptIDA = 17;
-                        ptIDB = 20;
-                        ptC = 21;
-                        ptD = 48;
-                        wb1A = 49;
-                        wb1B = 51;
-                        wb1C = 52;
-                        wb1D = 66;
-                        wb1E = 67;
-                        wb1F = 71;
-                        wb2A = 72;
-                        wb2B = 74;
-                        wb2C = 75;
-                        wb2D = 89;
-                        wb2E = 90;
-                        wb2F = 94;
-                        wb3A = 95;
-                        wb3B = 97;
-                        wb3C = 98;
-                        wb3D = 112;
-                        wb3E = 113;
-                        wb3F = 116;
-
-                        // special for M5
-                        lineNumber = line.substring(11, 17).trim();
-                        error = line.substring(118);
+                        final int[] M5 = BaseToolsZeiss.M5_LINE_POSITIONS;
+                        lineNumber = line.substring(M5[0], M5[1]).trim();
+                        ptIDA = M5[2];
+                        ptIDB = M5[3];
+                        ptC = M5[4];
+                        ptD = M5[5];
+                        wb1A = M5[6];
+                        wb1B = M5[7];
+                        wb1C = M5[8];
+                        wb1D = M5[9];
+                        wb1E = M5[10];
+                        wb1F = M5[11];
+                        wb2B = M5[12];
+                        wb2A = M5[13];
+                        wb2C = M5[14];
+                        wb2D = M5[15];
+                        wb2E = M5[16];
+                        wb2F = M5[17];
+                        wb3A = M5[18];
+                        wb3B = M5[19];
+                        wb3C = M5[20];
+                        wb3D = M5[21];
+                        wb3E = M5[22];
+                        wb3F = M5[23];
+                        error = line.substring(M5[24]);
                     }
 
                     pointIdentification = line.substring(ptIDA, ptIDB).trim();
@@ -181,20 +181,21 @@ public class Zeiss2GSI {
 
                     // valid REC 500 lines starts with three space signs and are not empty or filled with spaces
                 } else if (line.startsWith("   ") & line.trim().length() > 0) {
-                    lineCounter = Integer.parseInt(line.substring(3, 7).trim());
-                    pointNumber = line.substring(8, 22).trim();
-                    pointIdentification = line.substring(22, 35).trim();
+                    final int[] REC500 = BaseToolsZeiss.REC500_LINE_POSITIONS;
+                    lineCounter = Integer.parseInt(line.substring(REC500[0], REC500[1]).trim());
+                    pointNumber = line.substring(REC500[2], REC500[3]).trim();
+                    pointIdentification = line.substring(REC500[4], REC500[5]).trim();
 
-                    type1 = line.substring(36, 38).trim();
-                    value1 = line.substring(38, 50).trim();
+                    type1 = line.substring(REC500[6], REC500[7]).trim();
+                    value1 = line.substring(REC500[8], REC500[9]).trim();
 
                     if (line.length() > 50) {
-                        type2 = line.substring(51, 53).trim();
-                        value2 = line.substring(53, 66).trim();
+                        type2 = line.substring(REC500[10], REC500[11]).trim();
+                        value2 = line.substring(REC500[12], REC500[13]).trim();
 
                         if (line.length() > 66) {
-                            type3 = line.substring(67, 69).trim();
-                            value3 = line.substring(69, 78).trim();
+                            type3 = line.substring(REC500[14], REC500[15]).trim();
+                            value3 = line.substring(REC500[16], REC500[17]).trim();
                         }
                     }
                 }
