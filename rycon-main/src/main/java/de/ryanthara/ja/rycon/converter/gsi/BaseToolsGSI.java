@@ -44,7 +44,7 @@ public class BaseToolsGSI {
     private TreeSet<Integer> foundWordIndices;
 
     /**
-     * Class constructor for read line based text files in different formats.
+     * Class constructor for read line based Leica GSI8 or GSI16 files.
      *
      * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
      */
@@ -54,8 +54,8 @@ public class BaseToolsGSI {
     }
 
     /**
-     * Transforms a line of encoded {@code GSIBlock} into a string line and fill it up into an
-     * {@code ArrayList<String>} for file writing.
+     * Transforms a line of encoded {@code GSIBlock}s into a string line and fill it up into an
+     * {@code ArrayList<String>} for later on file writing.
      *
      * @param isGSI16          distinguish between GSI8 or GSI16 output format
      * @param encodedGSIBlocks ArrayList<ArrayList<GSIBlock>> of encoded GSIBlocks
@@ -96,9 +96,9 @@ public class BaseToolsGSI {
      * Prepares the line ending with an additional white space character.
      * <p>
      * For some reasons (e.g. self written Autocad VBA tools) it is necessary to add an additional white space
-     * at the line ending. This is done with this helper.
+     * at the end of a line. This is done with this helper.
      *
-     * @param stringToPrepare string to prepare
+     * @param stringToPrepare string to prepare with line ending
      *
      * @return prepared string
      */

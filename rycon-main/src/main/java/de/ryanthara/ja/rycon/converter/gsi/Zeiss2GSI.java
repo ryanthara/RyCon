@@ -208,6 +208,8 @@ public class Zeiss2GSI {
                     blocks.add(new GSIBlock(isGSI16, 71, lineCounter, pointIdentification));
                 }
 
+                // TODO: 21.09.16 use the right units
+
                 if (value1.trim().length() > 0) {
                     switch (type1.trim()) {
                         case "ih":
