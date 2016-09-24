@@ -1,37 +1,43 @@
 package de.ryanthara.ja.rycon.cli;
 
 /**
- * CmdLineInterfaceParser is used to parse command line interface values for RyCON.
- *
+ * This class provides command line interface functions to RyCON.
  * <p>
- * RyCON options can be set with a few command line arguments. At the moment there
- * are the following arguments supported.
+ * RyCON's options can be set with a few command line arguments. The following arguments
+ * will be supported in the current version of RyCON.
  * <code>
- *     --help              displays a help message on the terminal
- *     --locale=[a-zA-Z]   sets the locale to the given value in ISO 639 alpha-2 or alpha-3 language code
+ * --help                displays a help message on the terminal
+ * --locale=[a-zA-Z]     sets the locale to the given value in ISO 639 alpha-2 or alpha-3 language code
+ * --file=[input file]   sets the value of input file into the source text field
  * </code>
- *
  * <p>
- * The language of RyCON is set by ISO 639 alpha-2 or alpha-3 language code values. For example 'en' for english
- * or 'de' for german.
- *
- * <h3>Changes:</h3>
- * <ul>
- *     <li>2: code clean up </li>
- *     <li>1: basic implementation </li>
- * </ul>
+ * The language of RyCON is set by ISO 639 alpha-2 or alpha-3 language code values. For example use 'en' for english
+ * or 'de' for german language.
+ * <p>
+ * Due to some reasons in the development cycle of RyCON, the function to parse a file name into the source text filed
+ * was implemented.
  *
  * @author sebastian
- * @version 2
+ * @version 3
  * @since 6
  */
 public class CmdLineInterfaceParser {
 
     private boolean containsIllegalArgument = false;
     private String alphaLanguageCode;
+    private String inputFile;
 
     /**
-     * Return the parsed alpha-2 or alpha-3 language code as string.
+     * Returns the parsed input file as String.
+     *
+     * @return the input file
+     */
+    public String getInputFile() {
+        return inputFile;
+    }
+
+    /**
+     * Returns the parsed alpha-2 or alpha-3 language code as string.
      *
      * @return the alpha-2 or -3 language code
      */
@@ -40,11 +46,12 @@ public class CmdLineInterfaceParser {
     }
 
     /**
-     * Parse the command line interface arguments of RyCON and tries to set the locale to a given value.
+     * Parses the command line interface arguments of RyCON.
      * <p>
-     * The arguments are only parsed and not controlled for being valid.
+     * The arguments are only parsed and not checked for being valid or logical.
      *
      * @param args the arguments to be parsed
+     *
      * @throws CmdLineInterfaceException if something goes wrong with the parsing
      */
     public void parseArguments(final String... args) throws CmdLineInterfaceException {
@@ -54,10 +61,13 @@ public class CmdLineInterfaceParser {
                     System.out.println();
                     System.out.println("usage: java -jar RyCON_[version].jar");
                     System.out.println(" --help                     shows this help");
-                    System.out.println(" --locale=<language code>   alpha-2 or alpha-3 language code (e.g. en or de");
+                    System.out.println(" --locale=[language code]   alpha-2 or alpha-3 language code (e.g. en or de");
+                    System.out.println(" --file=[input file]        sets the value of input file into the source text field");
                     System.out.println();
                 } else if (s.toLowerCase().contains("--locale=")) {
                     alphaLanguageCode = s.toLowerCase().substring(9, s.length());
+                } else if (s.toLowerCase().contains("--file=")) {
+                    inputFile = s.substring(7, s.length());
                 } else {
                     containsIllegalArgument = true;
                     System.err.println("RyCON: illegal option " + s);
@@ -65,7 +75,7 @@ public class CmdLineInterfaceParser {
             }
 
             if (containsIllegalArgument) {
-                String usage = "usage: java -jar RyCON_[].jar --help --locale=[alpha-2 or alpha-3 language code]";
+                String usage = "usage: java -jar RyCON_[].jar --help --locale=[alpha-2 or alpha-3 language code] --file=[input file]";
                 System.err.println(usage);
             }
         }

@@ -3,12 +3,9 @@ package de.ryanthara.ja.rycon.cli;
 import java.security.PrivilegedActionException;
 
 /**
- * CmdLineInterfaceException defines an exception for command line interface operations.
- *
- * <h3>Changes:</h3>
- * <ul>
- *     <li>1: basic implementation </li>
- * </ul>
+ * This exception is thrown whenever a command line interface operations fails.
+ * <p>
+ * The functionality based on the default exception structure.
  *
  * @author sebastian
  * @version 1
@@ -93,4 +90,5 @@ public class CmdLineInterfaceException extends Exception {
     protected CmdLineInterfaceException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
+
 } // end of CmdLineInterfaceException
