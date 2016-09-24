@@ -23,7 +23,8 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 
 /**
- * GSIBlock defines an element of type GSI as 'block'.
+ * Instances of this class represents an object to store and handle
+ * the values of a GSI block.
  * <p>
  * The Leica Geo Serial Interface (GSI) is a general purpose, serial data
  * interface for bi-directional communication between TPS Total Stations,
@@ -33,15 +34,8 @@ import java.util.Arrays;
  * terminator (CR or CR/LF). The later introduced enhanced GSI16 format
  * starts every line with a <code>*</code> sign.
  *
- * <h3>Changes:</h3>
- * <ul>
- *     <li>3: code improvements, little additions, bug defeats </li>
- *     <li>2: code improvements, little additions </li>
- *     <li>1: basic implementation as own class</li>
- * </ul>
- *
  * @author sebastian
- * @version 3
+ * @version 4
  * @since 8
  */
 public class GSIBlock {
@@ -94,42 +88,42 @@ public class GSIBlock {
         if (wordIndex == 11) {                                          // point number
             this.information = String.format("%04d", number);
             intern = dataGSI;
-        } else if (wordIndex == 71) {                                   // code
-            this.information = "..46";
-            intern = dataGSI;
-        } else if ((wordIndex > 80) & (wordIndex < 90)) {               // coordinates
-            this.information = "..46";
-            if (dataGSI.startsWith("-")) {
-                this.sign = "-";
-                intern = dataGSI.substring(1, dataGSI.length());
-            } else if (dataGSI.startsWith("+")) {
-                intern = dataGSI.substring(1, dataGSI.length());
+        } else {
+            if (wordIndex == 71) {                                      // code
+                this.information = "..46";
+                intern = dataGSI;
+            } else if ((wordIndex > 80) & (wordIndex < 90)) {           // coordinates
+                this.information = "..46";
+                if (dataGSI.startsWith("-")) {
+                    this.sign = "-";
+                    intern = dataGSI.substring(1, dataGSI.length());
+                } else if (dataGSI.startsWith("+")) {
+                    intern = dataGSI.substring(1, dataGSI.length());
+                } else {
+                    intern = dataGSI;
+                }
+
+                try {
+                    Double d = Double.parseDouble(intern);
+                    if (d == 0d) {
+                        intern = "0";
+                    } else {
+                        d = d * 10000.0; // value d in 1/10mm
+
+                        BigDecimal bigDecimal = new BigDecimal(d);
+                        bigDecimal = bigDecimal.setScale(0, BigDecimal.ROUND_HALF_UP);
+
+                        intern = bigDecimal.toString();
+                    }
+                } catch (NumberFormatException e) {
+                    System.err.println("Error while parsing String to double in GSIBlock:GSIBlock()");
+                    e.printStackTrace();
+                }
             } else {
+                // not used other values
+                this.information = "..4.";
                 intern = dataGSI;
             }
-
-            Double d = null;
-            try {
-                d = Double.parseDouble(intern);
-            } catch (NumberFormatException e) {
-                System.err.println("Error while parsing String to double in GSIBlock:GSIBlock()");
-                e.printStackTrace();
-            }
-
-            if (d == 0d) {
-                intern = "0";
-            } else {
-                d = d * 10000.0; // value d in 1/10mm
-
-                BigDecimal bigDecimal = new BigDecimal(d);
-                bigDecimal = bigDecimal.setScale(0, BigDecimal.ROUND_HALF_UP);
-
-                intern = bigDecimal.toString();
-            }
-        } else {
-            // not used other values
-            this.information = "..4.";
-            intern = dataGSI;
         }
 
         this.dataGSI = fillWithZeros(length, intern);
