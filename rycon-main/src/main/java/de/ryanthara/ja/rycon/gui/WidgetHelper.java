@@ -33,13 +33,6 @@ import java.util.StringTokenizer;
  * <p>
  * Later on, here will be more flexible stuff implemented.
  *
- * <h3>Changes:</h3>
- * <ul>
- *     <li>3: check for valid files and suffixes </li>
- *     <li>2: documentation, optimization and new features </li>
- *     <li>1: basic implementation </li>
- * </ul>
- *
  * @author sebastian
  * @version 3
  * @since 4
@@ -47,11 +40,40 @@ import java.util.StringTokenizer;
 class WidgetHelper {
 
     /**
-     * Check the source and destination text fields for valid files and returns the valid chosen files as file object.
+     * Checks the content of an file array for valid files.
+     * <p>
+     * Non readable file objects and directories will be not included in the returned file array.
      *
-     * @param source        the source text field
-     * @param destination   the destination text field
-     * @param chosenFiles   the chosen files to be checked
+     * @param files                file array to be checked
+     * @param acceptableFileSuffix string array with the acceptable file suffixes to be accepted
+     *
+     * @return check file array with only valid and readable file objects
+     */
+    static File[] checkForValidFiles(File[] files, String[] acceptableFileSuffix) {
+        ArrayList<File> temp = new ArrayList<>();
+
+        for (File file : files) {
+            if (file.isFile() && file.canRead()) {
+                for (String anAcceptableFileSuffix : acceptableFileSuffix) {
+                    String reducedSuffix = anAcceptableFileSuffix.substring(2, anAcceptableFileSuffix.length());
+
+                    if (file.getName().toLowerCase().endsWith(reducedSuffix)) {
+                        temp.add(file);
+                    }
+                }
+            }
+        }
+
+        return temp.toArray(new File[temp.size()]);
+    }
+
+    /**
+     * Checks the source and destination text fields for valid files and returns the valid chosen files as file object.
+     *
+     * @param source      the source text field
+     * @param destination the destination text field
+     * @param chosenFiles the chosen files to be checked
+     *
      * @return the valid chosen files
      */
     static File[] checkSourceAndDestinationTextFields(Text source, Text destination, File[] chosenFiles) {
@@ -85,33 +107,6 @@ class WidgetHelper {
         }
 
         return files2read;
-    }
-
-    /**
-     * Check the content of an file array for valid files.
-     * <p>
-     * Non readable file objects and directories will be not included in the returned file array.
-     *
-     * @param files                 file array to be checked
-     * @param acceptableFileSuffix  string array with the acceptable file suffixes to be accepted
-     * @return check file array with only valid and readable file objects
-     */
-    static File[] checkForValidFiles(File[] files, String[] acceptableFileSuffix) {
-        ArrayList<File> temp = new ArrayList<>();
-
-        for (File file : files) {
-            if (file.isFile() && file.canRead()) {
-                for (String anAcceptableFileSuffix : acceptableFileSuffix) {
-                    String reducedSuffix = anAcceptableFileSuffix.substring(2, anAcceptableFileSuffix.length());
-
-                    if (file.getName().toLowerCase().endsWith(reducedSuffix)) {
-                        temp.add(file);
-                    }
-                }
-            }
-        }
-
-        return temp.toArray(new File[temp.size()]);
     }
 
 } // end of WidgetHelper

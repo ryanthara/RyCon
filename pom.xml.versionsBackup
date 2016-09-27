@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- coordinates -->
+    <groupId>de.ryanthara.ja.rycon</groupId>
+    <!-- version numbering with properties -->
+    <version>0.9.11</version>
+    <artifactId>RyCON</artifactId>
+    <packaging>pom</packaging>
+    <name>RyCON</name>
+    <url>http://code.ryanthara.de/RyCON</url>
+
+    <!-- information about the developer -->
+    <developers>
+        <developer>
+            <id>saust</id>
+            <name>Sebastian Aust</name>
+            <email>code at ryanthara dot de</email>
+            <url>http://code.ryanthara.de/</url>
+            <timezone>+1</timezone>
+            <roles>
+                <role>architect</role>
+                <role>developer</role>
+            </roles>
+        </developer>
+    </developers>
+
+    <!-- information about important contributors -->
+    <contributors>
+        <contributor>
+            <name>Christian Pesch</name>
+            <email>support at routeconverter dot com</email>
+            <url>http://www.routeconverter.com/</url>
+            <timezone>+1</timezone>
+            <roles>
+                <role>maven-supporter</role>
+            </roles>
+        </contributor>
+    </contributors>
+
+    <!-- used third party repositories -->
+    <repositories>
+        <!-- SWT -->
+       <!-- <repository>
+            <id>swt-repo</id>
+            <url>https://swt-repo.googlecode.com/svn/repo/</url>
+        </repository>-->
+        <!-- SWT -->
+        <repository>
+            <id>maven-eclipse-repo</id>
+            <url>http://maven-eclipse.github.io/maven</url>
+        </repository>
+        <repository>
+            <id>local-repository</id>
+            <releases>
+                <enabled>true</enabled>
+                <checksumPolicy>ignore</checksumPolicy>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <url>file://${project.basedir}/../local-libs</url>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <!-- launch4j -->
+        <pluginRepository>
+            <id>akathist-repository</id>
+            <name>Akathist Repository</name>
+            <url>http://www.9stmaryrd.com/maven</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <!-- distribution management -->
+    <distributionManagement>
+        <repository>
+            <id>absolute directory</id>
+            <url>file:///Users/sebastian/Coder/deploy/</url>
+        </repository>
+    </distributionManagement>
+
+    <!-- where the sourcecode lives -->
+    <scm>
+        <connection>scm:git:https://github.com/ryanthara/RyCon</connection>
+        <developerConnection>scm:git:git@github.com:ryanthara/RyCon.git</developerConnection>
+        <tag>0.9.11</tag>
+    </scm>
+
+    <!-- define properties -->
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <targetJdk>1.7</targetJdk>
+    </properties>
+
+    <!-- build management -->
+    <build>
+        <extensions>
+            <!-- Enabling the use of Wagon file -->
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-file</artifactId>
+                <version>2.10</version>
+            </extension>
+        </extensions>
+
+        <!-- plugins used to build RyCON and all the things around -->
+        <pluginManagement>
+            <plugins>
+                <!-- assemble an application bundle or distribution from an assembly descriptor -->
+                <plugin>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>2.6</version>
+                </plugin>
+
+                <!-- The goals for the Compiler Plugin are bound to their respective phases in the build lifecycle. -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.5.1</version>
+                    <configuration>
+                        <!-- put your configurations here -->
+                        <source>${targetJdk}</source>
+                        <target>${targetJdk}</target>
+                    </configuration>
+                </plugin>
+
+                <!-- Add the documentation. Some things should be done better! -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>2.10.3</version>
+                    <configuration>
+                        <doctitle>RyCON ${project.version} API</doctitle>
+                        <windowtitle>RyCON ${project.version} API</windowtitle>
+                        <encoding>UTF-8</encoding>
+                        <header>RyCON API</header>
+                        <bottom>Created by Sebastian Aust</bottom>
+                        <detectLinks>true</detectLinks>
+                    </configuration>
+                </plugin>
+
+                <!-- provides the capability to build and sign jars -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>2.6</version>
+                    <configuration>
+                        <!-- your example configuration here -->
+                        <archive>
+                            <addMavenDescriptor>false</addMavenDescriptor>
+                        </archive>
+                    </configuration>
+                </plugin>
+
+                <!-- The Resources Plugin handles the copying of project resources to the output directory. -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>2.7</version>
+                    <configuration>
+                        <encoding>UTF8</encoding>
+                    </configuration>
+                </plugin>
+
+                <!-- provides the capability to package the artifact in an uber-jar, including its
+                dependencies and to shade - i.e. rename - the packages of some of the dependencies -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-shade-plugin</artifactId>
+                    <!--<version>1.7.1</version>-->
+                    <version>2.4.3</version>
+                </plugin>
+                <!-- a cross-platform tool for wrapping Java applications distributed as jars in
+                lightweight Windows native executables.  -->
+                <plugin>
+                    <groupId>com.akathist.maven.plugins.launch4j</groupId>
+                    <artifactId>launch4j-maven-plugin</artifactId>
+                    <version>1.7.8</version>
+                    <!--<version>1.7.9</version>-->
+                </plugin>
+                <!-- give a build number -->
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>buildnumber-maven-plugin</artifactId>
+                    <version>1.4</version>
+                </plugin>
+
+                <!-- build helper functions -->
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>build-helper-maven-plugin</artifactId>
+                    <version>1.10</version>
+                </plugin>
+
+                <!-- automatic character encoding conversion for i18n support -->
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>native2ascii-maven-plugin</artifactId>
+                    <version>1.0-beta-1</version>
+                </plugin>
+
+                <!-- copy jar's after build -->
+                <plugin>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <version>1.8</version>
+                    <configuration>
+                        <target>
+                            <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_aix_ppc/target/RyCON_aix_ppc.jar" tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_aix_ppc.jar"/>
+                            <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_aix_ppc64/target/RyCON_aix_ppc64.jar" tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_aix_ppc64.jar"/>
+                            <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_hpux_ia64/target/RyCON_hpux_ia64.jar" tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_hpux_ia64.jar"/>
+                            <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_Linux_ppc/target/RyCON_Linux_ppc.jar" tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_Linux_ppc.jar"/>
+                            <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_Linux_ppc64/target/RyCON_Linux_ppc64.jar" tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_Linux_ppc64.jar"/>
+                            <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_Linux_x86/target/RyCON_Linux_x86.jar" tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_Linux_x86.jar"/>
+                            <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_Linux_x86-64/target/RyCON_Linux_x86-64.jar" tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_Linux_x86-64.jar"/>
+                            <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_MacOSX32/target/RyCON_MacOSX32.app-app.zip" tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_MacOSX32.app-app.zip"/>
+                            <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_MacOSX64/target/RyCON_MacOSX64.app-app.zip" tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_MacOSX64.app-app.zip"/>
+                            <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_Solaris_sparc/target/RyCON_Solaris_sparc.jar" tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_Linux_ppc.jar"/>
+                            <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_Solaris_x86/target/RyCON_Solaris_x86.jar" tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_Solaris_x86.jar"/>
+                            <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_Win32/target/RyCON_Windows32.exe" tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_Windows32.exe"/>
+                            <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_Win64/target/RyCON_Windows64.exe" tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_Windows64.exe"/>
+                        </target>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>run</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <!-- dependencies for third party repositories for all rycon modules -->
+    <dependencies>
+    </dependencies>
+
+    <!-- parts of the parent multi project RyCON -->
+    <modules>
+        <module>rycon-build</module>
+        <module>rycon-license</module>
+        <module>rycon-main</module>
+        <module>RyCON_aix_ppc</module>
+        <module>RyCON_aix_ppc64</module>
+        <module>RyCON_hpux_ia64</module>
+        <module>RyCON_Linux_ppc</module>
+        <module>RyCON_Linux_ppc64</module>
+        <module>RyCON_Linux_x86</module>
+        <module>RyCON_Linux_x86-64</module>
+        <module>RyCON_MacOSX32</module>
+        <module>RyCON_MacOSX64</module>
+        <module>RyCON_Solaris_sparc</module>
+        <module>RyCON_Solaris_x86</module>
+        <module>RyCON_Win32</module>
+        <module>RyCON_Win64</module>
+    </modules>
+
+</project>

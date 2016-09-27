@@ -36,32 +36,32 @@ import java.util.*;
  * @version 2
  * @since 8
  */
-public class BaseToolsLTOP {
+class BaseToolsLTOP {
 
     // prevent wrong output with empty strings of defined length for KOO and MES files
-    public static final String number = "          ";
-    public static final String pointType = "    ";
-    public static final String toleranceCategory = "  ";
-    public static final String easting = "            ";
-    public static final String northing = "            ";
-    public static final String height = "          ";
-    public static final String geoid = "        ";
-    public static final String eta = "      ";
-    public static final String xi = "      ";
-    public static final String emptySpace4 = "    ";
-    public static final String emptySpace6 = "      ";
-    public static final String emptySpace8 = "        ";
+    static final String number = "          ";
+    static final String pointType = "    ";
+    static final String toleranceCategory = "  ";
+    static final String easting = "            ";
+    static final String northing = "            ";
+    static final String height = "          ";
+    static final String geoid = "        ";
+    static final String eta = "      ";
+    static final String xi = "      ";
+    private static final String emptySpace4 = "    ";
+    private static final String emptySpace6 = "      ";
+    private static final String emptySpace8 = "        ";
 
     // prevent wrong output with empty strings of defined length for MES files
-    public static final String weather = "            ";
-    public static final String meanError = "      ";
+//    static final String weather = "            ";
+//    static final String meanError = "      ";
 
-    public static final String cartesianCoordsIdentifier = "$$PK";
-    // private final String ellipsoidCoordsIdentifier = "$$EL";
-    public static final String measurementLineIdentifier = "$$ME";
+    static final String cartesianCoordsIdentifier = "$$PK";
+    //    private final String ellipsoidCoordsIdentifier = "$$EL";
+    static final String measurementLineIdentifier = "$$ME";
 
     /**
-     * Eliminate duplicate points from an ArrayList<String>.
+     * Eliminates duplicate points from an ArrayList<String>.
      * <p>
      * Points are identical if the 3D distance is less than 3cm and the point number is the same. The point number is
      * used for find wrong numbered points.
@@ -70,7 +70,7 @@ public class BaseToolsLTOP {
      *
      * @return sorted ArrayList<String>
      */
-    public static ArrayList<String> eliminateDuplicatePoints(ArrayList<RyPoint> arrayList) {
+    static ArrayList<String> eliminateDuplicatePoints(ArrayList<RyPoint> arrayList) {
         ArrayList<String> result = new ArrayList<>();
 
         // set minDistance to default value and try to parse the settings value
@@ -118,7 +118,7 @@ public class BaseToolsLTOP {
     }
 
     /**
-     * Fill the ArrayList<RyPoint> with ryPoint objects.
+     * Fills the ArrayList<RyPoint> with ryPoint objects.
      *
      * @param ryPoints   the ArrayList<RyPoint>
      * @param easting    easting value
@@ -126,13 +126,19 @@ public class BaseToolsLTOP {
      * @param height     height value
      * @param resultLine result line as string
      */
-    public static void fillRyPoints(ArrayList<RyPoint> ryPoints, String easting, String northing, String height, String resultLine) {
+    static void fillRyPoints(ArrayList<RyPoint> ryPoints, String easting, String northing, String height, String resultLine) {
         double x = Double.NaN, y = Double.NaN, z = Double.NaN;
 
         try {
-            x = Double.parseDouble(easting);
-            y = Double.parseDouble(northing);
-            z = Double.parseDouble(height);
+            if (!easting.trim().equals("")) {
+                x = Double.parseDouble(easting);
+            }
+            if (!northing.trim().equals("")) {
+                y = Double.parseDouble(northing);
+            }
+            if (!height.trim().equals("")) {
+                z = Double.parseDouble(height);
+            }
         } catch (NumberFormatException e) {
             System.err.println("Can't convert string to double in BaseToolsLTOP:fillRyPoints()");
             System.err.println("Wrong line: " + resultLine);
@@ -142,21 +148,23 @@ public class BaseToolsLTOP {
     }
 
     /**
-     * @param number
-     * @param pointType
-     * @param toleranceCategory
-     * @param easting
-     * @param northing
-     * @param height
-     * @param geoid
-     * @param eta
-     * @param xi
+     * Prepares the result string for KOO file output from it's elements, which are given as single parameters.
      *
-     * @return
+     * @param number            the point number
+     * @param pointType         the point typ
+     * @param toleranceCategory the tolerance category
+     * @param easting           the easting coordinate
+     * @param northing          the northing coordinate
+     * @param height            the height coordinate
+     * @param geoid             the geoid
+     * @param eta               the eta
+     * @param xi                the xi
+     *
+     * @return prepared result string
      */
-    public static String prepareStringForKOO(String number, String pointType, String toleranceCategory,
-                                             String easting, String northing, String height,
-                                             String geoid, String eta, String xi) {
+    static String prepareStringForKOO(String number, String pointType, String toleranceCategory,
+                                      String easting, String northing, String height,
+                                      String geoid, String eta, String xi) {
 
         // check for null coordinate
         if (Boolean.parseBoolean(Main.pref.getUserPref(PreferenceHandler.CONVERTER_SETTING_ELIMINATE_ZERO_COORDINATE))) {
@@ -191,7 +199,7 @@ public class BaseToolsLTOP {
      *
      * @return sorted ArrayList<String>
      */
-    public static ArrayList<String> sortResult(ArrayList<String> arrayList) {
+    static ArrayList<String> sortResult(ArrayList<String> arrayList) {
         Collections.sort(arrayList, new Comparator<String>() {
             @Override
             public int compare(String s1, String s2) {
@@ -213,7 +221,7 @@ public class BaseToolsLTOP {
      * @param result              ArrayList<String> to write in
      * @param firstLineIdentifier identifier for different file type ($$ME, $$PK or $$EL)
      */
-    public static void writeCommendLine(ArrayList<String> result, String firstLineIdentifier) {
+    static void writeCommendLine(ArrayList<String> result, String firstLineIdentifier) {
         // insert RyCON version, date and time
         Date d = new Date();
         DateFormat df;

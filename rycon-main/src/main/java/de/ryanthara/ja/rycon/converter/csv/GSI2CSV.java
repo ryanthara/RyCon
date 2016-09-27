@@ -26,7 +26,7 @@ import java.util.TreeSet;
 
 /**
  * This class provides functions to convert measurement files from Leica GSI format (GSI8 and GSI16)
- * into comma separated values (csv format).
+ * into a comma separated values (csv) file.
  *
  * @author sebastian
  * @version 1
@@ -37,7 +37,7 @@ public class GSI2CSV {
     private BaseToolsGSI baseToolsGSI;
 
     /**
-     * Class constructor for read line based text files in different formats.
+     * Class constructor for read line based text files in Leica GSI format (GSI8 or GSI16).
      *
      * @param readStringLines {@code ArrayList<String>} with lines in text format
      */
