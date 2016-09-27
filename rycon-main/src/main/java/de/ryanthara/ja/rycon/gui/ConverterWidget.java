@@ -84,6 +84,13 @@ public class ConverterWidget {
      */
     ConverterWidget() {
         initUI();
+        handleFileInjection();
+    }
+
+    private void handleFileInjection() {
+        String files = Main.getCLIInputFiles();
+
+        inputFieldsComposite.setSourceTextFieldText(files);
     }
 
     private void actionBtnCancel() {
@@ -116,7 +123,6 @@ public class ConverterWidget {
                 inputFieldsComposite.getDestinationTextField().getText().equals("")) {
             return -1;
         }
-
         if (files2read.length == 0) {
             files2read = new File[1];
             files2read[0] = new File(inputFieldsComposite.getSourceTextField().getText());
@@ -711,7 +717,7 @@ public class ConverterWidget {
                             case 0:     // fall through for GSI8 format
                             case 1:     // GSI16 format
                                 GSI2TXT gsi2TXT = new GSI2TXT(readFile);
-                                gsi2TXT.convertGSI2TXT(separator, GSIFormat, chkBoxWriteCommentLine.getSelection());
+                                writeFile = gsi2TXT.convertGSI2TXT(separator, GSIFormat, chkBoxWriteCommentLine.getSelection());
                                 break;
 
                             case 2:     // TXT format (not possible)

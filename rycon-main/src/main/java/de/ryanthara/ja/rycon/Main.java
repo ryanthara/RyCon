@@ -44,30 +44,27 @@ import java.util.Locale;
  * java written editor for OpenStreetMap data.
  *
  * @author sebastian
- * @version 7
+ * @version 8
  * @since 2
  */
 public abstract class Main {
 
     /**
-     * Contain the URL of the RyCON update check website. RyCON uses https connection of course.
+     * Contains the URL of the RyCON update check website. RyCON uses https connection of course.
      *
      * @since 3
      */
     public static final String RyCON_UPDATE_URL = "https://code.ryanthara.de/content/3-RyCON/_current.version";
-
     /**
-     * Contain the URL of the RyCON website.
+     * Contains the URL of the RyCON website.
      */
     public static final String RyCON_WEBSITE = "https://code.ryanthara.de/RyCON";
-
     /**
-     * Contain for the URL of the RyCON help website.
+     * Contains for the URL of the RyCON help website.
      */
     public static final String RyCON_WEBSITE_HELP = "https://code.ryanthara.de/RyCON/help";
-
     /**
-     * Contain the URL of the RyCON what's new website.
+     * Contains the URL of the RyCON what's new website.
      * <p>
      * It's content is shown in the result window of the update check dialog.
      *
@@ -118,7 +115,7 @@ public abstract class Main {
      */
     public static Main main;
     /**
-     * Contain a value for application wide count of processed file operations.
+     * Contains a value for application wide count of processed file operations.
      */
     public static int countFileOps = -1;
     /**
@@ -133,6 +130,7 @@ public abstract class Main {
      * The reference to the global application status bar.
      */
     public static StatusBar statusBar;
+    private static String cliInputFile;
     private static boolean isSettingsWidgetOpenStatus = false;
     private static boolean isSubShellOpenStatus = false;
 
@@ -144,13 +142,14 @@ public abstract class Main {
     }
 
     /**
-     * Check the command line interface and it's given arguments.
+     * Checks the command line interface and it's given arguments.
      * <p>
      * RyCON accept a couple of simple command line interface (cli) arguments. At the moment there are
      * the following parameters implemented and can be used as described.
      * <p>
      * --help               shows the help and the valid cli arguments
-     * --locale=<LOCALE>    <LOCALE> in ISO 639 alpha-2 or alpha-3 language code (e.g. de for GERMAN, en for ENGLISH)
+     * --locale=[LOCALE]    [LOCALE] in ISO 639 alpha-2 or alpha-3 language code (e.g. de for GERMAN, en for ENGLISH)
+     * --file=[input file]  [input file] input file with path which is used in the source text field
      *
      * @param args command line interface arguments
      *
@@ -169,10 +168,14 @@ public abstract class Main {
         if (parser.getParsedLanguageCode() != null) {
             setLocaleTo(parser.getParsedLanguageCode());
         }
+
+        if (parser.getInputFile() != null) {
+            cliInputFile = parser.getInputFile();
+        }
     }
 
     /**
-     * Check the current JAVA version.
+     * Checks the current JAVA version.
      * <p>
      * During the startup of RyCON the version of the installed JRE is checked.
      * RyCON can be started only if a minimum version of a JRE is installed on
@@ -225,7 +228,7 @@ public abstract class Main {
     }
 
     /**
-     * Perform an online check for a new RyCON version.
+     * Performs an online check for a new RyCON version.
      * <p>
      * If a newer version of RyCON is available an info dialog is shown to the user
      * and an update is offered. This update has to be installed manually.
@@ -277,7 +280,16 @@ public abstract class Main {
     }
 
     /**
-     * Return the path of the admin directory as string value.
+     * Returns the read command line interface input files as string.
+     *
+     * @return cli input files
+     */
+    public static String getCLIInputFiles() {
+        return cliInputFile;
+    }
+
+    /**
+     * Returns the path of the admin directory as string value.
      *
      * @return admin directory path
      *
@@ -288,7 +300,7 @@ public abstract class Main {
     }
 
     /**
-     * Return the path of the admin template directory as string value.
+     * Returns the path of the admin template directory as string value.
      *
      * @return admin template directory path
      *
@@ -299,7 +311,7 @@ public abstract class Main {
     }
 
     /**
-     * Return the path of the base directory as string value.
+     * Returns the path of the base directory as string value.
      *
      * @return base directory path
      *
@@ -310,7 +322,7 @@ public abstract class Main {
     }
 
     /**
-     * Return the path of the big data directory as string value
+     * Returns the path of the big data directory as string value
      *
      * @return big data directory path
      */
@@ -319,7 +331,7 @@ public abstract class Main {
     }
 
     /**
-     * Return the path of the big data template directory as string value.
+     * Returns the path of the big data template directory as string value.
      *
      * @return big data template directory path
      */
@@ -328,7 +340,7 @@ public abstract class Main {
     }
 
     /**
-     * Return the path of the project directory as string value.
+     * Returns the path of the project directory as string value.
      *
      * @return project directory path
      *
@@ -339,7 +351,7 @@ public abstract class Main {
     }
 
     /**
-     * Return the path of the project template directory as string value.
+     * Returns the path of the project template directory as string value.
      *
      * @return project template directory
      *
@@ -350,7 +362,7 @@ public abstract class Main {
     }
 
     /**
-     * Return true as the indicator for GSI16.
+     * Returns true as the indicator for GSI16.
      *
      * @return true as indicator for GSI16 format
      *
@@ -361,7 +373,7 @@ public abstract class Main {
     }
 
     /**
-     * Return false as the indicator for GSI8.
+     * Returns false as the indicator for GSI8.
      *
      * @return false as indicator for GSI8 format
      *
@@ -372,7 +384,7 @@ public abstract class Main {
     }
 
     /**
-     * Return true or false as String for indicating a blank at the end of a gsi format line.
+     * Returns true or false as String for indicating a blank at the end of a gsi format line.
      *
      * @return true or false
      *
@@ -383,7 +395,7 @@ public abstract class Main {
     }
 
     /**
-     * Return the value of the primary position string.
+     * Returns the value of the primary position string.
      *
      * @return primary position string
      */
@@ -392,7 +404,7 @@ public abstract class Main {
     }
 
     /**
-     * Return the value of the secondary position string.
+     * Returns the value of the secondary position string.
      *
      * @return secondary position string
      */
@@ -401,7 +413,7 @@ public abstract class Main {
     }
 
     /**
-     * Return the number of the last used display RyCON was shown on.
+     * Returns the number of the last used display RyCON was shown on.
      *
      * @return last used display
      */
@@ -410,7 +422,7 @@ public abstract class Main {
     }
 
     /**
-     * Return the value of the code string ('CODE').
+     * Returns the value of the code string ('CODE').
      *
      * @return code string
      *
@@ -421,7 +433,7 @@ public abstract class Main {
     }
 
     /**
-     * Return the value of the control point string ('STKE').
+     * Returns the value of the control point string ('STKE').
      *
      * @return control point string
      *
@@ -432,7 +444,7 @@ public abstract class Main {
     }
 
     /**
-     * Return the value of the edit string ('EDIT').
+     * Returns the value of the edit string ('EDIT').
      *
      * @return edit string
      *
@@ -443,7 +455,7 @@ public abstract class Main {
     }
 
     /**
-     * Return the value of the eliminate zero coordinates flag.
+     * Returns the value of the eliminate zero coordinates flag.
      *
      * @return eliminate zero coordinates
      *
@@ -454,7 +466,7 @@ public abstract class Main {
     }
 
     /**
-     * Return the value of the free station string ('FS').
+     * Returns the value of the free station string ('FS').
      *
      * @return free station string
      *
@@ -465,7 +477,7 @@ public abstract class Main {
     }
 
     /**
-     * Return the value of the known station string ('ST').
+     * Returns the value of the known station string ('ST').
      *
      * @return known station string
      *
@@ -476,7 +488,7 @@ public abstract class Main {
     }
 
     /**
-     * Return the value of the LTOP use zenith distance flag.
+     * Returns the value of the LTOP use zenith distance flag.
      *
      * @return LTOP use zenith distance instead of height angle
      *
@@ -487,7 +499,7 @@ public abstract class Main {
     }
 
     /**
-     * Return the value for the minimum distance in which two points may be equal. (e.g. two points within 3cm may be
+     * Returns the value for the minimum distance in which two points may be equal. (e.g. two points within 3cm may be
      * the same points)
      *
      * @return minimum distance for points to be equal
@@ -497,7 +509,7 @@ public abstract class Main {
     }
 
     /**
-     * Return the app name ('RyCON') as String.
+     * Returns the app name ('RyCON') as String.
      *
      * @return the app name ('RyCON')
      *
@@ -508,7 +520,7 @@ public abstract class Main {
     }
 
     /**
-     * Return the url of the RyCON website as {@code String}.
+     * Returns the url of the RyCON website as {@code String}.
      *
      * @return the RyCON website as {@code String}
      */
@@ -517,7 +529,7 @@ public abstract class Main {
     }
 
     /**
-     * Return the global valid height of a widget.
+     * Returns the global valid height of a widget.
      *
      * @return global valid height of a widget
      */
@@ -526,7 +538,7 @@ public abstract class Main {
     }
 
     /**
-     * Return the global valid width of a widget.
+     * Returns the global valid width of a widget.
      *
      * @return global valid width of a widget
      */
@@ -535,7 +547,7 @@ public abstract class Main {
     }
 
     /**
-     * Return the height of a grid cell as {@code int} value.
+     * Returns the height of a grid cell as {@code int} value.
      *
      * @return height of a grid cell as {@code int} value
      */
@@ -544,7 +556,7 @@ public abstract class Main {
     }
 
     /**
-     * Return the width of a grid cell as {@code int} value.
+     * Returns the width of a grid cell as {@code int} value.
      *
      * @return width of a grid cell as {@code int} value
      */
@@ -553,7 +565,7 @@ public abstract class Main {
     }
 
     /**
-     * Return the status to indicate an open subshell.
+     * Returns the status to indicate an open subshell.
      *
      * @return true if a subshell is open
      */
@@ -562,7 +574,7 @@ public abstract class Main {
     }
 
     /**
-     * Set the status to indicate an open subshell.
+     * Sets the status to indicate an open subshell.
      *
      * @param isSubShellOpen subshell open status
      */
@@ -571,14 +583,14 @@ public abstract class Main {
     }
 
     /**
-     * Initialize access to {@code Settings} with {@code Main.pref} in normal context.
+     * Initializes access to {@code Settings} with {@code Main.pref} in normal context.
      */
     protected static void initApplicationPreferences() {
         Main.pref = new PreferenceHandler();
     }
 
     /**
-     * Return the status to indicate an open settings widget.
+     * Returns the status to indicate an open settings widget.
      *
      * @return true if a settings widget is open
      */
@@ -587,7 +599,7 @@ public abstract class Main {
     }
 
     /**
-     * Open an uri in the default browser of the system.
+     * Opens an uri in the default browser of the system.
      *
      * @param uri uri to open in default browser
      */
@@ -601,7 +613,7 @@ public abstract class Main {
     }
 
     /**
-     * Set the status to indicate an open settings widget.
+     * Sets the status to indicate an open settings widget.
      *
      * @param isSettingsWidgetOpen settings widget open status
      */
@@ -610,13 +622,14 @@ public abstract class Main {
     }
 
     /**
-     * Set the locale to a given language code in alpha-2 or alpha-3 language code.
+     * Sets the locale to a given language code in alpha-2 or alpha-3 language code.
      *
      * @param languageCode language code
      *
-     * @see {url http://docs.oracle.com/javase/7/docs/api/java/util/Locale.html}
+     * @see <a href="http://docs.oracle.com/javase/7/docs/api/java/util/Locale.html">Locale.html</a>
      */
     private static void setLocaleTo(String languageCode) {
         Locale.setDefault(new Locale(languageCode, languageCode.toUpperCase()));
     }
+
 }  // end of Main

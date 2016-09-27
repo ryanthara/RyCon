@@ -14,8 +14,8 @@ package de.ryanthara.ja.rycon.cli;
  * The language of RyCON is set by ISO 639 alpha-2 or alpha-3 language code values. For example use 'en' for english
  * or 'de' for german language.
  * <p>
- * Due to some reasons in the development cycle of RyCON, the function to parse a file name into the source text filed
- * was implemented.
+ * Due to some reasons in the development cycle of RyCON, the function to parse one file name into
+ * the source text field was implemented.
  *
  * @author sebastian
  * @version 3
@@ -62,7 +62,7 @@ public class CmdLineInterfaceParser {
                     System.out.println("usage: java -jar RyCON_[version].jar");
                     System.out.println(" --help                     shows this help");
                     System.out.println(" --locale=[language code]   alpha-2 or alpha-3 language code (e.g. en or de");
-                    System.out.println(" --file=[input file]        sets the value of input file into the source text field");
+                    System.out.println(" --file=[input files]       sets the value of input files into the source text field");
                     System.out.println();
                 } else if (s.toLowerCase().contains("--locale=")) {
                     alphaLanguageCode = s.toLowerCase().substring(9, s.length());
@@ -75,7 +75,7 @@ public class CmdLineInterfaceParser {
             }
 
             if (containsIllegalArgument) {
-                String usage = "usage: java -jar RyCON_[].jar --help --locale=[alpha-2 or alpha-3 language code] --file=[input file]";
+                String usage = "usage: java -jar RyCON_[].jar --help --locale=[alpha-2 or alpha-3 language code] --file=[input files]";
                 System.err.println(usage);
             }
         }

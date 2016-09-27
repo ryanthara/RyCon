@@ -38,29 +38,18 @@ import java.util.ArrayList;
  * With the TidyUpWidget of RyCON it is possible to clean up coordinate and
  * measurement files with a simple 'intelligence'.
  *
- * <h3>Changes:</h3>
- * <ul>
- *     <li>7: code optimizations, little corrections and additions </li>
- *     <li>6: defeat bug #1, #2 and #3! </li>
- *     <li>5: enable drag and drop handling </li>
- *     <li>4: simplification and improvements, extract input fields and bottom button bar into separate classes </li>
- *     <li>3: code improvements and clean up </li>
- *     <li>2: basic improvements </li>
- *     <li>1: basic implementation </li>
- * </ul>
- *
  * @author sebastian
- * @version 7
+ * @version 8
  * @since 1
  */
 public class TidyUpWidget {
 
+    private final String[] acceptableFileSuffixes = new String[]{"*.gsi"};
     private Button chkBoxHoldControlPoints;
     private Button chkBoxHoldStations;
     private File[] files2read = new File[0];
     private InputFieldsComposite inputFieldsComposite;
     private Shell innerShell = null;
-    private final String[] acceptableFileSuffixes = new String[]{"*.gsi"};
 
     /**
      * Class constructor without parameters.
@@ -69,6 +58,13 @@ public class TidyUpWidget {
      */
     TidyUpWidget() {
         initUI();
+        handleFileInjection();
+    }
+
+    private void handleFileInjection() {
+        String files = Main.getCLIInputFiles();
+
+        inputFieldsComposite.setSourceTextFieldText(files);
     }
 
     /**
@@ -106,85 +102,6 @@ public class TidyUpWidget {
         }
 
         return success;
-    }
-
-    private void initUI() {
-        int height = Main.getRyCONWidgetHeight();
-        int width = Main.getRyCONWidgetWidth();
-
-        GridLayout gridLayout = new GridLayout(1, true);
-        gridLayout.marginHeight = 5;
-        gridLayout.marginWidth = 5;
-
-        GridData gridData = new GridData(SWT.FILL, SWT.CENTER, true, true);
-        gridData.heightHint = height;
-        gridData.widthHint = width;
-
-        innerShell = new Shell(Main.shell, SWT.CLOSE | SWT.DIALOG_TRIM | SWT.MAX | SWT.TITLE | SWT.APPLICATION_MODAL);
-        innerShell.addListener(SWT.Close, new Listener() {
-            public void handleEvent(Event event) {
-                actionBtnCancel();
-            }
-        });
-        innerShell.setText(I18N.getWidgetTitleTidyUp());
-        innerShell.setSize(width, height);
-        innerShell.setLayout(gridLayout);
-        innerShell.setLayoutData(gridData);
-
-        gridLayout = new GridLayout(1, true);
-        gridLayout.marginHeight = 0;
-        gridLayout.marginWidth = 0;
-
-        inputFieldsComposite = new InputFieldsComposite(this, innerShell, SWT.NONE);
-        inputFieldsComposite.setLayout(gridLayout);
-
-        createOptions(width);
-        createDescription(width);
-
-        new BottomButtonBar(this, innerShell, SWT.NONE);
-
-        innerShell.setLocation(ShellPositioner.centerShellOnPrimaryMonitor(innerShell));
-
-        Main.setSubShellStatus(true);
-
-        innerShell.pack();
-        innerShell.open();
-    }
-
-    private void createOptions(int width) {
-        Group group = new Group(innerShell, SWT.NONE);
-        group.setText(I18N.getGroupTitleOptions());
-
-        GridLayout gridLayout = new GridLayout(1, true);
-        group.setLayout(gridLayout);
-
-        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
-        gridData.widthHint = width - 24;
-        group.setLayoutData(gridData);
-
-        chkBoxHoldControlPoints = new Button(group, SWT.CHECK);
-        chkBoxHoldControlPoints.setSelection(false);
-        chkBoxHoldControlPoints.setText(I18N.getBtnChkTidyUpHoldControlPoints());
-
-        chkBoxHoldStations = new Button(group, SWT.CHECK);
-        chkBoxHoldStations.setSelection(false);
-        chkBoxHoldStations.setText(I18N.getBtnChkTidyUpHoldStations());
-    }
-
-    private void createDescription(int width) {
-        Group group = new Group(innerShell, SWT.NONE);
-        group.setText(I18N.getGroupTitleGeneratorNumberInputAdvice());
-
-        GridLayout gridLayout = new GridLayout(1, true);
-        group.setLayout(gridLayout);
-
-        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
-        gridData.widthHint = width - 24;
-        group.setLayoutData(gridData);
-
-        Label tip = new Label(group, SWT.WRAP | SWT.BORDER | SWT.LEFT);
-        tip.setText(I18N.getLabelTipTidyUpWidget());
-        tip.setLayoutData(new GridData(SWT.HORIZONTAL, SWT.TOP, true, false, 1, 1));
     }
 
     private void actionBtnCancel() {
@@ -264,7 +181,7 @@ public class TidyUpWidget {
      */
     private void actionBtnSource() {
 
-        String[] filterNames = new String[] {
+        String[] filterNames = new String[]{
                 I18N.getFileChooserFilterNameGSI(),
         };
 
@@ -285,31 +202,40 @@ public class TidyUpWidget {
                 filterNames, inputFieldsComposite.getSourceTextField(), inputFieldsComposite.getDestinationTextField());
     }
 
-    private boolean processFileOperations() {
-        boolean success;
+    private void createDescription(int width) {
+        Group group = new Group(innerShell, SWT.NONE);
+        group.setText(I18N.getGroupTitleGeneratorNumberInputAdvice());
 
-        int counter = fileOperations(chkBoxHoldStations.getSelection(), chkBoxHoldControlPoints.getSelection());
+        GridLayout gridLayout = new GridLayout(1, true);
+        group.setLayout(gridLayout);
 
-        if (counter > 0) {
-            String message;
+        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
+        gridData.widthHint = width - 24;
+        group.setLayoutData(gridData);
 
-            if (counter == 1) {
-                message = String.format(I18N.getMsgTidyUpSuccess(Main.TEXT_SINGULAR), counter);
-            } else {
-                message = String.format(I18N.getMsgTidyUpSuccess(Main.TEXT_PLURAL), counter);
-            }
+        Label tip = new Label(group, SWT.WRAP | SWT.BORDER | SWT.LEFT);
+        tip.setText(I18N.getLabelTipTidyUpWidget());
+        tip.setLayoutData(new GridData(SWT.HORIZONTAL, SWT.TOP, true, false, 1, 1));
+    }
 
-            GuiHelper.showMessageBox(innerShell, SWT.ICON_INFORMATION, I18N.getMsgBoxTitleSuccess(), message);
+    private void createOptions(int width) {
+        Group group = new Group(innerShell, SWT.NONE);
+        group.setText(I18N.getGroupTitleOptions());
 
-            // set the counter for status bar information
-            Main.countFileOps = counter;
-            success = true;
-        } else {
-            GuiHelper.showMessageBox(innerShell, SWT.ICON_WARNING, I18N.getMsgBoxTitleError(), I18N.getMsgTidyUpError());
-            success = false;
-        }
+        GridLayout gridLayout = new GridLayout(1, true);
+        group.setLayout(gridLayout);
 
-        return success;
+        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
+        gridData.widthHint = width - 24;
+        group.setLayoutData(gridData);
+
+        chkBoxHoldControlPoints = new Button(group, SWT.CHECK);
+        chkBoxHoldControlPoints.setSelection(false);
+        chkBoxHoldControlPoints.setText(I18N.getBtnChkTidyUpHoldControlPoints());
+
+        chkBoxHoldStations = new Button(group, SWT.CHECK);
+        chkBoxHoldStations.setSelection(false);
+        chkBoxHoldStations.setText(I18N.getBtnChkTidyUpHoldStations());
     }
 
     private int fileOperations(boolean holdStations, boolean holdControlPoints) {
@@ -339,6 +265,76 @@ public class TidyUpWidget {
             }
         }
         return counter;
+    }
+
+    private void initUI() {
+        int height = Main.getRyCONWidgetHeight();
+        int width = Main.getRyCONWidgetWidth();
+
+        GridLayout gridLayout = new GridLayout(1, true);
+        gridLayout.marginHeight = 5;
+        gridLayout.marginWidth = 5;
+
+        GridData gridData = new GridData(SWT.FILL, SWT.CENTER, true, true);
+        gridData.heightHint = height;
+        gridData.widthHint = width;
+
+        innerShell = new Shell(Main.shell, SWT.CLOSE | SWT.DIALOG_TRIM | SWT.MAX | SWT.TITLE | SWT.APPLICATION_MODAL);
+        innerShell.addListener(SWT.Close, new Listener() {
+            public void handleEvent(Event event) {
+                actionBtnCancel();
+            }
+        });
+        innerShell.setText(I18N.getWidgetTitleTidyUp());
+        innerShell.setSize(width, height);
+        innerShell.setLayout(gridLayout);
+        innerShell.setLayoutData(gridData);
+
+        gridLayout = new GridLayout(1, true);
+        gridLayout.marginHeight = 0;
+        gridLayout.marginWidth = 0;
+
+        inputFieldsComposite = new InputFieldsComposite(this, innerShell, SWT.NONE);
+        inputFieldsComposite.setLayout(gridLayout);
+
+        createOptions(width);
+        createDescription(width);
+
+        new BottomButtonBar(this, innerShell, SWT.NONE);
+
+        innerShell.setLocation(ShellPositioner.centerShellOnPrimaryMonitor(innerShell));
+
+        Main.setSubShellStatus(true);
+
+        innerShell.pack();
+        innerShell.open();
+    }
+
+    private boolean processFileOperations() {
+        boolean success;
+
+        int counter = fileOperations(chkBoxHoldStations.getSelection(), chkBoxHoldControlPoints.getSelection());
+
+        if (counter > 0) {
+            String message;
+
+            if (counter == 1) {
+                message = String.format(I18N.getMsgTidyUpSuccess(Main.TEXT_SINGULAR), counter);
+            } else {
+                message = String.format(I18N.getMsgTidyUpSuccess(Main.TEXT_PLURAL), counter);
+            }
+
+            GuiHelper.showMessageBox(innerShell, SWT.ICON_INFORMATION, I18N.getMsgBoxTitleSuccess(), message);
+
+            // set the counter for status bar information
+            Main.countFileOps = counter;
+            success = true;
+        } else {
+            GuiHelper.showMessageBox(innerShell, SWT.ICON_WARNING, I18N.getMsgBoxTitleError(), I18N.getMsgTidyUpError());
+            success = false;
+        }
+
+        return success;
     }
 
     private boolean processFileOperationsDND() {

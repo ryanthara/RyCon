@@ -29,9 +29,10 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
-import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * InputFieldsComposite implements a custom composite with two labels, two text fields and two buttons for
@@ -103,14 +104,17 @@ class InputFieldsComposite extends Composite {
             }
         });
 
+        /*
+        Because of this listener there is a different behaviour of the source
+        text field implemented. From injected file names the path is not removed.
+         */
         sourceTextField.addModifyListener(new ModifyListener() {
             @Override
             public void modifyText(ModifyEvent modifyEvent) {
                 if (TextHelper.checkIfFileExists(sourceTextField)) {
-                    File sourceFile = new File(sourceTextField.getText());
-                    destinationTextField.setText(sourceFile.getName());
+                    Path path = Paths.get(sourceTextField.getText());
+                    destinationTextField.setText(path.getParent().toString());
                 }
-
             }
         });
 
@@ -196,7 +200,7 @@ class InputFieldsComposite extends Composite {
     }
 
     /**
-     * Return the complete destination text field as an object for full access to it.
+     * Returns the complete destination text field as an object for full access to it.
      *
      * @return destination text field
      */
@@ -205,7 +209,7 @@ class InputFieldsComposite extends Composite {
     }
 
     /**
-     * Return the complete source text field as an object for full access to it.
+     * Returns the complete source text field as an object for full access to it.
      *
      * @return source text field
      */
@@ -214,7 +218,7 @@ class InputFieldsComposite extends Composite {
     }
 
     /**
-     * Set the text of the destination text field.
+     * Sets the text of the destination text field.
      *
      * @param text the text to be set
      */
@@ -223,7 +227,7 @@ class InputFieldsComposite extends Composite {
     }
 
     /**
-     * Set the text of the source text field.
+     * Sets the text of the source text field.
      *
      * @param text the text to be set
      */

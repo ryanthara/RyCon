@@ -47,17 +47,8 @@ import java.util.Iterator;
  *     <li>text files with code (format no, code, x, y, z)
  * </ul>
  *
- * <h3>Changes:</h3>
- * <ul>
- *     <li>5: code improvements, little corrections and clean up </li>
- *     <li>4: simplification and improvements, extract input fields and bottom button bar into separate classes </li>
- *     <li>3: code improvements and clean up </li>
- *     <li>2: basic improvements </li>
- *     <li>1: basic implementation </li>
- * </ul>
- *
  * @author sebastian
- * @version 5
+ * @version 6
  * @since 1
  */
 public class CodeSplitterWidget {
@@ -76,6 +67,13 @@ public class CodeSplitterWidget {
      */
     CodeSplitterWidget() {
         initUI();
+        handleFileInjection();
+    }
+
+    private void handleFileInjection() {
+        String files = Main.getCLIInputFiles();
+
+        inputFieldsComposite.setSourceTextFieldText(files);
     }
 
     /**

@@ -44,19 +44,8 @@ import java.util.ArrayList;
  * <p>
  * On later versions of RyCON there will be support for more levelling formats.
  *
- * <h3>Changes:</h3>
- * <ul>
- *     <li>7: code optimizations, set initial path in source text field</li>
- *     <li>6: Support for NIGRA levelling files</li>
- *     <li>5: defeat bug #3 </li>
- *     <li>4: simplification and improvements, extract input fields and bottom button bar into separate classes </li>
- *     <li>3: code improvements and clean up </li>
- *     <li>2: basic improvements </li>
- *     <li>1: basic implementation </li>
- * </ul>
- *
  * @author sebastian
- * @version 7
+ * @version 8
  * @since 1
  */
 public class LevellingWidget {
@@ -74,6 +63,13 @@ public class LevellingWidget {
      */
     LevellingWidget() {
         initUI();
+        handleFileInjection();
+    }
+
+    private void handleFileInjection() {
+        String files = Main.getCLIInputFiles();
+
+        inputFieldsComposite.setSourceTextFieldText(files);
     }
 
     /**
