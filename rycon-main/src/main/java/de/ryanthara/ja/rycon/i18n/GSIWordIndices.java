@@ -38,7 +38,7 @@ import java.util.ResourceBundle;
  */
 public class GSIWordIndices {
 
-    private static final String BUNDLE_NAME = "de/ryanthara/ja/rycon/tools/LeicaGSIWordIndices";
+    private static final String BUNDLE_NAME = "de/ryanthara/ja/rycon/converter/LeicaGSIWordIndices";
     private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 
     /**

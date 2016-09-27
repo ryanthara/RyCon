@@ -38,7 +38,7 @@ import java.util.ResourceBundle;
  */
 class CaplanKDescription {
 
-    private static final String BUNDLE_NAME = "de/ryanthara/ja/rycon/tools/CaplanKDescription";
+    private static final String BUNDLE_NAME = "de/ryanthara/ja/rycon/converter/CaplanKDescription";
     private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 
     /**

@@ -46,6 +46,9 @@ public class GSI2Zeiss {
     public ArrayList<String> convertGSI2REC(String dialect) {
         ArrayList<String> result = null;
 
+        // comment row
+//        I18N.getWordIndexDescription(wordIndex)
+
         switch (dialect) {
             case "R4":
                 break;

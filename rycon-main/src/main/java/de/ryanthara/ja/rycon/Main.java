@@ -72,11 +72,11 @@ public abstract class Main {
      */
     public static final String RyCON_WHATS_NEW_URL = "https://code.ryanthara.de/content/3-RyCON/_whats.new";
     /**
-     * Member that is used for indicating that a text is in singular.
+     * Member that is used to indicate that a text is in singular.
      */
     public static final boolean TEXT_SINGULAR = true;
     /**
-     * Member that is used for indicating that a text is in plural.
+     * Member that is used to indicate that a text is in plural.
      */
     public static final boolean TEXT_PLURAL = false;
     // a couple of private members are used for storing values
@@ -384,7 +384,7 @@ public abstract class Main {
     }
 
     /**
-     * Returns true or false as String for indicating a blank at the end of a gsi format line.
+     * Returns true or false as String to indicate a blank at the end of a gsi format line.
      *
      * @return true or false
      *

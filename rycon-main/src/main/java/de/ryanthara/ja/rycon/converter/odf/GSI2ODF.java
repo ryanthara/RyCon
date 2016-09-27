@@ -27,7 +27,12 @@ import org.odftoolkit.simple.table.Table;
 import java.util.ArrayList;
 
 /**
- * Created by sebastian on 13.09.16.
+ * This class provides functions to convert measurement or coordinate files from Leica GSI format (GSI8 and GSI16)
+ * into an Open Document Format spreadsheet file.
+ *
+ * @author sebastian
+ * @version 1
+ * @since 12
  */
 public class GSI2ODF {
 

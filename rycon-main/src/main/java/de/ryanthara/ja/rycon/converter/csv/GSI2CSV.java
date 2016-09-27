@@ -18,6 +18,7 @@
 package de.ryanthara.ja.rycon.converter.csv;
 
 import de.ryanthara.ja.rycon.converter.gsi.BaseToolsGSI;
+import de.ryanthara.ja.rycon.i18n.I18N;
 import de.ryanthara.ja.rycon.tools.elements.GSIBlock;
 
 import java.util.ArrayList;
@@ -66,8 +67,7 @@ public class GSI2CSV {
             int counter = 0;
 
             for (Integer wordIndex : foundWordIndices) {
-                builder.append("WI_");
-                builder.append(wordIndex.toString());
+                builder.append(I18N.getWordIndexDescription(wordIndex));
 
                 if (counter < foundWordIndices.size() - 1) {
                     builder.append(separator);

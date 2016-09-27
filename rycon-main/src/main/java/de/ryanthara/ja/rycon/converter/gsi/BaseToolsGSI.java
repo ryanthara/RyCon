@@ -35,11 +35,12 @@ import java.util.*;
  * starts every line with a <code>*</code> sign.
  *
  * @author sebastian
- * @version 12
- * @since 1
+ * @version 1
+ * @since 12
  */
 public class BaseToolsGSI {
 
+    private ArrayList<ArrayList<GSIBlock>> encodedBlocks;
     private ArrayList<String> readStringLines;
     private TreeSet<Integer> foundWordIndices;
 
@@ -50,7 +51,8 @@ public class BaseToolsGSI {
      */
     public BaseToolsGSI(ArrayList<String> readStringLines) {
         this.readStringLines = readStringLines;
-        foundWordIndices = new TreeSet<>();
+        this.foundWordIndices = new TreeSet<>();
+        this.encodedBlocks = blockEncoder(readStringLines);
     }
 
     /**
@@ -122,14 +124,14 @@ public class BaseToolsGSI {
      */
     public ArrayList<ArrayList<GSIBlock>> getEncodedLinesOfGSIBlocks() {
         if (readStringLines != null && readStringLines.size() > 0) {
-            return blockEncoder(readStringLines);
+            return encodedBlocks;
         } else {
             return new ArrayList<>();
         }
     }
 
     /**
-     * Return the found word indices (WI) as {@code TreeSet<Integer>}.
+     * Returns the found word indices (WI) as {@code TreeSet<Integer>}.
      *
      * @return found word indices as {@code TreeSet<Integer>}
      */
