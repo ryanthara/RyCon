@@ -19,6 +19,7 @@
 package de.ryanthara.ja.rycon.gui;
 
 import de.ryanthara.ja.rycon.Main;
+import de.ryanthara.ja.rycon.converter.zeiss.BaseToolsZeiss;
 import de.ryanthara.ja.rycon.data.PreferenceHandler;
 import de.ryanthara.ja.rycon.i18n.I18N;
 import de.ryanthara.ja.rycon.tools.SimpleChecker;
@@ -31,22 +32,15 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
 /**
- * SettingsWidget implements a complete widget and it's functionality.
+ * Instances of this class represents a complete settings widget of RyCON and it's functionality.
  * <p>
- * With the SettingsWidget of RyCON it is possible to set up the options of RyCON and
- * write the configuration file.
+ * The settings widget of RyCON is called by hitting the 'P' key in the main window. It shows all of RyCON's settings,
+ * which can be changed easily and stored with Java's preference handling system.
  * <p>
- * <h3>Changes:</h3>
- * <ul>
- * <li>5: implementation of a new directory structure, code reformat, optimizations</li>
- * <li>4: defeat bug #1 and #3 </li>
- * <li>3: code improvements and clean up </li>
- * <li>2: basic improvements </li>
- * <li>1: basic implementation </li>
- * </ul>
+ * An additional button adds the functionality to set default values by a simple click.
  *
  * @author sebastian
- * @version 5
+ * @version 6
  * @since 2
  */
 public class SettingsWidget {
@@ -54,6 +48,7 @@ public class SettingsWidget {
     private Button chkBoxUseSpaceAtLineEnd;
     private Button chkBoxEliminateZeroCoordinates;
     private Button chkBoxLTOPUseZenithDistance;
+    private Composite compositeZeissRecDialect;
     private Group groupFormat;
     private Group groupGeneral;
     private Group groupConverterWidget;
@@ -106,6 +101,8 @@ public class SettingsWidget {
         identifierKnownStationTextField.setText(Main.getParamKnownStationString());
         pointIdenticalDistance.setText(Main.getPointIdenticalDistance());
 
+        RadioHelper.selectBtn(compositeZeissRecDialect.getChildren(), 4); // M5 as default value
+
         Main.pref.setDefaultSettingsGenerated(true);
     }
 
@@ -130,10 +127,6 @@ public class SettingsWidget {
         }
     }
 
-    private boolean checkForValidInputs() {
-        return SimpleChecker.checkIsDoubleValue(pointIdenticalDistance);
-    }
-
     private boolean checkForEmptyTextFields() {
         return SimpleChecker.checkIsTextEmpty(dirBaseTextField) |
                 SimpleChecker.checkIsTextEmpty(dirProjectTextField) |
@@ -148,6 +141,10 @@ public class SettingsWidget {
                 SimpleChecker.checkIsTextEmpty(identifierControlPointTextField) |
                 SimpleChecker.checkIsTextEmpty(identifierKnownStationTextField) |
                 SimpleChecker.checkIsTextEmpty(pointIdenticalDistance);
+    }
+
+    private boolean checkForValidInputs() {
+        return SimpleChecker.checkIsDoubleValue(pointIdenticalDistance);
     }
 
     private void createBottomButtons() {
@@ -195,7 +192,7 @@ public class SettingsWidget {
         gridLayout.marginWidth = 0;
         compositeGeneralAndFormat.setLayout(gridLayout);
 
-        GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
+        GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, false);
         compositeGeneralAndFormat.setLayoutData(gridData);
 
         groupGeneral = new Group(compositeGeneralAndFormat, SWT.NONE);
@@ -204,7 +201,7 @@ public class SettingsWidget {
 
         createGroupGeneral(width / 2);
 
-        GridData gridData2 = new GridData(SWT.FILL, SWT.FILL, true, true);
+        GridData gridData2 = new GridData(SWT.FILL, SWT.FILL, true, false);
         groupGeneral.setLayoutData(gridData2);
 
         groupFormat = new Group(compositeGeneralAndFormat, SWT.NONE);
@@ -213,7 +210,7 @@ public class SettingsWidget {
 
         createGroupFormat(width / 2);
 
-        gridData2 = new GridData(SWT.FILL, SWT.FILL, true, true);
+        gridData2 = new GridData(SWT.FILL, SWT.FILL, true, false);
         groupFormat.setLayoutData(gridData2);
     }
 
@@ -224,7 +221,7 @@ public class SettingsWidget {
         gridLayout.marginWidth = 0;
         compositeWidgetSettings.setLayout(gridLayout);
 
-        GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
+        GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, false);
         compositeWidgetSettings.setLayoutData(gridData);
 
         groupTidyUpWidget = new Group(compositeWidgetSettings, SWT.NONE);
@@ -233,7 +230,7 @@ public class SettingsWidget {
 
         createGroupTidyUp(width / 2);
 
-        GridData gridData2 = new GridData(SWT.FILL, SWT.FILL, true, true);
+        GridData gridData2 = new GridData(SWT.FILL, SWT.FILL, true, false);
         groupTidyUpWidget.setLayoutData(gridData2);
 
         groupConverterWidget = new Group(compositeWidgetSettings, SWT.NONE);
@@ -242,7 +239,7 @@ public class SettingsWidget {
 
         createGroupConverter(width / 2);
 
-        gridData2 = new GridData(SWT.FILL, SWT.FILL, true, true);
+        gridData2 = new GridData(SWT.FILL, SWT.FILL, true, false);
         groupConverterWidget.setLayoutData(gridData2);
     }
 
@@ -252,7 +249,7 @@ public class SettingsWidget {
         GridLayout gridLayout = new GridLayout(1, true);
         composite.setLayout(gridLayout);
 
-        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
+        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, false);
         gridData.grabExcessVerticalSpace = true;
         gridData.verticalAlignment = GridData.FILL_VERTICAL;
         gridData.widthHint = width - 24;
@@ -271,7 +268,7 @@ public class SettingsWidget {
         gridLayout = new GridLayout(2, true);
         composite2.setLayout(gridLayout);
 
-        gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
+        gridData = new GridData(GridData.FILL, GridData.CENTER, true, false);
         gridData.widthHint = width - 24;
         composite2.setLayoutData(gridData);
 
@@ -297,6 +294,45 @@ public class SettingsWidget {
         gridData.grabExcessHorizontalSpace = false;
         pointIdenticalDistance.setLayoutData(gridData);
 
+        compositeZeissRecDialect = new Composite(groupConverterWidget, SWT.NONE);
+
+        gridLayout = new GridLayout(5, false);
+        compositeZeissRecDialect.setLayout(gridLayout);
+
+        gridData = new GridData(GridData.FILL, GridData.CENTER, true, false);
+        gridData.widthHint = width - 24;
+        compositeZeissRecDialect.setLayoutData(gridData);
+
+        Label zeissRecDialectLabel = new Label(compositeZeissRecDialect, SWT.NONE);
+        zeissRecDialectLabel.setText(I18N.getLabelTextZeissRecDialect());
+
+        Button btnR4 = new Button(compositeZeissRecDialect, SWT.RADIO);
+        btnR4.setText(BaseToolsZeiss.R4);
+        Button btnR5 = new Button(compositeZeissRecDialect, SWT.RADIO);
+        btnR5.setText(BaseToolsZeiss.R5);
+        Button btnRec500 = new Button(compositeZeissRecDialect, SWT.RADIO);
+        btnRec500.setText(BaseToolsZeiss.REC500);
+        Button btnM5 = new Button(compositeZeissRecDialect, SWT.RADIO);
+        btnM5.setText(BaseToolsZeiss.M5);
+
+        // try to set the Zeiss Rec dialect from stored settings
+        switch (Main.pref.getUserPref(PreferenceHandler.CONVERTER_SETTING_ZEISS_DIALECT)) {
+            case BaseToolsZeiss.R4:
+                RadioHelper.selectBtn(compositeZeissRecDialect.getChildren(), 1);
+                break;
+            case BaseToolsZeiss.R5:
+                RadioHelper.selectBtn(compositeZeissRecDialect.getChildren(), 2);
+                break;
+            case BaseToolsZeiss.REC500:
+                RadioHelper.selectBtn(compositeZeissRecDialect.getChildren(), 3);
+                break;
+            case BaseToolsZeiss.M5:
+                RadioHelper.selectBtn(compositeZeissRecDialect.getChildren(), 4);
+                break;
+            default:
+                RadioHelper.selectBtn(compositeZeissRecDialect.getChildren(), 4);
+                break;
+        }
     }
 
     private void createGroupFormat(int width) {
@@ -305,7 +341,7 @@ public class SettingsWidget {
         GridLayout gridLayout = new GridLayout(1, true);
         composite.setLayout(gridLayout);
 
-        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
+        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, false);
         gridData.grabExcessVerticalSpace = true;
         gridData.verticalAlignment = GridData.FILL_VERTICAL;
         gridData.widthHint = width - 24;
@@ -322,7 +358,7 @@ public class SettingsWidget {
         GridLayout gridLayout = new GridLayout(2, true);
         composite.setLayout(gridLayout);
 
-        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
+        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, false);
         gridData.widthHint = width - 24;
         composite.setLayoutData(gridData);
 
@@ -379,7 +415,7 @@ public class SettingsWidget {
         gridLayout.numColumns = 3;
         group.setLayout(gridLayout);
 
-        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
+        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, false);
         gridData.widthHint = width - 24;
         group.setLayoutData(gridData);
 
@@ -657,7 +693,7 @@ public class SettingsWidget {
         gridLayout.numColumns = 2;
         composite.setLayout(gridLayout);
 
-        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
+        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, false);
         gridData.widthHint = width - 24;
         composite.setLayoutData(gridData);
 
@@ -740,7 +776,7 @@ public class SettingsWidget {
         gridLayout.marginHeight = 5;
         gridLayout.marginWidth = 5;
 
-        GridData gridData = new GridData(SWT.FILL, SWT.CENTER, true, true);
+        GridData gridData = new GridData(SWT.FILL, SWT.CENTER, true, false);
         gridData.heightHint = height;
         gridData.widthHint = width;
 
@@ -868,6 +904,22 @@ public class SettingsWidget {
         Main.pref.setUserPref(PreferenceHandler.CONVERTER_SETTING_ELIMINATE_ZERO_COORDINATE, Boolean.toString(chkBoxEliminateZeroCoordinates.getSelection()));
         Main.pref.setUserPref(PreferenceHandler.CONVERTER_SETTING_LTOP_USE_ZENITH_DISTANCE, Boolean.toString(chkBoxLTOPUseZenithDistance.getSelection()));
         Main.pref.setUserPref(PreferenceHandler.CONVERTER_SETTING_POINT_IDENTICAL_DISTANCE, pointIdenticalDistance.getText());
+
+        // Zeiss Rec dialect
+        switch (RadioHelper.getSelectedBtn(compositeZeissRecDialect.getChildren())) {
+            case 1:
+                Main.pref.setUserPref(PreferenceHandler.CONVERTER_SETTING_ZEISS_DIALECT, BaseToolsZeiss.R4);
+                break;
+            case 2:
+                Main.pref.setUserPref(PreferenceHandler.CONVERTER_SETTING_ZEISS_DIALECT, BaseToolsZeiss.R5);
+                break;
+            case 3:
+                Main.pref.setUserPref(PreferenceHandler.CONVERTER_SETTING_ZEISS_DIALECT, BaseToolsZeiss.REC500);
+                break;
+            case 4:
+                Main.pref.setUserPref(PreferenceHandler.CONVERTER_SETTING_ZEISS_DIALECT, BaseToolsZeiss.M5);
+                break;
+        }
 
         // paths for module #5 - project generation
         Main.pref.setUserPref(PreferenceHandler.DIR_BASE, dirBaseTextField.getText());

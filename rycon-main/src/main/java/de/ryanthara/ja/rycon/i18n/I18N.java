@@ -505,6 +505,10 @@ public class I18N {
         return Messages.getString("labelTextSource");
     }
 
+    public static String getLabelTextZeissRecDialect() {
+        return Messages.getString("labelTextZeissRecDialect");
+    }
+
     public static String getLabelTipConverterWidget() {
         return Messages.getString("labelTipConverterWidget");
     }

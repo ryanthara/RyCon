@@ -36,22 +36,19 @@ import java.util.prefs.Preferences;
  * - Under Windows in a location like 'HKEY_CURRENT_USER\Software\JavaSoft\Prefs\de\ryanthara\ja'
  * - Under OS X in a location ~/Library/Preferences/de.ryanthara.ja.plist
  * - Under *nix in a location /etc/.java/.systemPrefs
- * <p>
- * <h3>Changes:</h3>
- * <ul>
- * <li>6: implementation of a new directory structure, code improvements, small corrections</li>
- * <li>5: defeat bug #1 and #3 </li>
- * <li>4: code improvements and clean up </li>
- * <li>3: change from properties file to Java Preferences API </li>
- * <li>2: add a couple of parameters </li>
- * <li>1: basic implementation </li>
- * </ul>
  *
  * @author sebastian
- * @version 6
+ * @version 7
  * @since 1
  */
 public class PreferenceHandler implements PreferenceChangeListener {
+
+    /**
+     * Member for the preference key of the converter setting for the used Zeiss REC dialect.
+     *
+     * @since 7
+     */
+    public static final String CONVERTER_SETTING_ZEISS_DIALECT = "converter_setting_zeiss_dialect";
 
     /**
      * Member for the preference key of the converter setting for zero coordinates.
@@ -321,6 +318,7 @@ public class PreferenceHandler implements PreferenceChangeListener {
      * <li>'DIR_PROJECT_TEMPLATE' - './project/template-folder' </li>
      * <li>'CONVERTER_SETTING_ELIMINATE_ZERO_COORDINATE' -  true </li>
      * <li>'CONVERTER_SETTING_LTOP_USE_ZENITH_DISTANCE' -  false </li>
+     * <li>'CONVERTER_SETTING_ZEISS_DIALECT - M5' </li>
      * <li>'GSI_SETTING_LINE_ENDING_WITH_BLANK' -  true </li>
      * <li>'PARAM_CODE_STRING' - 'CODE' </li>
      * <li>'PARAM_CONTROL_POINT_STRING' - 'STKE' </li>
@@ -360,6 +358,7 @@ public class PreferenceHandler implements PreferenceChangeListener {
         // parameters for module #4 - converter
         userPreferences.put(CONVERTER_SETTING_ELIMINATE_ZERO_COORDINATE, Main.getParamEliminateZeroCoordinates());
         userPreferences.put(CONVERTER_SETTING_LTOP_USE_ZENITH_DISTANCE, Main.getParamLTOPUseZenithDistance());
+        userPreferences.put(CONVERTER_SETTING_ZEISS_DIALECT, Main.getParamZeissRecDialect());
 
         // GSI file format settings
         userPreferences.put(GSI_SETTING_LINE_ENDING_WITH_BLANK, Main.getGSISettingLineEnding());

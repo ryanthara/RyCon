@@ -110,6 +110,8 @@ public abstract class Main {
     private static final String PARAM_KNOWN_STATION_STRING = "ST";
     private static final String LAST_POS_PRIMARY_MONITOR = "-9999, -9999";
     private static final String LAST_POS_SECONDARY_MONITOR = "-9998, -9998,";
+    private static final String ZEISS_REC_DIALECT = "M5";
+
     /**
      * The reference to the global application class.
      */
@@ -580,6 +582,15 @@ public abstract class Main {
      */
     public static void setSubShellStatus(boolean isSubShellOpen) {
         isSubShellOpenStatus = isSubShellOpen;
+    }
+
+    /**
+     * Sets the zeiss REC dialect format value.
+     *
+     * @return Zeiss REC format dialect string
+     */
+    public static String getParamZeissRecDialect() {
+        return ZEISS_REC_DIALECT;
     }
 
     /**
