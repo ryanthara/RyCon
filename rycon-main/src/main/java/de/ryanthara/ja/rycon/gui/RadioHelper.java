@@ -22,15 +22,9 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Control;
 
 /**
- * RadioHelper implements functionality for radio buttons.
+ * This class implements different functionality for radio buttons in RyCON.
  * <p>
- * The access to simple functions is implemented with static access.
- *
- * <h3>Changes:</h3>
- * <ul>
- *     <li>2: code improvements and clean up </li>
- *     <li>1: basic implementation </li>
- * </ul>
+ * The access to the simple functions of this helper class is implemented as static access.
  *
  * @author sebastian
  * @version 2
@@ -39,11 +33,12 @@ import org.eclipse.swt.widgets.Control;
 public class RadioHelper {
 
     /**
-     * Return the number of a selected radio button from a given control group.
+     * Returns the number of a selected radio button from a given control group.
      * <p>
      * Pay attention to the fact, that the first button in the field has the number '0'.
      *
      * @param control {@code Control[]} object with radio buttons
+     *
      * @return number of the selected radio button
      */
     static int getSelectedBtn(Control[] control) {
@@ -63,7 +58,7 @@ public class RadioHelper {
     }
 
     /**
-     * Enable one radio button and disable all the others in the given control group.
+     * Enables a certain radio button in the given control group.
      *
      * @param control Control with radio buttons
      * @param number  Button to enable
@@ -83,9 +78,10 @@ public class RadioHelper {
     }
 
     /**
-     * Toggle radio buttons vice versa on two given control groups.
+     * Toggles radio buttons vice versa on two given control groups.
      * <p>
-     * With this helper the slave button will be toggled to a different index.
+     * With this helper the button in the slave group will be toggled to a different index
+     * as the button in the master group.
      *
      * @param master Radio button group which is selected
      * @param slave  Radio button group which has to be toggled
@@ -94,7 +90,7 @@ public class RadioHelper {
         int selectedMaster = -1;
         int selectedSlave;
 
-        // find out which radio button is selected on the master group (the one which was clicked)
+        // find out which radio button is selected in the master group (the one which was clicked)
         for (int i = 0; i < master.length; i++) {
             Control child = master[i];
             if (child instanceof Button) {
@@ -105,7 +101,7 @@ public class RadioHelper {
             }
         }
 
-        // find out which radio button is selected on the slave group (the one which was not clicked and has to be changed)
+        // find out which radio button is selected in the slave group (the one which was not clicked and has to be changed)
         for (int i = 0; i < slave.length; i++) {
             Control child = slave[i];
             if (child instanceof Button) {
