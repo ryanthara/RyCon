@@ -345,7 +345,7 @@ public class CodeSplitterWidget {
                                 Main.getParamCodeString() + "-" + code + ".GSI";
                         LineWriter lineWriter = new LineWriter(file2write);
                         if (lineWriter.writeFile(lines)) {
-                            counter++;
+                            counter = counter + 1;
                         }
                     }
                 } else if (suffix.endsWith(".txt")) {
@@ -361,7 +361,7 @@ public class CodeSplitterWidget {
                                 Main.getParamCodeString() + "-" + code + ".TXT";
                         LineWriter lineWriter = new LineWriter(file2write);
                         if (lineWriter.writeFile(lines)) {
-                            counter++;
+                            counter = counter + 1;
                         }
                     }
                 } else {

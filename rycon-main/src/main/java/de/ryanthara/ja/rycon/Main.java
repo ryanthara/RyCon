@@ -82,12 +82,8 @@ public abstract class Main {
     // a couple of private members are used for storing values
     private static final boolean GSI8 = false;
     private static final boolean GSI16 = true;
-    /*
-     * The width of a grid cell. Window size and others are calculated from these values.
-     * RyCON grid uses golden rectangle cut with an aspect ratio of 1.618:1
-     */
-    private static final int RyCON_GRID_WIDTH = 324;
-    private static final int RyCON_GRID_HEIGHT = 200;
+    private static final int RyCON_GRID_WIDTH = 325;
+    private static final int RyCON_GRID_HEIGHT = 135;
     private static final int RyCON_WIDGET_WIDTH = 666;
     private static final int RyCON_WIDGET_HEIGHT = 412;
     private static final String APP_NAME = "RyCON";
@@ -101,6 +97,7 @@ public abstract class Main {
     private static final String CONVERTER_SETTING_ELIMINATE_ZERO_COORDINATE = "true";
     private static final String CONVERTER_SETTING_LTOP_USE_ZENITH_DISTANCE = "false";
     private static final String CONVERTER_SETTING_POINT_IDENTICAL_DISTANCE = "3";
+    private static final String CONVERTER_SETTING_ZEISS_DIALECT = "M5";
     private static final String GSI_SETTING_LINE_ENDING_WITH_BLANK = "true";
     private static final String LAST_USED_DISPLAY = "-1";
     private static final String PARAM_CODE_STRING = "CODE";
@@ -110,7 +107,6 @@ public abstract class Main {
     private static final String PARAM_KNOWN_STATION_STRING = "ST";
     private static final String LAST_POS_PRIMARY_MONITOR = "-9999, -9999";
     private static final String LAST_POS_SECONDARY_MONITOR = "-9998, -9998,";
-    private static final String ZEISS_REC_DIALECT = "M5";
 
     /**
      * The reference to the global application class.
@@ -501,6 +497,15 @@ public abstract class Main {
     }
 
     /**
+     * Sets the Zeiss REC dialect format value.
+     *
+     * @return Zeiss REC format dialect string
+     */
+    public static String getParamZeissRecDialect() {
+        return CONVERTER_SETTING_ZEISS_DIALECT;
+    }
+
+    /**
      * Returns the value for the minimum distance in which two points may be equal. (e.g. two points within 3cm may be
      * the same points)
      *
@@ -582,15 +587,6 @@ public abstract class Main {
      */
     public static void setSubShellStatus(boolean isSubShellOpen) {
         isSubShellOpenStatus = isSubShellOpen;
-    }
-
-    /**
-     * Sets the zeiss REC dialect format value.
-     *
-     * @return Zeiss REC format dialect string
-     */
-    public static String getParamZeissRecDialect() {
-        return ZEISS_REC_DIALECT;
     }
 
     /**

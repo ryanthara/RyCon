@@ -20,7 +20,8 @@ package de.ryanthara.ja.rycon.converter.zeiss;
 import java.util.ArrayList;
 
 /**
- * Created by sebastian on 15.09.16.
+ * This class provides functions to convert text formatted coordinate files into Zeiss REC files and
+ * it's dialects (R4, R5, REC500 and M5).
  */
 public class TXT2Zeiss {
 
@@ -36,26 +37,58 @@ public class TXT2Zeiss {
     }
 
     /**
-     * Converts a text formatted measurement or coordinate based file into an Zeiss REC formatted file.
+     * Converts a text formatted coordinate file (nr x y (z) or nr code x y z) into a Zeiss REC formatted file.
      *
      * @param dialect dialect of the target file
+     *
      * @return string lines of the target file
      */
     public ArrayList<String> convertTXT2REC(String dialect) {
-        ArrayList<String> result = null;
+        ArrayList<String> result = new ArrayList<>();
 
-        switch (dialect) {
-            case "R4":
-                break;
-            case "R5":
-                break;
-            case "REC500":
-                break;
-            case "M5":
-                break;
+        int lineNumber = 0;
+
+        for (String line : readStringLines) {
+            String[] lineSplit = line.trim().split("\\s+");
+
+            String code = "";
+            String northing = "";
+            String easting = "";
+            String height = "";
+
+            String number = lineSplit[0];
+
+            lineNumber = lineNumber + 1;
+
+            switch (lineSplit.length) {
+                case 3:     // line contains no height
+                    easting = lineSplit[1];
+                    northing = lineSplit[2];
+                    break;
+
+                case 4:     // line contains no code
+                    easting = lineSplit[1];
+                    northing = lineSplit[2];
+                    height = lineSplit[3];
+                    break;
+
+                case 6:     // line contains code at second position and height
+                    /*
+                    Code is not used at the moment because the only chance to do this would be in M5 dialect.
+                     */
+                    // TODO: 16.10.16 use code from ASCII text file in M5 format
+                    //code = lineSplit[1];
+                    easting = lineSplit[2];
+                    northing = lineSplit[3];
+                    height = lineSplit[4];
+                    break;
+            }
+
+            result.add(BaseToolsZeiss.prepareLineOfCoordinates(dialect, number, code, easting, northing, height, lineNumber));
         }
 
         return result;
+
     }
 
 } // end of TXT2Zeiss

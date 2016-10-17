@@ -72,9 +72,9 @@ import java.util.List;
                 for (String description : commentLine) {
                     cell = table.getCellByPosition(colIndex, rowIndex);
                     cell.setStringValue(description);
-                    colIndex++;
+                    colIndex = colIndex + 1;
                 }
-                rowIndex++;
+                rowIndex = rowIndex + 1;
             }
 
             // remove furthermore the still not needed comment line
@@ -110,9 +110,9 @@ import java.util.List;
                             cell.setStringValue(csvLine[i]);
                             break;
                     }
-                    colIndex++;
+                    colIndex = colIndex + 1;
                 }
-                rowIndex++;
+                rowIndex = rowIndex + 1;
             }
 
         } catch (Exception e) {

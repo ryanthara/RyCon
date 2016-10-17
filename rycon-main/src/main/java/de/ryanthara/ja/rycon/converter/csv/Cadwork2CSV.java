@@ -44,7 +44,7 @@ public class Cadwork2CSV {
      * Converts a coordinate file from Cadwork (node.dat) into a CSV file with a given separator sign.
      *
      * @param separator        separator sign to use for conversion
-     * @param writeCommentLine writes an comment line with information about the column content
+     * @param writeCommentLine writes a comment line with information about the column content
      * @param useCodeColumn    use the code column from node.dat
      * @param useZeroHeights   use heights with zero (0.000) values
      *
@@ -59,7 +59,7 @@ public class Cadwork2CSV {
             readStringLines.remove(0);
             readStringLines.remove(0);
 
-            String[] lineSplit = readStringLines.get(0).trim().split("\\t", -1);
+            String[] lineSplit = readStringLines.get(0).trim().split("\\s+", -1);
 
             // point number
             String commentLine = lineSplit[5];

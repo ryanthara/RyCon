@@ -23,7 +23,8 @@ import de.ryanthara.ja.rycon.tools.elements.RyPoint;
 import java.util.ArrayList;
 
 /**
- * Created by sebastian on 13.09.16.
+ * This class provides functions to convert measurement or coordinate files from Caplan K format
+ * into LTOP KOO files.
  */
 public class K2LTOP {
 

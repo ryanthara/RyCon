@@ -241,6 +241,14 @@ public class I18N {
         return Messages.getString("btnOKToolTip");
     }
 
+    public static String getBtnPrintLabel() {
+        return Messages.getString("btnPrintLabel");
+    }
+
+    public static String getBtnPrintLabelToolTip() {
+        return Messages.getString("btnPrintLabelToolTip");
+    }
+
     public static String getBtnSettingsLabel() {
         return Messages.getString("btnSettings");
     }
@@ -249,12 +257,28 @@ public class I18N {
         return Messages.getString("btnSettingsToolTip");
     }
 
+    public static String getBtnSettingsMainLabel() {
+        return Messages.getString("btnSettingsMainLabel");
+    }
+
+    public static String getBtnSettingsMainLabelToolTip() {
+        return Messages.getString("btnSettingsMainLabelToolTip");
+    }
+
     public static String getBtnSplitterLabel() {
         return Messages.getString("btnSplitter");
     }
 
     public static String getBtnSplitterLabelToolTip() {
         return Messages.getString("btnSplitterToolTip");
+    }
+
+    public static String getBtnTransformationLabel() {
+        return Messages.getString("btnTransformationLabel");
+    }
+
+    public static String getBtnTransformationLabelToolTip() {
+        return Messages.getString("btnTransformationLabelToolTip");
     }
 
     public static String getBtnUseSpaceAtLineEnd() {
@@ -721,6 +745,10 @@ public class I18N {
         return prepareString("msgTidyUpSuccess", singular);
     }
 
+    public static String getStatus0ExitInitialized() {
+        return Messages.getString("status0ExitInitialized");
+    }
+
     public static String getStatus1CleanInitialized() {
         return Messages.getString("status1CleanInitialized");
     }
@@ -739,10 +767,6 @@ public class I18N {
 
     public static String getStatus5GeneratorInitialized() {
         return Messages.getString("status5GeneratorInitialized");
-    }
-
-    public static String getStatus6ExitInitialized() {
-        return Messages.getString("status6ExitInitialized");
     }
 
     public static String getStatusCleanFileSuccessful(boolean singular) {

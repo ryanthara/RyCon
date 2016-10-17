@@ -65,28 +65,28 @@ public class K2ODF {
             if (writeCommentRow) {
                 cell = table.getCellByPosition(colIndex, rowIndex);
                 cell.setStringValue(I18N.getCaplanColumnTyp("pointNumber"));
-                colIndex++;
+                colIndex = colIndex + 1;
 
                 cell = table.getCellByPosition(colIndex, rowIndex);
                 cell.setStringValue(I18N.getCaplanColumnTyp("easting"));
-                colIndex++;
+                colIndex = colIndex + 1;
 
                 cell = table.getCellByPosition(colIndex, rowIndex);
                 cell.setStringValue(I18N.getCaplanColumnTyp("northing"));
-                colIndex++;
+                colIndex = colIndex + 1;
 
                 cell = table.getCellByPosition(colIndex, rowIndex);
                 cell.setStringValue(I18N.getCaplanColumnTyp("height"));
-                colIndex++;
+                colIndex = colIndex + 1;
 
                 cell = table.getCellByPosition(colIndex, rowIndex);
                 cell.setStringValue(I18N.getCaplanColumnTyp("object"));
-                colIndex++;
+                colIndex = colIndex + 1;
 
                 cell = table.getCellByPosition(colIndex, rowIndex);
                 cell.setStringValue(I18N.getCaplanColumnTyp("attribute"));
 
-                rowIndex++;
+                rowIndex = rowIndex + 1;
             }
 
             for (String line : readStringLines) {
@@ -98,7 +98,7 @@ public class K2ODF {
                     if (line.length() >= 16) {
                         cell = table.getCellByPosition(colIndex, rowIndex);
                         cell.setStringValue(line.substring(0, 16).trim());          // point number (no '*', ',' and ';'), column 1 - 16
-                        colIndex++;
+                        colIndex = colIndex + 1;
                     }
 
                     if (line.length() >= 32) {
@@ -111,7 +111,7 @@ public class K2ODF {
                             cell.setStringValue("");
                         }
 
-                        colIndex++;
+                        colIndex = colIndex + 1;
                     }
 
                     if (line.length() >= 46) {
@@ -124,7 +124,7 @@ public class K2ODF {
                             cell.setStringValue("");
                         }
 
-                        colIndex++;
+                        colIndex = colIndex + 1;
                     }
 
                     if (line.length() >= 59) {
@@ -137,7 +137,7 @@ public class K2ODF {
                             cell.setStringValue("");
                         }
 
-                        colIndex++;
+                        colIndex = colIndex + 1;
                     }
 
                     if (line.length() >= 62) {
@@ -145,15 +145,15 @@ public class K2ODF {
 
                         cell = table.getCellByPosition(colIndex, rowIndex);
                         cell.setStringValue(lineSplit[0].trim());                   // code is the same as object type, column 62...
-                        colIndex++;
+                        colIndex = colIndex + 1;
 
                         for (int i = 1; i < lineSplit.length; i++) {
                             cell = table.getCellByPosition(colIndex, rowIndex);
                             cell.setStringValue(lineSplit[i].trim());
-                            colIndex++;
+                            colIndex = colIndex + 1;
                         }
                     }
-                    rowIndex++;
+                    rowIndex = rowIndex + 1;
                 }
             }
         } catch (Exception e) {

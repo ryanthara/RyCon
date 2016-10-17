@@ -258,7 +258,7 @@ public class TidyUpWidget {
                 String file2write = file2read.toString().substring(0, file2read.toString().length() - 4) + "_" + editString + ".GSI";
                 LineWriter lineWriter = new LineWriter(file2write);
                 if (lineWriter.writeFile(writeFile)) {
-                    counter++;
+                    counter = counter + 1;
                 }
             } else {
                 System.err.println("File " + file2read.getName() + " could not be read.");

@@ -92,13 +92,13 @@ public class K2GSI {
                     for (int i = 1; i < lineSplit.length; i++) {
                         String attr = lineSplit[i].trim();
                         blocks.add(new GSIBlock(isGSI16, (71 + i), lineCounter, attr));
-                        lineCounter++;
+                        lineCounter = lineCounter + 1;
                     }
                 }
 
                 // check for at least one or more added elements to prevent writing empty lines
                 if (blocks.size() > 0) {
-                    lineCounter++;
+                    lineCounter = lineCounter + 1;
                     blocksInLines.add(blocks);
                 }
             }

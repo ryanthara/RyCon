@@ -66,7 +66,7 @@ public class Cadwork2GSI {
         for (String line : readStringLines) {
             blocks = new ArrayList<>();
 
-            String[] lineSplit = line.trim().split("\\t", -1);
+            String[] lineSplit = line.trim().split("\\s+", -1);
 
             // point number
             blocks.add(new GSIBlock(isGSI16, 11, lineCounter, lineSplit[5]));
@@ -91,7 +91,7 @@ public class Cadwork2GSI {
 
             // check for at least one or more added elements to prevent writing empty lines
             if (blocks.size() > 0) {
-                lineCounter++;
+                lineCounter = lineCounter + 1;
                 blocksInLines.add(blocks);
             }
         }

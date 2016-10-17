@@ -42,7 +42,7 @@ import java.util.List;
     }
 
     /**
-     * Converts a CSV file (nr;x;y;z or nr;code;x;y;z) into a Caplan K file.
+     * Converts a CSV file (nr;x;y(;z) or nr;code;x;y;z) into a Caplan K file.
      *
      * @param useSimpleFormat  option to write a reduced K file which is compatible to ZF LaserControl
      * @param writeCommentLine option to write a comment line into the K file with basic information

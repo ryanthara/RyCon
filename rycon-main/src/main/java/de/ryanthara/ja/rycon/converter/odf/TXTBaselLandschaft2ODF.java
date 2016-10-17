@@ -68,9 +68,9 @@ public class TXTBaselLandschaft2ODF {
                 for (String description : lineSplit) {
                     cell = table.getCellByPosition(colIndex, rowIndex);
                     cell.setStringValue(description);
-                    colIndex++;
+                    colIndex = colIndex + 1;
                 }
-                rowIndex++;
+                rowIndex = rowIndex + 1;
             }
 
             // remove furthermore the still not needed comment line
@@ -85,21 +85,21 @@ public class TXTBaselLandschaft2ODF {
                     case 5:     // HFP file
                         cell = table.getCellByPosition(colIndex, rowIndex);      // Art
                         cell.setStringValue(lineSplit[0]);
-                        colIndex++;
+                        colIndex = colIndex + 1;
 
                         cell = table.getCellByPosition(colIndex, rowIndex);      // Number
                         cell.setStringValue(lineSplit[1]);
-                        colIndex++;
+                        colIndex = colIndex + 1;
 
                         cell = table.getCellByPosition(colIndex, rowIndex);      // X
                         cell.setDoubleValue(Double.parseDouble(lineSplit[2]));
                         cell.setFormatString("#,##0.000");
-                        colIndex++;
+                        colIndex = colIndex + 1;
 
                         cell = table.getCellByPosition(colIndex, rowIndex);      // Y
                         cell.setDoubleValue(Double.parseDouble(lineSplit[3]));
                         cell.setFormatString("#,##0.000");
-                        colIndex++;
+                        colIndex = colIndex + 1;
 
                         cell = table.getCellByPosition(colIndex, rowIndex);      // Z
                         if (lineSplit[4].equalsIgnoreCase("NULL")) {
@@ -113,25 +113,25 @@ public class TXTBaselLandschaft2ODF {
                     case 6:     // LFP file
                         cell = table.getCellByPosition(colIndex, rowIndex);      // Art
                         cell.setStringValue(lineSplit[0]);
-                        colIndex++;
+                        colIndex = colIndex + 1;
 
                         cell = table.getCellByPosition(colIndex, rowIndex);      // Number
                         cell.setStringValue(lineSplit[1]);
-                        colIndex++;
+                        colIndex = colIndex + 1;
 
                         cell = table.getCellByPosition(colIndex, rowIndex);      // VArt
                         cell.setStringValue(lineSplit[2]);
-                        colIndex++;
+                        colIndex = colIndex + 1;
 
                         cell = table.getCellByPosition(colIndex, rowIndex);      // X
                         cell.setDoubleValue(Double.parseDouble(lineSplit[3]));
                         cell.setFormatString("#,##0.000");
-                        colIndex++;
+                        colIndex = colIndex + 1;
 
                         cell = table.getCellByPosition(colIndex, rowIndex);      // Y
                         cell.setDoubleValue(Double.parseDouble(lineSplit[4]));
                         cell.setFormatString("#,##0.000");
-                        colIndex++;
+                        colIndex = colIndex + 1;
 
                         cell = table.getCellByPosition(colIndex, rowIndex);      // Z
                         if (lineSplit[5].equalsIgnoreCase("NULL")) {
@@ -146,7 +146,7 @@ public class TXTBaselLandschaft2ODF {
                         System.err.println("Error in convertTXTBaselLandschaft2ODS: line length doesn't match 5 or 6 elements");
 
                 }
-                rowIndex++;
+                rowIndex = rowIndex + 1;
             }
 
         } catch (Exception e) {

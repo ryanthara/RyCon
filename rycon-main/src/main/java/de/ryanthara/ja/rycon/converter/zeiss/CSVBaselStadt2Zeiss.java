@@ -21,7 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by sebastian on 15.09.16.
+ * This class provides functions to convert coordinate files from the geodata server Basel Stadt (Switzerland)
+ * into Zeiss REC files with it's dialects (R4, R5, REC500 and M5).
  */
 public class CSVBaselStadt2Zeiss {
 
@@ -41,22 +42,43 @@ public class CSVBaselStadt2Zeiss {
      * into a Zeiss REC formatted file.
      *
      * @param dialect dialect of the target file
+     *
      * @return converted Zeiss REC file as {@code ArrayList<String>}
      */
     public ArrayList<String> convertCSVBaselStadt2REC(String dialect) {
-        ArrayList<String> result = null;
+        ArrayList<String> result = new ArrayList<>();
 
-        switch (dialect) {
-            case "R4":
-                break;
-            case "R5":
-                break;
-            case "REC500":
-                break;
-            case "M5":
-                break;
+        int lineNumber = 0;
+        String number, code, easting, northing, height;
+
+        // remove comment line
+        readCSVLines.remove(0);
+
+        for (String[] stringField : readCSVLines) {
+            lineNumber = lineNumber + 1;
+            // point number is in column 1
+            number = stringField[0].replaceAll("\\s+", "").trim();
+
+            // code is in column 2
+            code = stringField[1];
+
+            // easting (Y) is in column 3
+            easting = stringField[2];
+
+            // northing (X) is in column 4
+            northing = stringField[3];
+
+            // height (Z) is in column 5, but not always valued
+            if (!stringField[4].equals("")) {
+                height = stringField[4];
+            } else {
+                height = "-9999";
+            }
+
+            result.add(BaseToolsZeiss.prepareLineOfCoordinates(dialect, number, code, easting, northing, height, lineNumber));
         }
 
         return result;
     }
+
 } // end of CSVBaselStadt2Zeiss

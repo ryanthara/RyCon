@@ -18,11 +18,15 @@
 package de.ryanthara.ja.rycon.converter.zeiss;
 
 import de.ryanthara.ja.rycon.converter.gsi.BaseToolsGSI;
+import de.ryanthara.ja.rycon.tools.elements.GSIBlock;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.TreeSet;
 
 /**
- * Created by sebastian on 15.09.16.
+ * This class provides functions to convert coordinate and measurement files from Leica GSI format
+ * into Zeiss REC files with it's dialects (R4, R5, REC500 and M5).
  */
 public class GSI2Zeiss {
 
@@ -38,28 +42,106 @@ public class GSI2Zeiss {
     }
 
     /**
-     * Converts a Leica GSI formatted measurement or coordinate based file into an Zeiss REC formatted file.
+     * Converts a Leica GSI formatted measurement or coordinate based file into a Zeiss REC formatted file.
      *
      * @param dialect dialect of the target file
+     *
      * @return string lines of the target file
      */
     public ArrayList<String> convertGSI2REC(String dialect) {
-        ArrayList<String> result = null;
+        ArrayList<String> result = new ArrayList<>();
+        TreeSet<Integer> foundWordIndices = baseToolsGSI.getFoundWordIndices();
 
-        // comment row
-//        I18N.getWordIndexDescription(wordIndex)
+        int lineNumber = 0;
 
-        switch (dialect) {
-            case "R4":
-                break;
-            case "R5":
-                break;
-            case "REC500":
-                break;
-            case "M5":
-                break;
+        for (ArrayList<GSIBlock> blocksAsLines : baseToolsGSI.getEncodedLinesOfGSIBlocks()) {
+            Iterator<Integer> it = foundWordIndices.iterator();
+
+            lineNumber = lineNumber + 1;
+
+            for (int i = 0; i < foundWordIndices.size(); i++) {
+                Integer wordIndex = it.next();
+
+                boolean isStationLine = false;
+                boolean isTargetLine = false;
+
+                String number = "", code = "", easting = "", northing = "", height = "", instrumentHeight = "";
+                String horizontalAngle = "", verticalAngle = "", slopeDistance = "", targetHeight = "";
+
+                for (GSIBlock block : blocksAsLines) {
+                    switch (wordIndex) {
+                        case 11:
+                            number = block.toPrintFormatTXT();
+                            break;
+                        case 21:
+                            horizontalAngle = block.toPrintFormatTXT();
+                            break;
+                        case 22:
+                            verticalAngle = block.toPrintFormatTXT();
+                            break;
+                        case 31:
+                            slopeDistance = block.toPrintFormatTXT();
+                            break;
+                        case 32:
+                            slopeDistance = block.toPrintFormatTXT();
+                            break;
+                        case 41:
+                            code = block.toPrintFormatTXT();
+                            break;
+                        case 81:
+                            easting = block.toPrintFormatTXT();
+                            isTargetLine = true;
+                            break;
+                        case 82:
+                            northing = block.toPrintFormatTXT();
+                            isTargetLine = true;
+                            break;
+                        case 83:
+                            height = block.toPrintFormatTXT();
+                            isTargetLine = true;
+                            break;
+                        case 84:
+                            easting = block.toPrintFormatTXT();
+                            isStationLine = true;
+                            break;
+                        case 85:
+                            northing = block.toPrintFormatTXT();
+                            isStationLine = true;
+                            break;
+                        case 86:
+                            height = block.toPrintFormatTXT();
+                            isStationLine = true;
+                            break;
+                        case 87:
+                            targetHeight = block.toPrintFormatTXT();
+                            break;
+                        case 88:
+                            instrumentHeight = block.toPrintFormatTXT();
+                            isStationLine = true;
+                            break;
+                    }
+                }
+
+                // differ between coordinate or measurement files
+                if (isStationLine) {
+                    if (dialect.equals(BaseToolsZeiss.REC500)) {
+                        result.add(BaseToolsZeiss.prepareLineOfInstrumentHeight(dialect, number, instrumentHeight, lineNumber));
+                        lineNumber = lineNumber + 1;
+                        result.add(BaseToolsZeiss.prepareLineOfCoordinates(dialect, number, code, easting, northing, height, lineNumber));
+                    } else {
+                        result.add(BaseToolsZeiss.prepareLineOfCoordinates(dialect, number, code, easting, northing, height, lineNumber));
+                        lineNumber = lineNumber + 1;
+                        result.add(BaseToolsZeiss.prepareLineOfInstrumentHeight(dialect, number, instrumentHeight, lineNumber));
+                    }
+                } else if (isTargetLine) {
+                    result.add(BaseToolsZeiss.prepareLineOfTargetHeight(dialect, number, targetHeight, lineNumber));
+                    lineNumber = lineNumber + 1;
+                    result.add(BaseToolsZeiss.prepareLineOfMeasurement(dialect, number, horizontalAngle, verticalAngle, slopeDistance, lineNumber));
+                    lineNumber = lineNumber + 1;
+                    result.add(BaseToolsZeiss.prepareLineOfCoordinates(dialect, number, code, easting, northing, height, lineNumber));
+                }
+            }
         }
-
         return result;
     }
 

@@ -21,7 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by sebastian on 15.09.16.
+ * This class provides functions to convert coordinate files in CSV format (comma separated values)
+ * into Zeiss REC files with it's dialects (R4, R5, REC500 and M5).
  */
 public class CSV2Zeiss {
 
@@ -37,26 +38,52 @@ public class CSV2Zeiss {
     }
 
     /**
-     * Converts an comma separated measurement or coordinate based file into an Zeiss REC formatted file.
+     * Converts a CSV file (nr;x;y;z or nr;code;x;y;z) into a Zeiss REC formatted file.
      *
      * @param dialect dialect of the target file
+     *
      * @return string lines of the target file
      */
     public ArrayList<String> convertCSV2REC(String dialect) {
-        ArrayList<String> result = null;
+        ArrayList<String> result = new ArrayList<>();
 
-        switch (dialect) {
-            case "R4":
-                break;
-            case "R5":
-                break;
-            case "REC500":
-                break;
-            case "M5":
-                break;
+        int lineNumber = 0;
+
+        for (String[] stringField : readCSVLines) {
+            String code = "";
+            String easting = "";
+            String northing = "";
+            String height = "";
+
+            String number = stringField[0];
+
+            lineNumber = lineNumber + 1;
+
+            switch (stringField.length) {
+                case 3:     // contains nr x y
+                    easting = stringField[1];
+                    northing = stringField[2];
+                    break;
+
+                case 4:     // contains nr x y z
+                    easting = stringField[1];
+                    northing = stringField[2];
+                    height = stringField[3];
+                    break;
+
+                case 5:     // contains nr code x y z
+                    code = stringField[1];
+                    easting = stringField[2];
+                    northing = stringField[3];
+                    height = stringField[4];
+                    break;
+            }
+
+            result.add(BaseToolsZeiss.prepareLineOfCoordinates(dialect, number, code, easting, northing, height, lineNumber));
         }
 
         return result;
+
     }
 
 } // end of CSV2Zeiss

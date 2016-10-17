@@ -83,7 +83,7 @@ public class BaseToolsGSI {
                     newLine = newLine.concat(" ");
                 }
 
-                counter++;
+                counter = counter + 1;
             }
 
             newLine = prepareLineEnding(newLine);

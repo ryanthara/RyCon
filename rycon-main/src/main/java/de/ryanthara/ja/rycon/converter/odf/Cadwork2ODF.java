@@ -75,14 +75,14 @@ public class Cadwork2ODF {
             }
 
             if (writeCommentRow) {
-                lineSplit = readStringLines.get(0).trim().split("\\t", -1);
+                lineSplit = readStringLines.get(0).trim().split("\\s+", -1);
 
                 for (String description : lineSplit) {
                     cell = table.getCellByPosition(colIndex, rowIndex);
                     cell.setStringValue(description);
-                    colIndex++;
+                    colIndex = colIndex + 1;
                 }
-                rowIndex++;
+                rowIndex = rowIndex + 1;
             }
 
             // remove furthermore the still not needed comment line
@@ -95,27 +95,27 @@ public class Cadwork2ODF {
 
                 cell = table.getCellByPosition(colIndex, rowIndex);      // No
                 cell.setStringValue(lineSplit[0]);
-                colIndex++;
+                colIndex = colIndex + 1;
 
                 cell = table.getCellByPosition(colIndex, rowIndex);      // X
                 cell.setStringValue(lineSplit[1]);
-                colIndex++;
+                colIndex = colIndex + 1;
 
                 cell = table.getCellByPosition(colIndex, rowIndex);      // Y
                 cell.setStringValue(lineSplit[2]);
-                colIndex++;
+                colIndex = colIndex + 1;
 
                 cell = table.getCellByPosition(colIndex, rowIndex);      // Z
                 cell.setStringValue(lineSplit[3]);
-                colIndex++;
+                colIndex = colIndex + 1;
 
                 cell = table.getCellByPosition(colIndex, rowIndex);      // Code
                 cell.setStringValue(lineSplit[4]);
-                colIndex++;
+                colIndex = colIndex + 1;
 
                 cell = table.getCellByPosition(colIndex, rowIndex);      // Name
                 cell.setStringValue(lineSplit[5]);
-                rowIndex++;
+                rowIndex = rowIndex + 1;
             }
         } catch (Exception e) {
             System.err.println("ERROR: unable to create output file.");

@@ -235,7 +235,7 @@ public class FileToolsLeicaGSI {
             switch (lineSplit.size()) {
                 // new levelling line has only one token
                 case 1:
-                    lineNumber++;
+                    lineNumber = lineNumber + 1;
                     break;
 
                 // line with height information from levelling has four tokens in GSI format
@@ -267,7 +267,7 @@ public class FileToolsLeicaGSI {
                         newLine = BaseToolsGSI.prepareLineEnding(newLine);
 
                         result.add(newLine);
-                        lineCounter++;
+                        lineCounter = lineCounter + 1;
                     }
                     break;
             }

@@ -66,7 +66,7 @@ public class Cadwork2K {
         for (String line : readStringLines) {
             int valencyIndicator;
 
-            String[] lineSplit = line.trim().split("\\t", -1);
+            String[] lineSplit = line.trim().split("\\s+", -1);
 
             String valency = BaseToolsCaplanK.valency;
             String freeSpace = BaseToolsCaplanK.freeSpace;

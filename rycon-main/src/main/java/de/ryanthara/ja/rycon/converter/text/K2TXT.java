@@ -41,7 +41,7 @@ public class K2TXT {
      * Converts a Caplan K file to a text formatted file.
      *
      * @param separator         distinguish between tabulator or space as division sign
-     * @param writeCommentLine  writes an comment line into the file
+     * @param writeCommentLine  writes a comment line into the file
      * @param writeCodeColumn   writes a code column (nr code x y z attr)
      * @param writeSimpleFormat writes a simple format (nr x y z or nr code x y z)
      *

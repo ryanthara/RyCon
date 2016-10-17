@@ -339,7 +339,7 @@ public class LevellingWidget {
 
                 LineWriter lineWriter = new LineWriter(file2write);
                 if (lineWriter.writeFile(writeFile)) {
-                    counter++;
+                    counter = counter + 1;
                 }
 
             } else {

@@ -23,14 +23,14 @@ import de.ryanthara.ja.rycon.tools.elements.RyPoint;
 import java.util.ArrayList;
 
 /**
- * Created by sebastian on 13.09.16.
+ * This class provides functions to convert text formatted coordinate files into LTOP KOO files.
  */
 public class TXT2LTOP {
 
     private ArrayList<String> readStringLines;
 
     /**
-     * Class constructor for read line based text files.
+     * Class constructor for read line based coordinate files in text format.
      *
      * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
      */
@@ -39,7 +39,7 @@ public class TXT2LTOP {
     }
 
     /**
-     * Convert a TXT coordinate file into a KOO file for LTOP.
+     * Converts a TXT coordinate file into a KOO file for LTOP.
      *
      * @param eliminateDuplicates eliminate duplicate coordinates within 3cm radius
      * @param sortOutputFile      sort an output file by point number

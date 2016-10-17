@@ -80,7 +80,7 @@ public class GSI2TXT {
                 if (counter < foundWordIndices.size() - 1) {
                     commentLine = commentLine.concat(sep);
                 }
-                counter++;
+                counter = counter + 1;
             }
 
             StringBuilder builder = new StringBuilder(commentLine);

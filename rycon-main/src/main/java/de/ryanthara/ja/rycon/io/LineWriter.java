@@ -76,7 +76,7 @@ public class LineWriter {
 
             for (String line : lines) {
                 pw.println(line);
-                writtenLines++;
+                writtenLines = writtenLines + 1;
             }
         } catch (IOException e) {
             System.err.println("File " + file.getName() + " could not be written to the file system.");
@@ -84,7 +84,7 @@ public class LineWriter {
         } finally {
             if (pw != null) {
                 pw.close();
-                writtenLines++;
+                writtenLines = writtenLines + 1;
                 success = true;
             }
         }

@@ -42,17 +42,8 @@ import java.io.File;
  * background functionality which is done by the extension of the
  * {@code Main} class.
  *
- * <h3>Changes:</h3>
- * <ul>
- *     <li>4: implement a first version of window positioning of the RyCON main window</li>
- *     <li>4: enable drag and drop handling </li>
- *     <li>3: code improvements and clean up </li>
- *     <li>2: basic improvements </li>
- *     <li>1: basic implementation </li>
- * </ul>
- *
  * @author sebastian
- * @version 5
+ * @version 6
  * @since 1
  * @see de.ryanthara.ja.rycon.Main
  */
@@ -85,7 +76,7 @@ public class MainApplication extends Main {
         initApplicationPreferences();
 
         // to provide illegal thread access -> https://github.com/udoprog/c10t-swt/issues/1
-        // add -XstartOnFirstThread as an java option on VM parameter on OS X
+        // add -XstartOnFirstThread as a java option on VM parameter on OS X
         new MainApplication();
     }
 
@@ -115,7 +106,22 @@ public class MainApplication extends Main {
     }
 
     private void actionBtn6() {
-        statusBar.setStatus(I18N.getStatus6ExitInitialized(), StatusBar.OK);
+        GuiHelper.showMessageBox(shell, SWT.ICON_WARNING, "Warning", "Not implemented yet.");
+        statusBar.setStatus("not implemented yet.", StatusBar.WARNING);
+    }
+
+    private void actionBtn7() {
+        GuiHelper.showMessageBox(shell, SWT.ICON_WARNING, "Warning", "Not implemented yet.");
+        statusBar.setStatus("not implemented yet.", StatusBar.WARNING);
+    }
+
+    private void actionBtn8() {
+        GuiHelper.showMessageBox(shell, SWT.ICON_WARNING, "Warning", "Not implemented yet.");
+        statusBar.setStatus("not implemented yet.", StatusBar.WARNING);
+    }
+
+    private void actionBtn0() {
+        statusBar.setStatus(I18N.getStatus0ExitInitialized(), StatusBar.OK);
         shell.getDisplay().dispose();
     }
 
@@ -271,9 +277,63 @@ public class MainApplication extends Main {
         btnToolboxGenerator.setLayoutData(gridData);
     }
 
-    private void createButton6Exit(Composite composite) {
+    private void createButton6(Composite composite) {
+        Button btnTransformation = new Button(composite, SWT.PUSH);
+        btnTransformation.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/icons/6-transformation.png"));
+        btnTransformation.setText(I18N.getBtnTransformationLabel());
+        btnTransformation.setToolTipText(I18N.getBtnTransformationLabelToolTip());
+
+        //register listener for the selection event
+        btnTransformation.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                actionBtn6();
+            }
+        });
+
+        GridData gridData = new GridData(getRyCON_GRID_WIDTH(), getRyCON_GRID_HEIGHT());
+        btnTransformation.setLayoutData(gridData);
+    }
+
+    private void createButton7(Composite composite) {
+        Button btnPrint = new Button(composite, SWT.PUSH);
+        btnPrint.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/icons/7-printer.png"));
+        btnPrint.setText(I18N.getBtnPrintLabel());
+        btnPrint.setToolTipText(I18N.getBtnPrintLabelToolTip());
+
+        //register listener for the selection event
+        btnPrint.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                actionBtn7();
+            }
+        });
+
+        GridData gridData = new GridData(getRyCON_GRID_WIDTH(), getRyCON_GRID_HEIGHT());
+        btnPrint.setLayoutData(gridData);
+    }
+
+    private void createButton8(Composite composite) {
+        Button btnSettings = new Button(composite, SWT.PUSH);
+        btnSettings.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/icons/8-settings.png"));
+        btnSettings.setText(I18N.getBtnSettingsMainLabel());
+        btnSettings.setToolTipText(I18N.getBtnSettingsMainLabelToolTip());
+
+        //register listener for the selection event
+        btnSettings.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                actionBtn8();
+            }
+        });
+
+        GridData gridData = new GridData(getRyCON_GRID_WIDTH(), getRyCON_GRID_HEIGHT());
+        btnSettings.setLayoutData(gridData);
+    }
+
+    private void createButton0Exit(Composite composite) {
         Button btnExit = new Button(composite, SWT.PUSH);
-        btnExit.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/icons/6-exit.png"));
+        btnExit.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/icons/0-exit.png"));
         btnExit.setText(I18N.getBtnExitLabel());
         btnExit.setToolTipText(I18N.getBtnExitLabelToolTip());
 
@@ -281,7 +341,7 @@ public class MainApplication extends Main {
         btnExit.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                actionBtn6();
+                actionBtn0();
             }
         });
 
@@ -342,7 +402,7 @@ public class MainApplication extends Main {
             exitItem.addListener(SWT.Selection, new Listener() {
                 @Override
                 public void handleEvent(Event event) {
-                    actionBtn6();
+                    actionBtn0();
                 }
             });
 
@@ -389,7 +449,7 @@ public class MainApplication extends Main {
         FormLayout formLayout = new FormLayout();
         shell.setLayout(formLayout);
 
-        // 3 x 2 grid for the buttons
+        // 3 x 3 grid for the buttons
         Composite compositeGrid = new Composite(shell, SWT.NONE);
 
         GridLayout gridLayout = new GridLayout();
@@ -422,6 +482,15 @@ public class MainApplication extends Main {
                         case '6':
                             actionBtn6();
                             break;
+                        case '7':
+                            actionBtn7();
+                            break;
+                        case '8':
+                            actionBtn8();
+                            break;
+                        case '0':
+                            actionBtn0();
+                            break;
                         case 'c':
                             shell.setLocation(ShellPositioner.centerShellOnPrimaryMonitor(shell));
                             break;
@@ -440,7 +509,10 @@ public class MainApplication extends Main {
         createButton3LevelTool(compositeGrid);
         createButton4ConvertTool(compositeGrid);
         createButton5ProjectTool(compositeGrid);
-        createButton6Exit(compositeGrid);
+        createButton6(compositeGrid);
+        createButton7(compositeGrid);
+        createButton8(compositeGrid);
+        createButton0Exit(compositeGrid);
 
         StatusBar statusBar = new StatusBar(shell, SWT.NONE);
         statusBar.setStatus(I18N.getStatusRyCONInitialized(), StatusBar.OK);
@@ -460,7 +532,7 @@ public class MainApplication extends Main {
         shell.pack();
 
         // size depends on the grid size
-        shell.setSize(3 * getRyCON_GRID_WIDTH() + 20, 2 * getRyCON_GRID_HEIGHT() + 100);
+        shell.setSize(3 * getRyCON_GRID_WIDTH() + 20, 3 * getRyCON_GRID_HEIGHT() + 80);
 
         // set the window position (last position or centered)
         shell.setLocation(ShellPositioner.positShell(shell));

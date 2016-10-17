@@ -66,9 +66,9 @@ public class CSV2ODF {
                 for (String element : csvLine) {
                     cell = table.getCellByPosition(colIndex, rowIndex);
                     cell.setStringValue(element);
-                    colIndex++;
+                    colIndex = colIndex + 1;
                 }
-                rowIndex++;
+                rowIndex = rowIndex + 1;
             }
         } catch (Exception e) {
             System.err.println("ERROR: unable to create spreadsheet document object.");

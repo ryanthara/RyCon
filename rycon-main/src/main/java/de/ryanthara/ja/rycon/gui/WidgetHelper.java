@@ -40,7 +40,7 @@ import java.util.StringTokenizer;
 class WidgetHelper {
 
     /**
-     * Checks the content of an file array for valid files.
+     * Checks the content of a file array for valid files.
      * <p>
      * Non readable file objects and directories will be not included in the returned file array.
      *

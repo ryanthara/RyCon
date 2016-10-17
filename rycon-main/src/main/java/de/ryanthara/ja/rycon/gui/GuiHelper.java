@@ -126,7 +126,7 @@ public class GuiHelper {
     }
 
     /**
-     * Shows a swt MessageBox and returns an Integer value as indicator for being shown.
+     * Shows a swt MessageBox and returns an integer value as indicator for being shown.
      *
      * @param innerShell    the inner shell object
      * @param icon          the icon of the message box

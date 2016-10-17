@@ -20,14 +20,19 @@ package de.ryanthara.ja.rycon.converter.zeiss;
 import java.util.ArrayList;
 
 /**
- * Created by sebastian on 15.09.16.
+ * This class provides functions to convert coordinate files from the geodata server Basel Landschaft (Switzerland)
+ * into Zeiss RED files with it's dialects (R4, R5, REC500 and M5).
+ *
+ * @author sebastian
+ * @version 1
+ * @since 12
  */
 public class TXTBaselLandschaft2Zeiss {
 
     private final ArrayList<String> readStringLines;
 
     /**
-     * Class constructor for read line based text files in different formats.
+     * Class constructor for read line based text files from the geodata server 'Basel Landschaft' (Switzerland).
      *
      * @param readStringLines {@code ArrayList<String>} with lines in text format
      */
@@ -36,23 +41,63 @@ public class TXTBaselLandschaft2Zeiss {
     }
 
     /**
-     * Converts a text formatted measurement or coordinate based file into an Zeiss REC formatted file.
+     * Converts a text formatted coordinate file from the geodata server 'Basel Landschaft' (Switzerland)
+     * into a Zeiss REC formatted file.
      *
      * @param dialect dialect of the target file
+     *
      * @return string lines of the target file
      */
     public ArrayList<String> convertTXTBaselLandschaft2REC(String dialect) {
-        ArrayList<String> result = null;
+        ArrayList<String> result = new ArrayList<>();
 
-        switch (dialect) {
-            case "R4":
-                break;
-            case "R5":
-                break;
-            case "REC500":
-                break;
-            case "M5":
-                break;
+        // remove comment line
+        readStringLines.remove(0);
+
+        int lineNumber = 0;
+
+        for (String line : readStringLines) {
+            String[] lineSplit = line.trim().split("\\t", -1);
+
+            String number, code, easting, northing, height;
+
+            lineNumber = lineNumber + 1;
+
+            switch (lineSplit.length) {
+                case 5:     // HFP file
+
+                    /*
+                    Art	Nummer	X	Y	Z
+                    HFP2	NC17014	2624601.9	1262056.014	348.298
+                     */
+                    code = lineSplit[0];
+                    number = lineSplit[1];
+                    easting = lineSplit[2];
+                    northing = lineSplit[3];
+                    height = lineSplit[4];
+
+                    result.add(BaseToolsZeiss.prepareLineOfCoordinates(dialect, number, code, easting, northing, height, lineNumber));
+                    break;
+
+                case 6:     // LFP file
+                    /*
+                    Art	Nummer	VArt	X	Y	Z
+                    LFP2	10681160	0	2623800.998	1263204.336	328.05
+                    */
+                    code = lineSplit[0];
+                    number = lineSplit[1];
+                    easting = lineSplit[3];
+                    northing = lineSplit[4];
+                    height = "";
+
+                    // prevent 'NULL' element in height
+                    if (!lineSplit[5].equals("NULL")) {
+                        height = lineSplit[5];
+                    }
+
+                    result.add(BaseToolsZeiss.prepareLineOfCoordinates(dialect, number, code, easting, northing, height, lineNumber));
+                    break;
+            }
         }
 
         return result;

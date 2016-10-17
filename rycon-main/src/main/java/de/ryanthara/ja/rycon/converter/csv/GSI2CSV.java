@@ -73,7 +73,7 @@ public class GSI2CSV {
                     builder.append(separator);
                 }
 
-                counter++;
+                counter = counter + 1;
             }
 
             result.add(0, builder.toString());

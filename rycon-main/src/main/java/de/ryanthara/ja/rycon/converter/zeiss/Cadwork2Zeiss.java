@@ -41,36 +41,35 @@ public class Cadwork2Zeiss {
     }
 
     /**
-     * Converts a cadwork node.dat file into Leica GSI8 or GS16 format.
-     * <p>
-     * Due to issues data precision is going to be lost.
-     *
-     * @param isGSI16        Output file is GSI16 format
-     * @param useCodeColumn  Use the code column from node.dat
-     * @param useZeroHeights Use heights with zero (0.000) values
-     *
-     * @return converted {@code ArrayList<String>} with lines of GSI8 or GSI16 format
-     */
-
-
-    /**
      * Converts a coordinate file from Cadwork (node.dat) into a Zeiss REC formatted file.
      *
      * @param dialect dialect of the target file
+     *
      * @return string lines of the target file
      */
     public ArrayList<String> convertCadwork2REC(String dialect) {
-        ArrayList<String> result = null;
+        ArrayList<String> result = new ArrayList<>();
 
-        switch (dialect) {
-            case "R4":
-                break;
-            case "R5":
-                break;
-            case "REC500":
-                break;
-            case "M5":
-                break;
+        // remove not needed headlines
+        for (int i = 0; i < 3; i++) {
+            readStringLines.remove(0);
+        }
+
+        int lineNumber = 0;
+
+        String number, code, easting, northing, height;
+
+        for (String line : readStringLines) {
+            lineNumber = lineNumber + 1;
+            String[] lineSplit = line.trim().split("\\s+", -1);
+
+            number = lineSplit[5];
+            code = lineSplit[4];
+            easting = lineSplit[1].substring(0, lineSplit[1].lastIndexOf('.') + 4);
+            northing = lineSplit[2].substring(0, lineSplit[2].lastIndexOf('.') + 4);
+            height = lineSplit[3].substring(0, lineSplit[3].lastIndexOf('.') + 5);
+
+            result.add(BaseToolsZeiss.prepareLineOfCoordinates(dialect, number, code, easting, northing, height, lineNumber));
         }
 
         return result;

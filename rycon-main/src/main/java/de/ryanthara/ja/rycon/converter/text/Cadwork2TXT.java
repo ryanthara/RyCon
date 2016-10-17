@@ -44,7 +44,7 @@ public class Cadwork2TXT {
         }
 
         for (String line : readStringLines) {
-            String[] lineSplit = line.trim().split("\\t", -1);
+            String[] lineSplit = line.trim().split("\\s+", -1);
 
             // point number, column 1 - 16
             String number = lineSplit[5];

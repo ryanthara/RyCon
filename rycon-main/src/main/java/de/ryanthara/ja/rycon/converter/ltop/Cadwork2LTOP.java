@@ -76,7 +76,7 @@ public class Cadwork2LTOP {
                 eta = BaseToolsLTOP.eta;
                 xi = BaseToolsLTOP.xi;
 
-                String[] lineSplit = line.trim().split("\\t", -1);
+                String[] lineSplit = line.trim().split("\\s+", -1);
 
                 // point number, column 1-10, aligned left
                 number = String.format("%-10s", lineSplit[5]);

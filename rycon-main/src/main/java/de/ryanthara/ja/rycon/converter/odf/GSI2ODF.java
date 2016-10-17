@@ -72,11 +72,11 @@ public class GSI2ODF {
             if (writeCommentRow) {
                 for (int wordIndex : baseToolsGSI.getFoundWordIndices()) {
                     cell = table.getCellByPosition(colIndex, 0);
-                    colIndex++;
+                    colIndex = colIndex + 1;
 
                     cell.setStringValue(I18N.getWordIndexDescription(wordIndex));
                 }
-                rowIndex++;
+                rowIndex = rowIndex + 1;
             }
 
             // fill gsi content into rows and cells
@@ -160,9 +160,9 @@ public class GSI2ODF {
                             cell.setFormatString("#,##0.000");
                             break;
                     }
-                    colIndex++;
+                    colIndex = colIndex + 1;
                 }
-                rowIndex++;
+                rowIndex = rowIndex + 1;
             }
         } catch (Exception e) {
             System.err.println("ERROR: unable to create output file.");

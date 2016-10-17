@@ -316,10 +316,10 @@ public class PreferenceHandler implements PreferenceChangeListener {
      * <li>'DIR_BIG_DATA_TEMPLATE' - './big_data/template-folder' </li>
      * <li>'DIR_PROJECT' - './project' </li>
      * <li>'DIR_PROJECT_TEMPLATE' - './project/template-folder' </li>
-     * <li>'CONVERTER_SETTING_ELIMINATE_ZERO_COORDINATE' -  true </li>
-     * <li>'CONVERTER_SETTING_LTOP_USE_ZENITH_DISTANCE' -  false </li>
-     * <li>'CONVERTER_SETTING_ZEISS_DIALECT - M5' </li>
-     * <li>'GSI_SETTING_LINE_ENDING_WITH_BLANK' -  true </li>
+     * <li>'CONVERTER_SETTING_ELIMINATE_ZERO_COORDINATE' -  'true' </li>
+     * <li>'CONVERTER_SETTING_LTOP_USE_ZENITH_DISTANCE' -  'false' </li>
+     * <li>'CONVERTER_SETTING_ZEISS_DIALECT' - 'M5' </li>
+     * <li>'GSI_SETTING_LINE_ENDING_WITH_BLANK' -  'true' </li>
      * <li>'PARAM_CODE_STRING' - 'CODE' </li>
      * <li>'PARAM_CONTROL_POINT_STRING' - 'STKE' </li>
      * <li>'PARAM_EDIT_STRING' - 'EDIT' </li>

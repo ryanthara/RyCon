@@ -129,22 +129,22 @@ public class LineReader {
 
                         // read the lines into an ArrayList
                         while ((line = bufferedReader.readLine()) != null) {
-                            countReadLines++;
+                            countReadLines = countReadLines + 1;
                             if (!line.trim().equals("")) {
                                 if (comment == null) {
                                     lines.add(line);
-                                    countStoredLines++;
+                                    countStoredLines = countStoredLines + 1;
                                 } else {
                                     if (!line.startsWith(comment)) {
                                         lines.add(line);
-                                        countStoredLines++;
+                                        countStoredLines = countStoredLines + 1;
                                     }
                                 }
                             }
                         }
                         // hack to get rid of the -1 initialization
-                        countReadLines++;
-                        countStoredLines++;
+                        countReadLines = countReadLines + 1;
+                        countStoredLines = countStoredLines + 1;
 
                         success = true;
                     }

@@ -90,7 +90,9 @@ public class ConverterWidget {
     private void handleFileInjection() {
         String files = Main.getCLIInputFiles();
 
-        inputFieldsComposite.setSourceTextFieldText(files);
+        if (files != null) {
+            inputFieldsComposite.setSourceTextFieldText(files);
+        }
     }
 
     private void actionBtnCancel() {
@@ -283,10 +285,15 @@ public class ConverterWidget {
                     break;
                 case 4: // Cadwork node.dat files
                     // prevent button change for node.dat (cadwork) files
+                    if (RadioHelper.getSelectedBtn(childrenSource) != 6) {
+                        RadioHelper.selectBtn(childrenSource, 6);
+                    }
+                    break;
+                case 5: // Zeiss REC files
+                    // prevent button change for Zeiss REC files
                     if (RadioHelper.getSelectedBtn(childrenSource) != 5) {
                         RadioHelper.selectBtn(childrenSource, 5);
                     }
-                    break;
             }
         }
     }
@@ -643,7 +650,7 @@ public class ConverterWidget {
 
                         }
                         if (writeFile2Disk(file2read, writeFile, ".GSI")) {
-                            counter++;
+                            counter = counter + 1;
                         }
                         break;
 
@@ -703,7 +710,7 @@ public class ConverterWidget {
 
                         }
                         if (writeFile2Disk(file2read, writeFile, ".GSI")) {
-                            counter++;
+                            counter = counter + 1;
                         }
                         break;
 
@@ -756,7 +763,7 @@ public class ConverterWidget {
                                 break;
                         }
                         if (writeFile2Disk(file2read, writeFile, ".TXT")) {
-                            counter++;
+                            counter = counter + 1;
                         }
                         break;
 
@@ -810,7 +817,7 @@ public class ConverterWidget {
                                 break;
                         }
                         if (writeFile2Disk(file2read, writeFile, ".CSV")) {
-                            counter++;
+                            counter = counter + 1;
                         }
                         break;
 
@@ -875,7 +882,7 @@ public class ConverterWidget {
                                 break;
                         }
                         if (writeFile2Disk(file2read, writeFile, ".K")) {
-                            counter++;
+                            counter = counter + 1;
                         }
                         break;
 
@@ -883,7 +890,8 @@ public class ConverterWidget {
                     Target format: Zeiss REC
                      */
                     case 5:
-                        String dialect = BaseToolsZeiss.M5;
+                        String dialect = Main.pref.getUserPref(PreferenceHandler.CONVERTER_SETTING_ZEISS_DIALECT);
+
                         switch (sourceNumber) {
                             case 0:     // fall through for GSI8 format
                             case 1:     // GSI16 format
@@ -918,7 +926,7 @@ public class ConverterWidget {
                                 break;
                         }
                         if (writeFile2Disk(file2read, writeFile, ".REC")) {
-                            counter++;
+                            counter = counter + 1;
                         }
                         break;
 
@@ -979,7 +987,7 @@ public class ConverterWidget {
                                 break;
                         }
                         if (writeFile2Disk(file2read, writeFile, ".KOO")) {
-                            counter++;
+                            counter = counter + 1;
                         }
                         break;
 
@@ -1003,7 +1011,7 @@ public class ConverterWidget {
 
                         }
                         if (writeFile2Disk(file2read, writeFile, ".MES")) {
-                            counter++;
+                            counter = counter + 1;
                         }
                         break;
 
@@ -1076,7 +1084,7 @@ public class ConverterWidget {
 
                         }
                         if (writeExcel2Disk(file2read, workbook, ".xlsx")) {
-                            counter++;
+                            counter = counter + 1;
                         }
                         break;
 
@@ -1151,7 +1159,7 @@ public class ConverterWidget {
                                 break;
                         }
                         if (writeExcel2Disk(file2read, workbook, ".xls")) {
-                            counter++;
+                            counter = counter + 1;
                         }
                         break;
 
@@ -1219,7 +1227,7 @@ public class ConverterWidget {
                                 break;
                         }
                         if (writeODS2Disk(file2read, spreadsheetDocument, ".ods")) {
-                            counter++;
+                            counter = counter + 1;
                         }
                         break;
                 }

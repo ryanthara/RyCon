@@ -72,7 +72,7 @@ public class RyCONLauncher {
      */
     public static void main(String[] args) {
         // to provide illegal thread access -> https://github.com/udoprog/c10t-swt/issues/1
-        // add -XstartOnFirstThread as an java option on VM parameter on OS X
+        // add -XstartOnFirstThread as a java option on VM parameter on OS X
         new RyCONLauncher();
     }
 }

@@ -83,7 +83,7 @@ public class Cadwork2Excel {
             row = sheet.createRow(rowNumber);
             rowNumber++;
 
-            lineSplit = readStringLines.get(0).trim().split("\\t", -1);
+            lineSplit = readStringLines.get(0).trim().split("\\s+", -1);
 
             for (String description : lineSplit) {
                 cell = row.createCell(cellNumber);

@@ -74,7 +74,7 @@ public class Nigra2GSI {
 
             // check for at least one or more added elements to prevent writing empty lines
             if (blocks.size() > 0) {
-                lineCounter++;
+                lineCounter = lineCounter + 1;
                 blocksInLines.add(blocks);
             }
         }
