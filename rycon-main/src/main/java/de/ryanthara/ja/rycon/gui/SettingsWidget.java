@@ -887,6 +887,7 @@ public class SettingsWidget {
 
     private void widgetDispose() {
         Main.setIsSettingsWidgetOpen(false);
+        Main.statusBar.setStatus("", StatusBar.OK);
         innerShell.dispose();
     }
 

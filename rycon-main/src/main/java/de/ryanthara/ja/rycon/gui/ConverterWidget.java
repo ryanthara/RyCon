@@ -87,14 +87,6 @@ public class ConverterWidget {
         handleFileInjection();
     }
 
-    private void handleFileInjection() {
-        String files = Main.getCLIInputFiles();
-
-        if (files != null) {
-            inputFieldsComposite.setSourceTextFieldText(files);
-        }
-    }
-
     private void actionBtnCancel() {
         Main.setSubShellStatus(false);
         Main.statusBar.setStatus("", StatusBar.OK);
@@ -444,6 +436,14 @@ public class ConverterWidget {
         chkBoxWriteCodeColumn.setText(I18N.getBtnChkBoxWriteCodeColumn());
     }
 
+    private void handleFileInjection() {
+        String files = Main.getCLIInputFiles();
+
+        if (files != null) {
+            inputFieldsComposite.setSourceTextFieldText(files);
+        }
+    }
+
     private void initUI() {
         int height = Main.getRyCONWidgetHeight();
         int width = Main.getRyCONWidgetWidth();
@@ -771,7 +771,7 @@ public class ConverterWidget {
                     Target format: CSV format (comma or semicolon separated)
                      */
                     case 3:
-                        separator = chkBoxCSVSemiColonSeparator.getSelection() ? BaseToolsCSV.SEPARATOR_SEMICOLON: BaseToolsCSV.SEPARATOR_COMMA;
+                        separator = chkBoxCSVSemiColonSeparator.getSelection() ? BaseToolsCSV.SEPARATOR_SEMICOLON : BaseToolsCSV.SEPARATOR_COMMA;
 
                         switch (sourceNumber) {
                             case 0:     // fall through for GSI8 format

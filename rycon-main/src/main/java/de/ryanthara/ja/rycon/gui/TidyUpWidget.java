@@ -1,5 +1,5 @@
 /*
- * License: GPL. Copyright 2014- (C) by Sebastian Aust (https://www.ryanthara.de/)
+ * License: GPL. Copyright 2016- (C) by Sebastian Aust (https://www.ryanthara.de/)
  *
  * This file is part of the package de.ryanthara.ja.rycon.gui
  *
@@ -23,7 +23,7 @@ import de.ryanthara.ja.rycon.data.PreferenceHandler;
 import de.ryanthara.ja.rycon.i18n.I18N;
 import de.ryanthara.ja.rycon.io.LineReader;
 import de.ryanthara.ja.rycon.io.LineWriter;
-import de.ryanthara.ja.rycon.tools.FileToolsLeicaGSI;
+import de.ryanthara.ja.rycon.tools.GSITidyUp;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -44,7 +44,7 @@ import java.util.ArrayList;
  */
 public class TidyUpWidget {
 
-    private final String[] acceptableFileSuffixes = new String[]{"*.gsi"};
+    private final String[] acceptableFileSuffixes = new String[]{"*.gsi", "*.gsl"};
     private Button chkBoxHoldControlPoints;
     private Button chkBoxHoldStations;
     private File[] files2read = new File[0];
@@ -59,12 +59,6 @@ public class TidyUpWidget {
     TidyUpWidget() {
         initUI();
         handleFileInjection();
-    }
-
-    private void handleFileInjection() {
-        String files = Main.getCLIInputFiles();
-
-        inputFieldsComposite.setSourceTextFieldText(files);
     }
 
     /**
@@ -251,8 +245,14 @@ public class TidyUpWidget {
                 ArrayList<String> writeFile;
 
                 // processFileOperations
-                FileToolsLeicaGSI gsiTools = new FileToolsLeicaGSI(readFile);
-                writeFile = gsiTools.processTidyUp(holdStations, holdControlPoints);
+                GSITidyUp gsiTidyUp = new GSITidyUp(readFile);
+
+                // differ between 'normal' GSI files and
+                if (file2read.getName().endsWith(".GSL")) {
+                    writeFile = gsiTidyUp.processLTOPClean();
+                } else {
+                    writeFile = gsiTidyUp.processTidyUp(holdStations, holdControlPoints);
+                }
 
                 // write file line by line
                 String file2write = file2read.toString().substring(0, file2read.toString().length() - 4) + "_" + editString + ".GSI";
@@ -265,6 +265,14 @@ public class TidyUpWidget {
             }
         }
         return counter;
+    }
+
+    private void handleFileInjection() {
+        String files = Main.getCLIInputFiles();
+
+        if (files != null) {
+            inputFieldsComposite.setSourceTextFieldText(files);
+        }
     }
 
     private void initUI() {

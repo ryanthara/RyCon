@@ -769,6 +769,10 @@ public class I18N {
         return Messages.getString("status5GeneratorInitialized");
     }
 
+    public static String getStatus8SettingsOpened() {
+        return Messages.getString("status8SettingsOpened");
+    }
+
     public static String getStatusCleanFileSuccessful(boolean singular) {
         return prepareString("statusCleanFileSuccessful", singular);
     }

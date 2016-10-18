@@ -27,7 +27,8 @@ import java.util.ArrayList;
  * @author sebastian
  * @version 1
  * @since 12
- */public class TXT2K {
+ */
+public class TXT2K {
 
     private ArrayList<String> readStringLines;
 

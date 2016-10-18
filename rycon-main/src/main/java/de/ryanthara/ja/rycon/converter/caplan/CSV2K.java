@@ -28,7 +28,8 @@ import java.util.List;
  * @author sebastian
  * @version 1
  * @since 12
- */public class CSV2K {
+ */
+public class CSV2K {
 
     private List<String[]> readCSVLines = null;
 

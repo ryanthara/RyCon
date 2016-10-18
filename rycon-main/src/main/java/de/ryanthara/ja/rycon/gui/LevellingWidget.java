@@ -24,7 +24,7 @@ import de.ryanthara.ja.rycon.data.PreferenceHandler;
 import de.ryanthara.ja.rycon.i18n.I18N;
 import de.ryanthara.ja.rycon.io.LineReader;
 import de.ryanthara.ja.rycon.io.LineWriter;
-import de.ryanthara.ja.rycon.tools.FileToolsLeicaGSI;
+import de.ryanthara.ja.rycon.tools.GSILevelling2Cad;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -50,11 +50,11 @@ import java.util.ArrayList;
  */
 public class LevellingWidget {
 
+    private final String[] acceptableFileSuffixes = new String[]{"*.gsi", "*.asc"};
     private Button chkBoxHoldChangePoint = null;
     private File[] files2read = new File[0];
     private InputFieldsComposite inputFieldsComposite;
     private Shell innerShell = null;
-    private final String[] acceptableFileSuffixes = new String[] {"*.gsi", "*.asc"};
 
     /**
      * Class constructor without parameters.
@@ -64,12 +64,6 @@ public class LevellingWidget {
     LevellingWidget() {
         initUI();
         handleFileInjection();
-    }
-
-    private void handleFileInjection() {
-        String files = Main.getCLIInputFiles();
-
-        inputFieldsComposite.setSourceTextFieldText(files);
     }
 
     /**
@@ -107,81 +101,6 @@ public class LevellingWidget {
         }
 
         return success;
-    }
-
-    private void initUI() {
-        int height = Main.getRyCONWidgetHeight();
-        int width = Main.getRyCONWidgetWidth();
-
-        GridLayout gridLayout = new GridLayout(1, true);
-        gridLayout.marginHeight = 5;
-        gridLayout.marginWidth = 5;
-
-        GridData gridData = new GridData(SWT.FILL, SWT.CENTER, true, true);
-        gridData.heightHint = height;
-        gridData.widthHint = width;
-
-        innerShell = new Shell(Main.shell, SWT.CLOSE | SWT.DIALOG_TRIM | SWT.MAX | SWT.TITLE | SWT.APPLICATION_MODAL);
-        innerShell.addListener(SWT.Close, new Listener() {
-            public void handleEvent(Event event) {
-                actionBtnCancel();
-            }
-        });
-        innerShell.setText(I18N.getWidgetTitleLevelling());
-        innerShell.setSize(width, height);
-        innerShell.setLayout(gridLayout);
-        innerShell.setLayoutData(gridData);
-
-        gridLayout = new GridLayout(1, true);
-        gridLayout.marginHeight = 0;
-        gridLayout.marginWidth = 0;
-
-        inputFieldsComposite = new InputFieldsComposite(this, innerShell, SWT.NONE);
-        inputFieldsComposite.setLayout(gridLayout);
-
-        createOptions(width);
-        createDescription(width);
-
-        new BottomButtonBar(this, innerShell, SWT.NONE);
-
-        innerShell.setLocation(ShellPositioner.centerShellOnPrimaryMonitor(innerShell));
-
-        Main.setSubShellStatus(true);
-
-        innerShell.pack();
-        innerShell.open();
-    }
-
-    private void createOptions(int width) {
-        Group group = new Group(innerShell, SWT.NONE);
-        group.setText(I18N.getGroupTitleOptions());
-
-        GridLayout gridLayout = new GridLayout(1, true);
-        group.setLayout(gridLayout);
-
-        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
-        gridData.widthHint = width - 24;
-        group.setLayoutData(gridData);
-
-        chkBoxHoldChangePoint = new Button(group, SWT.CHECK);
-        chkBoxHoldChangePoint.setSelection(true);
-        chkBoxHoldChangePoint.setText(I18N.getBtnChkLevellingIgnoreChangePoints());
-    }
-
-    private void createDescription(int width) {
-        Group group = new Group(innerShell, SWT.NONE);
-        group.setText(I18N.getGroupTitleGeneratorNumberInputAdvice());
-
-        GridLayout gridLayout = new GridLayout(1, true);
-        group.setLayout(gridLayout);
-
-        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
-        gridData.widthHint = width - 24;
-        group.setLayoutData(gridData);
-
-        Label tip = new Label(group, SWT.WRAP | SWT.BORDER | SWT.LEFT);
-        tip.setText(I18N.getLabelTipLevellingWidget());
-        tip.setLayoutData(new GridData(SWT.HORIZONTAL, SWT.TOP, true, false, 1, 1));
     }
 
     private void actionBtnCancel() {
@@ -259,7 +178,7 @@ public class LevellingWidget {
      * This method is used from the class InputFieldsComposite!
      */
     private void actionBtnSource() {
-        String[] filterNames = new String[] {
+        String[] filterNames = new String[]{
                 I18N.getFileChooserFilterNameGSI(),
                 I18N.getFileChooserFilterNameNIGRA()
         };
@@ -279,6 +198,132 @@ public class LevellingWidget {
         files2read = GuiHelper.showAdvancedFileDialog(
                 innerShell, SWT.MULTI, filterPath, I18N.getFileChooserSplitterSourceText(), acceptableFileSuffixes,
                 filterNames, inputFieldsComposite.getSourceTextField(), inputFieldsComposite.getDestinationTextField());
+    }
+
+    private void createDescription(int width) {
+        Group group = new Group(innerShell, SWT.NONE);
+        group.setText(I18N.getGroupTitleGeneratorNumberInputAdvice());
+
+        GridLayout gridLayout = new GridLayout(1, true);
+        group.setLayout(gridLayout);
+
+        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
+        gridData.widthHint = width - 24;
+        group.setLayoutData(gridData);
+
+        Label tip = new Label(group, SWT.WRAP | SWT.BORDER | SWT.LEFT);
+        tip.setText(I18N.getLabelTipLevellingWidget());
+        tip.setLayoutData(new GridData(SWT.HORIZONTAL, SWT.TOP, true, false, 1, 1));
+    }
+
+    private void createOptions(int width) {
+        Group group = new Group(innerShell, SWT.NONE);
+        group.setText(I18N.getGroupTitleOptions());
+
+        GridLayout gridLayout = new GridLayout(1, true);
+        group.setLayout(gridLayout);
+
+        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
+        gridData.widthHint = width - 24;
+        group.setLayoutData(gridData);
+
+        chkBoxHoldChangePoint = new Button(group, SWT.CHECK);
+        chkBoxHoldChangePoint.setSelection(true);
+        chkBoxHoldChangePoint.setText(I18N.getBtnChkLevellingIgnoreChangePoints());
+    }
+
+    private int fileOperations(boolean holdChangePoints) {
+        int counter = 0;
+        LineReader lineReader;
+
+        for (File file2read : files2read) {
+            lineReader = new LineReader(file2read);
+
+            if (lineReader.readFile()) {
+                // read
+                ArrayList<String> readFile = lineReader.getLines();
+
+                String[] fileNameAndSuffix = file2read.getName().split("\\.(?=[^.]+$)");
+
+                ArrayList<String> writeFile;
+                String file2write;
+
+                if (fileNameAndSuffix[1].equalsIgnoreCase("GSI")) {
+                    GSILevelling2Cad gsiLevelling2Cad = new GSILevelling2Cad(readFile);
+                    writeFile = gsiLevelling2Cad.processLevelling2Cad(holdChangePoints);
+                    file2write = file2read.toString().substring(0, file2read.toString().length() - 4) + "_LEVEL.GSI";
+                } else if (fileNameAndSuffix[1].equalsIgnoreCase("ASC")) {
+                    Nigra2GSI nigra2GSI = new Nigra2GSI(readFile);
+                    writeFile = nigra2GSI.convertNIGRA2GSI(Main.getGSI16());
+                    file2write = file2read.toString().substring(0, file2read.toString().length() - 4) + "_LEVEL.GSI";
+                } else {
+                    System.err.println("File " + file2read.getName() + " is not supported (yet).");
+                    break;
+                }
+
+                LineWriter lineWriter = new LineWriter(file2write);
+                if (lineWriter.writeFile(writeFile)) {
+                    counter = counter + 1;
+                }
+
+            } else {
+                System.err.println("File " + file2read.getName() + " could not be read.");
+            }
+
+        }
+
+        return counter;
+    }
+
+    private void handleFileInjection() {
+        String files = Main.getCLIInputFiles();
+
+        if (files != null) {
+            inputFieldsComposite.setSourceTextFieldText(files);
+        }
+    }
+
+    private void initUI() {
+        int height = Main.getRyCONWidgetHeight();
+        int width = Main.getRyCONWidgetWidth();
+
+        GridLayout gridLayout = new GridLayout(1, true);
+        gridLayout.marginHeight = 5;
+        gridLayout.marginWidth = 5;
+
+        GridData gridData = new GridData(SWT.FILL, SWT.CENTER, true, true);
+        gridData.heightHint = height;
+        gridData.widthHint = width;
+
+        innerShell = new Shell(Main.shell, SWT.CLOSE | SWT.DIALOG_TRIM | SWT.MAX | SWT.TITLE | SWT.APPLICATION_MODAL);
+        innerShell.addListener(SWT.Close, new Listener() {
+            public void handleEvent(Event event) {
+                actionBtnCancel();
+            }
+        });
+        innerShell.setText(I18N.getWidgetTitleLevelling());
+        innerShell.setSize(width, height);
+        innerShell.setLayout(gridLayout);
+        innerShell.setLayoutData(gridData);
+
+        gridLayout = new GridLayout(1, true);
+        gridLayout.marginHeight = 0;
+        gridLayout.marginWidth = 0;
+
+        inputFieldsComposite = new InputFieldsComposite(this, innerShell, SWT.NONE);
+        inputFieldsComposite.setLayout(gridLayout);
+
+        createOptions(width);
+        createDescription(width);
+
+        new BottomButtonBar(this, innerShell, SWT.NONE);
+
+        innerShell.setLocation(ShellPositioner.centerShellOnPrimaryMonitor(innerShell));
+
+        Main.setSubShellStatus(true);
+
+        innerShell.pack();
+        innerShell.open();
     }
 
     private boolean processFileOperations() {
@@ -306,49 +351,6 @@ public class LevellingWidget {
         }
 
         return success;
-    }
-
-    private int fileOperations(boolean holdChangePoints) {
-        int counter = 0;
-        LineReader lineReader;
-
-        for (File file2read : files2read) {
-            lineReader = new LineReader(file2read);
-
-            if (lineReader.readFile()) {
-                // read
-                ArrayList<String> readFile = lineReader.getLines();
-
-                String[] fileNameAndSuffix = file2read.getName().split("\\.(?=[^.]+$)");
-
-                ArrayList<String> writeFile;
-                String file2write;
-
-                if (fileNameAndSuffix[1].equalsIgnoreCase("GSI")) {
-                    FileToolsLeicaGSI fileToolsLeicaGSI = new FileToolsLeicaGSI(readFile);
-                    writeFile = fileToolsLeicaGSI.processLevelling2Cad(holdChangePoints);
-                    file2write = file2read.toString().substring(0, file2read.toString().length() - 4) + "_LEVEL.GSI";
-                } else if (fileNameAndSuffix[1].equalsIgnoreCase("ASC")) {
-                    Nigra2GSI nigra2GSI = new Nigra2GSI(readFile);
-                    writeFile = nigra2GSI.convertNIGRA2GSI(Main.getGSI16());
-                    file2write = file2read.toString().substring(0, file2read.toString().length() - 4) + "_LEVEL.GSI";
-                } else {
-                    System.err.println("File " + file2read.getName() + " is not supported (yet).");
-                    break;
-                }
-
-                LineWriter lineWriter = new LineWriter(file2write);
-                if (lineWriter.writeFile(writeFile)) {
-                    counter = counter + 1;
-                }
-
-            } else {
-                System.err.println("File " + file2read.getName() + " could not be read.");
-            }
-
-        }
-
-        return counter;
     }
 
     private boolean processFileOperationsDND() {

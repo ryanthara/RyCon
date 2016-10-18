@@ -44,8 +44,8 @@ import java.io.File;
  *
  * @author sebastian
  * @version 6
- * @since 1
  * @see de.ryanthara.ja.rycon.Main
+ * @since 1
  */
 public class MainApplication extends Main {
 
@@ -80,6 +80,11 @@ public class MainApplication extends Main {
         new MainApplication();
     }
 
+    private void actionBtn0() {
+        statusBar.setStatus(I18N.getStatus0ExitInitialized(), StatusBar.OK);
+        shell.getDisplay().dispose();
+    }
+
     private void actionBtn1() {
         new TidyUpWidget();
         statusBar.setStatus(I18N.getStatus1CleanInitialized(), StatusBar.OK);
@@ -107,22 +112,37 @@ public class MainApplication extends Main {
 
     private void actionBtn6() {
         GuiHelper.showMessageBox(shell, SWT.ICON_WARNING, "Warning", "Not implemented yet.");
+        new TransformationWidget();
         statusBar.setStatus("not implemented yet.", StatusBar.WARNING);
     }
 
     private void actionBtn7() {
         GuiHelper.showMessageBox(shell, SWT.ICON_WARNING, "Warning", "Not implemented yet.");
+        new PrinterWidget();
         statusBar.setStatus("not implemented yet.", StatusBar.WARNING);
     }
 
     private void actionBtn8() {
-        GuiHelper.showMessageBox(shell, SWT.ICON_WARNING, "Warning", "Not implemented yet.");
-        statusBar.setStatus("not implemented yet.", StatusBar.WARNING);
+        new SettingsWidget();
+        statusBar.setStatus(I18N.getStatus8SettingsOpened(), StatusBar.OK);
     }
 
-    private void actionBtn0() {
-        statusBar.setStatus(I18N.getStatus0ExitInitialized(), StatusBar.OK);
-        shell.getDisplay().dispose();
+    private void createButton0Exit(Composite composite) {
+        Button btnExit = new Button(composite, SWT.PUSH);
+        btnExit.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/icons/0-exit.png"));
+        btnExit.setText(I18N.getBtnExitLabel());
+        btnExit.setToolTipText(I18N.getBtnExitLabelToolTip());
+
+        //register listener for the selection event
+        btnExit.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                actionBtn0();
+            }
+        });
+
+        GridData gridData = new GridData(getRyCON_GRID_WIDTH(), getRyCON_GRID_HEIGHT());
+        btnExit.setLayoutData(gridData);
     }
 
     private void createButton1CleanTool(Composite composite) {
@@ -331,24 +351,6 @@ public class MainApplication extends Main {
         btnSettings.setLayoutData(gridData);
     }
 
-    private void createButton0Exit(Composite composite) {
-        Button btnExit = new Button(composite, SWT.PUSH);
-        btnExit.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/icons/0-exit.png"));
-        btnExit.setText(I18N.getBtnExitLabel());
-        btnExit.setToolTipText(I18N.getBtnExitLabelToolTip());
-
-        //register listener for the selection event
-        btnExit.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                actionBtn0();
-            }
-        });
-
-        GridData gridData = new GridData(getRyCON_GRID_WIDTH(), getRyCON_GRID_HEIGHT());
-        btnExit.setLayoutData(gridData);
-    }
-
     private void createTrayIcon() {
         final Tray tray = display.getSystemTray();
 
@@ -406,9 +408,9 @@ public class MainApplication extends Main {
                 }
             });
 
-            item.addListener (SWT.MenuDetect, new Listener () {
-                public void handleEvent (Event event) {
-                    menu.setVisible (true);
+            item.addListener(SWT.MenuDetect, new Listener() {
+                public void handleEvent(Event event) {
+                    menu.setVisible(true);
                 }
             });
         }
@@ -417,7 +419,7 @@ public class MainApplication extends Main {
     private void enableDNDSupport() {
         operations = DND.DROP_MOVE | DND.DROP_COPY | DND.DROP_DEFAULT;
         fileTransfer = FileTransfer.getInstance();
-        types = new Transfer[] {
+        types = new Transfer[]{
                 fileTransfer
         };
     }
@@ -427,9 +429,9 @@ public class MainApplication extends Main {
      * <p>
      * Drag and drop is implemented on the buttons of the following modules.
      * <ul>
-     *     <li>Clean files...</li>
-     *     <li>Split files by code...</li>
-     *     <li>Levelling to cad-import...</li>
+     * <li>Clean files...</li>
+     * <li>Split files by code...</li>
+     * <li>Levelling to cad-import...</li>
      * </ul>
      */
     private void initUI() {
@@ -555,8 +557,8 @@ public class MainApplication extends Main {
             }
         });
 
-        shell.addListener (SWT.Move,  new Listener () {
-            public void handleEvent (Event e) {
+        shell.addListener(SWT.Move, new Listener() {
+            public void handleEvent(Event e) {
                 saveWindowPosition();
             }
         });

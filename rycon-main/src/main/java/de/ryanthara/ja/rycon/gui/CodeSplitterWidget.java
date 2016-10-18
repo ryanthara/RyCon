@@ -23,8 +23,8 @@ import de.ryanthara.ja.rycon.data.PreferenceHandler;
 import de.ryanthara.ja.rycon.i18n.I18N;
 import de.ryanthara.ja.rycon.io.LineReader;
 import de.ryanthara.ja.rycon.io.LineWriter;
-import de.ryanthara.ja.rycon.tools.FileToolsLeicaGSI;
 import de.ryanthara.ja.rycon.tools.FileToolsText;
+import de.ryanthara.ja.rycon.tools.GSICodeSplit;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -43,8 +43,8 @@ import java.util.Iterator;
  * <p>
  * This version of the CodeSplitterWidget supports the following file types:
  * <ul>
- *     <li>Leica GSI format files (GSI8 and GSI16)
- *     <li>text files with code (format no, code, x, y, z)
+ * <li>Leica GSI format files (GSI8 and GSI16)
+ * <li>text files with code (format no, code, x, y, z)
  * </ul>
  *
  * @author sebastian
@@ -53,12 +53,12 @@ import java.util.Iterator;
  */
 public class CodeSplitterWidget {
 
+    private final String[] acceptableFileSuffixes = new String[]{"*.gsi", "*.txt"};
     private Button chkBoxWriteCodeZero;
     private Button chkBoxDropCodeBlock;
     private File[] files2read = new File[0];
     private InputFieldsComposite inputFieldsComposite;
     private Shell innerShell = null;
-    private final String[] acceptableFileSuffixes = new String[]{"*.gsi", "*.txt"};
 
     /**
      * Class constructor without parameters.
@@ -68,12 +68,6 @@ public class CodeSplitterWidget {
     CodeSplitterWidget() {
         initUI();
         handleFileInjection();
-    }
-
-    private void handleFileInjection() {
-        String files = Main.getCLIInputFiles();
-
-        inputFieldsComposite.setSourceTextFieldText(files);
     }
 
     /**
@@ -113,85 +107,6 @@ public class CodeSplitterWidget {
         }
 
         return success;
-    }
-
-    private void initUI() {
-        int height = Main.getRyCONWidgetHeight();
-        int width = Main.getRyCONWidgetWidth();
-
-        GridLayout gridLayout = new GridLayout(1, true);
-        gridLayout.marginHeight = 5;
-        gridLayout.marginWidth = 5;
-
-        GridData gridData = new GridData(SWT.FILL, SWT.CENTER, true, true);
-        gridData.heightHint = height;
-        gridData.widthHint = width;
-
-        innerShell = new Shell(Main.shell, SWT.CLOSE | SWT.DIALOG_TRIM | SWT.MAX | SWT.TITLE | SWT.APPLICATION_MODAL);
-        innerShell.addListener(SWT.Close, new Listener() {
-            public void handleEvent(Event event) {
-                actionBtnCancel();
-            }
-        });
-        innerShell.setText(I18N.getWidgetTitleSplitter());
-        innerShell.setSize(width, height);
-        innerShell.setLayout(gridLayout);
-        innerShell.setLayoutData(gridData);
-
-        gridLayout = new GridLayout(1, true);
-        gridLayout.marginHeight = 0;
-        gridLayout.marginWidth = 0;
-
-        inputFieldsComposite = new InputFieldsComposite(this, innerShell, SWT.NONE);
-        inputFieldsComposite.setLayout(gridLayout);
-
-        createOptions(width);
-        createDescription(width);
-
-        new BottomButtonBar(this, innerShell, SWT.NONE);
-
-        innerShell.setLocation(ShellPositioner.centerShellOnPrimaryMonitor(innerShell));
-
-        Main.setSubShellStatus(true);
-
-        innerShell.pack();
-        innerShell.open();
-    }
-
-    private void createOptions(int width) {
-        Group group = new Group(innerShell, SWT.NONE);
-        group.setText(I18N.getGroupTitleOptions());
-
-        GridLayout gridLayout = new GridLayout(1, true);
-        group.setLayout(gridLayout);
-
-        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
-        gridData.widthHint = width - 24;
-        group.setLayoutData(gridData);
-
-        chkBoxDropCodeBlock = new Button(group, SWT.CHECK);
-        chkBoxDropCodeBlock.setSelection(false);
-        chkBoxDropCodeBlock.setText(I18N.getBtnChkSplitterIgnoreCodeColumn());
-
-        chkBoxWriteCodeZero = new Button(group, SWT.CHECK);
-        chkBoxWriteCodeZero.setSelection(false);
-        chkBoxWriteCodeZero.setText(I18N.getBtnChkSplitterWriteCodeZero());
-    }
-
-    private void createDescription(int width) {
-        Group group = new Group(innerShell, SWT.NONE);
-        group.setText(I18N.getGroupTitleGeneratorNumberInputAdvice());
-
-        GridLayout gridLayout = new GridLayout(1, true);
-        group.setLayout(gridLayout);
-
-        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
-        gridData.widthHint = width - 24;
-        group.setLayoutData(gridData);
-
-        Label tip = new Label(group, SWT.WRAP | SWT.BORDER | SWT.LEFT);
-        tip.setLayoutData(new GridData(SWT.HORIZONTAL, SWT.TOP, true, false, 1, 1));
-        tip.setText(I18N.getLabelTipSplitterWidget());
     }
 
     private void actionBtnCancel() {
@@ -269,7 +184,7 @@ public class CodeSplitterWidget {
      * This method is used from the class InputFieldsComposite!
      */
     private void actionBtnSource() {
-        String[] filterNames = new String[] {
+        String[] filterNames = new String[]{
                 I18N.getFileChooserFilterNameGSI(),
                 I18N.getFileChooserFilterNameTXT()
         };
@@ -291,31 +206,40 @@ public class CodeSplitterWidget {
                 filterNames, inputFieldsComposite.getSourceTextField(), inputFieldsComposite.getDestinationTextField());
     }
 
-    private boolean processFileOperations() {
-        boolean success;
+    private void createDescription(int width) {
+        Group group = new Group(innerShell, SWT.NONE);
+        group.setText(I18N.getGroupTitleGeneratorNumberInputAdvice());
 
-        int counter = fileOperations(chkBoxDropCodeBlock.getSelection(), chkBoxWriteCodeZero.getSelection());
+        GridLayout gridLayout = new GridLayout(1, true);
+        group.setLayout(gridLayout);
 
-        if (counter > 0) {
-            String message;
+        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
+        gridData.widthHint = width - 24;
+        group.setLayoutData(gridData);
 
-            if (counter == 1) {
-                message = String.format(I18N.getMsgSplittingSuccess(Main.TEXT_SINGULAR), counter);
-            } else {
-                message = String.format(I18N.getMsgSplittingSuccess(Main.TEXT_PLURAL), counter);
-            }
+        Label tip = new Label(group, SWT.WRAP | SWT.BORDER | SWT.LEFT);
+        tip.setLayoutData(new GridData(SWT.HORIZONTAL, SWT.TOP, true, false, 1, 1));
+        tip.setText(I18N.getLabelTipSplitterWidget());
+    }
 
-            GuiHelper.showMessageBox(innerShell, SWT.ICON_INFORMATION, I18N.getMsgBoxTitleSuccess(), message);
+    private void createOptions(int width) {
+        Group group = new Group(innerShell, SWT.NONE);
+        group.setText(I18N.getGroupTitleOptions());
 
-            // set the counter for status bar information
-            Main.countFileOps = counter;
-            success = true;
-        } else {
-            GuiHelper.showMessageBox(innerShell, SWT.ICON_WARNING, I18N.getMsgBoxTitleError(), I18N.getMsgSplittingError());
-            success = false;
-        }
+        GridLayout gridLayout = new GridLayout(1, true);
+        group.setLayout(gridLayout);
 
-        return success;
+        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
+        gridData.widthHint = width - 24;
+        group.setLayoutData(gridData);
+
+        chkBoxDropCodeBlock = new Button(group, SWT.CHECK);
+        chkBoxDropCodeBlock.setSelection(false);
+        chkBoxDropCodeBlock.setText(I18N.getBtnChkSplitterIgnoreCodeColumn());
+
+        chkBoxWriteCodeZero = new Button(group, SWT.CHECK);
+        chkBoxWriteCodeZero.setSelection(false);
+        chkBoxWriteCodeZero.setText(I18N.getBtnChkSplitterWriteCodeZero());
     }
 
     private int fileOperations(boolean createCodeColumn, boolean writeFileWithCodeZero) {
@@ -333,10 +257,10 @@ public class CodeSplitterWidget {
                 String suffix = file2read.getName().toLowerCase();
 
                 if (suffix.endsWith(".gsi")) {
-                    FileToolsLeicaGSI gsiTools = new FileToolsLeicaGSI(readFile);
-                    writeFile = gsiTools.processCodeSplit(createCodeColumn, writeFileWithCodeZero);
+                    GSICodeSplit gsiCodeSplit = new GSICodeSplit(readFile);
+                    writeFile = gsiCodeSplit.processCodeSplit(createCodeColumn, writeFileWithCodeZero);
 
-                    Iterator<Integer> codeIterator = gsiTools.getFoundCodes().iterator();
+                    Iterator<Integer> codeIterator = gsiCodeSplit.getFoundCodes().iterator();
 
                     // write file by file with one code
                     for (ArrayList<String> lines : writeFile) {
@@ -373,6 +297,84 @@ public class CodeSplitterWidget {
         }
 
         return counter;
+    }
+
+    private void handleFileInjection() {
+        String files = Main.getCLIInputFiles();
+
+        if (files != null) {
+            inputFieldsComposite.setSourceTextFieldText(files);
+        }
+    }
+
+    private void initUI() {
+        int height = Main.getRyCONWidgetHeight();
+        int width = Main.getRyCONWidgetWidth();
+
+        GridLayout gridLayout = new GridLayout(1, true);
+        gridLayout.marginHeight = 5;
+        gridLayout.marginWidth = 5;
+
+        GridData gridData = new GridData(SWT.FILL, SWT.CENTER, true, true);
+        gridData.heightHint = height;
+        gridData.widthHint = width;
+
+        innerShell = new Shell(Main.shell, SWT.CLOSE | SWT.DIALOG_TRIM | SWT.MAX | SWT.TITLE | SWT.APPLICATION_MODAL);
+        innerShell.addListener(SWT.Close, new Listener() {
+            public void handleEvent(Event event) {
+                actionBtnCancel();
+            }
+        });
+        innerShell.setText(I18N.getWidgetTitleSplitter());
+        innerShell.setSize(width, height);
+        innerShell.setLayout(gridLayout);
+        innerShell.setLayoutData(gridData);
+
+        gridLayout = new GridLayout(1, true);
+        gridLayout.marginHeight = 0;
+        gridLayout.marginWidth = 0;
+
+        inputFieldsComposite = new InputFieldsComposite(this, innerShell, SWT.NONE);
+        inputFieldsComposite.setLayout(gridLayout);
+
+        createOptions(width);
+        createDescription(width);
+
+        new BottomButtonBar(this, innerShell, SWT.NONE);
+
+        innerShell.setLocation(ShellPositioner.centerShellOnPrimaryMonitor(innerShell));
+
+        Main.setSubShellStatus(true);
+
+        innerShell.pack();
+        innerShell.open();
+    }
+
+    private boolean processFileOperations() {
+        boolean success;
+
+        int counter = fileOperations(chkBoxDropCodeBlock.getSelection(), chkBoxWriteCodeZero.getSelection());
+
+        if (counter > 0) {
+            String message;
+
+            if (counter == 1) {
+                message = String.format(I18N.getMsgSplittingSuccess(Main.TEXT_SINGULAR), counter);
+            } else {
+                message = String.format(I18N.getMsgSplittingSuccess(Main.TEXT_PLURAL), counter);
+            }
+
+            GuiHelper.showMessageBox(innerShell, SWT.ICON_INFORMATION, I18N.getMsgBoxTitleSuccess(), message);
+
+            // set the counter for status bar information
+            Main.countFileOps = counter;
+            success = true;
+        } else {
+            GuiHelper.showMessageBox(innerShell, SWT.ICON_WARNING, I18N.getMsgBoxTitleError(), I18N.getMsgSplittingError());
+            success = false;
+        }
+
+        return success;
     }
 
     private boolean processFileOperationsDND() {
