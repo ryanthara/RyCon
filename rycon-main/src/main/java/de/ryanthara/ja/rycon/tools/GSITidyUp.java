@@ -48,55 +48,6 @@ public class GSITidyUp {
     }
 
     /**
-     * Cleans up a LTOP GSI8 polar measurement file and eliminates reference points and control points.
-     * <p>
-     * The measurement file must have the following structure:
-     * <ul>
-     * <li>station line</li>
-     * <li>reference point</li>
-     * <li>...</li>
-     * <li>reference point</li>
-     * <li>control point ('STKE')</li>
-     * <li>measurement points</li>
-     * <li>...</li>
-     * <li>measurement points</li>
-     * <li>control point ('STKE')</li>
-     * </ul>
-     *
-     * @return clean up LTOP MES file
-     */
-    public ArrayList<String> processLTOPClean() {
-        ArrayList<String> result = new ArrayList<>();
-
-        /*
-        Strategy
-            - identify a station line (WI 84, 85, 86 and 88 (instrument height)
-            - identify the first control point after the reference points by the char sequence 'STKE'
-            - identify the last control point before the next station line or at the file ending by the char sequence 'STKE'
-         */
-
-        for (String line : readStringLines) {
-
-            int size;
-
-            if (line.startsWith("*")) {
-                size = 24;
-                line = line.substring(1, line.length());
-            } else {
-                size = 16;
-            }
-
-            String currentLine, beforeLine, nextLine;
-            int tokens = (line.length() + size - 1) / size;
-
-            System.out.println("Number of 'tokens': " + tokens);
-
-        }
-
-        return result;
-    }
-
-    /**
      * Tidy up resurrection (stations) and control point measurements from files.
      * <p>
      * RyCON has the intelligence to tidy up resurrection and control points by a given

@@ -105,6 +105,7 @@ public abstract class Main {
     private static final String PARAM_EDIT_STRING = "EDIT";
     private static final String PARAM_FREE_STATION_STRING = "FS";
     private static final String PARAM_KNOWN_STATION_STRING = "ST";
+    private static final String PARAM_LTOP_STRING = "LTOP";
     private static final String LAST_POS_PRIMARY_MONITOR = "-9999, -9999";
     private static final String LAST_POS_SECONDARY_MONITOR = "-9998, -9998,";
 
@@ -639,4 +640,7 @@ public abstract class Main {
         Locale.setDefault(new Locale(languageCode, languageCode.toUpperCase()));
     }
 
+    public static String getParamLTOPString() {
+        return PARAM_LTOP_STRING;
+    }
 }  // end of Main

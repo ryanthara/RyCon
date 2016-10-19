@@ -66,6 +66,7 @@ public class SettingsWidget {
     private Text identifierEditStringTextField;
     private Text identifierFreeStationTextField;
     private Text identifierKnownStationTextField;
+    private Text identifierLTOPTextField;
     private Text pointIdenticalDistance;
 
     /**
@@ -99,6 +100,7 @@ public class SettingsWidget {
         identifierEditStringTextField.setText(Main.getParamEditString());
         identifierFreeStationTextField.setText(Main.getParamFreeStationString());
         identifierKnownStationTextField.setText(Main.getParamKnownStationString());
+        identifierLTOPTextField.setText(Main.getParamLTOPString());
         pointIdenticalDistance.setText(Main.getPointIdenticalDistance());
 
         RadioHelper.selectBtn(compositeZeissRecDialect.getChildren(), 4); // M5 as default value
@@ -140,6 +142,7 @@ public class SettingsWidget {
                 SimpleChecker.checkIsTextEmpty(identifierFreeStationTextField) |
                 SimpleChecker.checkIsTextEmpty(identifierControlPointTextField) |
                 SimpleChecker.checkIsTextEmpty(identifierKnownStationTextField) |
+                SimpleChecker.checkIsTextEmpty(identifierLTOPTextField) |
                 SimpleChecker.checkIsTextEmpty(pointIdenticalDistance);
     }
 
@@ -766,6 +769,31 @@ public class SettingsWidget {
         gridData.widthHint = 50;
         gridData.grabExcessHorizontalSpace = false;
         identifierControlPointTextField.setLayoutData(gridData);
+
+
+        Label ltopLabel = new Label(composite, SWT.NONE);
+        ltopLabel.setText(I18N.getLabelTextIdentifierLTOP());
+
+        identifierLTOPTextField = new Text(composite, SWT.BORDER);
+        identifierLTOPTextField.setText(Main.pref.getUserPref(PreferenceHandler.PARAM_LTOP_STRING));
+        identifierLTOPTextField.addListener(SWT.Traverse, new Listener() {
+            @Override
+            public void handleEvent(Event event) {
+                // prevent this shortcut for execute when the text fields are empty
+                if (!checkForEmptyTextFields()) {
+
+                    if (((event.stateMask & SWT.CTRL) == SWT.CTRL) && (event.detail == SWT.TRAVERSE_RETURN)) {
+                        actionBtnOk();
+                    }
+
+                }
+            }
+        });
+
+        gridData = new GridData();
+        gridData.widthHint = 50;
+        gridData.grabExcessHorizontalSpace = false;
+        identifierLTOPTextField.setLayoutData(gridData);
     }
 
     private void initUI() {
@@ -900,6 +928,7 @@ public class SettingsWidget {
         Main.pref.setUserPref(PreferenceHandler.PARAM_CONTROL_POINT_STRING, identifierControlPointTextField.getText());
         Main.pref.setUserPref(PreferenceHandler.PARAM_FREE_STATION_STRING, identifierFreeStationTextField.getText());
         Main.pref.setUserPref(PreferenceHandler.PARAM_KNOWN_STATION_STRING, identifierKnownStationTextField.getText());
+        Main.pref.setUserPref(PreferenceHandler.PARAM_LTOP_STRING, identifierLTOPTextField.getText());
 
         // parameters for module #4 - converter
         Main.pref.setUserPref(PreferenceHandler.CONVERTER_SETTING_ELIMINATE_ZERO_COORDINATE, Boolean.toString(chkBoxEliminateZeroCoordinates.getSelection()));

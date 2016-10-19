@@ -180,6 +180,11 @@ public class PreferenceHandler implements PreferenceChangeListener {
     public final static String LAST_USED_DISPLAY = "-1";
 
     /**
+     * Member for the preference key for the LTOP string.
+     */
+    public static final String PARAM_LTOP_STRING = "param_ltop_string";
+
+    /**
      * Member for the preference key of the build and version number value.
      *
      * @since 3
@@ -206,7 +211,6 @@ public class PreferenceHandler implements PreferenceChangeListener {
      * @since 3
      */
     private final static String USER_LAST_USED_DIR = "user_last_used_dir";
-
     private boolean isDefaultSettingsGenerated = false;
     private Preferences userPreferences;
 
@@ -324,10 +328,11 @@ public class PreferenceHandler implements PreferenceChangeListener {
      * <li>'PARAM_CONTROL_POINT_STRING' - 'STKE' </li>
      * <li>'PARAM_EDIT_STRING' - 'EDIT' </li>
      * <li>'PARAM_FREE_STATION_STRING' - 'FS' </li>
+     * <li>'PARAM_LTOP_STRING' - 'LTOP' </li>
+     * <li>'PARAM_STAKE_OUT_STRING' - 'ST' </li>
      * <li>'LAST_USED_DISPLAY' - '-1' </li>
      * <li>'LAST_POS_PRIMARY_MONITOR' - '-9999,-9999' </li>
      * <li>'LAST_POS_SECONDARY_MONITOR' - '-9998,-9998' </li>
-     * <li>'PARAM_STAKE_OUT_STRING' - 'ST' </li>
      * <li>'USER_LAST_USED_DIR' - '.' </li>
      * </ul>
      * <p>
@@ -354,6 +359,7 @@ public class PreferenceHandler implements PreferenceChangeListener {
         userPreferences.put(PARAM_CONTROL_POINT_STRING, Main.getParamControlPointString());
         userPreferences.put(PARAM_FREE_STATION_STRING, Main.getParamFreeStationString());
         userPreferences.put(PARAM_KNOWN_STATION_STRING, Main.getParamKnownStationString());
+        userPreferences.put(PARAM_LTOP_STRING, Main.getParamLTOPString());
 
         // parameters for module #4 - converter
         userPreferences.put(CONVERTER_SETTING_ELIMINATE_ZERO_COORDINATE, Main.getParamEliminateZeroCoordinates());

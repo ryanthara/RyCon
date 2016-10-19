@@ -377,6 +377,10 @@ public class I18N {
         return Messages.getString("fileChooserFilterNameK");
     }
 
+    public static String getFileChooserFilterNameLTOP() {
+        return Messages.getString("fileChooserFilterNameLTOP");
+    }
+
     public static String getFileChooserFilterNameNIGRA() {
         return Messages.getString("fileChooserFilterNameNIGRA");
     }
@@ -507,6 +511,10 @@ public class I18N {
 
     public static String getLabelTextIdentifierFreeStation() {
         return Messages.getString("labelTextIdentifierFreeStation");
+    }
+
+    public static String getLabelTextIdentifierLTOP() {
+        return Messages.getString("labelTextIdentifierLTOP");
     }
 
     public static String getLabelTextIdentifierStakeOutPoint() {
@@ -933,4 +941,5 @@ public class I18N {
             return s[1];
         }
     }
+
 } // end of I18N

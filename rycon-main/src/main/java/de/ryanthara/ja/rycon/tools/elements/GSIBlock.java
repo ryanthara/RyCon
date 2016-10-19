@@ -40,11 +40,11 @@ import java.util.Arrays;
  */
 public class GSIBlock {
 
-    private boolean isGSI16 = false;
     private final int wordIndex;
-    private String sign = "+";
     private final String dataGSI;
     private final String information;
+    private boolean isGSI16 = false;
+    private String sign = "+";
 
     /**
      * Constructor which defines the GSIBlock with string parameter.
@@ -60,14 +60,6 @@ public class GSIBlock {
         this.information = blockAsString.substring(2, 6);
         this.sign = blockAsString.substring(6, 7);
         this.dataGSI = blockAsString.substring(7, blockAsString.length());
-    }
-
-    /**
-     * Return the gsi data as string
-     * @return gsi data as string
-     */
-    public String getDataGSI() {
-        return dataGSI;
     }
 
     /**
@@ -130,12 +122,6 @@ public class GSIBlock {
     }
 
     /**
-     * Return the word index as integer value.
-     * @return word index as integer value
-     */
-    public int getWordIndex() {
-        return wordIndex;
-    }    /**
      * Constructor with parameters to build the GSI structure.
      *
      * @param isGSI16     boolean for indicating a GSI16 file
@@ -160,6 +146,24 @@ public class GSIBlock {
         Arrays.fill(leadingZeros, '0');
 
         this.dataGSI = new String(leadingZeros) + dataGSI.substring(0, dataGSI.length());
+    }
+
+    /**
+     * Return the gsi data as string
+     *
+     * @return gsi data as string
+     */
+    public String getDataGSI() {
+        return dataGSI;
+    }
+
+    /**
+     * Return the word index as integer value.
+     *
+     * @return word index as integer value
+     */
+    public int getWordIndex() {
+        return wordIndex;
     }
 
     /**
@@ -297,6 +301,7 @@ public class GSIBlock {
      * Due to issues of the format, leading zeros are added or values are cut off.
      *
      * @param isGSI16 True for GSI16 format
+     *
      * @return GSIBlock as String depending on format GSI8/GSI16
      */
     public String toString(boolean isGSI16) {

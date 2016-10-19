@@ -23,6 +23,7 @@ import de.ryanthara.ja.rycon.data.PreferenceHandler;
 import de.ryanthara.ja.rycon.i18n.I18N;
 import de.ryanthara.ja.rycon.io.LineReader;
 import de.ryanthara.ja.rycon.io.LineWriter;
+import de.ryanthara.ja.rycon.tools.GSILTOPClean;
 import de.ryanthara.ja.rycon.tools.GSITidyUp;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -176,7 +177,7 @@ public class TidyUpWidget {
     private void actionBtnSource() {
 
         String[] filterNames = new String[]{
-                I18N.getFileChooserFilterNameGSI(),
+                I18N.getFileChooserFilterNameGSI(), I18N.getFileChooserFilterNameLTOP()
         };
 
         String filterPath = Main.pref.getUserPref(PreferenceHandler.DIR_PROJECT);
@@ -236,6 +237,7 @@ public class TidyUpWidget {
         int counter = 0;
         LineReader lineReader;
         String editString = Main.pref.getUserPref(PreferenceHandler.PARAM_EDIT_STRING);
+        String ltopString = Main.pref.getUserPref(PreferenceHandler.PARAM_LTOP_STRING);
 
         for (File file2read : files2read) {
             lineReader = new LineReader(file2read);
@@ -243,19 +245,22 @@ public class TidyUpWidget {
             if (lineReader.readFile()) {
                 ArrayList<String> readFile = lineReader.getLines();
                 ArrayList<String> writeFile;
+                String file2write;
 
                 // processFileOperations
-                GSITidyUp gsiTidyUp = new GSITidyUp(readFile);
 
                 // differ between 'normal' GSI files and
                 if (file2read.getName().endsWith(".GSL")) {
-                    writeFile = gsiTidyUp.processLTOPClean();
+                    GSILTOPClean gsiltopClean = new GSILTOPClean(readFile);
+                    writeFile = gsiltopClean.processLTOPClean();
+                    file2write = file2read.toString().substring(0, file2read.toString().length() - 4) + "_" + ltopString + ".GSI";
                 } else {
+                    GSITidyUp gsiTidyUp = new GSITidyUp(readFile);
                     writeFile = gsiTidyUp.processTidyUp(holdStations, holdControlPoints);
+                    file2write = file2read.toString().substring(0, file2read.toString().length() - 4) + "_" + editString + ".GSI";
                 }
 
                 // write file line by line
-                String file2write = file2read.toString().substring(0, file2read.toString().length() - 4) + "_" + editString + ".GSI";
                 LineWriter lineWriter = new LineWriter(file2write);
                 if (lineWriter.writeFile(writeFile)) {
                     counter = counter + 1;

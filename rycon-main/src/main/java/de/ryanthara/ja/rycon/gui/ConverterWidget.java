@@ -243,9 +243,13 @@ public class ConverterWidget {
 
             switch (fileDialog.getFilterIndex()) {
                 case 0: // Leica GSI files
-                    RadioHelper.selectBtn(childrenSource, 1);
-                    if (RadioHelper.getSelectedBtn(childrenTarget) == 1) {
-                        RadioHelper.selectBtn(childrenTarget, 2);
+                    if (RadioHelper.getSelectedBtn(childrenSource) > 1) {
+                        RadioHelper.selectBtn(childrenSource, 1);
+                    }
+                    if (RadioHelper.getSelectedBtn(childrenTarget) == 0) {
+                        RadioHelper.selectBtn(childrenSource, 1);
+                    } else if (RadioHelper.getSelectedBtn(childrenTarget) == 1) {
+                        RadioHelper.selectBtn(childrenSource, 0);
                     }
                     break;
                 case 1: // text files
