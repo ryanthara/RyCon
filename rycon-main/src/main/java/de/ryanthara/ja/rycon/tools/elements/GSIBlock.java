@@ -23,33 +23,32 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 
 /**
- * Instances of this class represents an object to store and handle
- * the values of a GSI block.
+ * Instances of this class represents an object to store and handle the values of a GSI block.
  * <p>
- * The Leica Geo Serial Interface (GSI) is a general purpose, serial data
- * interface for bi-directional communication between TPS Total Stations,
- * Levelling instruments and computers.
+ * The Leica Geo Serial Interface (GSI) is a general purpose, serial data interface
+ * for bi-directional communication between TPS Total Stations, Levelling instruments and computers.
  * <p>
- * The GSI interface is composed in a sequence of blocks, ending with a
- * terminator (CR or CR/LF). The later introduced enhanced GSI16 format
- * starts every line with a <code>*</code> sign.
+ * The GSI interface is composed in a sequence of blocks, ending with a terminator (CR or CR/LF).
+ * The later introduced enhanced GSI16 format starts every line with a <code>*</code> sign.
  *
  * @author sebastian
- * @version 4
+ * @version 5
  * @since 8
  */
 public class GSIBlock {
 
-    private final int wordIndex;
-    private final String dataGSI;
-    private final String information;
     private boolean isGSI16 = false;
+    private int wordIndex = -1;
+    private String dataGSI = "";
+    private String information = "";
     private String sign = "+";
 
     /**
-     * Constructor which defines the GSIBlock with string parameter.
+     * Constructs a new instance of this class given a read GSI block as string.
+     * <p>
+     * This constructor is used for reading Leica GSI formatted files.
      *
-     * @param blockAsString complete block as one string
+     * @param blockAsString complete GSI block as string
      */
     public GSIBlock(String blockAsString) {
         blockAsString = blockAsString.trim();
@@ -63,66 +62,89 @@ public class GSIBlock {
     }
 
     /**
-     * Constructor with given parameters to build the GSI structure.
+     * Constructs a new instance of this class given its GSI8/GSI16 identifier, the word index, the line number and
+     * the data string.
+     * <p>
+     * This constructor is used for the GSI block that contains the line number and the point number string. (WI=11)
      *
-     * @param isGSI16   true if it is GSI16 format
-     * @param wordIndex word index (WI) of the block
-     * @param number    information for the point number (filled up with zeros)
-     * @param dataGSI   {@code String} to transform into a GSIBlock
+     * @param isGSI16    boolean for indicating a GSI16 file
+     * @param wordIndex  word index (WI) of the block
+     * @param lineNumber information for the point number (filled up with zeros)
+     * @param dataGSI    GSI data as string
      */
-    public GSIBlock(boolean isGSI16, int wordIndex, int number, String dataGSI) {
+    public GSIBlock(boolean isGSI16, int wordIndex, int lineNumber, String dataGSI) {
+        int length = isGSI16 ? 16 : 8;
+
+        if (wordIndex == 11) {
+            this.wordIndex = wordIndex;
+            this.information = String.format("%04d", lineNumber);
+            this.dataGSI = fillWithZeros(length, dataGSI);
+        }
+    }
+
+    // TODO: 23.10.16 refactor GSIBlock for WI11, a simple constructor without unit and a complete one with units 
+
+    /**
+     * Constructs a new instance of this class given its GSI8/GSI16 identifier, the word index and the data string.
+     * <p>
+     * This constructor is used for all GSI blocks except the point number one (WI=11).
+     *
+     * @param isGSI16   boolean for indicating a GSI16 file
+     * @param wordIndex word index (WI) of the block
+     * @param dataGSI   GSI data as string
+     */
+    public GSIBlock(boolean isGSI16, int wordIndex, String dataGSI) {
         String intern;
 
         int length = isGSI16 ? 16 : 8;
 
         this.wordIndex = wordIndex;
 
-        if (wordIndex == 11) {                                          // point number
-            this.information = String.format("%04d", number);
+        if (wordIndex == 71) {                                      // code
+            this.information = "..46";
             intern = dataGSI;
-        } else {
-            if (wordIndex == 71) {                                      // code
-                this.information = "..46";
-                intern = dataGSI;
-            } else if ((wordIndex > 80) & (wordIndex < 90)) {           // coordinates
-                this.information = "..46";
-                if (dataGSI.startsWith("-")) {
-                    this.sign = "-";
-                    intern = dataGSI.substring(1, dataGSI.length());
-                } else if (dataGSI.startsWith("+")) {
-                    intern = dataGSI.substring(1, dataGSI.length());
-                } else {
-                    intern = dataGSI;
-                }
-
-                try {
-                    Double d = Double.parseDouble(intern);
-                    if (d == 0d) {
-                        intern = "0";
-                    } else {
-                        d = d * 10000.0; // value d in 1/10mm
-
-                        BigDecimal bigDecimal = new BigDecimal(d);
-                        bigDecimal = bigDecimal.setScale(0, BigDecimal.ROUND_HALF_UP);
-
-                        intern = bigDecimal.toString();
-                    }
-                } catch (NumberFormatException e) {
-                    System.err.println("Error while parsing String to double in GSIBlock:GSIBlock()");
-                    e.printStackTrace();
-                }
+        } else if ((wordIndex > 80) & (wordIndex < 90)) {           // coordinates
+            this.information = "..46";
+            if (dataGSI.startsWith("-")) {                          // remove the sign
+                this.sign = "-";
+                intern = dataGSI.substring(1, dataGSI.length());
+            } else if (dataGSI.startsWith("+")) {
+                intern = dataGSI.substring(1, dataGSI.length());
             } else {
-                // not used other values
-                this.information = "..4.";
                 intern = dataGSI;
             }
+
+            try {
+                Double d = Double.parseDouble(intern);
+                if (d == 0d) {
+                    intern = "0";
+                } else {
+                    d = d * 10000.0; // value d in 1/10mm
+
+                    BigDecimal bigDecimal = new BigDecimal(d);
+                    bigDecimal = bigDecimal.setScale(0, BigDecimal.ROUND_HALF_UP);
+
+                    intern = bigDecimal.toString();
+                }
+            } catch (NumberFormatException e) {
+                System.err.println("Error while parsing String to double in GSIBlock:GSIBlock()");
+                e.printStackTrace();
+            }
+        } else {
+            // not used other values
+            this.information = "..4.";
+            intern = dataGSI;
         }
+
 
         this.dataGSI = fillWithZeros(length, intern);
     }
 
     /**
-     * Constructor with parameters to build the GSI structure.
+     * Constructs a new instance of this class given its GSI8/GSI16 identifier, the word index, the information
+     * related to data, the sign and the data string.
+     * <p>
+     * This constructor is additionally used to change between GSI8 and GSI16 data in the levelling widget.
      *
      * @param isGSI16     boolean for indicating a GSI16 file
      * @param wordIndex   word index (pos 1-2)
@@ -149,7 +171,7 @@ public class GSIBlock {
     }
 
     /**
-     * Return the gsi data as string
+     * Returns the gsi data as string
      *
      * @return gsi data as string
      */
@@ -158,7 +180,7 @@ public class GSIBlock {
     }
 
     /**
-     * Return the word index as integer value.
+     * Returns the word index as integer value.
      *
      * @return word index as integer value
      */
@@ -167,7 +189,7 @@ public class GSIBlock {
     }
 
     /**
-     * Return true if GSIBlock is GSI16 format.
+     * Returns true if GSIBlock is GSI16 format.
      *
      * @return true if GSIBlock is GSI16 format
      */
@@ -176,7 +198,7 @@ public class GSIBlock {
     }
 
     /**
-     * Return a GSIBlock in csv format without separation sign. No additional invisible spaces are created.
+     * Returns a GSIBlock in csv format without separation sign. No additional invisible spaces are created.
      *
      * @return formatted {@code String} for CSV output
      */
@@ -185,7 +207,7 @@ public class GSIBlock {
     }
 
     /**
-     * Return a GSIBlock in a printable format filled up with invisible spaces to a defined length (e.g. 16 characters).
+     * Returns a GSIBlock in a printable format filled up with invisible spaces to a defined length (e.g. 16 characters).
      *
      * @return formatted {@code String} for column based TXT output
      */
@@ -277,6 +299,7 @@ public class GSIBlock {
                     s = trimLeadingZeros(s);
                 }
 
+                // add two spaces, one for the sign and one for the decimal dot
                 s = fillWithSpaces(length + 2, s);
                 break;
             default:
@@ -287,7 +310,7 @@ public class GSIBlock {
     }
 
     /**
-     * Return a GSIBlock as String in the origin format.
+     * Returns a GSIBlock as String in the origin format.
      *
      * @return GSIBlock as String
      */
@@ -296,7 +319,7 @@ public class GSIBlock {
     }
 
     /**
-     * Return a GSIBlock as String in defined format (GSI8 or GSI16).
+     * Returns a GSIBlock as String in defined format (GSI8 or GSI16).
      * <p>
      * Due to issues of the format, leading zeros are added or values are cut off.
      *
@@ -321,7 +344,6 @@ public class GSIBlock {
             } else {
                 result = wordIndex + information + sign + dataGSI.substring(dataGSI.length() - 8, dataGSI.length());
             }
-
         }
 
         return result;

@@ -70,7 +70,7 @@ public class GSI2ODF {
             Cell cell;
 
             if (writeCommentRow) {
-                for (int wordIndex : baseToolsGSI.getFoundWordIndices()) {
+                for (int wordIndex : baseToolsGSI.getFoundAllWordIndices()) {
                     cell = table.getCellByPosition(colIndex, 0);
                     colIndex = colIndex + 1;
 

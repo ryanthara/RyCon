@@ -34,11 +34,13 @@ public class TXTBaselLandschaft2GSI {
     private ArrayList<String> readStringLines;
 
     /**
-     * Class constructor for read line based coordinate files.
+     *
+     * Constructs a new instance of this class given an {@code ArrayList<String} that contains the read coordinate file
+     * from the geodata server Basel Landschaft (Switzerland).
      * <p>
      * The differentiation of the content is done by the called method.
      *
-     * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
+     * @param readStringLines read coordinate file
      */
     public TXTBaselLandschaft2GSI(ArrayList<String> readStringLines) {
         this.readStringLines = readStringLines;
@@ -74,12 +76,12 @@ public class TXTBaselLandschaft2GSI {
                     blocks.add(new GSIBlock(isGSI16, 11, lineCounter, lineSplit[1]));
 
                     if (useAnnotationColumn) {
-                        blocks.add(new GSIBlock(isGSI16, 71, lineCounter, lineSplit[0]));
+                        blocks.add(new GSIBlock(isGSI16, 71, lineSplit[0]));
                     }
 
-                    blocks.add(new GSIBlock(isGSI16, 81, lineCounter, lineSplit[2]));
-                    blocks.add(new GSIBlock(isGSI16, 82, lineCounter, lineSplit[3]));
-                    blocks.add(new GSIBlock(isGSI16, 83, lineCounter, lineSplit[4]));
+                    blocks.add(new GSIBlock(isGSI16, 81, lineSplit[2]));
+                    blocks.add(new GSIBlock(isGSI16, 82, lineSplit[3]));
+                    blocks.add(new GSIBlock(isGSI16, 83, lineSplit[4]));
                     break;
 
                 case 6:     // LFP file
@@ -87,19 +89,19 @@ public class TXTBaselLandschaft2GSI {
 
                     if (useAnnotationColumn) {
                         if (lineSplit[2].equals("NULL")) {
-                            blocks.add(new GSIBlock(isGSI16, 41, lineCounter, "-1"));
+                            blocks.add(new GSIBlock(isGSI16, 41, "-1"));
                         } else {
-                            blocks.add(new GSIBlock(isGSI16, 41, lineCounter, lineSplit[2]));
+                            blocks.add(new GSIBlock(isGSI16, 41, lineSplit[2]));
                         }
-                        blocks.add(new GSIBlock(isGSI16, 71, lineCounter, lineSplit[0]));
+                        blocks.add(new GSIBlock(isGSI16, 71, lineSplit[0]));
                     }
 
-                    blocks.add(new GSIBlock(isGSI16, 81, lineCounter, lineSplit[3]));
-                    blocks.add(new GSIBlock(isGSI16, 82, lineCounter, lineSplit[4]));
+                    blocks.add(new GSIBlock(isGSI16, 81, lineSplit[3]));
+                    blocks.add(new GSIBlock(isGSI16, 82, lineSplit[4]));
 
                     // prevent 'NULL' element in height
                     if (!lineSplit[5].equals("NULL")) {
-                        blocks.add(new GSIBlock(isGSI16, 83, lineCounter, lineSplit[5]));
+                        blocks.add(new GSIBlock(isGSI16, 83, lineSplit[5]));
                     }
 
                     break;

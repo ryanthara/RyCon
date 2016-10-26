@@ -1,7 +1,7 @@
 /*
- * License: GPL. Copyright 2015- (C) by Sebastian Aust (https://www.ryanthara.de/)
+ * License: GPL. Copyright 2016- (C) by Sebastian Aust (https://www.ryanthara.de/)
  *
- * This file is part of the package de.ryanthara.ja.rycon.gui
+ * This file is part of the package de.ryanthara.ja.rycon.tools
  *
  * This package is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -15,21 +15,17 @@
  * You should have received a copy of the GNU General Public License along with
  * this package. If not, see <http://www.gnu.org/licenses/>.
  */
-
-package de.ryanthara.ja.rycon.events;
-
-import java.util.EventListener;
+package de.ryanthara.ja.rycon.converter.zeiss;
 
 /**
- * StatusInformationListener implements a custom event listener which is used for updating the
- * status bar with an event driven mechanism.
+ * This enumeration holds the dialect names of the Zeiss REC files.
  *
  * @author sebastian
- * @version 2
- * @since 7
+ * @version 1
+ * @since 12
  */
-public interface StatusInformationListener extends EventListener {
+public enum ZeissDialect {
 
-    void notification(StatusInformationEvent event);
+    R4, R5, REC500, M5
 
-} // end of StatusInformationListener
+} // end of ZeissDialect

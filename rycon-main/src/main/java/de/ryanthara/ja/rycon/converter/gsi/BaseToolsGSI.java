@@ -35,14 +35,14 @@ import java.util.*;
  * starts every line with a <code>*</code> sign.
  *
  * @author sebastian
- * @version 1
+ * @version 2
  * @since 12
  */
 public class BaseToolsGSI {
 
     private ArrayList<ArrayList<GSIBlock>> encodedBlocks;
     private ArrayList<String> readStringLines;
-    private TreeSet<Integer> foundWordIndices;
+    private TreeSet<Integer> foundAllWordIndices;
 
     /**
      * Class constructor for read line based Leica GSI8 or GSI16 files.
@@ -51,7 +51,7 @@ public class BaseToolsGSI {
      */
     public BaseToolsGSI(ArrayList<String> readStringLines) {
         this.readStringLines = readStringLines;
-        this.foundWordIndices = new TreeSet<>();
+        this.foundAllWordIndices = new TreeSet<>();
         this.encodedBlocks = blockEncoder(readStringLines);
     }
 
@@ -131,12 +131,13 @@ public class BaseToolsGSI {
     }
 
     /**
-     * Returns the found word indices (WI) as {@code TreeSet<Integer>}.
+     * Returns all found word indices (WI) from the complete Leica GSI file as one {@code TreeSet<Integer>}
+     * without duplicates.
      *
-     * @return found word indices as {@code TreeSet<Integer>}
+     * @return all found word indices as {@code TreeSet<Integer>}
      */
-    public TreeSet<Integer> getFoundWordIndices() {
-        return foundWordIndices;
+    public TreeSet<Integer> getFoundAllWordIndices() {
+        return foundAllWordIndices;
     }
 
     /**
@@ -171,7 +172,7 @@ public class BaseToolsGSI {
             for (String blockAsString : lineSplit) {
                 GSIBlock block = new GSIBlock(blockAsString);
                 blocks.add(block);
-                foundWordIndices.add(block.getWordIndex());
+                foundAllWordIndices.add(block.getWordIndex());
             }
 
             // sort every 'line' of GSI blocks by word index (WI)

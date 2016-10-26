@@ -34,11 +34,6 @@ import java.lang.reflect.Method;
  * BottomButtonBar implements a custom composite with three buttons ('Cancel', 'OK' and 'OK and EXIT')
  * which is used on the bottom of RyCON's widgets.
  *
- * <h3>Changes:</h3>
- * <ul>
- *     <li>1: basic implementation </li>
- * </ul>
- *
  * @author sebastian
  * @version 1
  * @since 4

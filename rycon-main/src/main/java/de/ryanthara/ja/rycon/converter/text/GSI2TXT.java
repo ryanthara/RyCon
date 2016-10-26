@@ -61,7 +61,7 @@ public class GSI2TXT {
 
         String sep = separator.equals(" ") ? "    " : separator;
 
-        TreeSet<Integer> foundWordIndices = baseToolsGSI.getFoundWordIndices();
+        TreeSet<Integer> foundWordIndices = baseToolsGSI.getFoundAllWordIndices();
 
         if (writeCommentLine) {
             int length;

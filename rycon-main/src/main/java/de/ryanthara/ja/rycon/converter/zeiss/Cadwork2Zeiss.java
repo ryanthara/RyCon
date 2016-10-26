@@ -47,7 +47,7 @@ public class Cadwork2Zeiss {
      *
      * @return string lines of the target file
      */
-    public ArrayList<String> convertCadwork2REC(String dialect) {
+    public ArrayList<String> convertCadwork2REC(ZeissDialect dialect) {
         ArrayList<String> result = new ArrayList<>();
 
         // remove not needed headlines

@@ -45,7 +45,7 @@ public class CSVBaselStadt2Zeiss {
      *
      * @return converted Zeiss REC file as {@code ArrayList<String>}
      */
-    public ArrayList<String> convertCSVBaselStadt2REC(String dialect) {
+    public ArrayList<String> convertCSVBaselStadt2REC(ZeissDialect dialect) {
         ArrayList<String> result = new ArrayList<>();
 
         int lineNumber = 0;

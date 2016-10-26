@@ -33,9 +33,10 @@ public class TXT2GSI {
     private ArrayList<String> readStringLines;
 
     /**
-     * Class constructor for read line based text files.
+     * Constructs a new instance of this class given an {@code ArrayList<String>} that contains
+     * the read txt formatted coordinate file.
      *
-     * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
+     * @param readStringLines read lines
      */
     public TXT2GSI(ArrayList<String> readStringLines) {
         this.readStringLines = readStringLines;
@@ -69,37 +70,37 @@ public class TXT2GSI {
 
                 case 2:     // no, height
                     blocks.add(new GSIBlock(isGSI16, 11, lineCounter, lineSplit[0]));
-                    blocks.add(new GSIBlock(isGSI16, 83, lineCounter, lineSplit[1]));
+                    blocks.add(new GSIBlock(isGSI16, 83, lineSplit[1]));
                     break;
 
                 case 3:     // no, code, height or no, easting, northing
                     blocks.add(new GSIBlock(isGSI16, 11, lineCounter, lineSplit[0]));
                     if (sourceContainsCodeColumn) {
-                        blocks.add(new GSIBlock(isGSI16, 71, lineCounter, lineSplit[1]));
-                        blocks.add(new GSIBlock(isGSI16, 83, lineCounter, lineSplit[2]));
+                        blocks.add(new GSIBlock(isGSI16, 71, lineSplit[1]));
+                        blocks.add(new GSIBlock(isGSI16, 83, lineSplit[2]));
                     } else {
-                        blocks.add(new GSIBlock(isGSI16, 81, lineCounter, lineSplit[1]));
-                        blocks.add(new GSIBlock(isGSI16, 82, lineCounter, lineSplit[2]));
+                        blocks.add(new GSIBlock(isGSI16, 81, lineSplit[1]));
+                        blocks.add(new GSIBlock(isGSI16, 82, lineSplit[2]));
                     }
                     break;
 
                 case 4:     // no, easting, northing, height
                     blocks.add(new GSIBlock(isGSI16, 11, lineCounter, lineSplit[0]));
-                    blocks.add(new GSIBlock(isGSI16, 81, lineCounter, lineSplit[1]));
-                    blocks.add(new GSIBlock(isGSI16, 82, lineCounter, lineSplit[2]));
+                    blocks.add(new GSIBlock(isGSI16, 81, lineSplit[1]));
+                    blocks.add(new GSIBlock(isGSI16, 82, lineSplit[2]));
 
                     // necessary because of Basel Stadt CSV distinguish between points without height
                     if (!lineSplit[3].equals("-9999")) {
-                        blocks.add(new GSIBlock(isGSI16, 83, lineCounter, lineSplit[3]));
+                        blocks.add(new GSIBlock(isGSI16, 83, lineSplit[3]));
                     }
                     break;
 
                 case 5:     // no, code, easting, northing, height
                     blocks.add(new GSIBlock(isGSI16, 11, lineCounter, lineSplit[0]));
-                    blocks.add(new GSIBlock(isGSI16, 71, lineCounter, lineSplit[1]));
-                    blocks.add(new GSIBlock(isGSI16, 81, lineCounter, lineSplit[2]));
-                    blocks.add(new GSIBlock(isGSI16, 82, lineCounter, lineSplit[3]));
-                    blocks.add(new GSIBlock(isGSI16, 83, lineCounter, lineSplit[4]));
+                    blocks.add(new GSIBlock(isGSI16, 71, lineSplit[1]));
+                    blocks.add(new GSIBlock(isGSI16, 81, lineSplit[2]));
+                    blocks.add(new GSIBlock(isGSI16, 82, lineSplit[3]));
+                    blocks.add(new GSIBlock(isGSI16, 83, lineSplit[4]));
                     break;
             }
 

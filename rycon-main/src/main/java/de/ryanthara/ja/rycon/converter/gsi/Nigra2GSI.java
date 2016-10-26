@@ -30,9 +30,9 @@ public class Nigra2GSI {
     private ArrayList<String> readStringLines;
 
     /**
-     * Class constructor for read line based text files.
+     * Constructs a new instance of this class given an {@code ArrayList<String>} file from Nigra or NigraWin.
      *
-     * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
+     * @param readStringLines read lines
      */
     public Nigra2GSI(ArrayList<String> readStringLines) {
         this.readStringLines = readStringLines;
@@ -67,9 +67,9 @@ public class Nigra2GSI {
                 String height = stringTokenizer.nextToken();
 
                 blocks.add(new GSIBlock(isGSI16, 11, lineCounter, number));
-                blocks.add(new GSIBlock(isGSI16, 81, lineCounter, easting));
-                blocks.add(new GSIBlock(isGSI16, 82, lineCounter, northing));
-                blocks.add(new GSIBlock(isGSI16, 83, lineCounter, height));
+                blocks.add(new GSIBlock(isGSI16, 81, easting));
+                blocks.add(new GSIBlock(isGSI16, 82, northing));
+                blocks.add(new GSIBlock(isGSI16, 83, height));
             }
 
             // check for at least one or more added elements to prevent writing empty lines

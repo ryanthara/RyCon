@@ -24,11 +24,6 @@ import java.util.EventObject;
  * StatusInformationEvent implements a custom event object which is used for updating the
  * status bar with an event driven mechanism.
  *
- * <h3>Changes:</h3>
- * <ul>
- *     <li>1: basic implementation </li>
- * </ul>
- *
  * @author sebastian
  * @version 1
  * @since 7
@@ -40,8 +35,8 @@ public class StatusInformationEvent extends EventObject {
     /**
      * Class constructor with parameters.
      *
-     * @param source        calling source object
-     * @param statusText    text to be shown on the status bar
+     * @param source     calling source object
+     * @param statusText text to be shown on the status bar
      */
     public StatusInformationEvent(Object source, String statusText) {
         super(source);

@@ -49,47 +49,37 @@ import java.util.StringTokenizer;
 /**
  * UpdateDialog implements an update dialog for RyCON.
  * <p>
- * If there is a new version of RyCON available this dialog will show a message and 
+ * If there is a new version of RyCON available this dialog will show a message and
  * a short 'what's new' section. The user can open the default browser of the system
  * and will be redirected to the RyCON update website.
  * <p>
  * The code is inspired by the original MessageDialog code from SWT.
  *
- * <h3>Changes:</h3>
- * <ul>
- *     <li>2: enable system default browser support in the what's new dialog </li>
- *     <li>1: basic implementation </li>
- * </ul> *
- *
  * @author sebastian
- * @since 3
  * @version 2
+ * @since 3
  */
 public class UpdateDialog extends Dialog {
 
+    /**
+     * Member for indicating which button was hit. It is set as {@see returnCode}*
+     */
+    public static final int CLOSE_AND_CONTINUE = 100;
+    /**
+     * Member for indicating which button was hit. It is set as {@see returnCode}*
+     */
+    public static final int CLOSE_AND_OPEN_BROWSER = 101;
     private static final int SPACING = 20;
     private static final int BUTTON_WIDTH = 61;
     private static final int HORIZONTAL_DIALOG_UNIT_PER_CHAR = 4;
     private static final int MAX_WIDTH = 640;
     private static final int MAX_HEIGHT = 480;
-
     private int returnCode = Integer.MIN_VALUE;
-
     private Image image;
     private Shell shell;
     private String message;
     private String whatsNewInfo;
 
-    /**
-     * Member for indicating which button was hit. It is set as {@see returnCode}* 
-     */
-    public static final int CLOSE_AND_CONTINUE = 100;
-
-    /**
-     * Member for indicating which button was hit. It is set as {@see returnCode}*
-     */
-    public static final int CLOSE_AND_OPEN_BROWSER = 101;
-    
     /**
      * Construct a new instance of this class given only its parent.
      * <p>
@@ -106,8 +96,8 @@ public class UpdateDialog extends Dialog {
      * <p>
      * The Constructor passes default styles.
      *
-     * @param parent    a shell which will be the parent of the new instance
-     * @param style     the style of dialog to construct
+     * @param parent a shell which will be the parent of the new instance
+     * @param style  the style of dialog to construct
      */
     private UpdateDialog(Shell parent, int style) {
         super(parent, style);
@@ -116,38 +106,12 @@ public class UpdateDialog extends Dialog {
     }
 
     /**
-     * Set the update dialog's message. The message will be visible on the dialog while it is open.
-     *
-     * @param message the message to be shown
-     * @exception java.lang.IllegalArgumentException ERROR_NULL_ARGUMENT - if the string is null
-     */
-    public void setMessage(String message) {
-        if (message == null) {
-            SWT.error(SWT.ERROR_NULL_ARGUMENT);
-        }
-        this.message = message;
-    }
-
-    /**
-     * Set the what's new info for displaying.
-     *
-     * @param whatsNewInfo the info to be set
-     * @exception java.lang.IllegalArgumentException ERROR_NULL_ARGUMENT - if the string is null
-     */
-    public void setWhatsNewInfo(String whatsNewInfo) {
-        if (whatsNewInfo == null) {
-            SWT.error(SWT.ERROR_NULL_ARGUMENT);
-        }
-        this.whatsNewInfo = whatsNewInfo;
-    }
-    
-    /**
      * Open the dialog and show the content.
      */
-    public int open () {
+    public int open() {
         shell = new Shell(getParent(), SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL);
         shell.setText(getText());
-        
+
         createControls();
 
         shell.setBounds(computeShellBounds());
@@ -163,6 +127,126 @@ public class UpdateDialog extends Dialog {
         }
 
         return returnCode;
+    }
+
+    /**
+     * Set the update dialog's message. The message will be visible on the dialog while it is open.
+     *
+     * @param message the message to be shown
+     *
+     * @throws java.lang.IllegalArgumentException ERROR_NULL_ARGUMENT - if the string is null
+     */
+    public void setMessage(String message) {
+        if (message == null) {
+            SWT.error(SWT.ERROR_NULL_ARGUMENT);
+        }
+        this.message = message;
+    }
+
+    /**
+     * Set the what's new info for displaying.
+     *
+     * @param whatsNewInfo the info to be set
+     *
+     * @throws java.lang.IllegalArgumentException ERROR_NULL_ARGUMENT - if the string is null
+     */
+    public void setWhatsNewInfo(String whatsNewInfo) {
+        if (whatsNewInfo == null) {
+            SWT.error(SWT.ERROR_NULL_ARGUMENT);
+        }
+        this.whatsNewInfo = whatsNewInfo;
+    }
+
+    private Rectangle computeShellBounds() {
+        Rectangle result = new Rectangle(0, 0, 0, 0);
+        Point preferredSize = shell.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+        Rectangle parentSize = getParent().getBounds();
+        result.x = (parentSize.width - preferredSize.x) / 2 + parentSize.x;
+        result.y = (parentSize.height - preferredSize.y) / 2 + parentSize.y;
+        result.width = Math.min(preferredSize.x, MAX_WIDTH);
+        result.height = preferredSize.y;
+
+        return result;
+    }
+
+    private int convertHorizontalDLUsToPixels(int dlus) {
+        GC gc = new GC(shell);
+        float charWidth = gc.getFontMetrics().getAverageCharWidth();
+        float width = charWidth * dlus + HORIZONTAL_DIALOG_UNIT_PER_CHAR / 2;
+        gc.dispose();
+
+        return (int) (width / HORIZONTAL_DIALOG_UNIT_PER_CHAR);
+    }
+
+    private void createBrowser() {
+        final Browser browser;
+        try {
+            browser = new Browser(shell, SWT.NONE);
+        } catch (SWTError e) {
+            System.out.println("Could not instantiate Browser: " + e.getMessage());
+            Display.getCurrent().dispose();
+            return;
+        }
+
+        browser.setText(whatsNewInfo);
+        browser.addLocationListener(new LocationListener() {
+            @Override
+            public void changed(LocationEvent locationEvent) {
+            }
+
+            @Override
+            public void changing(LocationEvent event) {
+                event.doit = false;
+                openDefaultSystemBrowser(event.location);
+            }
+        });
+
+        GridData browserData = new GridData(SWT.HORIZONTAL, SWT.TOP, true, false, 2, 1);
+        browserData.widthHint = MAX_WIDTH;
+        browserData.heightHint = MAX_HEIGHT;
+        browser.setLayoutData(browserData);
+    }
+
+    private void createButtons() {
+        Composite buttonArea = new Composite(shell, SWT.NONE);
+        buttonArea.setLayout(new GridLayout(2, true));
+        GridData data = new GridData(SWT.CENTER, SWT.CENTER, true, false);
+        data.horizontalSpan = 2;
+        buttonArea.setLayoutData(data);
+
+        Button close = new Button(buttonArea, SWT.PUSH);
+        close.setText(I18N.getBtnOKAndExitLabel());
+        close.setToolTipText(I18N.getBtnOKAndExitLabelToolTip());
+        close.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent selectionEvent) {
+                UpdateDialog.this.returnCode = CLOSE_AND_CONTINUE;
+                shell.close();
+            }
+        });
+        GridData closeBtnData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+        int widthHint = convertHorizontalDLUsToPixels(BUTTON_WIDTH);
+        Point minSize = close.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
+        closeBtnData.widthHint = Math.max(widthHint, minSize.x);
+        close.setLayoutData(closeBtnData);
+
+        Button openBrowser = new Button(buttonArea, SWT.PUSH);
+        openBrowser.setText(I18N.getBtnOKAndOpenBrowserLabel());
+        openBrowser.setToolTipText(I18N.getBtnOKAndOpenBrowserToolTip());
+        openBrowser.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent selectionEvent) {
+                UpdateDialog.this.returnCode = CLOSE_AND_OPEN_BROWSER;
+                shell.close();
+            }
+        });
+        GridData openBtnData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+        widthHint = convertHorizontalDLUsToPixels(BUTTON_WIDTH);
+        minSize = openBrowser.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
+        openBtnData.widthHint = Math.max(widthHint, minSize.x);
+        openBrowser.setLayoutData(openBtnData);
+
+        buttonArea.getChildren()[0].forceFocus();
     }
 
     private void createControls() {
@@ -217,34 +301,6 @@ public class UpdateDialog extends Dialog {
         });
     }
 
-    private void createBrowser() {
-        final Browser browser;
-        try {
-            browser = new Browser(shell, SWT.NONE);
-        } catch (SWTError e) {
-            System.out.println("Could not instantiate Browser: " + e.getMessage());
-            Display.getCurrent().dispose();
-            return;
-        }
-
-        browser.setText(whatsNewInfo);
-        browser.addLocationListener(new LocationListener() {
-            @Override
-            public void changing(LocationEvent event) {
-                event.doit = false;
-                openDefaultSystemBrowser(event.location);
-            }
-
-            @Override
-            public void changed(LocationEvent locationEvent) {}
-        });
-
-        GridData browserData = new GridData(SWT.HORIZONTAL, SWT.TOP, true, false, 2, 1);
-        browserData.widthHint = MAX_WIDTH;
-        browserData.heightHint = MAX_HEIGHT;
-        browser.setLayoutData(browserData);
-    }
-
     private int getMaxMessageLineWidth() {
         int result = 0;
 
@@ -253,7 +309,7 @@ public class UpdateDialog extends Dialog {
             String line = tokenizer.nextToken();
 
             // helper label for text width calculation
-            Label label = new Label (shell, SWT.NONE);
+            Label label = new Label(shell, SWT.NONE);
             GC gc = new GC(label);
             Point size = gc.textExtent(line);  // Tab expansion and carriage return processing are performed.
 //            Point size = gc.stringExtent(line); // No tab expansion or carriage return processing will be performed.
@@ -261,7 +317,7 @@ public class UpdateDialog extends Dialog {
             gc.dispose();
 
             int lineWidth = size.x;
-            result = Math.max( result, lineWidth);
+            result = Math.max(result, lineWidth);
         }
 
         return result;
@@ -277,69 +333,6 @@ public class UpdateDialog extends Dialog {
             e.printStackTrace();
             System.err.println("Could not open URI in the default browser.");
         }
-    }
-
-    private void createButtons() {
-        Composite buttonArea = new Composite(shell, SWT.NONE);
-        buttonArea.setLayout(new GridLayout(2, true));
-        GridData data = new GridData(SWT.CENTER, SWT.CENTER, true, false);
-        data.horizontalSpan = 2;
-        buttonArea.setLayoutData(data);
-        
-        Button close = new Button(buttonArea, SWT.PUSH);
-        close.setText(I18N.getBtnOKAndExitLabel());
-        close.setToolTipText(I18N.getBtnOKAndExitLabelToolTip());
-        close.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent selectionEvent) {
-                UpdateDialog.this.returnCode = CLOSE_AND_CONTINUE;
-                shell.close();
-            }
-        });
-        GridData closeBtnData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-        int widthHint = convertHorizontalDLUsToPixels(BUTTON_WIDTH);
-        Point minSize = close.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
-        closeBtnData.widthHint = Math.max(widthHint, minSize.x);
-        close.setLayoutData(closeBtnData);
-        
-        Button openBrowser = new Button(buttonArea, SWT.PUSH);
-        openBrowser.setText(I18N.getBtnOKAndOpenBrowserLabel());
-        openBrowser.setToolTipText(I18N.getBtnOKAndOpenBrowserToolTip());
-        openBrowser.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent selectionEvent) {
-                UpdateDialog.this.returnCode = CLOSE_AND_OPEN_BROWSER;
-                shell.close();
-            }
-        });
-        GridData openBtnData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-        widthHint = convertHorizontalDLUsToPixels(BUTTON_WIDTH);
-        minSize = openBrowser.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
-        openBtnData.widthHint = Math.max(widthHint, minSize.x);
-        openBrowser.setLayoutData(openBtnData);
-        
-        buttonArea.getChildren()[0].forceFocus();
-    }
-
-    private int convertHorizontalDLUsToPixels(int dlus) {
-        GC gc = new GC(shell);
-        float charWidth = gc.getFontMetrics().getAverageCharWidth();
-        float width = charWidth * dlus + HORIZONTAL_DIALOG_UNIT_PER_CHAR / 2;
-        gc.dispose();
-
-        return (int)(width / HORIZONTAL_DIALOG_UNIT_PER_CHAR);
-    }
-
-    private Rectangle computeShellBounds() {
-        Rectangle result = new Rectangle(0, 0, 0, 0);
-        Point preferredSize = shell.computeSize(SWT.DEFAULT, SWT.DEFAULT);
-        Rectangle parentSize = getParent().getBounds();
-        result.x = (parentSize.width - preferredSize.x) / 2 + parentSize.x;
-        result.y = (parentSize.height - preferredSize.y) / 2 + parentSize.y;
-        result.width = Math.min(preferredSize.x, MAX_WIDTH);
-        result.height = preferredSize.y;
-
-        return result;
     }
 
 } // end of class UpdateDialog

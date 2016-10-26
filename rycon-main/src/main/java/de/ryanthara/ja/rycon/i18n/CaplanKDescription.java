@@ -25,12 +25,7 @@ import java.util.ResourceBundle;
  * CaplanKDescription manages the strings of the Caplan K description for multi-language support in RyCON.
  * <p>
  * The strings are stored in Resource Bundle CaplanKDescription and loaded from this class.
- *
- * <h3>Changes:</h3>
- * <ul>
- *     <li>2: code improvements and clean up </li>
- *     <li>1: basic implementation </li>
- * </ul>
+ * <p>
  *
  * @author sebastian
  * @version 2
@@ -45,6 +40,7 @@ class CaplanKDescription {
      * Return the key-text-pair for the description.
      *
      * @param description key to look up
+     *
      * @return matched text
      */
     static String getDescription(String description) {

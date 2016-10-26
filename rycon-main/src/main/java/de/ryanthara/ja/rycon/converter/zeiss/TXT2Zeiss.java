@@ -43,7 +43,7 @@ public class TXT2Zeiss {
      *
      * @return string lines of the target file
      */
-    public ArrayList<String> convertTXT2REC(String dialect) {
+    public ArrayList<String> convertTXT2REC(ZeissDialect dialect) {
         ArrayList<String> result = new ArrayList<>();
 
         int lineNumber = 0;
@@ -88,7 +88,6 @@ public class TXT2Zeiss {
         }
 
         return result;
-
     }
 
 } // end of TXT2Zeiss

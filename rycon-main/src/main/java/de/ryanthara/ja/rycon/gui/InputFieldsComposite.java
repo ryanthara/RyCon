@@ -38,12 +38,6 @@ import java.nio.file.Paths;
  * InputFieldsComposite implements a custom composite with two labels, two text fields and two buttons for
  * file and directory inputs used in RyCON's widgets.
  *
- * <h3>Changes:</h3>
- * <ul>
- *     <li>2: little corrections</li>
- *     <li>1: basic implementation </li>
- * </ul>
- *
  * @author sebastian
  * @version 2
  * @since 4
@@ -58,13 +52,49 @@ class InputFieldsComposite extends Composite {
      * Class constructor with parameters.
      *
      * @param callingObject reference to the calling object
-     * @param parent parent composite (e.g. the parent shell)
-     * @param style style of the composite
+     * @param parent        parent composite (e.g. the parent shell)
+     * @param style         style of the composite
      */
     InputFieldsComposite(Object callingObject, Composite parent, int style) {
         super(parent, style);
         this.callingObject = callingObject;
         createContents();
+    }
+
+    /**
+     * Returns the complete destination text field as an object for full access to it.
+     *
+     * @return destination text field
+     */
+    Text getDestinationTextField() {
+        return destinationTextField;
+    }
+
+    /**
+     * Returns the complete source text field as an object for full access to it.
+     *
+     * @return source text field
+     */
+    Text getSourceTextField() {
+        return sourceTextField;
+    }
+
+    /**
+     * Sets the text of the destination text field.
+     *
+     * @param text the text to be set
+     */
+    void setDestinationTextFieldText(String text) {
+        destinationTextField.setText(text);
+    }
+
+    /**
+     * Sets the text of the source text field.
+     *
+     * @param text the text to be set
+     */
+    void setSourceTextFieldText(String text) {
+        sourceTextField.setText(text);
     }
 
     private void createContents() {
@@ -177,7 +207,7 @@ class InputFieldsComposite extends Composite {
 
         // tabulator key order
         Control[] controls = new Control[]{
-             sourceTextField, btnSource, destinationTextField, btnDestination
+                sourceTextField, btnSource, destinationTextField, btnDestination
         };
 
         group.setTabList(controls);
@@ -197,42 +227,6 @@ class InputFieldsComposite extends Composite {
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * Returns the complete destination text field as an object for full access to it.
-     *
-     * @return destination text field
-     */
-    Text getDestinationTextField() {
-        return destinationTextField;
-    }
-
-    /**
-     * Returns the complete source text field as an object for full access to it.
-     *
-     * @return source text field
-     */
-    Text getSourceTextField() {
-        return sourceTextField;
-    }
-
-    /**
-     * Sets the text of the destination text field.
-     *
-     * @param text the text to be set
-     */
-    void setDestinationTextFieldText(String text) {
-        destinationTextField.setText(text);
-    }
-
-    /**
-     * Sets the text of the source text field.
-     *
-     * @param text the text to be set
-     */
-    void setSourceTextFieldText(String text) {
-        sourceTextField.setText(text);
     }
 
 } // end of InputFieldsComposite

@@ -22,19 +22,19 @@ import java.util.ArrayList;
 /**
  * This class provides functions to convert coordinate files from Caplan K format into Zeiss REC files with
  * it's dialects (R4, R5, REC500 and M5).
- *
+ * <p>
  * Example K file:
  * <p>
  * ----+----1----+----2----+----3----+----4----+----5----+----6----+----7----+----8
  * !-------------------------------------------------------------------------------
  * ! The following data was created by RyCON Build xxx on 2016-09-06.
  * !-------------------------------------------------------------------------------
- *      GB1 7  2612259.5681  1256789.1990    256.90815 |10
- *      GB2 7  2612259.5681  1256789.1990    256.90815 |10
- *     1003 7  2612259.5681  1256789.1990    256.90815 |10|Att1|Att2
- *     1062 7  2612259.5681  1256789.1990    256.90815 |10
- * TF 1067G 4  2612259.5681  1256789.1990    256.90815 |10
- * NG 2156U 3  2612259.5681  1256789.1990      0.00000 |10
+ * GB1            7  2612259.5681  1256789.1990    256.90815 |10
+ * GB2            7  2612259.5681  1256789.1990    256.90815 |10
+ * 1003           7  2612259.5681  1256789.1990    256.90815 |10|Att1|Att2
+ * 1062           7  2612259.5681  1256789.1990    256.90815 |10
+ * TF 1067G       4  2612259.5681  1256789.1990    256.90815 |10
+ * NG 2156U       3  2612259.5681  1256789.1990      0.00000 |10
  */
 public class K2Zeiss {
 
@@ -53,9 +53,10 @@ public class K2Zeiss {
      * Converts a Caplan K formatted measurement or coordinate based file into a Zeiss REC formatted file.
      *
      * @param dialect dialect of the target file
+     *
      * @return string lines of the target file
      */
-    public ArrayList<String> convertK2REC(String dialect) {
+    public ArrayList<String> convertK2REC(ZeissDialect dialect) {
         ArrayList<String> result = new ArrayList<>();
 
         int lineNumber = 0;

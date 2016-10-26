@@ -469,6 +469,10 @@ public class I18N {
         return Messages.getString("infoTitleRyCONUpdate");
     }
 
+    public static String getLTOPCleanNoControlPointWarning() {
+        return Messages.getString("ltopCleanNoControlPointWarning");
+    }
+
     public static String getLabelTextCodeStringLabel() {
         return Messages.getString("labelTextCodeStringLabel");
     }
@@ -941,5 +945,4 @@ public class I18N {
             return s[1];
         }
     }
-
 } // end of I18N

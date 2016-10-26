@@ -19,7 +19,7 @@
 package de.ryanthara.ja.rycon.gui;
 
 import de.ryanthara.ja.rycon.Main;
-import de.ryanthara.ja.rycon.converter.zeiss.BaseToolsZeiss;
+import de.ryanthara.ja.rycon.converter.zeiss.ZeissDialect;
 import de.ryanthara.ja.rycon.data.PreferenceHandler;
 import de.ryanthara.ja.rycon.i18n.I18N;
 import de.ryanthara.ja.rycon.tools.SimpleChecker;
@@ -30,6 +30,8 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
+
+import static de.ryanthara.ja.rycon.converter.zeiss.ZeissDialect.*;
 
 /**
  * Instances of this class represents a complete settings widget of RyCON and it's functionality.
@@ -310,26 +312,26 @@ public class SettingsWidget {
         zeissRecDialectLabel.setText(I18N.getLabelTextZeissRecDialect());
 
         Button btnR4 = new Button(compositeZeissRecDialect, SWT.RADIO);
-        btnR4.setText(BaseToolsZeiss.R4);
+        btnR4.setText(R4.toString());
         Button btnR5 = new Button(compositeZeissRecDialect, SWT.RADIO);
-        btnR5.setText(BaseToolsZeiss.R5);
+        btnR5.setText(R5.toString());
         Button btnRec500 = new Button(compositeZeissRecDialect, SWT.RADIO);
-        btnRec500.setText(BaseToolsZeiss.REC500);
+        btnRec500.setText(REC500.toString());
         Button btnM5 = new Button(compositeZeissRecDialect, SWT.RADIO);
-        btnM5.setText(BaseToolsZeiss.M5);
+        btnM5.setText(ZeissDialect.M5.toString());
 
         // try to set the Zeiss Rec dialect from stored settings
         switch (Main.pref.getUserPref(PreferenceHandler.CONVERTER_SETTING_ZEISS_DIALECT)) {
-            case BaseToolsZeiss.R4:
+            case "R4":
                 RadioHelper.selectBtn(compositeZeissRecDialect.getChildren(), 1);
                 break;
-            case BaseToolsZeiss.R5:
+            case "R5":
                 RadioHelper.selectBtn(compositeZeissRecDialect.getChildren(), 2);
                 break;
-            case BaseToolsZeiss.REC500:
+            case "REC500":
                 RadioHelper.selectBtn(compositeZeissRecDialect.getChildren(), 3);
                 break;
-            case BaseToolsZeiss.M5:
+            case "M5":
                 RadioHelper.selectBtn(compositeZeissRecDialect.getChildren(), 4);
                 break;
             default:
@@ -938,16 +940,16 @@ public class SettingsWidget {
         // Zeiss Rec dialect
         switch (RadioHelper.getSelectedBtn(compositeZeissRecDialect.getChildren())) {
             case 1:
-                Main.pref.setUserPref(PreferenceHandler.CONVERTER_SETTING_ZEISS_DIALECT, BaseToolsZeiss.R4);
+                Main.pref.setUserPref(PreferenceHandler.CONVERTER_SETTING_ZEISS_DIALECT, R4.name());
                 break;
             case 2:
-                Main.pref.setUserPref(PreferenceHandler.CONVERTER_SETTING_ZEISS_DIALECT, BaseToolsZeiss.R5);
+                Main.pref.setUserPref(PreferenceHandler.CONVERTER_SETTING_ZEISS_DIALECT, R5.name());
                 break;
             case 3:
-                Main.pref.setUserPref(PreferenceHandler.CONVERTER_SETTING_ZEISS_DIALECT, BaseToolsZeiss.REC500);
+                Main.pref.setUserPref(PreferenceHandler.CONVERTER_SETTING_ZEISS_DIALECT, REC500.name());
                 break;
             case 4:
-                Main.pref.setUserPref(PreferenceHandler.CONVERTER_SETTING_ZEISS_DIALECT, BaseToolsZeiss.M5);
+                Main.pref.setUserPref(PreferenceHandler.CONVERTER_SETTING_ZEISS_DIALECT, M5.name());
                 break;
         }
 

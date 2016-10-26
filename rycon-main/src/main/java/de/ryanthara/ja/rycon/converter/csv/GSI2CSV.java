@@ -58,7 +58,7 @@ public class GSI2CSV {
      */
     public ArrayList<String> convertGSI2CSV(String separator, boolean writeCommentLine) {
         ArrayList<String> result = new ArrayList<>();
-        TreeSet<Integer> foundWordIndices = baseToolsGSI.getFoundWordIndices();
+        TreeSet<Integer> foundWordIndices = baseToolsGSI.getFoundAllWordIndices();
 
         // prepare comment line if necessary
         if (writeCommentLine) {

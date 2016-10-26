@@ -44,7 +44,7 @@ public class CSV2Zeiss {
      *
      * @return string lines of the target file
      */
-    public ArrayList<String> convertCSV2REC(String dialect) {
+    public ArrayList<String> convertCSV2REC(ZeissDialect dialect) {
         ArrayList<String> result = new ArrayList<>();
 
         int lineNumber = 0;
@@ -83,7 +83,6 @@ public class CSV2Zeiss {
         }
 
         return result;
-
     }
 
 } // end of CSV2Zeiss

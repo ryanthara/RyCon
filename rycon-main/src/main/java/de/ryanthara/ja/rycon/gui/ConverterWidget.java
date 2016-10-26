@@ -57,7 +57,7 @@ import java.util.List;
  * e.g. coordinate files from governmental services in Switzerland
  *
  * @author sebastian
- * @version 8
+ * @version 9
  * @since 1
  */
 public class ConverterWidget {
@@ -345,32 +345,22 @@ public class ConverterWidget {
             }
         };
 
-        String[] formatSource = {
-                "GSI8", "GSI16", "TXT", "CSV", "CAPLAN (.K)", "Zeiss (.REC)", "cadwork (node.dat)",
-                "Basel Stadt (.CSV)", "Basel Landschaft (.TXT)"
-        };
-
-        String[] formatTarget = {
-                "GSI8", "GSI16", "TXT", "CSV", "CAPLAN (.K)", "Zeiss (.REC)", "LTOP (.KOO)", "LTOP (.MES)",
-                "Excel 2007 (.xlsx)", "Excel '97 (.xls)", "Open Document  Format (.ods)"
-        };
-
-        for (int i = 0; i < formatSource.length; i++) {
+        for (ConverterWidgetSourceButtons btn : ConverterWidgetSourceButtons.values()) {
             Button btnSourceFormats = new Button(groupSource, SWT.RADIO);
             btnSourceFormats.addSelectionListener(selectionListenerSource);
-            btnSourceFormats.setText(formatSource[i]);
+            btnSourceFormats.setText(btn.getText());
 
-            if (i == 1) {
+            if (btn == ConverterWidgetSourceButtons.GSI16) {
                 btnSourceFormats.setSelection(true);
             }
         }
 
-        for (int i = 0; i < formatTarget.length; i++) {
+        for (ConverterWidgetTargetButtons btn : ConverterWidgetTargetButtons.values()) {
             Button btnTargetFormats = new Button(groupTarget, SWT.RADIO);
             btnTargetFormats.addSelectionListener(selectionListenerTarget);
-            btnTargetFormats.setText(formatTarget[i]);
+            btnTargetFormats.setText(btn.getText());
 
-            if (i == 2) {
+            if (btn == ConverterWidgetTargetButtons.TXT) {
                 btnTargetFormats.setSelection(true);
             }
         }
@@ -625,7 +615,7 @@ public class ConverterWidget {
 
                             case 4:     // CAPLAN K format
                                 K2GSI k2GSI = new K2GSI(readFile);
-                                writeFile = k2GSI.convertK2GSI(Main.getGSI8());
+                                writeFile = k2GSI.convertK2GSI(Main.getGSI8(), chkBoxWriteCodeColumn.getSelection());
                                 break;
 
                             case 5:     // Zeiss REC format and it's dialects
@@ -685,7 +675,7 @@ public class ConverterWidget {
 
                             case 4:     // CAPLAN K format
                                 K2GSI k2GSI = new K2GSI(readFile);
-                                writeFile = k2GSI.convertK2GSI(Main.getGSI16());
+                                writeFile = k2GSI.convertK2GSI(Main.getGSI16(), chkBoxWriteCodeColumn.getSelection());
                                 break;
 
                             case 5:     // Zeiss REC format and it's dialects
@@ -894,7 +884,7 @@ public class ConverterWidget {
                     Target format: Zeiss REC
                      */
                     case 5:
-                        String dialect = Main.pref.getUserPref(PreferenceHandler.CONVERTER_SETTING_ZEISS_DIALECT);
+                        ZeissDialect dialect = ZeissDialect.valueOf(Main.pref.getUserPref(PreferenceHandler.CONVERTER_SETTING_ZEISS_DIALECT));
 
                         switch (sourceNumber) {
                             case 0:     // fall through for GSI8 format

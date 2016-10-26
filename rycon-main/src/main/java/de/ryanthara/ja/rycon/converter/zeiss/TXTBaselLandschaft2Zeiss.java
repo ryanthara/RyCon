@@ -48,7 +48,7 @@ public class TXTBaselLandschaft2Zeiss {
      *
      * @return string lines of the target file
      */
-    public ArrayList<String> convertTXTBaselLandschaft2REC(String dialect) {
+    public ArrayList<String> convertTXTBaselLandschaft2REC(ZeissDialect dialect) {
         ArrayList<String> result = new ArrayList<>();
 
         // remove comment line

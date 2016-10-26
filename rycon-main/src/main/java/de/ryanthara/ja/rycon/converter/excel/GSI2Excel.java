@@ -75,7 +75,7 @@ public class GSI2Excel {
             row = sheet.createRow(rowNumber);
             rowNumber++;
 
-            for (int wordIndex : baseToolsGSI.getFoundWordIndices()) {
+            for (int wordIndex : baseToolsGSI.getFoundAllWordIndices()) {
                 cell = row.createCell(cellNumber);
                 cellNumber++;
 

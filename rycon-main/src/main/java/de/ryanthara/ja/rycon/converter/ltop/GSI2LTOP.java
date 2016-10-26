@@ -78,7 +78,7 @@ public class GSI2LTOP {
             eta = BaseToolsLTOP.eta;
             xi = BaseToolsLTOP.xi;
 
-            for (int i = 0; i < baseToolsGSI.getFoundWordIndices().size(); i++) {
+            for (int i = 0; i < baseToolsGSI.getFoundAllWordIndices().size(); i++) {
                 for (GSIBlock block : blocksAsLine) {
                     String s = block.toPrintFormatCSV();
 

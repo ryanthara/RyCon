@@ -39,26 +39,6 @@ package de.ryanthara.ja.rycon.converter.zeiss;
  */
 public class BaseToolsZeiss {
 
-    /**
-     * Member for indicating R4 dialect for output files.
-     */
-    public static final String R4 = "R4";
-
-    /**
-     * Member for indicating R4 dialect for output files.
-     */
-    public static final String R5 = "R5";
-
-    /**
-     * Member for indicating R4 dialect for output files.
-     */
-    public static final String REC500 = "REC500";
-
-    /**
-     * Member for indicating R4 dialect for output files.
-     */
-    public static final String M5 = "M5";
-
     private static final int[] M5_LINE_POSITIONS = {
             11, 17,     // line number
             17, 20,     // point identification
@@ -123,7 +103,7 @@ public class BaseToolsZeiss {
      *
      * @return line positions
      */
-    static int[] getLinePositions(String dialect) {
+    static int[] getLinePositions(ZeissDialect dialect) {
         switch (dialect) {
             case REC500:
                 return REC500_LINE_POSITIONS;
@@ -151,12 +131,12 @@ public class BaseToolsZeiss {
      *
      * @return prepared line as string in Zeiss REC format
      */
-    static String prepareLineOfCoordinates(String dialect, String number, String code, String easting, String northing, String height, int lineNumber) {
+    static String prepareLineOfCoordinates(ZeissDialect dialect, String number, String code, String easting, String northing, String height, int lineNumber) {
         StringBuilder builder = new StringBuilder();
         String result = "";
 
         switch (dialect) {
-            case BaseToolsZeiss.R4:
+            case R4:
                 builder.append("For R4|");
                 builder.append("KR ");
                 builder.append(String.format("%-7s", number));
@@ -173,7 +153,7 @@ public class BaseToolsZeiss {
 
                 result = builder.toString();
                 break;
-            case BaseToolsZeiss.R5:
+            case R5:
                 builder.append("For R5|Adr");
                 builder.append(String.format("%4d", lineNumber));
                 builder.append("|PI1 ");
@@ -191,7 +171,7 @@ public class BaseToolsZeiss {
 
                 result = builder.toString();
                 break;
-            case BaseToolsZeiss.REC500:
+            case REC500:
                 builder.append("   ");
                 builder.append(String.format("%4d", lineNumber));
                 builder.append(" ");
@@ -208,7 +188,7 @@ public class BaseToolsZeiss {
 
                 result = builder.toString();
                 break;
-            case BaseToolsZeiss.M5:
+            case M5:
                 builder.append("For M5|Adr ");
                 builder.append(String.format("%5d", lineNumber));
                 builder.append("|PI1 ");
@@ -231,12 +211,12 @@ public class BaseToolsZeiss {
         return result;
     }
 
-    static String prepareLineOfInstrumentHeight(String dialect, String number, String instrumentHeight, int lineNumber) {
+    static String prepareLineOfInstrumentHeight(ZeissDialect dialect, String number, String instrumentHeight, int lineNumber) {
         StringBuilder builder = new StringBuilder();
         String result = "";
 
         switch (dialect) {
-            case BaseToolsZeiss.R4:
+            case R4:
                 builder.append("For R4|");
                 builder.append("KR ");
                 builder.append(String.format("%-7s", number));
@@ -247,7 +227,7 @@ public class BaseToolsZeiss {
 
                 result = builder.toString();
                 break;
-            case BaseToolsZeiss.R5:
+            case R5:
                 builder.append("For R5|Adr");
                 builder.append(String.format("%4d", lineNumber));
                 builder.append("|PI1 ");
@@ -259,7 +239,7 @@ public class BaseToolsZeiss {
 
                 result = builder.toString();
                 break;
-            case BaseToolsZeiss.REC500:
+            case REC500:
                 builder.append("   ");
                 builder.append(String.format("%4d", lineNumber));
                 builder.append(" ");
@@ -272,7 +252,7 @@ public class BaseToolsZeiss {
 
                 result = builder.toString();
                 break;
-            case BaseToolsZeiss.M5:
+            case M5:
                 builder.append("For M5|Adr ");
                 builder.append(String.format("%5d", lineNumber));
                 builder.append("|PI1 ");
@@ -288,12 +268,12 @@ public class BaseToolsZeiss {
         return result;
     }
 
-    static String prepareLineOfMeasurement(String dialect, String number, String horizontalAngle, String verticalAngle, String slopeDistance, int lineNumber) {
+    static String prepareLineOfMeasurement(ZeissDialect dialect, String number, String horizontalAngle, String verticalAngle, String slopeDistance, int lineNumber) {
         StringBuilder builder = new StringBuilder();
         String result = "";
 
         switch (dialect) {
-            case BaseToolsZeiss.R4:
+            case R4:
                 builder.append("For R4|");
                 builder.append("KR ");
                 builder.append(String.format("%-7s", number));
@@ -310,7 +290,7 @@ public class BaseToolsZeiss {
 
                 result = builder.toString();
                 break;
-            case BaseToolsZeiss.R5:
+            case R5:
                 builder.append("For R5|Adr");
                 builder.append(String.format("%4d", lineNumber));
                 builder.append("|PI1 ");
@@ -328,7 +308,7 @@ public class BaseToolsZeiss {
 
                 result = builder.toString();
                 break;
-            case BaseToolsZeiss.REC500:
+            case REC500:
                 builder.append("   ");
                 builder.append(String.format("%4d", lineNumber));
                 builder.append(" ");
@@ -345,7 +325,7 @@ public class BaseToolsZeiss {
 
                 result = builder.toString();
                 break;
-            case BaseToolsZeiss.M5:
+            case M5:
                 builder.append("For M5|Adr ");
                 builder.append(String.format("%5d", lineNumber));
                 builder.append("|PI1 ");
@@ -368,12 +348,12 @@ public class BaseToolsZeiss {
         return result;
     }
 
-    static String prepareLineOfTargetHeight(String dialect, String number, String targetHeight, int lineNumber) {
+    static String prepareLineOfTargetHeight(ZeissDialect dialect, String number, String targetHeight, int lineNumber) {
         StringBuilder builder = new StringBuilder();
         String result = "";
 
         switch (dialect) {
-            case BaseToolsZeiss.R4:
+            case R4:
                 builder.append("For R4|");
                 builder.append("KR ");
                 builder.append(String.format("%-7s", number));
@@ -384,7 +364,7 @@ public class BaseToolsZeiss {
 
                 result = builder.toString();
                 break;
-            case BaseToolsZeiss.R5:
+            case R5:
                 builder.append("For R5|Adr");
                 builder.append(String.format("%4d", lineNumber));
                 builder.append("|PI1 ");
@@ -396,7 +376,7 @@ public class BaseToolsZeiss {
 
                 result = builder.toString();
                 break;
-            case BaseToolsZeiss.REC500:
+            case REC500:
                 builder.append("   ");
                 builder.append(String.format("%4d", lineNumber));
                 builder.append(" ");
@@ -409,7 +389,7 @@ public class BaseToolsZeiss {
 
                 result = builder.toString();
                 break;
-            case BaseToolsZeiss.M5:
+            case M5:
                 builder.append("For M5|Adr ");
                 builder.append(String.format("%5d", lineNumber));
                 builder.append("|PI1 ");

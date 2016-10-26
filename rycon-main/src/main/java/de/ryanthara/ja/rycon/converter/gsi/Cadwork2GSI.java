@@ -25,7 +25,7 @@ import java.util.ArrayList;
  * This class provides functions to convert coordinate files from Cadwork CAD program into Leica GSI files.
  *
  * @author sebastian
- * @version 1
+ * @version 2
  * @since 12
  */
 public class Cadwork2GSI {
@@ -33,9 +33,10 @@ public class Cadwork2GSI {
     private ArrayList<String> readStringLines;
 
     /**
-     * Class constructor for read line based text files from Cadwork CAD program in node.dat file format.
+     * Constructs a new instance of this class given an {@code ArrayList<String>} with the read line based
+     * text files from Cadwork CAD program (node.dat).
      *
-     * @param readStringLines {@code ArrayList<String>} with read lines from node.dat file
+     * @param readStringLines ArrayList<String> with read lines from node.dat file
      */
     public Cadwork2GSI(ArrayList<String> readStringLines) {
         this.readStringLines = readStringLines;
@@ -73,19 +74,19 @@ public class Cadwork2GSI {
 
             // use code if necessary
             if (useCodeColumn) {
-                blocks.add(new GSIBlock(isGSI16, 71, lineCounter, lineSplit[4]));
+                blocks.add(new GSIBlock(isGSI16, 71, lineSplit[4]));
             }
 
             // easting and northing
-            blocks.add(new GSIBlock(isGSI16, 81, lineCounter, lineSplit[1]));
-            blocks.add(new GSIBlock(isGSI16, 82, lineCounter, lineSplit[2]));
+            blocks.add(new GSIBlock(isGSI16, 81, lineSplit[1]));
+            blocks.add(new GSIBlock(isGSI16, 82, lineSplit[2]));
 
             // use height if necessary
             if (useZeroHeights) {
-                blocks.add(new GSIBlock(isGSI16, 83, lineCounter, lineSplit[3]));
+                blocks.add(new GSIBlock(isGSI16, 83, lineSplit[3]));
             } else {
                 if (!lineSplit[3].equals("0.000000")) {
-                    blocks.add(new GSIBlock(isGSI16, 83, lineCounter, lineSplit[3]));
+                    blocks.add(new GSIBlock(isGSI16, 83, lineSplit[3]));
                 }
             }
 

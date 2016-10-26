@@ -24,42 +24,38 @@ import java.util.ArrayList;
  * StatusInformationEventSource implements a custom event object source which is used for updating the
  * status bar with an event driven mechanism.
  *
- * <h3>Changes:</h3>
- * <ul>
- *     <li>1: basic implementation </li>
- * </ul>
- *
  * @author sebastian
  * @version 1
  * @since 7
  */
 public class StatusInformationEventSource {
 
-    private StatusInformationEvent statusInformationEvent;
-
-    // Initialization Block
-    {
-        // fireEvent = new FireEvent(this, "start fire", System.currentTimeMillis());
-        statusInformationEvent = new StatusInformationEvent(this, "UPDATE");
-    }
-
     // Container for subscribed FireListeners.
     ArrayList<StatusInformationListener> statusInformationListenerList = new ArrayList<>();
+    private StatusInformationEvent statusInformationEvent;
 
     // Add StatusInformationListener
     public void addStatusInformationListener(StatusInformationListener statusInformationListener) {
         statusInformationListenerList.add(statusInformationListener);
     }
+
     // Remove StatusInformationListener.
     public void removeFireListener(StatusInformationListener statusInformationListener) {
         statusInformationListenerList.remove(statusInformationListener);
     }
+
     // Fire event notifications to StatusInformationListener.
     public void updateStatus() {
         System.out.println("Fire Started in " + statusInformationEvent.getSource().getClass()
                 .getSimpleName() + "!");
-        for(StatusInformationListener obj : statusInformationListenerList) {
+        for (StatusInformationListener obj : statusInformationListenerList) {
             obj.notification(statusInformationEvent);
         }
+    }
+
+    // Initialization Block
+    {
+        // fireEvent = new FireEvent(this, "start fire", System.currentTimeMillis());
+        statusInformationEvent = new StatusInformationEvent(this, "UPDATE");
     }
 }

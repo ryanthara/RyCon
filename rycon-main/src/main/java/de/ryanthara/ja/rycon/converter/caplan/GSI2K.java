@@ -74,7 +74,7 @@ public class GSI2K {
             String objectTyp = BaseToolsCaplanK.objectTyp;
             String attr = "";
 
-            for (int i = 0; i < baseToolsGSI.getFoundWordIndices().size(); i++) {
+            for (int i = 0; i < baseToolsGSI.getFoundAllWordIndices().size(); i++) {
                 int valencyIndicator = 0;
 
                 for (GSIBlock block : blocksAsLines) {

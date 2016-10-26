@@ -18,6 +18,9 @@
 package de.ryanthara.ja.rycon.tools;
 
 import de.ryanthara.ja.rycon.Main;
+import de.ryanthara.ja.rycon.gui.GuiHelper;
+import de.ryanthara.ja.rycon.i18n.I18N;
+import org.eclipse.swt.SWT;
 
 import java.util.ArrayList;
 
@@ -83,8 +86,8 @@ public class GSILTOPClean {
             - identify the last control point before the next station line or at the file ending by the char sequence 'STKE'
          */
 
-        int status = 0;
-        String previousLine = "";
+        int range = 0, status = 0;
+        String currentStation = "", previousLine = "";
 
         for (String line : readStringLines) {
             int size;
@@ -105,18 +108,28 @@ public class GSILTOPClean {
                         result.remove(result.size() - 1);
                     }
 
+                    currentStation = line.substring(line.indexOf("FS"), line.indexOf(" "));
                     result.add(line);
 
+                    range = 0;
                     status = 0;
                     break;
-
                 case 6:         // polar measurement line
-                    // previous line contains a free station
-                    if (status == 0) {
-                        if (line.contains(Main.getParamControlPointString())) {
+                    // previous line contains a free station and a maximum of 4 reference points is used
+                    if ((status == 0) & (range < 4 )) {
+                        if (line.contains(Main.getParamControlPointString())) {     // control point
+                            range = range + 1;
                             status = 5;
+                        } else {                                                    // reference point
+                            range = range + 1;
                         }
-                    } else {
+                    } else if ((status == 0) & (range == 4)){                       // no control point in range
+                        GuiHelper.showMessageBox(Main.shell, SWT.ICON_WARNING, I18N.getMsgBoxTitleWarning(),
+                                String.format(I18N.getLTOPCleanNoControlPointWarning(), currentStation));
+
+                        range = range + 1;
+                    }
+                    else {
                         if (!line.contains(Main.getParamControlPointString())) {
                             result.add(line);
                         }

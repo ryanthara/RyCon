@@ -17,6 +17,10 @@
  */
 package de.ryanthara.ja.rycon.converter.zeiss;
 
+import de.ryanthara.ja.rycon.tools.elements.ZeissBlock;
+
+import java.util.ArrayList;
+
 /**
  * This class provides functions to decode a string line in Zeiss REC format and it's dialects (R4, R5, REC500 and M5)
  * into a bunch of elements.
@@ -28,13 +32,16 @@ package de.ryanthara.ja.rycon.converter.zeiss;
 public class ZeissDecoder {
 
     private int lineNumber;
-    private String dialect;
+    private int numOfBlocks;
+    private ZeissDialect dialect;
 
     private String pointIdentification, pointNumber;
 
-    private String block1Type = "", block1Value = "", block1Unit = "";
-    private String block2Type = "", block2Value = "", block2Unit = "";
-    private String block3Type = "", block3Value = "", block3Unit = "";
+    private ArrayList<ZeissBlock> zeissBlocks = new ArrayList<>();
+
+    private ZeissBlock block1 = null;
+    private ZeissBlock block3 = null;
+    private ZeissBlock block2 = null;
 
     private String error = "";
 
@@ -42,6 +49,7 @@ public class ZeissDecoder {
      * Default constructor without any function.
      */
     public ZeissDecoder() {
+        numOfBlocks = 0;
     }
 
     public boolean decodeRecLine(String line) {
@@ -59,8 +67,7 @@ public class ZeissDecoder {
         if (line.startsWith("For")) { // R4, R5 or M5
             // differ dialect with special kind of substring variable (a, b) with different values
             if (line.startsWith("For R4") || line.startsWith("For_R4")) {
-                dialect = BaseToolsZeiss.R4;
-                final int[] R4 = BaseToolsZeiss.getLinePositions(BaseToolsZeiss.R4);
+                final int[] R4 = BaseToolsZeiss.getLinePositions(dialect = ZeissDialect.R4);
                 ptIDA = R4[0];
                 ptIDB = R4[1];
                 ptC = R4[2];
@@ -84,8 +91,7 @@ public class ZeissDecoder {
                 wb3E = R4[20];
                 wb3F = R4[21];
             } else if (line.startsWith("For R5") || line.startsWith("For_R5")) {
-                dialect = BaseToolsZeiss.R5;
-                final int[] R5 = BaseToolsZeiss.getLinePositions(BaseToolsZeiss.R5);
+                final int[] R5 = BaseToolsZeiss.getLinePositions(dialect = ZeissDialect.R5);
                 lineNumber = Integer.parseInt(line.substring(R5[0], R5[1]).trim());
                 ptIDA = R5[2];
                 ptIDB = R5[3];
@@ -110,8 +116,7 @@ public class ZeissDecoder {
                 wb3E = R5[22];
                 wb3F = R5[23];
             } else if (line.startsWith("For M5") || line.startsWith("For_M5")) {
-                dialect = BaseToolsZeiss.M5;
-                final int[] M5 = BaseToolsZeiss.getLinePositions(BaseToolsZeiss.M5);
+                final int[] M5 = BaseToolsZeiss.getLinePositions(dialect = ZeissDialect.M5);
                 lineNumber = Integer.parseInt(line.substring(M5[0], M5[1]).trim());
                 ptIDA = M5[2];
                 ptIDB = M5[3];
@@ -141,43 +146,41 @@ public class ZeissDecoder {
             pointIdentification = line.substring(ptIDA, ptIDB).trim();
             pointNumber = line.substring(ptC, ptD).trim();
 
-            block1Type = line.substring(wb1A, wb1B).trim();
-            block1Value = line.substring(wb1C, wb1D).trim();
-            block1Unit = line.substring(wb1E, wb1F);
+            block1 = new ZeissBlock(ZeissTypeIdentifier.valueOf(line.substring(wb1A, wb1B).trim()), line.substring(wb1C, wb1D).trim(), line.substring(wb1E, wb1F));
+            zeissBlocks.add(block1);
+            numOfBlocks = numOfBlocks + 1;
 
             if (line.length() > wb2A - 1) {
-                block2Type = line.substring(wb2A, wb2B).trim();
-                block2Value = line.substring(wb2C, wb2D).trim();
-                block2Unit = line.substring(wb2E, wb2F);
+                block2 = new ZeissBlock(ZeissTypeIdentifier.valueOf(line.substring(wb2A, wb2B).trim()), line.substring(wb2C, wb2D).trim(), line.substring(wb2E, wb2F));
+                zeissBlocks.add(block2);
+                numOfBlocks = numOfBlocks + 1;
 
                 if (line.length() > wb3A - 1) {
-                    block3Type = line.substring(wb3A, wb3B).trim();
-                    block3Value = line.substring(wb3C, wb3D).trim();
-                    block3Unit = line.substring(wb3E, wb3F);
+                    block3 = new ZeissBlock(ZeissTypeIdentifier.valueOf(line.substring(wb3A, wb3B).trim()), line.substring(wb3C, wb3D).trim(), line.substring(wb3E, wb3F));
+                    zeissBlocks.add(block3);
+                    numOfBlocks = numOfBlocks + 1;
                 }
             }
 
             success = true;
 
         } else if (line.startsWith("   ") & line.trim().length() > 0) {
-            dialect = BaseToolsZeiss.REC500;
-
-            final int[] REC500 = BaseToolsZeiss.getLinePositions(BaseToolsZeiss.REC500);
+            final int[] REC500 = BaseToolsZeiss.getLinePositions(dialect = ZeissDialect.REC500);
 
             lineNumber = Integer.parseInt(line.substring(REC500[0], REC500[1]).trim());
             pointNumber = line.substring(REC500[2], REC500[3]).trim();
             pointIdentification = line.substring(REC500[4], REC500[5]).trim();
 
-            block1Type = line.substring(REC500[6], REC500[7]).trim();
-            block1Value = line.substring(REC500[8], REC500[9]).trim();
+            block1 = new ZeissBlock(ZeissTypeIdentifier.valueOf(line.substring(REC500[6], REC500[7]).trim()), line.substring(REC500[8], REC500[9]).trim(), "");
+            numOfBlocks = numOfBlocks + 1;
 
             if (line.length() > 50) {
-                block2Type = line.substring(REC500[10], REC500[11]).trim();
-                block2Value = line.substring(REC500[12], REC500[13]).trim();
+                block2 = new ZeissBlock(ZeissTypeIdentifier.valueOf(line.substring(REC500[10], REC500[11]).trim()), line.substring(REC500[12], REC500[13]).trim(), "");
+                numOfBlocks = numOfBlocks + 1;
 
                 if (line.length() > 66) {
-                    block3Type = line.substring(REC500[14], REC500[15]).trim();
-                    block3Value = line.substring(REC500[16], REC500[17]).trim();
+                    block3 = new ZeissBlock(ZeissTypeIdentifier.valueOf(line.substring(REC500[14], REC500[15]).trim()), line.substring(REC500[16], REC500[17]).trim(), "");
+                    numOfBlocks = numOfBlocks + 1;
                 }
             }
 
@@ -188,84 +191,30 @@ public class ZeissDecoder {
     }
 
     /**
-     * Returns the type of the first block.
+     * Returns the first block.
      *
-     * @return type of first block
+     * @return first block
      */
-    public String getBlock1Type() {
-        return block1Type;
+    public ZeissBlock getBlock1() {
+        return block1;
     }
 
     /**
-     * Returns the unit of the first block.
+     * Returns the second block.
      *
-     * @return unit of the first block
+     * @return second block
      */
-    public String getBlock1Unit() {
-        return block1Unit;
+    public ZeissBlock getBlock2() {
+        return block2;
     }
 
     /**
-     * Returns the value of the first block.
+     * Returns the third block.
      *
-     * @return value of the first block
+     * @return third block
      */
-    public String getBlock1Value() {
-        return block1Value;
-    }
-
-    /**
-     * Returns the type of the second block.
-     *
-     * @return type of second block
-     */
-    public String getBlock2Type() {
-        return block2Type;
-    }
-
-    /**
-     * Returns the unit of the second block.
-     *
-     * @return unit of the second block
-     */
-    public String getBlock2Unit() {
-        return block2Unit;
-    }
-
-    /**
-     * Returns the value of the second block.
-     *
-     * @return value of the second block
-     */
-    public String getBlock2Value() {
-        return block2Value;
-    }
-
-    /**
-     * Returns the type of the third block.
-     *
-     * @return type of third block
-     */
-    public String getBlock3Type() {
-        return block3Type;
-    }
-
-    /**
-     * Returns the unit of the third block.
-     *
-     * @return unit of the third block
-     */
-    public String getBlock3Unit() {
-        return block3Unit;
-    }
-
-    /**
-     * Returns the value of the third block.
-     *
-     * @return value of third block
-     */
-    public String getBlock3Value() {
-        return block3Value;
+    public ZeissBlock getBlock3() {
+        return block3;
     }
 
     /**
@@ -273,7 +222,7 @@ public class ZeissDecoder {
      *
      * @return current dialect
      */
-    public String getDialect() {
+    public ZeissDialect getDialect() {
         return dialect;
     }
 
@@ -296,6 +245,15 @@ public class ZeissDecoder {
     }
 
     /**
+     * Returns the number of found ZeissBlocks.
+     *
+     * @return number of ZeissBlocks
+     */
+    public int getNumOfBlocks() {
+        return numOfBlocks;
+    }
+
+    /**
      * Returns the point identification string (only).
      *
      * @return point identification string
@@ -311,6 +269,16 @@ public class ZeissDecoder {
      */
     public String getPointNumber() {
         return pointNumber;
+    }
+
+    /**
+     * Returns the found {@link ZeissBlock}.
+     * ^
+     *
+     * @return found {@link ZeissBlock}
+     */
+    public ArrayList<ZeissBlock> getZeissBlocks() {
+        return zeissBlocks;
     }
 
 } // end of ZeissDecoder
