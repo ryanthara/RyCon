@@ -44,7 +44,7 @@ import java.util.Locale;
  * java written editor for OpenStreetMap data.
  *
  * @author sebastian
- * @version 8
+ * @version 9
  * @since 2
  */
 public abstract class Main {
@@ -129,6 +129,8 @@ public abstract class Main {
      * The reference to the global application status bar.
      */
     public static StatusBar statusBar;
+    private static int cliSourceBtnNumber;
+    private static int cliTargetBtnNumber;
     private static String cliInputFile;
     private static boolean isSettingsWidgetOpenStatus = false;
     private static boolean isSubShellOpenStatus = false;
@@ -170,6 +172,14 @@ public abstract class Main {
 
         if (parser.getInputFile() != null) {
             cliInputFile = parser.getInputFile();
+        }
+
+        if (parser.getSourceBtnNumber() > -1) {
+            cliSourceBtnNumber = parser.getSourceBtnNumber();
+        }
+
+        if (parser.getTargetBtnNumber() > -1) {
+            cliTargetBtnNumber = parser.getTargetBtnNumber();
         }
     }
 
@@ -285,6 +295,24 @@ public abstract class Main {
      */
     public static String getCLIInputFiles() {
         return cliInputFile;
+    }
+
+    /**
+     * Returns the selected source button from the command line interface.
+     *
+     * @return cli source button number
+     */
+    public static int getCliSourceBtnNumber() {
+        return cliSourceBtnNumber;
+    }
+
+    /**
+     * Returns the selected target button from the command line interface.
+     *
+     * @return cli target button number
+     */
+    public static int getCliTargetBtnNumber() {
+        return cliTargetBtnNumber;
     }
 
     /**
@@ -486,6 +514,10 @@ public abstract class Main {
         return PARAM_KNOWN_STATION_STRING;
     }
 
+    public static String getParamLTOPString() {
+        return PARAM_LTOP_STRING;
+    }
+
     /**
      * Returns the value of the LTOP use zenith distance flag.
      *
@@ -638,9 +670,5 @@ public abstract class Main {
      */
     private static void setLocaleTo(String languageCode) {
         Locale.setDefault(new Locale(languageCode, languageCode.toUpperCase()));
-    }
-
-    public static String getParamLTOPString() {
-        return PARAM_LTOP_STRING;
     }
 }  // end of Main

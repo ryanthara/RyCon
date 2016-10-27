@@ -84,7 +84,7 @@ public class ConverterWidget {
      */
     ConverterWidget() {
         initUI();
-        handleFileInjection();
+        handleCommandLineInterfaceInjection();
     }
 
     private void actionBtnCancel() {
@@ -430,12 +430,15 @@ public class ConverterWidget {
         chkBoxWriteCodeColumn.setText(I18N.getBtnChkBoxWriteCodeColumn());
     }
 
-    private void handleFileInjection() {
+    private void handleCommandLineInterfaceInjection() {
         String files = Main.getCLIInputFiles();
 
         if (files != null) {
             inputFieldsComposite.setSourceTextFieldText(files);
         }
+
+        RadioHelper.selectBtn(groupSource.getChildren(), Main.getCliSourceBtnNumber());
+        RadioHelper.selectBtn(groupTarget.getChildren(), Main.getCliTargetBtnNumber());
     }
 
     private void initUI() {
