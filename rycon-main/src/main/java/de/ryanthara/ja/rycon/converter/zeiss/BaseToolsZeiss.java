@@ -54,7 +54,6 @@ public class BaseToolsZeiss {
             113, 116,   // 3. word block: units
             118         // error
     };
-
     private static final int[] R4_LINE_POSITIONS = {
             7, 9,       // point identification
             10, 17,     // point name
@@ -68,7 +67,6 @@ public class BaseToolsZeiss {
             61, 72,     // 3. word block: user information
             73, 77      // 3. word block: units
     };
-
     private static final int[] R5_LINE_POSITIONS = {
             11, 16,     // line number
             16, 18,     // point identification
@@ -83,7 +81,6 @@ public class BaseToolsZeiss {
             70, 81,     // 3. word block: user information
             82, 86      // 3. word block: units
     };
-
     private static final int[] REC500_LINE_POSITIONS = {
             3, 7,       // line counter
             8, 22,      // point number
@@ -95,6 +92,14 @@ public class BaseToolsZeiss {
             67, 69,     // 3. word block: type mark
             69, 78      // 3. word block: value
     };
+    /**
+     * Member which indicates a target height.
+     */
+    static boolean TARGET_HEIGHT = true;
+    /**
+     * Member which indicates a instrument height.
+     */
+    static boolean INSTRUMENT_HEIGHT = false;
 
     /**
      * Returns the integer array with the line positions of the elements in the chosen Zeiss RED dialect.
@@ -175,7 +180,8 @@ public class BaseToolsZeiss {
                 builder.append("   ");
                 builder.append(String.format("%4d", lineNumber));
                 builder.append(" ");
-                builder.append(String.format("%-27s", number));
+                builder.append(String.format("%-14s", number));
+                builder.append(String.format("%-13s", code));
                 builder.append(" ");
                 builder.append("Y ");
                 builder.append(String.format("%12s", easting));
@@ -211,17 +217,38 @@ public class BaseToolsZeiss {
         return result;
     }
 
-    static String prepareLineOfInstrumentHeight(ZeissDialect dialect, String number, String instrumentHeight, int lineNumber) {
+    /**
+     * Prepares a line of instrument or target height for the given dialect.
+     *
+     * @param dialect            dialect (R4, R5, REC500 or M5)
+     * @param isInstrumentHeight true if instrument height is use, false for target height
+     * @param number             point number
+     * @param code               code column (REC500 and M5)
+     * @param height             target or instrument height
+     * @param lineNumber         current line number
+     *
+     * @return prepared line as string in Zeiss REC format
+     */
+    static String prepareLineOfInstrumentOrTargetHeight(ZeissDialect dialect, boolean isInstrumentHeight, String number,
+                                                        String code, String height, int lineNumber) {
         StringBuilder builder = new StringBuilder();
-        String result = "";
+        String heightType, result = "";
+
+        if (isInstrumentHeight) {
+            heightType = "ih";
+        } else {
+            heightType = "th";
+        }
 
         switch (dialect) {
             case R4:
                 builder.append("For R4|");
                 builder.append("KR ");
                 builder.append(String.format("%-7s", number));
-                builder.append("|ih ");
-                builder.append(String.format("%11.11s", instrumentHeight));
+                builder.append("|");
+                builder.append(heightType);
+                builder.append(" ");
+                builder.append(String.format("%11.11s", height));
                 builder.append(" m   ");
                 builder.append("|");
 
@@ -232,8 +259,10 @@ public class BaseToolsZeiss {
                 builder.append(String.format("%4d", lineNumber));
                 builder.append("|PI1 ");
                 builder.append(String.format("%-27s", number));
-                builder.append("|ih ");
-                builder.append(String.format("%14.14s", instrumentHeight));
+                builder.append("|");
+                builder.append(heightType);
+                builder.append(" ");
+                builder.append(String.format("%14.14s", height));
                 builder.append(" m   ");
                 builder.append("|");
 
@@ -243,12 +272,12 @@ public class BaseToolsZeiss {
                 builder.append("   ");
                 builder.append(String.format("%4d", lineNumber));
                 builder.append(" ");
-                builder.append(String.format("%-27s", number));
+                builder.append(String.format("%-14s", number));
+                builder.append(String.format("%-13s", code));
                 builder.append(" ");
-                builder.append("ih ");
-                builder.append(String.format("%12s", instrumentHeight));
+                builder.append(heightType);
+                builder.append(String.format("%12s", height));
                 builder.append(" ");
-                builder.append("|");
 
                 result = builder.toString();
                 break;
@@ -257,8 +286,10 @@ public class BaseToolsZeiss {
                 builder.append(String.format("%5d", lineNumber));
                 builder.append("|PI1 ");
                 builder.append(String.format("%-27s", number));
-                builder.append("|ih ");
-                builder.append(String.format("%-14s", instrumentHeight));
+                builder.append("|");
+                builder.append(heightType);
+                builder.append(" ");
+                builder.append(String.format("%-14s", height));
                 builder.append(" m   |                 |                 | ");
 
                 result = builder.toString();
@@ -268,7 +299,21 @@ public class BaseToolsZeiss {
         return result;
     }
 
-    static String prepareLineOfMeasurement(ZeissDialect dialect, String number, String horizontalAngle, String verticalAngle, String slopeDistance, int lineNumber) {
+    /**
+     * Prepares a line of measurement for the given dialect.
+     *
+     * @param dialect         dialect (R4, R5, REC500 or M5)
+     * @param number          point number
+     * @param code            code column (REC500 and M5)
+     * @param horizontalAngle horizontal angle
+     * @param verticalAngle   vertical angle
+     * @param slopeDistance   slope distance
+     * @param lineNumber      current line number
+     *
+     * @return prepared line as string in Zeiss REC format
+     */
+    static String prepareLineOfMeasurement(ZeissDialect dialect, String number, String code, String horizontalAngle,
+                                           String verticalAngle, String slopeDistance, int lineNumber) {
         StringBuilder builder = new StringBuilder();
         String result = "";
 
@@ -312,7 +357,8 @@ public class BaseToolsZeiss {
                 builder.append("   ");
                 builder.append(String.format("%4d", lineNumber));
                 builder.append(" ");
-                builder.append(String.format("%-27s", number));
+                builder.append(String.format("%-14s", number));
+                builder.append(String.format("%-13s", code));
                 builder.append(" ");
                 builder.append("Hz");
                 builder.append(String.format("%12s", horizontalAngle));
@@ -340,63 +386,6 @@ public class BaseToolsZeiss {
                 builder.append(String.format("%-14s", slopeDistance));
                 builder.append(" m   ");
                 builder.append("| ");
-
-                result = builder.toString();
-                break;
-        }
-
-        return result;
-    }
-
-    static String prepareLineOfTargetHeight(ZeissDialect dialect, String number, String targetHeight, int lineNumber) {
-        StringBuilder builder = new StringBuilder();
-        String result = "";
-
-        switch (dialect) {
-            case R4:
-                builder.append("For R4|");
-                builder.append("KR ");
-                builder.append(String.format("%-7s", number));
-                builder.append("|th ");
-                builder.append(String.format("%11.11s", targetHeight));
-                builder.append(" m   ");
-                builder.append("|");
-
-                result = builder.toString();
-                break;
-            case R5:
-                builder.append("For R5|Adr");
-                builder.append(String.format("%4d", lineNumber));
-                builder.append("|PI1 ");
-                builder.append(String.format("%-27s", number));
-                builder.append("|th ");
-                builder.append(String.format("%14.14s", targetHeight));
-                builder.append(" m   ");
-                builder.append("|");
-
-                result = builder.toString();
-                break;
-            case REC500:
-                builder.append("   ");
-                builder.append(String.format("%4d", lineNumber));
-                builder.append(" ");
-                builder.append(String.format("%-27s", number));
-                builder.append(" ");
-                builder.append("th");
-                builder.append(String.format("%12s", targetHeight));
-                builder.append(" ");
-                builder.append("X ");
-
-                result = builder.toString();
-                break;
-            case M5:
-                builder.append("For M5|Adr ");
-                builder.append(String.format("%5d", lineNumber));
-                builder.append("|PI1 ");
-                builder.append(String.format("%-27s", number));
-                builder.append("|th ");
-                builder.append(String.format("%-14s", targetHeight));
-                builder.append(" m   |                 |                 | ");
 
                 result = builder.toString();
                 break;

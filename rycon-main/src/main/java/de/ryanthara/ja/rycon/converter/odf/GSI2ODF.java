@@ -80,9 +80,9 @@ public class GSI2ODF {
             }
 
             // fill gsi content into rows and cells
-            for (ArrayList<GSIBlock> blocksAsLines : baseToolsGSI.getEncodedLinesOfGSIBlocks()) {
+            for (ArrayList<GSIBlock> blocksInLine : baseToolsGSI.getEncodedLinesOfGSIBlocks()) {
                 colIndex = 0;
-                for (GSIBlock block : blocksAsLines) {
+                for (GSIBlock block : blocksInLine) {
                     cell = table.getCellByPosition(colIndex, rowIndex);
 
                     switch (block.getWordIndex()) {

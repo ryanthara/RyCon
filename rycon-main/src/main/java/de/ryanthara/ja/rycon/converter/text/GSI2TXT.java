@@ -89,7 +89,7 @@ public class GSI2TXT {
             result.add(0, commentLine);
         }
 
-        for (ArrayList<GSIBlock> blocksAsLines : baseToolsGSI.getEncodedLinesOfGSIBlocks()) {
+        for (ArrayList<GSIBlock> blocksInLine : baseToolsGSI.getEncodedLinesOfGSIBlocks()) {
             String newLine = "";
 
             Iterator<Integer> it = foundWordIndices.iterator();
@@ -99,7 +99,7 @@ public class GSI2TXT {
 
                 String intern = "";
 
-                for (GSIBlock block : blocksAsLines) {
+                for (GSIBlock block : blocksInLine) {
                     // check the WI and fill in an empty block of spaces if WI doesn't match to 'column'
                     if (wordIndex == block.getWordIndex()) {
                         intern = block.toPrintFormatTXT();

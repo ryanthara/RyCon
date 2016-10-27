@@ -61,7 +61,7 @@ public class GSI2K {
             BaseToolsCaplanK.writeCommentLine(result);
         }
 
-        for (ArrayList<GSIBlock> blocksAsLines : baseToolsGSI.getEncodedLinesOfGSIBlocks()) {
+        for (ArrayList<GSIBlock> blocksInLine : baseToolsGSI.getEncodedLinesOfGSIBlocks()) {
             StringBuilder stringBuilder = new StringBuilder();
 
             // prevent wrong output with empty strings of defined length from class
@@ -77,7 +77,7 @@ public class GSI2K {
             for (int i = 0; i < baseToolsGSI.getFoundAllWordIndices().size(); i++) {
                 int valencyIndicator = 0;
 
-                for (GSIBlock block : blocksAsLines) {
+                for (GSIBlock block : blocksInLine) {
                     String s = block.toPrintFormatCSV();
 
                     switch (block.getWordIndex()) {

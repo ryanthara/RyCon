@@ -52,7 +52,7 @@ public class GSI2Zeiss {
         ArrayList<String> result = new ArrayList<>();
         int lineNumber = 0;
 
-        for (ArrayList<GSIBlock> blocksAsLines : baseToolsGSI.getEncodedLinesOfGSIBlocks()) {
+        for (ArrayList<GSIBlock> blocksInLine : baseToolsGSI.getEncodedLinesOfGSIBlocks()) {
             lineNumber = lineNumber + 1;
 
             boolean isStationLine = false;
@@ -61,80 +61,98 @@ public class GSI2Zeiss {
             String number = "", code = "", easting = "", northing = "", height = "", instrumentHeight = "";
             String horizontalAngle = "", verticalAngle = "", slopeDistance = "", targetHeight = "";
 
-            for (GSIBlock block : blocksAsLines) {
+            // grab all the information from one line and fill them into place holders
+            for (GSIBlock block : blocksInLine) {
                 int wordIndex = block.getWordIndex();
                 System.out.println("Found WI: " + wordIndex + " ");
 
                 switch (wordIndex) {
                     case 11:
-                        number = block.toPrintFormatTXT();
+                        number = block.toPrintFormatCSV();
                         break;
                     case 21:
-                        horizontalAngle = block.toPrintFormatTXT();
+                        horizontalAngle = block.toPrintFormatCSV();
                         break;
                     case 22:
-                        verticalAngle = block.toPrintFormatTXT();
+                        verticalAngle = block.toPrintFormatCSV();
                         break;
                     case 31:
-                        slopeDistance = block.toPrintFormatTXT();
+                        slopeDistance = block.toPrintFormatCSV();
                         break;
                     case 32:
-                        slopeDistance = block.toPrintFormatTXT();
+                        slopeDistance = block.toPrintFormatCSV();
                         break;
                     case 41:
-                        code = block.toPrintFormatTXT();
+                        code = block.toPrintFormatCSV();
                         break;
                     case 81:
-                        easting = block.toPrintFormatTXT();
+                        easting = block.toPrintFormatCSV();
                         isTargetLine = true;
                         break;
                     case 82:
-                        northing = block.toPrintFormatTXT();
+                        northing = block.toPrintFormatCSV();
                         isTargetLine = true;
                         break;
                     case 83:
-                        height = block.toPrintFormatTXT();
+                        height = block.toPrintFormatCSV();
                         isTargetLine = true;
                         break;
                     case 84:
-                        easting = block.toPrintFormatTXT();
+                        easting = block.toPrintFormatCSV();
                         isStationLine = true;
                         break;
                     case 85:
-                        northing = block.toPrintFormatTXT();
+                        northing = block.toPrintFormatCSV();
                         isStationLine = true;
                         break;
                     case 86:
-                        height = block.toPrintFormatTXT();
+                        height = block.toPrintFormatCSV();
                         isStationLine = true;
                         break;
                     case 87:
-                        targetHeight = block.toPrintFormatTXT();
+                        targetHeight = block.toPrintFormatCSV();
+                        isTargetLine = true;
                         break;
                     case 88:
-                        instrumentHeight = block.toPrintFormatTXT();
+                        instrumentHeight = block.toPrintFormatCSV();
                         isStationLine = true;
                         break;
                 }
             }
 
-            // differ between coordinate or measurement files
+            /*
+             write the information from the place holder value to the result array list and
+             differ between coordinate or measurement files
+             */
             if (isStationLine) {
                 if (dialect.equals(ZeissDialect.REC500)) {
-                    result.add(BaseToolsZeiss.prepareLineOfInstrumentHeight(dialect, number, instrumentHeight, lineNumber));
-                    lineNumber = lineNumber + 1;
+                    if (!instrumentHeight.isEmpty()) {
+                        result.add(BaseToolsZeiss.prepareLineOfInstrumentOrTargetHeight(dialect,
+                                BaseToolsZeiss.INSTRUMENT_HEIGHT, number, code, instrumentHeight, lineNumber));
+                        lineNumber = lineNumber + 1;
+                    }
                     result.add(BaseToolsZeiss.prepareLineOfCoordinates(dialect, number, code, easting, northing, height, lineNumber));
                 } else {
                     result.add(BaseToolsZeiss.prepareLineOfCoordinates(dialect, number, code, easting, northing, height, lineNumber));
-                    lineNumber = lineNumber + 1;
-                    result.add(BaseToolsZeiss.prepareLineOfInstrumentHeight(dialect, number, instrumentHeight, lineNumber));
+                    if (!instrumentHeight.isEmpty()) {
+                        lineNumber = lineNumber + 1;
+                        result.add(BaseToolsZeiss.prepareLineOfInstrumentOrTargetHeight(dialect,
+                                BaseToolsZeiss.INSTRUMENT_HEIGHT, number, code, instrumentHeight, lineNumber));
+                    }
                 }
             } else if (isTargetLine) {
-                result.add(BaseToolsZeiss.prepareLineOfTargetHeight(dialect, number, targetHeight, lineNumber));
-                lineNumber = lineNumber + 1;
-                result.add(BaseToolsZeiss.prepareLineOfMeasurement(dialect, number, horizontalAngle, verticalAngle, slopeDistance, lineNumber));
-                lineNumber = lineNumber + 1;
-                result.add(BaseToolsZeiss.prepareLineOfCoordinates(dialect, number, code, easting, northing, height, lineNumber));
+                if (!targetHeight.isEmpty()) {
+                    result.add(BaseToolsZeiss.prepareLineOfInstrumentOrTargetHeight(dialect, BaseToolsZeiss.TARGET_HEIGHT,
+                            number, code, targetHeight, lineNumber));
+                    lineNumber = lineNumber + 1;
+                } else if (!horizontalAngle.isEmpty() & !verticalAngle.isEmpty() & !slopeDistance.isEmpty()) {
+                    result.add(BaseToolsZeiss.prepareLineOfMeasurement(dialect, number, code, horizontalAngle, verticalAngle,
+                            slopeDistance, lineNumber));
+                    lineNumber = lineNumber + 1;
+                } else if ((!easting.isEmpty() & !northing.isEmpty()) || (!height.isEmpty())) {
+                    result.add(BaseToolsZeiss.prepareLineOfCoordinates(dialect, number, code, easting, northing, height, lineNumber));
+                    lineNumber = lineNumber + 1;
+                }
             }
         }
 
