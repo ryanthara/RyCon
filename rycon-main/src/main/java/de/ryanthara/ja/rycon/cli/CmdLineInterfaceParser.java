@@ -18,7 +18,7 @@ package de.ryanthara.ja.rycon.cli;
  * the source text field was implemented.
  *
  * @author sebastian
- * @version 3
+ * @version 4
  * @since 6
  */
 public class CmdLineInterfaceParser {
@@ -63,6 +63,8 @@ public class CmdLineInterfaceParser {
                     System.out.println(" --help                     shows this help");
                     System.out.println(" --locale=[language code]   alpha-2 or alpha-3 language code (e.g. en or de");
                     System.out.println(" --file=[input files]       sets the value of input files into the source text field");
+                    System.out.println(" --sourceBtn=[number]       sets the source button by a given number");
+                    System.out.println(" --targetBtn=[number]       sets the target button by a given number");
                     System.out.println();
                 } else if (s.toLowerCase().contains("--locale=")) {
                     alphaLanguageCode = s.toLowerCase().substring(9, s.length());
@@ -75,7 +77,8 @@ public class CmdLineInterfaceParser {
             }
 
             if (containsIllegalArgument) {
-                String usage = "usage: java -jar RyCON_[].jar --help --locale=[alpha-2 or alpha-3 language code] --file=[input files]";
+                String usage = "usage: java -jar RyCON_[].jar --help --locale=[alpha-2 or alpha-3 language code] --file=[input files] ";
+                usage = usage.concat("--sourceBtn=[number] --targetBtn=[number] ");
                 System.err.println(usage);
             }
         }
