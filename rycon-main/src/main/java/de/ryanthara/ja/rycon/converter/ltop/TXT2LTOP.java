@@ -17,8 +17,8 @@
  */
 package de.ryanthara.ja.rycon.converter.ltop;
 
-import de.ryanthara.ja.rycon.tools.NumberHelper;
-import de.ryanthara.ja.rycon.tools.elements.RyPoint;
+import de.ryanthara.ja.rycon.tools.NumberFormatter;
+import de.ryanthara.ja.rycon.elements.RyPoint;
 
 import java.util.ArrayList;
 
@@ -73,16 +73,16 @@ public class TXT2LTOP {
                 switch (lineSplit.length) {
                     case 4:     // nr x y z
                         number = String.format("%10s", lineSplit[0].trim());
-                        easting = String.format("%12s", NumberHelper.fillDecimalPlace(lineSplit[1], 4));
-                        northing = String.format("%12s", NumberHelper.fillDecimalPlace(lineSplit[2], 4));
-                        height = String.format("%10s", NumberHelper.fillDecimalPlace(lineSplit[3], 4));
+                        easting = String.format("%12s", NumberFormatter.fillDecimalPlace(lineSplit[1], 4));
+                        northing = String.format("%12s", NumberFormatter.fillDecimalPlace(lineSplit[2], 4));
+                        height = String.format("%10s", NumberFormatter.fillDecimalPlace(lineSplit[3], 4));
                         break;
 
                     case 5:     // nr code x y z
                         number = String.format("%10s", lineSplit[0]);
-                        easting = String.format("%12s", NumberHelper.fillDecimalPlace(lineSplit[2], 4));
-                        northing = String.format("%12s", NumberHelper.fillDecimalPlace(lineSplit[3], 4));
-                        height = String.format("%10s", NumberHelper.fillDecimalPlace(lineSplit[4], 4));
+                        easting = String.format("%12s", NumberFormatter.fillDecimalPlace(lineSplit[2], 4));
+                        northing = String.format("%12s", NumberFormatter.fillDecimalPlace(lineSplit[3], 4));
+                        height = String.format("%10s", NumberFormatter.fillDecimalPlace(lineSplit[4], 4));
                         break;
                 }
 

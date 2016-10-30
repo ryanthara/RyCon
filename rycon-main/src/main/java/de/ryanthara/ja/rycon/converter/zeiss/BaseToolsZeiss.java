@@ -95,11 +95,11 @@ public class BaseToolsZeiss {
     /**
      * Member which indicates a target height.
      */
-    static boolean TARGET_HEIGHT = true;
+    static boolean TARGET_HEIGHT = false;
     /**
      * Member which indicates a instrument height.
      */
-    static boolean INSTRUMENT_HEIGHT = false;
+    static boolean INSTRUMENT_HEIGHT = true;
 
     /**
      * Returns the integer array with the line positions of the elements in the chosen Zeiss RED dialect.
@@ -162,7 +162,8 @@ public class BaseToolsZeiss {
                 builder.append("For R5|Adr");
                 builder.append(String.format("%4d", lineNumber));
                 builder.append("|PI1 ");
-                builder.append(String.format("%-27s", number));
+                builder.append(String.format("%-14s", number));
+                builder.append(String.format("%-13s", code));
                 builder.append("|Y  ");
                 builder.append(String.format("%14.14s", easting));
                 builder.append(" m   ");
@@ -285,12 +286,13 @@ public class BaseToolsZeiss {
                 builder.append("For M5|Adr ");
                 builder.append(String.format("%5d", lineNumber));
                 builder.append("|PI1 ");
-                builder.append(String.format("%-27s", number));
+                builder.append(String.format("%-14s", number));
+                builder.append(String.format("%-13s", code));
                 builder.append("|");
                 builder.append(heightType);
                 builder.append(" ");
                 builder.append(String.format("%-14s", height));
-                builder.append(" m   |                 |                 | ");
+                builder.append(" m   |                      |                      | ");
 
                 result = builder.toString();
                 break;
@@ -375,7 +377,8 @@ public class BaseToolsZeiss {
                 builder.append("For M5|Adr ");
                 builder.append(String.format("%5d", lineNumber));
                 builder.append("|PI1 ");
-                builder.append(String.format("%-27s", number));
+                builder.append(String.format("%-14s", number));
+                builder.append(String.format("%-13s", code));
                 builder.append("|Hz ");
                 builder.append(String.format("%-14s", horizontalAngle));
                 builder.append(" m   ");

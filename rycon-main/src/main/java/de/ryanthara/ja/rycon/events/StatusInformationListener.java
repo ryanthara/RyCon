@@ -15,14 +15,13 @@
  * You should have received a copy of the GNU General Public License along with
  * this package. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package de.ryanthara.ja.rycon.events;
 
 import java.util.EventListener;
 
 /**
- * StatusInformationListener implements a custom event listener which is used for updating the
- * status bar with an event driven mechanism.
+ * This class implements a custom event listener which is used for updating the status bar with
+ * an event driven mechanism.
  *
  * @author sebastian
  * @version 2

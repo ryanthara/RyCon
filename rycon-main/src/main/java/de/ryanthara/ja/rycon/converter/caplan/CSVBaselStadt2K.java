@@ -17,7 +17,7 @@
  */
 package de.ryanthara.ja.rycon.converter.caplan;
 
-import de.ryanthara.ja.rycon.tools.NumberHelper;
+import de.ryanthara.ja.rycon.tools.NumberFormatter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,17 +73,17 @@ public class CSVBaselStadt2K {
             String number = BaseToolsCaplanK.cleanPointNumberString(stringField[0].replaceAll("\\s+", "").trim());
 
             // easting E, column 19-32
-            String easting = String.format("%14s", NumberHelper.fillDecimalPlace(stringField[2], 4));
+            String easting = String.format("%14s", NumberFormatter.fillDecimalPlace(stringField[2], 4));
 
             // northing N, column 33-46
-            String northing = String.format("%14s", NumberHelper.fillDecimalPlace(stringField[3], 4));
+            String northing = String.format("%14s", NumberFormatter.fillDecimalPlace(stringField[3], 4));
             valencyIndicator = 3;
 
             // height (Z) is in column 5, but not always valued
             String height = "";
             if (!stringField[4].equals("")) {
                 // height H, column 47-59
-                height = String.format("%13s", NumberHelper.fillDecimalPlace(stringField[4], 5));
+                height = String.format("%13s", NumberFormatter.fillDecimalPlace(stringField[4], 5));
                 Double d = Double.parseDouble(height);
                 if (d != 0d) {
                     valencyIndicator += 4;

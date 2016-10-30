@@ -18,8 +18,8 @@
 package de.ryanthara.ja.rycon.converter.caplan;
 
 import de.ryanthara.ja.rycon.converter.gsi.BaseToolsGSI;
-import de.ryanthara.ja.rycon.tools.NumberHelper;
-import de.ryanthara.ja.rycon.tools.elements.GSIBlock;
+import de.ryanthara.ja.rycon.tools.NumberFormatter;
+import de.ryanthara.ja.rycon.elements.GSIBlock;
 
 import java.util.ArrayList;
 
@@ -99,27 +99,27 @@ public class GSI2K {
                             attr = attr.concat("|".concat(s));
                             break;
                         case 81:        // easting E, column 19-32
-                            easting = String.format("%14s", NumberHelper.fillDecimalPlace(s, 4));
+                            easting = String.format("%14s", NumberFormatter.fillDecimalPlace(s, 4));
                             valencyIndicator = 3;
                             break;
                         case 82:        // northing N, column 33-46
-                            northing = String.format("%14s", NumberHelper.fillDecimalPlace(s, 4));
+                            northing = String.format("%14s", NumberFormatter.fillDecimalPlace(s, 4));
                             valencyIndicator = 3;
                             break;
                         case 83:        // height H, column 47-59
-                            height = String.format("%13s", NumberHelper.fillDecimalPlace(s, 5));
+                            height = String.format("%13s", NumberFormatter.fillDecimalPlace(s, 5));
                             valencyIndicator += 4;
                             break;
                         case 84:        // easting E0, column 19-32
-                            easting = String.format("%14s", NumberHelper.fillDecimalPlace(s, 4));
+                            easting = String.format("%14s", NumberFormatter.fillDecimalPlace(s, 4));
                             valencyIndicator = 3;
                             break;
                         case 85:        // northing N0, column 33-46
-                            northing = String.format("%14s", NumberHelper.fillDecimalPlace(s, 4));
+                            northing = String.format("%14s", NumberFormatter.fillDecimalPlace(s, 4));
                             valencyIndicator = 3;
                             break;
                         case 86:        // height H0, column 47-59
-                            height = String.format("%13s", NumberHelper.fillDecimalPlace(s, 5));
+                            height = String.format("%13s", NumberFormatter.fillDecimalPlace(s, 5));
                             valencyIndicator += 4;
                             break;
                     }

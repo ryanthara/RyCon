@@ -9,15 +9,15 @@
     <artifactId>RyCON</artifactId>
     <packaging>pom</packaging>
     <name>RyCON</name>
-    <url>http://code.ryanthara.de/RyCON</url>
+    <url>http://number.ryanthara.de/RyCON</url>
 
     <!-- information about the developer -->
     <developers>
         <developer>
             <id>saust</id>
             <name>Sebastian Aust</name>
-            <email>code at ryanthara dot de</email>
-            <url>http://code.ryanthara.de/</url>
+            <email>number at ryanthara dot de</email>
+            <url>http://number.ryanthara.de/</url>
             <timezone>+1</timezone>
             <roles>
                 <role>architect</role>

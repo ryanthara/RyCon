@@ -27,7 +27,7 @@ import java.util.prefs.Preferences;
 
 
 /**
- * PreferenceHandler brought the functionality for handling system and user settings to RyCON.
+ * Instances of this class provides functions for handling system and user settings for RyCON.
  * <p>
  * The less needed configuration settings of RyCON are stored with the mechanism of the
  * JAVA Preferences API in the system and user area of your computer.
@@ -192,11 +192,11 @@ public class PreferenceHandler implements PreferenceChangeListener {
     private final static String BUILD_VERSION = "build_version";
 
     /**
-     * Member for the preference key of the generator value.
+     * Member for the preference key of the generate value.
      *
      * @since 3
      */
-    private final static String GENERATOR = "generator";
+    private final static String GENERATOR = "generate";
 
     /**
      * Member for the preference key of the information string value.
@@ -215,7 +215,7 @@ public class PreferenceHandler implements PreferenceChangeListener {
     private Preferences userPreferences;
 
     /**
-     * Class constructor which initializes the configuration handling.
+     * Constructs a new instance of this class and initializes the configuration handling.
      */
     public PreferenceHandler() {
         userPreferences = Preferences.userRoot().node("/de/ryanthara/rycon");
@@ -250,7 +250,7 @@ public class PreferenceHandler implements PreferenceChangeListener {
     }
 
     /**
-     * Return a system preference by given name.
+     * Returns a system preference by given name.
      *
      * @param prefName name of the system preference to be read
      *
@@ -263,7 +263,7 @@ public class PreferenceHandler implements PreferenceChangeListener {
     }
 
     /**
-     * Return true if a file with default settings was generated.
+     * Returns true if a file with default settings was generated.
      *
      * @return success
      */
@@ -272,7 +272,7 @@ public class PreferenceHandler implements PreferenceChangeListener {
     }
 
     /**
-     * Set the value for defaultSettingsGenerated from outside this class.
+     * Sets the value for defaultSettingsGenerated from outside this class.
      *
      * @param defaultSettingsGenerated value to be set
      */
@@ -294,7 +294,7 @@ public class PreferenceHandler implements PreferenceChangeListener {
     }
 
     /**
-     * Set a defined system preference by name and value.
+     * Sets a defined system preference by name and value.
      *
      * @param prefName name of the system preference to be set
      * @param value    value to be set
@@ -306,7 +306,7 @@ public class PreferenceHandler implements PreferenceChangeListener {
     }
 
     /**
-     * Fill in the default values for RyCON into user preferences.
+     * Fills in the default values for RyCON into user preferences.
      * <p>
      * Default settings are generated for the following parameters (parameter name - value).
      * <ul>

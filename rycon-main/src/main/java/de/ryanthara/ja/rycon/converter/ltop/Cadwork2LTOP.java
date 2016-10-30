@@ -17,8 +17,8 @@
  */
 package de.ryanthara.ja.rycon.converter.ltop;
 
-import de.ryanthara.ja.rycon.tools.NumberHelper;
-import de.ryanthara.ja.rycon.tools.elements.RyPoint;
+import de.ryanthara.ja.rycon.tools.NumberFormatter;
+import de.ryanthara.ja.rycon.elements.RyPoint;
 
 import java.util.ArrayList;
 
@@ -82,17 +82,17 @@ public class Cadwork2LTOP {
                 number = String.format("%-10s", lineSplit[5]);
 
                 // easting E, column 33-44
-                easting = String.format("%12s", NumberHelper.fillDecimalPlace(lineSplit[1], 4));
+                easting = String.format("%12s", NumberFormatter.fillDecimalPlace(lineSplit[1], 4));
 
                 // northing N, column 45-56
-                northing = String.format("%12s", NumberHelper.fillDecimalPlace(lineSplit[2], 4));
+                northing = String.format("%12s", NumberFormatter.fillDecimalPlace(lineSplit[2], 4));
 
                 // height H, column 61-70
                 if (useZeroHeights) {
-                    height = String.format("%10s", NumberHelper.fillDecimalPlace(lineSplit[3], 4));
+                    height = String.format("%10s", NumberFormatter.fillDecimalPlace(lineSplit[3], 4));
                 } else {
                     if (!lineSplit[3].equals("0.000000")) {
-                        height = String.format("%10s", NumberHelper.fillDecimalPlace(lineSplit[3], 4));
+                        height = String.format("%10s", NumberFormatter.fillDecimalPlace(lineSplit[3], 4));
                     }
                 }
 

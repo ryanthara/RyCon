@@ -125,8 +125,8 @@ public class I18N {
         return Messages.getString("btnChkLevellingIgnoreChangePoints");
     }
 
-    public static String getBtnChkSplitterIgnoreCodeColumn() {
-        return Messages.getString("btnChkSplitterIgnoreCodeColumn");
+    public static String getBtnChkSplitterInsertCodeColumn() {
+        return Messages.getString("btnChkSplitterInsertCodeColumn");
     }
 
     public static String getBtnChkSplitterWriteCodeZero() {

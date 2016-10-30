@@ -17,7 +17,7 @@
  */
 package de.ryanthara.ja.rycon.converter.zeiss;
 
-import de.ryanthara.ja.rycon.tools.elements.ZeissBlock;
+import de.ryanthara.ja.rycon.elements.ZeissBlock;
 
 import java.util.ArrayList;
 

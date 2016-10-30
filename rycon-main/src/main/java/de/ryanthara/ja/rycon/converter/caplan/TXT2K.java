@@ -17,7 +17,7 @@
  */
 package de.ryanthara.ja.rycon.converter.caplan;
 
-import de.ryanthara.ja.rycon.tools.NumberHelper;
+import de.ryanthara.ja.rycon.tools.NumberFormatter;
 
 import java.util.ArrayList;
 
@@ -75,23 +75,23 @@ public class TXT2K {
             switch (lineSplit.length) {
                 case 3:     // line contains no height
                     // easting (Y) is in column 2 -> column 19-32
-                    easting = String.format("%14s", NumberHelper.fillDecimalPlace(lineSplit[1], 4));
+                    easting = String.format("%14s", NumberFormatter.fillDecimalPlace(lineSplit[1], 4));
 
                     // northing (X) is in column 3 -> column 33-46
-                    northing = String.format("%14s", NumberHelper.fillDecimalPlace(lineSplit[2], 4));
+                    northing = String.format("%14s", NumberFormatter.fillDecimalPlace(lineSplit[2], 4));
                     valencyIndicator = 3;
                     break;
 
                 case 4:     // line contains no code
                     // easting (Y) is in column 2 -> column 19-32
-                    easting = String.format("%14s", NumberHelper.fillDecimalPlace(lineSplit[1], 4));
+                    easting = String.format("%14s", NumberFormatter.fillDecimalPlace(lineSplit[1], 4));
 
                     // northing (X) is in column 3 -> column 33-46
-                    northing = String.format("%14s", NumberHelper.fillDecimalPlace(lineSplit[2], 4));
+                    northing = String.format("%14s", NumberFormatter.fillDecimalPlace(lineSplit[2], 4));
                     valencyIndicator = 3;
 
                     // height (Z) is in column 4 -> column 47-59
-                    height = String.format("%13s", NumberHelper.fillDecimalPlace(lineSplit[3], 5));
+                    height = String.format("%13s", NumberFormatter.fillDecimalPlace(lineSplit[3], 5));
                     Double d = Double.parseDouble(height);
                     if (d != 0d) {
                         valencyIndicator += 4;
@@ -105,17 +105,17 @@ public class TXT2K {
                     }
 
                     // easting (Y) is in column 4 -> column 19-32
-                    easting = String.format("%14s", NumberHelper.fillDecimalPlace(lineSplit[2], 4));
+                    easting = String.format("%14s", NumberFormatter.fillDecimalPlace(lineSplit[2], 4));
 
                     // northing (X) is in column 5 -> column 33-46
-                    northing = String.format("%14s", NumberHelper.fillDecimalPlace(lineSplit[3], 4));
+                    northing = String.format("%14s", NumberFormatter.fillDecimalPlace(lineSplit[3], 4));
                     valencyIndicator = 3;
 
                     // height (Z) is in column 6, and not always valued (LFP file) -> column 47-59
                     if (lineSplit[5].equals("NULL")) {
-                        height = String.format("%13s", NumberHelper.fillDecimalPlace("-9999", 4));
+                        height = String.format("%13s", NumberFormatter.fillDecimalPlace("-9999", 4));
                     } else {
-                        height = String.format("%13s", NumberHelper.fillDecimalPlace(lineSplit[4], 5));
+                        height = String.format("%13s", NumberFormatter.fillDecimalPlace(lineSplit[4], 5));
                         if (Double.parseDouble(height) != 0d) {
                             valencyIndicator += 4;
                         }

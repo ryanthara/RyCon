@@ -17,7 +17,7 @@
  */
 package de.ryanthara.ja.rycon.converter.caplan;
 
-import de.ryanthara.ja.rycon.tools.NumberHelper;
+import de.ryanthara.ja.rycon.tools.NumberFormatter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,26 +73,26 @@ public class CSV2K {
             switch (stringField.length) {
                 case 3:     // contains nr x y
                     // easting E, column 19-32
-                    easting = String.format("%14s", NumberHelper.fillDecimalPlace(stringField[1], 4));
+                    easting = String.format("%14s", NumberFormatter.fillDecimalPlace(stringField[1], 4));
 
                     // northing N, column 33-46
-                    northing = String.format("%14s", NumberHelper.fillDecimalPlace(stringField[2], 4));
+                    northing = String.format("%14s", NumberFormatter.fillDecimalPlace(stringField[2], 4));
                     valencyIndicator = 3;
                     break;
 
                 case 4:     // contains nr x y z
                     // easting E, column 19-32
-                    easting = String.format("%14s", NumberHelper.fillDecimalPlace(stringField[1], 4));
+                    easting = String.format("%14s", NumberFormatter.fillDecimalPlace(stringField[1], 4));
 
                     // northing N, column 33-46
-                    northing = String.format("%14s", NumberHelper.fillDecimalPlace(stringField[2], 4));
+                    northing = String.format("%14s", NumberFormatter.fillDecimalPlace(stringField[2], 4));
                     valencyIndicator = 3;
 
                     // height (Z) is in column 5, but not always valued
                     height = "";
                     if (!stringField[4].equals("")) {
                         // height H, column 47-59
-                        height = String.format("%13s", NumberHelper.fillDecimalPlace(stringField[3], 5));
+                        height = String.format("%13s", NumberFormatter.fillDecimalPlace(stringField[3], 5));
                         Double d = Double.parseDouble(height);
                         if (d != 0d) {
                             valencyIndicator += 4;
@@ -107,17 +107,17 @@ public class CSV2K {
                     }
 
                     // easting E, column 19-32
-                    easting = String.format("%14s", NumberHelper.fillDecimalPlace(stringField[2], 4));
+                    easting = String.format("%14s", NumberFormatter.fillDecimalPlace(stringField[2], 4));
 
                     // northing N, column 33-46
-                    northing = String.format("%14s", NumberHelper.fillDecimalPlace(stringField[3], 4));
+                    northing = String.format("%14s", NumberFormatter.fillDecimalPlace(stringField[3], 4));
                     valencyIndicator = 3;
 
                     // height (Z) is in column 5, but not always valued
                     height = "";
                     if (!stringField[4].equals("")) {
                         // height H, column 47-59
-                        height = String.format("%13s", NumberHelper.fillDecimalPlace(stringField[4], 5));
+                        height = String.format("%13s", NumberFormatter.fillDecimalPlace(stringField[4], 5));
                         Double d = Double.parseDouble(height);
                         if (d != 0d) {
                             valencyIndicator += 4;

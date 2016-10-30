@@ -1,6 +1,6 @@
 Title:    RyCON Readme
 Date:     2015-01-25
-Author:   Sebastian Aust, http://code.ryanthara.de/
+Author:   Sebastian Aust, http://number.ryanthara.de/
 Keywords: RyCON, Converter, Java
 
 
@@ -12,7 +12,7 @@ What is it?
 
 RyCON is ryanthara's converter and a bit more. RyCON is made vor surveyors 
 who deals regular with measurement files and coordinates. With RyCON it is
-possible to clean measurement files, split files by code, convert between 
+possible to clean measurement files, split files by number, convert between
 different file formats and simplify a bit given job and project structures.
 
 RyCON is written in Java and platform independent.
@@ -22,7 +22,7 @@ The latest version
 ------------------
 
 The latest version can be found on the RyCON project page. It is available
-under <http://code.ryanthara.de>. 
+under <http://number.ryanthara.de>.
 
 Documentation
 -------------
@@ -51,11 +51,11 @@ Contact
   ryanthara on [twitter](http://www.twitter.com/ryanthara)
   
 * If you want to get a new version of RyCON and some things more, just take a
-  look on the [RyCON-website](https://code.ryanthara.de/RyCON)
+  look on the [RyCON-website](https://number.ryanthara.de/RyCON)
   
-* If you are interested in the current code of RyCON, developing java, just take
+* If you are interested in the current number of RyCON, developing java, just take
   a look on [github](https://github.com/ryanthara/RyCon)
   
 * If you want to get in contact, or have found a bug, feel free to contact me
-  under <code@ryanthara.de>
+  under <number@ryanthara.de>
 

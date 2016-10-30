@@ -17,7 +17,7 @@
  */
 package de.ryanthara.ja.rycon.converter.caplan;
 
-import de.ryanthara.ja.rycon.tools.NumberHelper;
+import de.ryanthara.ja.rycon.tools.NumberFormatter;
 
 import java.util.ArrayList;
 
@@ -76,14 +76,14 @@ public class Cadwork2K {
             String number = BaseToolsCaplanK.cleanPointNumberString(lineSplit[5]);
 
             // easting E, column 19-32
-            String easting = String.format("%14s", NumberHelper.fillDecimalPlace(lineSplit[1], 4));
+            String easting = String.format("%14s", NumberFormatter.fillDecimalPlace(lineSplit[1], 4));
 
             // northing N, column 33-46
-            String northing = String.format("%14s", NumberHelper.fillDecimalPlace(lineSplit[2], 4));
+            String northing = String.format("%14s", NumberFormatter.fillDecimalPlace(lineSplit[2], 4));
             valencyIndicator = 3;
 
             // height H, column 47-59
-            String height = String.format("%13s", NumberHelper.fillDecimalPlace(lineSplit[3], 5));
+            String height = String.format("%13s", NumberFormatter.fillDecimalPlace(lineSplit[3], 5));
             if (Double.parseDouble(height) != 0d) {
                 valencyIndicator += 4;
             }

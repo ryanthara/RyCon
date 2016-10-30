@@ -17,7 +17,7 @@
  */
 package de.ryanthara.ja.rycon.converter.gsi;
 
-import de.ryanthara.ja.rycon.tools.elements.GSIBlock;
+import de.ryanthara.ja.rycon.elements.GSIBlock;
 
 import java.util.ArrayList;
 import java.util.StringTokenizer;

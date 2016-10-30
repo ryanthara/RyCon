@@ -17,8 +17,8 @@
  */
 package de.ryanthara.ja.rycon.converter.ltop;
 
-import de.ryanthara.ja.rycon.tools.NumberHelper;
-import de.ryanthara.ja.rycon.tools.elements.RyPoint;
+import de.ryanthara.ja.rycon.tools.NumberFormatter;
+import de.ryanthara.ja.rycon.elements.RyPoint;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,14 +68,14 @@ public class CSV2LTOP {
             number = String.format("%-10s", stringField[0].replaceAll("\\s+", "").trim());
 
             // easting (Y) is in column 3
-            easting = String.format("%12s", NumberHelper.fillDecimalPlace(stringField[1], 4));
+            easting = String.format("%12s", NumberFormatter.fillDecimalPlace(stringField[1], 4));
 
             // northing (X) is in column 4
-            northing = String.format("%12s", NumberHelper.fillDecimalPlace(stringField[2], 4));
+            northing = String.format("%12s", NumberFormatter.fillDecimalPlace(stringField[2], 4));
 
             // height (Z) is in column 5, but not always valued
             if (!stringField[3].equals("")) {
-                height = String.format("%10s", NumberHelper.fillDecimalPlace(stringField[3], 4));
+                height = String.format("%10s", NumberFormatter.fillDecimalPlace(stringField[3], 4));
             }
 
             // pick up the relevant elements from the blocks from every line

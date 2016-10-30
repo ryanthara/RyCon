@@ -15,7 +15,6 @@
  * You should have received a copy of the GNU General Public License along with
  * this package. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package de.ryanthara.ja.rycon.data;
 
 /**
@@ -37,7 +36,7 @@ public class Version {
     private static final String buildDate = "2016-05-03";
 
     /**
-     * Return the build date of RyCON as string.
+     * Returns the build date of RyCON as string.
      *
      * @return the build date
      */
@@ -46,7 +45,7 @@ public class Version {
     }
 
     /**
-     * Return the current build number of RyCON as integer value.
+     * Returns the current build number of RyCON as integer value.
      *
      * @return the build number
      */
@@ -55,7 +54,7 @@ public class Version {
     }
 
     /**
-     * Return the current major release number of RyCON as short value.
+     * Returns the current major release number of RyCON as short value.
      *
      * @return the major release number
      */
@@ -64,7 +63,7 @@ public class Version {
     }
 
     /**
-     * Return the current minor release number of RyCON as short value.
+     * Returns the current minor release number of RyCON as short value.
      *
      * @return the minor release number
      */
@@ -73,7 +72,7 @@ public class Version {
     }
 
     /**
-     * Return the current patch level number of RyCON as short value.
+     * Returns the current patch level number of RyCON as short value.
      *
      * @return the patch level
      */
@@ -82,7 +81,7 @@ public class Version {
     }
 
     /**
-     * Return the current version of RyCON as string value (major.minor.patch).
+     * Returns the current version of RyCON as string value (major.minor.patch).
      *
      * @return the major.minor.patch as version string
      */
@@ -90,4 +89,4 @@ public class Version {
         return Short.toString(majorRelease) + "." + Short.toString(minorRelease) + "." + Short.toString(patchLevel);
     }
 
-}
+} // end of Version

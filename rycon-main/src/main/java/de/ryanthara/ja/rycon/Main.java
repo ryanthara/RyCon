@@ -21,8 +21,8 @@ package de.ryanthara.ja.rycon;
 import de.ryanthara.ja.rycon.cli.CmdLineInterfaceException;
 import de.ryanthara.ja.rycon.cli.CmdLineInterfaceParser;
 import de.ryanthara.ja.rycon.data.PreferenceHandler;
-import de.ryanthara.ja.rycon.gui.GuiHelper;
-import de.ryanthara.ja.rycon.gui.StatusBar;
+import de.ryanthara.ja.rycon.gui.custom.MessageBoxes;
+import de.ryanthara.ja.rycon.gui.custom.StatusBar;
 import de.ryanthara.ja.rycon.gui.UpdateDialog;
 import de.ryanthara.ja.rycon.i18n.I18N;
 import de.ryanthara.ja.rycon.tools.Updater;
@@ -210,7 +210,7 @@ public abstract class Main {
                 Display display = new Display();
                 Shell shell = new Shell(display);
 
-                int rc = GuiHelper.showMessageBox(shell, SWT.ICON_ERROR | SWT.YES | SWT.NO, I18N.getErrorTitleJavaVersion(), I18N.getErrorTextJavaVersion());
+                int rc = MessageBoxes.showMessageBox(shell, SWT.ICON_ERROR | SWT.YES | SWT.NO, I18N.getErrorTitleJavaVersion(), I18N.getErrorTextJavaVersion());
 
                 if (rc == SWT.YES) {
                     try {

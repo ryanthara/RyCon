@@ -17,8 +17,8 @@
  */
 package de.ryanthara.ja.rycon.converter.ltop;
 
-import de.ryanthara.ja.rycon.tools.NumberHelper;
-import de.ryanthara.ja.rycon.tools.elements.RyPoint;
+import de.ryanthara.ja.rycon.tools.NumberFormatter;
+import de.ryanthara.ja.rycon.elements.RyPoint;
 
 import java.util.ArrayList;
 
@@ -75,15 +75,15 @@ public class K2LTOP {
                     }
 
                     if (line.length() >= 32) {  // easting E, column 19-32
-                        easting = String.format("%12s", NumberHelper.fillDecimalPlace(line.substring(20, 32).trim(), 4));
+                        easting = String.format("%12s", NumberFormatter.fillDecimalPlace(line.substring(20, 32).trim(), 4));
                     }
 
                     if (line.length() >= 46) {  // northing N, column 33-46
-                        northing = String.format("%12s", NumberHelper.fillDecimalPlace(line.substring(34, 46).trim(), 4));
+                        northing = String.format("%12s", NumberFormatter.fillDecimalPlace(line.substring(34, 46).trim(), 4));
                     }
 
                     if (line.length() >= 59) {  // height H, column 61-70
-                        height = String.format("%10s", NumberHelper.fillDecimalPlace(line.substring(48, 59).trim(), 4));
+                        height = String.format("%10s", NumberFormatter.fillDecimalPlace(line.substring(48, 59).trim(), 4));
                     }
 
                     // pick up the relevant elements from the blocks from every line

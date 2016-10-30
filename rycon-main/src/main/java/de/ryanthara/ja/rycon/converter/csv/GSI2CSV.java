@@ -19,7 +19,7 @@ package de.ryanthara.ja.rycon.converter.csv;
 
 import de.ryanthara.ja.rycon.converter.gsi.BaseToolsGSI;
 import de.ryanthara.ja.rycon.i18n.I18N;
-import de.ryanthara.ja.rycon.tools.elements.GSIBlock;
+import de.ryanthara.ja.rycon.elements.GSIBlock;
 
 import java.util.ArrayList;
 import java.util.Iterator;

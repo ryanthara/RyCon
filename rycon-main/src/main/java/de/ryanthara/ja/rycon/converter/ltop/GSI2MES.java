@@ -18,8 +18,8 @@
 package de.ryanthara.ja.rycon.converter.ltop;
 
 import de.ryanthara.ja.rycon.converter.gsi.BaseToolsGSI;
-import de.ryanthara.ja.rycon.tools.NumberHelper;
-import de.ryanthara.ja.rycon.tools.elements.GSIBlock;
+import de.ryanthara.ja.rycon.tools.NumberFormatter;
+import de.ryanthara.ja.rycon.elements.GSIBlock;
 
 import java.util.ArrayList;
 
@@ -145,20 +145,20 @@ public class GSI2MES {
 
                     */
                     number = String.format("%-10s", blocksAsLine.get(0).toPrintFormatCSV());
-                    hzAngle = String.format("%12s", NumberHelper.fillDecimalPlace(blocksAsLine.get(1).toPrintFormatCSV(), 5));
+                    hzAngle = String.format("%12s", NumberFormatter.fillDecimalPlace(blocksAsLine.get(1).toPrintFormatCSV(), 5));
 
                     verticalAngle = blocksAsLine.get(2).toPrintFormatCSV();
 
                     Double d = Double.parseDouble(verticalAngle);
 
                     if (useZenithDistance) {
-                        verticalAngle = String.format("%12s", NumberHelper.fillDecimalPlace(Double.toString(d), 5));
+                        verticalAngle = String.format("%12s", NumberFormatter.fillDecimalPlace(Double.toString(d), 5));
                     } else {
                         double heightAngle = 100d - d;
-                        verticalAngle = String.format("%12s", NumberHelper.fillDecimalPlace(Double.toString(heightAngle), 5));
+                        verticalAngle = String.format("%12s", NumberFormatter.fillDecimalPlace(Double.toString(heightAngle), 5));
                     }
 
-                    slopeDistance = String.format("%12s", NumberHelper.fillDecimalPlace(blocksAsLine.get(3).toPrintFormatCSV(), 5));
+                    slopeDistance = String.format("%12s", NumberFormatter.fillDecimalPlace(blocksAsLine.get(3).toPrintFormatCSV(), 5));
 
                     // differ target foil and prism
                     if (blocksAsLine.get(4).toString().trim().endsWith("344")) {
@@ -167,7 +167,7 @@ public class GSI2MES {
                         ppmAndPrismConstant = "4";
                     }
 
-                    targetHeight = String.format("%6s", NumberHelper.fillDecimalPlace(blocksAsLine.get(5).toPrintFormatCSV(), 3));
+                    targetHeight = String.format("%6s", NumberFormatter.fillDecimalPlace(blocksAsLine.get(5).toPrintFormatCSV(), 3));
 
                     /*
                     KA<--PUNKT-><TY>        <-MESSWERT-><-MF-><GR><-IH-><-SH->  <ZENT>

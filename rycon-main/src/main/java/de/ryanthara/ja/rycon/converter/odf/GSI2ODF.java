@@ -19,7 +19,7 @@ package de.ryanthara.ja.rycon.converter.odf;
 
 import de.ryanthara.ja.rycon.converter.gsi.BaseToolsGSI;
 import de.ryanthara.ja.rycon.i18n.I18N;
-import de.ryanthara.ja.rycon.tools.elements.GSIBlock;
+import de.ryanthara.ja.rycon.elements.GSIBlock;
 import org.odftoolkit.simple.SpreadsheetDocument;
 import org.odftoolkit.simple.table.Cell;
 import org.odftoolkit.simple.table.Table;

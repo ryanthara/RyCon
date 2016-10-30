@@ -18,8 +18,8 @@
 package de.ryanthara.ja.rycon.converter.gsi;
 
 import de.ryanthara.ja.rycon.converter.zeiss.ZeissDecoder;
-import de.ryanthara.ja.rycon.tools.elements.GSIBlock;
-import de.ryanthara.ja.rycon.tools.elements.ZeissBlock;
+import de.ryanthara.ja.rycon.elements.GSIBlock;
+import de.ryanthara.ja.rycon.elements.ZeissBlock;
 
 import java.util.ArrayList;
 
@@ -60,6 +60,7 @@ public class Zeiss2GSI {
      *
      * @return converted {@code ArrayList<String>} with lines of text format
      */
+    // TODO: 29.10.16 Implement the correct unit handling
     public ArrayList<String> convertZeiss2GSI(boolean isGSI16) {
         ArrayList<GSIBlock> blocks = new ArrayList<>();
         ArrayList<ArrayList<GSIBlock>> blocksInLines = new ArrayList<>();

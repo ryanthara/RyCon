@@ -21,16 +21,10 @@ package de.ryanthara.ja.rycon.io;
 import java.io.*;
 
 /**
- * FileUtils implements basic file io-operations for copying, etc. to RyCON.
+ * This class implements static access to basic file io-operations for copying, etc.
  * <p>
  * Because of the fact that there are a lot of user who has java version 7
- * running, RyCON uses no functions of java version 8 in versions lower than 2.
- *
- * <h3>Changes:</h3>
- * <ul>
- *     <li>2: code improvements and clean up </li>
- *     <li>1: basic implementation </li>
- * </ul>
+ * running, RyCON still not uses any functions of java version 8 in versions lower than 2.
  *
  * @author sebastian
  * @version 2
@@ -39,40 +33,17 @@ import java.io.*;
 public class FileUtils {
 
     /**
-     * Check if a directory exists and is a valid directory for a given String URL.
-     *
-     * @param file directory URL as String to be checked
-     * @return true if is directory and exists
-     */
-    public static boolean checkIsDirectory(String file) {
-        File f = new File(file);
-
-        return f.exists() & f.isDirectory();
-    }
-
-    /**
-     * Check if a file exists and is a valid file for a given String URL.
-     *
-     * @param file file URL as String to be checked
-     * @return true if is file and exists
-     */
-    public static boolean checkIsFile(String file) {
-        File f = new File(file);
-
-        return f.exists() & f.isFile();
-    }
-
-    /**
-     * Copy a file or directory and it's subdirectories recursively from source to target location.
+     * Copies a file or directory and it's subdirectories recursively from source to target location.
      * <p>
      * Alternatively the Apache Commons IO functions can be used for the same task. But at the moment
      * RyCON tries to use at less external libraries as necessary.
      *
      * @param sourceLocation source location files and folders to be copied
      * @param targetLocation target location files and folders to be copied
+     *
      * @throws IOException copying failed
      */
-    public void copy(File sourceLocation, File targetLocation) throws IOException {
+    public static void copy(File sourceLocation, File targetLocation) throws IOException {
         if (sourceLocation.isDirectory()) {
             copyDirectory(sourceLocation, targetLocation);
         } else {
@@ -80,7 +51,7 @@ public class FileUtils {
         }
     }
 
-    private void copyDirectory(File source, File target) throws IOException {
+    private static void copyDirectory(File source, File target) throws IOException {
         if (!target.exists()) {
             if (!target.mkdir()) {
                 System.err.println("copying directories and files failed. Directory couldn't be created.");
@@ -94,7 +65,7 @@ public class FileUtils {
         }
     }
 
-    private void copyFile(File source, File target) throws IOException {
+    private static void copyFile(File source, File target) throws IOException {
         try (InputStream in = new FileInputStream(source);
              OutputStream out = new FileOutputStream(target)) {
 

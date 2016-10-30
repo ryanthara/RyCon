@@ -6,7 +6,7 @@ RyCON is not an one man show, rather a project with important contributors and t
 I want to say thank you to:
 
  - the RyCON users who helped me with feedback, files and their endurance
- - all the little inputs from outside (code, icons, time, ...)
+ - all the little inputs from outside (number, icons, time, ...)
 
 I have to be indebted to:
 

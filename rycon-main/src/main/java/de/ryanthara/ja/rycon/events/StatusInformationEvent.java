@@ -21,8 +21,7 @@ package de.ryanthara.ja.rycon.events;
 import java.util.EventObject;
 
 /**
- * StatusInformationEvent implements a custom event object which is used for updating the
- * status bar with an event driven mechanism.
+ * This class implements a custom event object which is used for updating the status bar with an event driven mechanism.
  *
  * @author sebastian
  * @version 1
@@ -30,10 +29,10 @@ import java.util.EventObject;
  */
 public class StatusInformationEvent extends EventObject {
 
-    private String statusText;
+    private final String statusText;
 
     /**
-     * Class constructor with parameters.
+     * Constructs a new instance of this class given a calling object and the status text to be shown on the status bar.
      *
      * @param source     calling source object
      * @param statusText text to be shown on the status bar
@@ -44,16 +43,16 @@ public class StatusInformationEvent extends EventObject {
     }
 
     /**
-     * Return the status text.
+     * Returns the status text.
      *
-     * @return the status text
+     * @return status text
      */
     public String getStatusText() {
         return statusText;
     }
 
     /**
-     * Print the {@link StatusInformationEvent} as text to the console.
+     * Prints the {@link StatusInformationEvent} as text to the console.
      *
      * @return class name, status text and source
      */

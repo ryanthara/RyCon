@@ -19,9 +19,12 @@ package de.ryanthara.ja.rycon.converter.gsi;
 
 import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.data.PreferenceHandler;
-import de.ryanthara.ja.rycon.tools.elements.GSIBlock;
+import de.ryanthara.ja.rycon.elements.GSIBlock;
+import de.ryanthara.ja.rycon.tools.SortHelper;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.TreeSet;
 
 /**
  * This class implements several basic operations on Leica GSI files.
@@ -45,7 +48,7 @@ public class BaseToolsGSI {
     private TreeSet<Integer> foundAllWordIndices;
 
     /**
-     * Class constructor for read line based Leica GSI8 or GSI16 files.
+     * Constructs a new instance of this class given a read line based Leica GSI8 or GSI16 file.
      *
      * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
      */
@@ -53,6 +56,52 @@ public class BaseToolsGSI {
         this.readStringLines = readStringLines;
         this.foundAllWordIndices = new TreeSet<>();
         this.encodedBlocks = blockEncoder(readStringLines);
+    }
+
+    /**
+     * Returns the block size (number of characters) of a GSI block depending on it's format (GSI8 = 16, GSI16 = 24).
+     *
+     * @param line line to check
+     *
+     * @return block size
+     */
+    public static int getBlockSize(String line) {
+        if (line.startsWith("*")) {
+            return 24;
+        } else {
+            return 16;
+        }
+    }
+
+    /**
+     * Returns the point number for the line as string without encoding it into blocks.
+     *
+     * @param line Leica GSI formatted line
+     *
+     * @return point number
+     */
+    public static String getPointNumber(String line) {
+        if (line.startsWith("*")) {
+            return line.substring(8, 24);
+        } else {
+            return line.substring(8, 16);
+        }
+    }
+
+    /**
+     * Checks a valid Leica GSI formatted string line for being a target line (three times the coordinate is zero) for
+     * a free station.
+     *
+     * @param line line to be checked
+     *
+     * @return true if line is a target line
+     */
+    public static boolean isTargetLine(String line) {
+        if (line.startsWith("*")) {
+            return (line.split("0000000000000000").length - 1) == 3;
+        } else {
+            return (line.split("00000000").length - 1) == 3;
+        }
     }
 
     /**
@@ -152,14 +201,12 @@ public class BaseToolsGSI {
         ArrayList<ArrayList<GSIBlock>> blocksInLines = new ArrayList<>();
 
         for (String line : lines) {
-            int size;
             blocks = new ArrayList<>();
 
-            if (line.startsWith("*")) {
-                size = 24;
+            int size = BaseToolsGSI.getBlockSize(line);
+
+            if (size == 24) {
                 line = line.substring(1, line.length());
-            } else {
-                size = 16;
             }
 
             // split read line into separate Strings
@@ -176,16 +223,7 @@ public class BaseToolsGSI {
             }
 
             // sort every 'line' of GSI blocks by word index (WI)
-            Collections.sort(blocks, new Comparator<GSIBlock>() {
-                @Override
-                public int compare(GSIBlock o1, GSIBlock o2) {
-                    if (o1.getWordIndex() > o2.getWordIndex()) {
-                        return 1;
-                    } else {
-                        return -1;
-                    }
-                }
-            });
+            SortHelper.sortByWordIndex(blocks);
 
             // fill in the sorted 'line' of blocks into an array
             blocksInLines.add(blocks);

@@ -18,9 +18,9 @@
 package de.ryanthara.ja.rycon.converter.ltop;
 
 import de.ryanthara.ja.rycon.converter.gsi.BaseToolsGSI;
-import de.ryanthara.ja.rycon.tools.NumberHelper;
-import de.ryanthara.ja.rycon.tools.elements.GSIBlock;
-import de.ryanthara.ja.rycon.tools.elements.RyPoint;
+import de.ryanthara.ja.rycon.tools.NumberFormatter;
+import de.ryanthara.ja.rycon.elements.GSIBlock;
+import de.ryanthara.ja.rycon.elements.RyPoint;
 
 import java.util.ArrayList;
 
@@ -87,22 +87,22 @@ public class GSI2LTOP {
                             number = String.format("%-10s", s);
                             break;
                         case 81:        // easting E, column 33-44
-                            easting = String.format("%12s", NumberHelper.fillDecimalPlace(s, 4));
+                            easting = String.format("%12s", NumberFormatter.fillDecimalPlace(s, 4));
                             break;
                         case 82:        // northing N, column 45-56
-                            northing = String.format("%12s", NumberHelper.fillDecimalPlace(s, 4));
+                            northing = String.format("%12s", NumberFormatter.fillDecimalPlace(s, 4));
                             break;
                         case 83:        // height H, column 61-70
-                            height = String.format("%10s", NumberHelper.fillDecimalPlace(s, 4));
+                            height = String.format("%10s", NumberFormatter.fillDecimalPlace(s, 4));
                             break;
                         case 84:        // easting E0, column 33-44
-                            easting = String.format("%12s", NumberHelper.fillDecimalPlace(s, 4));
+                            easting = String.format("%12s", NumberFormatter.fillDecimalPlace(s, 4));
                             break;
                         case 85:        // northing N0, column 45-56
-                            northing = String.format("%12s", NumberHelper.fillDecimalPlace(s, 4));
+                            northing = String.format("%12s", NumberFormatter.fillDecimalPlace(s, 4));
                             break;
                         case 86:        // height H0, column 61-70
-                            height = String.format("%10s", NumberHelper.fillDecimalPlace(s, 4));
+                            height = String.format("%10s", NumberFormatter.fillDecimalPlace(s, 4));
                             break;
                     }
                 }

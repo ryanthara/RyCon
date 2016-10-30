@@ -1,6 +1,6 @@
 package de.ryanthara.ja.rycon.converter.text;
 
-import de.ryanthara.ja.rycon.tools.NumberHelper;
+import de.ryanthara.ja.rycon.tools.NumberFormatter;
 
 import java.util.ArrayList;
 
@@ -50,18 +50,18 @@ public class Cadwork2TXT {
             String number = lineSplit[5];
 
             // easting E, column 19-32
-            String easting = String.format("%14s", NumberHelper.fillDecimalPlace(lineSplit[1], 4));
+            String easting = String.format("%14s", NumberFormatter.fillDecimalPlace(lineSplit[1], 4));
 
             // northing N, column 33-46
-            String northing = String.format("%14s", NumberHelper.fillDecimalPlace(lineSplit[2], 4));
+            String northing = String.format("%14s", NumberFormatter.fillDecimalPlace(lineSplit[2], 4));
 
             // height H, column 61-70
             String height = "";
             if (useZeroHeights) {
-                height = String.format("%10s", NumberHelper.fillDecimalPlace(lineSplit[3], 4));
+                height = String.format("%10s", NumberFormatter.fillDecimalPlace(lineSplit[3], 4));
             } else {
                 if (!lineSplit[3].equals("0.000000")) {
-                    height = String.format("%10s", NumberHelper.fillDecimalPlace(lineSplit[3], 4));
+                    height = String.format("%10s", NumberFormatter.fillDecimalPlace(lineSplit[3], 4));
                 }
             }
 

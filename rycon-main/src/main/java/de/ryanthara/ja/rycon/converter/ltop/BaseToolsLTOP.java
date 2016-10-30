@@ -21,7 +21,7 @@ import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.data.PreferenceHandler;
 import de.ryanthara.ja.rycon.data.Version;
 import de.ryanthara.ja.rycon.i18n.I18N;
-import de.ryanthara.ja.rycon.tools.elements.RyPoint;
+import de.ryanthara.ja.rycon.elements.RyPoint;
 
 import java.text.DateFormat;
 import java.util.*;

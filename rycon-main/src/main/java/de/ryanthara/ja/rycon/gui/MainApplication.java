@@ -21,8 +21,13 @@ package de.ryanthara.ja.rycon.gui;
 import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.data.PreferenceHandler;
 import de.ryanthara.ja.rycon.data.Version;
+import de.ryanthara.ja.rycon.gui.custom.MessageBoxes;
+import de.ryanthara.ja.rycon.gui.custom.StatusBar;
+import de.ryanthara.ja.rycon.gui.widget.*;
+import de.ryanthara.ja.rycon.gui.widget.CodeSplitterWidget;
 import de.ryanthara.ja.rycon.i18n.I18N;
 import de.ryanthara.ja.rycon.tools.ImageConverter;
+import de.ryanthara.ja.rycon.tools.ShellPositioner;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.*;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -35,32 +40,39 @@ import org.eclipse.swt.widgets.*;
 
 import java.io.File;
 
+import static de.ryanthara.ja.rycon.gui.MainApplicationDnDButtons.CLEAN;
+import static de.ryanthara.ja.rycon.gui.MainApplicationDnDButtons.LEVELLING;
+import static de.ryanthara.ja.rycon.gui.MainApplicationDnDButtons.SPLIT;
+
 /**
- * MainApplication is the main application class of RyCON.
+ * Instances of this class are the main application of RyCON.
  * <p>
  * This class initializes the main window of RyCON and setup the
  * background functionality which is done by the extension of the
  * {@code Main} class.
  *
  * @author sebastian
- * @version 6
- * @see de.ryanthara.ja.rycon.Main
+ * @version 7
+ * @see Main
  * @since 1
  */
 public class MainApplication extends Main {
 
-    private boolean firstStart = true;
-    private int operations = Integer.MIN_VALUE;
-    private Display display = null;
-    private FileTransfer fileTransfer = null;
+    private boolean firstStart;
+    private int operations;
+    private Display display;
+    private FileTransfer fileTransfer;
     private Transfer[] types;
 
     /**
-     * Class constructor without parameters.
+     * Constructs a new instance of this class without parameters.
      * <p>
      * The user interface is initialized in a separate method, which is called from here.
      */
     public MainApplication() {
+        fileTransfer = null;
+        firstStart = true;
+        operations = Integer.MIN_VALUE;
         initUI();
     }
 
@@ -111,13 +123,13 @@ public class MainApplication extends Main {
     }
 
     private void actionBtn6() {
-        GuiHelper.showMessageBox(shell, SWT.ICON_WARNING, "Warning", "Not implemented yet.");
+        MessageBoxes.showMessageBox(shell, SWT.ICON_WARNING, "Warning", "Not implemented yet.");
         new TransformationWidget();
         statusBar.setStatus("not implemented yet.", StatusBar.WARNING);
     }
 
     private void actionBtn7() {
-        GuiHelper.showMessageBox(shell, SWT.ICON_WARNING, "Warning", "Not implemented yet.");
+        MessageBoxes.showMessageBox(shell, SWT.ICON_WARNING, "Warning", "Not implemented yet.");
         new PrinterWidget();
         statusBar.setStatus("not implemented yet.", StatusBar.WARNING);
     }
@@ -127,13 +139,57 @@ public class MainApplication extends Main {
         statusBar.setStatus(I18N.getStatus8SettingsOpened(), StatusBar.OK);
     }
 
+    private void addKeyBoardInputFilter(final Shell shell) {
+        display.addFilter(SWT.KeyDown, new Listener() {
+            @Override
+            public void handleEvent(Event event) {
+                if (!getSubShellStatus()) {
+                    switch (event.keyCode) {
+                        case '1':
+                            actionBtn1();
+                            break;
+                        case '2':
+                            actionBtn2();
+                            break;
+                        case '3':
+                            actionBtn3();
+                            break;
+                        case '4':
+                            actionBtn4();
+                            break;
+                        case '5':
+                            actionBtn5();
+                            break;
+                        case '6':
+                            actionBtn6();
+                            break;
+                        case '7':
+                            actionBtn7();
+                            break;
+                        case '8':
+                            actionBtn8();
+                            break;
+                        case '0':
+                            actionBtn0();
+                            break;
+                        case 'c':
+                            shell.setLocation(ShellPositioner.centerShellOnPrimaryMonitor(shell));
+                            break;
+                        case 'p':
+                            new SettingsWidget();
+                            break;
+                    }
+                }
+            }
+        });
+    }
+
     private void createButton0Exit(Composite composite) {
         Button btnExit = new Button(composite, SWT.PUSH);
         btnExit.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/icons/0-exit.png"));
         btnExit.setText(I18N.getBtnExitLabel());
         btnExit.setToolTipText(I18N.getBtnExitLabelToolTip());
 
-        //register listener for the selection event
         btnExit.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -161,25 +217,7 @@ public class MainApplication extends Main {
         GridData gridData = new GridData(getRyCON_GRID_WIDTH(), getRyCON_GRID_HEIGHT());
         btnToolboxClean.setLayoutData(gridData);
 
-        // Drag and drop for clean files tool
-        DropTarget targetClean = new DropTarget(btnToolboxClean, operations);
-        targetClean.setTransfer(types);
-
-        targetClean.addDropListener(new DropTargetAdapter() {
-            public void drop(DropTargetEvent event) {
-                if (fileTransfer.isSupportedType(event.currentDataType)) {
-                    String[] droppedFiles = (String[]) event.data;
-                    File files[] = new File[droppedFiles.length];
-
-                    for (int i = 0; i < droppedFiles.length; i++) {
-                        files[i] = new File(droppedFiles[i]);
-                    }
-
-                    new TidyUpWidget(files).executeDropInjection();
-
-                }
-            }
-        });
+        handleDropTarget(btnToolboxClean, CLEAN);
     }
 
     private void createButton2SplitTool(Composite composite) {
@@ -188,7 +226,6 @@ public class MainApplication extends Main {
         btnToolboxSplitter.setText(I18N.getBtnSplitterLabel());
         btnToolboxSplitter.setToolTipText(I18N.getBtnSplitterLabelToolTip());
 
-        //register listener for the selection event
         btnToolboxSplitter.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -199,27 +236,7 @@ public class MainApplication extends Main {
         GridData gridData = new GridData(getRyCON_GRID_WIDTH(), getRyCON_GRID_HEIGHT());
         btnToolboxSplitter.setLayoutData(gridData);
 
-        // Drag and drop for splitter tool
-        DropTarget targetSplitter = new DropTarget(btnToolboxSplitter, operations);
-        targetSplitter.setTransfer(types);
-
-        targetSplitter.addDropListener(new DropTargetAdapter() {
-
-            public void drop(DropTargetEvent event) {
-                if (fileTransfer.isSupportedType(event.currentDataType)) {
-                    String[] droppedFiles = (String[]) event.data;
-                    File files[] = new File[droppedFiles.length];
-
-                    for (int i = 0; i < droppedFiles.length; i++) {
-                        files[i] = new File(droppedFiles[i]);
-                    }
-
-                    new CodeSplitterWidget(files).executeDropInjection();
-
-                }
-            }
-
-        });
+        handleDropTarget(btnToolboxSplitter, SPLIT);
     }
 
     private void createButton3LevelTool(Composite composite) {
@@ -228,7 +245,6 @@ public class MainApplication extends Main {
         btnToolboxLeveling.setText(I18N.getBtnLevelingLabel());
         btnToolboxLeveling.setToolTipText(I18N.getBtnLevelingLabelToolTip());
 
-        //register listener for the selection event
         btnToolboxLeveling.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -239,26 +255,7 @@ public class MainApplication extends Main {
         GridData gridData = new GridData(getRyCON_GRID_WIDTH(), getRyCON_GRID_HEIGHT());
         btnToolboxLeveling.setLayoutData(gridData);
 
-        DropTarget targetLevelling = new DropTarget(btnToolboxLeveling, operations);
-        targetLevelling.setTransfer(types);
-
-        targetLevelling.addDropListener(new DropTargetAdapter() {
-
-            public void drop(DropTargetEvent event) {
-                if (fileTransfer.isSupportedType(event.currentDataType)) {
-                    String[] droppedFiles = (String[]) event.data;
-                    File files[] = new File[droppedFiles.length];
-
-                    for (int i = 0; i < droppedFiles.length; i++) {
-                        files[i] = new File(droppedFiles[i]);
-                    }
-
-                    new LevellingWidget(files).executeDropInjection();
-
-                }
-            }
-
-        });
+        handleDropTarget(btnToolboxLeveling, LEVELLING);
     }
 
     private void createButton4ConvertTool(Composite composite) {
@@ -267,7 +264,6 @@ public class MainApplication extends Main {
         btnToolboxConvert.setText(I18N.getBtnConvertLabel());
         btnToolboxConvert.setToolTipText(I18N.getBtnConvertLabelToolTip());
 
-        //register listener for the selection event
         btnToolboxConvert.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -285,7 +281,6 @@ public class MainApplication extends Main {
         btnToolboxGenerator.setText(I18N.getBtnGeneratorLabel());
         btnToolboxGenerator.setToolTipText(I18N.getBtnGeneratorLabelToolTip());
 
-        //register listener for the selection event
         btnToolboxGenerator.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -303,7 +298,6 @@ public class MainApplication extends Main {
         btnTransformation.setText(I18N.getBtnTransformationLabel());
         btnTransformation.setToolTipText(I18N.getBtnTransformationLabelToolTip());
 
-        //register listener for the selection event
         btnTransformation.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -321,7 +315,6 @@ public class MainApplication extends Main {
         btnPrint.setText(I18N.getBtnPrintLabel());
         btnPrint.setToolTipText(I18N.getBtnPrintLabelToolTip());
 
-        //register listener for the selection event
         btnPrint.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -339,7 +332,6 @@ public class MainApplication extends Main {
         btnSettings.setText(I18N.getBtnSettingsMainLabel());
         btnSettings.setToolTipText(I18N.getBtnSettingsMainLabelToolTip());
 
-        //register listener for the selection event
         btnSettings.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -349,6 +341,20 @@ public class MainApplication extends Main {
 
         GridData gridData = new GridData(getRyCON_GRID_WIDTH(), getRyCON_GRID_HEIGHT());
         btnSettings.setLayoutData(gridData);
+    }
+
+    private StatusBar createStatusBar(Shell shell) {
+        StatusBar statusBar = new StatusBar(shell, SWT.NONE);
+        statusBar.setStatus(I18N.getStatusRyCONInitialized(), StatusBar.OK);
+        Main.statusBar = statusBar;
+
+        FormData formDataStatus = new FormData();
+        formDataStatus.width = 3 * getRyCON_GRID_WIDTH() + 2; // width of the status bar!
+        formDataStatus.bottom = new FormAttachment(100, -8);
+        formDataStatus.left = new FormAttachment(0, 8);
+
+        statusBar.setLayoutData(formDataStatus);
+        return statusBar;
     }
 
     private void createTrayIcon() {
@@ -424,6 +430,38 @@ public class MainApplication extends Main {
         };
     }
 
+    private void handleDropTarget(Button button, final MainApplicationDnDButtons dnDButtons) {
+        DropTarget targetLevelling = new DropTarget(button, operations);
+        targetLevelling.setTransfer(types);
+
+        targetLevelling.addDropListener(new DropTargetAdapter() {
+
+            public void drop(DropTargetEvent event) {
+                if (fileTransfer.isSupportedType(event.currentDataType)) {
+                    String[] droppedFiles = (String[]) event.data;
+                    File files[] = new File[droppedFiles.length];
+
+                    for (int i = 0; i < droppedFiles.length; i++) {
+                        files[i] = new File(droppedFiles[i]);
+                    }
+
+                    switch (dnDButtons) {
+                        case CLEAN:
+                            new TidyUpWidget(files).executeDropInjection();
+                            break;
+                        case LEVELLING:
+                            new LevellingWidget(files).executeDropInjection();
+                            break;
+                        case SPLIT:
+                            new CodeSplitterWidget(files).executeDropInjection();
+                            break;
+                    }
+                }
+            }
+
+        });
+    }
+
     /**
      * Implements the user interface (UI) and all its components.
      * <p>
@@ -461,48 +499,7 @@ public class MainApplication extends Main {
         compositeGrid.setLayout(gridLayout);
 
         // listen to keyboard inputs. There is no modifier key used!
-        display.addFilter(SWT.KeyDown, new Listener() {
-            @Override
-            public void handleEvent(Event event) {
-                if (!getSubShellStatus()) {
-                    switch (event.keyCode) {
-                        case '1':
-                            actionBtn1();
-                            break;
-                        case '2':
-                            actionBtn2();
-                            break;
-                        case '3':
-                            actionBtn3();
-                            break;
-                        case '4':
-                            actionBtn4();
-                            break;
-                        case '5':
-                            actionBtn5();
-                            break;
-                        case '6':
-                            actionBtn6();
-                            break;
-                        case '7':
-                            actionBtn7();
-                            break;
-                        case '8':
-                            actionBtn8();
-                            break;
-                        case '0':
-                            actionBtn0();
-                            break;
-                        case 'c':
-                            shell.setLocation(ShellPositioner.centerShellOnPrimaryMonitor(shell));
-                            break;
-                        case 'p':
-                            new SettingsWidget();
-                            break;
-                    }
-                }
-            }
-        });
+        addKeyBoardInputFilter(shell);
 
         enableDNDSupport();
 
@@ -516,16 +513,7 @@ public class MainApplication extends Main {
         createButton8(compositeGrid);
         createButton0Exit(compositeGrid);
 
-        StatusBar statusBar = new StatusBar(shell, SWT.NONE);
-        statusBar.setStatus(I18N.getStatusRyCONInitialized(), StatusBar.OK);
-        Main.statusBar = statusBar;
-
-        FormData formDataStatus = new FormData();
-        formDataStatus.width = 3 * getRyCON_GRID_WIDTH() + 2; // width of the status bar!
-        formDataStatus.bottom = new FormAttachment(100, -8);
-        formDataStatus.left = new FormAttachment(0, 8);
-
-        statusBar.setLayoutData(formDataStatus);
+        StatusBar statusBar = createStatusBar(shell);
 
         if (pref.isDefaultSettingsGenerated()) {
             statusBar.setStatus(I18N.getMsgNewConfigFileGenerated(), StatusBar.WARNING);
@@ -576,7 +564,7 @@ public class MainApplication extends Main {
         }
 
         display.dispose();
-    }  // end of initUI()
+    }
 
     private void saveWindowPosition() {
         // find out on which display RyCON is visible

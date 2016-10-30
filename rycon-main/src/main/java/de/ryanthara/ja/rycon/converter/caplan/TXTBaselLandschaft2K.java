@@ -17,7 +17,7 @@
  */
 package de.ryanthara.ja.rycon.converter.caplan;
 
-import de.ryanthara.ja.rycon.tools.NumberHelper;
+import de.ryanthara.ja.rycon.tools.NumberFormatter;
 
 import java.util.ArrayList;
 
@@ -80,14 +80,14 @@ public class TXTBaselLandschaft2K {
             switch (lineSplit.length) {
                 case 5:     // HFP file
                     // easting (Y) is in column 3 -> column 19-32
-                    easting = String.format("%14s", NumberHelper.fillDecimalPlace(lineSplit[2], 4));
+                    easting = String.format("%14s", NumberFormatter.fillDecimalPlace(lineSplit[2], 4));
 
                     // northing (X) is in column 4 -> column 33-46
-                    northing = String.format("%14s", NumberHelper.fillDecimalPlace(lineSplit[3], 4));
+                    northing = String.format("%14s", NumberFormatter.fillDecimalPlace(lineSplit[3], 4));
                     valencyIndicator = 3;
 
                     // height (Z) is in column 5, and not always valued (LFP file) -> column 47-59
-                    height = String.format("%13s", NumberHelper.fillDecimalPlace(lineSplit[4], 5));
+                    height = String.format("%13s", NumberFormatter.fillDecimalPlace(lineSplit[4], 5));
                     Double d = Double.parseDouble(height);
                     if (d != 0d) {
                         valencyIndicator += 4;
@@ -101,17 +101,17 @@ public class TXTBaselLandschaft2K {
                     }
 
                     // easting (Y) is in column 4 -> column 19-32
-                    easting = String.format("%14s", NumberHelper.fillDecimalPlace(lineSplit[3], 4));
+                    easting = String.format("%14s", NumberFormatter.fillDecimalPlace(lineSplit[3], 4));
 
                     // northing (X) is in column 5 -> column 33-46
-                    northing = String.format("%14s", NumberHelper.fillDecimalPlace(lineSplit[4], 4));
+                    northing = String.format("%14s", NumberFormatter.fillDecimalPlace(lineSplit[4], 4));
                     valencyIndicator = 3;
 
                     // height (Z) is in column 6, and not always valued (LFP file) -> column 47-59
                     if (lineSplit[5].equals("NULL")) {
-                        height = String.format("%13s", NumberHelper.fillDecimalPlace("-9999", 5));
+                        height = String.format("%13s", NumberFormatter.fillDecimalPlace("-9999", 5));
                     } else {
-                        height = String.format("%13s", NumberHelper.fillDecimalPlace(lineSplit[5], 5));
+                        height = String.format("%13s", NumberFormatter.fillDecimalPlace(lineSplit[5], 5));
                         if (Double.parseDouble(height) != 0d) {
                             valencyIndicator += 4;
                         }

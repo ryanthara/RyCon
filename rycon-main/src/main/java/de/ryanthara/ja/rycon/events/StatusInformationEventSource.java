@@ -15,14 +15,13 @@
  * You should have received a copy of the GNU General Public License along with
  * this package. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package de.ryanthara.ja.rycon.events;
 
 import java.util.ArrayList;
 
 /**
- * StatusInformationEventSource implements a custom event object source which is used for updating the
- * status bar with an event driven mechanism.
+ * This class implements a custom event source object which is used for updating the status bar with an
+ * event driven mechanism.
  *
  * @author sebastian
  * @version 1
@@ -39,7 +38,7 @@ public class StatusInformationEventSource {
         statusInformationListenerList.add(statusInformationListener);
     }
 
-    // Remove StatusInformationListener.
+    // Remove StatusInformationListener
     public void removeFireListener(StatusInformationListener statusInformationListener) {
         statusInformationListenerList.remove(statusInformationListener);
     }
@@ -58,4 +57,5 @@ public class StatusInformationEventSource {
         // fireEvent = new FireEvent(this, "start fire", System.currentTimeMillis());
         statusInformationEvent = new StatusInformationEvent(this, "UPDATE");
     }
-}
+
+} // end of StatusInformationEventSource

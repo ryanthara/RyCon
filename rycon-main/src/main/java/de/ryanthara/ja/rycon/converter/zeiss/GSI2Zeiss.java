@@ -18,7 +18,7 @@
 package de.ryanthara.ja.rycon.converter.zeiss;
 
 import de.ryanthara.ja.rycon.converter.gsi.BaseToolsGSI;
-import de.ryanthara.ja.rycon.tools.elements.GSIBlock;
+import de.ryanthara.ja.rycon.elements.GSIBlock;
 
 import java.util.ArrayList;
 
@@ -64,7 +64,6 @@ public class GSI2Zeiss {
             // grab all the information from one line and fill them into place holders
             for (GSIBlock block : blocksInLine) {
                 int wordIndex = block.getWordIndex();
-                System.out.println("Found WI: " + wordIndex + " ");
 
                 switch (wordIndex) {
                     case 11:
@@ -145,11 +144,13 @@ public class GSI2Zeiss {
                     result.add(BaseToolsZeiss.prepareLineOfInstrumentOrTargetHeight(dialect, BaseToolsZeiss.TARGET_HEIGHT,
                             number, code, targetHeight, lineNumber));
                     lineNumber = lineNumber + 1;
-                } else if (!horizontalAngle.isEmpty() & !verticalAngle.isEmpty() & !slopeDistance.isEmpty()) {
+                }
+                if (!horizontalAngle.isEmpty() & !verticalAngle.isEmpty() & !slopeDistance.isEmpty()) {
                     result.add(BaseToolsZeiss.prepareLineOfMeasurement(dialect, number, code, horizontalAngle, verticalAngle,
                             slopeDistance, lineNumber));
                     lineNumber = lineNumber + 1;
-                } else if ((!easting.isEmpty() & !northing.isEmpty()) || (!height.isEmpty())) {
+                }
+                if (!easting.isEmpty() & !northing.isEmpty()) {
                     result.add(BaseToolsZeiss.prepareLineOfCoordinates(dialect, number, code, easting, northing, height, lineNumber));
                     lineNumber = lineNumber + 1;
                 }

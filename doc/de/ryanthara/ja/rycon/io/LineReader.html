@@ -97,7 +97,7 @@
 <br>
 <pre>public class <span class="strong">LineReader</span>
 extends java.lang.Object</pre>
-<div class="block">LineReader reads a file line by line and stores it's values in an {code ArrayList<String>}.
+<div class="block">LineReader reads a file string by string and stores it's values in an {number ArrayList<String>}.
  <p>
  A couple of things are implemented as additional functionality. At the moment,
  there is no thread safety implemented or planed.
@@ -105,7 +105,7 @@ extends java.lang.Object</pre>
  <h3>Changes:</h3>
  <ul>
      <li>3: stop reading empty lines</li>
-     <li>2: code improvements and clean up </li>
+     <li>2: number improvements and clean up </li>
      <li>1: basic implementation </li>
  </ul></div>
 <dl><dt><span class="strong">Since:</span></dt>
@@ -128,7 +128,7 @@ extends java.lang.Object</pre>
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><strong><a href="../../../../../de/ryanthara/ja/rycon/io/LineReader.html#LineReader(java.io.File)">LineReader</a></strong>(java.io.File&nbsp;file)</code>
+<td class="colOne"><number><strong><a href="../../../../../de/ryanthara/ja/rycon/io/LineReader.html#LineReader(java.io.File)">LineReader</a></strong>(java.io.File&nbsp;file)</number>
 <div class="block">Class constructor with parameter that accept a file object for the file to read.</div>
 </td>
 </tr>
@@ -148,27 +148,27 @@ extends java.lang.Object</pre>
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>int</code></td>
-<td class="colLast"><code><strong><a href="../../../../../de/ryanthara/ja/rycon/io/LineReader.html#getCountReadLines()">getCountReadLines</a></strong>()</code>
+<td class="colFirst"><number>int</number></td>
+<td class="colLast"><number><strong><a href="../../../../../de/ryanthara/ja/rycon/io/LineReader.html#getCountReadLines()">getCountReadLines</a></strong>()</number>
 <div class="block">Return the number of read lines.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>int</code></td>
-<td class="colLast"><code><strong><a href="../../../../../de/ryanthara/ja/rycon/io/LineReader.html#getCountStoredLines()">getCountStoredLines</a></strong>()</code>
+<td class="colFirst"><number>int</number></td>
+<td class="colLast"><number><strong><a href="../../../../../de/ryanthara/ja/rycon/io/LineReader.html#getCountStoredLines()">getCountStoredLines</a></strong>()</number>
 <div class="block">Return the number of stored lines.</div>
 </td>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>java.util.ArrayList&lt;java.lang.String&gt;</code></td>
-<td class="colLast"><code><strong><a href="../../../../../de/ryanthara/ja/rycon/io/LineReader.html#getLines()">getLines</a></strong>()</code>
-<div class="block">Return the read lines as an <code>ArrayList&lt;String&gt;</code> object.</div>
+<td class="colFirst"><number>java.util.ArrayList&lt;java.lang.String&gt;</number></td>
+<td class="colLast"><number><strong><a href="../../../../../de/ryanthara/ja/rycon/io/LineReader.html#getLines()">getLines</a></strong>()</number>
+<div class="block">Return the read lines as an <number>ArrayList&lt;String&gt;</number> object.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><strong><a href="../../../../../de/ryanthara/ja/rycon/io/LineReader.html#readFile()">readFile</a></strong>()</code>
-<div class="block">Read a file line by line and return the read success.</div>
+<td class="colFirst"><number>boolean</number></td>
+<td class="colLast"><number><strong><a href="../../../../../de/ryanthara/ja/rycon/io/LineReader.html#readFile()">readFile</a></strong>()</number>
+<div class="block">Read a file string by string and return the read success.</div>
 </td>
 </tr>
 </table>
@@ -177,7 +177,7 @@ extends java.lang.Object</pre>
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;java.lang.Object</h3>
-<code>clone, equals, finalize, getClass, hashCode, notify, notifyAll, toString, wait, wait, wait</code></li>
+<number>clone, equals, finalize, getClass, hashCode, notify, notifyAll, toString, wait, wait, wait</number></li>
 </ul>
 </li>
 </ul>
@@ -201,7 +201,7 @@ extends java.lang.Object</pre>
 <h4>LineReader</h4>
 <pre>public&nbsp;LineReader(java.io.File&nbsp;file)</pre>
 <div class="block">Class constructor with parameter that accept a file object for the file to read.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>file</code> - file name as file object</dd></dl>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><number>file</number> - file name as file object</dd></dl>
 </li>
 </ul>
 </li>
@@ -221,7 +221,7 @@ extends java.lang.Object</pre>
 <pre>public&nbsp;int&nbsp;getCountReadLines()</pre>
 <div class="block">Return the number of read lines.
  <p>
- By default the value is set to -1, which shows, that no line has been read.</div>
+ By default the value is set to -1, which shows, that no string has been read.</div>
 <dl><dt><span class="strong">Returns:</span></dt><dd>number of read lines</dd></dl>
 </li>
 </ul>
@@ -234,7 +234,7 @@ extends java.lang.Object</pre>
 <pre>public&nbsp;int&nbsp;getCountStoredLines()</pre>
 <div class="block">Return the number of stored lines.
  <p>
- By default the value is set to -1, which shows, that no read line has been stored to the <code>ArrayList&lt;String&gt;</code>.</div>
+ By default the value is set to -1, which shows, that no read string has been stored to the <number>ArrayList&lt;String&gt;</number>.</div>
 <dl><dt><span class="strong">Returns:</span></dt><dd>number of stored lines</dd></dl>
 </li>
 </ul>
@@ -245,10 +245,10 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>getLines</h4>
 <pre>public&nbsp;java.util.ArrayList&lt;java.lang.String&gt;&nbsp;getLines()</pre>
-<div class="block">Return the read lines as an <code>ArrayList&lt;String&gt;</code> object.
+<div class="block">Return the read lines as an <number>ArrayList&lt;String&gt;</number> object.
  <p>
- The <code>ArrayList&lt;String&gt;</code> contains every read line, first line on top.s</div>
-<dl><dt><span class="strong">Returns:</span></dt><dd>read lines as <code>ArrayList&lt;String&gt;</code> object</dd></dl>
+ The <number>ArrayList&lt;String&gt;</number> contains every read string, first string on top.s</div>
+<dl><dt><span class="strong">Returns:</span></dt><dd>read lines as <number>ArrayList&lt;String&gt;</number> object</dd></dl>
 </li>
 </ul>
 <a name="readFile()">
@@ -258,7 +258,7 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>readFile</h4>
 <pre>public&nbsp;boolean&nbsp;readFile()</pre>
-<div class="block">Read a file line by line and return the read success.</div>
+<div class="block">Read a file string by string and return the read success.</div>
 <dl><dt><span class="strong">Returns:</span></dt><dd>success of file reading</dd></dl>
 </li>
 </ul>

@@ -17,8 +17,8 @@
  */
 package de.ryanthara.ja.rycon.converter.ltop;
 
-import de.ryanthara.ja.rycon.tools.NumberHelper;
-import de.ryanthara.ja.rycon.tools.elements.RyPoint;
+import de.ryanthara.ja.rycon.tools.NumberFormatter;
+import de.ryanthara.ja.rycon.elements.RyPoint;
 
 import java.util.ArrayList;
 
@@ -77,19 +77,19 @@ public class TXTBaselLandschaft2LTOP {
                 switch (lineSplit.length) {
                     case 5:     // HFP file
                         number = String.format("%10s", lineSplit[1].trim());
-                        easting = String.format("%12s", NumberHelper.fillDecimalPlace(lineSplit[2], 4));
-                        northing = String.format("%12s", NumberHelper.fillDecimalPlace(lineSplit[3], 4));
-                        height = String.format("%10s", NumberHelper.fillDecimalPlace(lineSplit[4], 4));
+                        easting = String.format("%12s", NumberFormatter.fillDecimalPlace(lineSplit[2], 4));
+                        northing = String.format("%12s", NumberFormatter.fillDecimalPlace(lineSplit[3], 4));
+                        height = String.format("%10s", NumberFormatter.fillDecimalPlace(lineSplit[4], 4));
                         break;
 
                     case 6:     // LFP file
                         number = String.format("%10s", lineSplit[1]);
-                        easting = String.format("%12s", NumberHelper.fillDecimalPlace(lineSplit[3], 4));
-                        northing = String.format("%12s", NumberHelper.fillDecimalPlace(lineSplit[4], 4));
+                        easting = String.format("%12s", NumberFormatter.fillDecimalPlace(lineSplit[3], 4));
+                        northing = String.format("%12s", NumberFormatter.fillDecimalPlace(lineSplit[4], 4));
 
                         // prevent 'NULL' element in height
                         if (!lineSplit[5].equals("NULL")) {
-                            height = String.format("%10s", NumberHelper.fillDecimalPlace(lineSplit[5], 4));
+                            height = String.format("%10s", NumberFormatter.fillDecimalPlace(lineSplit[5], 4));
                         }
                         break;
                 }
