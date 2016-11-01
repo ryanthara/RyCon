@@ -57,12 +57,6 @@ import java.awt.image.WritableRaster;
  * <p>
  * A couple of additional methods was implemented for RyCON.
  *
- * <h3>Changes:</h3>
- * <ul>
- *     <li>2: code improvements and clean up </li>
- *     <li>1: basic implementation </li>
- * </ul>
- *
  * @author sebastian
  * @version 2
  * @since 1
@@ -70,20 +64,37 @@ import java.awt.image.WritableRaster;
 public class ImageConverter {
 
     /**
-     * Convert an image (GIF, JPG, PGN, ...) to {@code Image} object from swt
+     * Converts an image (GIF, JPG, PGN, ...) to {@code Image} object from swt
      * {@link org.eclipse.swt.graphics.Image}.
      *
      * @param display Display object on which the image is loaded (swt dependency)
      * @param path    String with the URL of the image as String
+     *
      * @return {@link org.eclipse.swt.graphics.Image} object
      */
     public Image convertToImage(Display display, String path) {
         return new Image(display, convertToImageData(convertToBufferedImage(IconLoader.getIcon(path))));
     }
 
+    private BufferedImage convertToBufferedImage(Icon icon) {
+        int w = icon.getIconWidth();
+        int h = icon.getIconHeight();
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice gd = ge.getDefaultScreenDevice();
+        GraphicsConfiguration gc = gd.getDefaultConfiguration();
+        BufferedImage image = gc.createCompatibleImage(w, h, Transparency.TRANSLUCENT);
+        Graphics2D g2D = image.createGraphics();
+        icon.paintIcon(null, g2D, 0, 0);
+        g2D.dispose();
+
+        return image;
+    }
+
     /**
      * Convert a {@code BufferedImage} object to an {@code ImageData} object.
+     *
      * @param bufferedImage the BufferedImage to convert
+     *
      * @return converted BufferedImage as ImageData
      */
     private ImageData convertToImageData(BufferedImage bufferedImage) {
@@ -133,20 +144,6 @@ public class ImageConverter {
             return data;
         }
         return null;
-    }
-
-    private BufferedImage convertToBufferedImage(Icon icon) {
-        int w = icon.getIconWidth();
-        int h = icon.getIconHeight();
-        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        GraphicsDevice gd = ge.getDefaultScreenDevice();
-        GraphicsConfiguration gc = gd.getDefaultConfiguration();
-        BufferedImage image = gc.createCompatibleImage(w, h, Transparency.TRANSLUCENT);
-        Graphics2D g2D = image.createGraphics();
-        icon.paintIcon(null, g2D, 0, 0);
-        g2D.dispose();
-
-        return image;
     }
 
 } // end of ImageConverter

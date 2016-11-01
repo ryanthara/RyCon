@@ -24,11 +24,15 @@ public class BaseToolsExcel {
 
     /**
      * Member which helps distinguish between XLS and XLSX file format.
+     * <p>
+     * The member isXLS holds 'true'
      */
     public static final boolean isXLS = true;
 
     /**
      * Member which helps distinguish between XLS and XLSX file format.
+     *<p>
+     * The member isXLSX holds 'false'
      */
     public static final boolean isXLSX = false;
 

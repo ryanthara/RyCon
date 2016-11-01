@@ -26,7 +26,8 @@ import java.util.ArrayList;
  * @author sebastian
  * @version 1
  * @since 12
- */public class Zeiss2CSV {
+ */
+public class Zeiss2CSV {
 
     private ArrayList<String> readStringLines;
 
@@ -44,10 +45,10 @@ import java.util.ArrayList;
     /**
      * Converts a Zeiss REC file (and it's dialects R4, R5, R500 and M5) into a K format file.
      *
-     * @param separator         used separator sign
-     * @param writeCommentLine  option to write a comment line into the K file with basic information
-     * @param writeCodeColumn   option to write a found code into the K file
-     * @param useSimpleFormat   option to write a reduced K file which is compatible to ZF LaserControl
+     * @param separator        used separator sign
+     * @param useSimpleFormat  option to write a reduced K file which is compatible to ZF LaserControl
+     * @param writeCommentLine option to write a comment line into the K file with basic information
+     * @param writeCodeColumn  option to write a found code into the K file
      *
      * @return converted K file as ArrayList<String>
      */

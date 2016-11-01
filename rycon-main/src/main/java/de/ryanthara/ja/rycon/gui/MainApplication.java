@@ -186,6 +186,7 @@ public class MainApplication extends Main {
 
     private void createButton0Exit(Composite composite) {
         Button btnExit = new Button(composite, SWT.PUSH);
+        btnExit.setAlignment(SWT.LEFT);
         btnExit.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/icons/0-exit.png"));
         btnExit.setText(I18N.getBtnExitLabel());
         btnExit.setToolTipText(I18N.getBtnExitLabelToolTip());
@@ -203,6 +204,7 @@ public class MainApplication extends Main {
 
     private void createButton1CleanTool(Composite composite) {
         Button btnToolboxClean = new Button(composite, SWT.PUSH);
+        btnToolboxClean.setAlignment(SWT.LEFT);
         btnToolboxClean.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/icons/1-clean.png"));
         btnToolboxClean.setText(I18N.getBtnCleanLabel());
         btnToolboxClean.setToolTipText(I18N.getBtnCleanLabelToolTip());
@@ -222,6 +224,7 @@ public class MainApplication extends Main {
 
     private void createButton2SplitTool(Composite composite) {
         Button btnToolboxSplitter = new Button(composite, SWT.PUSH);
+        btnToolboxSplitter.setAlignment(SWT.LEFT);
         btnToolboxSplitter.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/icons/2-code.png"));
         btnToolboxSplitter.setText(I18N.getBtnSplitterLabel());
         btnToolboxSplitter.setToolTipText(I18N.getBtnSplitterLabelToolTip());
@@ -241,6 +244,7 @@ public class MainApplication extends Main {
 
     private void createButton3LevelTool(Composite composite) {
         Button btnToolboxLeveling = new Button(composite, SWT.PUSH);
+        btnToolboxLeveling.setAlignment(SWT.LEFT);
         btnToolboxLeveling.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/icons/3-level.png"));
         btnToolboxLeveling.setText(I18N.getBtnLevelingLabel());
         btnToolboxLeveling.setToolTipText(I18N.getBtnLevelingLabelToolTip());
@@ -260,6 +264,7 @@ public class MainApplication extends Main {
 
     private void createButton4ConvertTool(Composite composite) {
         Button btnToolboxConvert = new Button(composite, SWT.PUSH);
+        btnToolboxConvert.setAlignment(SWT.LEFT);
         btnToolboxConvert.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/icons/4-convert.png"));
         btnToolboxConvert.setText(I18N.getBtnConvertLabel());
         btnToolboxConvert.setToolTipText(I18N.getBtnConvertLabelToolTip());
@@ -277,6 +282,7 @@ public class MainApplication extends Main {
 
     private void createButton5ProjectTool(Composite composite) {
         Button btnToolboxGenerator = new Button(composite, SWT.PUSH);
+        btnToolboxGenerator.setAlignment(SWT.LEFT);
         btnToolboxGenerator.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/icons/5-project.png"));
         btnToolboxGenerator.setText(I18N.getBtnGeneratorLabel());
         btnToolboxGenerator.setToolTipText(I18N.getBtnGeneratorLabelToolTip());
@@ -294,6 +300,7 @@ public class MainApplication extends Main {
 
     private void createButton6(Composite composite) {
         Button btnTransformation = new Button(composite, SWT.PUSH);
+        btnTransformation.setAlignment(SWT.LEFT);
         btnTransformation.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/icons/6-transformation.png"));
         btnTransformation.setText(I18N.getBtnTransformationLabel());
         btnTransformation.setToolTipText(I18N.getBtnTransformationLabelToolTip());
@@ -311,6 +318,7 @@ public class MainApplication extends Main {
 
     private void createButton7(Composite composite) {
         Button btnPrint = new Button(composite, SWT.PUSH);
+        btnPrint.setAlignment(SWT.LEFT);
         btnPrint.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/icons/7-printer.png"));
         btnPrint.setText(I18N.getBtnPrintLabel());
         btnPrint.setToolTipText(I18N.getBtnPrintLabelToolTip());
@@ -328,6 +336,7 @@ public class MainApplication extends Main {
 
     private void createButton8(Composite composite) {
         Button btnSettings = new Button(composite, SWT.PUSH);
+        btnSettings.setAlignment(SWT.LEFT);
         btnSettings.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/icons/8-settings.png"));
         btnSettings.setText(I18N.getBtnSettingsMainLabel());
         btnSettings.setToolTipText(I18N.getBtnSettingsMainLabelToolTip());

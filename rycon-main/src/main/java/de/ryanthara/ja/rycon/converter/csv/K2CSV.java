@@ -44,9 +44,9 @@ public class K2CSV {
      * Convert a text file (nr x y z or nr code x y z) into a K format file.
      *
      * @param separator         used separator sign
+     * @param useSimpleFormat   option to write a reduced K file which is compatible to ZF LaserControl
      * @param writeCommentLine  option to write a comment line into the K file with basic information
      * @param writeCodeColumn   option to write a found code into the K file
-     * @param useSimpleFormat   option to write a reduced K file which is compatible to ZF LaserControl
      *
      * @return converted K file as ArrayList<String>
      */

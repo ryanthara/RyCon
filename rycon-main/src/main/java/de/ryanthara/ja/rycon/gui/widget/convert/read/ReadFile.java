@@ -15,11 +15,13 @@
  * You should have received a copy of the GNU General Public License along with
  * this package. If not, see <http://www.gnu.org/licenses/>.
  */
-package de.ryanthara.ja.rycon.gui.widget.convert;
+package de.ryanthara.ja.rycon.gui.widget.convert.read;
 
 import de.ryanthara.ja.rycon.gui.widget.ConverterWidget;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Interface for reading operations in the {@link ConverterWidget}.
@@ -30,6 +32,33 @@ import java.io.File;
  */
 public interface ReadFile {
 
+    /**
+     * Returns the read CSV lines as {@link List}.
+     * * <p>
+     * This method is used vise versa with method {@link #getReadStringLines()}. The one which is not used,
+     * returns null for indication.
+     *
+     * @return read CSV lines
+     */
+    List<String[]> getReadCSVFile();
+
+    /**
+     * Returns the read string lines as {@link ArrayList}.
+     * <p>
+     * This method is used vise versa with method {@link #getReadCSVFile()}. The one which is not used,
+     * returns null for indication.
+     *
+     * @return read string lines
+     */
+    ArrayList<String> getReadStringLines();
+
+    /**
+     * Reads the ... file from ... given as parameter and returns the read file success.
+     *
+     * @param file2Read read file reference
+     *
+     * @return read file success
+     */
     boolean readFile(File file2Read);
 
-}
+} // end of ReadFile

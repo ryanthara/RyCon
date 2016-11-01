@@ -46,12 +46,12 @@ public class Zeiss2K {
      * Converts a measurement file from Zeiss REC format (R4, R5, REC500 or M5) into a Caplan K file.
      *
      * @param useSimpleFormat  output file with a simple structure
-     * @param writeCodeColumn  write code column to output file
      * @param writeCommentLine write comment line to output file
+     * @param writeCodeColumn  write code column to output file
      *
      * @return converted K file
      */
-    public ArrayList<String> convertZeiss2K(boolean useSimpleFormat, boolean writeCodeColumn, boolean writeCommentLine) {
+    public ArrayList<String> convertZeiss2K(boolean useSimpleFormat, boolean writeCommentLine, boolean writeCodeColumn) {
         ArrayList<String> result = new ArrayList<>();
 
         if (writeCommentLine) {

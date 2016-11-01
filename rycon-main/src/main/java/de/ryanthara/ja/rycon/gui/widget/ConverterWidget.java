@@ -17,7 +17,6 @@
  */
 package de.ryanthara.ja.rycon.gui.widget;
 
-import com.opencsv.CSVReader;
 import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.check.TextCheck;
 import de.ryanthara.ja.rycon.converter.caplan.*;
@@ -35,8 +34,9 @@ import de.ryanthara.ja.rycon.gui.custom.*;
 import de.ryanthara.ja.rycon.gui.widget.convert.FileFilterIndex;
 import de.ryanthara.ja.rycon.gui.widget.convert.SourceButton;
 import de.ryanthara.ja.rycon.gui.widget.convert.TargetButton;
+import de.ryanthara.ja.rycon.gui.widget.convert.read.*;
+import de.ryanthara.ja.rycon.gui.widget.convert.write.*;
 import de.ryanthara.ja.rycon.i18n.I18N;
-import de.ryanthara.ja.rycon.io.LineReader;
 import de.ryanthara.ja.rycon.io.LineWriter;
 import de.ryanthara.ja.rycon.tools.RadioHelper;
 import de.ryanthara.ja.rycon.tools.ShellPositioner;
@@ -51,15 +51,15 @@ import org.eclipse.swt.widgets.*;
 import org.odftoolkit.simple.SpreadsheetDocument;
 
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static de.ryanthara.ja.rycon.gui.widget.convert.FileFilterIndex.*;
 
 /**
- * This class ConverterWidget implements a complete widget and it's functionality.
+ * Instances of this class implements a complete converter widget and it's functionality.
  * <p>
  * The ConverterWidget of RyCON is used to convert measurement and coordinate
  * files into different formats. RyCON can be used to convert special formats
@@ -87,7 +87,7 @@ public class ConverterWidget {
     private Shell innerShell;
 
     /**
-     * Class constructor without parameters.
+     * Constructs the {@link ConverterWidget} without any parameters.
      * <p>
      * The user interface is initialized in a separate method, which is called from here.
      */
@@ -218,56 +218,7 @@ public class ConverterWidget {
             Control[] childrenSource = groupSource.getChildren();
             Control[] childrenTarget = groupTarget.getChildren();
 
-            switch (FileFilterIndex.fromIndex(fileDialog.getFilterIndex())) {
-                case GSI:
-                    if (RadioHelper.getSelectedBtn(childrenSource) > 1) {
-                        RadioHelper.selectBtn(childrenSource, 1);
-                    }
-                    if (RadioHelper.getSelectedBtn(childrenTarget) == 0) {
-                        RadioHelper.selectBtn(childrenSource, 1);
-                    } else if (RadioHelper.getSelectedBtn(childrenTarget) == 1) {
-                        RadioHelper.selectBtn(childrenSource, 0);
-                    }
-                    break;
-                case TXT:
-                    // prevent button change for geodata Basel Landschaft files
-                    if (RadioHelper.getSelectedBtn(childrenSource) != 7) {
-                        RadioHelper.selectBtn(childrenSource, 2);
-                    }
-                    if (RadioHelper.getSelectedBtn(childrenTarget) == 2) {
-                        RadioHelper.selectBtn(childrenTarget, 1);
-                    }
-                    break;
-                case CSV:
-                    // prevent button change for geodata Basel Stadt files
-                    if (RadioHelper.getSelectedBtn(childrenSource) != 6) {
-                        RadioHelper.selectBtn(childrenSource, 3);
-                    }
-                    if (RadioHelper.getSelectedBtn(childrenTarget) == 3) {
-                        RadioHelper.selectBtn(childrenTarget, 1);
-                    }
-                    break;
-                case K:
-                    // prevent button change for CAPLAN K files
-                    if (RadioHelper.getSelectedBtn(childrenSource) != 4) {
-                        RadioHelper.selectBtn(childrenSource, 4);
-                    }
-                    if (RadioHelper.getSelectedBtn(childrenTarget) == 4) {
-                        RadioHelper.selectBtn(childrenTarget, 1);
-                    }
-                    break;
-                case DAT:
-                    // prevent button change for node.dat (cadwork) files
-                    if (RadioHelper.getSelectedBtn(childrenSource) != 6) {
-                        RadioHelper.selectBtn(childrenSource, 6);
-                    }
-                    break;
-                case REC:
-                    // prevent button change for Zeiss REC files
-                    if (RadioHelper.getSelectedBtn(childrenSource) != 5) {
-                        RadioHelper.selectBtn(childrenSource, 5);
-                    }
-            }
+            toggleRadioButtons(fileDialog, childrenSource, childrenTarget);
         }
     }
 
@@ -407,10 +358,10 @@ public class ConverterWidget {
                 fileDialog.setFilterIndex(K.getIndex());
                 break;
             case 5:
-                fileDialog.setFilterIndex(FileFilterIndex.REC.getIndex());
+                fileDialog.setFilterIndex(REC.getIndex());
                 break;
             case 6:
-                fileDialog.setFilterIndex(FileFilterIndex.DAT.getIndex());
+                fileDialog.setFilterIndex(DAT.getIndex());
                 break;
             case 7:
                 fileDialog.setFilterIndex(CSV.getIndex());
@@ -418,6 +369,8 @@ public class ConverterWidget {
             case 8:
                 fileDialog.setFilterIndex(TXT.getIndex());
                 break;
+            default:
+                fileDialog.setFilterIndex(GSI.getIndex());
         }
     }
 
@@ -493,6 +446,38 @@ public class ConverterWidget {
         return file.toString().substring(0, file.toString().length() - 4) + "_" + Main.getParamEditString() + suffix;
     }
 
+    private Map<Integer, ReadFile> prepareReadFileMaps() {
+        Map<Integer, ReadFile> readFileMap = new HashMap<>();
+        readFileMap.put(0, new GSIReadFile(innerShell));
+        readFileMap.put(1, new GSIReadFile(innerShell));
+        readFileMap.put(2, new TXTReadFile(innerShell));
+        readFileMap.put(3, new CSVReadFile(innerShell, chkBoxCSVSemiColonSeparator.getSelection()));
+        readFileMap.put(4, new CaplanReadFile(innerShell));
+        readFileMap.put(5, new ZeissReadFile(innerShell));
+        readFileMap.put(6, new CadworkReadFile(innerShell));
+        readFileMap.put(7, new BaselStadtCSVReadFile(innerShell));
+        readFileMap.put(8, new BaselLandschaftTXTReadFile(innerShell));
+
+        return readFileMap;
+    }
+
+    private Map<Integer, WriteFile> prepareWriteFile(File file, ArrayList<String> readStringFile, List<String[]> readCSVFile, WriteParameter parameter) {
+        Map<Integer, WriteFile> writeFileMap = new HashMap<>();
+        writeFileMap.put(0, new GSIWriteFile(readStringFile, readCSVFile, parameter, Main.getGSI8()));
+        writeFileMap.put(1, new GSIWriteFile(readStringFile, readCSVFile, parameter, Main.getGSI16()));
+        writeFileMap.put(2, new TXTWriteFile(readStringFile, readCSVFile, parameter));
+        writeFileMap.put(3, new CSVWriteFile(readStringFile, readCSVFile, parameter));
+        writeFileMap.put(4, new CaplanWriteFile(readStringFile, readCSVFile, parameter));
+        writeFileMap.put(5, new ZeissWriteFile(readStringFile, readCSVFile, parameter));
+        writeFileMap.put(6, new LtopKOOWriteFile(readStringFile, readCSVFile, parameter));
+        writeFileMap.put(7, new LtopMESWriteFile(readStringFile, parameter));
+        writeFileMap.put(8, new ExcelWriteFile(file, readStringFile, readCSVFile, parameter, BaseToolsExcel.isXLSX));
+        writeFileMap.put(9, new ExcelWriteFile(file, readStringFile, readCSVFile, parameter, BaseToolsExcel.isXLS));
+        writeFileMap.put(10, new ODFWriteFile(file, readStringFile, readCSVFile, parameter));
+
+        return writeFileMap;
+    }
+
     private boolean processFileOperations() {
         boolean success;
         boolean GSIFormat;
@@ -500,13 +485,11 @@ public class ConverterWidget {
         int sourceNumber = RadioHelper.getSelectedBtn(groupSource.getChildren());
         int targetNumber = RadioHelper.getSelectedBtn(groupTarget.getChildren());
 
-        if (sourceNumber == 0) {
-            GSIFormat = Main.getGSI8();
-        } else {
-            GSIFormat = Main.getGSI16();
-        }
+        GSIFormat = sourceNumber == 0 ? Main.getGSI8() : Main.getGSI16();
 
         int counter = 0;
+
+        Map<Integer, ReadFile> readFileMap = prepareReadFileMaps();
 
         for (File file2read : files2read) {
             boolean readFileSuccess = false;
@@ -514,81 +497,34 @@ public class ConverterWidget {
             List<String[]> readCSVFile = null;
             ArrayList<String> readFile = null;
 
-            // read files
-            switch (sourceNumber) {
-                case 0:     // fall through for GSI8 format
-                case 1:     // GSI16 format
-                    if ((readFile = readLineBasedFile(file2read)) != null) {
+            // read files (new version)
+            if (readFileMap.containsKey(sourceNumber)) {
+                if (readFileMap.get(sourceNumber).readFile(file2read)) {
+                    if ((readCSVFile = readFileMap.get(sourceNumber).getReadCSVFile()) != null) {
                         readFileSuccess = true;
                     } else {
-                        readErrorHandler(file2read, I18N.getMsgConvertReaderGSIFailed());
+                        readFileSuccess = (readFile = readFileMap.get(sourceNumber).getReadStringLines()) != null;
                     }
-                    break;
-
-                case 2:     // TXT format (tabulator or space separated)
-                    if ((readFile = readLineBasedFile(file2read)) != null) {
-                        readFileSuccess = true;
-                    } else {
-                        readErrorHandler(file2read, I18N.getMsgConvertReaderTXTFailed());
-                    }
-                    break;
-
-                case 3:     // CSV format (comma or semicolon separated)
-                    char separatorCSV = chkBoxCSVSemiColonSeparator.getSelection() ? ';' : ',';
-
-                    // use opencsv project for reading -> could this be done better?
-                    try {
-                        CSVReader reader = new CSVReader(new FileReader(file2read), separatorCSV);
-                        readCSVFile = reader.readAll();
-                        readFileSuccess = true;
-                    } catch (IOException e) {
-                        readErrorHandler(file2read, I18N.getMsgConvertReaderCSVFailed());
-                    }
-                    break;
-
-                case 4:     // CAPLAN K format file
-                    if ((readFile = readLineBasedFile(file2read)) != null) {
-                        readFileSuccess = true;
-                    } else {
-                        readErrorHandler(file2read, I18N.getMsgConvertReaderCaplanFailed());
-                    }
-                    break;
-
-                case 5:     // Zeiss REC format and it's dialects (R4, R5, REC500 und M5)
-                    if ((readFile = readLineBasedFile(file2read)) != null) {
-                        readFileSuccess = true;
-                    } else {
-                        readErrorHandler(file2read, I18N.getMsgConvertReaderZeissFailed());
-                    }
-                    break;
-
-                case 6:     // cadwork node.dat format from the cadwork CAD program
-                    if ((readFile = readLineBasedFile(file2read)) != null) {
-                        readFileSuccess = true;
-                    } else {
-                        readErrorHandler(file2read, I18N.getMsgConvertReaderCadworkFailed());
-                    }
-                    break;
-
-                case 7:     // CSV format from the geodata server 'Basel Stadt' (http://shop.geo.bs.ch/geoshop_app/geoshop/)
-                    try {
-                        CSVReader reader = new CSVReader(new FileReader(file2read), ';', '"', 0); // not skip first line!
-                        readCSVFile = reader.readAll();
-                        readFileSuccess = true;
-                    } catch (IOException e) {
-                        readErrorHandler(file2read, I18N.getMsgConvertReaderBaselStadtFailed());
-                    }
-                    break;
-
-                case 8:     // TXT format from the geodata server 'Basel Landschaft' (https://www.geo.bl.ch/)
-                    if ((readFile = readLineBasedFile(file2read)) != null) {
-                        readFileSuccess = true;
-                    } else {
-                        readErrorHandler(file2read, I18N.getMsgConvertReaderBaselLandschaftFailed());
-                    }
-                    break;
+                }
             }
 
+            // new version
+            String separatorCSV = chkBoxCSVSemiColonSeparator.getSelection() ? BaseToolsCSV.SEPARATOR_SEMICOLON : BaseToolsCSV.SEPARATOR_COMMA;
+            String separatorTXT = chkBoxTXTSpaceSeparator.getSelection() ? BaseToolsTXT.SEPARATOR_SPACE : BaseToolsTXT.SEPARATOR_TAB;
+            ZeissDialect dialect = ZeissDialect.valueOf(Main.pref.getUserPref(PreferenceHandler.CONVERTER_SETTING_ZEISS_DIALECT));
+
+            WriteParameter parameter = new WriteParameter(sourceNumber, GSIFormat,
+                    chkBoxCadworkUseZeroHeights.getSelection(),
+                    chkBoxKFormatUseSimpleFormat.getSelection(),
+                    chkBoxLTOPEliminateDuplicatePoints.getSelection(),
+                    chkBoxLTOPSortOutputFileByNumber.getSelection(),
+                    chkBoxSourceContainsCode.getSelection(),
+                    chkBoxWriteCodeColumn.getSelection(),
+                    chkBoxWriteCommentLine.getSelection(),
+                    separatorCSV, separatorTXT, dialect);
+            Map<Integer, WriteFile> writeFileMap = prepareWriteFile(file2read, readFile, readCSVFile, parameter);
+
+            // old version
             if (readFileSuccess) {  // write files
                 ArrayList<String> writeFile = null;
                 String separator;
@@ -890,7 +826,7 @@ public class ConverterWidget {
                     Target format: Zeiss REC
                      */
                     case 5:
-                        ZeissDialect dialect = ZeissDialect.valueOf(Main.pref.getUserPref(PreferenceHandler.CONVERTER_SETTING_ZEISS_DIALECT));
+                        dialect = ZeissDialect.valueOf(Main.pref.getUserPref(PreferenceHandler.CONVERTER_SETTING_ZEISS_DIALECT));
 
                         switch (sourceNumber) {
                             case 0:     // fall through for GSI8 format
@@ -1256,17 +1192,56 @@ public class ConverterWidget {
         return success;
     }
 
-    private void readErrorHandler(File file2read, String message) {
-        System.err.println("File " + file2read.getName() + " could not be read.");
-        MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR, I18N.getMsgBoxTitleError(), message);
-    }
-
-    private ArrayList<String> readLineBasedFile(File file2read) {
-        LineReader lineReader = new LineReader(file2read);
-        if (lineReader.readFile()) {
-            return lineReader.getLines();
-        } else {
-            return null;
+    private void toggleRadioButtons(FileDialog fileDialog, Control[] childrenSource, Control[] childrenTarget) {
+        switch (FileFilterIndex.fromIndex(fileDialog.getFilterIndex())) {
+            case GSI:
+                if (RadioHelper.getSelectedBtn(childrenSource) > 1) {
+                    RadioHelper.selectBtn(childrenSource, 1);
+                }
+                if (RadioHelper.getSelectedBtn(childrenTarget) == 0) {
+                    RadioHelper.selectBtn(childrenSource, 1);
+                } else if (RadioHelper.getSelectedBtn(childrenTarget) == 1) {
+                    RadioHelper.selectBtn(childrenSource, 0);
+                }
+                break;
+            case TXT:
+                // prevent button change for geodata Basel Landschaft files
+                if (RadioHelper.getSelectedBtn(childrenSource) != 7) {
+                    RadioHelper.selectBtn(childrenSource, 2);
+                }
+                if (RadioHelper.getSelectedBtn(childrenTarget) == 2) {
+                    RadioHelper.selectBtn(childrenTarget, 1);
+                }
+                break;
+            case CSV:
+                // prevent button change for geodata Basel Stadt files
+                if (RadioHelper.getSelectedBtn(childrenSource) != 6) {
+                    RadioHelper.selectBtn(childrenSource, 3);
+                }
+                if (RadioHelper.getSelectedBtn(childrenTarget) == 3) {
+                    RadioHelper.selectBtn(childrenTarget, 1);
+                }
+                break;
+            case K:
+                // prevent button change for CAPLAN K files
+                if (RadioHelper.getSelectedBtn(childrenSource) != 4) {
+                    RadioHelper.selectBtn(childrenSource, 4);
+                }
+                if (RadioHelper.getSelectedBtn(childrenTarget) == 4) {
+                    RadioHelper.selectBtn(childrenTarget, 1);
+                }
+                break;
+            case DAT:
+                // prevent button change for node.dat (cadwork) files
+                if (RadioHelper.getSelectedBtn(childrenSource) != 6) {
+                    RadioHelper.selectBtn(childrenSource, 6);
+                }
+                break;
+            case REC:
+                // prevent button change for Zeiss REC files
+                if (RadioHelper.getSelectedBtn(childrenSource) != 5) {
+                    RadioHelper.selectBtn(childrenSource, 5);
+                }
         }
     }
 

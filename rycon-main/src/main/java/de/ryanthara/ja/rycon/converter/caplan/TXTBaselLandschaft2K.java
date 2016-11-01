@@ -51,8 +51,7 @@ public class TXTBaselLandschaft2K {
      *
      * @return converted K file as ArrayList<String>
      */
-    public ArrayList<String> convertTXTBaselLandschaft2K(boolean useSimpleFormat, boolean writeCodeColumn,
-                                                         boolean writeCommentLine) {
+    public ArrayList<String> convertTXTBaselLandschaft2K(boolean useSimpleFormat, boolean writeCommentLine, boolean writeCodeColumn) {
         ArrayList<String> result = new ArrayList<>();
 
         // remove not needed headlines

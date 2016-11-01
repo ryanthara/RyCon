@@ -363,6 +363,7 @@ public class GSIBlock {
             sign = "-";
             return dataGSI.substring(1, dataGSI.length());
         } else {
+            sign = "+";
             return dataGSI;
         }
     }

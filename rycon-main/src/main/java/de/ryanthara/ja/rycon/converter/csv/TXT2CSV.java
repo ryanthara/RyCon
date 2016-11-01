@@ -46,6 +46,7 @@ public class TXT2CSV {
      * Due to some reasons the text file could not use white space characters in point numbers or code blocks.
      *
      * @param separator separator sign to use for conversion
+     *
      * @return converted CSV file
      */
     public ArrayList<String> convertTXT2CSV(String separator) {
