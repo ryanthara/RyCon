@@ -116,6 +116,9 @@ public class TXTBaselLandschaft2K {
                         }
                     }
                     break;
+
+                default:
+                    System.err.println("CSV2K.convertCSV2K() : line contains less or more tokens " + line);
             }
             if (valencyIndicator > 0) {
                 valency = " ".concat(Integer.toString(valencyIndicator));

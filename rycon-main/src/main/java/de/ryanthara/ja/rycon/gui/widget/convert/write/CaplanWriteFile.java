@@ -19,9 +19,11 @@ package de.ryanthara.ja.rycon.gui.widget.convert.write;
 
 import de.ryanthara.ja.rycon.converter.caplan.*;
 import de.ryanthara.ja.rycon.gui.widget.ConverterWidget;
+import de.ryanthara.ja.rycon.gui.widget.convert.SourceButton;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.odftoolkit.simple.SpreadsheetDocument;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,39 +31,39 @@ import java.util.List;
  * Instances of this class are used for writing Caplan K files from the {@link ConverterWidget} of RyCON.
  *
  * @author sebastian
- * @version 1
+ * @version 2
  * @since 12
  */
 public class CaplanWriteFile implements WriteFile {
 
-    private ArrayList<String> readStringFile;
-    private List<String[]> readCSVFile;
-    private WriteParameter parameter;
+    private final Path path;
+    private final ArrayList<String> readStringFile;
+    private final List<String[]> readCSVFile;
+    private final WriteParameter parameter;
 
     /**
      * Constructs the {@link CaplanWriteFile} with a set of parameters.
      *
+     * @param path           read path object for writing
      * @param readCSVFile    read csv file
      * @param readStringFile read string file
      * @param parameter      the write parameter object
      */
-    public CaplanWriteFile(ArrayList<String> readStringFile, List<String[]> readCSVFile, WriteParameter parameter) {
+    public CaplanWriteFile(Path path, ArrayList<String> readStringFile, List<String[]> readCSVFile, WriteParameter parameter) {
+        this.path = path;
         this.readStringFile = readStringFile;
         this.readCSVFile = readCSVFile;
         this.parameter = parameter;
     }
 
     /**
-     * Returns the prepared {@link SpreadsheetDocument} for file writing.
-     * <p>
-     * This method is used vise versa with {@link #writeStringFile()} and {@link #writeWorkbookFile()}.
-     * The ones which are not used, returns null for indication.
+     * Returns true if the prepared {@link SpreadsheetDocument} for file writing was written to the file system.
      *
-     * @return array list for file writing
+     * @return write success
      */
     @Override
-    public SpreadsheetDocument writeSpreadsheetDocument() {
-        return null;
+    public boolean writeSpreadsheetDocument() {
+        return false;
     }
 
     /**
@@ -70,66 +72,68 @@ public class CaplanWriteFile implements WriteFile {
      * @return array list for file writing
      */
     @Override
-    public ArrayList<String> writeStringFile() {
+    public boolean writeStringFile() {
+        boolean success = false;
         ArrayList<String> writeFile = null;
 
-        switch (parameter.getSourceNumber()) {
-            case 0:     // fall through for GSI8 format
-            case 1:     // GSI16 format
+        switch (SourceButton.fromIndex(parameter.getSourceNumber())) {
+            case GSI8:
+            case GSI16:
                 GSI2K gsi2K = new GSI2K(readStringFile);
                 writeFile = gsi2K.convertGSI2K(parameter.isKFormatUseSimpleFormat(), parameter.isWriteCommentLine());
                 break;
-            case 2:     // TXT format (space or tabulator separated)
+            case TXT:
                 TXT2K txt2K = new TXT2K(readStringFile);
                 writeFile = txt2K.convertTXT2K(parameter.isKFormatUseSimpleFormat(), parameter.isWriteCommentLine(), parameter.isWriteCodeColumn());
                 break;
-            case 3:     // CSV format (comma or semicolon separated)
+            case CSV:
                 CSV2K csv2K = new CSV2K(readCSVFile);
                 writeFile = csv2K.convertCSV2K(parameter.isKFormatUseSimpleFormat(), parameter.isWriteCommentLine(), parameter.isWriteCodeColumn());
                 break;
 
-            case 4:     // CAPLAN K format (not possible)
+            case CAPLAN_K:
                 break;
 
-            case 5:     // Zeiss REC format and it's dialects
+            case ZEISS_REC:
                 Zeiss2K zeiss2K = new Zeiss2K(readStringFile);
                 writeFile = zeiss2K.convertZeiss2K(parameter.isKFormatUseSimpleFormat(), parameter.isWriteCommentLine(), parameter.isWriteCodeColumn());
                 break;
 
-            case 6:     // cadwork node.dat from cadwork CAD program
+            case CADWORK:
                 Cadwork2K cadwork2K = new Cadwork2K(readStringFile);
                 writeFile = cadwork2K.convertCadwork2K(parameter.isKFormatUseSimpleFormat(), parameter.isWriteCommentLine(), parameter.isWriteCodeColumn());
                 break;
 
-            case 7:     // CSV format 'Basel Stadt' (semicolon separated)
+            case BASEL_STADT:
                 CSVBaselStadt2K csvBaselStadt2K = new CSVBaselStadt2K(readCSVFile);
                 writeFile = csvBaselStadt2K.convertCSVBaselStadt2K(parameter.isKFormatUseSimpleFormat(), parameter.isWriteCommentLine());
                 break;
 
-            case 8:     // TXT format 'Basel Landschaft' (different column based text files for LFP and HFP points)
+            case BASEL_LANDSCHAFT:
                 TXTBaselLandschaft2K txtBaselLandschaft2K = new TXTBaselLandschaft2K(readStringFile);
                 writeFile = txtBaselLandschaft2K.convertTXTBaselLandschaft2K(parameter.isKFormatUseSimpleFormat(), parameter.isWriteCommentLine(), parameter.isWriteCodeColumn());
                 break;
 
             default:
                 writeFile = null;
-                break;
+                System.err.println("CaplanWriteFile.writeStringFile() : unknown file format " + SourceButton.fromIndex(parameter.getSourceNumber()));
         }
 
-        return writeFile;
+        if (WriteFile2Disk.writeFile2Disk(path, writeFile, ".K")) {
+            success = true;
+        }
+
+        return success;
     }
 
     /**
-     * Returns the prepared {@link Workbook} for file writing.
-     * <p>
-     * This method is used vise versa with {@link #writeStringFile()} and {@link #writeSpreadsheetDocument()}.
-     * The ones which are not used, returns null for indication.
+     * Returns true if the prepared {@link Workbook} for file writing was written to the file system.
      *
-     * @return array list for file writing
+     * @return write success
      */
     @Override
-    public Workbook writeWorkbookFile() {
-        return null;
+    public boolean writeWorkbookFile() {
+        return false;
     }
 
 } // end of CaplanWriteFile

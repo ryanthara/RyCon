@@ -17,23 +17,28 @@
  */
 package de.ryanthara.ja.rycon.converter.text;
 
+import de.ryanthara.ja.rycon.elements.CaplanBlock;
+
 import java.util.ArrayList;
 
 /**
- * This class provides functions to convert a Caplan K formatted measurement file into text formatted file.
+ * Instances of this class provides functions to convert a Caplan K formatted coordinate file
+ * into a text formatted file.
  *
  * @author sebastian
  * @version 1
  * @since 12
  */
-public class K2TXT {
+public class Caplan2TXT {
 
     private ArrayList<String> readStringLines;
 
     /**
-     * @param readStringLines
+     * Constructs an instance of this class with the read Caplan K file {@link ArrayList} string as parameter.
+     *
+     * @param readStringLines {@code ArrayList<String>} with lines in Caplan K format
      */
-    public K2TXT(ArrayList<String> readStringLines) {
+    public Caplan2TXT(ArrayList<String> readStringLines) {
         this.readStringLines = readStringLines;
     }
 
@@ -65,53 +70,40 @@ public class K2TXT {
         }
 
         for (String line : readStringLines) {
-            if (!line.startsWith("!")) {    // comment lines starting with '!' are ignored
+            // skip empty lines directly after reading
+            if (!line.trim().isEmpty()) {
                 String s = "";
 
-                if (line.length() >= 16) {
-                    s = line.substring(0, 16).trim();       // point number (no '*', ',' and ';'), column 1 - 16
+                CaplanBlock caplanBlock = new CaplanBlock(line);
+
+                if (caplanBlock.getNumber() != null) {
+                    s = caplanBlock.getNumber();
                 }
 
-                if ((line.length() >= 62) && writeSimpleFormat && writeCodeColumn) {
-                    String[] lineSplit = line.substring(61, line.length()).trim().split("\\|+");
-                    String code = lineSplit[0].trim();      // code is the same as object type, column 62...
-
+                if ((caplanBlock.getCode() != null) && !writeSimpleFormat & writeCodeColumn) {
                     s = s.concat(separator);
-                    s = s.concat(code);
-                } else if (writeCodeColumn) {
-                    s = s.concat(separator);
-                    s = s.concat("NULL");
+                    s = s.concat(caplanBlock.getCode());
                 }
 
-                if (line.length() >= 32) {
-                    String easting = line.substring(20, 32).trim();     // easting E, column 19-32
+                if (caplanBlock.getEasting() != null) {
                     s = s.concat(separator);
-                    s = s.concat(easting);
+                    s = s.concat(caplanBlock.getEasting());
                 }
 
-                if (line.length() >= 46) {
-                    String northing = line.substring(34, 46).trim();    // northing N, column 33-46
+                if (caplanBlock.getNorthing() != null) {
                     s = s.concat(separator);
-                    s = s.concat(northing);
+                    s = s.concat(caplanBlock.getNorthing());
                 }
 
-                if (line.length() >= 59) {
-                    String height = line.substring(48, 59).trim();      // height H, column 47-59
+                if (caplanBlock.getHeight() != null) {
                     s = s.concat(separator);
-                    s = s.concat(height);
+                    s = s.concat(caplanBlock.getHeight());
                 }
 
-                if ((line.length() >= 62) && !writeSimpleFormat && writeCodeColumn) {
-                    String[] lineSplit = line.substring(61, line.length()).trim().split("\\|+");
-
-                    String code = lineSplit[0].trim();              // code is the same as object type, column 62...
-                    s = s.concat(separator);
-                    s = s.concat(code);
-
-                    for (int i = 1; i < lineSplit.length; i++) {
-                        String attr = lineSplit[i].trim();
+                if (caplanBlock.getAttributes().size() > 0 && !writeSimpleFormat && writeCodeColumn) {
+                    for (String attribute : caplanBlock.getAttributes()) {
                         s = s.concat(separator);
-                        s = s.concat(attr);
+                        s = s.concat(attribute);
                     }
                 }
 
@@ -122,4 +114,4 @@ public class K2TXT {
         return result;
     }
 
-} // end of K2TXT
+} // end of Caplan2TXT

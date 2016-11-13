@@ -17,8 +17,8 @@
  */
 package de.ryanthara.ja.rycon.converter.ltop;
 
-import de.ryanthara.ja.rycon.tools.NumberFormatter;
 import de.ryanthara.ja.rycon.elements.RyPoint;
+import de.ryanthara.ja.rycon.tools.NumberFormatter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,8 @@ import java.util.List;
  * @author sebastian
  * @version 1
  * @since 12
- */public class CSVBaselStadt2LTOP {
+ */
+public class CSVBaselStadt2LTOP {
 
     private List<String[]> readCSVLines = null;
 

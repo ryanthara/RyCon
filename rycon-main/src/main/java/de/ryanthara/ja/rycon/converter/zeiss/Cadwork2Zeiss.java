@@ -20,8 +20,8 @@ package de.ryanthara.ja.rycon.converter.zeiss;
 import java.util.ArrayList;
 
 /**
- * This class provides functions to convert coordinate files from Cadwork CAD program into Zeiss REC files with
- * it's dialects (R4, R5, REC500 and M5).
+ * Instances of this class provides functions to convert coordinate files from Cadwork CAD program into
+ * Zeiss REC files with it's dialects (R4, R5, REC500 and M5).
  *
  * @author sebastian
  * @version 1

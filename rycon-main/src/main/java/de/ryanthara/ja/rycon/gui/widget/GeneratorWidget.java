@@ -20,7 +20,6 @@ package de.ryanthara.ja.rycon.gui.widget;
 import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.data.PreferenceHandler;
 import de.ryanthara.ja.rycon.gui.custom.MessageBoxes;
-import de.ryanthara.ja.rycon.gui.custom.StatusBar;
 import de.ryanthara.ja.rycon.gui.widget.generate.AdminCopyWarnAndErrorMessage;
 import de.ryanthara.ja.rycon.gui.widget.generate.BigDataCopyWarnAndErrorMessage;
 import de.ryanthara.ja.rycon.gui.widget.generate.CopyWarnAndErrorMessage;
@@ -36,10 +35,15 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+
+import static de.ryanthara.ja.rycon.gui.custom.Status.OK;
 
 /**
  * Instances of this class implements a complete widget and it's functionality.
@@ -75,7 +79,7 @@ public class GeneratorWidget {
 
     private void actionBtnCancel() {
         Main.setSubShellStatus(false);
-        Main.statusBar.setStatus("", StatusBar.OK);
+        Main.statusBar.setStatus("", OK);
         innerShell.dispose();
     }
 
@@ -89,19 +93,19 @@ public class GeneratorWidget {
         } else {
             if (generateFolders(number)) {
                 if (chkBoxCreateAdminFolder.getSelection() && chkBoxCreateBigDataFolder.getSelection() && chkBoxCreateProjectFolder.getSelection()) {
-                    Main.statusBar.setStatus(String.format(I18N.getStatusFoldersAdminAndBigDataAndProjectGenerated(), number, number, number), StatusBar.OK);
+                    Main.statusBar.setStatus(String.format(I18N.getStatusFoldersAdminAndBigDataAndProjectGenerated(), number, number, number), OK);
                 } else if (chkBoxCreateAdminFolder.getSelection() && chkBoxCreateBigDataFolder.getSelection()) {
-                    Main.statusBar.setStatus(String.format(I18N.getStatusFoldersAdminAndBigDataGenerated(), number, number), StatusBar.OK);
+                    Main.statusBar.setStatus(String.format(I18N.getStatusFoldersAdminAndBigDataGenerated(), number, number), OK);
                 } else if (chkBoxCreateAdminFolder.getSelection() && chkBoxCreateProjectFolder.getSelection()) {
-                    Main.statusBar.setStatus(String.format(I18N.getStatusFoldersAdminAndProjectGenerated(), number, number), StatusBar.OK);
+                    Main.statusBar.setStatus(String.format(I18N.getStatusFoldersAdminAndProjectGenerated(), number, number), OK);
                 } else if (chkBoxCreateBigDataFolder.getSelection() && chkBoxCreateProjectFolder.getSelection()) {
-                    Main.statusBar.setStatus(String.format(I18N.getStatusFoldersBigDataAndProjectGenerated(), number, number), StatusBar.OK);
+                    Main.statusBar.setStatus(String.format(I18N.getStatusFoldersBigDataAndProjectGenerated(), number, number), OK);
                 } else if (chkBoxCreateAdminFolder.getSelection()) {
-                    Main.statusBar.setStatus(String.format(I18N.getStatusFolderAdminGenerated(), number), StatusBar.OK);
+                    Main.statusBar.setStatus(String.format(I18N.getStatusFolderAdminGenerated(), number), OK);
                 } else if (chkBoxCreateBigDataFolder.getSelection()) {
-                    Main.statusBar.setStatus(String.format(I18N.getStatusFolderBigDataGenerated(), number), StatusBar.OK);
+                    Main.statusBar.setStatus(String.format(I18N.getStatusFolderBigDataGenerated(), number), OK);
                 } else if (chkBoxCreateProjectFolder.getSelection()) {
-                    Main.statusBar.setStatus(String.format(I18N.getStatusFolderProjectGenerated(), number), StatusBar.OK);
+                    Main.statusBar.setStatus(String.format(I18N.getStatusFolderProjectGenerated(), number), OK);
                 }
             }
 
@@ -110,15 +114,11 @@ public class GeneratorWidget {
     }
 
     private void actionBtnOkAndExit() {
-        switch (actionBtnOk()) {
-            case 0:
-                break;
-            case 1:
-                Main.setSubShellStatus(false);
-                Main.statusBar.setStatus("", StatusBar.OK);
+        if (actionBtnOk() == 1) {
+            Main.setSubShellStatus(false);
+            Main.statusBar.setStatus("", OK);
 
-                innerShell.dispose();
-                break;
+            innerShell.dispose();
         }
     }
 
@@ -126,13 +126,13 @@ public class GeneratorWidget {
         new GeneratorSettingsWidget(innerShell);
     }
 
-    private boolean copyFile(String number, String directoryTemplate, int type, File copyDestinationPath) {
+    private boolean copyFile(String number, String directoryTemplate, int type, Path copyDestinationPath) {
         boolean success = false;
-        File copySourcePath = new File(directoryTemplate);
+
+        Path copySourcePath = Paths.get(directoryTemplate);
 
         try {
             FileUtils.copy(copySourcePath, copyDestinationPath);
-
             success = true;
         } catch (IOException e) {
             System.err.println(e.getMessage());
@@ -342,10 +342,10 @@ public class GeneratorWidget {
     private boolean generateFoldersHelper(String number, String directory, String directoryTemplate, int type) {
         boolean success = false;
 
-        File copyDestinationPath = new File(directory + File.separator + number);
+        Path copyDestinationPath = Paths.get(directory + FileSystems.getDefault().getSeparator() + number);
 
-        if (copyDestinationPath.exists()) {
-            Main.statusBar.setStatus("", StatusBar.OK);
+        if (Files.exists(copyDestinationPath)) {
+            Main.statusBar.setStatus("", OK);
 
             String message = messages.get(type).getErrorMessage(number);
 

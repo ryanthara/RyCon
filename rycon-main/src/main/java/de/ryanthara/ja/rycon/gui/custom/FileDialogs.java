@@ -15,28 +15,29 @@
  * You should have received a copy of the GNU General Public License along with
  * this package. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package de.ryanthara.ja.rycon.gui.custom;
 
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import java.io.File;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * This class implements a simple static access to swt {@link FileDialog} and it's functionality to RyCON.
  *
  * @author sebastian
- * @version 1
+ * @version 2
  * @since 12
  */
 public class FileDialogs {
 
-    private static File[] handleFile(FileDialog fileDialog, Text source, Text destination) {
+    private static Path[] handleFile(FileDialog fileDialog, Text source, Text destination) {
         String[] files = fileDialog.getFileNames();
 
-        File[] files2read = new File[files.length];
+        Path[] files2read = new Path[files.length];
 
         // hack for displaying file names without path in text field
         String concatString = "";
@@ -46,7 +47,7 @@ public class FileDialogs {
             concatString = concatString.concat(files[i]);
             concatString = concatString.concat(" ");
 
-            files2read[i] = new File(workingDir + File.separator + files[i]);
+            files2read[i] = Paths.get(workingDir + FileSystems.getDefault().getSeparator() + files[i]);
         }
 
         source.setText(concatString);
@@ -69,9 +70,9 @@ public class FileDialogs {
      * @param source           source text field
      * @param destination      destination text field
      *
-     * @return chosen files as String array
+     * @return chosen files as {@link Path} array
      */
-    public static File[] showAdvancedFileDialog(Shell innerShell, int multiSelection, String filterPath, String text,
+    public static Path[] showAdvancedFileDialog(Shell innerShell, int multiSelection, String filterPath, String text,
                                                 String[] filterExtensions, String[] filterNames, Text source, Text destination) {
         FileDialog fileDialog = new FileDialog(innerShell, multiSelection);
         fileDialog.setFilterPath(filterPath);

@@ -113,6 +113,7 @@ public class GSILTOPClean {
                     range = 0;
                     status = 0;
                     break;
+
                 case 6:         // polar measurement line
                     // previous line contains a free station and a maximum of 4 reference points is used
                     if ((status == 0) & (range < 4)) {
@@ -133,6 +134,9 @@ public class GSILTOPClean {
                         }
                     }
                     break;
+
+                default:
+                    System.err.println("GSILTOPClean.processLTOPClean() : line contains less or more tokens " + line);
             }
 
             previousLine = line;

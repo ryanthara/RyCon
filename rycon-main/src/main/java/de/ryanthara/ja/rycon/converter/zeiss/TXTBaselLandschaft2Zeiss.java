@@ -20,8 +20,8 @@ package de.ryanthara.ja.rycon.converter.zeiss;
 import java.util.ArrayList;
 
 /**
- * This class provides functions to convert coordinate files from the geodata server Basel Landschaft (Switzerland)
- * into Zeiss RED files with it's dialects (R4, R5, REC500 and M5).
+ * Instances of this class provides functions to convert coordinate files from the geodata server Basel Landschaft (Switzerland)
+ * into Zeiss REC files with it's dialects (R4, R5, REC500 and M5).
  *
  * @author sebastian
  * @version 1
@@ -32,7 +32,8 @@ public class TXTBaselLandschaft2Zeiss {
     private final ArrayList<String> readStringLines;
 
     /**
-     * Class constructor for read line based text files from the geodata server 'Basel Landschaft' (Switzerland).
+     * Constructs a new instance of this class with a parameter for the read line based text files from
+     * the geodata server 'Basel Landschaft' (Switzerland) as string array.
      *
      * @param readStringLines {@code ArrayList<String>} with lines in text format
      */
@@ -65,7 +66,6 @@ public class TXTBaselLandschaft2Zeiss {
 
             switch (lineSplit.length) {
                 case 5:     // HFP file
-
                     /*
                     Art	Nummer	X	Y	Z
                     HFP2	NC17014	2624601.9	1262056.014	348.298
@@ -97,6 +97,9 @@ public class TXTBaselLandschaft2Zeiss {
 
                     result.add(BaseToolsZeiss.prepareLineOfCoordinates(dialect, number, code, easting, northing, height, lineNumber));
                     break;
+
+                default:
+                    System.err.println("TXTBaselLandschaft2Zeiss.convertTXTBaselLandschaft2REC() : line contains less or more tokens " + line);
             }
         }
 

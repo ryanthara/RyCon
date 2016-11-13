@@ -47,8 +47,9 @@ public class TXTBaselLandschaft2TXT {
      * This method can differ between LFP and HFP files, which has a given different structure.
      * With a parameter it is possible to distinguish between tabulator and space divided files.
      *
-     * @param separator         distinguish between tabulator or space as division sign
-     * @param writeCodeColumn   use 'Versicherungsart' (LFP) as code column on second position
+     * @param separator       distinguish between tabulator or space as division sign
+     * @param writeCodeColumn use 'Versicherungsart' (LFP) as code column on second position
+     *
      * @return converted {@code ArrayList<String>} with lines of text format
      */
     public ArrayList<String> convertTXTBaselLandschaft2TXT(String separator, boolean writeCodeColumn) {

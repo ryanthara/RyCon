@@ -19,7 +19,7 @@
 package de.ryanthara.ja.rycon.gui.widget;
 
 import de.ryanthara.ja.rycon.Main;
-import de.ryanthara.ja.rycon.check.FileCheck;
+import de.ryanthara.ja.rycon.check.PathCheck;
 import de.ryanthara.ja.rycon.check.TextCheck;
 import de.ryanthara.ja.rycon.core.GSILTOPClean;
 import de.ryanthara.ja.rycon.core.GSITidyUp;
@@ -34,8 +34,10 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
-import java.io.File;
+import java.nio.file.*;
 import java.util.ArrayList;
+
+import static de.ryanthara.ja.rycon.gui.custom.Status.OK;
 
 /**
  * Instances of this class implements a complete widget and it's functionality.
@@ -52,9 +54,9 @@ public class TidyUpWidget {
     private final String[] acceptableFileSuffixes = new String[]{"*.gsi", "*.gsl"};
     private Button chkBoxHoldControlPoints;
     private Button chkBoxHoldStations;
-    private File[] files2read = new File[0];
+    private Path[] files2read;
     private InputFieldsComposite inputFieldsComposite;
-    private Shell innerShell = null;
+    private Shell innerShell;
 
     /**
      * Constructs the {@link TidyUpWidget} without parameters.
@@ -62,6 +64,9 @@ public class TidyUpWidget {
      * The user interface is initialized in a separate method, which is called from here.
      */
     public TidyUpWidget() {
+        files2read = new Path[0];
+        innerShell = null;
+
         initUI();
         handleFileInjection();
     }
@@ -72,10 +77,11 @@ public class TidyUpWidget {
      * <p>
      * The file array of the dropped files will be checked for being valid and not being a directory.
      *
-     * @param droppedFiles file array from drop source
+     * @param droppedFiles {@link Path} array from drop source
      */
-    public TidyUpWidget(File[] droppedFiles) {
-        files2read = FileCheck.checkForValidFiles(droppedFiles, acceptableFileSuffixes);
+    public TidyUpWidget(Path[] droppedFiles) {
+        files2read = PathCheck.getValidFiles(droppedFiles, acceptableFileSuffixes);
+        innerShell = null;
     }
 
     /**
@@ -93,9 +99,9 @@ public class TidyUpWidget {
             if (success = processFileOperationsDND()) {
                 // use counter to display different text on the status bar
                 if (Main.countFileOps == 1) {
-                    Main.statusBar.setStatus(String.format(I18N.getStatusCleanFileSuccessful(Main.TEXT_SINGULAR), Main.countFileOps), StatusBar.OK);
+                    Main.statusBar.setStatus(String.format(I18N.getStatusCleanFileSuccessful(Main.TEXT_SINGULAR), Main.countFileOps), OK);
                 } else {
-                    Main.statusBar.setStatus(String.format(I18N.getStatusCleanFileSuccessful(Main.TEXT_PLURAL), Main.countFileOps), StatusBar.OK);
+                    Main.statusBar.setStatus(String.format(I18N.getStatusCleanFileSuccessful(Main.TEXT_PLURAL), Main.countFileOps), OK);
                 }
             }
         }
@@ -105,7 +111,7 @@ public class TidyUpWidget {
 
     private void actionBtnCancel() {
         Main.setSubShellStatus(false);
-        Main.statusBar.setStatus("", StatusBar.OK);
+        Main.statusBar.setStatus("", OK);
         innerShell.dispose();
     }
 
@@ -118,8 +124,8 @@ public class TidyUpWidget {
         Text input = inputFieldsComposite.getDestinationTextField();
 
         // Set the initial filter path according to anything selected or typed in
-        if (!TextCheck.checkIsEmpty(input)) {
-            if (TextCheck.checkDirExists(input)) {
+        if (!TextCheck.isEmpty(input)) {
+            if (TextCheck.isDirExists(input)) {
                 filterPath = input.getText();
             }
         }
@@ -130,14 +136,14 @@ public class TidyUpWidget {
     }
 
     private int actionBtnOk() {
-        if (inputFieldsComposite.getSourceTextField().getText().equals("") &
-                inputFieldsComposite.getDestinationTextField().getText().equals("")) {
+        if (TextCheck.isEmpty(inputFieldsComposite.getSourceTextField()) ||
+                TextCheck.isEmpty(inputFieldsComposite.getDestinationTextField())) {
             return -1;
         }
 
         if (files2read.length == 0) {
-            files2read = new File[1];
-            files2read[0] = new File(inputFieldsComposite.getSourceTextField().getText());
+            files2read = new Path[1];
+            files2read[0] = Paths.get(inputFieldsComposite.getSourceTextField().getText());
         } else {
             files2read = TextCheck.checkSourceAndDestinationText(
                     inputFieldsComposite.getSourceTextField(),
@@ -148,9 +154,9 @@ public class TidyUpWidget {
             if (processFileOperations()) {
                 // use counter to display different text on the status bar
                 if (Main.countFileOps == 1) {
-                    Main.statusBar.setStatus(String.format(I18N.getStatusCleanFileSuccessful(Main.TEXT_SINGULAR), Main.countFileOps), StatusBar.OK);
+                    Main.statusBar.setStatus(String.format(I18N.getStatusCleanFileSuccessful(Main.TEXT_SINGULAR), Main.countFileOps), OK);
                 } else {
-                    Main.statusBar.setStatus(String.format(I18N.getStatusCleanFileSuccessful(Main.TEXT_PLURAL), Main.countFileOps), StatusBar.OK);
+                    Main.statusBar.setStatus(String.format(I18N.getStatusCleanFileSuccessful(Main.TEXT_PLURAL), Main.countFileOps), OK);
                 }
             }
             return 1;
@@ -162,16 +168,11 @@ public class TidyUpWidget {
      * This method is used from the class BottomButtonBar!
      */
     private void actionBtnOkAndExit() {
-        switch (actionBtnOk()) {
-            case 0:
+        if (actionBtnOk() == 1) {
+            Main.setSubShellStatus(false);
+            Main.statusBar.setStatus("", OK);
 
-                break;
-            case 1:
-                Main.setSubShellStatus(false);
-                Main.statusBar.setStatus("", StatusBar.OK);
-
-                innerShell.dispose();
-                break;
+            innerShell.dispose();
         }
     }
 
@@ -179,20 +180,21 @@ public class TidyUpWidget {
      * This method is used from the class InputFieldsComposite!
      */
     private void actionBtnSource() {
-
         String[] filterNames = new String[]{
-                I18N.getFileChooserFilterNameGSI(), I18N.getFileChooserFilterNameLTOP()
+                I18N.getFileChooserFilterNameGSI(),
+                I18N.getFileChooserFilterNameLTOP()
         };
 
         String filterPath = Main.pref.getUserPref(PreferenceHandler.DIR_PROJECT);
 
         // Set the initial filter path according to anything pasted or typed in
         if (!inputFieldsComposite.getSourceTextField().getText().trim().equals("")) {
-            File sourceFile = new File(inputFieldsComposite.getSourceTextField().getText());
-            if (sourceFile.isDirectory()) {
+            Path sourcePath = Paths.get(inputFieldsComposite.getSourceTextField().getText());
+
+            if (Files.isDirectory(sourcePath)) {
                 filterPath = inputFieldsComposite.getSourceTextField().getText();
-            } else if (sourceFile.isFile()) {
-                inputFieldsComposite.setDestinationTextFieldText(sourceFile.getName());
+            } else if (Files.isRegularFile(sourcePath)) {
+                inputFieldsComposite.setDestinationTextFieldText(sourcePath.getFileName().toString());
             }
         }
 
@@ -243,34 +245,38 @@ public class TidyUpWidget {
         String editString = Main.pref.getUserPref(PreferenceHandler.PARAM_EDIT_STRING);
         String ltopString = Main.pref.getUserPref(PreferenceHandler.PARAM_LTOP_STRING);
 
-        for (File file2read : files2read) {
-            lineReader = new LineReader(file2read);
+        for (Path path : files2read) {
+            lineReader = new LineReader(path);
 
             if (lineReader.readFile()) {
                 ArrayList<String> readFile = lineReader.getLines();
-                ArrayList<String> writeFile;
-                String file2write;
+                ArrayList<String> writeFile = null;
+                String file2write = null;
 
-                // processFileOperations
 
-                // differ between 'normal' GSI files and
-                if (file2read.getName().endsWith(".GSL")) {
+                // processFileOperations and differ between 'normal' GSI files and LTOP 'GSL' files (caseinsensitive)
+                PathMatcher matcherGSI = FileSystems.getDefault().getPathMatcher("regex:(?iu:.+\\.GSI)");
+                PathMatcher matcherGSL = FileSystems.getDefault().getPathMatcher("regex:(?iu:.+\\.GSL)");
+
+                if (matcherGSL.matches(path)) {
                     GSILTOPClean gsiltopClean = new GSILTOPClean(readFile);
                     writeFile = gsiltopClean.processLTOPClean();
-                    file2write = file2read.toString().substring(0, file2read.toString().length() - 4) + "_" + ltopString + ".GSI";
-                } else {
+                    file2write = path.toString().substring(0, path.toString().length() - 4) + "_" + ltopString + ".GSI";
+                } else if (matcherGSI.matches(path)) {
                     GSITidyUp gsiTidyUp = new GSITidyUp(readFile);
                     writeFile = gsiTidyUp.processTidyUp(holdStations, holdControlPoints);
-                    file2write = file2read.toString().substring(0, file2read.toString().length() - 4) + "_" + editString + ".GSI";
+                    file2write = path.toString().substring(0, path.toString().length() - 4) + "_" + editString + ".GSI";
                 }
 
                 // write file line by line
-                LineWriter lineWriter = new LineWriter(file2write);
-                if (lineWriter.writeFile(writeFile)) {
-                    counter = counter + 1;
+                if (file2write != null) {
+                    LineWriter lineWriter = new LineWriter(file2write);
+                    if (lineWriter.writeFile(writeFile)) {
+                        counter = counter + 1;
+                    }
                 }
             } else {
-                System.err.println("File " + file2read.getName() + " could not be read.");
+                System.err.println("File " + path.getFileName() + " could not be read.");
             }
         }
         return counter;

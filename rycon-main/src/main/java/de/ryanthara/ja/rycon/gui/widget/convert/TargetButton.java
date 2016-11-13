@@ -47,6 +47,25 @@ public enum TargetButton {
     }
 
     /**
+     * Returns the {@link TargetButton} from index parameter as static access from switch cases.
+     *
+     * @param index index to return
+     *
+     * @return TargetButton by index
+     */
+    public static TargetButton fromIndex(int index) {
+        TargetButton selectedTargetButton = null;
+
+        for (TargetButton targetButton : values()) {
+            if (targetButton.ordinal() == index) {
+                selectedTargetButton = targetButton;
+            }
+        }
+
+        return selectedTargetButton;
+    }
+
+    /**
      * Returns the text.
      *
      * @return the text

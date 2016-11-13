@@ -18,8 +18,8 @@
 package de.ryanthara.ja.rycon.converter.caplan;
 
 import de.ryanthara.ja.rycon.converter.gsi.BaseToolsGSI;
-import de.ryanthara.ja.rycon.tools.NumberFormatter;
 import de.ryanthara.ja.rycon.elements.GSIBlock;
+import de.ryanthara.ja.rycon.tools.NumberFormatter;
 
 import java.util.ArrayList;
 
@@ -78,15 +78,17 @@ public class GSI2K {
                 int valencyIndicator = 0;
 
                 for (GSIBlock block : blocksInLine) {
-                    String s = block.toPrintFormatCSV();
+                    String printFormatCSV = block.toPrintFormatCSV();
 
                     switch (block.getWordIndex()) {
                         case 11:        // point number (no '*', ',' and ';'), column 1 - 16
-                            number = BaseToolsCaplanK.cleanPointNumberString(s);
+                            number = BaseToolsCaplanK.cleanPointNumberString(printFormatCSV);
                             break;
+
                         case 41:        // code is the same as object type, column 62...
-                            objectTyp = "|".concat(s);
+                            objectTyp = "|".concat(printFormatCSV);
                             break;
+
                         case 71:        // comment 1, used as Attr1
                         case 72:        // comment 2, used as Attr2
                         case 73:        // comment 3, used as Attr3
@@ -96,32 +98,41 @@ public class GSI2K {
                         case 77:        // comment 7, used as Attr7
                         case 78:        // comment 8, used as Attr8
                         case 79:        // comment 9, used as Attr9
-                            attr = attr.concat("|".concat(s));
+                            attr = attr.concat("|".concat(printFormatCSV));
                             break;
+
                         case 81:        // easting E, column 19-32
-                            easting = String.format("%14s", NumberFormatter.fillDecimalPlace(s, 4));
+                            easting = String.format("%14s", NumberFormatter.fillDecimalPlace(printFormatCSV, 4));
                             valencyIndicator = 3;
                             break;
+
                         case 82:        // northing N, column 33-46
-                            northing = String.format("%14s", NumberFormatter.fillDecimalPlace(s, 4));
+                            northing = String.format("%14s", NumberFormatter.fillDecimalPlace(printFormatCSV, 4));
                             valencyIndicator = 3;
                             break;
+
                         case 83:        // height H, column 47-59
-                            height = String.format("%13s", NumberFormatter.fillDecimalPlace(s, 5));
+                            height = String.format("%13s", NumberFormatter.fillDecimalPlace(printFormatCSV, 5));
                             valencyIndicator += 4;
                             break;
+
                         case 84:        // easting E0, column 19-32
-                            easting = String.format("%14s", NumberFormatter.fillDecimalPlace(s, 4));
+                            easting = String.format("%14s", NumberFormatter.fillDecimalPlace(printFormatCSV, 4));
                             valencyIndicator = 3;
                             break;
+
                         case 85:        // northing N0, column 33-46
-                            northing = String.format("%14s", NumberFormatter.fillDecimalPlace(s, 4));
+                            northing = String.format("%14s", NumberFormatter.fillDecimalPlace(printFormatCSV, 4));
                             valencyIndicator = 3;
                             break;
+
                         case 86:        // height H0, column 47-59
-                            height = String.format("%13s", NumberFormatter.fillDecimalPlace(s, 5));
+                            height = String.format("%13s", NumberFormatter.fillDecimalPlace(printFormatCSV, 5));
                             valencyIndicator += 4;
                             break;
+
+                        default:
+                            System.err.println("GSI2K.convertGSI2K() : line contains unknown word index " + printFormatCSV);
                     }
 
                     if (valencyIndicator > 0) {

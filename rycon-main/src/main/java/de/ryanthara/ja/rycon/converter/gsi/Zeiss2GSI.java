@@ -90,7 +90,7 @@ public class Zeiss2GSI {
                     readLineCounter = readLineCounter + 1;
 
                     // check if point values are in one or more lines stored
-                    if (pointNumber != decoder.getPointNumber()) {
+                    if (!pointNumber.equals(decoder.getPointNumber())) {
                         /*
                         finishing the current point and flush the blocks to the result array and although check
                         for at least one or more added elements to prevent writing empty lines
@@ -118,6 +118,9 @@ public class Zeiss2GSI {
                             case X:
                                 blocks.add(new GSIBlock(isGSI16, 82, zeissBlock.getValue()));
                                 break;
+
+                            default:
+                                System.err.println("Zeiss2GSI.convertZeiss2GSI() : line contains less or more tokens " + zeissBlock.toString());
                         }
 
 

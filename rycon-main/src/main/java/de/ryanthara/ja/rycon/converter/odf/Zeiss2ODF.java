@@ -19,6 +19,7 @@ package de.ryanthara.ja.rycon.converter.odf;
 
 import org.odftoolkit.simple.SpreadsheetDocument;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 
 /**
@@ -28,7 +29,8 @@ import java.util.ArrayList;
  * @author sebastian
  * @version 1
  * @since 12
- */public class Zeiss2ODF {
+ */
+public class Zeiss2ODF {
 
     private ArrayList<String> readStringLines;
     private SpreadsheetDocument spreadsheetDocument;
@@ -43,16 +45,17 @@ import java.util.ArrayList;
     }
 
     /**
-     Converts a Zeiss REC file (R4, R5, M5 or REC500) into a text formatted file.
+     * Converts a Zeiss REC file (R4, R5, M5 or REC500) into a text formatted file.
      * <p>
      * This method can differ between different Zeiss REC dialects because of the
      * different structure and line length.
      *
      * @param name
      * @param selection
+     *
      * @return
      */
-    public boolean convertZeiss2ODS(String name, boolean selection) {
+    public boolean convertZeiss2ODS(Path name, boolean selection) {
         ArrayList<String> result = new ArrayList<>();
 
         return false;

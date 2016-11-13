@@ -26,7 +26,7 @@ import java.util.Locale;
  * NumberFormatter implements basic number format operations for string stored double values.
  *
  * @author sebastian
- * @version 2
+ * @version 3
  * @since 8
  */
 public class NumberFormatter {
@@ -48,35 +48,14 @@ public class NumberFormatter {
         DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols(Locale.getDefault());
         otherSymbols.setDecimalSeparator('.');
 
-        DecimalFormat df;
+        // prepare the format string by length
+        String formatString = "#0.";
 
-        switch (lastDecimalLength) {
-            case 1:
-                df = new DecimalFormat("#0.0", otherSymbols);
-                break;
-
-            case 2:
-                df = new DecimalFormat("#0.00", otherSymbols);
-                break;
-
-            case 3:
-                df = new DecimalFormat("#0.000", otherSymbols);
-                break;
-
-            case 4:
-                df = new DecimalFormat("#0.0000", otherSymbols);
-                break;
-
-            case 5:
-                df = new DecimalFormat("#0.00000", otherSymbols);
-                break;
-
-            default:
-                df = new DecimalFormat("#0.0000", otherSymbols);
-
+        for (int i = 0; i < lastDecimalLength; i++) {
+            formatString = formatString.concat("0");
         }
 
-        return df.format(d);
+        return new DecimalFormat(formatString, otherSymbols).format(d);
     }
 
 } // end of NumberFormatter

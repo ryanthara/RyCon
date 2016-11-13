@@ -102,6 +102,9 @@ public class TXT2GSI {
                     blocks.add(new GSIBlock(isGSI16, 82, lineSplit[3]));
                     blocks.add(new GSIBlock(isGSI16, 83, lineSplit[4]));
                     break;
+
+                default:
+                    System.err.println("TXT2GSI.convertTXT2GSI() : line contains less or more tokens " + line);
             }
 
             // check for at least one or more added elements to prevent writing empty lines

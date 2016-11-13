@@ -15,23 +15,19 @@
  * You should have received a copy of the GNU General Public License along with
  * this package. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package de.ryanthara.ja.rycon.io;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 /**
- * LineWriter writes an {@code ArrayList<String>} line by line to a file.
+ * Instances of this class provides functions to write an {@code ArrayList<String>} line by line to a file.
  * <p>
- * A couple of things are implemented as additional functionality. At the moment,
- * there is no thread safety implemented or planed.
- *
- * <h3>Changes:</h3>
- * <ul>
- *     <li>2: code improvements and clean up </li>
- *     <li>1: basic implementation </li>
- * </ul>
+ * A couple of things are implemented as additional functionality. At the moment, there is no thread safety
+ * implemented or planed.
  *
  * @author sebastian
  * @version 2
@@ -39,8 +35,8 @@ import java.util.ArrayList;
  */
 public class LineWriter {
 
+    private final String fileName;
     private int writtenLines = -1;
-    private final File file;
 
     /**
      * Constructor with the filename as {code String} parameter.
@@ -48,7 +44,7 @@ public class LineWriter {
      * @param fileName filename as {@code String}
      */
     public LineWriter(String fileName) {
-        this.file = new File(fileName);
+        this.fileName = fileName;
     }
 
     /**
@@ -65,6 +61,7 @@ public class LineWriter {
      * Write a given {@code ArrayList<String>} line by line to the file system.
      *
      * @param lines given list to write to file system
+     *
      * @return success
      */
     public boolean writeFile(ArrayList<String> lines) {
@@ -72,14 +69,14 @@ public class LineWriter {
         PrintWriter pw = null;
 
         try {
-            pw = new PrintWriter(new BufferedWriter(new FileWriter(file)), true);
+            pw = new PrintWriter(new BufferedWriter(new FileWriter(fileName)), true);
 
             for (String line : lines) {
                 pw.println(line);
                 writtenLines = writtenLines + 1;
             }
         } catch (IOException e) {
-            System.err.println("File " + file.getName() + " could not be written to the file system.");
+            System.err.format("File %s could not be written to the file system.", fileName);
             e.printStackTrace();
         } finally {
             if (pw != null) {

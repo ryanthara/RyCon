@@ -47,8 +47,9 @@ public class TXT2Excel {
     /**
      * Converts a TXT file element by element into an Excel file.
      *
-     * @param isXLS selector to distinguish between XLS and XLSX file extension
+     * @param isXLS     selector to distinguish between XLS and XLSX file extension
      * @param sheetName name of the sheet (file name from input file)
+     *
      * @return success conversion success
      */
     public boolean convertTXT2Excel(boolean isXLS, String sheetName) {

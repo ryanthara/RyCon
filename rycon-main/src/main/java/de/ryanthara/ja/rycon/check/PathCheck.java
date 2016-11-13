@@ -17,44 +17,48 @@
  */
 package de.ryanthara.ja.rycon.check;
 
-import java.io.File;
+import java.nio.file.*;
 import java.util.ArrayList;
 
 /**
- * This class implements different kind of checks for {@link File} objects.
+ * This class implements different kind of checks for {@link Path} objects.
+ * <p>
+ * RyCON now uses path objects for better file handling.
  *
  * @author sebastian
- * @version 1
+ * @version 2
  * @since 12
  */
-public class FileCheck {
+public class PathCheck {
 
     /**
-     * Checks the content of a file array for valid files by a given file suffix.
+     * Checks the content of a paths array for valid paths by a given file suffix.
      * <p>
      * Non readable file objects and directories will be excluded from the returned file array.
      *
-     * @param files                array of files to be checked
+     * @param paths                array of paths to be checked
      * @param acceptableFileSuffix string array with the acceptable file suffixes
      *
-     * @return checked file array with valid and readable file objects
+     * @return checked path array with valid and readable path objects
      */
-    public static File[] checkForValidFiles(File[] files, String[] acceptableFileSuffix) {
-        ArrayList<File> temp = new ArrayList<>();
+    public static Path[] getValidFiles(Path[] paths, String[] acceptableFileSuffix) {
+        ArrayList<Path> temp = new ArrayList<>();
 
-        for (File file : files) {
-            if (file.isFile() && file.canRead()) {
+        for (Path path : paths) {
+            if (Files.exists(path) && Files.isRegularFile(path) && Files.isReadable(path)) {
                 for (String anAcceptableFileSuffix : acceptableFileSuffix) {
                     String reducedSuffix = anAcceptableFileSuffix.substring(2, anAcceptableFileSuffix.length());
 
-                    if (file.getName().toLowerCase().endsWith(reducedSuffix)) {
-                        temp.add(file);
+                    PathMatcher matcher = FileSystems.getDefault().getPathMatcher("regex:(?iu:.+\\." + reducedSuffix + ")");
+
+                    if (matcher.matches(path)) {
+                        temp.add(path);
                     }
                 }
             }
         }
 
-        return temp.toArray(new File[temp.size()]);
+        return temp.toArray(new Path[temp.size()]);
     }
 
     /**
@@ -64,10 +68,10 @@ public class FileCheck {
      *
      * @return true if is directory and exists
      */
-    public static boolean checkIsDirectory(String file) {
-        File f = new File(file);
+    static boolean isDirectory(String file) {
+        Path path = Paths.get(file);
 
-        return f.exists() & f.isDirectory();
+        return Files.exists(path) && Files.isDirectory(path);
     }
 
     /**
@@ -77,10 +81,10 @@ public class FileCheck {
      *
      * @return true if is file and exists
      */
-    public static boolean checkIsFile(String file) {
-        File f = new File(file);
+    static boolean isFile(String file) {
+        Path path = Paths.get(file);
 
-        return f.exists() & f.isFile();
+        return Files.exists(path) && Files.isRegularFile(path);
     }
 
-} // end of FileCheck
+} // end of PathCheck

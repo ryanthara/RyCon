@@ -33,33 +33,24 @@ import java.util.ArrayList;
 public interface WriteFile {
 
     /**
-     * Returns the prepared {@link SpreadsheetDocument} for file writing.
-     * <p>
-     * This method is used vise versa with {@link #writeStringFile()} and {@link #writeWorkbookFile()}.
-     * The ones which are not used, returns null for indication.
+     * Returns true if the prepared {@link SpreadsheetDocument} for file writing was written to the file system.
      *
-     * @return array list for file writing
+     * @return write success
      */
-    SpreadsheetDocument writeSpreadsheetDocument();
+    boolean writeSpreadsheetDocument();
 
     /**
-     * Returns the prepared {@link ArrayList} for file writing.
-     * <p>
-     * This method is used vise versa with {@link #writeSpreadsheetDocument()} and {@link #writeWorkbookFile()}.
-     * The ones which are not used, returns null for indication.
+     * Returns true if the prepared {@link ArrayList} for file writing was written to the file system.
      *
-     * @return array list for file writing
+     * @return write success
      */
-    ArrayList<String> writeStringFile();
+    boolean writeStringFile();
 
     /**
-     * Returns the prepared {@link Workbook} for file writing.
-     * <p>
-     * This method is used vise versa with {@link #writeStringFile()} and {@link #writeSpreadsheetDocument()}.
-     * The ones which are not used, returns null for indication.
+     * Returns true if the prepared {@link Workbook} for file writing was written to the file system.
      *
-     * @return array list for file writing
+     * @return write success
      */
-    Workbook writeWorkbookFile();
+    boolean writeWorkbookFile();
 
 } // end of WriteFile

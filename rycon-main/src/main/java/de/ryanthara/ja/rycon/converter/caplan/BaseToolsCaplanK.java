@@ -37,10 +37,10 @@ import java.util.Date;
  * !-------------------------------------------------------------------------------
  * ! The following data was created by RyCON Build xxx on 2016-09-06.
  * !-------------------------------------------------------------------------------
- *      GB1 7  2612259.5681  1256789.1990    256.90815 |10
- *      GB2 7  2612259.5681  1256789.1990    256.90815 |10
- *     1003 7  2612259.5681  1256789.1990    256.90815 |10|Att1|Att2
- *     1062 7  2612259.5681  1256789.1990    256.90815 |10
+ * GB1 7  2612259.5681  1256789.1990    256.90815 |10
+ * GB2 7  2612259.5681  1256789.1990    256.90815 |10
+ * 1003 7  2612259.5681  1256789.1990    256.90815 |10|Att1|Att2
+ * 1062 7  2612259.5681  1256789.1990    256.90815 |10
  * TF 1067G 4  2612259.5681  1256789.1990    256.90815 |10
  * NG 2156U 3  2612259.5681  1256789.1990      0.00000 |10
  *
@@ -96,14 +96,14 @@ class BaseToolsCaplanK {
     /**
      * Prepares an output line as a string with a defined format and defined values.
      *
-     * @param useSimpleFormat   write simple formatted output file
-     * @param number            point number
-     * @param valency           valency value
-     * @param easting           easting coordinate
-     * @param northing          northing coordinate
-     * @param height            height coordinate
-     * @param freeSpace         free space delimiter
-     * @param objectTyp         object typ
+     * @param useSimpleFormat write simple formatted output file
+     * @param number          point number
+     * @param valency         valency value
+     * @param easting         easting coordinate
+     * @param northing        northing coordinate
+     * @param height          height coordinate
+     * @param freeSpace       free space delimiter
+     * @param objectTyp       object typ
      *
      * @return prepared output string
      */

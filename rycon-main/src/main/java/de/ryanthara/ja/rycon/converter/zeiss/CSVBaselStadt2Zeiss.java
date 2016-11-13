@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class provides functions to convert coordinate files from the geodata server Basel Stadt (Switzerland)
+ * Instances of this class provides functions to convert coordinate files from the geodata server Basel Stadt (Switzerland)
  * into Zeiss REC files with it's dialects (R4, R5, REC500 and M5).
  */
 public class CSVBaselStadt2Zeiss {

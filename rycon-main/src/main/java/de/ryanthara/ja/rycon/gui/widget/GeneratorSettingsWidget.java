@@ -23,7 +23,6 @@ import de.ryanthara.ja.rycon.check.TextCheck;
 import de.ryanthara.ja.rycon.data.PreferenceHandler;
 import de.ryanthara.ja.rycon.gui.custom.DirectoryDialogs;
 import de.ryanthara.ja.rycon.gui.custom.MessageBoxes;
-import de.ryanthara.ja.rycon.gui.custom.StatusBar;
 import de.ryanthara.ja.rycon.i18n.I18N;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -32,6 +31,8 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
+
+import static de.ryanthara.ja.rycon.gui.custom.Status.OK;
 
 
 /**
@@ -77,50 +78,50 @@ public class GeneratorSettingsWidget {
         if (!checkForEmptyTexts()) {
             int errorOccurred = Integer.MIN_VALUE;
 
-            if (!TextCheck.checkFileExists(textDefaultPath)) {
+            if (!TextCheck.isFileExists(textDefaultPath)) {
                 errorOccurred = MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING, I18N.getMsgBoxTitleWarning(), I18N.getMsgDirBaseNotFound());
             } else {
                 Main.pref.setUserPref(PreferenceHandler.DIR_BASE, textDefaultPath.getText());
             }
 
-            if (!TextCheck.checkFileExists(textProjectPath)) {
+            if (!TextCheck.isFileExists(textProjectPath)) {
                 errorOccurred = MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING, I18N.getMsgBoxTitleWarning(), I18N.getMsgDirProjectNotFound());
             } else {
                 Main.pref.setUserPref(PreferenceHandler.DIR_PROJECT, textProjectPath.getText());
             }
 
-            if (!TextCheck.checkFileExists(textProjectPathTemplateFolder)) {
+            if (!TextCheck.isFileExists(textProjectPathTemplateFolder)) {
                 errorOccurred = MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING, I18N.getMsgBoxTitleWarning(), I18N.getMsgDirProjectDefaultNotFound());
             } else {
                 Main.pref.setUserPref(PreferenceHandler.DIR_PROJECT_TEMPLATE, textProjectPathTemplateFolder.getText());
             }
 
-            if (!TextCheck.checkFileExists(textAdminPath)) {
+            if (!TextCheck.isFileExists(textAdminPath)) {
                 errorOccurred = MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING, I18N.getMsgBoxTitleWarning(), I18N.getMsgDirAdminNotFound());
             } else {
                 Main.pref.setUserPref(PreferenceHandler.DIR_ADMIN, textAdminPath.getText());
             }
 
-            if (!TextCheck.checkFileExists(textAdminPathTemplateFolder)) {
+            if (!TextCheck.isFileExists(textAdminPathTemplateFolder)) {
                 errorOccurred = MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING, I18N.getMsgBoxTitleWarning(), I18N.getMsgDirAdminDefaultNotFound());
             } else {
                 Main.pref.setUserPref(PreferenceHandler.DIR_ADMIN_TEMPLATE, textAdminPathTemplateFolder.getText());
             }
 
-            if (!TextCheck.checkFileExists(textBigDataPath)) {
+            if (!TextCheck.isFileExists(textBigDataPath)) {
                 errorOccurred = MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING, I18N.getMsgBoxTitleWarning(), I18N.getMsgDirBigDataNotFound());
             } else {
                 Main.pref.setUserPref(PreferenceHandler.DIR_BIG_DATA, textBigDataPath.getText());
             }
 
-            if (!TextCheck.checkFileExists(textBigDataPathTemplateFolder)) {
+            if (!TextCheck.isFileExists(textBigDataPathTemplateFolder)) {
                 errorOccurred = MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING, I18N.getMsgBoxTitleWarning(), I18N.getMsgDirBigDataDefaultNotFound());
             } else {
                 Main.pref.setUserPref(PreferenceHandler.DIR_BIG_DATA_TEMPLATE, textBigDataPathTemplateFolder.getText());
             }
 
             if (errorOccurred == Integer.MIN_VALUE) {
-                Main.statusBar.setStatus(I18N.getStatusSettingsSaved(), StatusBar.OK);
+                Main.statusBar.setStatus(I18N.getStatusSettingsSaved(), OK);
                 shell.setText(I18N.getWidgetTitleGenerator());
 
                 MessageBoxes.showMessageBox(innerShell, SWT.ICON_INFORMATION, I18N.getMsgBoxTitleSuccess(), I18N.getMsgSettingsSuccess());
@@ -133,13 +134,13 @@ public class GeneratorSettingsWidget {
     }
 
     private boolean checkForEmptyTexts() {
-        return TextCheck.checkIsEmpty(textDefaultPath) ||
-                TextCheck.checkIsEmpty(textProjectPath) ||
-                TextCheck.checkIsEmpty(textProjectPathTemplateFolder) ||
-                TextCheck.checkIsEmpty(textAdminPath) ||
-                TextCheck.checkIsEmpty(textAdminPathTemplateFolder) ||
-                TextCheck.checkIsEmpty(textBigDataPath) ||
-                TextCheck.checkIsEmpty(textBigDataPathTemplateFolder);
+        return TextCheck.isEmpty(textDefaultPath) ||
+                TextCheck.isEmpty(textProjectPath) ||
+                TextCheck.isEmpty(textProjectPathTemplateFolder) ||
+                TextCheck.isEmpty(textAdminPath) ||
+                TextCheck.isEmpty(textAdminPathTemplateFolder) ||
+                TextCheck.isEmpty(textBigDataPath) ||
+                TextCheck.isEmpty(textBigDataPathTemplateFolder);
     }
 
     private Button createAdminPathComposite(int style) {

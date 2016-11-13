@@ -19,10 +19,11 @@ package de.ryanthara.ja.rycon.gui.widget.convert.write;
 
 import de.ryanthara.ja.rycon.converter.odf.*;
 import de.ryanthara.ja.rycon.gui.widget.ConverterWidget;
+import de.ryanthara.ja.rycon.gui.widget.convert.SourceButton;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.odftoolkit.simple.SpreadsheetDocument;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +37,7 @@ import java.util.List;
  */
 public class ODFWriteFile implements WriteFile {
 
-    private File file;
+    private Path path;
     private ArrayList<String> readStringFile;
     private List<String[]> readCSVFile;
     private WriteParameter parameter;
@@ -44,120 +45,116 @@ public class ODFWriteFile implements WriteFile {
     /**
      * Constructs the {@link ODFWriteFile} with a set of parameters.
      *
-     * @param file           output file
+     * @param path           output file
      * @param readCSVFile    read csv file
      * @param readStringFile read string file
      * @param parameter      the write parameter object
      */
-    public ODFWriteFile(File file, ArrayList<String> readStringFile, List<String[]> readCSVFile, WriteParameter parameter) {
-        this.file = file;
+    public ODFWriteFile(Path path, ArrayList<String> readStringFile, List<String[]> readCSVFile, WriteParameter parameter) {
+        this.path = path;
         this.readStringFile = readStringFile;
         this.readCSVFile = readCSVFile;
         this.parameter = parameter;
     }
 
     /**
-     * Returns the prepared {@link SpreadsheetDocument} for file writing.
-     * <p>
-     * This method is used vise versa with {@link #writeStringFile()} and {@link #writeWorkbookFile()}.
-     * The ones which are not used, returns null for indication.
+     * Returns true if the prepared {@link SpreadsheetDocument} for file writing was written to the file system.
      *
-     * @return array list for file writing
+     * @return write success
      */
     @Override
-    public SpreadsheetDocument writeSpreadsheetDocument() {
+    public boolean writeSpreadsheetDocument() {
+        boolean success = false;
         SpreadsheetDocument spreadsheetDocument = null;
 
-        switch (parameter.getSourceNumber()) {
-            case 0:     // fall through for GSI8 format
-            case 1:     // GSI16 format
+        switch (SourceButton.fromIndex(parameter.getSourceNumber())) {
+            case GSI8:
+            case GSI16:
                 GSI2ODF gsi2ODF = new GSI2ODF(readStringFile);
-                if (gsi2ODF.convertGSI2ODS(file.getName(), parameter.isWriteCommentLine())) {
+                if (gsi2ODF.convertGSI2ODS(path.getFileName(), parameter.isWriteCommentLine())) {
                     spreadsheetDocument = gsi2ODF.getSpreadsheetDocument();
                 }
                 break;
 
-            case 2:     // TXT format (space or tabulator separated)
+            case TXT:
                 TXT2ODF txt2ODF = new TXT2ODF(readStringFile);
-                if (txt2ODF.convertTXT2ODS(file.getName())) {
+                if (txt2ODF.convertTXT2ODS(path.getFileName())) {
                     spreadsheetDocument = txt2ODF.getSpreadsheetDocument();
                 }
                 break;
 
-            case 3:     // CSV format (comma or semicolon separated)
+            case CSV:
                 CSV2ODF csv2ODF = new CSV2ODF(readCSVFile);
-                if (csv2ODF.convertCSV2ODS(file.getName())) {
+                if (csv2ODF.convertCSV2ODS(path.getFileName())) {
                     spreadsheetDocument = csv2ODF.getSpreadsheetDocument();
                 }
                 break;
 
-            case 4:     // CAPLAN K format
-                K2ODF k2ODF = new K2ODF(readStringFile);
-                if (k2ODF.convertCaplan2ODS(file.getName(), parameter.isWriteCommentLine())) {
-                    spreadsheetDocument = k2ODF.getSpreadsheetDocument();
+            case CAPLAN_K:
+                Caplan2ODF caplan2ODF = new Caplan2ODF(readStringFile);
+                if (caplan2ODF.convertCaplan2ODS(path.getFileName(), parameter.isWriteCommentLine())) {
+                    spreadsheetDocument = caplan2ODF.getSpreadsheetDocument();
                 }
                 break;
 
-            case 5:     // Zeiss M5 format and it's dialects
+            case ZEISS_REC:
                 Zeiss2ODF zeiss2ODF = new Zeiss2ODF(readStringFile);
-                if (zeiss2ODF.convertZeiss2ODS(file.getName(), parameter.isWriteCommentLine())) {
+                if (zeiss2ODF.convertZeiss2ODS(path.getFileName(), parameter.isWriteCommentLine())) {
                     spreadsheetDocument = zeiss2ODF.getSpreadsheetDocument();
                 }
                 break;
 
-            case 6:     // cadwork node.dat from cadwork CAD program
+            case CADWORK:
                 Cadwork2ODF cadwork2ODF = new Cadwork2ODF(readStringFile);
-                if (cadwork2ODF.convertCadwork2ODS(file.getName(), parameter.isWriteCommentLine())) {
+                if (cadwork2ODF.convertCadwork2ODS(path.getFileName(), parameter.isWriteCommentLine())) {
                     spreadsheetDocument = cadwork2ODF.getSpreadsheetDocument();
                 }
                 break;
 
-            case 7:     // CSV format 'Basel Stadt' (semicolon separated)
+            case BASEL_STADT:
                 CSVBaselStadt2ODF csvBaselStadt2ODF = new CSVBaselStadt2ODF(readCSVFile);
-                if (csvBaselStadt2ODF.convertCSVBaselStadt2ODS(file.getName(), parameter.isWriteCommentLine())) {
+                if (csvBaselStadt2ODF.convertCSVBaselStadt2ODS(path.getFileName(), parameter.isWriteCommentLine())) {
                     spreadsheetDocument = csvBaselStadt2ODF.getSpreadsheetDocument();
                 }
                 break;
 
-            case 8:     // TXT format 'Basel Landschaft' (different column based text files for LFP and HFP points)
+            case BASEL_LANDSCHAFT:
                 TXTBaselLandschaft2ODF txtBaselLandschaft2ODF = new TXTBaselLandschaft2ODF(readStringFile);
-                if (txtBaselLandschaft2ODF.convertTXTBaselLandschaft2ODS(file.getName(), parameter.isWriteCommentLine())) {
+                if (txtBaselLandschaft2ODF.convertTXTBaselLandschaft2ODS(path.getFileName(), parameter.isWriteCommentLine())) {
                     spreadsheetDocument = txtBaselLandschaft2ODF.getSpreadsheetDocument();
                 }
                 break;
 
             default:
                 spreadsheetDocument = null;
-                break;
+                System.err.println("ODFWriteFile.writeStringFile() : unknown file format " + SourceButton.fromIndex(parameter.getSourceNumber()));
         }
 
-        return spreadsheetDocument;
+        if (WriteODS2Disk.writeODS2Disk(path, spreadsheetDocument, ".ods")) {
+            success = true;
+        }
+
+        return success;
     }
 
     /**
-     * Returns the prepared {@link ArrayList} for file writing.
-     * <p>
-     * This method is used vise versa with {@link #writeSpreadsheetDocument()} and {@link #writeWorkbookFile()}.
-     * The ones which are not used, returns null for indication.
+     * Returns true if the prepared {@link ArrayList} for file writing was written to the file system.
      *
-     * @return array list for file writing
+     * @return write success
      */
     @Override
-    public ArrayList<String> writeStringFile() {
-        return null;
+    public boolean writeStringFile() {
+        return false;
     }
 
     /**
-     * Returns the prepared {@link Workbook} for file writing.
-     * <p>
-     * This method is used vise versa with {@link #writeStringFile()} and {@link #writeSpreadsheetDocument()}.
-     * The ones which are not used, returns null for indication.
+     * Returns true if the prepared {@link Workbook} for file writing was written to the file system.
      *
-     * @return array list for file writing
+     * @return write success
      */
     @Override
-    public Workbook writeWorkbookFile() {
-        return null;
+    public boolean writeWorkbookFile() {
+        return false;
     }
 
 } // end of ODFWriteFile

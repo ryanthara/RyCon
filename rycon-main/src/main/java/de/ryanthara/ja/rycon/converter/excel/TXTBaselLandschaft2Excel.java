@@ -133,6 +133,7 @@ public class TXTBaselLandschaft2Excel {
 
                     countColumns = 5;
                     break;
+
                 case 6:     // LFP file
                     cell = row.createCell(cellNumber);      // Art
                     cell.setCellValue(lineSplit[0]);
@@ -175,6 +176,9 @@ public class TXTBaselLandschaft2Excel {
 
                     countColumns = 6;
                     break;
+
+                default:
+                    System.err.println("TXTBaselLandschaft2Excel.convertTXTBaselLand2Excel() : line contains less or more tokens " + line);
             }
         }
 

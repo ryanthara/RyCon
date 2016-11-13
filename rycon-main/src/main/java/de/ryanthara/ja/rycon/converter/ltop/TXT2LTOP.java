@@ -17,8 +17,8 @@
  */
 package de.ryanthara.ja.rycon.converter.ltop;
 
-import de.ryanthara.ja.rycon.tools.NumberFormatter;
 import de.ryanthara.ja.rycon.elements.RyPoint;
+import de.ryanthara.ja.rycon.tools.NumberFormatter;
 
 import java.util.ArrayList;
 
@@ -84,6 +84,9 @@ public class TXT2LTOP {
                         northing = String.format("%12s", NumberFormatter.fillDecimalPlace(lineSplit[3], 4));
                         height = String.format("%10s", NumberFormatter.fillDecimalPlace(lineSplit[4], 4));
                         break;
+
+                    default:
+                        System.err.println("TXT2LTOP.convertTXT2KOO() : line contains less or more tokens " + line);
                 }
 
                 // pick up the relevant elements from the blocks from every line

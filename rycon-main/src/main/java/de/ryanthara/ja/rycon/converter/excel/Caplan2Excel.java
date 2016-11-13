@@ -17,6 +17,7 @@
  */
 package de.ryanthara.ja.rycon.converter.excel;
 
+import de.ryanthara.ja.rycon.elements.CaplanBlock;
 import de.ryanthara.ja.rycon.i18n.I18N;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
@@ -26,7 +27,12 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.util.ArrayList;
 
 /**
- * Created by sebastian on 13.09.16.
+ * Instances of this class provides functions to convert a Caplan K formatted coordinate file
+ * into a Microsoft Excel file.
+ *
+ * @author sebastian
+ * @version 1
+ * @since 12
  */
 public class Caplan2Excel {
 
@@ -34,16 +40,16 @@ public class Caplan2Excel {
     private Workbook workbook;
 
     /**
-     * Class constructor for read line based text files in different formats.
+     * Constructs an instance of this class with the read Caplan K file {@link ArrayList} string as parameter.
      *
-     * @param readStringLines {@code ArrayList<String>} with lines in text format
+     * @param readStringLines {@code ArrayList<String>} with lines in Caplan K format
      */
     public Caplan2Excel(ArrayList<String> readStringLines) {
         this.readStringLines = readStringLines;
     }
 
     /**
-     * Convert a K file element by element into an Excel file.
+     * Converts a Caplan K file element by element into a Microsoft Excel file.
      *
      * @param isXLS           selector to distinguish between XLS and XLSX file extension
      * @param sheetName       name of the sheet (file name from input file)
@@ -100,25 +106,26 @@ public class Caplan2Excel {
         }
 
         for (String line : readStringLines) {
-            row = sheet.createRow(rowNumber);
-            rowNumber++;
+            // skip empty lines directly after reading
+            if (!line.trim().isEmpty()) {
+                row = sheet.createRow(rowNumber);
+                rowNumber++;
 
-            cellNumber = 0;
+                cellNumber = 0;
 
-            if (!line.startsWith("!")) {    // comment lines starting with '!' are ignored
-                String s;
+                CaplanBlock caplanBlock = new CaplanBlock(line);
 
-                if (line.length() >= 16) {
+                if (caplanBlock.getNumber() != null) {
                     cell = row.createCell(cellNumber);
-                    cell.setCellValue(line.substring(0, 16).trim());       // point number (no '*', ',' and ';'), column 1 - 16
+                    cell.setCellValue(caplanBlock.getNumber());
                     cellNumber++;
                 }
 
-                if (line.length() >= 32) {
+                if (caplanBlock.getEasting() != null) {
                     cell = row.createCell(cellNumber);
 
-                    if (!(s = line.substring(20, 32).trim()).equals("")) {      // easting E, column 19-32
-                        cell.setCellValue(Double.parseDouble(s));
+                    if (!caplanBlock.getEasting().equals("")) {
+                        cell.setCellValue(Double.parseDouble(caplanBlock.getEasting()));
                         cellStyle = workbook.createCellStyle();
                         cellStyle.setDataFormat(format.getFormat("#,##0.0000"));
                         cellStyle.setVerticalAlignment(CellStyle.ALIGN_RIGHT);
@@ -130,11 +137,11 @@ public class Caplan2Excel {
                     cellNumber++;
                 }
 
-                if (line.length() >= 46) {
+                if (caplanBlock.getNorthing() != null) {
                     cell = row.createCell(cellNumber);
 
-                    if (!(s = line.substring(34, 46).trim()).equals("")) {      // northing N, column 33-46
-                        cell.setCellValue(Double.parseDouble(s));
+                    if (!caplanBlock.getNorthing().equals("")) {
+                        cell.setCellValue(Double.parseDouble(caplanBlock.getNorthing()));
                         cellStyle = workbook.createCellStyle();
                         cellStyle.setDataFormat(format.getFormat("#,##0.0000"));
                         cellStyle.setVerticalAlignment(CellStyle.ALIGN_RIGHT);
@@ -146,11 +153,11 @@ public class Caplan2Excel {
                     cellNumber++;
                 }
 
-                if (line.length() >= 59) {
+                if (caplanBlock.getHeight() != null) {
                     cell = row.createCell(cellNumber);
 
-                    if (!(s = line.substring(48, 59).trim()).equals("")) {      // height H, column 47-59
-                        cell.setCellValue(Double.parseDouble(s));
+                    if (!caplanBlock.getHeight().equals("")) {
+                        cell.setCellValue(Double.parseDouble(caplanBlock.getHeight()));
                         cellStyle = workbook.createCellStyle();
                         cellStyle.setDataFormat(format.getFormat("#,##0.0000"));
                         cellStyle.setVerticalAlignment(CellStyle.ALIGN_RIGHT);
@@ -162,24 +169,23 @@ public class Caplan2Excel {
                     cellNumber++;
                 }
 
-                if (line.length() >= 62) {
-                    String[] lineSplit = line.substring(61, line.length()).trim().split("\\|+");
-
+                if (caplanBlock.getCode() != null) {
                     cell = row.createCell(cellNumber);
-                    cell.setCellValue(lineSplit[0].trim());              // code is the same as object type, column 62...
+                    cell.setCellValue(caplanBlock.getCode());
                     cellNumber++;
 
-                    for (int i = 1; i < lineSplit.length; i++) {
-                        cell = row.createCell(cellNumber);
-                        cell.setCellValue(lineSplit[i].trim());
-                        cellNumber++;
+                    if (caplanBlock.getAttributes().size() > 0) {
+                        for (String attribute : caplanBlock.getAttributes()) {
+                            cell = row.createCell(cellNumber);
+                            cell.setCellValue(attribute);
+                            cellNumber++;
+                        }
                     }
                 }
 
                 if (cellNumber > countColumns) {
                     countColumns = cellNumber;
                 }
-
             }
         }
 

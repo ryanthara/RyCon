@@ -20,7 +20,7 @@ package de.ryanthara.ja.rycon.converter.zeiss;
 import java.util.ArrayList;
 
 /**
- * This class provides functions to convert text formatted coordinate files into Zeiss REC files and
+ * Instances of this class provides functions to convert text formatted coordinate files into Zeiss REC files and
  * it's dialects (R4, R5, REC500 and M5).
  */
 public class TXT2Zeiss {
@@ -82,6 +82,9 @@ public class TXT2Zeiss {
                     northing = lineSplit[3];
                     height = lineSplit[4];
                     break;
+
+                default:
+                    System.err.println("TXT2Zeiss.convertTXT2REC() : line contains less or more tokens " + line);
             }
 
             result.add(BaseToolsZeiss.prepareLineOfCoordinates(dialect, number, code, easting, northing, height, lineNumber));

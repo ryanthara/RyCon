@@ -17,30 +17,35 @@
  */
 package de.ryanthara.ja.rycon.converter.ltop;
 
-import de.ryanthara.ja.rycon.tools.NumberFormatter;
+import de.ryanthara.ja.rycon.elements.CaplanBlock;
 import de.ryanthara.ja.rycon.elements.RyPoint;
+import de.ryanthara.ja.rycon.tools.NumberFormatter;
 
 import java.util.ArrayList;
 
 /**
- * This class provides functions to convert measurement or coordinate files from Caplan K format
- * into LTOP KOO files.
+ * Instances of this class provides functions to convert a Caplan K formatted coordinate file
+ * into a LTOP coordinate file.
+ *
+ * @author sebastian
+ * @version 1
+ * @since 12
  */
-public class K2LTOP {
+public class Caplan2LTOP {
 
     private ArrayList<String> readStringLines;
 
     /**
-     * Class constructor for read line based text files.
+     * Constructs an instance of this class with the read Caplan K file {@link ArrayList} string as parameter.
      *
-     * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
+     * @param readStringLines {@code ArrayList<String>} with lines in Caplan K format
      */
-    public K2LTOP(ArrayList<String> readStringLines) {
+    public Caplan2LTOP(ArrayList<String> readStringLines) {
         this.readStringLines = readStringLines;
     }
 
     /**
-     * Convert a CAPLAN K coordinate file into a KOO file for LTOP.
+     * Converts a Caplan K coordinate file into a KOO file for LTOP.
      *
      * @param eliminateDuplicates eliminate duplicate coordinates within 3cm radius
      * @param sortOutputFile      sort an output file by point number
@@ -69,35 +74,35 @@ public class K2LTOP {
                 eta = BaseToolsLTOP.eta;
                 xi = BaseToolsLTOP.xi;
 
-                if (!line.startsWith("!")) {    // comment lines starting with '!' are ignored
-                    if (line.length() >= 16) {  // point number (no '*', ',' and ';'), column 1 - 16
-                        number = String.format("%10s", line.substring(0, 16).trim());
-                    }
+                CaplanBlock caplanBlock = new CaplanBlock(line);
 
-                    if (line.length() >= 32) {  // easting E, column 19-32
-                        easting = String.format("%12s", NumberFormatter.fillDecimalPlace(line.substring(20, 32).trim(), 4));
-                    }
+                if (caplanBlock.getNumber() != null) {
+                    number = String.format("%10s", caplanBlock.getNumber());
+                }
 
-                    if (line.length() >= 46) {  // northing N, column 33-46
-                        northing = String.format("%12s", NumberFormatter.fillDecimalPlace(line.substring(34, 46).trim(), 4));
-                    }
+                if (caplanBlock.getEasting() != null) {
+                    easting = String.format("%12s", NumberFormatter.fillDecimalPlace(caplanBlock.getEasting(), 4));
+                }
 
-                    if (line.length() >= 59) {  // height H, column 61-70
-                        height = String.format("%10s", NumberFormatter.fillDecimalPlace(line.substring(48, 59).trim(), 4));
-                    }
+                if (caplanBlock.getNorthing() != null) {
+                    northing = String.format("%12s", NumberFormatter.fillDecimalPlace(caplanBlock.getNorthing(), 4));
+                }
 
-                    // pick up the relevant elements from the blocks from every line
-                    resultLine = BaseToolsLTOP.prepareStringForKOO(number, pointType, toleranceCategory, easting, northing,
-                            height, geoid, eta, xi);
+                if (caplanBlock.getHeight() != null) {
+                    height = String.format("%10s", NumberFormatter.fillDecimalPlace(caplanBlock.getHeight(), 4));
+                }
 
-                    // fill elements in a special object structure for duplicate elimination
-                    if (eliminateDuplicates) {
-                        BaseToolsLTOP.fillRyPoints(ryPoints, easting, northing, height, resultLine);
-                    }
+                // pick up the relevant elements from the blocks from every line
+                resultLine = BaseToolsLTOP.prepareStringForKOO(number, pointType, toleranceCategory, easting, northing,
+                        height, geoid, eta, xi);
 
-                    if (!resultLine.isEmpty()) {
-                        result.add(resultLine);
-                    }
+                // fill elements in a special object structure for duplicate elimination
+                if (eliminateDuplicates) {
+                    BaseToolsLTOP.fillRyPoints(ryPoints, easting, northing, height, resultLine);
+                }
+
+                if (!resultLine.isEmpty()) {
+                    result.add(resultLine);
                 }
             }
         }
@@ -107,4 +112,4 @@ public class K2LTOP {
         return sortOutputFile ? BaseToolsLTOP.sortResult(result) : result;
     }
 
-} // end of K2LTOP
+} // end of Caplan2LTOP

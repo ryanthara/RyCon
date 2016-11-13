@@ -25,10 +25,10 @@ import org.eclipse.swt.widgets.Display;
  * all of it's services before the main window is shown.
  * <p>
  * This functionality isn't still active.
- *
+ * <p>
  * <h3>Changes:</h3>
  * <ul>
- *     <li>1: basic implementation </li>
+ * <li>1: basic implementation </li>
  * </ul>
  *
  * @author sebastian
@@ -54,11 +54,9 @@ public class RyCONLauncher {
         new MainApplication();
 
 
-        while((Display.getCurrent().getShells().length != 0)
-                && !Display.getCurrent().getShells()[0].isDisposed())
-        {
-            if(!display.readAndDispatch())
-            {
+        while ((Display.getCurrent().getShells().length != 0)
+                && !Display.getCurrent().getShells()[0].isDisposed()) {
+            if (!display.readAndDispatch()) {
                 display.sleep();
             }
         }

@@ -24,7 +24,9 @@ import de.ryanthara.ja.rycon.i18n.I18N;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Text;
 
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.StringTokenizer;
 
 /**
@@ -33,10 +35,53 @@ import java.util.StringTokenizer;
  * It is used by all main widgets of RyCON.
  *
  * @author sebastian
- * @version 1
+ * @version 2
  * @since 12
  */
 public class TextCheck {
+
+    /**
+     * Checks the source and destination {@link Text} fields for being valid files and returns the valid ones
+     * as a {@link Path} array.
+     *
+     * @param source      the source text field
+     * @param destination the destination text field
+     * @param chosenFiles the chosen files to be checked
+     *
+     * @return the valid chosen files
+     */
+    public static Path[] checkSourceAndDestinationText(Text source, Text destination, Path[] chosenFiles) {
+        Path[] files2read = null;
+
+        if (isEmpty(source) || isEmpty(destination)) {
+            MessageBoxes.showMessageBox(Main.shell, SWT.ICON_WARNING, I18N.getMsgBoxTitleWarning(), I18N.getMsgEmptyTextFieldWarning());
+
+            files2read = new Path[0];
+        } else if (chosenFiles == null) {
+            StringTokenizer st = new StringTokenizer(source.getText());
+            files2read = new Path[st.countTokens()];
+
+            for (int i = 0; i < st.countTokens(); i++) {
+                String s = st.nextToken();
+
+                if (PathCheck.isFile(s)) {
+                    files2read[i] = Paths.get(s);
+                } else {
+                    MessageBoxes.showMessageBox(Main.shell, SWT.ICON_WARNING, I18N.getMsgBoxTitleWarning(), I18N.getMsgFileNotExist());
+                }
+            }
+
+            Path destinationPath = Paths.get(destination.getText());
+
+            if (!(Files.isDirectory(destinationPath) && files2read.length > 0)) {
+                files2read = new Path[0];
+            }
+        } else if (chosenFiles.length > 0) {
+            files2read = chosenFiles;
+        }
+
+        return files2read;
+    }
 
     /**
      * Checks the content of the {@link Text} field if it is a valid directory in the file system.
@@ -45,19 +90,8 @@ public class TextCheck {
      *
      * @return true if directory exist
      */
-    public static boolean checkDirExists(Text textField) {
-        return FileCheck.checkIsDirectory(textField.getText());
-    }
-
-    /**
-     * Checks the content of the {@link Text} field if it is a valid file in the file system.
-     *
-     * @param textField text field which content has to be checked
-     *
-     * @return true if file exist
-     */
-    public static boolean checkFileExists(Text textField) {
-        return FileCheck.checkIsFile(textField.getText());
+    public static boolean isDirExists(Text textField) {
+        return PathCheck.isDirectory(textField.getText());
     }
 
     /**
@@ -67,67 +101,40 @@ public class TextCheck {
      *
      * @return success of the check
      */
-    public static boolean checkIsDoubleValue(Text textField) {
+    public static boolean isDoubleValue(Text textField) {
+        boolean isDoubleValue;
+
         try {
-            Double.parseDouble(textField.getText());
-            return true;
+            Double.valueOf(textField.getText());
+            isDoubleValue = true;
         } catch (NumberFormatException ex) {
             System.err.println("Text field contains a value that can't be parsed into a double value!");
-            return false;
+            isDoubleValue = false;
         }
+
+        return isDoubleValue;
     }
 
     /**
-     * Checks the {@link Text} field if it contains an empty String.
+     * Checks if the {@link Text} field contains an empty String.
      *
      * @param textField text field to be checked
      *
      * @return true if text field contains an empty string
      */
-    public static boolean checkIsEmpty(Text textField) {
-        return textField != null & (textField != null && textField.getText().trim().equals(""));
+    public static boolean isEmpty(Text textField) {
+        return textField.getText().isEmpty();
     }
 
     /**
-     * Checks the source and destination {@link Text} fields for valid files and returns the valid ones as a file array.
+     * Checks the content of the {@link Text} field if it is a valid file in the file system.
      *
-     * @param source      the source text field
-     * @param destination the destination text field
-     * @param chosenFiles the chosen files to be checked
+     * @param textField text field which content has to be checked
      *
-     * @return the valid chosen files
+     * @return true if file exist
      */
-    public static File[] checkSourceAndDestinationText(Text source, Text destination, File[] chosenFiles) {
-        File[] files2read = null;
-
-        if (checkIsEmpty(source) || checkIsEmpty(destination)) {
-            MessageBoxes.showMessageBox(Main.shell, SWT.ICON_WARNING, I18N.getMsgBoxTitleWarning(), I18N.getMsgEmptyTextFieldWarning());
-
-            files2read = new File[0];
-        } else if (chosenFiles == null) {
-            StringTokenizer st = new StringTokenizer(source.getText());
-            files2read = new File[st.countTokens()];
-
-            for (int i = 0; i < st.countTokens(); i++) {
-                String s = st.nextToken();
-
-                if (FileCheck.checkIsFile(s)) {
-                    files2read[i] = new File(s);
-                } else {
-                    MessageBoxes.showMessageBox(Main.shell, SWT.ICON_WARNING, I18N.getMsgBoxTitleWarning(), I18N.getMsgFileNotExist());
-                }
-            }
-
-            File destinationPath = new File(destination.getText());
-
-            if (!(destinationPath.isDirectory() && files2read.length > 0)) {
-                files2read = new File[0];
-            }
-        } else if (chosenFiles.length > 0) {
-            files2read = chosenFiles;
-        }
-
-        return files2read;
+    public static boolean isFileExists(Text textField) {
+        return PathCheck.isFile(textField.getText());
     }
 
 } // end of TextCheck

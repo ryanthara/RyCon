@@ -19,9 +19,11 @@ package de.ryanthara.ja.rycon.gui.widget.convert.write;
 
 import de.ryanthara.ja.rycon.converter.ltop.*;
 import de.ryanthara.ja.rycon.gui.widget.ConverterWidget;
+import de.ryanthara.ja.rycon.gui.widget.convert.SourceButton;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.odftoolkit.simple.SpreadsheetDocument;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,39 +31,39 @@ import java.util.List;
  * Instances of this class are used for writing LTOP KOO files from the {@link ConverterWidget} of RyCON.
  *
  * @author sebastian
- * @version 1
+ * @version 2
  * @since 12
  */
 public class LtopKOOWriteFile implements WriteFile {
 
-    private ArrayList<String> readStringFile;
-    private List<String[]> readCSVFile;
-    private WriteParameter parameter;
+    private final Path path;
+    private final ArrayList<String> readStringFile;
+    private final List<String[]> readCSVFile;
+    private final WriteParameter parameter;
 
     /**
      * Constructs the {@link LtopKOOWriteFile} with a set of parameters.
      *
+     * @param path           read path object for writing
      * @param readCSVFile    read csv file
      * @param readStringFile read string file
      * @param parameter      the write parameter object
      */
-    public LtopKOOWriteFile(ArrayList<String> readStringFile, List<String[]> readCSVFile, WriteParameter parameter) {
+    public LtopKOOWriteFile(Path path, ArrayList<String> readStringFile, List<String[]> readCSVFile, WriteParameter parameter) {
+        this.path = path;
         this.readStringFile = readStringFile;
         this.readCSVFile = readCSVFile;
         this.parameter = parameter;
     }
 
     /**
-     * Returns the prepared {@link SpreadsheetDocument} for file writing.
-     * <p>
-     * This method is used vise versa with {@link #writeStringFile()} and {@link #writeWorkbookFile()}.
-     * The ones which are not used, returns null for indication.
+     * Returns true if the prepared {@link SpreadsheetDocument} for file writing was written to the file system.
      *
-     * @return array list for file writing
+     * @return write success
      */
     @Override
-    public SpreadsheetDocument writeSpreadsheetDocument() {
-        return null;
+    public boolean writeSpreadsheetDocument() {
+        return false;
     }
 
     /**
@@ -70,54 +72,55 @@ public class LtopKOOWriteFile implements WriteFile {
      * @return array list for file writing
      */
     @Override
-    public ArrayList<String> writeStringFile() {
+    public boolean writeStringFile() {
+        boolean success = false;
         ArrayList<String> writeFile;
 
-        switch (parameter.getSourceNumber()) {
-            case 0:     // fall through for GSI8 format
-            case 1:     // GSI16 format
+        switch (SourceButton.fromIndex(parameter.getSourceNumber())) {
+            case GSI8:
+            case GSI16:
                 GSI2LTOP gsi2LTOP = new GSI2LTOP(readStringFile);
                 writeFile = gsi2LTOP.convertGSI2KOO(parameter.isLtopEliminateDuplicatePoints(),
                         parameter.isLtopSortOutputFileByNumber());
                 break;
 
-            case 2:     // TXT format (space or tabulator separated)
+            case TXT:
                 TXT2LTOP txt2LTOP = new TXT2LTOP(readStringFile);
                 writeFile = txt2LTOP.convertTXT2KOO(parameter.isLtopEliminateDuplicatePoints(),
                         parameter.isLtopSortOutputFileByNumber());
                 break;
 
-            case 3:     // CSV format (comma or semicolon separated)
+            case CSV:
                 CSV2LTOP csv2LTOP = new CSV2LTOP(readCSVFile);
                 writeFile = csv2LTOP.convertCSV2KOO(parameter.isLtopEliminateDuplicatePoints(),
                         parameter.isLtopSortOutputFileByNumber());
                 break;
 
-            case 4:     // CAPLAN K format
-                K2LTOP k2LTOP = new K2LTOP(readStringFile);
-                writeFile = k2LTOP.convertK2KOO(parameter.isLtopEliminateDuplicatePoints(),
+            case CAPLAN_K:
+                Caplan2LTOP caplan2LTOP = new Caplan2LTOP(readStringFile);
+                writeFile = caplan2LTOP.convertK2KOO(parameter.isLtopEliminateDuplicatePoints(),
                         parameter.isLtopSortOutputFileByNumber());
                 break;
 
-            case 5:     // Zeiss REC format and it's dialects
+            case ZEISS_REC:
                 Zeiss2LTOP zeiss2LTOP = new Zeiss2LTOP(readStringFile);
                 writeFile = zeiss2LTOP.convertZeiss2KOO(parameter.isLtopEliminateDuplicatePoints(),
                         parameter.isLtopSortOutputFileByNumber());
                 break;
 
-            case 6:     // cadwork node.dat from cadwork CAD program
+            case CADWORK:
                 Cadwork2LTOP cadwork2LTOP = new Cadwork2LTOP(readStringFile);
                 writeFile = cadwork2LTOP.convertCadwork2KOO(parameter.isCadworkUseZeroHeights(),
                         parameter.isLtopEliminateDuplicatePoints(), parameter.isLtopSortOutputFileByNumber());
                 break;
 
-            case 7:     // CSV format 'Basel Stadt' (semicolon separated)
+            case BASEL_STADT:
                 CSVBaselStadt2LTOP csvBaselStadt2LTOP = new CSVBaselStadt2LTOP(readCSVFile);
                 writeFile = csvBaselStadt2LTOP.convertCSVBaselStadt2KOO(parameter.isLtopEliminateDuplicatePoints(),
                         parameter.isLtopSortOutputFileByNumber());
                 break;
 
-            case 8:     // TXT format 'Basel Landschaft' (different column based text files for LFP and HFP points)
+            case BASEL_LANDSCHAFT:
                 TXTBaselLandschaft2LTOP txtBaselLandschaft2LTOP = new TXTBaselLandschaft2LTOP(readStringFile);
                 writeFile = txtBaselLandschaft2LTOP.convertTXTBaselLandschaft2KOO(parameter.isLtopEliminateDuplicatePoints(),
                         parameter.isLtopSortOutputFileByNumber());
@@ -125,23 +128,24 @@ public class LtopKOOWriteFile implements WriteFile {
 
             default:
                 writeFile = null;
-                break;
+                System.err.println("LtopKOOWriteFile.writeStringFile() : unknown file format " + SourceButton.fromIndex(parameter.getSourceNumber()));
         }
 
-        return writeFile;
+        if (WriteFile2Disk.writeFile2Disk(path, writeFile, ".KOO")) {
+            success = true;
+        }
+
+        return success;
     }
 
     /**
-     * Returns the prepared {@link Workbook} for file writing.
-     * <p>
-     * This method is used vise versa with {@link #writeStringFile()} and {@link #writeSpreadsheetDocument()}.
-     * The ones which are not used, returns null for indication.
+     * Returns true if the prepared {@link Workbook} for file writing was written to the file system.
      *
-     * @return array list for file writing
+     * @return write success
      */
     @Override
-    public Workbook writeWorkbookFile() {
-        return null;
+    public boolean writeWorkbookFile() {
+        return false;
     }
 
 } // end of LtopKOOWriteFile

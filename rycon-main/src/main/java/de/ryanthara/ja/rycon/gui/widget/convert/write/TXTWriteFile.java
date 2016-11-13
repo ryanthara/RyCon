@@ -19,9 +19,11 @@ package de.ryanthara.ja.rycon.gui.widget.convert.write;
 
 import de.ryanthara.ja.rycon.converter.text.*;
 import de.ryanthara.ja.rycon.gui.widget.ConverterWidget;
+import de.ryanthara.ja.rycon.gui.widget.convert.SourceButton;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.odftoolkit.simple.SpreadsheetDocument;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,39 +31,39 @@ import java.util.List;
  * Instances of this class are used for writing text files from the {@link ConverterWidget} of RyCON.
  *
  * @author sebastian
- * @version 1
+ * @version 2
  * @since 12
  */
 public class TXTWriteFile implements WriteFile {
 
-    private ArrayList<String> readStringFile;
-    private List<String[]> readCSVFile;
-    private WriteParameter parameter;
+    private final Path path;
+    private final ArrayList<String> readStringFile;
+    private final List<String[]> readCSVFile;
+    private final WriteParameter parameter;
 
     /**
      * Constructs the {@link TXTWriteFile} with a set of parameters.
      *
+     * @param path           read file object for writing
      * @param readCSVFile    read csv file
      * @param readStringFile read string file
      * @param parameter      the write parameter object
      */
-    public TXTWriteFile(ArrayList<String> readStringFile, List<String[]> readCSVFile, WriteParameter parameter) {
+    public TXTWriteFile(Path path, ArrayList<String> readStringFile, List<String[]> readCSVFile, WriteParameter parameter) {
+        this.path = path;
         this.readStringFile = readStringFile;
         this.readCSVFile = readCSVFile;
         this.parameter = parameter;
     }
 
     /**
-     * Returns the prepared {@link SpreadsheetDocument} for file writing.
-     * <p>
-     * This method is used vise versa with {@link #writeStringFile()} and {@link #writeWorkbookFile()}.
-     * The ones which are not used, returns null for indication.
+     * Returns true if the prepared {@link SpreadsheetDocument} for file writing was written to the file system.
      *
-     * @return array list for file writing
+     * @return write success
      */
     @Override
-    public SpreadsheetDocument writeSpreadsheetDocument() {
-        return null;
+    public boolean writeSpreadsheetDocument() {
+        return false;
     }
 
     /**
@@ -70,70 +72,72 @@ public class TXTWriteFile implements WriteFile {
      * @return array list for file writing
      */
     @Override
-    public ArrayList<String> writeStringFile() {
+    public boolean writeStringFile() {
+        boolean success = false;
         ArrayList<String> writeFile = null;
 
-        switch (parameter.getSourceNumber()) {
-            case 0:     // fall through for GSI8 format
-            case 1:     // GSI16 format
+        switch (SourceButton.fromIndex(parameter.getSourceNumber())) {
+            case GSI8:
+            case GSI16:
                 GSI2TXT gsi2TXT = new GSI2TXT(readStringFile);
                 writeFile = gsi2TXT.convertGSI2TXT(parameter.getSeparatorTXT(), parameter.isGSI16(), parameter.isWriteCommentLine());
                 break;
 
-            case 2:     // TXT format (not possible)
+            case TXT:
                 break;
 
-            case 3:     // CSV format (comma or semicolon separated)
+            case CSV:
                 CSV2TXT csv2TXT = new CSV2TXT(readCSVFile);
                 writeFile = csv2TXT.convertCSV2TXT(parameter.getSeparatorTXT());
                 break;
 
-            case 4:     // CAPLAN K format
-                K2TXT k2TXT = new K2TXT(readStringFile);
-                writeFile = k2TXT.convertK2TXT(parameter.getSeparatorTXT(), parameter.isKFormatUseSimpleFormat(),
+            case CAPLAN_K:
+                Caplan2TXT caplan2TXT = new Caplan2TXT(readStringFile);
+                writeFile = caplan2TXT.convertK2TXT(parameter.getSeparatorTXT(), parameter.isKFormatUseSimpleFormat(),
                         parameter.isWriteCommentLine(), parameter.isWriteCodeColumn());
                 break;
 
-            case 5:     // Zeiss REC format and it's dialects
+            case ZEISS_REC:
                 Zeiss2TXT zeiss2TXT = new Zeiss2TXT(readStringFile);
                 writeFile = zeiss2TXT.convertZeiss2TXT(parameter.getSeparatorTXT());
                 break;
 
-            case 6:     // cadwork node.dat from cadwork CAD program
+            case CADWORK:
                 Cadwork2TXT cadwork2TXT = new Cadwork2TXT(readStringFile);
                 writeFile = cadwork2TXT.convertCadwork2TXT(parameter.getSeparatorTXT(), parameter.isWriteCodeColumn(),
                         parameter.isCadworkUseZeroHeights());
                 break;
 
-            case 7:     // CSV format 'Basel Stadt' (semicolon separated)
+            case BASEL_STADT:
                 CSVBaselStadt2TXT csvBaselStadt2TXT = new CSVBaselStadt2TXT(readCSVFile);
                 writeFile = csvBaselStadt2TXT.convertCSVBaselStadt2TXT(parameter.getSeparatorTXT());
                 break;
 
-            case 8:     // TXT format 'Basel Landschaft' (different column based text files for LFP and HFP points)
+            case BASEL_LANDSCHAFT:
                 TXTBaselLandschaft2TXT txtBaselLandschaft2TXT = new TXTBaselLandschaft2TXT(readStringFile);
                 writeFile = txtBaselLandschaft2TXT.convertTXTBaselLandschaft2TXT(parameter.getSeparatorTXT(), parameter.isWriteCodeColumn());
                 break;
 
             default:
                 writeFile = null;
-                break;
+                System.err.println("TXTWriteFile.writeStringFile() : unknown file format " + SourceButton.fromIndex(parameter.getSourceNumber()));
         }
 
-        return writeFile;
+        if (WriteFile2Disk.writeFile2Disk(path, writeFile, ".TXT")) {
+            success = true;
+        }
+
+        return success;
     }
 
     /**
-     * Returns the prepared {@link Workbook} for file writing.
-     * <p>
-     * This method is used vise versa with {@link #writeStringFile()} and {@link #writeSpreadsheetDocument()}.
-     * The ones which are not used, returns null for indication.
+     * Returns true if the prepared {@link Workbook} for file writing was written to the file system.
      *
-     * @return array list for file writing
+     * @return write success
      */
     @Override
-    public Workbook writeWorkbookFile() {
-        return null;
+    public boolean writeWorkbookFile() {
+        return false;
     }
 
 } // end of TXTWriteFile

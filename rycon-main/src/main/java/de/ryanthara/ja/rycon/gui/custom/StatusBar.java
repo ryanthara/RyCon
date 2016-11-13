@@ -48,19 +48,6 @@ import java.util.Vector;
  */
 public class StatusBar extends Composite {
 
-    /**
-     * Constant value for displaying the error icon.
-     */
-    public static final int ERROR = 10;
-    /**
-     * Constant value for displaying the ok icon.
-     */
-    public static final int OK = 20;
-    /**
-     * Constant value for displaying the warning icon.
-     */
-    public static final int WARNING = 15;
-
     private Image iconError;
     private Image iconOK;
     private Image iconWarning;
@@ -143,19 +130,25 @@ public class StatusBar extends Composite {
      * @param text   status text to be set
      * @param status status icon chosen by static int value from class
      */
-    public void setStatus(String text, int status) {
+    public void setStatus(String text, Status status) {
         message.setText(text);
 
         switch (status) {
-            case 10:
+            case ERROR:
                 icon.setImage(iconError);
                 break;
-            case 15:
+
+            case WARNING:
                 icon.setImage(iconWarning);
                 break;
-            case 20:
+
+            case OK:
                 icon.setImage(iconOK);
                 break;
+
+            default:
+                icon.setImage(iconOK);
+                System.err.println("StatusBar.setStatus() : default icon was set!");
         }
 
         // force a Layout to recalculate the sizes of and reposition children

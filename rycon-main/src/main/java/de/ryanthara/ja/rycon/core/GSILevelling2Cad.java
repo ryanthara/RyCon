@@ -123,8 +123,10 @@ public class GSILevelling2Cad {
                         result.add(newLine);
                         lineCounter = lineCounter + 1;
                     }
-
                     break;
+
+                default:
+                    System.err.println("GSILevelling2Cad.processLevelling2Cad() : line contains less or more tokens " + lineSplit);
             }
         }
         return result;

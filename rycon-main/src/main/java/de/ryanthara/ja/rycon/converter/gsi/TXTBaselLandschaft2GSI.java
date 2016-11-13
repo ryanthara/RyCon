@@ -34,7 +34,6 @@ public class TXTBaselLandschaft2GSI {
     private ArrayList<String> readStringLines;
 
     /**
-     *
      * Constructs a new instance of this class given an {@code ArrayList<String} that contains the read coordinate file
      * from the geodata server Basel Landschaft (Switzerland).
      * <p>
@@ -105,6 +104,9 @@ public class TXTBaselLandschaft2GSI {
                     }
 
                     break;
+
+                default:
+                    System.err.println("TXTBaselLandschaft2GSI.convertTXTBaselLandschaft2GSI() : line contains less or more tokens " + line);
             }
 
             // check for at least one or more added elements to prevent writing empty lines

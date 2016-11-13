@@ -31,19 +31,17 @@ import java.util.ArrayList;
  */
 public enum FileFilterIndex {
 
-    GSI(0, "*.gsi", I18N.getFileChooserFilterNameGSI()),
-    TXT(1, "*.txt", I18N.getFileChooserFilterNameTXT()),
-    CSV(2, "*.csv", I18N.getFileChooserFilterNameCSV()),
-    K(3, "*.K", I18N.getFileChooserFilterNameK()),
-    DAT(4, "*.dat", I18N.getFileChooserFilterNameCadwork()),
-    REC(5, "*.REC", I18N.getFileChooserFilterNameZeiss());
+    GSI("*.gsi", I18N.getFileChooserFilterNameGSI()),
+    TXT("*.txt", I18N.getFileChooserFilterNameTXT()),
+    CSV("*.csv", I18N.getFileChooserFilterNameCSV()),
+    K("*.K", I18N.getFileChooserFilterNameK()),
+    DAT("*.dat", I18N.getFileChooserFilterNameCadwork()),
+    REC("*.REC", I18N.getFileChooserFilterNameZeiss());
 
-    private final int index;
     private final String extension;
     private final String filterName;
 
-    FileFilterIndex(int index, String extension, String filterName) {
-        this.index = index;
+    FileFilterIndex(String extension, String filterName) {
         this.extension = extension;
         this.filterName = filterName;
     }
@@ -56,21 +54,15 @@ public enum FileFilterIndex {
      * @return FileFilterIndex by index
      */
     public static FileFilterIndex fromIndex(int index) {
+        FileFilterIndex selectedFileFilterIndex = null;
+
         for (FileFilterIndex fileFilterIndex : values()) {
-            if (fileFilterIndex.index == index) {
-                return fileFilterIndex;
+            if (fileFilterIndex.ordinal() == index) {
+                selectedFileFilterIndex = fileFilterIndex;
             }
         }
-        return null;
-    }
 
-    /**
-     * Returns the file extension string.
-     *
-     * @return the file extension
-     */
-    String getExtension() {
-        return extension;
+        return selectedFileFilterIndex;
     }
 
     /**
@@ -89,15 +81,6 @@ public enum FileFilterIndex {
     }
 
     /**
-     * Returns the file filter name as string.
-     *
-     * @return file filter name
-     */
-    String getFilterName() {
-        return filterName;
-    }
-
-    /**
      * Return all stored file filter names as one string array.
      *
      * @return file filter names
@@ -113,12 +96,21 @@ public enum FileFilterIndex {
     }
 
     /**
-     * Returns the index.
+     * Returns the file extension string.
      *
-     * @return the index
+     * @return the file extension
      */
-    public int getIndex() {
-        return this.index;
+    String getExtension() {
+        return extension;
+    }
+
+    /**
+     * Returns the file filter name as string.
+     *
+     * @return file filter name
+     */
+    String getFilterName() {
+        return filterName;
     }
 
 } // end of FileFilterIndex

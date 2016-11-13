@@ -20,11 +20,11 @@ package de.ryanthara.ja.rycon.data;
 
 import de.ryanthara.ja.rycon.Main;
 
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.prefs.PreferenceChangeEvent;
 import java.util.prefs.PreferenceChangeListener;
 import java.util.prefs.Preferences;
-
 
 /**
  * Instances of this class provides functions for handling system and user settings for RyCON.
@@ -38,7 +38,7 @@ import java.util.prefs.Preferences;
  * - Under *nix in a location /etc/.java/.systemPrefs
  *
  * @author sebastian
- * @version 7
+ * @version 8
  * @since 1
  */
 public class PreferenceHandler implements PreferenceChangeListener {
@@ -239,10 +239,9 @@ public class PreferenceHandler implements PreferenceChangeListener {
      * @param pathToBeChecked stored path which has to be checked
      */
     public static String checkUserPrefPathExist(String pathToBeChecked) {
-        File f = new File(pathToBeChecked);
-        if (f.exists()) {
+        if (Files.exists(Paths.get(pathToBeChecked))) {
             return pathToBeChecked;
-        } else if (new File(PreferenceHandler.DIR_BASE).exists()) {
+        } else if (Files.exists(Paths.get(PreferenceHandler.DIR_BASE))) {
             return PreferenceHandler.DIR_BASE;
         } else {
             return System.getenv().get("HOME");

@@ -17,8 +17,8 @@
  */
 package de.ryanthara.ja.rycon.converter.ltop;
 
-import de.ryanthara.ja.rycon.tools.NumberFormatter;
 import de.ryanthara.ja.rycon.elements.RyPoint;
+import de.ryanthara.ja.rycon.tools.NumberFormatter;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -17,8 +17,8 @@
  */
 package de.ryanthara.ja.rycon.converter.ltop;
 
-import de.ryanthara.ja.rycon.tools.NumberFormatter;
 import de.ryanthara.ja.rycon.elements.RyPoint;
+import de.ryanthara.ja.rycon.tools.NumberFormatter;
 
 import java.util.ArrayList;
 
@@ -92,6 +92,9 @@ public class TXTBaselLandschaft2LTOP {
                             height = String.format("%10s", NumberFormatter.fillDecimalPlace(lineSplit[5], 4));
                         }
                         break;
+
+                    default:
+                        System.err.println("TXTBaselLandschaft2LTOP.convertTXTBaselLandschaft2KOO() : line contains less or more tokens " + line);
                 }
 
                 // pick up the relevant elements from the blocks from every line

@@ -18,17 +18,18 @@
 package de.ryanthara.ja.rycon.converter.odf;
 
 import de.ryanthara.ja.rycon.converter.gsi.BaseToolsGSI;
-import de.ryanthara.ja.rycon.i18n.I18N;
 import de.ryanthara.ja.rycon.elements.GSIBlock;
+import de.ryanthara.ja.rycon.i18n.I18N;
 import org.odftoolkit.simple.SpreadsheetDocument;
 import org.odftoolkit.simple.table.Cell;
 import org.odftoolkit.simple.table.Table;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 
 /**
- * This class provides functions to convert measurement or coordinate files from Leica GSI format (GSI8 and GSI16)
- * into an Open Document Format spreadsheet file.
+ * Instances of this class provides functions to convert measurement or coordinate files from Leica GSI format
+ * (GSI8 and GSI16) into an Open Document Format spreadsheet file.
  *
  * @author sebastian
  * @version 1
@@ -40,7 +41,7 @@ public class GSI2ODF {
     private SpreadsheetDocument spreadsheetDocument;
 
     /**
-     * Class constructor for read line based text files in different formats.
+     * Constructs a new instance of this class for read Leica GSI files as parameter.
      *
      * @param readStringLines {@code ArrayList<String>} with lines in text format
      */
@@ -55,7 +56,7 @@ public class GSI2ODF {
      *
      * @return success conversion success
      */
-    public boolean convertGSI2ODS(String sheetName, boolean writeCommentRow) {
+    public boolean convertGSI2ODS(Path sheetName, boolean writeCommentRow) {
         int rowIndex = 0;
         int colIndex = 0;
 
@@ -65,7 +66,7 @@ public class GSI2ODF {
             spreadsheetDocument.getTableByName("Sheet1").remove();
 
             Table table = Table.newTable(spreadsheetDocument);
-            table.setTableName(sheetName);
+            table.setTableName(sheetName.toString());
 
             Cell cell;
 
@@ -154,16 +155,22 @@ public class GSI2ODF {
                             cell.setDoubleValue(Double.parseDouble(block.toPrintFormatCSV()));
                             cell.setFormatString("#,##0.0000");
                             break;
+
                         case 87:    // Reflector height (above ground)
                         case 88:    // Instrument height (above ground)
                             cell.setDoubleValue(Double.parseDouble(block.toPrintFormatCSV()));
                             cell.setFormatString("#,##0.000");
                             break;
+
+                        default:
+                            System.err.println("GSI2ODF.convertGSI2ODS() : found unknown word index " + block.toPrintFormatCSV());
                     }
                     colIndex = colIndex + 1;
                 }
                 rowIndex = rowIndex + 1;
             }
+        } catch (RuntimeException e) {
+            throw e;
         } catch (Exception e) {
             System.err.println("ERROR: unable to create output file.");
         }

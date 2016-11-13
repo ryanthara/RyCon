@@ -21,10 +21,16 @@ import org.odftoolkit.simple.SpreadsheetDocument;
 import org.odftoolkit.simple.table.Cell;
 import org.odftoolkit.simple.table.Table;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 
 /**
- * Created by sebastian on 14.09.16.
+ * Instances of this class provides functions to convert coordinate files from the geodata server Basel Landschaft (Switzerland)
+ * into an Open Document Format spreadsheet file.
+ *
+ * @author sebastian
+ * @version 2
+ * @since 12
  */
 public class TXTBaselLandschaft2ODF {
 
@@ -32,7 +38,7 @@ public class TXTBaselLandschaft2ODF {
     private SpreadsheetDocument spreadsheetDocument;
 
     /**
-     * Class constructor for read line based text files in different formats.
+     * Constructs a new instance of this class for read line based text files in different formats.
      *
      * @param readStringLines {@code ArrayList<String>} with lines in text format
      */
@@ -41,14 +47,15 @@ public class TXTBaselLandschaft2ODF {
     }
 
     /**
-     * Convert a txt file from the geodata server Basel Landschaft (Switzerland) element by element into an
+     * Converts a txt file from the geodata server Basel Landschaft (Switzerland) element by element into an
      * Open Document Format spreadsheet file.
      *
      * @param sheetName       name of the sheet (file name from input file)
      * @param writeCommentRow write comment row
+     *
      * @return success conversion success
      */
-    public boolean convertTXTBaselLandschaft2ODS(String sheetName, boolean writeCommentRow) {
+    public boolean convertTXTBaselLandschaft2ODS(Path sheetName, boolean writeCommentRow) {
         int rowIndex = 0;
         int colIndex = 0;
 
@@ -58,7 +65,7 @@ public class TXTBaselLandschaft2ODF {
             spreadsheetDocument.getTableByName("Sheet1").remove();
 
             Table table = Table.newTable(spreadsheetDocument);
-            table.setTableName(sheetName);
+            table.setTableName(sheetName.toString());
 
             Cell cell;
 
@@ -149,6 +156,8 @@ public class TXTBaselLandschaft2ODF {
                 rowIndex = rowIndex + 1;
             }
 
+        } catch (RuntimeException e) {
+            throw e;
         } catch (Exception e) {
             System.err.println("ERROR: unable to create output file.");
         }

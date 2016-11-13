@@ -45,6 +45,25 @@ public enum SourceButton {
     }
 
     /**
+     * Returns the {@link SourceButton} from index parameter as static access from switch cases.
+     *
+     * @param index index to return
+     *
+     * @return SourceButton by index
+     */
+    public static SourceButton fromIndex(int index) {
+        SourceButton selectedSourceButton = null;
+
+        for (SourceButton sourceButton : values()) {
+            if (sourceButton.ordinal() == index) {
+                selectedSourceButton = sourceButton;
+            }
+        }
+
+        return selectedSourceButton;
+    }
+
+    /**
      * Returns the text.
      *
      * @return the text

@@ -26,7 +26,8 @@ import java.util.ArrayList;
  * @author sebastian
  * @version 1
  * @since 12
- */public class Zeiss2LTOP {
+ */
+public class Zeiss2LTOP {
 
     private ArrayList<String> readStringLines;
 
@@ -42,14 +43,13 @@ import java.util.ArrayList;
     /**
      * Converts a Zeiss REC file (R4, R5, M5 or REC500) into a KOO file for LTOP.
      *
-     * @param eliminateDuplicates   eliminate duplicate points from KOO file
-     * @param sortFileByNumber      sort KOO file by point number
+     * @param eliminateDuplicates eliminate duplicate points from KOO file
+     * @param sortFileByNumber    sort KOO file by point number
+     *
      * @return converted KOO file
      */
     public ArrayList<String> convertZeiss2KOO(boolean eliminateDuplicates, boolean sortFileByNumber) {
         ArrayList<String> result = new ArrayList<>();
-
-
 
 
         return result;
@@ -59,6 +59,7 @@ import java.util.ArrayList;
      * Converts a Zeiss REC file into a MES file for LTOP.
      *
      * @param useZenithDistance use zenith distance instead of height angle
+     *
      * @return converted MES file
      */
     public ArrayList<String> convertZeiss2MES(boolean useZenithDistance) {

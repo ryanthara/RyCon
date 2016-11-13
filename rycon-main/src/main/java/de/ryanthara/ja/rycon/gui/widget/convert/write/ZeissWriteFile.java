@@ -19,9 +19,11 @@ package de.ryanthara.ja.rycon.gui.widget.convert.write;
 
 import de.ryanthara.ja.rycon.converter.zeiss.*;
 import de.ryanthara.ja.rycon.gui.widget.ConverterWidget;
+import de.ryanthara.ja.rycon.gui.widget.convert.SourceButton;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.odftoolkit.simple.SpreadsheetDocument;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,39 +32,39 @@ import java.util.List;
  * from the {@link ConverterWidget} of RyCON.
  *
  * @author sebastian
- * @version 1
+ * @version 2
  * @since 12
  */
 public class ZeissWriteFile implements WriteFile {
 
-    private ArrayList<String> readStringFile;
-    private List<String[]> readCSVFile;
-    private WriteParameter parameter;
+    private final Path path;
+    private final ArrayList<String> readStringFile;
+    private final List<String[]> readCSVFile;
+    private final WriteParameter parameter;
 
     /**
      * Constructs the {@link ZeissWriteFile} with a set of parameters.
      *
+     * @param path           read file object for writing
      * @param readCSVFile    read csv file
      * @param readStringFile read string file
      * @param parameter      the write parameter object
      */
-    public ZeissWriteFile(ArrayList<String> readStringFile, List<String[]> readCSVFile, WriteParameter parameter) {
+    public ZeissWriteFile(Path path, ArrayList<String> readStringFile, List<String[]> readCSVFile, WriteParameter parameter) {
+        this.path = path;
         this.readStringFile = readStringFile;
         this.readCSVFile = readCSVFile;
         this.parameter = parameter;
     }
 
     /**
-     * Returns the prepared {@link SpreadsheetDocument} for file writing.
-     * <p>
-     * This method is used vise versa with {@link #writeStringFile()} and {@link #writeWorkbookFile()}.
-     * The ones which are not used, returns null for indication.
+     * Returns true if the prepared {@link SpreadsheetDocument} for file writing was written to the file system.
      *
-     * @return array list for file writing
+     * @return write success
      */
     @Override
-    public SpreadsheetDocument writeSpreadsheetDocument() {
-        return null;
+    public boolean writeSpreadsheetDocument() {
+        return false;
     }
 
     /**
@@ -71,68 +73,70 @@ public class ZeissWriteFile implements WriteFile {
      * @return array list for file writing
      */
     @Override
-    public ArrayList<String> writeStringFile() {
+    public boolean writeStringFile() {
+        boolean success = false;
         ArrayList<String> writeFile = null;
 
-        switch (parameter.getSourceNumber()) {
-            case 0:     // fall through for GSI8 format
-            case 1:     // GSI16 format
+        switch (SourceButton.fromIndex(parameter.getSourceNumber())) {
+            case GSI8:
+            case GSI16:
                 GSI2Zeiss gsi2Zeiss = new GSI2Zeiss(readStringFile);
                 writeFile = gsi2Zeiss.convertGSI2REC(parameter.getDialect());
                 break;
 
-            case 2:     // TXT format
+            case TXT:
                 TXT2Zeiss txt2Zeiss = new TXT2Zeiss(readStringFile);
                 writeFile = txt2Zeiss.convertTXT2REC(parameter.getDialect());
                 break;
 
-            case 3:     // CSV format (comma or semicolon separated)
+            case CSV:
                 CSV2Zeiss csv2Zeiss = new CSV2Zeiss(readCSVFile);
                 writeFile = csv2Zeiss.convertCSV2REC(parameter.getDialect());
                 break;
 
-            case 4:     // CAPLAN K format
-                K2Zeiss k2Zeiss = new K2Zeiss(readStringFile);
-                writeFile = k2Zeiss.convertK2REC(parameter.getDialect());
+            case CAPLAN_K:
+                Caplan2Zeiss caplan2Zeiss = new Caplan2Zeiss(readStringFile);
+                writeFile = caplan2Zeiss.convertK2REC(parameter.getDialect());
                 break;
 
-            case 5:     // Zeiss REC format and it's dialects (not possible or into dialects?)
+            case ZEISS_REC:
                 break;
 
-            case 6:     // cadwork node.dat from cadwork CAD program
+            case CADWORK:
                 Cadwork2Zeiss cadwork2Zeiss = new Cadwork2Zeiss(readStringFile);
                 writeFile = cadwork2Zeiss.convertCadwork2REC(parameter.getDialect());
                 break;
 
-            case 7:     // CSV format 'Basel Stadt' (semicolon separated)
+            case BASEL_STADT:
                 CSVBaselStadt2Zeiss csvBaselStadt2Zeiss = new CSVBaselStadt2Zeiss(readCSVFile);
                 writeFile = csvBaselStadt2Zeiss.convertCSVBaselStadt2REC(parameter.getDialect());
                 break;
 
-            case 8:     // TXT format 'Basel Landschaft' (different column based text files for LFP and HFP points)
+            case BASEL_LANDSCHAFT:
                 TXTBaselLandschaft2Zeiss txtBaselLandschaft2Zeiss = new TXTBaselLandschaft2Zeiss(readStringFile);
                 writeFile = txtBaselLandschaft2Zeiss.convertTXTBaselLandschaft2REC(parameter.getDialect());
                 break;
 
             default:
                 writeFile = null;
-                break;
+                System.err.println("ZeissWriteFile.writeStringFile() : unknown file format " + SourceButton.fromIndex(parameter.getSourceNumber()));
         }
 
-        return writeFile;
+        if (WriteFile2Disk.writeFile2Disk(path, writeFile, ".REC")) {
+            success = true;
+        }
+
+        return success;
     }
 
     /**
-     * Returns the prepared {@link Workbook} for file writing.
-     * <p>
-     * This method is used vise versa with {@link #writeStringFile()} and {@link #writeSpreadsheetDocument()}.
-     * The ones which are not used, returns null for indication.
+     * Returns true if the prepared {@link Workbook} for file writing was written to the file system.
      *
-     * @return array list for file writing
+     * @return write success
      */
     @Override
-    public Workbook writeWorkbookFile() {
-        return null;
+    public boolean writeWorkbookFile() {
+        return false;
     }
 
 } // end of ZeissWriteFile

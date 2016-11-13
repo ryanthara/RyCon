@@ -22,7 +22,7 @@ import de.ryanthara.ja.rycon.elements.GSIBlock;
 import java.util.ArrayList;
 
 /**
- * This class provides functions to convert coordinate files from Cadwork CAD program into Leica GSI files.
+ * Instances of this class provides functions to convert coordinate files from Cadwork CAD program into Leica GSI files.
  *
  * @author sebastian
  * @version 2

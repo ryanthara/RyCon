@@ -50,9 +50,10 @@ public class GSI2TXT {
      * <p>
      * With parameter it is possible to set the separation char (space or tab).
      *
-     * @param separator         separator sign as {@code String}
-     * @param isGSI16           true if GSI16 format is used
-     * @param writeCommentLine  if comment line should be written
+     * @param separator        separator sign as {@code String}
+     * @param isGSI16          true if GSI16 format is used
+     * @param writeCommentLine if comment line should be written
+     *
      * @return converted {@code ArrayList<String>} with lines of text format
      */
     public ArrayList<String> convertGSI2TXT(String separator, boolean isGSI16, boolean writeCommentLine) {

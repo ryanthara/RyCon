@@ -19,9 +19,11 @@ package de.ryanthara.ja.rycon.gui.widget.convert.write;
 
 import de.ryanthara.ja.rycon.converter.csv.*;
 import de.ryanthara.ja.rycon.gui.widget.ConverterWidget;
+import de.ryanthara.ja.rycon.gui.widget.convert.SourceButton;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.odftoolkit.simple.SpreadsheetDocument;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,39 +32,39 @@ import java.util.List;
  * from the {@link ConverterWidget} of RyCON.
  *
  * @author sebastian
- * @version 1
+ * @version 2
  * @since 12
  */
 public class CSVWriteFile implements WriteFile {
 
-    private ArrayList<String> readStringFile;
-    private List<String[]> readCSVFile;
-    private WriteParameter parameter;
+    private final Path path;
+    private final ArrayList<String> readStringFile;
+    private final List<String[]> readCSVFile;
+    private final WriteParameter parameter;
 
     /**
      * Constructs the {@link CSVWriteFile} with a set of parameters.
      *
+     * @param path           read path object for writing
      * @param readCSVFile    read csv file
      * @param readStringFile read string file
      * @param parameter      the write parameter object
      */
-    public CSVWriteFile(ArrayList<String> readStringFile, List<String[]> readCSVFile, WriteParameter parameter) {
+    public CSVWriteFile(Path path, ArrayList<String> readStringFile, List<String[]> readCSVFile, WriteParameter parameter) {
+        this.path = path;
         this.readStringFile = readStringFile;
         this.readCSVFile = readCSVFile;
         this.parameter = parameter;
     }
 
     /**
-     * Returns the prepared {@link SpreadsheetDocument} for file writing.
-     * <p>
-     * This method is used vise versa with {@link #writeStringFile()} and {@link #writeWorkbookFile()}.
-     * The ones which are not used, returns null for indication.
+     * Returns true if the prepared {@link SpreadsheetDocument} for file writing was written to the file system.
      *
-     * @return array list for file writing
+     * @return write success
      */
     @Override
-    public SpreadsheetDocument writeSpreadsheetDocument() {
-        return null;
+    public boolean writeSpreadsheetDocument() {
+        return false;
     }
 
     /**
@@ -71,70 +73,70 @@ public class CSVWriteFile implements WriteFile {
      * @return array list for file writing
      */
     @Override
-    public ArrayList<String> writeStringFile() {
+    public boolean writeStringFile() {
+        boolean success = false;
         ArrayList<String> writeFile = null;
 
-        switch (parameter.getSourceNumber()) {
-            case 0:     // fall through for GSI8 format
-            case 1:     // GSI16 format
+        switch (SourceButton.fromIndex(parameter.getSourceNumber())) {
+            case GSI8:
+            case GSI16:
                 GSI2CSV gsi2CSV = new GSI2CSV(readStringFile);
                 writeFile = gsi2CSV.convertGSI2CSV(parameter.getSeparatorCSV(), parameter.isWriteCommentLine());
                 break;
 
-//            parameter.isKFormatUseSimpleFormat(), parameter.isWriteCommentLine(), parameter.isWriteCodeColumn()
-
-            case 2:     // TXT format (space or tabulator separated)
+            case TXT:
                 TXT2CSV txt2CSV = new TXT2CSV(readStringFile);
                 writeFile = txt2CSV.convertTXT2CSV(parameter.getSeparatorCSV());
                 break;
 
-            case 3:     // CSV format (not possible)
+            case CSV:
                 break;
 
-            case 4:     // CAPLAN K format
-                K2CSV k2CSV = new K2CSV(readStringFile);
-                writeFile = k2CSV.convertK2CSV(parameter.getSeparatorCSV(), parameter.isKFormatUseSimpleFormat(), parameter.isWriteCommentLine(), parameter.isWriteCodeColumn());
+            case CAPLAN_K:
+                Caplan2CSV caplan2CSV = new Caplan2CSV(readStringFile);
+                writeFile = caplan2CSV.convertK2CSV(parameter.getSeparatorCSV(), parameter.isKFormatUseSimpleFormat(), parameter.isWriteCommentLine(), parameter.isWriteCodeColumn());
                 break;
 
-            case 5:     // Zeiss REC format and it's dialects
+            case ZEISS_REC:
                 Zeiss2CSV zeiss2CSV = new Zeiss2CSV(readStringFile);
                 zeiss2CSV.convertZeiss2CSV(parameter.getSeparatorCSV(), parameter.isKFormatUseSimpleFormat(), parameter.isWriteCommentLine(), parameter.isWriteCodeColumn());
                 break;
 
-            case 6:     // cadwork node.dat from cadwork CAD program
+            case CADWORK:
                 Cadwork2CSV cadwork2CSV = new Cadwork2CSV(readStringFile);
                 writeFile = cadwork2CSV.convertCadwork2CSV(parameter.getSeparatorCSV(), parameter.isWriteCommentLine(), parameter.isWriteCodeColumn(), parameter.isCadworkUseZeroHeights());
                 break;
 
-            case 7:     // CSV format 'Basel Stadt' (semicolon separated)
+            case BASEL_STADT:
                 CSVBaselStadt2CSV csvBaselStadt2CSV = new CSVBaselStadt2CSV(readCSVFile);
                 writeFile = csvBaselStadt2CSV.convertCSVBaselStadt2CSV(parameter.getSeparatorCSV());
                 break;
 
-            case 8:     // TXT format 'Basel Landschaft' (different column based text files for LFP and HFP points)
+            case BASEL_LANDSCHAFT:
                 TXTBaselLandschaft2CSV txtBaselLandschaft2CSV = new TXTBaselLandschaft2CSV(readStringFile);
                 writeFile = txtBaselLandschaft2CSV.convertTXTBaselLandschaft2CSV(parameter.getSeparatorCSV());
                 break;
 
             default:
                 writeFile = null;
-                break;
+                System.err.println("CSVWriteFile.writeStringFile() : unknown file format " + SourceButton.fromIndex(parameter.getSourceNumber()));
         }
 
-        return writeFile;
+        if (WriteFile2Disk.writeFile2Disk(path, writeFile, ".CSV")) {
+            success = true;
+        }
+
+        return success;
     }
 
     /**
-     * Returns the prepared {@link Workbook} for file writing.
-     * <p>
-     * This method is used vise versa with {@link #writeStringFile()} and {@link #writeSpreadsheetDocument()}.
-     * The ones which are not used, returns null for indication.
+     * Returns true if the prepared {@link Workbook} for file writing was written to the file system.
      *
-     * @return array list for file writing
+     * @return write success
      */
     @Override
-    public Workbook writeWorkbookFile() {
-        return null;
+    public boolean writeWorkbookFile() {
+        return false;
     }
 
 } // end of CSVWriteFile

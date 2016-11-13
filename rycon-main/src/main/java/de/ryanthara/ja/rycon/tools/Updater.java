@@ -41,14 +41,14 @@ import java.util.regex.Pattern;
  * Updater holds all the update functionality for RyCON.
  * <p>
  * This class checks the RyCON website (URL 'https://code.ryanthara.de/RyCON') for a new RyCON version.
- *
+ * <p>
  * <h3>Changes:</h3>
  * <ul>
- *     <li>5: patch level support implemented </li>
- *     <li>4: ssl check implemented </li>
- *     <li>3: clean up and improvements </li>
- *     <li>2: basic improvements </li>
- *     <li>1: basic implementation </li>
+ * <li>5: patch level support implemented </li>
+ * <li>4: ssl check implemented </li>
+ * <li>3: clean up and improvements </li>
+ * <li>2: basic improvements </li>
+ * <li>1: basic implementation </li>
  * </ul>
  *
  * @author sebastian
@@ -64,7 +64,7 @@ public class Updater {
      * <p>
      * Due to JAVA's SSL implementations and it's constrained to store the key in the public keychain,
      * this is a 'hack' to bypass the ssl check easily. This should be done better in a future version.
-     *  
+     *
      * @return success
      */
     public boolean checkForUpdate() {
@@ -76,9 +76,11 @@ public class Updater {
                     public java.security.cert.X509Certificate[] getAcceptedIssuers() {
                         return null;
                     }
+
                     public void checkClientTrusted(
                             java.security.cert.X509Certificate[] certs, String authType) {
                     }
+
                     public void checkServerTrusted(
                             java.security.cert.X509Certificate[] certs, String authType) {
                     }
@@ -137,7 +139,7 @@ public class Updater {
                 } else if (majorRelease == Version.getMajorRelease() && minorRelease == Version.getMinorRelease()
                         && patchLevel > Version.getPatchLevel()) {
                     updateAvailable = true;
-                } else if (build > Version.getBuildNumber()){
+                } else if (build > Version.getBuildNumber()) {
                     updateAvailable = true;
                 } else if (update < 0) {
                     updateAvailable = true;
@@ -164,7 +166,7 @@ public class Updater {
      */
     public String getWhatsNew() {
         StringBuilder builder = new StringBuilder();
-        
+
         try {
             URL whatsNewURL = new URL(Main.RyCON_WHATS_NEW_URL);
             BufferedReader in = new BufferedReader(new InputStreamReader(whatsNewURL.openStream()));
@@ -193,5 +195,5 @@ public class Updater {
     public boolean isUpdateAvailable() {
         return updateAvailable;
     }
-    
+
 } // end of Updater

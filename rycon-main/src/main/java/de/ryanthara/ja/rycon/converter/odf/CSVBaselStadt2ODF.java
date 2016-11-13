@@ -21,6 +21,8 @@ import org.odftoolkit.simple.SpreadsheetDocument;
 import org.odftoolkit.simple.table.Cell;
 import org.odftoolkit.simple.table.Table;
 
+import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -30,13 +32,14 @@ import java.util.List;
  * @author sebastian
  * @version 1
  * @since 12
- */public class CSVBaselStadt2ODF {
+ */
+public class CSVBaselStadt2ODF {
 
     private List<String[]> readCSVLines;
     private SpreadsheetDocument spreadsheetDocument;
 
     /**
-     * Class constructor for read line based CSV files from the geodata server Basel Stadt (Switzerland).
+     * Constructs a new instance of this class for read line based CSV files from the geodata server Basel Stadt (Switzerland).
      *
      * @param readCSVLines {@code List<String[]>} with lines as {@code String[]}
      */
@@ -52,7 +55,7 @@ import java.util.List;
      *
      * @return success conversion success
      */
-    public boolean convertCSVBaselStadt2ODS(String sheetName, boolean writeCommentRow) {
+    public boolean convertCSVBaselStadt2ODS(Path sheetName, boolean writeCommentRow) {
         int colIndex = 0;
         int rowIndex = 0;
 
@@ -62,7 +65,7 @@ import java.util.List;
             spreadsheetDocument.getTableByName("Sheet1").remove();
 
             Table table = Table.newTable(spreadsheetDocument);
-            table.setTableName(sheetName);
+            table.setTableName(sheetName.toString());
 
             Cell cell;
 
@@ -91,6 +94,7 @@ import java.util.List;
                         case 1:
                             cell.setStringValue(csvLine[i]);
                             break;
+
                         case 2:
                         case 3:
                         case 4:
@@ -102,6 +106,7 @@ import java.util.List;
                                 cell.setFormatString("#,##0.000");
                             }
                             break;
+
                         case 6:
                         case 7:
                         case 8:
@@ -109,12 +114,16 @@ import java.util.List;
                         case 10:
                             cell.setStringValue(csvLine[i]);
                             break;
+
+                        default:
+                            System.err.println("CSVBaselStadt2ODF.convertCSVBaselStadt2ODS() : line contains less or more tokens " + Arrays.toString(csvLine));
                     }
                     colIndex = colIndex + 1;
                 }
                 rowIndex = rowIndex + 1;
             }
-
+        } catch (RuntimeException e) {
+            throw e;
         } catch (Exception e) {
             System.err.println("ERROR: unable to create output file.");
         }

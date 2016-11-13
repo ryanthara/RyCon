@@ -26,6 +26,25 @@ package de.ryanthara.ja.rycon.converter.zeiss;
  */
 public enum ZeissDialect {
 
-    R4, R5, REC500, M5
+    R4, R5, REC500, M5;
+
+    /**
+     * Returns the {@link ZeissDialect} from index parameter as static access from switch cases.
+     *
+     * @param index index to return
+     *
+     * @return ZeissDialect by index
+     */
+    public static ZeissDialect fromIndex(int index) {
+        ZeissDialect selectedZeissDialect = null;
+
+        for (ZeissDialect zeissDialect : values()) {
+            if (zeissDialect.ordinal() == index) {
+                selectedZeissDialect = zeissDialect;
+            }
+        }
+
+        return selectedZeissDialect;
+    }
 
 } // end of ZeissDialect

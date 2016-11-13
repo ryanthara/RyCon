@@ -25,17 +25,16 @@ import java.util.ResourceBundle;
  * Messages handles character string for multi-language support in RyCON.
  * <p>
  * The strings are stored in Resource Bundle RyCON and loaded from this class.
- *
+ * <p>
  * <h3>Changes:</h3>
  * <ul>
- *     <li>2: code improvements and clean up </li>
- *     <li>1: basic implementation </li>
+ * <li>2: code improvements and clean up </li>
+ * <li>1: basic implementation </li>
  * </ul>
  *
  * @author sebastian
  * @version 2
  * @since 1
- *
  */
 class Messages {
 
@@ -46,6 +45,7 @@ class Messages {
      * Return the key-text-pair which represents the character string.
      *
      * @param key key to look up
+     *
      * @return matched text
      */
     static String getString(String key) {

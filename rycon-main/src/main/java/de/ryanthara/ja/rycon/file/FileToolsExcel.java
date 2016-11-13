@@ -19,9 +19,9 @@ package de.ryanthara.ja.rycon.file;
 
 import org.apache.poi.ss.usermodel.Workbook;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Path;
 
 /**
  * Instances of this class provides basic file operations to write Microsoft xls, xlsx, ... files.
@@ -51,8 +51,8 @@ public class FileToolsExcel {
      *
      * @return success write success
      */
-    public boolean writeXLS(File writeFile) {
-        try (FileOutputStream fileOut = new FileOutputStream(writeFile)) {
+    public boolean writeXLS(Path writeFile) {
+        try (FileOutputStream fileOut = new FileOutputStream(writeFile.toFile())) {
             workbook.write(fileOut);
 
             fileOut.close();
@@ -68,22 +68,24 @@ public class FileToolsExcel {
     /**
      * Writes the converted XLSX file to the file system.
      *
-     * @param writeFile file to be written
+     * @param writeFile path to be written
      *
      * @return success write success
      */
-    public boolean writeXLSX(File writeFile) {
-        try (FileOutputStream fileOut = new FileOutputStream(writeFile)) {
+    public boolean writeXLSX(Path writeFile) {
+        boolean writeSuccess = false;
+
+        try (FileOutputStream fileOut = new FileOutputStream(writeFile.toFile())) {
             workbook.write(fileOut);
 
             fileOut.close();
-            return true;
+            writeSuccess = true;
         } catch (IOException e) {
             System.err.println("Error while writing XLSX file to disk.");
             e.printStackTrace();
         }
 
-        return false;
+        return writeSuccess;
     }
 
 } // end of FileToolsExcel

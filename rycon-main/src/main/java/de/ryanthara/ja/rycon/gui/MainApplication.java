@@ -15,7 +15,6 @@
  * You should have received a copy of the GNU General Public License along with
  * this package. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package de.ryanthara.ja.rycon.gui;
 
 import de.ryanthara.ja.rycon.Main;
@@ -24,7 +23,6 @@ import de.ryanthara.ja.rycon.data.Version;
 import de.ryanthara.ja.rycon.gui.custom.MessageBoxes;
 import de.ryanthara.ja.rycon.gui.custom.StatusBar;
 import de.ryanthara.ja.rycon.gui.widget.*;
-import de.ryanthara.ja.rycon.gui.widget.CodeSplitterWidget;
 import de.ryanthara.ja.rycon.i18n.I18N;
 import de.ryanthara.ja.rycon.tools.ImageConverter;
 import de.ryanthara.ja.rycon.tools.ShellPositioner;
@@ -38,11 +36,12 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 
-import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
-import static de.ryanthara.ja.rycon.gui.MainApplicationDnDButtons.CLEAN;
-import static de.ryanthara.ja.rycon.gui.MainApplicationDnDButtons.LEVELLING;
-import static de.ryanthara.ja.rycon.gui.MainApplicationDnDButtons.SPLIT;
+import static de.ryanthara.ja.rycon.gui.MainApplicationDnDButtons.*;
+import static de.ryanthara.ja.rycon.gui.custom.Status.OK;
+import static de.ryanthara.ja.rycon.gui.custom.Status.WARNING;
 
 /**
  * Instances of this class are the main application of RyCON.
@@ -93,50 +92,50 @@ public class MainApplication extends Main {
     }
 
     private void actionBtn0() {
-        statusBar.setStatus(I18N.getStatus0ExitInitialized(), StatusBar.OK);
+        statusBar.setStatus(I18N.getStatus0ExitInitialized(), OK);
         shell.getDisplay().dispose();
     }
 
     private void actionBtn1() {
         new TidyUpWidget();
-        statusBar.setStatus(I18N.getStatus1CleanInitialized(), StatusBar.OK);
+        statusBar.setStatus(I18N.getStatus1CleanInitialized(), OK);
     }
 
     private void actionBtn2() {
         new CodeSplitterWidget();
-        statusBar.setStatus(I18N.getStatus2SplitterInitialized(), StatusBar.OK);
+        statusBar.setStatus(I18N.getStatus2SplitterInitialized(), OK);
     }
 
     private void actionBtn3() {
         new LevellingWidget();
-        statusBar.setStatus(I18N.getStatus3LevelInitialized(), StatusBar.OK);
+        statusBar.setStatus(I18N.getStatus3LevelInitialized(), OK);
     }
 
     private void actionBtn4() {
         new ConverterWidget();
-        statusBar.setStatus(I18N.getStatus4ConverterInitialized(), StatusBar.OK);
+        statusBar.setStatus(I18N.getStatus4ConverterInitialized(), OK);
     }
 
     private void actionBtn5() {
         new GeneratorWidget();
-        statusBar.setStatus(I18N.getStatus5GeneratorInitialized(), StatusBar.OK);
+        statusBar.setStatus(I18N.getStatus5GeneratorInitialized(), OK);
     }
 
     private void actionBtn6() {
         MessageBoxes.showMessageBox(shell, SWT.ICON_WARNING, "Warning", "Not implemented yet.");
         new TransformationWidget();
-        statusBar.setStatus("not implemented yet.", StatusBar.WARNING);
+        statusBar.setStatus("not implemented yet.", WARNING);
     }
 
     private void actionBtn7() {
         MessageBoxes.showMessageBox(shell, SWT.ICON_WARNING, "Warning", "Not implemented yet.");
         new PrinterWidget();
-        statusBar.setStatus("not implemented yet.", StatusBar.WARNING);
+        statusBar.setStatus("not implemented yet.", WARNING);
     }
 
     private void actionBtn8() {
         new SettingsWidget();
-        statusBar.setStatus(I18N.getStatus8SettingsOpened(), StatusBar.OK);
+        statusBar.setStatus(I18N.getStatus8SettingsOpened(), OK);
     }
 
     private void addKeyBoardInputFilter(final Shell shell) {
@@ -148,36 +147,49 @@ public class MainApplication extends Main {
                         case '1':
                             actionBtn1();
                             break;
+
                         case '2':
                             actionBtn2();
                             break;
+
                         case '3':
                             actionBtn3();
                             break;
+
                         case '4':
                             actionBtn4();
                             break;
+
                         case '5':
                             actionBtn5();
                             break;
+
                         case '6':
                             actionBtn6();
                             break;
+
                         case '7':
                             actionBtn7();
                             break;
+
                         case '8':
                             actionBtn8();
                             break;
+
                         case '0':
                             actionBtn0();
                             break;
+
                         case 'c':
                             shell.setLocation(ShellPositioner.centerShellOnPrimaryMonitor(shell));
                             break;
+
                         case 'p':
                             new SettingsWidget();
                             break;
+
+                        default:
+                            System.err.println("MainApplication.addKeyBoardInputFilter() : unsupported key pressed " + event.keyCode);
                     }
                 }
             }
@@ -354,7 +366,7 @@ public class MainApplication extends Main {
 
     private StatusBar createStatusBar(Shell shell) {
         StatusBar statusBar = new StatusBar(shell, SWT.NONE);
-        statusBar.setStatus(I18N.getStatusRyCONInitialized(), StatusBar.OK);
+        statusBar.setStatus(I18N.getStatusRyCONInitialized(), OK);
         Main.statusBar = statusBar;
 
         FormData formDataStatus = new FormData();
@@ -448,21 +460,21 @@ public class MainApplication extends Main {
             public void drop(DropTargetEvent event) {
                 if (fileTransfer.isSupportedType(event.currentDataType)) {
                     String[] droppedFiles = (String[]) event.data;
-                    File files[] = new File[droppedFiles.length];
+                    Path[] paths = new Path[droppedFiles.length];
 
                     for (int i = 0; i < droppedFiles.length; i++) {
-                        files[i] = new File(droppedFiles[i]);
+                        paths[i] = Paths.get(droppedFiles[i]);
                     }
 
                     switch (dnDButtons) {
                         case CLEAN:
-                            new TidyUpWidget(files).executeDropInjection();
+                            new TidyUpWidget(paths).executeDropInjection();
                             break;
                         case LEVELLING:
-                            new LevellingWidget(files).executeDropInjection();
+                            new LevellingWidget(paths).executeDropInjection();
                             break;
                         case SPLIT:
-                            new CodeSplitterWidget(files).executeDropInjection();
+                            new CodeSplitterWidget(paths).executeDropInjection();
                             break;
                     }
                 }
@@ -525,7 +537,7 @@ public class MainApplication extends Main {
         StatusBar statusBar = createStatusBar(shell);
 
         if (pref.isDefaultSettingsGenerated()) {
-            statusBar.setStatus(I18N.getMsgNewConfigFileGenerated(), StatusBar.WARNING);
+            statusBar.setStatus(I18N.getMsgNewConfigFileGenerated(), WARNING);
         }
 
         shell.pack();

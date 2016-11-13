@@ -21,13 +21,15 @@ import org.odftoolkit.simple.SpreadsheetDocument;
 import org.odftoolkit.simple.table.Cell;
 import org.odftoolkit.simple.table.Table;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 
 /**
- * This class provides functions to convert coordinate files from Cadwork CAD program into OpenDocument spreadsheet files.
+ * Instances of this class provides functions to convert coordinate files from Cadwork CAD program into
+ * an OpenDocument spreadsheet file.
  *
  * @author sebastian
- * @version 1
+ * @version 2
  * @since 12
  */
 public class Cadwork2ODF {
@@ -36,7 +38,8 @@ public class Cadwork2ODF {
     private SpreadsheetDocument spreadsheetDocument;
 
     /**
-     * Class constructor for read line based text files from Cadwork CAD program in node.dat file format.
+     * Constructs a new instance of this class for read line based text files from Cadwork CAD program
+     * in node.dat file format.
      *
      * @param readStringLines {@code ArrayList<String>} with read lines from node.dat file
      */
@@ -54,7 +57,7 @@ public class Cadwork2ODF {
      *
      * @return success conversion
      */
-    public boolean convertCadwork2ODS(String sheetName, boolean writeCommentRow) {
+    public boolean convertCadwork2ODS(Path sheetName, boolean writeCommentRow) {
         int rowIndex = 0;
         int colIndex = 0;
         String[] lineSplit;
@@ -65,7 +68,7 @@ public class Cadwork2ODF {
             spreadsheetDocument.getTableByName("Sheet1").remove();
 
             Table table = Table.newTable(spreadsheetDocument);
-            table.setTableName(sheetName);
+            table.setTableName(sheetName.toString());
 
             Cell cell;
 
@@ -117,6 +120,8 @@ public class Cadwork2ODF {
                 cell.setStringValue(lineSplit[5]);
                 rowIndex = rowIndex + 1;
             }
+        } catch (RuntimeException e) {
+            throw e;
         } catch (Exception e) {
             System.err.println("ERROR: unable to create output file.");
         }

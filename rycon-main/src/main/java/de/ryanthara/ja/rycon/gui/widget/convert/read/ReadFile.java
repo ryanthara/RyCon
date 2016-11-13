@@ -19,7 +19,7 @@ package de.ryanthara.ja.rycon.gui.widget.convert.read;
 
 import de.ryanthara.ja.rycon.gui.widget.ConverterWidget;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,10 +55,10 @@ public interface ReadFile {
     /**
      * Reads the ... file from ... given as parameter and returns the read file success.
      *
-     * @param file2Read read file reference
+     * @param file2Read {@link Path} reference to file
      *
      * @return read file success
      */
-    boolean readFile(File file2Read);
+    boolean readFile(Path file2Read);
 
 } // end of ReadFile

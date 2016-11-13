@@ -19,10 +19,11 @@ package de.ryanthara.ja.rycon.gui.widget.convert.write;
 
 import de.ryanthara.ja.rycon.converter.excel.*;
 import de.ryanthara.ja.rycon.gui.widget.ConverterWidget;
+import de.ryanthara.ja.rycon.gui.widget.convert.SourceButton;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.odftoolkit.simple.SpreadsheetDocument;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,28 +32,28 @@ import java.util.List;
  * from the {@link ConverterWidget} of RyCON.
  *
  * @author sebastian
- * @version 1
+ * @version 2
  * @since 12
  */
 public class ExcelWriteFile implements WriteFile {
 
-    private boolean isXLSX;
-    private ArrayList<String> readStringFile;
-    private File file;
-    private List<String[]> readCSVFile;
-    private WriteParameter parameter;
+    private final boolean isXLSX;
+    private final ArrayList<String> readStringFile;
+    private final Path path;
+    private final List<String[]> readCSVFile;
+    private final WriteParameter parameter;
 
     /**
      * Constructs the {@link ExcelWriteFile} with a set of parameters.
      *
-     * @param file           read file name
+     * @param path           read file object for writing
      * @param readCSVFile    read csv file
      * @param readStringFile read string file
      * @param parameter      the write parameter object^
      * @param isXLSX         true if is XLSX
      */
-    public ExcelWriteFile(File file, ArrayList<String> readStringFile, List<String[]> readCSVFile, WriteParameter parameter, boolean isXLSX) {
-        this.file = file;
+    public ExcelWriteFile(Path path, ArrayList<String> readStringFile, List<String[]> readCSVFile, WriteParameter parameter, boolean isXLSX) {
+        this.path = path;
         this.readStringFile = readStringFile;
         this.readCSVFile = readCSVFile;
         this.parameter = parameter;
@@ -60,16 +61,13 @@ public class ExcelWriteFile implements WriteFile {
     }
 
     /**
-     * Returns the prepared {@link SpreadsheetDocument} for file writing.
-     * <p>
-     * This method is used vise versa with {@link #writeStringFile()} and {@link #writeWorkbookFile()}.
-     * The ones which are not used, returns null for indication.
+     * Returns true if the prepared {@link SpreadsheetDocument} for file writing was written to the file system.
      *
-     * @return array list for file writing
+     * @return write success
      */
     @Override
-    public SpreadsheetDocument writeSpreadsheetDocument() {
-        return null;
+    public boolean writeSpreadsheetDocument() {
+        return false;
     }
 
     /**
@@ -78,85 +76,91 @@ public class ExcelWriteFile implements WriteFile {
      * @return array list for file writing
      */
     @Override
-    public ArrayList<String> writeStringFile() {
-        return null;
+    public boolean writeStringFile() {
+        return false;
     }
 
     /**
-     * Returns the prepared {@link Workbook} for file writing.
-     * <p>
-     * This method is used vise versa with {@link #writeStringFile()} and {@link #writeSpreadsheetDocument()}.
-     * The ones which are not used, returns null for indication.
+     * Returns true if the prepared {@link Workbook} for file writing was written to the file system.
      *
-     * @return array list for file writing
+     * @return write success
      */
     @Override
-    public Workbook writeWorkbookFile() {
+    public boolean writeWorkbookFile() {
+        boolean success = false;
         Workbook workbook = null;
 
-        switch (parameter.getSourceNumber()) {
-            case 0:     // fall through for GSI8 format
-            case 1:     // GSI16 format
+        switch (SourceButton.fromIndex(parameter.getSourceNumber())) {
+            case GSI8:
+            case GSI16:
                 GSI2Excel gsi2Excel = new GSI2Excel(readStringFile);
-                if (gsi2Excel.convertGSI2Excel(isXLSX, file.getName(), parameter.isWriteCommentLine())) {
+                if (gsi2Excel.convertGSI2Excel(isXLSX, path.getFileName().toString(), parameter.isWriteCommentLine())) {
                     workbook = gsi2Excel.getWorkbook();
                 }
                 break;
-            case 2:     // TXT format (space or tabulator separated)
+
+            case TXT:
                 TXT2Excel txt2Excel = new TXT2Excel(readStringFile);
-                if (txt2Excel.convertTXT2Excel(isXLSX, file.getName())) {
+                if (txt2Excel.convertTXT2Excel(isXLSX, path.getFileName().toString())) {
                     workbook = txt2Excel.getWorkbook();
                 }
                 break;
-            case 3:     // CSV format (comma or semicolon separated)
+
+            case CSV:
                 CSV2Excel csv2Excel = new CSV2Excel(readCSVFile);
-                if (csv2Excel.convertCSV2Excel(isXLSX, file.getName())) {
+                if (csv2Excel.convertCSV2Excel(isXLSX, path.getFileName().toString())) {
                     workbook = csv2Excel.getWorkbook();
                 }
                 break;
 
-            case 4:     // CAPLAN K format
+            case CAPLAN_K:
                 Caplan2Excel caplan2Excel = new Caplan2Excel(readStringFile);
-                if (caplan2Excel.convertCaplan2Excel(isXLSX, file.getName(), parameter.isWriteCommentLine())) {
+                if (caplan2Excel.convertCaplan2Excel(isXLSX, path.getFileName().toString(), parameter.isWriteCommentLine())) {
                     workbook = caplan2Excel.getWorkbook();
                 }
                 break;
 
-            case 5:     // Zeiss REC format and it's dialects
+            case ZEISS_REC:
                 Zeiss2Excel zeiss2Excel = new Zeiss2Excel(readStringFile);
-                if (zeiss2Excel.convertZeiss2Excel(isXLSX, file.getName(), parameter.isWriteCommentLine())) {
+                if (zeiss2Excel.convertZeiss2Excel(isXLSX, path.getFileName().toString(), parameter.isWriteCommentLine())) {
                     workbook = zeiss2Excel.getWorkbook();
                 }
                 break;
 
-            case 6:     // cadwork node.dat from cadwork CAD program
+            case CADWORK:
                 Cadwork2Excel cadwork2Excel = new Cadwork2Excel(readStringFile);
-                if (cadwork2Excel.convertCadwork2Excel(isXLSX, file.getName(), parameter.isWriteCommentLine())) {
+                if (cadwork2Excel.convertCadwork2Excel(isXLSX, path.getFileName().toString(), parameter.isWriteCommentLine())) {
                     workbook = cadwork2Excel.getWorkbook();
                 }
                 break;
 
-            case 7:     // CSV format 'Basel Stadt' (semicolon separated)
+            case BASEL_STADT:
                 CSVBaselStadt2Excel csvBaselStadt2Excel = new CSVBaselStadt2Excel(readCSVFile);
-                if (csvBaselStadt2Excel.convertCSVBaselStadt2Excel(isXLSX, file.getName(), parameter.isWriteCommentLine())) {
+                if (csvBaselStadt2Excel.convertCSVBaselStadt2Excel(isXLSX, path.getFileName().toString(), parameter.isWriteCommentLine())) {
                     workbook = csvBaselStadt2Excel.getWorkbook();
                 }
                 break;
 
-            case 8:     // TXT format 'Basel Landschaft' (different column based text files for LFP and HFP points)
+            case BASEL_LANDSCHAFT:
                 TXTBaselLandschaft2Excel txtBaselLandschaft2Excel = new TXTBaselLandschaft2Excel(readStringFile);
-                if (txtBaselLandschaft2Excel.convertTXTBaselLand2Excel(isXLSX, file.getName(), parameter.isWriteCommentLine())) {
+                if (txtBaselLandschaft2Excel.convertTXTBaselLand2Excel(isXLSX, path.getFileName().toString(), parameter.isWriteCommentLine())) {
                     workbook = txtBaselLandschaft2Excel.getWorkbook();
                 }
                 break;
 
             default:
                 workbook = null;
-                break;
+                System.err.println("ExcelWriteFile.writeStringFile() : unknown file format " + SourceButton.fromIndex(parameter.getSourceNumber()));
 
         }
 
-        return workbook;
+        String suffix = isXLSX ? ".xlsx" : ".xls";
+
+        if (WriteExcel2Disk.writeExcel2Disk(path, workbook, suffix)) {
+            success = true;
+        }
+
+        return success;
     }
 
 } // end of ExcelWriteFile

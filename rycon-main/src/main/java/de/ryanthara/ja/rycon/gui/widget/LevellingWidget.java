@@ -15,11 +15,10 @@
  * You should have received a copy of the GNU General Public License along with
  * this package. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package de.ryanthara.ja.rycon.gui.widget;
 
 import de.ryanthara.ja.rycon.Main;
-import de.ryanthara.ja.rycon.check.FileCheck;
+import de.ryanthara.ja.rycon.check.PathCheck;
 import de.ryanthara.ja.rycon.check.TextCheck;
 import de.ryanthara.ja.rycon.converter.gsi.Nigra2GSI;
 import de.ryanthara.ja.rycon.core.GSILevelling2Cad;
@@ -34,9 +33,12 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
+import static de.ryanthara.ja.rycon.gui.custom.Status.OK;
 
 /**
  * Instances of this class implements a complete widget for process levelling files.
@@ -56,7 +58,7 @@ public class LevellingWidget {
 
     private final String[] acceptableFileSuffixes = new String[]{"*.gsi", "*.asc"};
     private Button chkBoxHoldChangePoint;
-    private File[] files2read;
+    private Path[] files2read;
     private InputFieldsComposite inputFieldsComposite;
     private Shell innerShell;
 
@@ -66,21 +68,21 @@ public class LevellingWidget {
      * The user interface is initialized in a separate method, which is called from here.
      */
     public LevellingWidget() {
-        files2read = new File[0];
+        files2read = new Path[0];
         initUI();
         handleFileInjection();
     }
 
     /**
-     * Constructs a new instance of this class given a file array as parameter. This constructor type
+     * Constructs a new instance of this class given a {@link Path} array as parameter. This constructor type
      * is used for the drag and drop injection.
      * <p>
-     * The file array of the dropped files will be checked for being valid and not being a directory.
+     * The {@link Path} array of the dropped files will be checked for being valid and not being a directory.
      *
-     * @param droppedFiles file array from drop source
+     * @param droppedFiles {@link Path} array from drop source
      */
-    public LevellingWidget(File[] droppedFiles) {
-        files2read = FileCheck.checkForValidFiles(droppedFiles, acceptableFileSuffixes);
+    public LevellingWidget(Path[] droppedFiles) {
+        files2read = PathCheck.getValidFiles(droppedFiles, acceptableFileSuffixes);
     }
 
     /**
@@ -98,9 +100,9 @@ public class LevellingWidget {
             if (success = processFileOperationsDND()) {
                 // use counter to display different text on the status bar
                 if (Main.countFileOps == 1) {
-                    Main.statusBar.setStatus(String.format(I18N.getStatusPrepareLevelSuccess(Main.TEXT_SINGULAR), Main.countFileOps), StatusBar.OK);
+                    Main.statusBar.setStatus(String.format(I18N.getStatusPrepareLevelSuccess(Main.TEXT_SINGULAR), Main.countFileOps), OK);
                 } else {
-                    Main.statusBar.setStatus(String.format(I18N.getStatusPrepareLevelSuccess(Main.TEXT_PLURAL), Main.countFileOps), StatusBar.OK);
+                    Main.statusBar.setStatus(String.format(I18N.getStatusPrepareLevelSuccess(Main.TEXT_PLURAL), Main.countFileOps), OK);
                 }
             }
         }
@@ -110,7 +112,7 @@ public class LevellingWidget {
 
     private void actionBtnCancel() {
         Main.setSubShellStatus(false);
-        Main.statusBar.setStatus("", StatusBar.OK);
+        Main.statusBar.setStatus("", OK);
         innerShell.dispose();
     }
 
@@ -123,8 +125,8 @@ public class LevellingWidget {
         Text input = inputFieldsComposite.getDestinationTextField();
 
         // Set the initial filter path according to anything selected or typed in
-        if (!TextCheck.checkIsEmpty(input)) {
-            if (TextCheck.checkDirExists(input)) {
+        if (!TextCheck.isEmpty(input)) {
+            if (TextCheck.isDirExists(input)) {
                 filterPath = input.getText();
             }
         }
@@ -134,14 +136,14 @@ public class LevellingWidget {
     }
 
     private int actionBtnOk() {
-        if (inputFieldsComposite.getSourceTextField().getText().equals("") &
-                inputFieldsComposite.getDestinationTextField().getText().equals("")) {
+        if (TextCheck.isEmpty(inputFieldsComposite.getSourceTextField()) ||
+                TextCheck.isEmpty(inputFieldsComposite.getDestinationTextField())) {
             return -1;
         }
 
         if (files2read.length == 0) {
-            files2read = new File[1];
-            files2read[0] = new File(inputFieldsComposite.getSourceTextField().getText());
+            files2read = new Path[1];
+            files2read[0] = Paths.get(inputFieldsComposite.getSourceTextField().getText());
         } else {
             files2read = TextCheck.checkSourceAndDestinationText(
                     inputFieldsComposite.getSourceTextField(),
@@ -152,9 +154,9 @@ public class LevellingWidget {
             if (processFileOperations()) {
                 // use counter to display different text on the status bar
                 if (Main.countFileOps == 1) {
-                    Main.statusBar.setStatus(String.format(I18N.getStatusPrepareLevelSuccess(Main.TEXT_SINGULAR), Main.countFileOps), StatusBar.OK);
+                    Main.statusBar.setStatus(String.format(I18N.getStatusPrepareLevelSuccess(Main.TEXT_SINGULAR), Main.countFileOps), OK);
                 } else {
-                    Main.statusBar.setStatus(String.format(I18N.getStatusPrepareLevelSuccess(Main.TEXT_PLURAL), Main.countFileOps), StatusBar.OK);
+                    Main.statusBar.setStatus(String.format(I18N.getStatusPrepareLevelSuccess(Main.TEXT_PLURAL), Main.countFileOps), OK);
                 }
             }
             return 1;
@@ -166,15 +168,11 @@ public class LevellingWidget {
      * This method is used from the class BottomButtonBar!
      */
     private void actionBtnOkAndExit() {
-        switch (actionBtnOk()) {
-            case 0:
-                break;
-            case 1:
-                Main.setSubShellStatus(false);
-                Main.statusBar.setStatus("", StatusBar.OK);
+        if (actionBtnOk() == 1) {
+            Main.setSubShellStatus(false);
+            Main.statusBar.setStatus("", OK);
 
-                innerShell.dispose();
-                break;
+            innerShell.dispose();
         }
     }
 
@@ -191,11 +189,12 @@ public class LevellingWidget {
 
         // Set the initial filter path according to anything pasted or typed in
         if (!inputFieldsComposite.getSourceTextField().getText().trim().equals("")) {
-            File sourceFile = new File(inputFieldsComposite.getSourceTextField().getText());
-            if (sourceFile.isDirectory()) {
+            Path sourcePath = Paths.get(inputFieldsComposite.getSourceTextField().getText());
+
+            if (Files.isDirectory(sourcePath)) {
                 filterPath = inputFieldsComposite.getSourceTextField().getText();
-            } else if (sourceFile.isFile()) {
-                inputFieldsComposite.setDestinationTextFieldText(sourceFile.getName());
+            } else if (Files.isRegularFile(sourcePath)) {
+                inputFieldsComposite.setDestinationTextFieldText(sourcePath.getFileName().toString());
             }
         }
 
@@ -239,14 +238,14 @@ public class LevellingWidget {
     private int fileOperations(boolean holdChangePoints) {
         int counter = 0;
 
-        for (File file2read : files2read) {
+        for (Path file2read : files2read) {
             LineReader lineReader = new LineReader(file2read);
 
             if (lineReader.readFile()) {
                 // read
                 ArrayList<String> readFile = lineReader.getLines();
 
-                String[] fileNameAndSuffix = file2read.getName().split("\\.(?=[^.]+$)");
+                String[] fileNameAndSuffix = file2read.getFileName().toString().split("\\.(?=[^.]+$)");
 
                 ArrayList<String> writeFile;
 
@@ -257,7 +256,7 @@ public class LevellingWidget {
                     Nigra2GSI nigra2GSI = new Nigra2GSI(readFile);
                     writeFile = nigra2GSI.convertNIGRA2GSI(Main.getGSI16());
                 } else {
-                    System.err.println("File " + file2read.getName() + " is not supported (yet).");
+                    System.err.println("File " + file2read.getFileName() + " is not supported (yet).");
                     break;
                 }
 
@@ -269,7 +268,7 @@ public class LevellingWidget {
                     counter = counter + 1;
                 }
             } else {
-                System.err.println("File " + file2read.getName() + " could not be read.");
+                System.err.println("File " + file2read.getFileName() + " could not be read.");
             }
         }
 

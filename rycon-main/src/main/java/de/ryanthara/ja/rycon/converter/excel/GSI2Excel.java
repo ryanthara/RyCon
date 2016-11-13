@@ -18,8 +18,8 @@
 package de.ryanthara.ja.rycon.converter.excel;
 
 import de.ryanthara.ja.rycon.converter.gsi.BaseToolsGSI;
-import de.ryanthara.ja.rycon.i18n.I18N;
 import de.ryanthara.ja.rycon.elements.GSIBlock;
+import de.ryanthara.ja.rycon.i18n.I18N;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.WorkbookUtil;
@@ -166,6 +166,7 @@ public class GSI2Excel {
                         cellStyle.setVerticalAlignment(CellStyle.ALIGN_RIGHT);
                         cell.setCellStyle(cellStyle);
                         break;
+
                     case 87:    // Reflector height (above ground)
                     case 88:    // Instrument height (above ground)
                         cell.setCellValue(Double.parseDouble(block.toPrintFormatCSV()));
@@ -174,6 +175,9 @@ public class GSI2Excel {
                         cellStyle.setVerticalAlignment(CellStyle.ALIGN_RIGHT);
                         cell.setCellStyle(cellStyle);
                         break;
+
+                    default:
+                        System.err.println("GSI2Excel.convertGSI2Excel() : line contains unknown word index " + block.toPrintFormatCSV());
                 }
             }
         }

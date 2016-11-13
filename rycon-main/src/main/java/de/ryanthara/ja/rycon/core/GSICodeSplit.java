@@ -114,6 +114,9 @@ public class GSICodeSplit {
                         newLine = newLine.concat(" " + block.toString());
                         validCheckHelperValue += 6;
                         break;
+
+                    default:
+                        System.err.println("GSICodeSplit.processCodeSplit() : found wrong word index " + block.toPrintFormatCSV());
                 }
             }
 

@@ -33,13 +33,13 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * SplashScreen displays a splash screen while RyCON is starting.
  * <p>
- * This is necessary because of a bug in Cocoa from Apple when 
+ * This is necessary because of a bug in Cocoa from Apple when
  * starting a SWT-jar which needs -XstartOnFirstThread option!
- *
+ * <p>
  * <h3>Changes:</h3>
  * <ul>
- *     <li>2: code improvements and clean up </li>
- *     <li>1: basic implementation </li>
+ * <li>2: code improvements and clean up </li>
+ * <li>1: basic implementation </li>
  * </ul>
  *
  * @author sebastian
@@ -47,7 +47,7 @@ import org.eclipse.swt.widgets.Shell;
  * @since 1
  */
 public class SplashScreen {
-    
+
     private int splashPos = 0;
     private static final int SPLASH_MAX = 100;
 
@@ -114,12 +114,12 @@ public class SplashScreen {
                 image.dispose();
             }
         });
-        
+
         while (splashPos != SPLASH_MAX) {
             if (!display.readAndDispatch()) {
                 display.sleep();
             }
         }
     }
-    
+
 } // end of SplashScreen

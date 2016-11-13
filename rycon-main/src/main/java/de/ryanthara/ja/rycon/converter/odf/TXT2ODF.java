@@ -21,10 +21,16 @@ import org.odftoolkit.simple.SpreadsheetDocument;
 import org.odftoolkit.simple.table.Cell;
 import org.odftoolkit.simple.table.Table;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 
 /**
- * Created by sebastian on 14.09.16.
+ * This class provides functions to convert measurement or coordinate files from text format
+ * into an Open Document Format spreadsheet file.
+ *
+ * @author sebastian
+ * @version 2
+ * @since 12
  */
 public class TXT2ODF {
 
@@ -32,7 +38,7 @@ public class TXT2ODF {
     private SpreadsheetDocument spreadsheetDocument;
 
     /**
-     * Class constructor for read line based text files in different formats.
+     * Constructs a new instance of this class for read line based text files as parameter.
      *
      * @param readStringLines {@code ArrayList<String>} with lines in text format
      */
@@ -47,7 +53,7 @@ public class TXT2ODF {
      *
      * @return success conversion success
      */
-    public boolean convertTXT2ODS(String sheetName) {
+    public boolean convertTXT2ODS(Path sheetName) {
         int rowIndex = 0;
         int colIndex;
 
@@ -57,7 +63,7 @@ public class TXT2ODF {
             spreadsheetDocument.getTableByName("Sheet1").remove();
 
             Table table = Table.newTable(spreadsheetDocument);
-            table.setTableName(sheetName);
+            table.setTableName(sheetName.toString());
 
             Cell cell;
 
@@ -72,7 +78,7 @@ public class TXT2ODF {
                 rowIndex = rowIndex + 1;
             }
         } catch (Exception e) {
-            System.err.println("ERROR: unable to create output file.");
+            System.err.println("ERROR: unable to create output file " + sheetName.toString() + ".");
         }
 
         return rowIndex > 1;

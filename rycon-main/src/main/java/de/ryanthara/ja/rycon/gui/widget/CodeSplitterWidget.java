@@ -15,11 +15,10 @@
  * You should have received a copy of the GNU General Public License along with
  * this package. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package de.ryanthara.ja.rycon.gui.widget;
 
 import de.ryanthara.ja.rycon.Main;
-import de.ryanthara.ja.rycon.check.FileCheck;
+import de.ryanthara.ja.rycon.check.PathCheck;
 import de.ryanthara.ja.rycon.check.TextCheck;
 import de.ryanthara.ja.rycon.core.GSICodeSplit;
 import de.ryanthara.ja.rycon.core.TextCodeSplit;
@@ -34,9 +33,11 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
-import java.io.File;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.Iterator;
+
+import static de.ryanthara.ja.rycon.gui.custom.Status.OK;
 
 /**
  * Instances of this class implements a complete widget and it's functionality to split coordinate files by code.
@@ -59,7 +60,7 @@ public class CodeSplitterWidget {
 
     private final String[] acceptableFileSuffixes = new String[]{"*.gsi", "*.txt"};
     private Button chkBoxInsertCodeColumn, chkBoxWriteCodeZero;
-    private File[] files2read;
+    private Path[] files2read;
     private InputFieldsComposite inputFieldsComposite;
     private Shell innerShell;
 
@@ -69,7 +70,7 @@ public class CodeSplitterWidget {
      * The user interface is initialized in a separate method, which is called from here.
      */
     public CodeSplitterWidget() {
-        files2read = new File[0];
+        files2read = new Path[0];
         initUI();
         handleFileInjection();
     }
@@ -77,12 +78,12 @@ public class CodeSplitterWidget {
     /**
      * Constructs the {@link CodeSplitterWidget} for the given files from the drag'n drop operation.
      * <p>
-     * The file array of the dropped files will be checked for being valid and not being a directory.
+     * The {@link java.nio.file.Path} array of the dropped files will be checked for being valid and not being a directory.
      *
-     * @param droppedFiles file array from drop source
+     * @param droppedFiles path array from drop source
      */
-    public CodeSplitterWidget(File[] droppedFiles) {
-        files2read = FileCheck.checkForValidFiles(droppedFiles, acceptableFileSuffixes);
+    public CodeSplitterWidget(Path[] droppedFiles) {
+        files2read = PathCheck.getValidFiles(droppedFiles, acceptableFileSuffixes);
     }
 
     /**
@@ -100,9 +101,9 @@ public class CodeSplitterWidget {
             if (success = processFileOperationsDND()) {
                 // use counter to display different text on the status bar
                 if (Main.countFileOps == 1) {
-                    Main.statusBar.setStatus(String.format(I18N.getStatusCodeSplitSuccess(Main.TEXT_SINGULAR), Main.countFileOps), StatusBar.OK);
+                    Main.statusBar.setStatus(String.format(I18N.getStatusCodeSplitSuccess(Main.TEXT_SINGULAR), Main.countFileOps), OK);
                 } else {
-                    Main.statusBar.setStatus(String.format(I18N.getStatusCodeSplitSuccess(Main.TEXT_PLURAL), Main.countFileOps), StatusBar.OK);
+                    Main.statusBar.setStatus(String.format(I18N.getStatusCodeSplitSuccess(Main.TEXT_PLURAL), Main.countFileOps), OK);
                 }
             }
         }
@@ -112,7 +113,7 @@ public class CodeSplitterWidget {
 
     private void actionBtnCancel() {
         Main.setSubShellStatus(false);
-        Main.statusBar.setStatus("", StatusBar.OK);
+        Main.statusBar.setStatus("", OK);
         innerShell.dispose();
     }
 
@@ -125,8 +126,8 @@ public class CodeSplitterWidget {
         Text input = inputFieldsComposite.getDestinationTextField();
 
         // Set the initial filter path according to anything selected or typed in
-        if (!TextCheck.checkIsEmpty(input)) {
-            if (TextCheck.checkDirExists(input)) {
+        if (!TextCheck.isEmpty(input)) {
+            if (TextCheck.isDirExists(input)) {
                 filterPath = input.getText();
             }
         }
@@ -136,14 +137,14 @@ public class CodeSplitterWidget {
     }
 
     private int actionBtnOk() {
-        if (inputFieldsComposite.getSourceTextField().getText().equals("") &
-                inputFieldsComposite.getDestinationTextField().getText().equals("")) {
+        if (TextCheck.isEmpty(inputFieldsComposite.getSourceTextField()) ||
+                TextCheck.isEmpty(inputFieldsComposite.getDestinationTextField())) {
             return -1;
         }
 
         if (files2read.length == 0) {
-            files2read = new File[1];
-            files2read[0] = new File(inputFieldsComposite.getSourceTextField().getText());
+            files2read = new Path[1];
+            files2read[0] = Paths.get(inputFieldsComposite.getSourceTextField().getText());
         } else {
             files2read = TextCheck.checkSourceAndDestinationText(
                     inputFieldsComposite.getSourceTextField(),
@@ -155,9 +156,9 @@ public class CodeSplitterWidget {
 
                 // use counter to display different text on the status bar
                 if (Main.countFileOps == 1) {
-                    Main.statusBar.setStatus(String.format(I18N.getStatusCodeSplitSuccess(Main.TEXT_SINGULAR), Main.countFileOps), StatusBar.OK);
+                    Main.statusBar.setStatus(String.format(I18N.getStatusCodeSplitSuccess(Main.TEXT_SINGULAR), Main.countFileOps), OK);
                 } else {
-                    Main.statusBar.setStatus(String.format(I18N.getStatusCodeSplitSuccess(Main.TEXT_PLURAL), Main.countFileOps), StatusBar.OK);
+                    Main.statusBar.setStatus(String.format(I18N.getStatusCodeSplitSuccess(Main.TEXT_PLURAL), Main.countFileOps), OK);
                 }
             }
 
@@ -167,15 +168,11 @@ public class CodeSplitterWidget {
     }
 
     private void actionBtnOkAndExit() {
-        switch (actionBtnOk()) {
-            case 0:
-                break;
-            case 1:
-                Main.setSubShellStatus(false);
-                Main.statusBar.setStatus("", StatusBar.OK);
+        if (actionBtnOk() == 1) {
+            Main.setSubShellStatus(false);
+            Main.statusBar.setStatus("", OK);
 
-                innerShell.dispose();
-                break;
+            innerShell.dispose();
         }
     }
 
@@ -192,11 +189,12 @@ public class CodeSplitterWidget {
 
         // Set the initial filter path according to anything pasted or typed in
         if (!inputFieldsComposite.getSourceTextField().getText().trim().equals("")) {
-            File sourceFile = new File(inputFieldsComposite.getSourceTextField().getText());
-            if (sourceFile.isDirectory()) {
+            Path sourcePath = Paths.get(inputFieldsComposite.getSourceTextField().getText());
+
+            if (Files.isDirectory(sourcePath)) {
                 filterPath = inputFieldsComposite.getSourceTextField().getText();
-            } else if (sourceFile.isFile()) {
-                inputFieldsComposite.setDestinationTextFieldText(sourceFile.getName());
+            } else if (Files.isRegularFile(sourcePath)) {
+                inputFieldsComposite.setDestinationTextFieldText(sourcePath.getFileName().toString());
             }
         }
 
@@ -241,7 +239,8 @@ public class CodeSplitterWidget {
         chkBoxWriteCodeZero.setText(I18N.getBtnChkSplitterWriteCodeZero());
     }
 
-    private int executeSplitGSI(boolean insertCodeColumn, boolean writeFileWithCodeZero, int counter, File file2read, ArrayList<String> readFile) {
+    private int executeSplitGSI(boolean insertCodeColumn, boolean writeFileWithCodeZero, int counter, Path file2read,
+                                ArrayList<String> readFile) {
         GSICodeSplit gsiCodeSplit = new GSICodeSplit(readFile);
         ArrayList<ArrayList<String>> writeFile = gsiCodeSplit.processCodeSplit(insertCodeColumn, writeFileWithCodeZero);
 
@@ -263,7 +262,8 @@ public class CodeSplitterWidget {
         return counter;
     }
 
-    private int executeSplitTxt(boolean insertCodeColumn, boolean writeFileWithCodeZero, int counter, File file2read, ArrayList<String> readFile) {
+    private int executeSplitTxt(boolean insertCodeColumn, boolean writeFileWithCodeZero, int counter, Path file2read,
+                                ArrayList<String> readFile) {
         TextCodeSplit textCodeSplit = new TextCodeSplit(readFile);
         ArrayList<ArrayList<String>> writeFile = textCodeSplit.processCodeSplit(insertCodeColumn, writeFileWithCodeZero);
 
@@ -288,24 +288,27 @@ public class CodeSplitterWidget {
     private int fileOperations(boolean insertCodeColumn, boolean writeFileWithCodeZero) {
         int counter = 0;
 
-        for (File file2read : files2read) {
-            LineReader lineReader = new LineReader(file2read);
+        for (Path path : files2read) {
+            LineReader lineReader = new LineReader(path);
 
             if (lineReader.readFile()) {
                 ArrayList<String> readFile = lineReader.getLines();
 
                 // processFileOperations by differ between txt oder gsi files
-                String suffix = file2read.getName().toLowerCase();
 
-                if (suffix.endsWith(".gsi")) {
-                    counter = executeSplitGSI(insertCodeColumn, writeFileWithCodeZero, counter, file2read, readFile);
-                } else if (suffix.endsWith(".txt")) {
-                    counter = executeSplitTxt(insertCodeColumn, writeFileWithCodeZero, counter, file2read, readFile);
+                // processFileOperations and differ between 'normal' GSI files and LTOP 'GSL' files
+                PathMatcher matcherGSI = FileSystems.getDefault().getPathMatcher("regex:(?iu:.+\\.GSI)");
+                PathMatcher matcherTXT = FileSystems.getDefault().getPathMatcher("regex:(?iu:.+\\.TXT)");
+
+                if (matcherGSI.matches(path)) {
+                    counter = executeSplitGSI(insertCodeColumn, writeFileWithCodeZero, counter, path, readFile);
+                } else if (matcherTXT.matches(path)) {
+                    counter = executeSplitTxt(insertCodeColumn, writeFileWithCodeZero, counter, path, readFile);
                 } else {
-                    System.err.println("File format of " + file2read.getName() + " are not supported.");
+                    System.err.println("File format of " + path.getFileName() + " are not supported.");
                 }
             } else {
-                System.err.println("File " + file2read.getName() + " could not be read.");
+                System.err.println("File " + path.getFileName() + " could not be read.");
             }
         }
 

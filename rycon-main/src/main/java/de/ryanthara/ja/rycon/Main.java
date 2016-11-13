@@ -15,15 +15,14 @@
  * You should have received a copy of the GNU General Public License along with
  * this package. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package de.ryanthara.ja.rycon;
 
 import de.ryanthara.ja.rycon.cli.CmdLineInterfaceException;
 import de.ryanthara.ja.rycon.cli.CmdLineInterfaceParser;
 import de.ryanthara.ja.rycon.data.PreferenceHandler;
+import de.ryanthara.ja.rycon.gui.UpdateDialog;
 import de.ryanthara.ja.rycon.gui.custom.MessageBoxes;
 import de.ryanthara.ja.rycon.gui.custom.StatusBar;
-import de.ryanthara.ja.rycon.gui.UpdateDialog;
 import de.ryanthara.ja.rycon.i18n.I18N;
 import de.ryanthara.ja.rycon.tools.Updater;
 import org.eclipse.swt.SWT;
@@ -96,7 +95,7 @@ public abstract class Main {
     private static final String DIR_PROJECT_TEMPLATE = "./projects/template-folder";
     private static final String CONVERTER_SETTING_ELIMINATE_ZERO_COORDINATE = "true";
     private static final String CONVERTER_SETTING_LTOP_USE_ZENITH_DISTANCE = "false";
-    private static final String CONVERTER_SETTING_POINT_IDENTICAL_DISTANCE = "3";
+    private static final String CONVERTER_SETTING_POINT_IDENTICAL_DISTANCE = "0.03";
     private static final String CONVERTER_SETTING_ZEISS_DIALECT = "M5";
     private static final String GSI_SETTING_LINE_ENDING_WITH_BLANK = "true";
     private static final String LAST_USED_DISPLAY = "-1";
@@ -109,10 +108,6 @@ public abstract class Main {
     private static final String LAST_POS_PRIMARY_MONITOR = "-9999, -9999";
     private static final String LAST_POS_SECONDARY_MONITOR = "-9998, -9998,";
 
-    /**
-     * The reference to the global application class.
-     */
-    public static Main main;
     /**
      * Contains a value for application wide count of processed file operations.
      */
@@ -139,7 +134,6 @@ public abstract class Main {
      * Construct a new {@code Main} object with all it's functionality.
      */
     public Main() {
-        main = this;
     }
 
     /**
@@ -514,6 +508,11 @@ public abstract class Main {
         return PARAM_KNOWN_STATION_STRING;
     }
 
+    /**
+     * Returns the value of the LTOP string ('LTOP').
+     *
+     * @return ltop string
+     */
     public static String getParamLTOPString() {
         return PARAM_LTOP_STRING;
     }

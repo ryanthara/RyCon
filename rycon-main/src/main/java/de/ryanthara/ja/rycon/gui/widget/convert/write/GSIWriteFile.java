@@ -19,9 +19,11 @@ package de.ryanthara.ja.rycon.gui.widget.convert.write;
 
 import de.ryanthara.ja.rycon.converter.gsi.*;
 import de.ryanthara.ja.rycon.gui.widget.ConverterWidget;
+import de.ryanthara.ja.rycon.gui.widget.convert.SourceButton;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.odftoolkit.simple.SpreadsheetDocument;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,19 +36,22 @@ import java.util.List;
  */
 public class GSIWriteFile implements WriteFile {
 
-    private boolean isGSI16;
-    private ArrayList<String> readStringFile;
-    private List<String[]> readCSVFile;
-    private WriteParameter parameter;
+    private final Path path;
+    private final boolean isGSI16;
+    private final ArrayList<String> readStringFile;
+    private final List<String[]> readCSVFile;
+    private final WriteParameter parameter;
 
     /**
      * Constructs the {@link GSIWriteFile} with a set of parameters.
      *
+     * @param path           read file object as {@link java.nio.file.Path} for writing
      * @param readCSVFile    read csv file
      * @param readStringFile read string file
      * @param parameter      the write parameter object
      */
-    public GSIWriteFile(ArrayList<String> readStringFile, List<String[]> readCSVFile, WriteParameter parameter, boolean isGSI16) {
+    public GSIWriteFile(Path path, ArrayList<String> readStringFile, List<String[]> readCSVFile, WriteParameter parameter, boolean isGSI16) {
+        this.path = path;
         this.readStringFile = readStringFile;
         this.readCSVFile = readCSVFile;
         this.parameter = parameter;
@@ -54,16 +59,13 @@ public class GSIWriteFile implements WriteFile {
     }
 
     /**
-     * Returns the prepared {@link SpreadsheetDocument} for file writing.
-     * <p>
-     * This method is used vise versa with {@link #writeStringFile()} and {@link #writeWorkbookFile()}.
-     * The ones which are not used, returns null for indication.
+     * Returns true if the prepared {@link SpreadsheetDocument} for file writing was written to the file system.
      *
-     * @return array list for file writing
+     * @return write success
      */
     @Override
-    public SpreadsheetDocument writeSpreadsheetDocument() {
-        return null;
+    public boolean writeSpreadsheetDocument() {
+        return false;
     }
 
     /**
@@ -72,71 +74,73 @@ public class GSIWriteFile implements WriteFile {
      * @return array list for file writing
      */
     @Override
-    public ArrayList<String> writeStringFile() {
+    public boolean writeStringFile() {
+        boolean success = false;
         ArrayList<String> writeFile;
 
-        switch (parameter.getSourceNumber()) {
-            case 0:     // GSI8 format
-            case 1:     // GSI16 format
+        switch (SourceButton.fromIndex(parameter.getSourceNumber())) {
+            case GSI8:
+            case GSI16:
                 GSI8vsGSI16 gsi8vsGSI16 = new GSI8vsGSI16(readStringFile);
                 writeFile = gsi8vsGSI16.convertGSI8vsGSI16(isGSI16);
                 break;
 
-            case 2:     // TXT format (space or tabulator separated)
+            case TXT:
                 TXT2GSI txt2GSI = new TXT2GSI(readStringFile);
                 writeFile = txt2GSI.convertTXT2GSI(isGSI16, parameter.sourceContainsCode());
                 break;
 
-            case 3:     // CSV format (comma or semicolon separated)
+            case CSV:
                 CSV2GSI csv2GSI = new CSV2GSI(readCSVFile);
                 writeFile = csv2GSI.convertCSV2GSI(isGSI16, parameter.sourceContainsCode());
                 break;
 
-            case 4:     // CAPLAN K format
-                K2GSI k2GSI = new K2GSI(readStringFile);
-                writeFile = k2GSI.convertK2GSI(isGSI16, parameter.isWriteCodeColumn());
+            case CAPLAN_K:
+                Caplan2GSI caplan2GSI = new Caplan2GSI(readStringFile);
+                writeFile = caplan2GSI.convertK2GSI(isGSI16, parameter.isWriteCodeColumn());
                 break;
 
-            case 5:     // Zeiss REC format and it's dialects
+            case ZEISS_REC:
                 Zeiss2GSI zeiss2GSI = new Zeiss2GSI(readStringFile);
                 writeFile = zeiss2GSI.convertZeiss2GSI(isGSI16);
                 break;
 
-            case 6:     // cadwork node.dat from cadwork CAD program
+            case CADWORK:
                 Cadwork2GSI cadwork2GSI = new Cadwork2GSI(readStringFile);
                 writeFile = cadwork2GSI.convertCadwork2GSI(isGSI16, parameter.isWriteCodeColumn(), parameter.isCadworkUseZeroHeights());
                 break;
 
-            case 7:     // CSV format 'Basel Stadt' (semicolon separated)
+            case BASEL_STADT:
                 CSVBaselStadt2GSI csvBaselStadt2GSI = new CSVBaselStadt2GSI(readCSVFile);
                 writeFile = csvBaselStadt2GSI.convertCSVBaselStadt2GSI(isGSI16, parameter.sourceContainsCode());
                 break;
 
-            case 8:     // TXT format 'Basel Landschaft' (different column based text files for LFP and HFP points)
+            case BASEL_LANDSCHAFT:
                 TXTBaselLandschaft2GSI txtBaselLandschaft2GSI = new TXTBaselLandschaft2GSI(readStringFile);
                 writeFile = txtBaselLandschaft2GSI.convertTXTBaselLandschaft2GSI(isGSI16, parameter.isWriteCodeColumn());
                 break;
 
             default:
                 writeFile = null;
-                break;
+                System.err.println("GSIWriteFile.writeStringFile() : unknown file format " + SourceButton.fromIndex(parameter.getSourceNumber()));
 
         }
 
-        return writeFile;
+        if (WriteFile2Disk.writeFile2Disk(path, writeFile, ".GSI")) {
+            success = true;
+        }
+
+        return success;
     }
 
     /**
-     * Returns the prepared {@link Workbook} for file writing.
-     * <p>
-     * This method is used vise versa with {@link #writeStringFile()} and {@link #writeSpreadsheetDocument()}.
-     * The ones which are not used, returns null for indication.
+     * Returns true if the prepared {@link Workbook} for file writing was written to the file system.
      *
-     * @return array list for file writing
+     * @return write success
      */
     @Override
-    public Workbook writeWorkbookFile() {
-        return null;
+    public boolean writeWorkbookFile() {
+        return false;
     }
 
 } // end of GSIWriteFile

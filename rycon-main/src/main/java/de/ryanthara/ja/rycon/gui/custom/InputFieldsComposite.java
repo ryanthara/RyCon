@@ -178,7 +178,7 @@ public class InputFieldsComposite extends Composite {
         sourceTextField.addModifyListener(new ModifyListener() {
             @Override
             public void modifyText(ModifyEvent modifyEvent) {
-                if (TextCheck.checkFileExists(sourceTextField)) {
+                if (TextCheck.isFileExists(sourceTextField)) {
                     Path path = Paths.get(sourceTextField.getText());
                     destinationTextField.setText(path.getParent().toString());
                 }

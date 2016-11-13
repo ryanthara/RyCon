@@ -24,7 +24,8 @@ import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /**
  * This class implements a simple static access to swt {@link DirectoryDialog} and it's functionality to RyCON.
@@ -35,9 +36,9 @@ import java.io.File;
  */
 public class DirectoryDialogs {
 
-    private static void handlePath(Shell innerShell, Text textField, String path) {
-        if ((path != null) & (new File(path).exists())) {
-            textField.setText(path);
+    private static void handlePath(Shell innerShell, Text textField, String pathAsString) {
+        if ((pathAsString != null) && (Files.exists(Paths.get(pathAsString)))) {
+            textField.setText(pathAsString);
         } else {
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING, I18N.getMsgBoxTitleWarning(), I18N.getMsgDirNotFound());
         }

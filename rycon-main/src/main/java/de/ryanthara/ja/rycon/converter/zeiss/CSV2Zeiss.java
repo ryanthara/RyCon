@@ -18,10 +18,11 @@
 package de.ryanthara.ja.rycon.converter.zeiss;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
- * This class provides functions to convert coordinate files in CSV format (comma separated values)
+ * Instances of this class provides functions to convert coordinate files in CSV format (comma separated values)
  * into Zeiss REC files with it's dialects (R4, R5, REC500 and M5).
  */
 public class CSV2Zeiss {
@@ -77,6 +78,9 @@ public class CSV2Zeiss {
                     northing = stringField[3];
                     height = stringField[4];
                     break;
+
+                default:
+                    System.err.println("CSV2Zeiss.convertCSV2REC() : line contains less or more tokens " + Arrays.toString(stringField));
             }
 
             result.add(BaseToolsZeiss.prepareLineOfCoordinates(dialect, number, code, easting, northing, height, lineNumber));

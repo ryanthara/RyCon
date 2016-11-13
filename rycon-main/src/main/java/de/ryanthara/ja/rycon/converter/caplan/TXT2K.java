@@ -121,6 +121,9 @@ public class TXT2K {
                         }
                     }
                     break;
+
+                default:
+                    System.err.println("TXT2K.convertTXT2K() : line contains less or more tokens " + line);
             }
             if (valencyIndicator > 0) {
                 valency = " ".concat(Integer.toString(valencyIndicator));

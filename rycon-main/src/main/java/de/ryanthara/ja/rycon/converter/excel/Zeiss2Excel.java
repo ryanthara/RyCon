@@ -28,7 +28,8 @@ import java.util.ArrayList;
  * @author sebastian
  * @version 1
  * @since 12
- */public class Zeiss2Excel {
+ */
+public class Zeiss2Excel {
 
     private ArrayList<String> readStringLines;
     private Workbook workbook = null;

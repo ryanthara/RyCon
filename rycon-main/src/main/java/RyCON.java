@@ -33,5 +33,6 @@ import de.ryanthara.ja.rycon.gui.MainApplication;
  * @version 1
  * @since 1
  */
-public class RyCON extends MainApplication {} // end of RyCON
+public class RyCON extends MainApplication {
+} // end of RyCON
 //public class RyCON extends RyCONLauncher {} // end of RyCON

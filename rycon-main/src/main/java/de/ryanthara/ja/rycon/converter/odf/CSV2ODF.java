@@ -21,10 +21,16 @@ import org.odftoolkit.simple.SpreadsheetDocument;
 import org.odftoolkit.simple.table.Cell;
 import org.odftoolkit.simple.table.Table;
 
+import java.nio.file.Path;
 import java.util.List;
 
 /**
- * Created by sebastian on 13.09.16.
+ * This class provides functions to convert measurement or coordinate files from comma separated values (CSV) format
+ * into an Open Document Format spreadsheet file.
+ *
+ * @author sebastian
+ * @version 2
+ * @since 12
  */
 public class CSV2ODF {
 
@@ -32,7 +38,7 @@ public class CSV2ODF {
     private SpreadsheetDocument spreadsheetDocument;
 
     /**
-     * Class constructor for read line based CSV files.
+     * Constructs a new instance of this class for read line based CSV files.
      *
      * @param readCSVLines {@code List<String[]>} with lines as {@code String[]}
      */
@@ -47,7 +53,7 @@ public class CSV2ODF {
      *
      * @return success conversion success
      */
-    public boolean convertCSV2ODS(String sheetName) {
+    public boolean convertCSV2ODS(Path sheetName) {
         int colIndex;
         int rowIndex = 0;
 
@@ -57,7 +63,7 @@ public class CSV2ODF {
             spreadsheetDocument.getTableByName("Sheet1").remove();
 
             Table table = Table.newTable(spreadsheetDocument);
-            table.setTableName(sheetName);
+            table.setTableName(sheetName.toString());
 
             Cell cell;
 

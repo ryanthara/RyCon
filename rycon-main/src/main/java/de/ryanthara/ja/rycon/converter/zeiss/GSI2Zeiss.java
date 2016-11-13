@@ -23,7 +23,7 @@ import de.ryanthara.ja.rycon.elements.GSIBlock;
 import java.util.ArrayList;
 
 /**
- * This class provides functions to convert coordinate and measurement files from Leica GSI format
+ * Instances of this class provides functions to convert coordinate and measurement files from Leica GSI format
  * into Zeiss REC files with it's dialects (R4, R5, REC500 and M5).
  */
 public class GSI2Zeiss {
@@ -69,53 +69,69 @@ public class GSI2Zeiss {
                     case 11:
                         number = block.toPrintFormatCSV();
                         break;
+
                     case 21:
                         horizontalAngle = block.toPrintFormatCSV();
                         break;
+
                     case 22:
                         verticalAngle = block.toPrintFormatCSV();
                         break;
+
                     case 31:
                         slopeDistance = block.toPrintFormatCSV();
                         break;
+
                     case 32:
                         slopeDistance = block.toPrintFormatCSV();
                         break;
+
                     case 41:
                         code = block.toPrintFormatCSV();
                         break;
+
                     case 81:
                         easting = block.toPrintFormatCSV();
                         isTargetLine = true;
                         break;
+
                     case 82:
                         northing = block.toPrintFormatCSV();
                         isTargetLine = true;
                         break;
+
                     case 83:
                         height = block.toPrintFormatCSV();
                         isTargetLine = true;
                         break;
+
                     case 84:
                         easting = block.toPrintFormatCSV();
                         isStationLine = true;
                         break;
+
                     case 85:
                         northing = block.toPrintFormatCSV();
                         isStationLine = true;
                         break;
+
                     case 86:
                         height = block.toPrintFormatCSV();
                         isStationLine = true;
                         break;
+
                     case 87:
                         targetHeight = block.toPrintFormatCSV();
                         isTargetLine = true;
                         break;
+
                     case 88:
                         instrumentHeight = block.toPrintFormatCSV();
                         isStationLine = true;
                         break;
+
+                    default:
+                        System.err.println("GSI2Zeiss.convertGSI2REC() : found unknown word index " + block.toPrintFormatCSV());
                 }
             }
 

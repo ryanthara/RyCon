@@ -22,45 +22,47 @@ import de.ryanthara.ja.rycon.converter.ltop.GSI2MES;
 import de.ryanthara.ja.rycon.converter.ltop.Zeiss2LTOP;
 import de.ryanthara.ja.rycon.data.PreferenceHandler;
 import de.ryanthara.ja.rycon.gui.widget.ConverterWidget;
+import de.ryanthara.ja.rycon.gui.widget.convert.SourceButton;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.odftoolkit.simple.SpreadsheetDocument;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 
 /**
  * Instances of this class are used for writing LTOP MES files from the {@link ConverterWidget} of RyCON.
  *
  * @author sebastian
- * @version 1
+ * @version 2
  * @since 12
  */
 public class LtopMESWriteFile implements WriteFile {
 
+    private final Path path;
     private ArrayList<String> readStringFile;
     private WriteParameter parameter;
 
     /**
      * Constructs the {@link LtopMESWriteFile} with a set of parameters.
      *
+     * @param path           read file object for writing
      * @param readStringFile read string file
      * @param parameter      the write parameter object
      */
-    public LtopMESWriteFile(ArrayList<String> readStringFile, WriteParameter parameter) {
+    public LtopMESWriteFile(Path path, ArrayList<String> readStringFile, WriteParameter parameter) {
+        this.path = path;
         this.readStringFile = readStringFile;
         this.parameter = parameter;
     }
 
     /**
-     * Returns the prepared {@link SpreadsheetDocument} for file writing.
-     * <p>
-     * This method is used vise versa with {@link #writeStringFile()} and {@link #writeWorkbookFile()}.
-     * The ones which are not used, returns null for indication.
+     * Returns true if the prepared {@link SpreadsheetDocument} for file writing was written to the file system.
      *
-     * @return array list for file writing
+     * @return write success
      */
     @Override
-    public SpreadsheetDocument writeSpreadsheetDocument() {
-        return null;
+    public boolean writeSpreadsheetDocument() {
+        return false;
     }
 
     /**
@@ -69,18 +71,19 @@ public class LtopMESWriteFile implements WriteFile {
      * @return array list for file writing
      */
     @Override
-    public ArrayList<String> writeStringFile() {
+    public boolean writeStringFile() {
+        boolean success = false;
         ArrayList<String> writeFile;
 
-        switch (parameter.getSourceNumber()) {
-            case 0:     // fall through for GSI8 format
-            case 1:     // GSI16 format
+        switch (SourceButton.fromIndex(parameter.getSourceNumber())) {
+            case GSI8:
+            case GSI16:
                 GSI2MES gsi2MES = new GSI2MES(readStringFile);
                 writeFile = gsi2MES.convertGSI2MES(Boolean.parseBoolean(Main.pref.getUserPref(
                         PreferenceHandler.CONVERTER_SETTING_LTOP_USE_ZENITH_DISTANCE)));
                 break;
 
-            case 5:     // Zeiss REC format and it's dialects
+            case ZEISS_REC:
                 Zeiss2LTOP zeiss2LTOP = new Zeiss2LTOP(readStringFile);
                 writeFile = zeiss2LTOP.convertZeiss2MES(Boolean.parseBoolean(Main.pref.getUserPref(
                         PreferenceHandler.CONVERTER_SETTING_LTOP_USE_ZENITH_DISTANCE)));
@@ -88,23 +91,24 @@ public class LtopMESWriteFile implements WriteFile {
 
             default:
                 writeFile = null;
-                break;
+                System.err.println("LtopMESWriteFile.writeStringFile() : unknown file format " + SourceButton.fromIndex(parameter.getSourceNumber()));
         }
 
-        return writeFile;
+        if (WriteFile2Disk.writeFile2Disk(path, writeFile, ".MES")) {
+            success = true;
+        }
+
+        return success;
     }
 
     /**
-     * Returns the prepared {@link Workbook} for file writing.
-     * <p>
-     * This method is used vise versa with {@link #writeStringFile()} and {@link #writeSpreadsheetDocument()}.
-     * The ones which are not used, returns null for indication.
+     * Returns true if the prepared {@link Workbook} for file writing was written to the file system.
      *
-     * @return array list for file writing
+     * @return write success
      */
     @Override
-    public Workbook writeWorkbookFile() {
-        return null;
+    public boolean writeWorkbookFile() {
+        return false;
     }
 
 } // end of LtopMESWriteFile

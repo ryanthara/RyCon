@@ -22,8 +22,8 @@ import de.ryanthara.ja.rycon.elements.ZeissBlock;
 import java.util.ArrayList;
 
 /**
- * This class provides functions to decode a string line in Zeiss REC format and it's dialects (R4, R5, REC500 and M5)
- * into a bunch of elements.
+ * Instances of this class provides functions to decode a string line in Zeiss REC format and it's
+ * dialects (R4, R5, REC500 and M5) into a bunch of elements.
  *
  * @author sebastian
  * @version 1

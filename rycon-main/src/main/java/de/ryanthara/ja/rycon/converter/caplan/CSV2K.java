@@ -125,6 +125,10 @@ public class CSV2K {
                     }
                     break;
 
+                default:
+                    System.err.println("CSV2K.convertCSV2K() : line contains less or more tokens " + stringField.length);
+                    break;
+
             }
 
             if (valencyIndicator > 0) {

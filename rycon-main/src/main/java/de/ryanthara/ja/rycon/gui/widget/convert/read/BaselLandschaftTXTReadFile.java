@@ -24,7 +24,7 @@ import de.ryanthara.ja.rycon.io.LineReader;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +33,7 @@ import java.util.List;
  * Kanton Basel Landschaft (Switzerland) from the {@link ConverterWidget} of RyCON.
  *
  * @author sebastian
- * @version 1
+ * @version 2
  * @since 12
  */
 public class BaselLandschaftTXTReadFile implements ReadFile {
@@ -85,7 +85,7 @@ public class BaselLandschaftTXTReadFile implements ReadFile {
      * @return read file success
      */
     @Override
-    public boolean readFile(File file2Read) {
+    public boolean readFile(Path file2Read) {
         boolean success = false;
 
         LineReader lineReader = new LineReader(file2Read);
@@ -95,7 +95,7 @@ public class BaselLandschaftTXTReadFile implements ReadFile {
                 success = true;
             }
         } else {
-            System.err.println("File " + file2Read.getName() + " could not be read.");
+            System.err.println("File " + file2Read.getFileName() + " could not be read.");
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR, I18N.getMsgBoxTitleError(),
                     I18N.getMsgConvertReaderBaselLandschaftFailed());
 

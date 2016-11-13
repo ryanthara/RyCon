@@ -17,6 +17,8 @@
  */
 package de.ryanthara.ja.rycon.converter.zeiss;
 
+import de.ryanthara.ja.rycon.tools.NumberFormatter;
+
 /**
  * This class implements several basic operations for conversion to or from Zeiss REC files.
  * <p>
@@ -119,6 +121,7 @@ public class BaseToolsZeiss {
             case M5:
                 return M5_LINE_POSITIONS;
             default:
+                System.err.println("BaseToolsZeiss.getLinePositions() : Unknown / wrong dialect used.");
                 return new int[]{};
         }
     }
@@ -146,15 +149,18 @@ public class BaseToolsZeiss {
                 builder.append("KR ");
                 builder.append(String.format("%-7s", number));
                 builder.append("|Y  ");
-                builder.append(String.format("%11.11s", easting));
+                builder.append(String.format("%11.11s", NumberFormatter.fillDecimalPlace(easting, 3)));
                 builder.append(" m   ");
                 builder.append("|X  ");
-                builder.append(String.format("%11.11s", northing));
+                builder.append(String.format("%11.11s", NumberFormatter.fillDecimalPlace(northing, 3)));
                 builder.append(" m   ");
-                builder.append("|Z  ");
-                builder.append(String.format("%11.11s", height));
-                builder.append(" m   ");
-                builder.append("|");
+
+                if (!height.equalsIgnoreCase("")) {
+                    builder.append("|Z  ");
+                    builder.append(String.format("%11.11s", NumberFormatter.fillDecimalPlace(height, 3)));
+                    builder.append(" m   ");
+                    builder.append("|");
+                }
 
                 result = builder.toString();
                 break;
@@ -165,15 +171,18 @@ public class BaseToolsZeiss {
                 builder.append(String.format("%-14s", number));
                 builder.append(String.format("%-13s", code));
                 builder.append("|Y  ");
-                builder.append(String.format("%14.14s", easting));
+                builder.append(String.format("%14.14s", NumberFormatter.fillDecimalPlace(easting, 3)));
                 builder.append(" m   ");
                 builder.append("|X  ");
-                builder.append(String.format("%14.14s", northing));
+                builder.append(String.format("%14.14s", NumberFormatter.fillDecimalPlace(northing, 3)));
                 builder.append(" m   ");
-                builder.append("|Z  ");
-                builder.append(String.format("%14.14s", height));
-                builder.append(" m   ");
-                builder.append("|");
+
+                if (!height.equalsIgnoreCase("")) {
+                    builder.append("|Z  ");
+                    builder.append(String.format("%14.14s", NumberFormatter.fillDecimalPlace(height, 3)));
+                    builder.append(" m   ");
+                    builder.append("|");
+                }
 
                 result = builder.toString();
                 break;
@@ -185,13 +194,16 @@ public class BaseToolsZeiss {
                 builder.append(String.format("%-13s", code));
                 builder.append(" ");
                 builder.append("Y ");
-                builder.append(String.format("%12s", easting));
+                builder.append(String.format("%12s", NumberFormatter.fillDecimalPlace(easting, 3)));
                 builder.append(" ");
                 builder.append("X ");
-                builder.append(String.format("%13s", northing));
-                builder.append(" ");
-                builder.append("Z ");
-                builder.append(String.format("%9s", height));
+                builder.append(String.format("%13s", NumberFormatter.fillDecimalPlace(northing, 3)));
+
+                if (!height.equalsIgnoreCase("")) {
+                    builder.append(" ");
+                    builder.append("Z ");
+                    builder.append(String.format("%9s", NumberFormatter.fillDecimalPlace(height, 3)));
+                }
 
                 result = builder.toString();
                 break;
@@ -201,15 +213,18 @@ public class BaseToolsZeiss {
                 builder.append("|PI1 ");
                 builder.append(String.format("%-27s", number));
                 builder.append("|Y  ");
-                builder.append(String.format("%-14s", easting));
+                builder.append(String.format("%-14s", NumberFormatter.fillDecimalPlace(easting, 3)));
                 builder.append(" m   ");
                 builder.append("|X  ");
-                builder.append(String.format("%-14s", northing));
+                builder.append(String.format("%-14s", NumberFormatter.fillDecimalPlace(northing, 3)));
                 builder.append(" m   ");
-                builder.append("|Z  ");
-                builder.append(String.format("%-14s", height));
-                builder.append(" m   ");
-                builder.append("| ");
+
+                if (!height.equalsIgnoreCase("")) {
+                    builder.append("|Z  ");
+                    builder.append(String.format("%-14s", NumberFormatter.fillDecimalPlace(height, 3)));
+                    builder.append(" m   ");
+                    builder.append("| ");
+                }
 
                 result = builder.toString();
                 break;
@@ -249,7 +264,7 @@ public class BaseToolsZeiss {
                 builder.append("|");
                 builder.append(heightType);
                 builder.append(" ");
-                builder.append(String.format("%11.11s", height));
+                builder.append(String.format("%11.11s", NumberFormatter.fillDecimalPlace(height, 3)));
                 builder.append(" m   ");
                 builder.append("|");
 
@@ -263,7 +278,7 @@ public class BaseToolsZeiss {
                 builder.append("|");
                 builder.append(heightType);
                 builder.append(" ");
-                builder.append(String.format("%14.14s", height));
+                builder.append(String.format("%14.14s", NumberFormatter.fillDecimalPlace(height, 3)));
                 builder.append(" m   ");
                 builder.append("|");
 
@@ -277,7 +292,7 @@ public class BaseToolsZeiss {
                 builder.append(String.format("%-13s", code));
                 builder.append(" ");
                 builder.append(heightType);
-                builder.append(String.format("%12s", height));
+                builder.append(String.format("%12s", NumberFormatter.fillDecimalPlace(height, 3)));
                 builder.append(" ");
 
                 result = builder.toString();
@@ -291,7 +306,7 @@ public class BaseToolsZeiss {
                 builder.append("|");
                 builder.append(heightType);
                 builder.append(" ");
-                builder.append(String.format("%-14s", height));
+                builder.append(String.format("%-14s", NumberFormatter.fillDecimalPlace(height, 3)));
                 builder.append(" m   |                      |                      | ");
 
                 result = builder.toString();
@@ -325,13 +340,13 @@ public class BaseToolsZeiss {
                 builder.append("KR ");
                 builder.append(String.format("%-7s", number));
                 builder.append("|Hz ");
-                builder.append(String.format("%11.11s", horizontalAngle));
+                builder.append(String.format("%11.11s", NumberFormatter.fillDecimalPlace(horizontalAngle, 4)));
                 builder.append(" gon ");
                 builder.append("|V1  ");
-                builder.append(String.format("%11.11s", verticalAngle));
+                builder.append(String.format("%11.11s", NumberFormatter.fillDecimalPlace(verticalAngle, 4)));
                 builder.append(" gon ");
                 builder.append("|D  ");
-                builder.append(String.format("%11.11s", slopeDistance));
+                builder.append(String.format("%11.11s", NumberFormatter.fillDecimalPlace(slopeDistance, 3)));
                 builder.append(" m   ");
                 builder.append("|");
 
@@ -343,13 +358,13 @@ public class BaseToolsZeiss {
                 builder.append("|PI1 ");
                 builder.append(String.format("%-27s", number));
                 builder.append("|Hz ");
-                builder.append(String.format("%14.14s", horizontalAngle));
+                builder.append(String.format("%14.14s", NumberFormatter.fillDecimalPlace(horizontalAngle, 4)));
                 builder.append(" gon ");
                 builder.append("|V1 ");
-                builder.append(String.format("%14.14s", verticalAngle));
+                builder.append(String.format("%14.14s", NumberFormatter.fillDecimalPlace(verticalAngle, 4)));
                 builder.append(" gon ");
                 builder.append("|D  ");
-                builder.append(String.format("%14.14s", slopeDistance));
+                builder.append(String.format("%14.14s", NumberFormatter.fillDecimalPlace(slopeDistance, 3)));
                 builder.append(" m   ");
                 builder.append("|");
 
@@ -363,13 +378,13 @@ public class BaseToolsZeiss {
                 builder.append(String.format("%-13s", code));
                 builder.append(" ");
                 builder.append("Hz");
-                builder.append(String.format("%12s", horizontalAngle));
+                builder.append(String.format("%12s", NumberFormatter.fillDecimalPlace(horizontalAngle, 4)));
                 builder.append(" ");
                 builder.append("V1");
-                builder.append(String.format("%13s", verticalAngle));
+                builder.append(String.format("%13s", NumberFormatter.fillDecimalPlace(verticalAngle, 4)));
                 builder.append(" ");
                 builder.append("D ");
-                builder.append(String.format("%9s", slopeDistance));
+                builder.append(String.format("%9s", NumberFormatter.fillDecimalPlace(slopeDistance, 3)));
 
                 result = builder.toString();
                 break;
@@ -380,13 +395,13 @@ public class BaseToolsZeiss {
                 builder.append(String.format("%-14s", number));
                 builder.append(String.format("%-13s", code));
                 builder.append("|Hz ");
-                builder.append(String.format("%-14s", horizontalAngle));
+                builder.append(String.format("%-14s", NumberFormatter.fillDecimalPlace(horizontalAngle, 4)));
                 builder.append(" m   ");
                 builder.append("|V1 ");
-                builder.append(String.format("%-14s", verticalAngle));
+                builder.append(String.format("%-14s", NumberFormatter.fillDecimalPlace(verticalAngle, 4)));
                 builder.append(" m   ");
                 builder.append("|D  ");
-                builder.append(String.format("%-14s", slopeDistance));
+                builder.append(String.format("%-14s", NumberFormatter.fillDecimalPlace(slopeDistance, 3)));
                 builder.append(" m   ");
                 builder.append("| ");
 

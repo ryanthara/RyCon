@@ -24,9 +24,9 @@ import de.ryanthara.ja.rycon.i18n.I18N;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,22 +83,22 @@ public class CSVReadFile implements ReadFile {
     /**
      * Reads the comma separeted values (CSV) file given as parameter and returns the read file success.
      *
-     * @param file2Read read file reference
+     * @param file2Read read path reference
      *
      * @return read file success
      */
     @Override
-    public boolean readFile(File file2Read) {
+    public boolean readFile(Path file2Read) {
         boolean success = false;
         char separatorCSV = useSemicolonAsSeparator ? ';' : ',';
 
         // use opencsv project for reading -> could this be done better?
         try {
-            CSVReader reader = new CSVReader(new FileReader(file2Read), separatorCSV);
+            CSVReader reader = new CSVReader(new FileReader(file2Read.toFile()), separatorCSV);
             readCSVFile = reader.readAll();
             success = true;
         } catch (IOException e) {
-            System.err.println("File " + file2Read.getName() + " could not be read.");
+            System.err.println("File " + file2Read.getFileName() + " could not be read.");
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR, I18N.getMsgBoxTitleError(),
                     I18N.getMsgConvertReaderCSVFailed());
         }

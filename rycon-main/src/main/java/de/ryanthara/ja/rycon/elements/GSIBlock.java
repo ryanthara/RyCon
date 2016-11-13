@@ -288,6 +288,7 @@ public class GSIBlock {
                 break;
             default:
                 s = GSIWordIndices.getWordIndexDescription(9999);
+                System.err.println("GSIBlock.toPrintFormatTXT() : block contains the wrong word index " + dataGSI);
         }
 
         return s;

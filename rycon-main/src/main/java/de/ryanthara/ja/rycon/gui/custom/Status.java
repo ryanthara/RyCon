@@ -1,7 +1,7 @@
 /*
  * License: GPL. Copyright 2016- (C) by Sebastian Aust (https://www.ryanthara.de/)
  *
- * This file is part of the package ${PACKAGE_NAME}
+ * This file is part of the package de.ryanthara.ja.rycon.gui.custom
  *
  * This package is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -15,21 +15,36 @@
  * You should have received a copy of the GNU General Public License along with
  * this package. If not, see <http://www.gnu.org/licenses/>.
  */
-package de.ryanthara.ja.rycon.gui.widget.convert;
-
-import de.ryanthara.ja.rycon.gui.widget.ConverterWidget;
-
-import java.io.File;
+package de.ryanthara.ja.rycon.gui.custom;
 
 /**
- * Interface for writing operations in the {@link ConverterWidget}.
+ * This enumeration is used for the status of the {@link StatusBar}.
  *
  * @author sebastian
  * @version 1
  * @since 12
  */
-public interface ConverterWriteFile {
+public enum Status {
 
-    boolean writeFile(File file2Write);
+    ERROR, WARNING, OK;
 
-} // end of ConverterWriteFile
+    /**
+     * Returns the {@link Status} from index parameter as static access from switch cases.
+     *
+     * @param index index to return
+     *
+     * @return Status by index
+     */
+    public static Status fromIndex(int index) {
+        Status selectedStatus = null;
+
+        for (Status status : values()) {
+            if (status.ordinal() == index) {
+                selectedStatus = status;
+            }
+        }
+
+        return selectedStatus;
+    }
+
+} // end of Status

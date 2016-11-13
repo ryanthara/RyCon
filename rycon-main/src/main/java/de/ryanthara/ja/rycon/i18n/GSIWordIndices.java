@@ -25,11 +25,11 @@ import java.util.ResourceBundle;
  * GSIWordIndices manages the strings of the GSI Word Indices for multi-language support in RyCON.
  * <p>
  * The strings are stored in Resource Bundle LeicaGSIWordIndices and loaded from this class.
- *
+ * <p>
  * <h3>Changes:</h3>
  * <ul>
- *     <li>2: code improvements and clean up </li>
- *     <li>1: basic implementation </li>
+ * <li>2: code improvements and clean up </li>
+ * <li>1: basic implementation </li>
  * </ul>
  *
  * @author sebastian
@@ -45,6 +45,7 @@ public class GSIWordIndices {
      * Return the key-text-pair for the word index description.
      *
      * @param wordIndex key to look up
+     *
      * @return matched text
      */
     public static String getWordIndexDescription(int wordIndex) {

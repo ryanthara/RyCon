@@ -23,7 +23,6 @@ import de.ryanthara.ja.rycon.converter.zeiss.ZeissDialect;
 import de.ryanthara.ja.rycon.data.PreferenceHandler;
 import de.ryanthara.ja.rycon.gui.custom.DirectoryDialogs;
 import de.ryanthara.ja.rycon.gui.custom.MessageBoxes;
-import de.ryanthara.ja.rycon.gui.custom.StatusBar;
 import de.ryanthara.ja.rycon.i18n.I18N;
 import de.ryanthara.ja.rycon.tools.RadioHelper;
 import de.ryanthara.ja.rycon.tools.ShellPositioner;
@@ -36,6 +35,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
 import static de.ryanthara.ja.rycon.converter.zeiss.ZeissDialect.*;
+import static de.ryanthara.ja.rycon.gui.custom.Status.OK;
 
 /**
  * Instances of this class represents a complete settings widget of RyCON and it's functionality.
@@ -54,11 +54,11 @@ public class SettingsWidget {
     private Button chkBoxUseSpaceAtLineEnd;
     private Button chkBoxEliminateZeroCoordinates;
     private Button chkBoxLTOPUseZenithDistance;
-    private Composite compositeZeissRecDialect;
     private Group groupFormat;
     private Group groupGeneral;
     private Group groupConverterWidget;
     private Group groupTidyUpWidget;
+    private Group groupZeissRECFormat;
     private Shell innerShell;
     private Text dirBaseTextField;
     private Text dirAdminTextField;
@@ -88,7 +88,7 @@ public class SettingsWidget {
     private void actionBtnCancel() {
         Main.pref.setDefaultSettingsGenerated(false);
         Main.setSubShellStatus(false);
-        Main.statusBar.setStatus("", StatusBar.OK);
+        Main.statusBar.setStatus("", OK);
 
         widgetDispose();
     }
@@ -109,7 +109,7 @@ public class SettingsWidget {
         identifierLTOPTextField.setText(Main.getParamLTOPString());
         pointIdenticalDistance.setText(Main.getPointIdenticalDistance());
 
-        RadioHelper.selectBtn(compositeZeissRecDialect.getChildren(), 4); // M5 as default value
+        RadioHelper.selectBtn(groupZeissRECFormat.getChildren(), 3); // M5 as default value
 
         Main.pref.setDefaultSettingsGenerated(true);
     }
@@ -124,7 +124,7 @@ public class SettingsWidget {
                     MessageBoxes.showMessageBox(innerShell, SWT.ICON_INFORMATION, I18N.getMsgBoxTitleSuccess(), I18N.getMsgSettingsSuccess());
                     Main.pref.setDefaultSettingsGenerated(false);
                 }
-                Main.statusBar.setStatus("", StatusBar.OK);
+                Main.statusBar.setStatus("", OK);
                 Main.setSubShellStatus(false);
                 widgetDispose();
             } else {
@@ -136,24 +136,24 @@ public class SettingsWidget {
     }
 
     private boolean checkForEmptyTextFields() {
-        return TextCheck.checkIsEmpty(dirBaseTextField) |
-                TextCheck.checkIsEmpty(dirProjectTextField) |
-                TextCheck.checkIsEmpty(dirProjectTemplateTextField) |
-                TextCheck.checkIsEmpty(dirAdminTextField) |
-                TextCheck.checkIsEmpty(dirAdminTemplateTextField) |
-                TextCheck.checkIsEmpty(dirBigDataTextField) |
-                TextCheck.checkIsEmpty(dirBigDataTemplateTextField) |
-                TextCheck.checkIsEmpty(identifierCodeStringTextField) |
-                TextCheck.checkIsEmpty(identifierEditStringTextField) |
-                TextCheck.checkIsEmpty(identifierFreeStationTextField) |
-                TextCheck.checkIsEmpty(identifierControlPointTextField) |
-                TextCheck.checkIsEmpty(identifierKnownStationTextField) |
-                TextCheck.checkIsEmpty(identifierLTOPTextField) |
-                TextCheck.checkIsEmpty(pointIdenticalDistance);
+        return TextCheck.isEmpty(dirBaseTextField) |
+                TextCheck.isEmpty(dirProjectTextField) |
+                TextCheck.isEmpty(dirProjectTemplateTextField) |
+                TextCheck.isEmpty(dirAdminTextField) |
+                TextCheck.isEmpty(dirAdminTemplateTextField) |
+                TextCheck.isEmpty(dirBigDataTextField) |
+                TextCheck.isEmpty(dirBigDataTemplateTextField) |
+                TextCheck.isEmpty(identifierCodeStringTextField) |
+                TextCheck.isEmpty(identifierEditStringTextField) |
+                TextCheck.isEmpty(identifierFreeStationTextField) |
+                TextCheck.isEmpty(identifierControlPointTextField) |
+                TextCheck.isEmpty(identifierKnownStationTextField) |
+                TextCheck.isEmpty(identifierLTOPTextField) |
+                TextCheck.isEmpty(pointIdenticalDistance);
     }
 
     private boolean checkForValidInputs() {
-        return TextCheck.checkIsDoubleValue(pointIdenticalDistance);
+        return TextCheck.isDoubleValue(pointIdenticalDistance);
     }
 
     private void createAdminDirComposite(Group group) {
@@ -514,7 +514,7 @@ public class SettingsWidget {
     }
 
     private void createGroupConverterComposite3(int width) {
-        compositeZeissRecDialect = new Composite(groupConverterWidget, SWT.NONE);
+        Composite compositeZeissRecDialect = new Composite(groupConverterWidget, SWT.NONE);
 
         GridLayout gridLayout = new GridLayout(5, false);
         compositeZeissRecDialect.setLayout(gridLayout);
@@ -526,32 +526,35 @@ public class SettingsWidget {
         Label zeissRecDialectLabel = new Label(compositeZeissRecDialect, SWT.NONE);
         zeissRecDialectLabel.setText(I18N.getLabelTextZeissRecDialect());
 
-        Button btnR4 = new Button(compositeZeissRecDialect, SWT.RADIO);
+        groupZeissRECFormat = new Group(compositeZeissRecDialect, SWT.NONE);
+        groupZeissRECFormat.setLayout(new GridLayout(4, false));
+
+        Button btnR4 = new Button(groupZeissRECFormat, SWT.RADIO);
         btnR4.setText(R4.toString());
-        Button btnR5 = new Button(compositeZeissRecDialect, SWT.RADIO);
+        Button btnR5 = new Button(groupZeissRECFormat, SWT.RADIO);
         btnR5.setText(R5.toString());
-        Button btnRec500 = new Button(compositeZeissRecDialect, SWT.RADIO);
+        Button btnRec500 = new Button(groupZeissRECFormat, SWT.RADIO);
         btnRec500.setText(REC500.toString());
-        Button btnM5 = new Button(compositeZeissRecDialect, SWT.RADIO);
+        Button btnM5 = new Button(groupZeissRECFormat, SWT.RADIO);
         btnM5.setText(ZeissDialect.M5.toString());
 
         // try to set the Zeiss Rec dialect from stored settings
         switch (Main.pref.getUserPref(PreferenceHandler.CONVERTER_SETTING_ZEISS_DIALECT)) {
             case "R4":
-                RadioHelper.selectBtn(compositeZeissRecDialect.getChildren(), 1);
+                RadioHelper.selectBtn(groupZeissRECFormat.getChildren(), 0);
                 break;
             case "R5":
-                RadioHelper.selectBtn(compositeZeissRecDialect.getChildren(), 2);
+                RadioHelper.selectBtn(groupZeissRECFormat.getChildren(), 1);
                 break;
             case "REC500":
-                RadioHelper.selectBtn(compositeZeissRecDialect.getChildren(), 3);
+                RadioHelper.selectBtn(groupZeissRECFormat.getChildren(), 2);
                 break;
             case "M5":
-                RadioHelper.selectBtn(compositeZeissRecDialect.getChildren(), 4);
+                RadioHelper.selectBtn(groupZeissRECFormat.getChildren(), 3);
                 break;
             default:
-                RadioHelper.selectBtn(compositeZeissRecDialect.getChildren(), 4);
-                break;
+                RadioHelper.selectBtn(groupZeissRECFormat.getChildren(), 3);
+                System.err.println("SettingsWidget.createGroupConverterComposite3() : set Zeiss dialect to M5");
         }
     }
 
@@ -973,7 +976,7 @@ public class SettingsWidget {
 
     private void widgetDispose() {
         Main.setIsSettingsWidgetOpen(false);
-        Main.statusBar.setStatus("", StatusBar.OK);
+        Main.statusBar.setStatus("", OK);
         innerShell.dispose();
     }
 
@@ -994,18 +997,20 @@ public class SettingsWidget {
         Main.pref.setUserPref(PreferenceHandler.CONVERTER_SETTING_POINT_IDENTICAL_DISTANCE, pointIdenticalDistance.getText());
 
         // Zeiss Rec dialect
-        switch (RadioHelper.getSelectedBtn(compositeZeissRecDialect.getChildren())) {
-            case 1:
+        switch (ZeissDialect.fromIndex(RadioHelper.getSelectedBtn(groupZeissRECFormat.getChildren()))) {
+            case R4:
                 Main.pref.setUserPref(PreferenceHandler.CONVERTER_SETTING_ZEISS_DIALECT, R4.name());
                 break;
-            case 2:
+            case R5:
                 Main.pref.setUserPref(PreferenceHandler.CONVERTER_SETTING_ZEISS_DIALECT, R5.name());
                 break;
-            case 3:
+            case REC500:
                 Main.pref.setUserPref(PreferenceHandler.CONVERTER_SETTING_ZEISS_DIALECT, REC500.name());
                 break;
-            case 4:
+            case M5:
                 Main.pref.setUserPref(PreferenceHandler.CONVERTER_SETTING_ZEISS_DIALECT, M5.name());
+                break;
+            default:
                 break;
         }
 

@@ -17,27 +17,34 @@
  */
 package de.ryanthara.ja.rycon.converter.odf;
 
+import de.ryanthara.ja.rycon.elements.CaplanBlock;
 import de.ryanthara.ja.rycon.i18n.I18N;
 import org.odftoolkit.simple.SpreadsheetDocument;
 import org.odftoolkit.simple.table.Cell;
 import org.odftoolkit.simple.table.Table;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 
 /**
- * Created by sebastian on 14.09.16.
+ * Instances of this class provides functions to convert a Caplan K formatted coordinate file
+ * into an OpenDocument spreadsheet file.
+ *
+ * @author sebastian
+ * @version 2
+ * @since 12
  */
-public class K2ODF {
+public class Caplan2ODF {
 
     private ArrayList<String> readStringLines;
     private SpreadsheetDocument spreadsheetDocument;
 
     /**
-     * Class constructor for read line based text files in different formats.
+     * Constructs an instance of this class with the read Caplan K file {@link ArrayList} string as parameter.
      *
-     * @param readStringLines {@code ArrayList<String>} with lines in text format
+     * @param readStringLines {@code ArrayList<String>} with lines in Caplan K format
      */
-    public K2ODF(ArrayList<String> readStringLines) {
+    public Caplan2ODF(ArrayList<String> readStringLines) {
         this.readStringLines = readStringLines;
     }
 
@@ -46,9 +53,10 @@ public class K2ODF {
      *
      * @param sheetName       name of the sheet (file name from input file)
      * @param writeCommentRow write comment row
+     *
      * @return success conversion success
      */
-    public boolean convertCaplan2ODS(String sheetName, boolean writeCommentRow) {
+    public boolean convertCaplan2ODS(Path sheetName, boolean writeCommentRow) {
         int rowIndex = 0;
         int colIndex = 0;
 
@@ -58,7 +66,7 @@ public class K2ODF {
             spreadsheetDocument.getTableByName("Sheet1").remove();
 
             Table table = Table.newTable(spreadsheetDocument);
-            table.setTableName(sheetName);
+            table.setTableName(sheetName.toString());
 
             Cell cell;
 
@@ -90,21 +98,22 @@ public class K2ODF {
             }
 
             for (String line : readStringLines) {
-                colIndex = 0;
+                // skip empty lines directly after reading
+                if (!line.trim().isEmpty()) {
+                    colIndex = 0;
 
-                if (!line.startsWith("!")) {    // comment lines starting with '!' are ignored
-                    String s;
+                    CaplanBlock caplanBlock = new CaplanBlock(line);
 
-                    if (line.length() >= 16) {
+                    if (caplanBlock.getNumber() != null) {
                         cell = table.getCellByPosition(colIndex, rowIndex);
-                        cell.setStringValue(line.substring(0, 16).trim());          // point number (no '*', ',' and ';'), column 1 - 16
+                        cell.setStringValue(caplanBlock.getNumber());
                         colIndex = colIndex + 1;
                     }
 
-                    if (line.length() >= 32) {
-                        if (!(s = line.substring(20, 32).trim()).equals("")) {      // easting E, column 19-32
+                    if (caplanBlock.getEasting() != null) {
+                        if (!caplanBlock.getEasting().equals("")) {
                             cell = table.getCellByPosition(colIndex, rowIndex);
-                            cell.setDoubleValue(Double.parseDouble(s));
+                            cell.setDoubleValue(Double.parseDouble(caplanBlock.getEasting()));
                             cell.setFormatString("#,##0.0000");
                         } else {
                             cell = table.getCellByPosition(colIndex, rowIndex);
@@ -114,10 +123,10 @@ public class K2ODF {
                         colIndex = colIndex + 1;
                     }
 
-                    if (line.length() >= 46) {
-                        if (!(s = line.substring(34, 46).trim()).equals("")) {      // northing N, column 33-46
+                    if (caplanBlock.getNorthing() != null) {
+                        if (!caplanBlock.getNorthing().equals("")) {
                             cell = table.getCellByPosition(colIndex, rowIndex);
-                            cell.setDoubleValue(Double.parseDouble(s));
+                            cell.setDoubleValue(Double.parseDouble(caplanBlock.getNorthing()));
                             cell.setFormatString("#,##0.0000");
                         } else {
                             cell = table.getCellByPosition(colIndex, rowIndex);
@@ -127,10 +136,10 @@ public class K2ODF {
                         colIndex = colIndex + 1;
                     }
 
-                    if (line.length() >= 59) {
-                        if (!(s = line.substring(48, 59).trim()).equals("")) {      // height H, column 47-59
+                    if (caplanBlock.getHeight() != null) {
+                        if (!caplanBlock.getHeight().equals("")) {
                             cell = table.getCellByPosition(colIndex, rowIndex);
-                            cell.setDoubleValue(Double.parseDouble(s));
+                            cell.setDoubleValue(Double.parseDouble(caplanBlock.getHeight()));
                             cell.setFormatString("#,##0.0000");
                         } else {
                             cell = table.getCellByPosition(colIndex, rowIndex);
@@ -140,22 +149,26 @@ public class K2ODF {
                         colIndex = colIndex + 1;
                     }
 
-                    if (line.length() >= 62) {
-                        String[] lineSplit = line.substring(61, line.length()).trim().split("\\|+");
-
+                    if (caplanBlock.getCode() != null) {
                         cell = table.getCellByPosition(colIndex, rowIndex);
-                        cell.setStringValue(lineSplit[0].trim());                   // code is the same as object type, column 62...
+                        cell.setStringValue(caplanBlock.getCode());
                         colIndex = colIndex + 1;
 
-                        for (int i = 1; i < lineSplit.length; i++) {
-                            cell = table.getCellByPosition(colIndex, rowIndex);
-                            cell.setStringValue(lineSplit[i].trim());
-                            colIndex = colIndex + 1;
+                        if (caplanBlock.getAttributes().size() > 0) {
+                            for (String attribute : caplanBlock.getAttributes()) {
+                                cell = table.getCellByPosition(colIndex, rowIndex);
+                                cell.setStringValue(attribute);
+                                colIndex = colIndex + 1;
+                            }
                         }
                     }
+
                     rowIndex = rowIndex + 1;
                 }
             }
+
+        } catch (RuntimeException e) {
+            throw e;
         } catch (Exception e) {
             System.err.println("ERROR: unable to create output file.");
         }
@@ -172,4 +185,4 @@ public class K2ODF {
         return this.spreadsheetDocument;
     }
 
-} // end of K2ODF
+} // end of Caplan2ODF

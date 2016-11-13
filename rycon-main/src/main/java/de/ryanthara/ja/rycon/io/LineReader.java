@@ -20,39 +20,35 @@ package de.ryanthara.ja.rycon.io;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 
 /**
- * LineReader reads a file line by line and stores it's values in an {code ArrayList<String>}.
+ * Instances of this class implements functions to read a text based path line by line and stores it's values
+ * in an {code ArrayList<String>}.
  * <p>
- * A couple of things are implemented as additional functionality. At the moment,
- * there is no thread safety implemented or planed.
- *
- * <h3>Changes:</h3>
- * <ul>
- *     <li>3: stop reading empty lines</li>
- *     <li>2: code improvements and clean up </li>
- *     <li>1: basic implementation </li>
- * </ul>
+ * A couple of things are implemented as additional functionality. At the moment there is no thread safety
+ * implemented or planed due to some reasons.
  *
  * @author sebastian
- * @version 3
+ * @version 4
  * @since 1
  */
 public class LineReader {
 
+    private final Path path;
     private int countReadLines = -1;
     private int countStoredLines = -1;
     private ArrayList<String> lines = null;
-    private final File file;
 
     /**
-     * Class constructor with parameter that accept a file object for the file to read.
+     * Constructs an instance of this class with a parameter that accepts a {@link Path} object for the file to be read.
      *
-     * @param file file name as file object
+     * @param path file name as path object
      */
-    public LineReader(File file) {
-        this.file = file;
+    public LineReader(Path path) {
+        this.path = path;
     }
 
     /**
@@ -91,37 +87,36 @@ public class LineReader {
     }
 
     /**
-     * Read a file line by line and return the read success.
+     * Read a path line by line and return the read success.
      *
-     * @return success of file reading
+     * @return success of path reading
      */
     public boolean readFile() {
         return readFile(null);
     }
 
     /**
-     * Read a file line by line and returns the read success.
+     * Read a path line by line and returns the read success.
      * <p>
      * Additionally with the parameter 'comment', there is the possibility to use
      * a {@code String} as comment sign. These lines will be ignored and not read.
      *
      * @param comment String for comment signs
-     * @return success of file reading
+     *
+     * @return success of path reading
      */
     private boolean readFile(String comment) {
-        // some basic initialization
         boolean success = false;
         lines = new ArrayList<>();
         FileInputStream fileInputStream = null;
         String line;
 
-        // check file for a couple of things
-        //  null-reference       directory or file      file                   can be read
-        if (this.file == null || !this.file.exists() || !this.file.isFile() || !this.file.canRead()) {
+        // check path for a couple of things
+        if (path == null || !Files.exists(path) || !Files.isRegularFile(path) || !Files.isReadable(path)) {
             return false;
         } else {
             try {
-                fileInputStream = new FileInputStream(this.file);
+                fileInputStream = new FileInputStream(path.toFile());
 
                 try {
                     fileInputStream.getChannel().lock(0, Long.MAX_VALUE, true);
@@ -150,11 +145,11 @@ public class LineReader {
                     }
 
                 } catch (IOException e) {
-                    System.err.println("File " + file.getName() + " could not be locked.");
+                    System.err.println("File " + path.getFileName() + " could not be locked.");
                     e.printStackTrace();
                 }
             } catch (FileNotFoundException e) {
-                System.err.println("File: " + file.getName() + "could not be read.");
+                System.err.println("File: " + path.getFileName() + "could not be read.");
                 e.printStackTrace();
             } finally {
                 // reset variables back to initialization values
