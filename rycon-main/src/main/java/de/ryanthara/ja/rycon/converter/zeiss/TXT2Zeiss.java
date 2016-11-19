@@ -28,7 +28,8 @@ public class TXT2Zeiss {
     private final ArrayList<String> readStringLines;
 
     /**
-     * Class constructor for read line based text files in different formats.
+     * Constructs a new instance of this class with a parameter for read line based text files in Zeiss REC format
+     * and it's dialects (R4, R5, REC500 and M5).
      *
      * @param readStringLines {@code ArrayList<String>} with lines in text format
      */
@@ -39,9 +40,9 @@ public class TXT2Zeiss {
     /**
      * Converts a text formatted coordinate file (nr x y (z) or nr code x y z) into a Zeiss REC formatted file.
      *
-     * @param dialect dialect of the target file
+     * @param dialect dialect of the destination file
      *
-     * @return string lines of the target file
+     * @return string lines of the destination file
      */
     public ArrayList<String> convertTXT2REC(ZeissDialect dialect) {
         ArrayList<String> result = new ArrayList<>();

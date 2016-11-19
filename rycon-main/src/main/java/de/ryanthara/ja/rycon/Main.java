@@ -301,9 +301,9 @@ public abstract class Main {
     }
 
     /**
-     * Returns the selected target button from the command line interface.
+     * Returns the selected destination button from the command line interface.
      *
-     * @return cli target button number
+     * @return cli destination button number
      */
     public static int getCliTargetBtnNumber() {
         return cliTargetBtnNumber;

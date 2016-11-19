@@ -22,7 +22,8 @@ import de.ryanthara.ja.rycon.elements.GSIBlock;
 import java.util.ArrayList;
 
 /**
- * This class provides functions to convert text formatted measurement files into Leica GSI8 and GSI16 formatted files.
+ * Instances of this class provides functions to convert text formatted measurement files into
+ * Leica GSI8 and GSI16 formatted files.
  *
  * @author sebastian
  * @version 1

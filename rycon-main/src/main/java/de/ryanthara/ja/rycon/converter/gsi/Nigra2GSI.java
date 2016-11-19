@@ -23,14 +23,18 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 /**
- * Created by sebastian on 15.09.16.
+ * Instances of this class provides functions to convert a Nigra height file into Leica GSI8 or GSI16 formatted files.
+ *
+ * @author sebastian
+ * @version 1
+ * @since 12
  */
 public class Nigra2GSI {
 
     private ArrayList<String> readStringLines;
 
     /**
-     * Constructs a new instance of this class given an {@code ArrayList<String>} file from Nigra or NigraWin.
+     * Constructs a new instance of this class with a parameter for the {@code ArrayList<String>}  from Nigra or NigraWin.
      *
      * @param readStringLines read lines
      */

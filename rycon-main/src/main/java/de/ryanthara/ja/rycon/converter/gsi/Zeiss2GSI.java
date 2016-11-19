@@ -24,7 +24,7 @@ import de.ryanthara.ja.rycon.elements.ZeissBlock;
 import java.util.ArrayList;
 
 /**
- * This class provides functions to convert measurement and coordinate files from Zeiss REC format
+ * Instances of this class provides functions to convert measurement and coordinate files from Zeiss REC format
  * and it's dialects (R4, R5, REC500 and M5) into Leica GSI8 or GSI16 formatted files.
  *
  * @author sebastian
@@ -60,7 +60,6 @@ public class Zeiss2GSI {
      *
      * @return converted {@code ArrayList<String>} with lines of text format
      */
-    // TODO: 29.10.16 Implement the correct unit handling
     public ArrayList<String> convertZeiss2GSI(boolean isGSI16) {
         ArrayList<GSIBlock> blocks = new ArrayList<>();
         ArrayList<ArrayList<GSIBlock>> blocksInLines = new ArrayList<>();
@@ -70,12 +69,14 @@ public class Zeiss2GSI {
         int readLineCounter = 1, writeLineCounter = 1;
 
         for (String line : readStringLines) {
+
             // skip empty lines
             if (line.trim().length() > 0) {
                 ZeissDecoder decoder = new ZeissDecoder();
 
                 if (decoder.decodeRecLine(line)) {
                     // use the decoded lines and differ e.g. code column by dialect
+                    // TODO: 29.10.16 Implement the correct unit handling
                     switch (decoder.getDialect()) {
                         case R4:
                             break;
@@ -110,90 +111,58 @@ public class Zeiss2GSI {
                         blocks.add(new GSIBlock(isGSI16, 11, readLineCounter, pointNumber));
                     }
 
-                    // fill in the values into the GSI format expressions
                     for (ZeissBlock zeissBlock : decoder.getZeissBlocks()) {
-                        System.out.println(zeissBlock.getTypeIdentifier());
-
-                        switch (zeissBlock.getTypeIdentifier()) {
-                            case X:
-                                blocks.add(new GSIBlock(isGSI16, 82, zeissBlock.getValue()));
-                                break;
-
-                            default:
-                                System.err.println("Zeiss2GSI.convertZeiss2GSI() : line contains less or more tokens " + zeissBlock.toString());
-                        }
-
-
+                        fillValuesIntoBlocks(zeissBlock, blocks, isGSI16);
                     }
                 }
-
-
-               /*
-
-
-
-
-                // use point identification (e.g. code, point classes, ...)
-                if (decoder.getPointIdentification().trim().length() > 0) {
-                    blocks.add(new GSIBlock(isGSI16, 71, lineCounter, decoder.getPointIdentification()));
-                }
-
-                // TODO: 21.09.16 use the right units
-
-                    switch (decoder.getBlock1Type().trim()) {
-                        case "ih":
-                            blocks.add(new GSIBlock(isGSI16, 88, lineCounter, decoder.getBlock1Value()));
-                            break;
-                        case "th":
-                            blocks.add(new GSIBlock(isGSI16, 87, lineCounter, decoder.getBlock1Value()));
-                            break;
-                        case "Hz":
-                            blocks.add(new GSIBlock(isGSI16, 21, lineCounter, decoder.getBlock1Value()));
-                            break;
-                        case "Y":
-                            blocks.add(new GSIBlock(isGSI16, 81, lineCounter, decoder.getBlock1Value()));
-                            break;
-                    }
-                }
-
-                if (decoder.getBlock2Value().trim().length() > 0) {
-                    String block2Unit = decoder.getBlock2Unit();
-
-                    switch (decoder.getBlock2Type().trim()) {
-                        case "V1":
-                            blocks.add(new GSIBlock(isGSI16, 22, lineCounter, decoder.getBlock2Value()));
-                            break;
-                        case "X":
-                            break;
-                    }
-                }
-
-                if (decoder.getBlock3Value().trim().length() > 0) {
-                    String block3Unit = decoder.getBlock3Unit();
-
-                    switch (decoder.getBlock3Type().trim()) {
-                        case "D":
-                            blocks.add(new GSIBlock(isGSI16, 31, lineCounter, decoder.getBlock3Value()));
-                            break;
-                        case "Z":
-                            blocks.add(new GSIBlock(isGSI16, 83, lineCounter, decoder.getBlock3Value()));
-                            break;
-                    }
-                }
-                */
-
-
             }
+        }
+
+        // flush last element if exists
+        if (blocks.size() > 0) {
+            blocksInLines.add(blocks);
         }
 
         return BaseToolsGSI.lineTransformation(isGSI16, blocksInLines);
     }
 
-    private GSIBlock encodeBlock(boolean isGSI16, int WI, int lineNumber, String value) {
-        GSIBlock block = null;
+    private void fillValuesIntoBlocks(ZeissBlock zeissBlock, ArrayList<GSIBlock> blocks, boolean isGSI16) {
+        switch (zeissBlock.getTypeIdentifier()) {
+            case ih:
+                blocks.add(new GSIBlock(isGSI16, 88, zeissBlock.getValue()));
+                break;
 
+            case th:
+                blocks.add(new GSIBlock(isGSI16, 87, zeissBlock.getValue()));
+                break;
 
-        return block;
+            case D:
+                blocks.add(new GSIBlock(isGSI16, 31, zeissBlock.getValue()));
+                break;
+
+            case Hz:
+                blocks.add(new GSIBlock(isGSI16, 21, zeissBlock.getValue()));
+                break;
+
+            case V1:
+                blocks.add(new GSIBlock(isGSI16, 22, zeissBlock.getValue()));
+                break;
+
+            case X:
+                blocks.add(new GSIBlock(isGSI16, 82, zeissBlock.getValue()));
+                break;
+
+            case Y:
+                blocks.add(new GSIBlock(isGSI16, 81, zeissBlock.getValue()));
+                break;
+
+            case Z:
+                blocks.add(new GSIBlock(isGSI16, 83, zeissBlock.getValue()));
+                break;
+
+            default:
+                System.err.println("Zeiss2GSI.convertZeiss2GSI() : line contains less or more tokens " + zeissBlock.getTypeIdentifier());
+        }
     }
 
 } // end of Zeiss2GSI

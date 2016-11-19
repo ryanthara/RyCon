@@ -34,6 +34,10 @@ import de.ryanthara.ja.rycon.tools.NumberFormatter;
  * For M5|Adr     1|TI  Berechn. Punkt             |                      |                      |                      |
  * For M5|Adr     2|PI1 2154H                      |th 1.600          m   |                      |                      |
  * For M5|Adr     3|PI1 2154H                      |Hz 34.9078        gon |V1 106.3481       gon |D  89.893         m   |
+ *<p>
+ * The line positions are grabbed from technical definitions and are reduced with the value of '-1' because of the
+ * array position numbering in java, which starts with zero for the first position.
+ *
  *
  * @author sebastian
  * @version 1
@@ -41,58 +45,59 @@ import de.ryanthara.ja.rycon.tools.NumberFormatter;
  */
 public class BaseToolsZeiss {
 
+    // positions are 'java' corrected with the value of '-1' because of array position start at '0'
     private static final int[] M5_LINE_POSITIONS = {
-            11, 17,     // line number
-            17, 20,     // point identification
-            21, 48,     // point name
-            49, 51,     // 1. word block: type mark
-            52, 66,     // 1. word block: user information
-            67, 71,     // 1. word block: units
-            72, 74,     // 2. word block: type mark
-            75, 89,     // 2. word block: user information
-            90, 94,     // 2. word block: units
-            95, 97,     // 3. word block: type mark
-            98, 112,    // 3. word block: user information
+            11, 15,     // line number
+            17, 19,     // point identification
+            21, 47,     // point name
+            49, 50,     // 1. word block: type mark
+            52, 65,     // 1. word block: user information
+            67, 70,     // 1. word block: units
+            72, 73,     // 2. word block: type mark
+            75, 88,     // 2. word block: user information
+            90, 93,     // 2. word block: units
+            95, 96,     // 3. word block: type mark
+            98, 111,    // 3. word block: user information
             113, 116,   // 3. word block: units
             118         // error
     };
     private static final int[] R4_LINE_POSITIONS = {
-            7, 9,       // point identification
-            10, 17,     // point name
-            18, 20,     // 1. word block: type mark
-            21, 32,     // 1. word block: user information
-            33, 37,     // 1. word block: units
-            38, 40,     // 2. word block: type mark
+            7, 8,       // point identification
+            10, 16,     // point name
+            18, 19,     // 1. word block: type mark
+            21, 31,     // 1. word block: user information
+            33, 36,     // 1. word block: units
+            38, 39,     // 2. word block: type mark
             41, 51,     // 2. word block: user information
-            54, 56,     // 2. word block: units
-            58, 60,     // 3. word block: type mark
-            61, 72,     // 3. word block: user information
-            73, 77      // 3. word block: units
+            53, 56,     // 2. word block: units
+            58, 59,     // 3. word block: type mark
+            61, 71,     // 3. word block: user information
+            73, 76      // 3. word block: units
     };
     private static final int[] R5_LINE_POSITIONS = {
-            11, 16,     // line number
-            16, 18,     // point identification
-            19, 26,     // point name
-            27, 29,     // 1. word block: type mark
-            30, 41,     // 1. word block: user information
-            42, 46,     // 1. word block: units
-            47, 49,     // 2. word block: type mark
-            50, 61,     // 2. word block: user information
-            62, 66,     // 2. word block: units
-            67, 69,     // 3. word block: type mark
-            70, 81,     // 3. word block: user information
-            82, 86      // 3. word block: units
+            11, 14,     // line number
+            16, 11,     // point identification
+            19, 25,     // point name
+            27, 28,     // 1. word block: type mark
+            30, 40,     // 1. word block: user information
+            42, 45,     // 1. word block: units
+            47, 48,     // 2. word block: type mark
+            50, 60,     // 2. word block: user information
+            62, 65,     // 2. word block: units
+            67, 68,     // 3. word block: type mark
+            70, 80,     // 3. word block: user information
+            82, 85      // 3. word block: units
     };
     private static final int[] REC500_LINE_POSITIONS = {
-            3, 7,       // line counter
-            8, 22,      // point number
-            22, 35,     // point identification
-            36, 38,     // 1. word block: type mark
-            38, 50,     // 1. word block: value
-            51, 53,     // 2. word block: type mark
-            53, 66,     // 2. word block: value
-            67, 69,     // 3. word block: type mark
-            69, 78      // 3. word block: value
+            3, 6,       // line counter
+            8, 21,      // point number
+            22, 34,     // point identification
+            36, 37,     // 1. word block: type mark
+            38, 49,     // 1. word block: value
+            51, 52,     // 2. word block: type mark
+            53, 65,     // 2. word block: value
+            67, 68,     // 3. word block: type mark
+            69, 77      // 3. word block: value
     };
     /**
      * Member which indicates a target height.

@@ -29,7 +29,8 @@ public class CSVBaselStadt2Zeiss {
     private List<String[]> readCSVLines = null;
 
     /**
-     * Class constructor for read line based CSV files from the geodata server Basel Stadt (Switzerland).
+     * Constructs a new instance of this class given an {@link ArrayList} of strings with the read line based CSV file
+     * from the geodata server Basel Stadt (Switzerland).
      *
      * @param readCSVLines {@code List<String[]>} with lines as {@code String[]}
      */
@@ -41,7 +42,7 @@ public class CSVBaselStadt2Zeiss {
      * Converts a comma separated coordinate file from the geodata server Basel Stadt (Switzerland)
      * into a Zeiss REC formatted file.
      *
-     * @param dialect dialect of the target file
+     * @param dialect dialect of the destination file
      *
      * @return converted Zeiss REC file as {@code ArrayList<String>}
      */
@@ -72,7 +73,7 @@ public class CSVBaselStadt2Zeiss {
             if (!stringField[4].equals("")) {
                 height = stringField[4];
             } else {
-                height = "-9999";
+                height = "";
             }
 
             result.add(BaseToolsZeiss.prepareLineOfCoordinates(dialect, number, code, easting, northing, height, lineNumber));

@@ -45,9 +45,9 @@ public class TXTBaselLandschaft2Zeiss {
      * Converts a text formatted coordinate file from the geodata server 'Basel Landschaft' (Switzerland)
      * into a Zeiss REC formatted file.
      *
-     * @param dialect dialect of the target file
+     * @param dialect dialect of the destination file
      *
-     * @return string lines of the target file
+     * @return string lines of the destination file
      */
     public ArrayList<String> convertTXTBaselLandschaft2REC(ZeissDialect dialect) {
         ArrayList<String> result = new ArrayList<>();

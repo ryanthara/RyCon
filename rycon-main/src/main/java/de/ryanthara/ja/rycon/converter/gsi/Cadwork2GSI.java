@@ -33,7 +33,7 @@ public class Cadwork2GSI {
     private ArrayList<String> readStringLines;
 
     /**
-     * Constructs a new instance of this class given an {@code ArrayList<String>} with the read line based
+     * Constructs a new instance of this class with a parameter for the  {@code ArrayList<String>} with the read line based
      * text files from Cadwork CAD program (node.dat).
      *
      * @param readStringLines ArrayList<String> with read lines from node.dat file

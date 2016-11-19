@@ -35,7 +35,7 @@ public class Caplan2GSI {
     private ArrayList<String> readStringLines;
 
     /**
-     * Constructs an instance of this class with the read Caplan K file {@link ArrayList} string as parameter.
+     * Constructs a new instance of this class with a parameter for the read Caplan K file {@link ArrayList} string.
      *
      * @param readStringLines {@code ArrayList<String>} with lines in Caplan K format
      */

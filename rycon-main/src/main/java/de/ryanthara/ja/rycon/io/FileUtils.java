@@ -66,51 +66,14 @@ public class FileUtils {
         EnumSet<FileVisitOption> opts = EnumSet.of(FileVisitOption.FOLLOW_LINKS);
         TreeCopier tc = new TreeCopier(source, destination, false);
         Files.walkFileTree(source, opts, Integer.MAX_VALUE, tc);
-
-        // NEW VERSION
-        /*
-        // remaining arguments are the source files(s) and the target location
-        int remaining = args.length - argi;
-        if (remaining < 2)
-            usage();
-        Path[] source = new Path[remaining - 1];
-        int i = 0;
-        while (remaining > 1) {
-            source[i++] = Paths.get(args[argi++]);
-            remaining--;
-        }
-        Path target = Paths.get(args[argi]);
-
-        // check if target is a directory
-        boolean isDir = Files.isDirectory(target);
-
-        // copy each source file/directory to target
-        for (i = 0; i < source.length; i++) {
-            Path dest = (isDir) ? target.resolve(source[i].getFileName()) : target;
-
-            if (recursive) {
-                // follow links when copying files
-                EnumSet<FileVisitOption> opts = EnumSet.of(FileVisitOption.FOLLOW_LINKS);
-                TreeCopier tc = new TreeCopier(source[i], dest, prompt, preserve);
-                Files.walkFileTree(source[i], opts, Integer.MAX_VALUE, tc);
-            } else {
-                // not recursive so source must not be a directory
-                if (Files.isDirectory(source[i])) {
-                    System.err.format("%s: is a directory%n", source[i]);
-                    continue;
-                }
-                copyFile(source[i], dest, prompt, preserve);
-            }
-        }
-        */
     }
 
     /*
     Copies a file, and only a file, without following symbolic links.
      */
-    private static void copyFile(Path source, Path target) throws IOException {
+    private static void copyFile(Path source, Path destination) throws IOException {
         try {
-            Files.copy(source, target, NOFOLLOW_LINKS);
+            Files.copy(source, destination, NOFOLLOW_LINKS);
         } catch (UnsupportedOperationException ex) {
             System.err.println("Unable to copy file - UnsupportedOperationException");
         } catch (FileAlreadyExistsException ex) {
@@ -125,12 +88,12 @@ public class FileUtils {
      */
     private static class TreeCopier implements FileVisitor<Path> {
         private final Path source;
-        private final Path target;
+        private final Path destination;
         private final boolean preserve;
 
-        TreeCopier(Path source, Path target, boolean preserve) {
+        TreeCopier(Path source, Path destination, boolean preserve) {
             this.source = source;
-            this.target = target;
+            this.destination = destination;
             this.preserve = preserve;
         }
 
@@ -154,7 +117,7 @@ public class FileUtils {
         public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
             // fix up modification time of directory when done
             if (exc == null && preserve) {
-                Path newDir = target.resolve(source.relativize(dir));
+                Path newDir = destination.resolve(source.relativize(dir));
                 try {
                     FileTime time = Files.getLastModifiedTime(dir);
                     Files.setLastModifiedTime(newDir, time);
@@ -189,7 +152,7 @@ public class FileUtils {
             CopyOption[] options = (preserve) ?
                     new CopyOption[]{COPY_ATTRIBUTES} : new CopyOption[0];
 
-            Path newDir = target.resolve(source.relativize(dir));
+            Path newDir = destination.resolve(source.relativize(dir));
 
             try {
                 Files.copy(dir, newDir, options);
@@ -215,7 +178,7 @@ public class FileUtils {
          */
         @Override
         public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-            copyFile(file, target.resolve(source.relativize(file)));
+            copyFile(file, destination.resolve(source.relativize(file)));
 
             return CONTINUE;
         }

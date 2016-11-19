@@ -22,8 +22,11 @@ import de.ryanthara.ja.rycon.tools.NumberFormatter;
 import java.util.ArrayList;
 
 /**
- * This class provides functions to convert text formatted coordinate files from the geodata server
+ * Instances of this class provides functions to convert text formatted coordinate files from the geodata server
  * Basel Landschaft (Switzerland) into Caplan K formatted files.
+ * <p>
+ * Due to some reasons the geodata Server Basel Landschaft delivers different file formats for
+ * location and height reference points.
  *
  * @author sebastian
  * @version 1
@@ -34,7 +37,8 @@ public class TXTBaselLandschaft2K {
     private ArrayList<String> readStringLines;
 
     /**
-     * Class constructor for read line based text files.
+     * Constructs a new instance of this class with a parameter for read line based text files from the
+     * geodata Server Basel Landschaft (Switzerland).
      *
      * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
      */
@@ -43,7 +47,7 @@ public class TXTBaselLandschaft2K {
     }
 
     /**
-     * Converts a CSV file from the geodata server Basel Stadt (Switzerland) into a K formatted file.
+     * Converts a text formatted file from the geodata server Basel Landschaft (Switzerland) into a K formatted file.
      *
      * @param useSimpleFormat  option to write a reduced K file which is compatible to ZF LaserControl
      * @param writeCodeColumn  option to write a found code into the K file
@@ -118,7 +122,7 @@ public class TXTBaselLandschaft2K {
                     break;
 
                 default:
-                    System.err.println("CSV2K.convertCSV2K() : line contains less or more tokens " + line);
+                    System.err.println("CSV2BaselLandschaft.convertTXTBaselLandschaft2K() : line contains less or more tokens " + line);
             }
             if (valencyIndicator > 0) {
                 valency = " ".concat(Integer.toString(valencyIndicator));

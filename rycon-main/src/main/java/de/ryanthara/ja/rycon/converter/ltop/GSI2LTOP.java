@@ -25,10 +25,10 @@ import de.ryanthara.ja.rycon.tools.NumberFormatter;
 import java.util.ArrayList;
 
 /**
- * This class provides functions to convert coordinate and measurement files from Leica GSI format (GSI8 and GSI16)
- * into LTOP KOO and MES files.
+ * Instances of this class provides functions to convert coordinate files from the
+ * Leica GSI format (GSI8 and GSI16) into LTOP KOO files.
  * <p>
- * With different methods it is possible to create the needed coordinate or measurement files.
+ * With a little 'intelligence' it is possible to create the needed coordinate file.
  *
  * @author sebastian
  * @version 1

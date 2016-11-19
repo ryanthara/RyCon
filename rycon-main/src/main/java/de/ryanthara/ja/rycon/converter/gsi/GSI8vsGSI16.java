@@ -20,7 +20,7 @@ package de.ryanthara.ja.rycon.converter.gsi;
 import java.util.ArrayList;
 
 /**
- * This class provides functions to convert between Leica GSI8 and GSI16 vice versa.
+ * Instances of this class provides functions to convert between Leica GSI8 and GSI16 vice versa.
  *
  * @author sebastian
  * @version 1
@@ -31,7 +31,7 @@ public class GSI8vsGSI16 {
     private ArrayList<String> readStringLines;
 
     /**
-     * Class constructor for read line based GSI formatted files.
+     * Constructs a new instance of this class with a parameter for the read line based GSI formatted files.
      *
      * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
      */

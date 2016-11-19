@@ -145,7 +145,6 @@ public enum ZeissTypeIdentifier {
 
     private final String typeIdentifier;
 
-
     /**
      * Defines a {@link ZeissTypeIdentifier} by a type identifier string.
      *

@@ -22,7 +22,7 @@ import de.ryanthara.ja.rycon.tools.NumberFormatter;
 import java.util.ArrayList;
 
 /**
- * This class provides functions to convert a coordinate file from Cadwork CAD program (node.dat)
+ * Instances of this class provides functions to convert a coordinate file from Cadwork CAD program (node.dat)
  * into a Caplan K file.
  *
  * @author sebastian
@@ -34,7 +34,8 @@ public class Cadwork2K {
     private ArrayList<String> readStringLines;
 
     /**
-     * Class constructor for read line based text files from Cadwork CAD program in node.dat file format.
+     * Constructs a new instance of this class with a parameter for read line based text files from Cadwork CAD program
+     * in node.dat file format.
      *
      * @param readStringLines {@code ArrayList<String>} with read lines from node.dat file
      */

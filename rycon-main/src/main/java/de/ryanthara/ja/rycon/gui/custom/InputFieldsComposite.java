@@ -206,10 +206,10 @@ public class InputFieldsComposite extends Composite {
         return btnSource;
     }
 
-    private void doButtonAction(String target) {
+    private void doButtonAction(String destination) {
         Class<?> clazz = callingObject.getClass();
         try {
-            Method method = clazz.getDeclaredMethod(target);
+            Method method = clazz.getDeclaredMethod(destination);
             method.setAccessible(true);
 
             try {

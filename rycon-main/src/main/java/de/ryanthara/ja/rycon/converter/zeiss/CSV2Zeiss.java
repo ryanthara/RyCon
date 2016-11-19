@@ -30,7 +30,7 @@ public class CSV2Zeiss {
     private List<String[]> readCSVLines = null;
 
     /**
-     * Class constructor for read line based CSV files.
+     * Constructs a new instance of this class with a parameter for read line based CSV files.
      *
      * @param readCSVLines {@code List<String[]>} with lines as {@code String[]}
      */
@@ -41,9 +41,9 @@ public class CSV2Zeiss {
     /**
      * Converts a CSV file (nr;x;y;z or nr;code;x;y;z) into a Zeiss REC formatted file.
      *
-     * @param dialect dialect of the target file
+     * @param dialect dialect of the destination file
      *
-     * @return string lines of the target file
+     * @return string lines of the destination file
      */
     public ArrayList<String> convertCSV2REC(ZeissDialect dialect) {
         ArrayList<String> result = new ArrayList<>();

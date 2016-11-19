@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class provides functions to convert comma separated coordinate files (CSV format) into Caplan K files.
+ * Instances of this class provides functions to convert comma separated (CSV) coordinate files into Caplan K files.
  *
  * @author sebastian
  * @version 1
@@ -34,7 +34,7 @@ public class CSV2K {
     private List<String[]> readCSVLines = null;
 
     /**
-     * Class constructor for read line based CSV files.
+     * Constructs a new instance of this class with a parameter for read line based comma separated values (CSV) files.
      *
      * @param readCSVLines {@code List<String[]>} with lines as {@code String[]}
      */

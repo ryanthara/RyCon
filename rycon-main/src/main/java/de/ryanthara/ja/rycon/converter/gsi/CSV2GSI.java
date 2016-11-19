@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class provides functions to convert a csv formatted measurement or coordinate file into
+ * Instances of this class provides functions to convert a csv formatted measurement or coordinate file into
  * a Leica GSI8 or GSI16 files.
  *
  * @author sebastian
@@ -33,7 +33,7 @@ public class CSV2GSI {
     private List<String[]> readCSVLines = null;
 
     /**
-     * Class constructor for read line based CSV files.
+     * Constructs a new instance of this class with a parameter for the read line based CSV files.
      *
      * @param readCSVLines {@code List<String[]>} with lines as {@code String[]}
      */

@@ -43,7 +43,7 @@ public class LineReader {
     private ArrayList<String> lines = null;
 
     /**
-     * Constructs an instance of this class with a parameter that accepts a {@link Path} object for the file to be read.
+     * Constructs a new instance of this class with a parameter that accepts a {@link Path} object for the file to be read.
      *
      * @param path file name as path object
      */

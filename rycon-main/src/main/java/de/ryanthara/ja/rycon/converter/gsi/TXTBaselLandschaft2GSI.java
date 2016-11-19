@@ -22,7 +22,7 @@ import de.ryanthara.ja.rycon.elements.GSIBlock;
 import java.util.ArrayList;
 
 /**
- * This class provides functions to convert text formatted coordinate files from the geodata server
+ * Instances of this class provides functions to convert text formatted coordinate files from the geodata server
  * Basel Landschaft (Switzerland) into Leica GSI8 and GSI16 formatted files.
  *
  * @author sebastian

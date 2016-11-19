@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class provides functions to convert csv formatted coordinate file from the geodata server
+ * Instances of this class provides functions to convert csv formatted coordinate file from the geodata server
  * Basel Stadt (Switzerland) into a Leica GSI8 or GSI16 file.
  *
  * @author sebastian
@@ -16,7 +16,8 @@ public class CSVBaselStadt2GSI {
     private List<String[]> readCSVLines = null;
 
     /**
-     * Class constructor for read line based CSV files from the geodata server Basel Stadt (Switzerland).
+     * Constructs a new instance of this class with a parameter for the read line based CSV files from the
+     * geodata server Basel Stadt (Switzerland).
      *
      * @param readCSVLines {@code List<String[]>} with lines as {@code String[]}
      */

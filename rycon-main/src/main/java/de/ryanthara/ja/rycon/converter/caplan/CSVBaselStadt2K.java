@@ -23,8 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class provides functions to convert csv formatted coordinate files from the geodata server
- * Basel Stadt (Switzerland) into comma separated files (CSV).
+ * Instances of this class provides functions to convert comma separated files (CSV) formatted coordinate files
+ * from the geodata server Basel Stadt (Switzerland) into comma separated files (CSV).
  *
  * @author sebastian
  * @version 1
@@ -35,7 +35,8 @@ public class CSVBaselStadt2K {
     private List<String[]> readCSVLines = null;
 
     /**
-     * Class constructor for read line based CSV files from the geodata server Basel Stadt (Switzerland).
+     * Constructs a new instance of this class with a parameter for read line based comma separated values (CSV) files
+     * from the geodata server Basel Stadt (Switzerland).
      *
      * @param readCSVLines {@code List<String[]>} with lines as {@code String[]}
      */

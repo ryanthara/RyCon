@@ -24,8 +24,8 @@ import de.ryanthara.ja.rycon.tools.NumberFormatter;
 import java.util.ArrayList;
 
 /**
- * This class provides functions to convert coordinate and measurement files from Leica GSI format (GSI8 and GSI16)
- * into Caplan K files.
+ * Instances of this class provides functions to convert coordinate and measurement files from
+ * the Leica GSI format (GSI8 and GSI16) into Caplan K formatted files.
  *
  * @author sebastian
  * @version 1
@@ -36,7 +36,7 @@ public class GSI2K {
     private BaseToolsGSI baseToolsGSI;
 
     /**
-     * Class constructor for read line based text files in the Leica GSI format.
+     * Constructs a new instance of this class with a parameter for read line based text files in the Leica GSI format.
      * <p>
      * The differentiation of the content is done by the called method and it's content analyze functionality.
      *

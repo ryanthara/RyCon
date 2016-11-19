@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.TreeSet;
 
 /**
- * This class implements several basic operations on Leica GSI files.
+ * Instances of this class implements several basic operations on Leica GSI files.
  * <p>
  * The Leica Geo Serial Interface (GSI) is a general purpose, serial data
  * interface for bi-directional communication between TPS Total Stations,
@@ -48,7 +48,7 @@ public class BaseToolsGSI {
     private TreeSet<Integer> foundAllWordIndices;
 
     /**
-     * Constructs a new instance of this class given a read line based Leica GSI8 or GSI16 file.
+     * Constructs a new instance of this class with a parameter for the read line based Leica GSI8 or GSI16 file.
      *
      * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
      */
@@ -89,8 +89,8 @@ public class BaseToolsGSI {
     }
 
     /**
-     * Checks a valid Leica GSI formatted string line for being a target line (three times the coordinate is zero) for
-     * a free station.
+     * Checks a valid Leica GSI formatted string line for being a target line (three times the coordinate is zero)
+     * or for being a free station line.
      *
      * @param line line to be checked
      *

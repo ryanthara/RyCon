@@ -40,7 +40,7 @@ public class Caplan2ODF {
     private SpreadsheetDocument spreadsheetDocument;
 
     /**
-     * Constructs an instance of this class with the read Caplan K file {@link ArrayList} string as parameter.
+     * Constructs a new instance of this class with the read Caplan K file {@link ArrayList} string as parameter.
      *
      * @param readStringLines {@code ArrayList<String>} with lines in Caplan K format
      */

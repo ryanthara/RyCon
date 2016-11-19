@@ -24,7 +24,14 @@ import de.ryanthara.ja.rycon.tools.NumberFormatter;
 import java.util.ArrayList;
 
 /**
- * Created by sebastian on 13.09.16.
+ * Instances of this class provides functions to convert measurement files from the
+ * Leica GSI format (GSI8 and GSI16) into LTOP MES files.
+ * <p>
+ * With a little 'intelligence' it is possible to create the needed measurement file.
+ *
+ * @author sebastian
+ * @version 1
+ * @since 12
  */
 public class GSI2MES {
 
@@ -190,6 +197,11 @@ public class GSI2MES {
 
                     String slopedDistanceLine = "DS" + number + "            " + slopeDistance + "      "
                             + ppmAndPrismConstant + "         " + targetHeight;
+
+                    // write lines with zero distance as commented line (**DS...)
+                    if (slopeDistance.trim().equalsIgnoreCase("0.00000")) {
+                        slopedDistanceLine = "**".concat(slopedDistanceLine);
+                    }
 
                     horizontalAngleGroup.add(horizontalAngleLine);
                     verticalAngleGroup.add(verticalAngleLine);

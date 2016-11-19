@@ -68,7 +68,7 @@ public class GeneratorWidget {
     private Shell innerShell;
 
     /**
-     * Constructs an instance without parameters.
+     * Constructs a new instance without parameters.
      * <p>
      * The user interface is initialized in a separate method, which is called from here.
      */

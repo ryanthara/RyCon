@@ -20,7 +20,7 @@ package de.ryanthara.ja.rycon.gui.widget.convert;
 import de.ryanthara.ja.rycon.gui.widget.ConverterWidget;
 
 /**
- * This enumeration is used for the target radio buttons of the {@link ConverterWidget}.
+ * This enumeration is used for the target format radio buttons of the {@link ConverterWidget}.
  *
  * @author sebastian
  * @version 1

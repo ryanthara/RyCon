@@ -20,7 +20,7 @@ package de.ryanthara.ja.rycon.converter.caplan;
 import java.util.ArrayList;
 
 /**
- * This class provides functions to convert measurement files from Zeiss REC format
+ * Instances of this class provides functions to convert measurement files from the Zeiss REC format
  * and it's dialects (R4, R5, REC500 and M5) into Caplan K files.
  *
  * @author sebastian
@@ -32,7 +32,8 @@ public class Zeiss2K {
     private ArrayList<String> readStringLines;
 
     /**
-     * Class constructor for read line base text files in the Zeiss REC format and it's dialects.
+     * Constructs a new instance of this class with a parameter for read line base text files in the Zeiss REC format
+     * and it's dialects.
      * <p>
      * The differentiation of the content is done by the called method and it's content analyze functionality.
      *

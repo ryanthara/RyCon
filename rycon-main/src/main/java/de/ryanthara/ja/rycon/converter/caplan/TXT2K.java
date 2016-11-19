@@ -22,7 +22,7 @@ import de.ryanthara.ja.rycon.tools.NumberFormatter;
 import java.util.ArrayList;
 
 /**
- * This class provides functions to convert text formatted coordinate files into Caplan K files.
+ * Instances of this class provides functions to convert text formatted coordinate files into Caplan K files.
  *
  * @author sebastian
  * @version 1
@@ -33,7 +33,7 @@ public class TXT2K {
     private ArrayList<String> readStringLines;
 
     /**
-     * Class constructor for read line based text files.
+     * Constructs a new instance of this class with a parameter for read line based coordinate files in text format.
      *
      * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
      */

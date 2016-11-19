@@ -81,6 +81,9 @@ public class MainApplication extends Main {
      * @param args command line arguments
      */
     public static void main(String[] args) {
+
+        xTest();
+
         checkCommandLineInterfaceArguments(args);
         checkJavaVersion();
         checkRyCONVersion();
@@ -89,6 +92,17 @@ public class MainApplication extends Main {
         // to provide illegal thread access -> https://github.com/udoprog/c10t-swt/issues/1
         // add -XstartOnFirstThread as a java option on VM parameter on OS X
         new MainApplication();
+    }
+
+    private static void xTest() {
+
+        String r = "1234567890123456789*123456789#1234567890";
+        String s = "0123456789+123456789*123456789#1234567890";
+        String t = "For M5|Adr #9871|";
+        String u = "For M5|Adr     1|";
+
+//        System.out.println(t.substring(12, 16));
+
     }
 
     private void actionBtn0() {

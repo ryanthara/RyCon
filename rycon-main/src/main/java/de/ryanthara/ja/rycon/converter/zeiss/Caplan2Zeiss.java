@@ -34,7 +34,7 @@ public class Caplan2Zeiss {
     private final ArrayList<String> readStringLines;
 
     /**
-     * Constructs an instance of this class with the read Caplan K file {@link ArrayList} string as parameter.
+     * Constructs a new instance of this class with the read Caplan K file {@link ArrayList} string as parameter.
      *
      * @param readStringLines {@code ArrayList<String>} with lines in Caplan K format
      */
@@ -45,9 +45,9 @@ public class Caplan2Zeiss {
     /**
      * Converts a Caplan K formatted coordinate file into a Zeiss REC formatted file.
      *
-     * @param dialect dialect of the target file
+     * @param dialect dialect of the destination file
      *
-     * @return string lines of the target file
+     * @return string lines of the destination file
      */
     public ArrayList<String> convertK2REC(ZeissDialect dialect) {
         ArrayList<String> result = new ArrayList<>();

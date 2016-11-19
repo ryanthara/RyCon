@@ -24,14 +24,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by sebastian on 13.09.16.
+ * Instances of this class provides functions to convert a comma separated values (CSV) formatted
+ * coordinate file into a coordinate file for LTOP.
+ *
+ * @author sebastian
+ * @version 1
+ * @since 12
  */
 public class CSV2LTOP {
 
     private List<String[]> readCSVLines = null;
 
     /**
-     * Class constructor for read line based CSV files.
+     * Constructs a new instance of this class with a parameter for read line based comma separated values (CSV) files.
      *
      * @param readCSVLines {@code List<String[]>} with lines as {@code String[]}
      */
@@ -40,7 +45,7 @@ public class CSV2LTOP {
     }
 
     /**
-     * Convert a CSV coordinate file (nr x y z) into a KOO file for LTOP.
+     * Converts a comma separated values (CSV) coordinate file (nr x y z) into a KOO file for LTOP.
      *
      * @param eliminateDuplicates eliminate duplicate coordinates within 3cm radius
      * @param sortOutputFile      sort an output file by point number

@@ -33,20 +33,16 @@ public class ZeissDecoder {
 
     private int lineNumber;
     private int numOfBlocks;
-    private ZeissDialect dialect;
-
+    private String error = "";
     private String pointIdentification, pointNumber;
-
     private ArrayList<ZeissBlock> zeissBlocks = new ArrayList<>();
-
     private ZeissBlock block1 = null;
     private ZeissBlock block3 = null;
     private ZeissBlock block2 = null;
-
-    private String error = "";
+    private ZeissDialect dialect;
 
     /**
-     * Default constructor without any function.
+     * Constructs a new instance of this class without any parameters.
      */
     public ZeissDecoder() {
         numOfBlocks = 0;
@@ -68,6 +64,7 @@ public class ZeissDecoder {
             // differ dialect with special kind of substring variable (a, b) with different values
             if (line.startsWith("For R4") || line.startsWith("For_R4")) {
                 final int[] R4 = BaseToolsZeiss.getLinePositions(dialect = ZeissDialect.R4);
+
                 ptIDA = R4[0];
                 ptIDB = R4[1];
                 ptC = R4[2];
@@ -78,8 +75,8 @@ public class ZeissDecoder {
                 wb1D = R4[7];
                 wb1E = R4[8];
                 wb1F = R4[9];
-                wb2B = R4[10];
-                wb2A = R4[11];
+                wb2A = R4[10];
+                wb2B = R4[11];
                 wb2C = R4[12];
                 wb2D = R4[13];
                 wb2E = R4[14];
@@ -92,7 +89,9 @@ public class ZeissDecoder {
                 wb3F = R4[21];
             } else if (line.startsWith("For R5") || line.startsWith("For_R5")) {
                 final int[] R5 = BaseToolsZeiss.getLinePositions(dialect = ZeissDialect.R5);
-                lineNumber = Integer.parseInt(line.substring(R5[0], R5[1]).trim());
+
+                lineNumber = Integer.parseInt(line.substring(R5[0], R5[1] + 1).trim());
+
                 ptIDA = R5[2];
                 ptIDB = R5[3];
                 ptC = R5[4];
@@ -103,8 +102,8 @@ public class ZeissDecoder {
                 wb1D = R5[9];
                 wb1E = R5[10];
                 wb1F = R5[11];
-                wb2B = R5[12];
-                wb2A = R5[13];
+                wb2A = R5[12];
+                wb2B = R5[13];
                 wb2C = R5[14];
                 wb2D = R5[15];
                 wb2E = R5[16];
@@ -117,7 +116,9 @@ public class ZeissDecoder {
                 wb3F = R5[23];
             } else if (line.startsWith("For M5") || line.startsWith("For_M5")) {
                 final int[] M5 = BaseToolsZeiss.getLinePositions(dialect = ZeissDialect.M5);
-                lineNumber = Integer.parseInt(line.substring(M5[0], M5[1]).trim());
+
+                lineNumber = Integer.parseInt(line.substring(M5[0], M5[1] + 1).trim());
+
                 ptIDA = M5[2];
                 ptIDB = M5[3];
                 ptC = M5[4];
@@ -128,8 +129,8 @@ public class ZeissDecoder {
                 wb1D = M5[9];
                 wb1E = M5[10];
                 wb1F = M5[11];
-                wb2B = M5[12];
-                wb2A = M5[13];
+                wb2A = M5[12];
+                wb2B = M5[13];
                 wb2C = M5[14];
                 wb2D = M5[15];
                 wb2E = M5[16];
@@ -143,20 +144,38 @@ public class ZeissDecoder {
                 error = line.substring(M5[24]);
             }
 
-            pointIdentification = line.substring(ptIDA, ptIDB).trim();
-            pointNumber = line.substring(ptC, ptD).trim();
+            // correct lines have at least one block
+            pointIdentification = line.substring(ptIDA, ptIDB + 1).trim();
+            pointNumber = line.substring(ptC, ptD + 1).trim();
 
-            block1 = new ZeissBlock(ZeissTypeIdentifier.valueOf(line.substring(wb1A, wb1B).trim()), line.substring(wb1C, wb1D).trim(), line.substring(wb1E, wb1F));
-            zeissBlocks.add(block1);
-            numOfBlocks = numOfBlocks + 1;
+            // check for being empty
+            if (line.substring(wb1A, wb1F + 1).trim().length() > 1) {
+                block1 = new ZeissBlock(ZeissTypeIdentifier.valueOf(
+                        line.substring(wb1A, wb1B + 1).trim()),
+                        line.substring(wb1C, wb1D + 1).trim(),
+                        line.substring(wb1E, wb1F + 1).trim());
 
-            if (line.length() > wb2A - 1) {
-                block2 = new ZeissBlock(ZeissTypeIdentifier.valueOf(line.substring(wb2A, wb2B).trim()), line.substring(wb2C, wb2D).trim(), line.substring(wb2E, wb2F));
+                zeissBlocks.add(block1);
+                numOfBlocks = numOfBlocks + 1;
+            }
+
+            // check for a second block
+            if (line.substring(wb2A, wb2F + 1).trim().length() > 1) {
+                block2 = new ZeissBlock(ZeissTypeIdentifier.valueOf(
+                        line.substring(wb2A, wb2B + 1).trim()),
+                        line.substring(wb2C, wb2D + 1).trim(),
+                        line.substring(wb2E, wb2F + 1).trim());
+
                 zeissBlocks.add(block2);
                 numOfBlocks = numOfBlocks + 1;
 
-                if (line.length() > wb3A - 1) {
-                    block3 = new ZeissBlock(ZeissTypeIdentifier.valueOf(line.substring(wb3A, wb3B).trim()), line.substring(wb3C, wb3D).trim(), line.substring(wb3E, wb3F));
+                // check for a third block
+                if (line.substring(wb3A, wb3F + 1).trim().length() > 1) {
+                    block3 = new ZeissBlock(ZeissTypeIdentifier.valueOf(
+                            line.substring(wb3A, wb3B + 1).trim()),
+                            line.substring(wb3C, wb3D + 1).trim(),
+                            line.substring(wb3E, wb3F + 1).trim());
+
                     zeissBlocks.add(block3);
                     numOfBlocks = numOfBlocks + 1;
                 }
@@ -167,19 +186,35 @@ public class ZeissDecoder {
         } else if (line.startsWith("   ") & line.trim().length() > 0) {
             final int[] REC500 = BaseToolsZeiss.getLinePositions(dialect = ZeissDialect.REC500);
 
-            lineNumber = Integer.parseInt(line.substring(REC500[0], REC500[1]).trim());
-            pointNumber = line.substring(REC500[2], REC500[3]).trim();
-            pointIdentification = line.substring(REC500[4], REC500[5]).trim();
+            lineNumber = Integer.parseInt(line.substring(REC500[0], REC500[1] + 1).trim());
+            pointNumber = line.substring(REC500[2], REC500[3] + 1).trim();
+            pointIdentification = line.substring(REC500[4], REC500[5] + 1).trim();
 
-            block1 = new ZeissBlock(ZeissTypeIdentifier.valueOf(line.substring(REC500[6], REC500[7]).trim()), line.substring(REC500[8], REC500[9]).trim(), "");
+            block1 = new ZeissBlock(ZeissTypeIdentifier.valueOf(
+                    line.substring(REC500[6], REC500[7] + 1).trim()),
+                    line.substring(REC500[8], REC500[9] + 1).trim(),
+                    "");
+
+            zeissBlocks.add(block1);
             numOfBlocks = numOfBlocks + 1;
 
             if (line.length() > 50) {
-                block2 = new ZeissBlock(ZeissTypeIdentifier.valueOf(line.substring(REC500[10], REC500[11]).trim()), line.substring(REC500[12], REC500[13]).trim(), "");
+                block2 = new ZeissBlock(ZeissTypeIdentifier.valueOf(
+                        line.substring(REC500[10], REC500[11] + 1).trim()),
+                        line.substring(REC500[12], REC500[13] + 1).trim(),
+                        "");
+
+                zeissBlocks.add(block2);
                 numOfBlocks = numOfBlocks + 1;
 
+                System.out.println(line.length());
                 if (line.length() > 66) {
-                    block3 = new ZeissBlock(ZeissTypeIdentifier.valueOf(line.substring(REC500[14], REC500[15]).trim()), line.substring(REC500[16], REC500[17]).trim(), "");
+                    block3 = new ZeissBlock(ZeissTypeIdentifier.valueOf(
+                            line.substring(REC500[14], REC500[15] + 1).trim()),
+                            line.substring(REC500[16], REC500[17] + 1).trim(),
+                            "");
+
+                    zeissBlocks.add(block3);
                     numOfBlocks = numOfBlocks + 1;
                 }
             }
