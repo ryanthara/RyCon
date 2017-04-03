@@ -81,7 +81,7 @@ public class LevellingWidget {
      *
      * @param droppedFiles {@link Path} array from drop source
      */
-    public LevellingWidget(Path[] droppedFiles) {
+    public LevellingWidget(Path... droppedFiles) {
         files2read = PathCheck.getValidFiles(droppedFiles, acceptableFileSuffixes);
     }
 
@@ -199,7 +199,7 @@ public class LevellingWidget {
         }
 
         files2read = FileDialogs.showAdvancedFileDialog(
-                innerShell, SWT.MULTI, filterPath, I18N.getFileChooserSplitterSourceText(), acceptableFileSuffixes,
+                innerShell, filterPath, I18N.getFileChooserSplitterSourceText(), acceptableFileSuffixes,
                 filterNames, inputFieldsComposite.getSourceTextField(), inputFieldsComposite.getDestinationTextField());
     }
 
@@ -310,13 +310,13 @@ public class LevellingWidget {
         gridLayout.marginHeight = 0;
         gridLayout.marginWidth = 0;
 
-        inputFieldsComposite = new InputFieldsComposite(this, innerShell, SWT.NONE);
+        inputFieldsComposite = new InputFieldsComposite(this, innerShell);
         inputFieldsComposite.setLayout(gridLayout);
 
         createOptions(width);
         createDescription(width);
 
-        new BottomButtonBar(this, innerShell, SWT.NONE);
+        new BottomButtonBar(this, innerShell);
 
         innerShell.setLocation(ShellPositioner.centerShellOnPrimaryMonitor(innerShell));
 

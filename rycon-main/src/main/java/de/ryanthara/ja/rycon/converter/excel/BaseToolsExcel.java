@@ -18,7 +18,11 @@
 package de.ryanthara.ja.rycon.converter.excel;
 
 /**
- * Created by sebastian on 07.09.16.
+ * This class provides static access to members to distinguish between XLS (true) and XLSX (false) output files.
+ *
+ * @author sebastian
+ * @version 1
+ * @since 12
  */
 public class BaseToolsExcel {
 

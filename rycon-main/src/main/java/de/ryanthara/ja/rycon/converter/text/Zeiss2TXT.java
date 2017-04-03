@@ -17,6 +17,9 @@
  */
 package de.ryanthara.ja.rycon.converter.text;
 
+import de.ryanthara.ja.rycon.converter.zeiss.ZeissDecoder;
+import de.ryanthara.ja.rycon.elements.ZeissBlock;
+
 import java.util.ArrayList;
 
 /**
@@ -32,7 +35,7 @@ public class Zeiss2TXT {
     private ArrayList<String> readStringLines;
 
     /**
-     * Class constructor for read line based Zeiss REC files in different dialects.
+     * Constructs the {@link Zeiss2TXT} with a bunch of parameters.
      * <p>
      * The differentiation of the content is done by the called method.
      *
@@ -49,14 +52,30 @@ public class Zeiss2TXT {
      * This method can differ between different Zeiss REC dialects because of the
      * different structure and line length.
      *
-     * @param isGSI16 distinguish between GSI8 or GSI16 output
+     * @param separator used separator sign
      *
      * @return converted {@code ArrayList<String>} with lines of text format
      */
     public ArrayList<String> convertZeiss2TXT(String separator) {
         ArrayList<String> result = new ArrayList<>();
 
+        int readLineCounter = 0;
+
+        for (String line : readStringLines) {
+
+            // skip empty lines
+            if (line.trim().length() > 0) {
+                ZeissDecoder decoder = new ZeissDecoder();
+
+                readLineCounter = readLineCounter + 1;
+
+                for (ZeissBlock zeissBlock : decoder.getZeissBlocks()) {
+                    result.add(zeissBlock.getValue() + separator);
+                }
+            }
+        }
+
         return result;
     }
 
-}
+} // end of Zeiss2TXT

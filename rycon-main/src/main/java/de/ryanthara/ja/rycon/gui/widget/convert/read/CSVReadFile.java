@@ -81,7 +81,7 @@ public class CSVReadFile implements ReadFile {
     }
 
     /**
-     * Reads the comma separeted values (CSV) file given as parameter and returns the read file success.
+     * Reads the comma separated values (CSV) file given as parameter and returns the read file success.
      *
      * @param file2Read read path reference
      *
@@ -96,6 +96,7 @@ public class CSVReadFile implements ReadFile {
         try {
             CSVReader reader = new CSVReader(new FileReader(file2Read.toFile()), separatorCSV);
             readCSVFile = reader.readAll();
+
             success = true;
         } catch (IOException e) {
             System.err.println("File " + file2Read.getFileName() + " could not be read.");

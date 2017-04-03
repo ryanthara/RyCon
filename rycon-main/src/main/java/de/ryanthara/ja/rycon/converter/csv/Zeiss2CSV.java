@@ -17,6 +17,9 @@
  */
 package de.ryanthara.ja.rycon.converter.csv;
 
+import de.ryanthara.ja.rycon.converter.zeiss.ZeissDecoder;
+import de.ryanthara.ja.rycon.elements.ZeissBlock;
+
 import java.util.ArrayList;
 
 /**
@@ -46,15 +49,30 @@ public class Zeiss2CSV {
      * Converts a Zeiss REC file (and it's dialects R4, R5, R500 and M5) into a K format file.
      *
      * @param separator        used separator sign
-     * @param useSimpleFormat  option to write a reduced K file which is compatible to ZF LaserControl
-     * @param writeCommentLine option to write a comment line into the K file with basic information
-     * @param writeCodeColumn  option to write a found code into the K file
      *
      * @return converted K file as ArrayList<String>
      */
-    public ArrayList<String> convertZeiss2CSV(String separator, boolean useSimpleFormat, boolean writeCommentLine, boolean writeCodeColumn) {
-        return null;
+    public ArrayList<String> convertZeiss2CSV(String separator) {
+        ArrayList<String> result = new ArrayList<>();
+
+        int readLineCounter = 0;
+
+        for (String line : readStringLines) {
+
+            // skip empty lines
+            if (line.trim().length() > 0) {
+                ZeissDecoder decoder = new ZeissDecoder();
+
+                readLineCounter = readLineCounter + 1;
+
+                for (ZeissBlock zeissBlock : decoder.getZeissBlocks()) {
+                    result.add(zeissBlock.getValue() + separator);
+                }
+            }
+        }
+
+        return result;
     }
 
 
-} // Zeiss2CSV
+} // end of Zeiss2CSV

@@ -50,7 +50,7 @@ public class TextCheck {
      *
      * @return the valid chosen files
      */
-    public static Path[] checkSourceAndDestinationText(Text source, Text destination, Path[] chosenFiles) {
+    public static Path[] checkSourceAndDestinationText(Text source, Text destination, Path... chosenFiles) {
         Path[] files2read = null;
 
         if (isEmpty(source) || isEmpty(destination)) {

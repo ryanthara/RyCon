@@ -47,9 +47,10 @@ public class GSITidyUp {
     /**
      * Tidy up resurrection (stations) and control point measurements from files.
      * <p>
-     * RyCON has the intelligence to tidy up resurrection and control points by a given
-     * structure in the measurement file. Stations are identified by word index (WI) and
-     * the control / stake out points by order in the file and the pattern 'STKE'.
+     * RyCON uses 'intelligence' to tidy up resurrection and control points by a given
+     * structure in the measurement file. Stations are identified by word index (WI).
+     * The control and stake out points are identified by the order in the file and
+     * with the stake out pattern (e.g. 'STKE').
      *
      * @param holdStations      decide to hold station lines
      * @param holdControlPoints decide to hold control points
@@ -57,6 +58,7 @@ public class GSITidyUp {
      * @return converted {@code ArrayList<ArrayList<String>>} for writing
      */
     public ArrayList<String> processTidyUp(boolean holdStations, boolean holdControlPoints) {
+        // initialize values and prepare string with additional zeros for identification
         String controlPointIdentifier = Main.pref.getUserPref(PreferenceHandler.PARAM_CONTROL_POINT_STRING);
         String freeStationIdentifier = "000" + Main.pref.getUserPref(PreferenceHandler.PARAM_FREE_STATION_STRING);
         String stationIdentifier = "000" + Main.pref.getUserPref(PreferenceHandler.PARAM_KNOWN_STATION_STRING);

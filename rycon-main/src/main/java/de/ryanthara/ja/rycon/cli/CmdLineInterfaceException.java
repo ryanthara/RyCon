@@ -17,6 +17,8 @@
  */
 package de.ryanthara.ja.rycon.cli;
 
+import java.security.PrivilegedActionException;
+
 /**
  * This exception is thrown whenever a command line interface operations fails.
  * <p>

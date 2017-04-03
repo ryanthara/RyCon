@@ -41,6 +41,7 @@ public class PathCheck {
      *
      * @return checked path array with valid and readable path objects
      */
+    @SuppressWarnings("MethodCanBeVariableArityMethod")
     public static Path[] getValidFiles(Path[] paths, String[] acceptableFileSuffix) {
         ArrayList<Path> temp = new ArrayList<>();
 

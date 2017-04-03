@@ -46,7 +46,7 @@ public class Caplan2CSV {
      * Converts a Caplan K file to a comma separated values (CSV) formatted file.
      *
      * @param separator         used separator sign
-     * @param writeSimpleFormat option to write a reduced K file which is compatible to ZF LaserControl
+     * @param writeSimpleFormat option to write a reduced K file which is compatible to Z+F LaserControl
      * @param writeCommentLine  option to write a comment line into the K file with basic information
      * @param writeCodeColumn   option to write a found code into the K file
      *

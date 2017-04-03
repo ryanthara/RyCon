@@ -277,18 +277,18 @@ public class GeneratorWidget {
         chkBoxCreateBigDataFolder.setText(I18N.getBtnChkBoxCreateBigDataFolder());
     }
 
-    private boolean generateAdminFolder(String number, int type) {
+    private boolean generateAdminFolder(String number) {
         String dir = Main.pref.getUserPref(PreferenceHandler.DIR_ADMIN);
         String dirTemplate = Main.pref.getUserPref(PreferenceHandler.DIR_ADMIN_TEMPLATE);
 
-        return generateFoldersHelper(number, dir, dirTemplate, type);
+        return generateFoldersHelper(number, dir, dirTemplate, TYPE_ADMIN);
     }
 
-    private boolean generateBigDataFolder(String number, int type) {
+    private boolean generateBigDataFolder(String number) {
         String dir = Main.pref.getUserPref(PreferenceHandler.DIR_BIG_DATA);
         String dirTemplate = Main.pref.getUserPref(PreferenceHandler.DIR_BIG_DATA_TEMPLATE);
 
-        return generateFoldersHelper(number, dir, dirTemplate, type);
+        return generateFoldersHelper(number, dir, dirTemplate, TYPE_BIG_DATA);
     }
 
     private boolean generateFolders(String number) {
@@ -297,13 +297,13 @@ public class GeneratorWidget {
         boolean isProjectFolderGenerated = false;
 
         if (chkBoxCreateAdminFolder.getSelection()) {
-            isAdminFolderGenerated = generateAdminFolder(number, TYPE_ADMIN);
+            isAdminFolderGenerated = generateAdminFolder(number);
         }
         if (chkBoxCreateBigDataFolder.getSelection()) {
-            isBigDataFolderGenerated = generateBigDataFolder(number, TYPE_BIG_DATA);
+            isBigDataFolderGenerated = generateBigDataFolder(number);
         }
         if (chkBoxCreateProjectFolder.getSelection()) {
-            isProjectFolderGenerated = generateProjectFolder(number, TYPE_PROJECT);
+            isProjectFolderGenerated = generateProjectFolder(number);
         }
 
         if (isAdminFolderGenerated && isBigDataFolderGenerated && isProjectFolderGenerated) {
@@ -356,11 +356,11 @@ public class GeneratorWidget {
         return success;
     }
 
-    private boolean generateProjectFolder(String number, int type) {
+    private boolean generateProjectFolder(String number) {
         String dir = Main.pref.getUserPref(PreferenceHandler.DIR_PROJECT);
         String dirTemplate = Main.pref.getUserPref(PreferenceHandler.DIR_PROJECT_TEMPLATE);
 
-        return generateFoldersHelper(number, dir, dirTemplate, type);
+        return generateFoldersHelper(number, dir, dirTemplate, TYPE_PROJECT);
     }
 
     private void initMaps() {

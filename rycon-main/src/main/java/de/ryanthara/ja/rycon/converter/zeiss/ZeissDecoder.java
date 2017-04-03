@@ -183,7 +183,7 @@ public class ZeissDecoder {
 
             success = true;
 
-        } else if (line.startsWith("   ") & line.trim().length() > 0) {
+        } else if (line.startsWith("   ") && line.trim().length() > 0) {
             final int[] REC500 = BaseToolsZeiss.getLinePositions(dialect = ZeissDialect.REC500);
 
             lineNumber = Integer.parseInt(line.substring(REC500[0], REC500[1] + 1).trim());

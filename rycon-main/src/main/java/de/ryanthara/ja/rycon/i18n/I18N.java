@@ -757,32 +757,32 @@ public class I18N {
         return prepareString("msgTidyUpSuccess", singular);
     }
 
-    public static String getStatus0ExitInitialized() {
-        return Messages.getString("status0ExitInitialized");
+    public static String getStatusExitInitialized() {
+        return Messages.getString("statusExitInitialized");
     }
 
-    public static String getStatus1CleanInitialized() {
-        return Messages.getString("status1CleanInitialized");
+    public static String getStatusCleanInitialized() {
+        return Messages.getString("statusCleanInitialized");
     }
 
-    public static String getStatus2SplitterInitialized() {
-        return Messages.getString("status2SplitterInitialized");
+    public static String getStatusSplitterInitialized() {
+        return Messages.getString("statusSplitterInitialized");
     }
 
-    public static String getStatus3LevelInitialized() {
-        return Messages.getString("status3LevelInitialized");
+    public static String getStatusLevelInitialized() {
+        return Messages.getString("statusLevelInitialized");
     }
 
-    public static String getStatus4ConverterInitialized() {
-        return Messages.getString("status4ConverterInitialized");
+    public static String getStatusConverterInitialized() {
+        return Messages.getString("statusConverterInitialized");
     }
 
-    public static String getStatus5GeneratorInitialized() {
-        return Messages.getString("status5GeneratorInitialized");
+    public static String getStatusGeneratorInitialized() {
+        return Messages.getString("statusGeneratorInitialized");
     }
 
-    public static String getStatus8SettingsOpened() {
-        return Messages.getString("status8SettingsOpened");
+    public static String getStatusSettingsOpened() {
+        return Messages.getString("statusSettingsOpened");
     }
 
     public static String getStatusCleanFileSuccessful(boolean singular) {
@@ -944,5 +944,13 @@ public class I18N {
         } else {
             return s[1];
         }
+    }
+
+    public static String getBtnCopyLabel() {
+        return Messages.getString("btnCopyLabel");
+    }
+
+    public static String getBtnCopyLabelToolTip() {
+        return Messages.getString("btnCopyToolTip");
     }
 } // end of I18N

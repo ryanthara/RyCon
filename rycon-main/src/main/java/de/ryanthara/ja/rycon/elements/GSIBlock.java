@@ -20,6 +20,7 @@ package de.ryanthara.ja.rycon.elements;
 import de.ryanthara.ja.rycon.i18n.GSIWordIndices;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Arrays;
 
 /**
@@ -112,7 +113,7 @@ public class GSIBlock {
                     d = d * 10000.0; // value d in 1/10mm
 
                     BigDecimal bigDecimal = new BigDecimal(d);
-                    bigDecimal = bigDecimal.setScale(0, BigDecimal.ROUND_HALF_UP);
+                    bigDecimal = bigDecimal.setScale(0, RoundingMode.HALF_UP);
 
                     dataGSI = bigDecimal.toString();
                 }

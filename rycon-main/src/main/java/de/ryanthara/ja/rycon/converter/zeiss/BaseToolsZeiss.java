@@ -34,10 +34,9 @@ import de.ryanthara.ja.rycon.tools.NumberFormatter;
  * For M5|Adr     1|TI  Berechn. Punkt             |                      |                      |                      |
  * For M5|Adr     2|PI1 2154H                      |th 1.600          m   |                      |                      |
  * For M5|Adr     3|PI1 2154H                      |Hz 34.9078        gon |V1 106.3481       gon |D  89.893         m   |
- *<p>
+ * <p>
  * The line positions are grabbed from technical definitions and are reduced with the value of '-1' because of the
  * array position numbering in java, which starts with zero for the first position.
- *
  *
  * @author sebastian
  * @version 1
@@ -76,7 +75,7 @@ public class BaseToolsZeiss {
     };
     private static final int[] R5_LINE_POSITIONS = {
             11, 14,     // line number
-            16, 11,     // point identification
+            16, 17,     // point identification
             19, 25,     // point name
             27, 28,     // 1. word block: type mark
             30, 40,     // 1. word block: user information
@@ -99,10 +98,12 @@ public class BaseToolsZeiss {
             67, 68,     // 3. word block: type mark
             69, 77      // 3. word block: value
     };
+
     /**
      * Member which indicates a target height.
      */
     static boolean TARGET_HEIGHT = false;
+
     /**
      * Member which indicates a instrument height.
      */

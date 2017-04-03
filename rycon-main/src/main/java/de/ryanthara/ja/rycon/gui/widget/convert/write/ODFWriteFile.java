@@ -99,7 +99,7 @@ public class ODFWriteFile implements WriteFile {
 
             case ZEISS_REC:
                 Zeiss2ODF zeiss2ODF = new Zeiss2ODF(readStringFile);
-                if (zeiss2ODF.convertZeiss2ODS(path.getFileName(), parameter.isWriteCommentLine())) {
+                if (zeiss2ODF.convertZeiss2ODS(path.getFileName())) {
                     spreadsheetDocument = zeiss2ODF.getSpreadsheetDocument();
                 }
                 break;
@@ -130,7 +130,7 @@ public class ODFWriteFile implements WriteFile {
                 System.err.println("ODFWriteFile.writeStringFile() : unknown file format " + SourceButton.fromIndex(parameter.getSourceNumber()));
         }
 
-        if (WriteODS2Disk.writeODS2Disk(path, spreadsheetDocument, ".ods")) {
+        if (WriteODS2Disk.writeODS2Disk(path, spreadsheetDocument)) {
             success = true;
         }
 

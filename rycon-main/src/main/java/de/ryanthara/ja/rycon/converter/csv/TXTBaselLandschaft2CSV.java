@@ -20,7 +20,12 @@ package de.ryanthara.ja.rycon.converter.csv;
 import java.util.ArrayList;
 
 /**
- * Created by sebastian on 12.09.16.
+ * This class provides functions to convert coordinate files from the geodata server 'Basel Landschaft' (Switzerland)
+ * into csv (comma separated values) files.
+ *
+ * @author sebastian
+ * @version 1
+ * @since 12
  */
 public class TXTBaselLandschaft2CSV {
 

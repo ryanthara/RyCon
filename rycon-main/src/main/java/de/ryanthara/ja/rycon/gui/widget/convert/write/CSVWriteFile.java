@@ -99,7 +99,7 @@ public class CSVWriteFile implements WriteFile {
 
             case ZEISS_REC:
                 Zeiss2CSV zeiss2CSV = new Zeiss2CSV(readStringFile);
-                zeiss2CSV.convertZeiss2CSV(parameter.getSeparatorCSV(), parameter.isKFormatUseSimpleFormat(), parameter.isWriteCommentLine(), parameter.isWriteCodeColumn());
+                zeiss2CSV.convertZeiss2CSV(parameter.getSeparatorCSV());
                 break;
 
             case CADWORK:

@@ -46,7 +46,7 @@ public class Cadwork2K {
     /**
      * Converts a coordinate file from Cadwork CAD program (node.dat) into a Caplan K file.
      *
-     * @param useSimpleFormat  option to write a reduced K file which is compatible to ZF LaserControl
+     * @param useSimpleFormat  option to write a reduced K file which is compatible to Z+F LaserControl
      * @param writeCommentLine option to write a comment line into the K file with basic information
      * @param writeCodeColumn  option to write the code column into the K file
      *
@@ -99,10 +99,10 @@ public class Cadwork2K {
             }
 
             /*
-            pick up the relevant elements from the blocks from every line, check ZF option
-            if ZF option is checked, then use only no 7 x y z for K file
+            pick up the relevant elements from the blocks from every line, check Z+F option
+            if Z+F option is checked, then use only no 7 x y z for K file
              */
-            result.add(BaseToolsCaplanK.prepareStringBuilder(useSimpleFormat, number, valency, easting, northing, height,
+            result.add(BaseToolsCaplanK.prepareCaplanLine(useSimpleFormat, number, valency, easting, northing, height,
                     freeSpace, objectTyp).toString());
         }
 

@@ -96,7 +96,7 @@ class BaseToolsLTOP {
 
                 Points are equal if they are in a slope distance of 'maxDistance' and have the same number!
                  */
-                if ((pt1.getSlopeDistance(pt2) < minDistance) & (pt1.getNumber().equalsIgnoreCase(pt2.getNumber()))) {
+                if ((pt1.getSlopeDistance(pt2) < minDistance) && (pt1.getNumber().equalsIgnoreCase(pt2.getNumber()))) {
                     return 0;
                 } else {
                     return 1;

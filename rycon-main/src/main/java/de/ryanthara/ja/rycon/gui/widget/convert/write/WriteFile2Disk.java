@@ -52,21 +52,21 @@ class WriteFile2Disk {
      */
     static boolean writeFile2Disk(Path path, ArrayList<String> writeFile, String suffix) {
         boolean success;
-        String fileName = prepareOutputFileName(path, suffix);
+        String outputFileName = prepareOutputFileName(path, suffix);
 
-        if (Files.exists(Paths.get(fileName))) {
+        if (Files.exists(Paths.get(outputFileName))) {
             int returnValue = MessageBoxes.showMessageBox(Main.shell, SWT.ICON_WARNING | SWT.YES | SWT.NO,
-                    I18N.getMsgBoxTitleWarning(), String.format(I18N.getMsgFileExist(), fileName));
+                    I18N.getMsgBoxTitleWarning(), String.format(I18N.getMsgFileExist(), outputFileName));
 
             if (returnValue == SWT.YES) {
-                LineWriter lineWriter = new LineWriter(fileName);
+                LineWriter lineWriter = new LineWriter(outputFileName);
 
                 success = lineWriter.writeFile(writeFile);
             } else {
                 success = false;
             }
         } else {
-            success = new LineWriter(fileName).writeFile(writeFile);
+            success = new LineWriter(outputFileName).writeFile(writeFile);
         }
 
         return success;

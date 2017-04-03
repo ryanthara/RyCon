@@ -62,7 +62,6 @@ public class FileDialogs {
      * With a special number of parameters the dialog is fully customizable.
      *
      * @param innerShell       shell object
-     * @param multiSelection   allows multi selection
      * @param filterPath       filter path of the file dialog
      * @param text             title of the file dialog
      * @param filterExtensions allowed extensions
@@ -72,9 +71,9 @@ public class FileDialogs {
      *
      * @return chosen files as {@link Path} array
      */
-    public static Path[] showAdvancedFileDialog(Shell innerShell, int multiSelection, String filterPath, String text,
-                                                String[] filterExtensions, String[] filterNames, Text source, Text destination) {
-        FileDialog fileDialog = new FileDialog(innerShell, multiSelection);
+    public static Path[] showAdvancedFileDialog(Shell innerShell, String filterPath, String text, String[] filterExtensions,
+                                                String[] filterNames, Text source, Text destination) {
+        FileDialog fileDialog = new FileDialog(innerShell, org.eclipse.swt.SWT.MULTI);
         fileDialog.setFilterPath(filterPath);
         fileDialog.setText(text);
         fileDialog.setFilterExtensions(filterExtensions);

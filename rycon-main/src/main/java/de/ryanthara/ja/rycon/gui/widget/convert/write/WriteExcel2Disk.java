@@ -52,26 +52,29 @@ class WriteExcel2Disk {
      */
     static boolean writeExcel2Disk(Path path, Workbook workbook, String suffix) {
         boolean writeSuccess;
-        String fileName = prepareOutputFileName(path, suffix);
+        String outputFileName = prepareOutputFileName(path, suffix);
+
+        System.out.println(outputFileName);
+
         FileToolsExcel fileToolsExcel = new FileToolsExcel(workbook);
 
-        if (Files.exists(Paths.get(fileName))) {
+        if (Files.exists(Paths.get(outputFileName))) {
             int returnValue = MessageBoxes.showMessageBox(Main.shell, SWT.ICON_WARNING | SWT.YES | SWT.NO,
-                    I18N.getMsgBoxTitleWarning(), String.format(I18N.getMsgFileExist(), fileName));
+                    I18N.getMsgBoxTitleWarning(), String.format(I18N.getMsgFileExist(), outputFileName));
 
             if (returnValue == SWT.YES) {
                 if (suffix.equalsIgnoreCase(".xls")) {
-                    writeSuccess = fileToolsExcel.writeXLS(path);
+                    writeSuccess = fileToolsExcel.writeXLS(Paths.get(outputFileName));
                 } else
-                    writeSuccess = suffix.equalsIgnoreCase(".xlsx") && fileToolsExcel.writeXLSX(path);
+                    writeSuccess = suffix.equalsIgnoreCase(".xlsx") && fileToolsExcel.writeXLSX(Paths.get(outputFileName));
             } else {
                 writeSuccess = false;
             }
         } else {
             if (suffix.equalsIgnoreCase(".xls")) {
-                writeSuccess = fileToolsExcel.writeXLS(path);
+                writeSuccess = fileToolsExcel.writeXLS(Paths.get(outputFileName));
             } else
-                writeSuccess = suffix.equalsIgnoreCase(".xlsx") && fileToolsExcel.writeXLSX(path);
+                writeSuccess = suffix.equalsIgnoreCase(".xlsx") && fileToolsExcel.writeXLSX(Paths.get(outputFileName));
         }
 
         return writeSuccess;

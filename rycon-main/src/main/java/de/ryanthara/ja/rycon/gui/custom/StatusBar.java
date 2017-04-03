@@ -51,8 +51,9 @@ public class StatusBar extends Composite {
     private Image iconError;
     private Image iconOK;
     private Image iconWarning;
-    private Label icon, message;
-    private Vector statusInformationListeners;
+    private Label icon;
+    private Label message;
+    private Vector<StatusInformationListener> statusInformationListeners;
 
     /**
      * Constructs a new instance of this class given it's parent composite and the style.
@@ -60,12 +61,12 @@ public class StatusBar extends Composite {
      * Initializes the Control and its Widgets.
      *
      * @param parent the parent composite
-     * @param style  sorry, but only SWT.NONE is supported
      *
      * @since 1
      */
-    public StatusBar(Composite parent, int style) {
-        super(parent, style);
+    @SuppressWarnings("unchecked")
+    public StatusBar(Composite parent) {
+        super(parent, org.eclipse.swt.SWT.NONE);
 
         prepareIcons();
 
@@ -73,8 +74,8 @@ public class StatusBar extends Composite {
         formLayout.marginHeight = 5;
         setLayout(formLayout);
 
-        icon = new Label(this, style);
-        message = new Label(this, style);
+        icon = new Label(this, org.eclipse.swt.SWT.NONE);
+        message = new Label(this, org.eclipse.swt.SWT.NONE);
 
         FormData data = new FormData();
 
@@ -109,6 +110,7 @@ public class StatusBar extends Composite {
      *
      * @param listener the {@link StatusInformationListener} to be added
      */
+    @SuppressWarnings("unchecked")
     public void addStatusInformationListener(StatusInformationListener listener) {
         statusInformationListeners.addElement(listener);
     }

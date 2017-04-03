@@ -79,7 +79,7 @@ public class TidyUpWidget {
      *
      * @param droppedFiles {@link Path} array from drop source
      */
-    public TidyUpWidget(Path[] droppedFiles) {
+    public TidyUpWidget(Path... droppedFiles) {
         files2read = PathCheck.getValidFiles(droppedFiles, acceptableFileSuffixes);
         innerShell = null;
     }
@@ -199,7 +199,7 @@ public class TidyUpWidget {
         }
 
         files2read = FileDialogs.showAdvancedFileDialog(
-                innerShell, SWT.MULTI, filterPath, I18N.getFileChooserTidyUpSourceText(), acceptableFileSuffixes,
+                innerShell, filterPath, I18N.getFileChooserTidyUpSourceText(), acceptableFileSuffixes,
                 filterNames, inputFieldsComposite.getSourceTextField(), inputFieldsComposite.getDestinationTextField());
     }
 
@@ -253,8 +253,7 @@ public class TidyUpWidget {
                 ArrayList<String> writeFile = null;
                 String file2write = null;
 
-
-                // processFileOperations and differ between 'normal' GSI files and LTOP 'GSL' files (caseinsensitive)
+                // processFileOperations and differ between 'normal' GSI files and LTOP 'GSL' files (case insensitive)
                 PathMatcher matcherGSI = FileSystems.getDefault().getPathMatcher("regex:(?iu:.+\\.GSI)");
                 PathMatcher matcherGSL = FileSystems.getDefault().getPathMatcher("regex:(?iu:.+\\.GSL)");
 
@@ -317,13 +316,13 @@ public class TidyUpWidget {
         gridLayout.marginHeight = 0;
         gridLayout.marginWidth = 0;
 
-        inputFieldsComposite = new InputFieldsComposite(this, innerShell, SWT.NONE);
+        inputFieldsComposite = new InputFieldsComposite(this, innerShell);
         inputFieldsComposite.setLayout(gridLayout);
 
         createOptions(width);
         createDescription(width);
 
-        new BottomButtonBar(this, innerShell, SWT.NONE);
+        new BottomButtonBar(this, innerShell);
 
         innerShell.setLocation(ShellPositioner.centerShellOnPrimaryMonitor(innerShell));
 

@@ -46,23 +46,22 @@ class WriteODS2Disk {
      *
      * @param path                path object
      * @param spreadsheetDocument prepared {@link SpreadsheetDocument} for writing
-     * @param suffix              file suffix
      *
      * @return write success
      */
-    static boolean writeODS2Disk(Path path, SpreadsheetDocument spreadsheetDocument, String suffix) {
+    static boolean writeODS2Disk(Path path, SpreadsheetDocument spreadsheetDocument) {
         boolean writeSuccess;
-        String fileName = prepareOutputFileName(path, suffix);
+        String outputFileName = prepareOutputFileName(path, ".ods");
 
         FileToolsODF fileToolsODF = new FileToolsODF(spreadsheetDocument);
 
-        if (Files.exists(Paths.get(fileName))) {
+        if (Files.exists(Paths.get(outputFileName))) {
             int returnValue = MessageBoxes.showMessageBox(Main.shell, SWT.ICON_WARNING | SWT.YES | SWT.NO,
-                    I18N.getMsgBoxTitleWarning(), String.format(I18N.getMsgFileExist(), fileName));
+                    I18N.getMsgBoxTitleWarning(), String.format(I18N.getMsgFileExist(), outputFileName));
 
-            writeSuccess = returnValue == SWT.YES && fileToolsODF.writeODS(fileName);
+            writeSuccess = returnValue == SWT.YES && fileToolsODF.writeODS(outputFileName);
         } else {
-            writeSuccess = fileToolsODF.writeODS(fileName);
+            writeSuccess = fileToolsODF.writeODS(outputFileName);
         }
 
         return writeSuccess;

@@ -25,7 +25,12 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.util.List;
 
 /**
- * Created by sebastian on 13.09.16.
+ * This class provides functions to convert coordinate files from the geodata server 'Basel Stadt' (Switzerland)
+ * into Microsoft Excel (XLS and XLSX) files.
+ *
+ * @author sebastian
+ * @version 1
+ * @since 12
  */
 public class CSVBaselStadt2Excel {
 

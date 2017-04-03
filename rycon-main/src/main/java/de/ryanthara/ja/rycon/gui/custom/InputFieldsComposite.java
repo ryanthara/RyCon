@@ -51,13 +51,11 @@ public class InputFieldsComposite extends Composite {
 
     /**
      * Constructs a new instance of this class given a calling object, the parent composite and a style.
-     *
-     * @param callingObject reference to the calling object
+     *  @param callingObject reference to the calling object
      * @param parent        parent composite (e.g. the parent shell)
-     * @param style         style of the composite
      */
-    public InputFieldsComposite(Object callingObject, Composite parent, int style) {
-        super(parent, style);
+    public InputFieldsComposite(Object callingObject, Composite parent) {
+        super(parent, SWT.NONE);
         this.callingObject = callingObject;
         createContents();
     }

@@ -41,7 +41,7 @@ public class RadioHelper {
      *
      * @return number of the selected radio button
      */
-    public static int getSelectedBtn(Control[] control) {
+    public static int getSelectedBtn(Control... control) {
         int number = -1;
 
         for (int i = 0; i < control.length; i++) {
@@ -86,6 +86,7 @@ public class RadioHelper {
      * @param master Radio button group which is selected
      * @param slave  Radio button group which has to be toggled
      */
+    @SuppressWarnings("MethodCanBeVariableArityMethod")
     public static void toggleBtn(Control[] master, Control[] slave) {
         int selectedMaster = -1;
         int selectedSlave;

@@ -28,7 +28,12 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.util.ArrayList;
 
 /**
- * Created by sebastian on 13.09.16.
+ * This class provides functions to convert coordinate or measurement files in ASCII text format
+ * into Microsoft Excel (XLS and XLSX) files.
+ *
+ * @author sebastian
+ * @version 1
+ * @since 12
  */
 public class TXT2Excel {
 

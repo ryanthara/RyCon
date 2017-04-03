@@ -39,7 +39,7 @@ public class LineWriter {
     private int writtenLines = -1;
 
     /**
-     * Constructor with the filename as {code String} parameter.
+     * Constructs a new instance of this class with the filename as {code String} parameter.
      *
      * @param fileName filename as {@code String}
      */
@@ -48,7 +48,7 @@ public class LineWriter {
     }
 
     /**
-     * Return the number of written lines.
+     * Returns the number of written lines.
      *
      * @return number of written lines
      */
@@ -58,7 +58,7 @@ public class LineWriter {
     }
 
     /**
-     * Write a given {@code ArrayList<String>} line by line to the file system.
+     * Writes a given {@code ArrayList<String>} line by line to the file system.
      *
      * @param lines given list to write to file system
      *

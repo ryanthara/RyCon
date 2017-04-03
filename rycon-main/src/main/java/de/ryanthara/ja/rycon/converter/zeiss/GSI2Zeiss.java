@@ -161,12 +161,12 @@ public class GSI2Zeiss {
                             number, code, targetHeight, lineNumber));
                     lineNumber = lineNumber + 1;
                 }
-                if (!horizontalAngle.isEmpty() & !verticalAngle.isEmpty() & !slopeDistance.isEmpty()) {
+                if (!horizontalAngle.isEmpty() && !verticalAngle.isEmpty() && !slopeDistance.isEmpty()) {
                     result.add(BaseToolsZeiss.prepareLineOfMeasurement(dialect, number, code, horizontalAngle, verticalAngle,
                             slopeDistance, lineNumber));
                     lineNumber = lineNumber + 1;
                 }
-                if (!easting.isEmpty() & !northing.isEmpty()) {
+                if (!easting.isEmpty() && !northing.isEmpty()) {
                     result.add(BaseToolsZeiss.prepareLineOfCoordinates(dialect, number, code, easting, northing, height, lineNumber));
                     lineNumber = lineNumber + 1;
                 }

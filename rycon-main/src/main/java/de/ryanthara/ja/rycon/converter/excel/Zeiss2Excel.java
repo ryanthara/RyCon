@@ -17,7 +17,15 @@
  */
 package de.ryanthara.ja.rycon.converter.excel;
 
+import de.ryanthara.ja.rycon.converter.zeiss.ZeissDecoder;
+import de.ryanthara.ja.rycon.elements.ZeissBlock;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.WorkbookUtil;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.util.ArrayList;
 
@@ -53,7 +61,87 @@ public class Zeiss2Excel {
      * @return success conversion success
      */
     public boolean convertZeiss2Excel(boolean isXLS, String sheetName, boolean writeCommentRow) {
-        return false;
+        // general preparation of the workbook
+        if (isXLS) {
+            workbook = new HSSFWorkbook();
+        } else {
+            workbook = new XSSFWorkbook();
+        }
+
+        String safeName = WorkbookUtil.createSafeSheetName(sheetName);
+        Sheet sheet = workbook.createSheet(safeName);
+        Row row;
+        Cell cell;
+//        CellStyle cellStyle;
+
+//        DataFormat format = workbook.createDataFormat();
+
+        short rowNumber = 0;
+        short cellNumber = 0;
+        short countColumns = 0;
+
+        // TODO implement comment row and multi line stored values
+
+        /*
+        if (writeCommentRow) {
+            row = sheet.createRow(rowNumber);
+            rowNumber++;
+
+            cell = row.createCell(cellNumber);
+            cell.setCellValue(I18N.getCaplanColumnTyp("pointNumber"));
+            cellNumber++;
+
+            cell = row.createCell(cellNumber);
+            cell.setCellValue(I18N.getCaplanColumnTyp("easting"));
+            cellNumber++;
+
+            cell = row.createCell(cellNumber);
+            cell.setCellValue(I18N.getCaplanColumnTyp("northing"));
+            cellNumber++;
+
+            cell = row.createCell(cellNumber);
+            cell.setCellValue(I18N.getCaplanColumnTyp("height"));
+            cellNumber++;
+
+            cell = row.createCell(cellNumber);
+            cell.setCellValue(I18N.getCaplanColumnTyp("object"));
+            cellNumber++;
+
+            cell = row.createCell(cellNumber);
+            cell.setCellValue(I18N.getCaplanColumnTyp("attribute"));
+        }
+        */
+
+        for (String line : readStringLines) {
+
+            // skip empty lines directly after reading
+            if (!line.trim().isEmpty()) {
+                row = sheet.createRow(rowNumber);
+                rowNumber++;
+
+                cellNumber = 0;
+
+                ZeissDecoder decoder = new ZeissDecoder();
+
+                for (ZeissBlock zeissBlock : decoder.getZeissBlocks()) {
+                    cell = row.createCell(cellNumber);
+                    cell.setCellValue(zeissBlock.getValue());
+                    cellNumber++;
+                    countColumns++;
+                }
+
+                if (cellNumber > countColumns) {
+                    countColumns = cellNumber;
+                }
+            }
+        }
+
+        // adjust column width to fit the content
+        for (int i = 0; i < countColumns; i++) {
+            sheet.autoSizeColumn((short) i);
+        }
+
+        return rowNumber > 1;
     }
 
     /**

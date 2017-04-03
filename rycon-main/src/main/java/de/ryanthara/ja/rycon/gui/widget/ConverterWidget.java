@@ -372,6 +372,7 @@ public class ConverterWidget {
         }
     }
 
+    @SuppressWarnings("MethodCanBeVariableArityMethod")
     private SelectionListener getSelectionListener(final Control[] children1, final Control[] children2) {
         return new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
@@ -424,13 +425,13 @@ public class ConverterWidget {
 
         createCompositeSourceTarget();
 
-        inputFieldsComposite = new InputFieldsComposite(this, innerShell, SWT.NONE);
+        inputFieldsComposite = new InputFieldsComposite(this, innerShell);
         inputFieldsComposite.setLayout(gridLayout);
 
         createOptions(width);
         createDescription(width);
 
-        new BottomButtonBar(this, innerShell, SWT.NONE);
+        new BottomButtonBar(this, innerShell);
 
         innerShell.setLocation(ShellPositioner.centerShellOnPrimaryMonitor(innerShell));
 
@@ -553,6 +554,7 @@ public class ConverterWidget {
         return success;
     }
 
+    @SuppressWarnings("MethodCanBeVariableArityMethod")
     private void toggleRadioButtons(FileDialog fileDialog, Control[] childrenSource, Control[] childrenTarget) {
         switch (FileFilterIndex.fromIndex(fileDialog.getFilterIndex())) {
             case GSI:

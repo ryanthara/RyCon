@@ -109,7 +109,7 @@ public class GSI2MES {
 
                     String stationLine = "ST".concat(stationNumber).concat("                                  ").concat(instrumentHeight);
 
-                    if (horizontalAngleGroup.size() != 0 & verticalAngleGroup.size() != 0 & slopeDistanceGroup.size() != 0) {
+                    if (horizontalAngleGroup.size() != 0 && verticalAngleGroup.size() != 0 && slopeDistanceGroup.size() != 0) {
                         // write the ArrayLists
                         for (String elevationLine : horizontalAngleGroup) {
                             result.add(elevationLine);

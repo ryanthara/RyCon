@@ -64,7 +64,7 @@ public class FileUtils {
     private static void copyDirectory(Path source, Path destination) throws IOException {
         // follow links when copying files
         EnumSet<FileVisitOption> opts = EnumSet.of(FileVisitOption.FOLLOW_LINKS);
-        TreeCopier tc = new TreeCopier(source, destination, false);
+        TreeCopier tc = new TreeCopier(source, destination);
         Files.walkFileTree(source, opts, Integer.MAX_VALUE, tc);
     }
 
@@ -91,10 +91,10 @@ public class FileUtils {
         private final Path destination;
         private final boolean preserve;
 
-        TreeCopier(Path source, Path destination, boolean preserve) {
+        TreeCopier(Path source, Path destination) {
             this.source = source;
             this.destination = destination;
-            this.preserve = preserve;
+            this.preserve = false;
         }
 
         /**

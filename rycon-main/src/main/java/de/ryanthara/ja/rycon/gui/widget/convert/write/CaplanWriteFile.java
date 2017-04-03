@@ -82,10 +82,12 @@ public class CaplanWriteFile implements WriteFile {
                 GSI2K gsi2K = new GSI2K(readStringFile);
                 writeFile = gsi2K.convertGSI2K(parameter.isKFormatUseSimpleFormat(), parameter.isWriteCommentLine());
                 break;
+
             case TXT:
                 TXT2K txt2K = new TXT2K(readStringFile);
                 writeFile = txt2K.convertTXT2K(parameter.isKFormatUseSimpleFormat(), parameter.isWriteCommentLine(), parameter.isWriteCodeColumn());
                 break;
+
             case CSV:
                 CSV2K csv2K = new CSV2K(readCSVFile);
                 writeFile = csv2K.convertCSV2K(parameter.isKFormatUseSimpleFormat(), parameter.isWriteCommentLine(), parameter.isWriteCodeColumn());
@@ -96,7 +98,7 @@ public class CaplanWriteFile implements WriteFile {
 
             case ZEISS_REC:
                 Zeiss2K zeiss2K = new Zeiss2K(readStringFile);
-                writeFile = zeiss2K.convertZeiss2K(parameter.isKFormatUseSimpleFormat(), parameter.isWriteCommentLine(), parameter.isWriteCodeColumn());
+                writeFile = zeiss2K.convertZeiss2K(parameter.isKFormatUseSimpleFormat(), parameter.isWriteCommentLine());
                 break;
 
             case CADWORK:

@@ -37,10 +37,10 @@ import java.util.Date;
  * !-------------------------------------------------------------------------------
  * ! The following data was created by RyCON Build xxx on 2016-09-06.
  * !-------------------------------------------------------------------------------
- *      GB1 7  2612259.5681  1256789.1990    256.90815 |10
- *      GB2 7  2612259.5681  1256789.1990    256.90815 |10
- *     1003 7  2612259.5681  1256789.1990    256.90815 |10|Att1|Att2
- *     1062 7  2612259.5681  1256789.1990    256.90815 |10
+ * GB1      7  2612259.5681  1256789.1990    256.90815 |10
+ * GB2      7  2612259.5681  1256789.1990    256.90815 |10
+ * 1003     7  2612259.5681  1256789.1990    256.90815 |10|Att1|Att2
+ * 1062     7  2612259.5681  1256789.1990    256.90815 |10
  * TF 1067G 4  2612259.5681  1256789.1990    256.90815 |10
  * NG 2156U 3  2612259.5681  1256789.1990      0.00000 |10
  *
@@ -95,6 +95,9 @@ class BaseToolsCaplanK {
 
     /**
      * Prepares an output line as a string with a defined format and defined values.
+     * <p>
+     * All input string parameters of this method are automatically transformed to the
+     * right length with cut off oversize strings.
      *
      * @param useSimpleFormat write simple formatted output file
      * @param number          point number
@@ -107,26 +110,24 @@ class BaseToolsCaplanK {
      *
      * @return prepared output string
      */
-    static StringBuilder prepareStringBuilder(boolean useSimpleFormat, String number, String valency, String easting,
-                                              String northing, String height, String freeSpace, String objectTyp) {
+    static StringBuilder prepareCaplanLine(boolean useSimpleFormat, String number, String valency, String easting,
+                                           String northing, String height, String freeSpace, String objectTyp) {
         StringBuilder stringBuilder = new StringBuilder();
-        if (useSimpleFormat) {
-            stringBuilder.append(number);
-            stringBuilder.append(valency);
-            stringBuilder.append(easting);
-            stringBuilder.append(northing);
-            stringBuilder.append(height);
-        } else {
-            stringBuilder.append(number);
-            stringBuilder.append(valency);
-            stringBuilder.append(easting);
-            stringBuilder.append(northing);
-            stringBuilder.append(height);
+        // TODO use the right string format methods here instead of the calling methods if possible
+
+        stringBuilder.append(number);
+        stringBuilder.append(valency);
+        stringBuilder.append(easting);
+        stringBuilder.append(northing);
+        stringBuilder.append(height);
+
+        if (!useSimpleFormat) {
             if (!objectTyp.equals("")) {
                 stringBuilder.append(freeSpace);
                 stringBuilder.append(objectTyp);
             }
         }
+
         return stringBuilder;
     }
 

@@ -46,10 +46,9 @@ public class BottomButtonBar extends Composite {
      *
      * @param callingObject reference to the calling object
      * @param parent        parent composite (e.g. the parent shell)
-     * @param style         style of the composite
      */
-    public BottomButtonBar(Object callingObject, Composite parent, int style) {
-        super(parent, style);
+    public BottomButtonBar(Object callingObject, Composite parent) {
+        super(parent, SWT.NONE);
         this.callingObject = callingObject;
         createContents();
     }

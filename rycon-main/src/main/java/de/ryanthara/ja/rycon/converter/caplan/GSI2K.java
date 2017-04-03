@@ -49,7 +49,7 @@ public class GSI2K {
     /**
      * Converts a Leica GSI file into a CAPLAN K file.
      *
-     * @param useSimpleFormat  option to write a reduced K file which is compatible to ZF LaserControl
+     * @param useSimpleFormat  option to write a reduced K file which is compatible to Z+F LaserControl
      * @param writeCommentLine option to write a comment line into the K file with basic information
      *
      * @return converted K file as ArrayList<String>
@@ -141,10 +141,10 @@ public class GSI2K {
                 }
 
                 /*
-                pick up the relevant elements from the blocks from every line, check ZF option
-                if ZF option is checked, then use only no 7 x y z for K file
+                pick up the relevant elements from the blocks from every line, check Z+F option
+                if Z+F option is checked, then use only no 7 y x z for K file
                  */
-                stringBuilder = BaseToolsCaplanK.prepareStringBuilder(useSimpleFormat, number, valency, easting, northing, height,
+                stringBuilder = BaseToolsCaplanK.prepareCaplanLine(useSimpleFormat, number, valency, easting, northing, height,
                         freeSpace, objectTyp);
 
                 if ((!useSimpleFormat) && (!attr.equals(""))) {

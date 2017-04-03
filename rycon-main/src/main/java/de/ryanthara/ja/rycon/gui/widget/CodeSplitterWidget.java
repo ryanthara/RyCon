@@ -82,7 +82,7 @@ public class CodeSplitterWidget {
      *
      * @param droppedFiles path array from drop source
      */
-    public CodeSplitterWidget(Path[] droppedFiles) {
+    public CodeSplitterWidget(Path... droppedFiles) {
         files2read = PathCheck.getValidFiles(droppedFiles, acceptableFileSuffixes);
     }
 
@@ -199,7 +199,7 @@ public class CodeSplitterWidget {
         }
 
         files2read = FileDialogs.showAdvancedFileDialog(
-                innerShell, SWT.MULTI, filterPath, I18N.getFileChooserSplitterSourceText(), acceptableFileSuffixes,
+                innerShell, filterPath, I18N.getFileChooserSplitterSourceText(), acceptableFileSuffixes,
                 filterNames, inputFieldsComposite.getSourceTextField(), inputFieldsComposite.getDestinationTextField());
     }
 
@@ -350,13 +350,13 @@ public class CodeSplitterWidget {
         gridLayout.marginHeight = 0;
         gridLayout.marginWidth = 0;
 
-        inputFieldsComposite = new InputFieldsComposite(this, innerShell, SWT.NONE);
+        inputFieldsComposite = new InputFieldsComposite(this, innerShell);
         inputFieldsComposite.setLayout(gridLayout);
 
         createOptions(width);
         createDescription(width);
 
-        new BottomButtonBar(this, innerShell, SWT.NONE);
+        new BottomButtonBar(this, innerShell);
 
         innerShell.setLocation(ShellPositioner.centerShellOnPrimaryMonitor(innerShell));
 

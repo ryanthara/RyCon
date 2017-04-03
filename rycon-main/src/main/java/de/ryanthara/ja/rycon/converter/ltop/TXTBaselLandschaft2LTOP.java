@@ -23,7 +23,12 @@ import de.ryanthara.ja.rycon.tools.NumberFormatter;
 import java.util.ArrayList;
 
 /**
- * Created by sebastian on 13.09.16.
+ * This class provides functions to convert coordinate files from the geodata server 'Basel Landschaft' (Switzerland)
+ * into LTOP KOO files.
+ *
+ * @author sebastian
+ * @version 1
+ * @since 12
  */
 public class TXTBaselLandschaft2LTOP {
 
