@@ -17,7 +17,7 @@
  */
 package de.ryanthara.ja.rycon.gui.custom;
 
-import de.ryanthara.ja.rycon.i18n.I18N;
+import de.ryanthara.ja.rycon.i18n.Buttons;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -57,8 +57,8 @@ public class BottomButtonBar extends Composite {
         this.setLayout(new FillLayout());
 
         Button btnCancel = new Button(this, SWT.NONE);
-        btnCancel.setText(I18N.getBtnCancelLabel());
-        btnCancel.setToolTipText(I18N.getBtnCancelLabelToolTip());
+        btnCancel.setText(Buttons.getString("cancelText"));
+        btnCancel.setToolTipText(Buttons.getString("cancelToolTip"));
         btnCancel.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -67,8 +67,8 @@ public class BottomButtonBar extends Composite {
         });
 
         Button btnOK = new Button(this, SWT.NONE);
-        btnOK.setText(I18N.getBtnOKAndOpenLabel());
-        btnOK.setToolTipText(I18N.getBtnOKAndOpenLabelToolTip());
+        btnOK.setText(Buttons.getString("okAndOpenText"));
+        btnOK.setToolTipText(Buttons.getString("okAndOpenToolTip"));
         btnOK.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -77,8 +77,8 @@ public class BottomButtonBar extends Composite {
         });
 
         Button btnOKAndExit = new Button(this, SWT.NONE);
-        btnOKAndExit.setText(I18N.getBtnOKAndExitLabel());
-        btnOKAndExit.setToolTipText(I18N.getBtnOKAndExitLabelToolTip());
+        btnOKAndExit.setText(Buttons.getString("okAndExitText"));
+        btnOKAndExit.setToolTipText(Buttons.getString("okAndExitToolTip"));
         btnOKAndExit.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {

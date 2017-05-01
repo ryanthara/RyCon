@@ -19,7 +19,7 @@ package de.ryanthara.ja.rycon.converter.excel;
 
 import de.ryanthara.ja.rycon.converter.gsi.BaseToolsGSI;
 import de.ryanthara.ja.rycon.elements.GSIBlock;
-import de.ryanthara.ja.rycon.i18n.I18N;
+import de.ryanthara.ja.rycon.i18n.GSIWordIndices;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.WorkbookUtil;
@@ -84,7 +84,7 @@ public class GSI2Excel {
                 cell = row.createCell(cellNumber);
                 cellNumber++;
 
-                cell.setCellValue(I18N.getWordIndexDescription(wordIndex));
+                cell.setCellValue(GSIWordIndices.getWordIndexDescription(wordIndex));
             }
         }
 

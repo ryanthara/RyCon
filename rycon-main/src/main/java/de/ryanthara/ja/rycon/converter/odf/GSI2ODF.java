@@ -19,7 +19,7 @@ package de.ryanthara.ja.rycon.converter.odf;
 
 import de.ryanthara.ja.rycon.converter.gsi.BaseToolsGSI;
 import de.ryanthara.ja.rycon.elements.GSIBlock;
-import de.ryanthara.ja.rycon.i18n.I18N;
+import de.ryanthara.ja.rycon.i18n.GSIWordIndices;
 import org.odftoolkit.simple.SpreadsheetDocument;
 import org.odftoolkit.simple.table.Cell;
 import org.odftoolkit.simple.table.Table;
@@ -75,7 +75,7 @@ public class GSI2ODF {
                     cell = table.getCellByPosition(colIndex, 0);
                     colIndex = colIndex + 1;
 
-                    cell.setStringValue(I18N.getWordIndexDescription(wordIndex));
+                    cell.setStringValue(GSIWordIndices.getWordIndexDescription(wordIndex));
                 }
                 rowIndex = rowIndex + 1;
             }

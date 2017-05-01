@@ -18,7 +18,7 @@
 
 package de.ryanthara.ja.rycon.gui;
 
-import de.ryanthara.ja.rycon.i18n.I18N;
+import de.ryanthara.ja.rycon.i18n.Buttons;
 import de.ryanthara.ja.rycon.tools.ShellPositioner;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTError;
@@ -216,8 +216,8 @@ public class UpdateDialog extends Dialog {
         buttonArea.setLayoutData(data);
 
         Button close = new Button(buttonArea, SWT.PUSH);
-        close.setText(I18N.getBtnOKAndExitLabel());
-        close.setToolTipText(I18N.getBtnOKAndExitLabelToolTip());
+        close.setText(Buttons.getString("okAndExitText"));
+        close.setToolTipText(Buttons.getString("okAndExitToolTip"));
         close.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent selectionEvent) {
@@ -232,8 +232,8 @@ public class UpdateDialog extends Dialog {
         close.setLayoutData(closeBtnData);
 
         Button openBrowser = new Button(buttonArea, SWT.PUSH);
-        openBrowser.setText(I18N.getBtnOKAndOpenBrowserLabel());
-        openBrowser.setToolTipText(I18N.getBtnOKAndOpenBrowserToolTip());
+        openBrowser.setText(Buttons.getString("okAndOpenBrowserText"));
+        openBrowser.setToolTipText(Buttons.getString("okAndOpenBrowserToolTip"));
         openBrowser.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent selectionEvent) {

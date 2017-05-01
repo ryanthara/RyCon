@@ -1,7 +1,7 @@
 /*
- * License: GPL. Copyright 2014- (C) by Sebastian Aust (https://www.ryanthara.de/)
+ * License: GPL. Copyright 2017- (C) by Sebastian Aust (https://www.ryanthara.de/)
  *
- * This file is part of the package de.ryanthara.ja.rycon.tools
+ * This file is part of the package de.ryanthara.ja.rycon.i18n
  *
  * This package is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -21,23 +21,21 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 /**
- * Messages handles character string for multi-language support in RyCON.
+ * Labels handles character string for multi-language support in RyCON.
  * <p>
- * The strings for different message texts are stored in the Resource Bundle MessageBundle and loaded from this class.
+ * The strings for different label texts are stored in the Resource Bundle LabelBundle and loaded from this class.
  * <p>
  * <h3>Changes:</h3>
  * <ul>
- * <li>2: code improvements and clean up </li>
  * <li>1: basic implementation </li>
  * </ul>
  *
  * @author sebastian
- * @version 2
  * @since 1
  */
-public class Messages {
+public class Labels {
 
-    private static final String BUNDLE_NAME = "de/ryanthara/ja/rycon/gui/MessageBundle";
+    private static final String BUNDLE_NAME = "de/ryanthara/ja/rycon/gui/LabelBundle";
     private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 
     /**
@@ -56,24 +54,13 @@ public class Messages {
     }
 
     /**
-     * Helper for string preparation to differ between singular and plural text.
-     * <p>
-     * In the properties file the String "§§" is used as separator. The values
-     * for singular is set with {@code Main.TEXT_SINGULAR} and for plural is
-     * set with {@code Main.TEXT_PLURAL}
+     * Returns the Caplan K column description string by a given string.
      *
-     * @param key key to look up
-     * @param singular set to get a singular or plural text back
-     *
-     * @return singular or plural string message
+     * @param columnType column type to get the string for
+     * @return Caplan K description string
      */
-    public static String prepareString(String key, boolean singular) {
-        String[] s = Messages.getString(key).split("§§");
-        if (singular) {
-            return s[0];
-        } else {
-            return s[1];
-        }
+    public static String getCaplanColumnTyp(String columnType) {
+        return CaplanKDescription.getDescription(columnType);
     }
 
-} // end of Messages
+} // end of Labels

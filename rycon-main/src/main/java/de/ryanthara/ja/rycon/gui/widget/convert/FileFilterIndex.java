@@ -18,7 +18,7 @@
 package de.ryanthara.ja.rycon.gui.widget.convert;
 
 import de.ryanthara.ja.rycon.gui.widget.ConverterWidget;
-import de.ryanthara.ja.rycon.i18n.I18N;
+import de.ryanthara.ja.rycon.i18n.FileChoosers;
 
 import java.util.ArrayList;
 
@@ -31,12 +31,12 @@ import java.util.ArrayList;
  */
 public enum FileFilterIndex {
 
-    GSI("*.gsi", I18N.getFileChooserFilterNameGSI()),
-    TXT("*.txt", I18N.getFileChooserFilterNameTXT()),
-    CSV("*.csv", I18N.getFileChooserFilterNameCSV()),
-    K("*.K", I18N.getFileChooserFilterNameK()),
-    DAT("*.dat", I18N.getFileChooserFilterNameCadwork()),
-    REC("*.REC", I18N.getFileChooserFilterNameZeiss());
+    GSI("*.gsi", FileChoosers.getString("filterNameGSI")),
+    TXT("*.txt", FileChoosers.getString("filterNameTXT")),
+    CSV("*.csv", FileChoosers.getString("filterNameCSV")),
+    K("*.K", FileChoosers.getString("filterNameK")),
+    DAT("*.dat", FileChoosers.getString("filterNameCadwork")),
+    REC("*.REC", FileChoosers.getString("filterNameZeiss"));
 
     private final String extension;
     private final String filterName;

@@ -20,7 +20,8 @@ package de.ryanthara.ja.rycon.gui.widget.convert.read;
 import com.opencsv.CSVReader;
 import de.ryanthara.ja.rycon.gui.custom.MessageBoxes;
 import de.ryanthara.ja.rycon.gui.widget.ConverterWidget;
-import de.ryanthara.ja.rycon.i18n.I18N;
+import de.ryanthara.ja.rycon.i18n.Errors;
+import de.ryanthara.ja.rycon.i18n.Labels;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 
@@ -97,8 +98,8 @@ public class BaselStadtCSVReadFile implements ReadFile {
             success = true;
         } catch (IOException e) {
             System.err.println("File " + file2Read.getFileName() + " could not be read.");
-            MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR, I18N.getMsgBoxTitleError(),
-                    I18N.getMsgConvertReaderBaselStadtFailed());
+            MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR, Labels.getString("errorTextMsgBox"),
+                    Errors.getString("csvBSReadingFailed"));
         }
 
         return success;

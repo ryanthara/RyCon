@@ -25,7 +25,7 @@ import de.ryanthara.ja.rycon.core.GSILTOPClean;
 import de.ryanthara.ja.rycon.core.GSITidyUp;
 import de.ryanthara.ja.rycon.data.PreferenceHandler;
 import de.ryanthara.ja.rycon.gui.custom.*;
-import de.ryanthara.ja.rycon.i18n.I18N;
+import de.ryanthara.ja.rycon.i18n.*;
 import de.ryanthara.ja.rycon.io.LineReader;
 import de.ryanthara.ja.rycon.io.LineWriter;
 import de.ryanthara.ja.rycon.tools.ShellPositioner;
@@ -99,9 +99,9 @@ public class TidyUpWidget {
             if (success = processFileOperationsDND()) {
                 // use counter to display different text on the status bar
                 if (Main.countFileOps == 1) {
-                    Main.statusBar.setStatus(String.format(I18N.getStatusCleanFileSuccessful(Main.TEXT_SINGULAR), Main.countFileOps), OK);
+                    Main.statusBar.setStatus(String.format(Messages.prepareString("tidyUpStatus", Main.TEXT_SINGULAR), Main.countFileOps), OK);
                 } else {
-                    Main.statusBar.setStatus(String.format(I18N.getStatusCleanFileSuccessful(Main.TEXT_PLURAL), Main.countFileOps), OK);
+                    Main.statusBar.setStatus(String.format(Messages.prepareString("tidyUpStatus", Main.TEXT_PLURAL), Main.countFileOps), OK);
                 }
             }
         }
@@ -130,8 +130,8 @@ public class TidyUpWidget {
             }
         }
 
-        DirectoryDialogs.showAdvancedDirectoryDialog(innerShell, input, I18N.getFileChooserTidyUpSourceText(),
-                I18N.getFileChooserTidyUpSourceMessage(), filterPath);
+        DirectoryDialogs.showAdvancedDirectoryDialog(innerShell, input, FileChoosers.getString("tidyUpSourceTitle"),
+                FileChoosers.getString("tidyUpSourceMessage"), filterPath);
 
     }
 
@@ -154,9 +154,9 @@ public class TidyUpWidget {
             if (processFileOperations()) {
                 // use counter to display different text on the status bar
                 if (Main.countFileOps == 1) {
-                    Main.statusBar.setStatus(String.format(I18N.getStatusCleanFileSuccessful(Main.TEXT_SINGULAR), Main.countFileOps), OK);
+                    Main.statusBar.setStatus(String.format(Messages.prepareString("tidyUpStatus", Main.TEXT_SINGULAR), Main.countFileOps), OK);
                 } else {
-                    Main.statusBar.setStatus(String.format(I18N.getStatusCleanFileSuccessful(Main.TEXT_PLURAL), Main.countFileOps), OK);
+                    Main.statusBar.setStatus(String.format(Messages.prepareString("tidyUpStatus", Main.TEXT_PLURAL), Main.countFileOps), OK);
                 }
             }
             return 1;
@@ -181,8 +181,8 @@ public class TidyUpWidget {
      */
     private void actionBtnSource() {
         String[] filterNames = new String[]{
-                I18N.getFileChooserFilterNameGSI(),
-                I18N.getFileChooserFilterNameLTOP()
+                FileChoosers.getString("filterNameGSI"),
+                FileChoosers.getString("filterNameLTOP")
         };
 
         String filterPath = Main.pref.getUserPref(PreferenceHandler.DIR_PROJECT);
@@ -199,13 +199,13 @@ public class TidyUpWidget {
         }
 
         files2read = FileDialogs.showAdvancedFileDialog(
-                innerShell, filterPath, I18N.getFileChooserTidyUpSourceText(), acceptableFileSuffixes,
+                innerShell, filterPath, FileChoosers.getString("tidyUpSourceTitle"), acceptableFileSuffixes,
                 filterNames, inputFieldsComposite.getSourceTextField(), inputFieldsComposite.getDestinationTextField());
     }
 
     private void createDescription(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(I18N.getGroupTitleGeneratorNumberInputAdvice());
+        group.setText(Labels.getString("adviceText"));
 
         GridLayout gridLayout = new GridLayout(1, true);
         group.setLayout(gridLayout);
@@ -215,13 +215,13 @@ public class TidyUpWidget {
         group.setLayoutData(gridData);
 
         Label tip = new Label(group, SWT.WRAP | SWT.BORDER | SWT.LEFT);
-        tip.setText(I18N.getLabelTipTidyUpWidget());
+        tip.setText(Labels.getString("tipTidyUpWidget"));
         tip.setLayoutData(new GridData(SWT.HORIZONTAL, SWT.TOP, true, false, 1, 1));
     }
 
     private void createOptions(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(I18N.getGroupTitleOptions());
+        group.setText(Labels.getString("optionsText"));
 
         GridLayout gridLayout = new GridLayout(1, true);
         group.setLayout(gridLayout);
@@ -232,11 +232,11 @@ public class TidyUpWidget {
 
         chkBoxHoldControlPoints = new Button(group, SWT.CHECK);
         chkBoxHoldControlPoints.setSelection(false);
-        chkBoxHoldControlPoints.setText(I18N.getBtnChkTidyUpHoldControlPoints());
+        chkBoxHoldControlPoints.setText(CheckBoxes.getString("HoldControlPointsTidyUp"));
 
         chkBoxHoldStations = new Button(group, SWT.CHECK);
         chkBoxHoldStations.setSelection(false);
-        chkBoxHoldStations.setText(I18N.getBtnChkTidyUpHoldStations());
+        chkBoxHoldStations.setText(CheckBoxes.getString("HoldStationsTidyUp"));
     }
 
     private int fileOperations(boolean holdStations, boolean holdControlPoints) {
@@ -307,7 +307,7 @@ public class TidyUpWidget {
                 actionBtnCancel();
             }
         });
-        innerShell.setText(I18N.getWidgetTitleTidyUp());
+        innerShell.setText(Labels.getString("tidyUpText"));
         innerShell.setSize(width, height);
         innerShell.setLayout(gridLayout);
         innerShell.setLayoutData(gridData);
@@ -341,18 +341,26 @@ public class TidyUpWidget {
             String message;
 
             if (counter == 1) {
-                message = String.format(I18N.getMsgTidyUpSuccess(Main.TEXT_SINGULAR), counter);
+                message = String.format(Messages.prepareString("tidyUpMessage", Main.TEXT_SINGULAR), counter);
             } else {
-                message = String.format(I18N.getMsgTidyUpSuccess(Main.TEXT_PLURAL), counter);
+                message = String.format(Messages.prepareString("tidyUpMessage", Main.TEXT_PLURAL), counter);
             }
 
-            MessageBoxes.showMessageBox(innerShell, SWT.ICON_INFORMATION, I18N.getMsgBoxTitleSuccess(), message);
+            MessageBoxes.showMessageBox(innerShell, SWT.ICON_INFORMATION,
+                    Labels.getString("successTextMsgBox"), message);
 
             // set the counter for status bar information
             Main.countFileOps = counter;
             success = true;
         } else {
-            MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING, I18N.getMsgBoxTitleError(), I18N.getMsgTidyUpError());
+            if (counter == 1) {
+                MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING,
+                        Labels.getString("errorTextMsgBox"), Errors.prepareString("tidyUpFailed", Main.TEXT_SINGULAR));
+            } else {
+                MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING,
+                        Labels.getString("errorTextMsgBox"), Errors.prepareString("tidyUpFailed", Main.TEXT_PLURAL));
+            }
+
             success = false;
         }
 

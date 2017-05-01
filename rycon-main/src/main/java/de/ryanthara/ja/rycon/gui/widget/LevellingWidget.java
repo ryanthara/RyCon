@@ -24,7 +24,7 @@ import de.ryanthara.ja.rycon.converter.gsi.Nigra2GSI;
 import de.ryanthara.ja.rycon.core.GSILevelling2Cad;
 import de.ryanthara.ja.rycon.data.PreferenceHandler;
 import de.ryanthara.ja.rycon.gui.custom.*;
-import de.ryanthara.ja.rycon.i18n.I18N;
+import de.ryanthara.ja.rycon.i18n.*;
 import de.ryanthara.ja.rycon.io.LineReader;
 import de.ryanthara.ja.rycon.io.LineWriter;
 import de.ryanthara.ja.rycon.tools.ShellPositioner;
@@ -100,9 +100,9 @@ public class LevellingWidget {
             if (success = processFileOperationsDND()) {
                 // use counter to display different text on the status bar
                 if (Main.countFileOps == 1) {
-                    Main.statusBar.setStatus(String.format(I18N.getStatusPrepareLevelSuccess(Main.TEXT_SINGULAR), Main.countFileOps), OK);
+                    Main.statusBar.setStatus(String.format(Messages.prepareString("levellingStatus", Main.TEXT_SINGULAR), Main.countFileOps), OK);
                 } else {
-                    Main.statusBar.setStatus(String.format(I18N.getStatusPrepareLevelSuccess(Main.TEXT_PLURAL), Main.countFileOps), OK);
+                    Main.statusBar.setStatus(String.format(Messages.prepareString("levellingStatus", Main.TEXT_PLURAL), Main.countFileOps), OK);
                 }
             }
         }
@@ -131,8 +131,8 @@ public class LevellingWidget {
             }
         }
 
-        DirectoryDialogs.showAdvancedDirectoryDialog(innerShell, input, I18N.getFileChooserLevellingSourceText(),
-                I18N.getFileChooserLevellingSourceMessage(), filterPath);
+        DirectoryDialogs.showAdvancedDirectoryDialog(innerShell, input, FileChoosers.getString("levellingSourceTitle"),
+                FileChoosers.getString("levellingSourceMessage"), filterPath);
     }
 
     private int actionBtnOk() {
@@ -154,9 +154,9 @@ public class LevellingWidget {
             if (processFileOperations()) {
                 // use counter to display different text on the status bar
                 if (Main.countFileOps == 1) {
-                    Main.statusBar.setStatus(String.format(I18N.getStatusPrepareLevelSuccess(Main.TEXT_SINGULAR), Main.countFileOps), OK);
+                    Main.statusBar.setStatus(String.format(Messages.prepareString("levellingStatus", Main.TEXT_SINGULAR), Main.countFileOps), OK);
                 } else {
-                    Main.statusBar.setStatus(String.format(I18N.getStatusPrepareLevelSuccess(Main.TEXT_PLURAL), Main.countFileOps), OK);
+                    Main.statusBar.setStatus(String.format(Messages.prepareString("levellingStatus", Main.TEXT_PLURAL), Main.countFileOps), OK);
                 }
             }
             return 1;
@@ -181,8 +181,8 @@ public class LevellingWidget {
      */
     private void actionBtnSource() {
         String[] filterNames = new String[]{
-                I18N.getFileChooserFilterNameGSI(),
-                I18N.getFileChooserFilterNameNIGRA()
+                FileChoosers.getString("filterNameGSI"),
+                FileChoosers.getString("filterNameNIGRA")
         };
 
         String filterPath = Main.pref.getUserPref(PreferenceHandler.DIR_PROJECT);
@@ -199,13 +199,13 @@ public class LevellingWidget {
         }
 
         files2read = FileDialogs.showAdvancedFileDialog(
-                innerShell, filterPath, I18N.getFileChooserSplitterSourceText(), acceptableFileSuffixes,
+                innerShell, filterPath, FileChoosers.getString("splitterSourceText"), acceptableFileSuffixes,
                 filterNames, inputFieldsComposite.getSourceTextField(), inputFieldsComposite.getDestinationTextField());
     }
 
     private void createDescription(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(I18N.getGroupTitleGeneratorNumberInputAdvice());
+        group.setText(Labels.getString("adviceText"));
 
         GridLayout gridLayout = new GridLayout(1, true);
         group.setLayout(gridLayout);
@@ -215,13 +215,13 @@ public class LevellingWidget {
         group.setLayoutData(gridData);
 
         Label tip = new Label(group, SWT.WRAP | SWT.BORDER | SWT.LEFT);
-        tip.setText(I18N.getLabelTipLevellingWidget());
+        tip.setText(Labels.getString("tipLevellingWidget"));
         tip.setLayoutData(new GridData(SWT.HORIZONTAL, SWT.TOP, true, false, 1, 1));
     }
 
     private void createOptions(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(I18N.getGroupTitleOptions());
+        group.setText(Labels.getString("optionsText"));
 
         GridLayout gridLayout = new GridLayout(1, true);
         group.setLayout(gridLayout);
@@ -232,7 +232,7 @@ public class LevellingWidget {
 
         chkBoxHoldChangePoint = new Button(group, SWT.CHECK);
         chkBoxHoldChangePoint.setSelection(true);
-        chkBoxHoldChangePoint.setText(I18N.getBtnChkLevellingIgnoreChangePoints());
+        chkBoxHoldChangePoint.setText(CheckBoxes.getString("levellingIgnoreChangePoints"));
     }
 
     private int fileOperations(boolean holdChangePoints) {
@@ -301,7 +301,7 @@ public class LevellingWidget {
                 actionBtnCancel();
             }
         });
-        innerShell.setText(I18N.getWidgetTitleLevelling());
+        innerShell.setText(Labels.getString("levellingText"));
         innerShell.setSize(width, height);
         innerShell.setLayout(gridLayout);
         innerShell.setLayoutData(gridData);
@@ -335,18 +335,20 @@ public class LevellingWidget {
             String message;
 
             if (counter == 1) {
-                message = String.format(I18N.getMsgLevellingSuccess(Main.TEXT_SINGULAR), counter);
+                message = String.format(Messages.prepareString("levellingMessage", Main.TEXT_SINGULAR), counter);
             } else {
-                message = String.format(I18N.getMsgLevellingSuccess(Main.TEXT_PLURAL), counter);
+                message = String.format(Messages.prepareString("levellingMessage", Main.TEXT_PLURAL), counter);
             }
 
-            MessageBoxes.showMessageBox(innerShell, SWT.ICON_INFORMATION, I18N.getMsgBoxTitleSuccess(), message);
+            MessageBoxes.showMessageBox(innerShell, SWT.ICON_INFORMATION,
+                    Labels.getString("successTextMsgBox"), message);
 
             // set the counter for status bar information
             Main.countFileOps = counter;
             success = true;
         } else {
-            MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING, I18N.getMsgBoxTitleError(), I18N.getMsgLevellingError());
+            MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING,
+                    Labels.getString("errorTextMsgBox"), Errors.getString("levellingPreparationFailed"));
             success = false;
         }
 

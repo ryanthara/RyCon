@@ -19,7 +19,8 @@ package de.ryanthara.ja.rycon.gui.widget.convert.write;
 
 import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.gui.custom.MessageBoxes;
-import de.ryanthara.ja.rycon.i18n.I18N;
+import de.ryanthara.ja.rycon.i18n.Labels;
+import de.ryanthara.ja.rycon.i18n.Warnings;
 import de.ryanthara.ja.rycon.io.LineWriter;
 import org.eclipse.swt.SWT;
 
@@ -56,7 +57,7 @@ class WriteFile2Disk {
 
         if (Files.exists(Paths.get(outputFileName))) {
             int returnValue = MessageBoxes.showMessageBox(Main.shell, SWT.ICON_WARNING | SWT.YES | SWT.NO,
-                    I18N.getMsgBoxTitleWarning(), String.format(I18N.getMsgFileExist(), outputFileName));
+                    Labels.getString("warningTextMsgBox"), String.format(Warnings.getString("fileExists"), outputFileName));
 
             if (returnValue == SWT.YES) {
                 LineWriter lineWriter = new LineWriter(outputFileName);

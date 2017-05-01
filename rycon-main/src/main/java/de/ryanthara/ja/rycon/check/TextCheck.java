@@ -20,7 +20,9 @@ package de.ryanthara.ja.rycon.check;
 
 import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.gui.custom.MessageBoxes;
-import de.ryanthara.ja.rycon.i18n.I18N;
+import de.ryanthara.ja.rycon.i18n.Errors;
+import de.ryanthara.ja.rycon.i18n.Labels;
+import de.ryanthara.ja.rycon.i18n.Warnings;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Text;
 
@@ -54,7 +56,8 @@ public class TextCheck {
         Path[] files2read = null;
 
         if (isEmpty(source) || isEmpty(destination)) {
-            MessageBoxes.showMessageBox(Main.shell, SWT.ICON_WARNING, I18N.getMsgBoxTitleWarning(), I18N.getMsgEmptyTextFieldWarning());
+            MessageBoxes.showMessageBox(Main.shell, SWT.ICON_WARNING,
+                    Labels.getString("warningTextMsgBox"), Warnings.getString("emptyTextField"));
 
             files2read = new Path[0];
         } else if (chosenFiles == null) {
@@ -67,7 +70,8 @@ public class TextCheck {
                 if (PathCheck.isFile(s)) {
                     files2read[i] = Paths.get(s);
                 } else {
-                    MessageBoxes.showMessageBox(Main.shell, SWT.ICON_WARNING, I18N.getMsgBoxTitleWarning(), I18N.getMsgFileNotExist());
+                    MessageBoxes.showMessageBox(Main.shell, SWT.ICON_WARNING,
+                            Labels.getString("warningTextMsgBox"), Errors.getString("fileExistsNot"));
                 }
             }
 

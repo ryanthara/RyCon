@@ -18,7 +18,7 @@
 package de.ryanthara.ja.rycon.converter.excel;
 
 import de.ryanthara.ja.rycon.elements.CaplanBlock;
-import de.ryanthara.ja.rycon.i18n.I18N;
+import de.ryanthara.ja.rycon.i18n.Labels;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.WorkbookUtil;
@@ -82,27 +82,27 @@ public class Caplan2Excel {
             rowNumber++;
 
             cell = row.createCell(cellNumber);
-            cell.setCellValue(I18N.getCaplanColumnTyp("pointNumber"));
+            cell.setCellValue(Labels.getCaplanColumnTyp("pointNumber"));
             cellNumber++;
 
             cell = row.createCell(cellNumber);
-            cell.setCellValue(I18N.getCaplanColumnTyp("easting"));
+            cell.setCellValue(Labels.getCaplanColumnTyp("easting"));
             cellNumber++;
 
             cell = row.createCell(cellNumber);
-            cell.setCellValue(I18N.getCaplanColumnTyp("northing"));
+            cell.setCellValue(Labels.getCaplanColumnTyp("northing"));
             cellNumber++;
 
             cell = row.createCell(cellNumber);
-            cell.setCellValue(I18N.getCaplanColumnTyp("height"));
+            cell.setCellValue(Labels.getCaplanColumnTyp("height"));
             cellNumber++;
 
             cell = row.createCell(cellNumber);
-            cell.setCellValue(I18N.getCaplanColumnTyp("object"));
+            cell.setCellValue(Labels.getCaplanColumnTyp("object"));
             cellNumber++;
 
             cell = row.createCell(cellNumber);
-            cell.setCellValue(I18N.getCaplanColumnTyp("attribute"));
+            cell.setCellValue(Labels.getCaplanColumnTyp("attribute"));
         }
 
         for (String line : readStringLines) {

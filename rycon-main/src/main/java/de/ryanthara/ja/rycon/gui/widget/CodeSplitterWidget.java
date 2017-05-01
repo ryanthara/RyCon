@@ -24,7 +24,7 @@ import de.ryanthara.ja.rycon.core.GSICodeSplit;
 import de.ryanthara.ja.rycon.core.TextCodeSplit;
 import de.ryanthara.ja.rycon.data.PreferenceHandler;
 import de.ryanthara.ja.rycon.gui.custom.*;
-import de.ryanthara.ja.rycon.i18n.I18N;
+import de.ryanthara.ja.rycon.i18n.*;
 import de.ryanthara.ja.rycon.io.LineReader;
 import de.ryanthara.ja.rycon.io.LineWriter;
 import de.ryanthara.ja.rycon.tools.ShellPositioner;
@@ -101,9 +101,9 @@ public class CodeSplitterWidget {
             if (success = processFileOperationsDND()) {
                 // use counter to display different text on the status bar
                 if (Main.countFileOps == 1) {
-                    Main.statusBar.setStatus(String.format(I18N.getStatusCodeSplitSuccess(Main.TEXT_SINGULAR), Main.countFileOps), OK);
+                    Main.statusBar.setStatus(String.format(Messages.prepareString("splitFilesStatus", Main.TEXT_SINGULAR), Main.countFileOps), OK);
                 } else {
-                    Main.statusBar.setStatus(String.format(I18N.getStatusCodeSplitSuccess(Main.TEXT_PLURAL), Main.countFileOps), OK);
+                    Main.statusBar.setStatus(String.format(Messages.prepareString("splitFilesStatus", Main.TEXT_PLURAL), Main.countFileOps), OK);
                 }
             }
         }
@@ -132,8 +132,8 @@ public class CodeSplitterWidget {
             }
         }
 
-        DirectoryDialogs.showAdvancedDirectoryDialog(innerShell, input, I18N.getFileChooserSplitterSourceText(),
-                I18N.getFileChooserSplitterSourceMessage(), filterPath);
+        DirectoryDialogs.showAdvancedDirectoryDialog(innerShell, input, FileChoosers.getString("splitterSourceText"),
+                FileChoosers.getString("splitterSourceMessage"), filterPath);
     }
 
     private int actionBtnOk() {
@@ -156,9 +156,9 @@ public class CodeSplitterWidget {
 
                 // use counter to display different text on the status bar
                 if (Main.countFileOps == 1) {
-                    Main.statusBar.setStatus(String.format(I18N.getStatusCodeSplitSuccess(Main.TEXT_SINGULAR), Main.countFileOps), OK);
+                    Main.statusBar.setStatus(String.format(Messages.prepareString("splitFilesStatus", Main.TEXT_SINGULAR), Main.countFileOps), OK);
                 } else {
-                    Main.statusBar.setStatus(String.format(I18N.getStatusCodeSplitSuccess(Main.TEXT_PLURAL), Main.countFileOps), OK);
+                    Main.statusBar.setStatus(String.format(Messages.prepareString("splitFilesStatus", Main.TEXT_PLURAL), Main.countFileOps), OK);
                 }
             }
 
@@ -181,8 +181,8 @@ public class CodeSplitterWidget {
      */
     private void actionBtnSource() {
         String[] filterNames = new String[]{
-                I18N.getFileChooserFilterNameGSI(),
-                I18N.getFileChooserFilterNameTXT()
+                FileChoosers.getString("filterNameGSI"),
+                FileChoosers.getString("filterNameTXT")
         };
 
         String filterPath = Main.pref.getUserPref(PreferenceHandler.DIR_PROJECT);
@@ -199,13 +199,13 @@ public class CodeSplitterWidget {
         }
 
         files2read = FileDialogs.showAdvancedFileDialog(
-                innerShell, filterPath, I18N.getFileChooserSplitterSourceText(), acceptableFileSuffixes,
+                innerShell, filterPath, FileChoosers.getString("splitterSourceText"), acceptableFileSuffixes,
                 filterNames, inputFieldsComposite.getSourceTextField(), inputFieldsComposite.getDestinationTextField());
     }
 
     private void createDescription(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(I18N.getGroupTitleGeneratorNumberInputAdvice());
+        group.setText(Labels.getString("adviceText"));
 
         GridLayout gridLayout = new GridLayout(1, true);
         group.setLayout(gridLayout);
@@ -216,12 +216,12 @@ public class CodeSplitterWidget {
 
         Label tip = new Label(group, SWT.WRAP | SWT.BORDER | SWT.LEFT);
         tip.setLayoutData(new GridData(SWT.HORIZONTAL, SWT.TOP, true, false, 1, 1));
-        tip.setText(I18N.getLabelTipSplitterWidget());
+        tip.setText(Labels.getString("tipSplitterWidget"));
     }
 
     private void createOptions(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(I18N.getGroupTitleOptions());
+        group.setText(Labels.getString("optionsText"));
 
         GridLayout gridLayout = new GridLayout(1, true);
         group.setLayout(gridLayout);
@@ -232,11 +232,11 @@ public class CodeSplitterWidget {
 
         chkBoxInsertCodeColumn = new Button(group, SWT.CHECK);
         chkBoxInsertCodeColumn.setSelection(false);
-        chkBoxInsertCodeColumn.setText(I18N.getBtnChkSplitterInsertCodeColumn());
+        chkBoxInsertCodeColumn.setText(CheckBoxes.getString("insertCodeColumn"));
 
         chkBoxWriteCodeZero = new Button(group, SWT.CHECK);
         chkBoxWriteCodeZero.setSelection(false);
-        chkBoxWriteCodeZero.setText(I18N.getBtnChkSplitterWriteCodeZero());
+        chkBoxWriteCodeZero.setText(CheckBoxes.getString("writeCodeZeroSplitter"));
     }
 
     private int executeSplitGSI(boolean insertCodeColumn, boolean writeFileWithCodeZero, int counter, Path file2read,
@@ -341,7 +341,7 @@ public class CodeSplitterWidget {
                 actionBtnCancel();
             }
         });
-        innerShell.setText(I18N.getWidgetTitleSplitter());
+        innerShell.setText(Labels.getString("splitterText"));
         innerShell.setSize(width, height);
         innerShell.setLayout(gridLayout);
         innerShell.setLayoutData(gridData);
@@ -373,18 +373,20 @@ public class CodeSplitterWidget {
             String message;
 
             if (counter == 1) {
-                message = String.format(I18N.getMsgSplittingSuccess(Main.TEXT_SINGULAR), counter);
+                message = String.format(Messages.prepareString("splitFilesMessage", Main.TEXT_SINGULAR), counter);
             } else {
-                message = String.format(I18N.getMsgSplittingSuccess(Main.TEXT_PLURAL), counter);
+                message = String.format(Messages.prepareString("splitFilesMessage", Main.TEXT_PLURAL), counter);
             }
 
-            MessageBoxes.showMessageBox(innerShell, SWT.ICON_INFORMATION, I18N.getMsgBoxTitleSuccess(), message);
+            MessageBoxes.showMessageBox(innerShell, SWT.ICON_INFORMATION,
+                    Labels.getString("successTextMsgBox"), message);
 
             // set the counter for status bar information
             Main.countFileOps = counter;
             return true;
         } else {
-            MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING, I18N.getMsgBoxTitleError(), I18N.getMsgSplittingError());
+            MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING,
+                    Labels.getString("errorTextMsgBox"), Errors.getString("codeSplitFailed"));
             return false;
         }
     }

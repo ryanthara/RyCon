@@ -20,7 +20,8 @@ package de.ryanthara.ja.rycon.core;
 import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.converter.gsi.BaseToolsGSI;
 import de.ryanthara.ja.rycon.gui.custom.MessageBoxes;
-import de.ryanthara.ja.rycon.i18n.I18N;
+import de.ryanthara.ja.rycon.i18n.Labels;
+import de.ryanthara.ja.rycon.i18n.Warnings;
 import org.eclipse.swt.SWT;
 
 import java.util.ArrayList;
@@ -124,8 +125,8 @@ public class GSILTOPClean {
                             range = range + 1;
                         }
                     } else if ((status == 0) & (range == 4)) {                       // no control point in range
-                        MessageBoxes.showMessageBox(Main.shell, SWT.ICON_WARNING, I18N.getMsgBoxTitleWarning(),
-                                String.format(I18N.getLTOPCleanNoControlPointWarning(), currentStation));
+                        MessageBoxes.showMessageBox(Main.shell, SWT.ICON_WARNING, Labels.getString("warningTextMsgBox"),
+                                String.format(Warnings.getString("noControlPointsLTOP"), currentStation));
 
                         range = range + 1;
                     } else {

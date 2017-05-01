@@ -33,7 +33,7 @@ import de.ryanthara.ja.rycon.gui.widget.convert.SourceButton;
 import de.ryanthara.ja.rycon.gui.widget.convert.TargetButton;
 import de.ryanthara.ja.rycon.gui.widget.convert.read.*;
 import de.ryanthara.ja.rycon.gui.widget.convert.write.*;
-import de.ryanthara.ja.rycon.i18n.I18N;
+import de.ryanthara.ja.rycon.i18n.*;
 import de.ryanthara.ja.rycon.tools.RadioHelper;
 import de.ryanthara.ja.rycon.tools.ShellPositioner;
 import org.eclipse.swt.SWT;
@@ -116,8 +116,8 @@ public class ConverterWidget {
             }
         }
 
-        DirectoryDialogs.showAdvancedDirectoryDialog(innerShell, input, I18N.getFileChooserConverterSourceText(),
-                I18N.getFileChooserConverterSourceMessage(), filterPath);
+        DirectoryDialogs.showAdvancedDirectoryDialog(innerShell, input, FileChoosers.getString("converterSourceTitle"),
+                FileChoosers.getString("converterSourceMessage"), filterPath);
     }
 
     private int actionBtnOk() {
@@ -138,9 +138,9 @@ public class ConverterWidget {
             if (processFileOperations()) {
                 // use counter to display different text on the status bar
                 if (Main.countFileOps == 1) {
-                    Main.statusBar.setStatus(String.format(I18N.getStatusConvertSuccess(Main.TEXT_SINGULAR), Main.countFileOps), OK);
+                    Main.statusBar.setStatus(String.format(Messages.prepareString("conversionStatus", Main.TEXT_SINGULAR), Main.countFileOps), OK);
                 } else {
-                    Main.statusBar.setStatus(String.format(I18N.getStatusConvertSuccess(Main.TEXT_PLURAL), Main.countFileOps), OK);
+                    Main.statusBar.setStatus(String.format(Messages.prepareString("conversionStatus", Main.TEXT_PLURAL), Main.countFileOps), OK);
                 }
             }
             return 1;
@@ -180,7 +180,7 @@ public class ConverterWidget {
         }
 
         fileDialog.setFilterPath(filterPath);
-        fileDialog.setText(I18N.getFileChooserTidyUpSourceText());
+        fileDialog.setText(FileChoosers.getString("tidyUpSourceTitle"));
 
         fileDialog.setFilterExtensions(CSV.getExtensionsArray());
         fileDialog.setFilterNames(CSV.getFilterNamesArray());
@@ -229,14 +229,14 @@ public class ConverterWidget {
         compositeSourceTarget.setLayoutData(gridData);
 
         groupSource = new Group(compositeSourceTarget, SWT.NONE);
-        groupSource.setText(I18N.getGroupTitleSourceFileFormat());
+        groupSource.setText(Labels.getString("sourceFormatText"));
         groupSource.setLayout(new GridLayout(2, false));
 
         gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
         groupSource.setLayoutData(gridData);
 
         groupTarget = new Group(compositeSourceTarget, SWT.NONE);
-        groupTarget.setText(I18N.getGroupTitleTargetFileFormat());
+        groupTarget.setText(Labels.getString("targetFormatText"));
         groupTarget.setLayout(new GridLayout(2, false));
 
         gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
@@ -251,7 +251,7 @@ public class ConverterWidget {
 
     private void createDescription(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(I18N.getGroupTitleGeneratorNumberInputAdvice());
+        group.setText(Labels.getString("adviceText"));
 
         GridLayout gridLayout = new GridLayout(1, true);
         group.setLayout(gridLayout);
@@ -261,13 +261,13 @@ public class ConverterWidget {
         group.setLayoutData(gridData);
 
         Label tip = new Label(group, SWT.WRAP | SWT.BORDER | SWT.LEFT);
-        tip.setText(I18N.getLabelTipConverterWidget());
+        tip.setText(Labels.getString("tipConverterWidget"));
         tip.setLayoutData(new GridData(SWT.HORIZONTAL, SWT.TOP, true, false, 1, 1));
     }
 
     private void createOptions(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(I18N.getGroupTitleOptions());
+        group.setText(Labels.getString("optionsText"));
 
         GridLayout gridLayout = new GridLayout(1, true);
         group.setLayout(gridLayout);
@@ -278,39 +278,39 @@ public class ConverterWidget {
 
         chkBoxSourceContainsCode = new Button(group, SWT.CHECK);
         chkBoxSourceContainsCode.setSelection(false);
-        chkBoxSourceContainsCode.setText(I18N.getBtnChkBoxSourceContainsCode());
+        chkBoxSourceContainsCode.setText(CheckBoxes.getString("sourceContainsCodeChk"));
 
         chkBoxTXTSpaceSeparator = new Button(group, SWT.CHECK);
         chkBoxTXTSpaceSeparator.setSelection(false);
-        chkBoxTXTSpaceSeparator.setText(I18N.getBtnChkConverterTXTSpaceSeparator());
+        chkBoxTXTSpaceSeparator.setText(CheckBoxes.getString("separatorTXTSpace"));
 
         chkBoxCSVSemiColonSeparator = new Button(group, SWT.CHECK);
         chkBoxCSVSemiColonSeparator.setSelection(false);
-        chkBoxCSVSemiColonSeparator.setText(I18N.getBtnChkConverterCSVSemiColonSeparator());
+        chkBoxCSVSemiColonSeparator.setText(CheckBoxes.getString("separatorCSVSemiColon"));
 
         chkBoxCadworkUseZeroHeights = new Button(group, SWT.CHECK);
         chkBoxCadworkUseZeroHeights.setSelection(false);
-        chkBoxCadworkUseZeroHeights.setText(I18N.getBtnChkBoxCadworkUseZeroHeights());
+        chkBoxCadworkUseZeroHeights.setText(CheckBoxes.getString("useZeroHeightsCadwork"));
 
         chkBoxKFormatUseSimpleFormat = new Button(group, SWT.CHECK);
         chkBoxKFormatUseSimpleFormat.setSelection(true);
-        chkBoxKFormatUseSimpleFormat.setText(I18N.getBtnChkBoxKFormatUseSimpleFormat());
+        chkBoxKFormatUseSimpleFormat.setText(CheckBoxes.getString("useSimpleKFormatChk"));
 
         chkBoxLTOPEliminateDuplicatePoints = new Button(group, SWT.CHECK);
         chkBoxLTOPEliminateDuplicatePoints.setSelection(true);
-        chkBoxLTOPEliminateDuplicatePoints.setText(I18N.getBtnChkBoxLTOPEliminateDuplicatePoints());
+        chkBoxLTOPEliminateDuplicatePoints.setText(CheckBoxes.getString("eliminateDuplicatePointsLTOP"));
 
         chkBoxLTOPSortOutputFileByNumber = new Button(group, SWT.CHECK);
         chkBoxLTOPSortOutputFileByNumber.setSelection(true);
-        chkBoxLTOPSortOutputFileByNumber.setText(I18N.getBtnChkBoxLTOPSortOutputFileByNumber());
+        chkBoxLTOPSortOutputFileByNumber.setText(CheckBoxes.getString("sortOutputFileByNumberLTOP"));
 
         chkBoxWriteCommentLine = new Button(group, SWT.CHECK);
         chkBoxWriteCommentLine.setSelection(false);
-        chkBoxWriteCommentLine.setText(I18N.getBtnChkConverterWriteCommentLine());
+        chkBoxWriteCommentLine.setText(CheckBoxes.getString("writeCommentLine"));
 
         chkBoxWriteCodeColumn = new Button(group, SWT.CHECK);
         chkBoxWriteCodeColumn.setSelection(false);
-        chkBoxWriteCodeColumn.setText(I18N.getBtnChkBoxWriteCodeColumn());
+        chkBoxWriteCodeColumn.setText(CheckBoxes.getString("writeCodeColumn"));
     }
 
     private void createRadioButtonsSource(SelectionListener selectionListener, Group group) {
@@ -414,7 +414,7 @@ public class ConverterWidget {
                 actionBtnCancel();
             }
         });
-        innerShell.setText(I18N.getWidgetTitleConverter());
+        innerShell.setText(Labels.getString("converterText"));
         innerShell.setSize(width, height);
         innerShell.setLayout(gridLayout);
         innerShell.setLayoutData(gridData);
@@ -536,18 +536,20 @@ public class ConverterWidget {
             String message;
 
             if (counter == 1) {
-                message = String.format(I18N.getMsgConvertSuccess(Main.TEXT_SINGULAR), counter);
+                message = String.format(Messages.prepareString("conversionMessage", Main.TEXT_SINGULAR), counter);
             } else {
-                message = String.format(I18N.getMsgConvertSuccess(Main.TEXT_PLURAL), counter);
+                message = String.format(Messages.prepareString("conversionMessage", Main.TEXT_PLURAL), counter);
             }
 
-            MessageBoxes.showMessageBox(innerShell, SWT.ICON_INFORMATION, I18N.getMsgBoxTitleSuccess(), message);
+            MessageBoxes.showMessageBox(innerShell, SWT.ICON_INFORMATION,
+                    Labels.getString("successTextMsgBox"), message);
 
             // set the counter for status bar information
             Main.countFileOps = counter;
             success = true;
         } else {
-            MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR, I18N.getMsgBoxTitleError(), I18N.getMsgConvertFailed());
+            MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR,
+                    Labels.getString("errorTextMsgBox"), Errors.getString("conversionFailed"));
             success = false;
         }
 

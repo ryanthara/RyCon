@@ -19,18 +19,19 @@ package de.ryanthara.ja.rycon.gui.widget;
 
 import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.data.PreferenceHandler;
+import de.ryanthara.ja.rycon.gui.custom.BottomButtonBar;
 import de.ryanthara.ja.rycon.gui.custom.MessageBoxes;
 import de.ryanthara.ja.rycon.gui.widget.generate.AdminCopyWarnAndErrorMessage;
 import de.ryanthara.ja.rycon.gui.widget.generate.BigDataCopyWarnAndErrorMessage;
 import de.ryanthara.ja.rycon.gui.widget.generate.CopyWarnAndErrorMessage;
 import de.ryanthara.ja.rycon.gui.widget.generate.ProjectCopyWarnAndErrorMessages;
-import de.ryanthara.ja.rycon.i18n.I18N;
+import de.ryanthara.ja.rycon.i18n.CheckBoxes;
+import de.ryanthara.ja.rycon.i18n.Labels;
+import de.ryanthara.ja.rycon.i18n.Messages;
+import de.ryanthara.ja.rycon.i18n.Warnings;
 import de.ryanthara.ja.rycon.io.FileUtils;
 import de.ryanthara.ja.rycon.tools.ShellPositioner;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
@@ -87,25 +88,26 @@ public class GeneratorWidget {
         String number = inputNumber.getText();
 
         if (number.trim().equals("")) {
-            MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING, I18N.getMsgBoxTitleWarning(), I18N.getMsgEmptyTextFieldWarning());
+            MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING,
+                    Labels.getString("warningTextMsgBox"), Warnings.getString("emptyTextField"));
 
             return 0;
         } else {
             if (generateFolders(number)) {
                 if (chkBoxCreateAdminFolder.getSelection() && chkBoxCreateBigDataFolder.getSelection() && chkBoxCreateProjectFolder.getSelection()) {
-                    Main.statusBar.setStatus(String.format(I18N.getStatusFoldersAdminAndBigDataAndProjectGenerated(), number, number, number), OK);
+                    Main.statusBar.setStatus(String.format(Messages.getString("adminAndBigDataAndProjectGenerated"), number, number, number), OK);
                 } else if (chkBoxCreateAdminFolder.getSelection() && chkBoxCreateBigDataFolder.getSelection()) {
-                    Main.statusBar.setStatus(String.format(I18N.getStatusFoldersAdminAndBigDataGenerated(), number, number), OK);
+                    Main.statusBar.setStatus(String.format(Messages.getString("adminAndBigDataGenerated"), number, number), OK);
                 } else if (chkBoxCreateAdminFolder.getSelection() && chkBoxCreateProjectFolder.getSelection()) {
-                    Main.statusBar.setStatus(String.format(I18N.getStatusFoldersAdminAndProjectGenerated(), number, number), OK);
+                    Main.statusBar.setStatus(String.format(Messages.getString("adminAndProjectGenerated"), number, number), OK);
                 } else if (chkBoxCreateBigDataFolder.getSelection() && chkBoxCreateProjectFolder.getSelection()) {
-                    Main.statusBar.setStatus(String.format(I18N.getStatusFoldersBigDataAndProjectGenerated(), number, number), OK);
+                    Main.statusBar.setStatus(String.format(Messages.getString("bigDataAndProjectGenerated"), number, number), OK);
                 } else if (chkBoxCreateAdminFolder.getSelection()) {
-                    Main.statusBar.setStatus(String.format(I18N.getStatusFolderAdminGenerated(), number), OK);
+                    Main.statusBar.setStatus(String.format(Messages.getString("adminFolderGenerated"), number), OK);
                 } else if (chkBoxCreateBigDataFolder.getSelection()) {
-                    Main.statusBar.setStatus(String.format(I18N.getStatusFolderBigDataGenerated(), number), OK);
+                    Main.statusBar.setStatus(String.format(Messages.getString("bigDataFolderGenerated"), number), OK);
                 } else if (chkBoxCreateProjectFolder.getSelection()) {
-                    Main.statusBar.setStatus(String.format(I18N.getStatusFolderProjectGenerated(), number), OK);
+                    Main.statusBar.setStatus(String.format(Messages.getString("projectFolderGenerated"), number), OK);
                 }
             }
 
@@ -122,10 +124,6 @@ public class GeneratorWidget {
         }
     }
 
-    private void actionBtnSettings() {
-        new GeneratorSettingsWidget(innerShell);
-    }
-
     private boolean copyFile(String number, String directoryTemplate, int type, Path copyDestinationPath) {
         boolean success = false;
 
@@ -137,69 +135,16 @@ public class GeneratorWidget {
         } catch (IOException e) {
             System.err.println(e.getMessage());
 
-            String message = messages.get(type).getWarnMessage(number);
-
-            MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR, I18N.getMsgBoxTitleError(), message);
+            MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR, Labels.getString("errorTextMsgBox"),
+                    messages.get(type).getErrorMessage(number));
         }
+
         return success;
-    }
-
-    private void createBottomButtons() {
-        Composite composite = new Composite(innerShell, SWT.NONE);
-        GridLayout gridLayout = new GridLayout();
-        gridLayout.numColumns = 2;
-        composite.setLayout(gridLayout);
-
-        Composite compositeLeft = new Composite(composite, SWT.NONE);
-        compositeLeft.setLayout(new FillLayout());
-
-        Button btnSettings = new Button(compositeLeft, SWT.NONE);
-        btnSettings.setText(I18N.getBtnSettingsLabel());
-        btnSettings.setToolTipText(I18N.getBtnSettingsLabelToolTip());
-        btnSettings.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                actionBtnSettings();
-            }
-        });
-
-        Composite compositeRight = new Composite(composite, SWT.NONE);
-        compositeRight.setLayout(new FillLayout());
-
-        Button btnCancel = new Button(compositeRight, SWT.NONE);
-        btnCancel.setText(I18N.getBtnCancelLabel());
-        btnCancel.setToolTipText(I18N.getBtnCancelLabelToolTip());
-        btnCancel.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                actionBtnCancel();
-            }
-        });
-
-        Button btnOK = new Button(compositeRight, SWT.NONE);
-        btnOK.setText(I18N.getBtnOKAndOpenLabel());
-        btnOK.setToolTipText(I18N.getBtnOKAndOpenLabelToolTip());
-        btnOK.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                actionBtnOk();
-            }
-        });
-
-        Button btnOKAndExit = new Button(compositeRight, SWT.NONE);
-        btnOKAndExit.setText(I18N.getBtnOKAndExitLabel());
-        btnOKAndExit.setToolTipText(I18N.getBtnOKAndExitLabelToolTip());
-        btnOKAndExit.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                actionBtnOkAndExit();
-            }
-        });
     }
 
     private void createDescription(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(I18N.getGroupTitleGeneratorNumberInputAdvice());
+        group.setText(Labels.getString("adviceText"));
 
         GridLayout gridLayout = new GridLayout(1, true);
         group.setLayout(gridLayout);
@@ -209,13 +154,13 @@ public class GeneratorWidget {
         group.setLayoutData(gridData);
 
         Label tip = new Label(group, SWT.WRAP | SWT.BORDER | SWT.LEFT);
-        tip.setText(I18N.getLabelTipGeneratorWidget());
+        tip.setText(Labels.getString("tipGeneratorWidget"));
         tip.setLayoutData(new GridData(SWT.HORIZONTAL, SWT.TOP, true, false, 1, 1));
     }
 
     private void createGroupInputField() {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(I18N.getGroupTitleGeneratorNumberInput());
+        group.setText(Labels.getString("generatorNumberText"));
 
         GridLayout gridLayout = new GridLayout();
         gridLayout.marginHeight = 5;
@@ -228,7 +173,7 @@ public class GeneratorWidget {
         group.setLayoutData(gridData);
 
         Label projectNumberLabel = new Label(group, SWT.NONE);
-        projectNumberLabel.setText(I18N.getLabelTextProjectNumber());
+        projectNumberLabel.setText(Labels.getString("projectNumber"));
 
         inputNumber = new Text(group, SWT.SINGLE | SWT.BORDER);
 
@@ -255,7 +200,7 @@ public class GeneratorWidget {
 
     private void createGroupOptions(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(I18N.getGroupTitleOptions());
+        group.setText(Labels.getString("optionsText"));
 
         GridLayout gridLayout = new GridLayout(1, true);
         group.setLayout(gridLayout);
@@ -266,15 +211,15 @@ public class GeneratorWidget {
 
         chkBoxCreateProjectFolder = new Button(group, SWT.CHECK);
         chkBoxCreateProjectFolder.setSelection(false);
-        chkBoxCreateProjectFolder.setText(I18N.getBtnChkBoxCreateProjectFolder());
+        chkBoxCreateProjectFolder.setText(CheckBoxes.getString("createProjectFolder"));
 
         chkBoxCreateAdminFolder = new Button(group, SWT.CHECK);
         chkBoxCreateAdminFolder.setSelection(true);
-        chkBoxCreateAdminFolder.setText(I18N.getBtnChkBoxCreateAdminFolder());
+        chkBoxCreateAdminFolder.setText(CheckBoxes.getString("createAdminFolder"));
 
         chkBoxCreateBigDataFolder = new Button(group, SWT.CHECK);
         chkBoxCreateBigDataFolder.setSelection(false);
-        chkBoxCreateBigDataFolder.setText(I18N.getBtnChkBoxCreateBigDataFolder());
+        chkBoxCreateBigDataFolder.setText(CheckBoxes.getString("createBigDataFolder"));
     }
 
     private boolean generateAdminFolder(String number) {
@@ -308,32 +253,32 @@ public class GeneratorWidget {
 
         if (isAdminFolderGenerated && isBigDataFolderGenerated && isProjectFolderGenerated) {
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_INFORMATION,
-                    String.format(I18N.getTextDirAdminAndBigDataAndProjectGenerated(), number, number, number),
-                    String.format(I18N.getMsgDirAdminAndBigDataAndProjectGenerated(), number, number, number));
+                    Labels.getString("informationTextMsgBox"),
+                    String.format(Messages.getString("adminAndBigDataAndProjectGenerated"), number, number, number));
         } else if (isAdminFolderGenerated && isBigDataFolderGenerated) {
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_INFORMATION,
-                    String.format(I18N.getTextDirAdminAndBigDataGenerated(), number, number),
-                    String.format(I18N.getMsgDirAdminAndBigDataGenerated(), number, number));
+                    Labels.getString("informationTextMsgBox"),
+                    String.format(Messages.getString("adminAndBigDataGenerated"), number, number));
         } else if (isAdminFolderGenerated && isProjectFolderGenerated) {
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_INFORMATION,
-                    String.format(I18N.getTextDirAdminAndProjectGenerated(), number, number),
-                    String.format(I18N.getMsgDirAdminAndProjectGenerated(), number, number));
+                    Labels.getString("informationTextMsgBox"),
+                    String.format(Messages.getString("adminAndProjectGenerated"), number, number));
         } else if (isBigDataFolderGenerated && isProjectFolderGenerated) {
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_INFORMATION,
-                    String.format(I18N.getTextDirBigDataAndProjectGenerated(), number, number),
-                    String.format(I18N.getMsgDirBigDataAndProjectGenerated(), number, number));
+                    Labels.getString("informationTextMsgBox"),
+                    String.format(Messages.getString("bigDataAndProjectGenerated"), number, number));
         } else if (isAdminFolderGenerated) {
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_INFORMATION,
-                    String.format(I18N.getTextDirAdminGenerated(), number),
-                    String.format(I18N.getMsgDirAdminGenerated(), number));
+                    Labels.getString("informationTextMsgBox"),
+                    String.format(Messages.getString("adminFolderGenerated"), number));
         } else if (isBigDataFolderGenerated) {
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_INFORMATION,
-                    String.format(I18N.getTextDirBigDataGenerated(), number),
-                    String.format(I18N.getMsgDirBigDataGenerated(), number));
+                    Labels.getString("informationTextMsgBox"),
+                    String.format(Messages.getString("bigDataFolderGenerated"), number));
         } else if (isProjectFolderGenerated) {
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_INFORMATION,
-                    String.format(I18N.getTextDirProjectGenerated(), number),
-                    String.format(I18N.getMsgDirProjectGenerated(), number));
+                    Labels.getString("informationTextMsgBox"),
+                    String.format(Messages.getString("projectFolderGenerated"), number));
         }
 
         return isAdminFolderGenerated & isBigDataFolderGenerated & isProjectFolderGenerated;
@@ -347,12 +292,12 @@ public class GeneratorWidget {
         if (Files.exists(copyDestinationPath)) {
             Main.statusBar.setStatus("", OK);
 
-            String message = messages.get(type).getErrorMessage(number);
-
-            MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING, I18N.getMsgBoxTitleWarning(), message);
+            MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING, Labels.getString("warningTextMsgBox"),
+                    messages.get(type).getWarnMessage(number));
         } else {
             success = copyFile(number, directoryTemplate, type, copyDestinationPath);
         }
+
         return success;
     }
 
@@ -388,7 +333,7 @@ public class GeneratorWidget {
                 actionBtnCancel();
             }
         });
-        innerShell.setText(I18N.getWidgetTitleGenerator());
+        innerShell.setText(Labels.getString("generatorText"));
         innerShell.setSize(width, height);
         innerShell.setLayout(gridLayout);
         innerShell.setLayoutData(gridData);
@@ -400,7 +345,8 @@ public class GeneratorWidget {
         createGroupInputField();
         createGroupOptions(width);
         createDescription(width);
-        createBottomButtons();
+
+        new BottomButtonBar(this, innerShell);
 
         innerShell.setLocation(ShellPositioner.centerShellOnPrimaryMonitor(innerShell));
 

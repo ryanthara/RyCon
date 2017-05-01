@@ -18,7 +18,7 @@
 package de.ryanthara.ja.rycon.converter.caplan;
 
 import de.ryanthara.ja.rycon.data.Version;
-import de.ryanthara.ja.rycon.i18n.I18N;
+import de.ryanthara.ja.rycon.i18n.Labels;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -148,7 +148,7 @@ class BaseToolsCaplanK {
         DateFormat df;
         df = DateFormat.getDateTimeInstance(/* dateStyle */ DateFormat.LONG,
                                             /* timeStyle */ DateFormat.MEDIUM);
-        result.add(String.format(I18N.getStrCaplanCommentLine(), Version.getVersion(), df.format(d)));
+        result.add(String.format(Labels.getString("commentLineCaplanK"), Version.getVersion(), df.format(d)));
         result.add(commentLine2);
     }
 

@@ -23,7 +23,7 @@ import de.ryanthara.ja.rycon.converter.zeiss.ZeissDialect;
 import de.ryanthara.ja.rycon.data.PreferenceHandler;
 import de.ryanthara.ja.rycon.gui.custom.DirectoryDialogs;
 import de.ryanthara.ja.rycon.gui.custom.MessageBoxes;
-import de.ryanthara.ja.rycon.i18n.I18N;
+import de.ryanthara.ja.rycon.i18n.*;
 import de.ryanthara.ja.rycon.tools.RadioHelper;
 import de.ryanthara.ja.rycon.tools.ShellPositioner;
 import org.eclipse.swt.SWT;
@@ -40,13 +40,13 @@ import static de.ryanthara.ja.rycon.gui.custom.Status.OK;
 /**
  * Instances of this class represents a complete settings widget of RyCON and it's functionality.
  * <p>
- * The settings widget of RyCON is called by hitting the 'P' key in the main window. It shows all of RyCON's settings,
- * which can be changed easily and stored with Java's preference handling system.
+ * The settings widget of RyCON is behind button 9 or can be called by hitting the 'P' key in the main window .
+ * It shows all of RyCON's settings, which can be changed easily and stored with Java's preference handling system.
  * <p>
  * An additional button adds the functionality to set default values by a simple click.
  *
  * @author sebastian
- * @version 7
+ * @version 8
  * @since 2
  */
 public class SettingsWidget {
@@ -115,24 +115,98 @@ public class SettingsWidget {
     }
 
     private void actionBtnOk() {
-        if (!checkForEmptyTextFields() & checkForValidInputs()) {
+        int errorOccurred = Integer.MIN_VALUE;
+
+        if (TextCheck.isEmpty(dirBaseTextField) || !TextCheck.isDirExists(dirBaseTextField)) {
+            errorOccurred = MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR,
+                    Labels.getString("errorTextMsgBox"), Errors.getString("baseDirNotFound"));
+        }
+
+        if (TextCheck.isEmpty(dirProjectTextField) || !TextCheck.isDirExists(dirProjectTextField)) {
+            errorOccurred = MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR,
+                    Labels.getString("errorTextMsgBox"), Errors.getString("projectDirNotFound"));
+        }
+
+        if (TextCheck.isEmpty(dirProjectTemplateTextField) || !TextCheck.isDirExists(dirProjectTemplateTextField)) {
+            errorOccurred = MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR,
+                    Labels.getString("errorTextMsgBox"), Errors.getString("projectDirDefaultNotFound"));
+        }
+
+        if (TextCheck.isEmpty(dirAdminTextField) || !TextCheck.isDirExists(dirAdminTextField)) {
+            errorOccurred = MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR,
+                    Labels.getString("errorTextMsgBox"), Errors.getString("adminDirNotFound"));
+        }
+
+        if (TextCheck.isEmpty(dirAdminTemplateTextField) || !TextCheck.isDirExists(dirAdminTemplateTextField)) {
+            errorOccurred = MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR,
+                    Labels.getString("errorTextMsgBox"), Errors.getString("adminDirDefaultNotFound"));
+        }
+
+        if (TextCheck.isEmpty(dirBigDataTextField) || !TextCheck.isDirExists(dirBigDataTextField)) {
+            errorOccurred = MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR,
+                    Labels.getString("errorTextMsgBox"), Errors.getString("bigDataDirNotFound"));
+        }
+
+        if (TextCheck.isEmpty(dirBigDataTemplateTextField) || !TextCheck.isDirExists(dirBigDataTemplateTextField)) {
+            errorOccurred = MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR,
+                    Labels.getString("errorTextMsgBox"), Errors.getString("bigDataDirDefaultNotFound"));
+        }
+
+        if (TextCheck.isEmpty(identifierCodeStringTextField)) {
+            errorOccurred = MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING,
+                    Labels.getString("warningTextMsgBox"), Warnings.getString("emptyTextField"));
+        }
+
+        if (TextCheck.isEmpty(identifierEditStringTextField)) {
+            errorOccurred = MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING,
+                    Labels.getString("warningTextMsgBox"), Warnings.getString("emptyTextField"));
+        }
+
+        if (TextCheck.isEmpty(identifierFreeStationTextField)) {
+            errorOccurred = MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING,
+                    Labels.getString("warningTextMsgBox"), Warnings.getString("emptyTextField"));
+        }
+
+        if (TextCheck.isEmpty(identifierControlPointTextField)) {
+            errorOccurred = MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING,
+                    Labels.getString("warningTextMsgBox"), Warnings.getString("emptyTextField"));
+        }
+
+        if (TextCheck.isEmpty(identifierKnownStationTextField)) {
+            errorOccurred = MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING,
+                    Labels.getString("warningTextMsgBox"), Warnings.getString("emptyTextField"));
+        }
+
+        if (TextCheck.isEmpty(identifierLTOPTextField)) {
+            errorOccurred = MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING,
+                    Labels.getString("warningTextMsgBox"), Warnings.getString("emptyTextField"));
+        }
+
+        if (TextCheck.isEmpty(pointIdenticalDistance) || !checkForValidInputs()) {
+            errorOccurred = MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING,
+                    Labels.getString("warningTextMsgBox"), Warnings.getString("emptyTextField"));
+        }
+
+        if (errorOccurred == Integer.MIN_VALUE) {
             if (writeSettings()) {
                 if (Main.pref.isDefaultSettingsGenerated()) {
-                    MessageBoxes.showMessageBox(innerShell, SWT.ICON_INFORMATION, I18N.getMsgBoxTitleSuccess(), I18N.getMsgSettingsDefaultGenerated());
+                    MessageBoxes.showMessageBox(innerShell, SWT.ICON_INFORMATION,
+                            Labels.getString("successTextMsgBox"), Messages.getString("settingsDefaultGenerated"));
                     Main.pref.setDefaultSettingsGenerated(true);
                 } else {
-                    MessageBoxes.showMessageBox(innerShell, SWT.ICON_INFORMATION, I18N.getMsgBoxTitleSuccess(), I18N.getMsgSettingsSuccess());
+                    MessageBoxes.showMessageBox(innerShell, SWT.ICON_INFORMATION,
+                            Labels.getString("successTextMsgBox"), Messages.getString("settingsGenerated"));
                     Main.pref.setDefaultSettingsGenerated(false);
                 }
-                Main.statusBar.setStatus("", OK);
+                Main.statusBar.setStatus(Labels.getString("settingsSaved"), OK);
                 Main.setSubShellStatus(false);
                 widgetDispose();
             } else {
-                MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR, I18N.getMsgBoxTitleError(), I18N.getMsgSettingsError());
+                MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR,
+                        Labels.getString("errorTextMsgBox"), Errors.getString("settingsError"));
             }
-        } else {
-            MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING, I18N.getMsgBoxTitleWarning(), I18N.getMsgEmptyTextFieldWarning());
         }
+
     }
 
     private boolean checkForEmptyTextFields() {
@@ -157,9 +231,8 @@ public class SettingsWidget {
     }
 
     private void createAdminDirComposite(Group group) {
-        GridData gridData;
         Label dirAdminLabel = new Label(group, SWT.NONE);
-        dirAdminLabel.setText(I18N.getLabelTextDirAdmin());
+        dirAdminLabel.setText(Labels.getString("adminPath"));
         dirAdminLabel.setLayoutData(new GridData());
 
         dirAdminTextField = new Text(group, SWT.SINGLE | SWT.BORDER);
@@ -178,13 +251,13 @@ public class SettingsWidget {
             }
         });
 
-        gridData = new GridData();
+        GridData gridData = new GridData();
         gridData.horizontalAlignment = GridData.FILL;
         gridData.grabExcessHorizontalSpace = true;
         dirAdminTextField.setLayoutData(gridData);
 
         Button btnDirAdmin = new Button(group, SWT.NONE);
-        btnDirAdmin.setText(I18N.getBtnChoosePath());
+        btnDirAdmin.setText(Buttons.getString("choosePathText"));
         btnDirAdmin.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -192,14 +265,14 @@ public class SettingsWidget {
             }
         });
 
-        btnDirAdmin.setToolTipText(I18N.getBtnChoosePathToolTip());
+        btnDirAdmin.setToolTipText(Buttons.getString("choosePathToolTip"));
         btnDirAdmin.setLayoutData(new GridData());
     }
 
     private void createAdminDirTemplateComposite(Group group) {
         GridData gridData;
         Label dirAdminTemplateLabel = new Label(group, SWT.NONE);
-        dirAdminTemplateLabel.setText(I18N.getLabelTextDirAdminTemplate());
+        dirAdminTemplateLabel.setText(Labels.getString("adminPathDefault"));
         dirAdminTemplateLabel.setLayoutData(new GridData());
 
         dirAdminTemplateTextField = new Text(group, SWT.SINGLE | SWT.BORDER);
@@ -224,7 +297,7 @@ public class SettingsWidget {
         dirAdminTemplateTextField.setLayoutData(gridData);
 
         Button btnDirAdminTemplate = new Button(group, SWT.NONE);
-        btnDirAdminTemplate.setText(I18N.getBtnChoosePath());
+        btnDirAdminTemplate.setText(Buttons.getString("choosePathText"));
         btnDirAdminTemplate.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -232,14 +305,14 @@ public class SettingsWidget {
             }
         });
 
-        btnDirAdminTemplate.setToolTipText(I18N.getBtnChoosePathToolTip());
+        btnDirAdminTemplate.setToolTipText(Buttons.getString("choosePathToolTip"));
         btnDirAdminTemplate.setLayoutData(new GridData());
     }
 
     private void createBaseDirComposite(Group group) {
         GridData gridData;
         Label dirBaseLabel = new Label(group, SWT.NONE);
-        dirBaseLabel.setText(I18N.getLabelTextDirBase());
+        dirBaseLabel.setText(Labels.getString("defaultPath"));
 
         dirBaseTextField = new Text(group, SWT.BORDER);
         dirBaseTextField.setText(Main.pref.getUserPref(PreferenceHandler.DIR_BASE));
@@ -263,8 +336,8 @@ public class SettingsWidget {
         dirBaseTextField.setLayoutData(gridData);
 
         Button btnDirBase = new Button(group, SWT.NONE);
-        btnDirBase.setText(I18N.getBtnChoosePath());
-        btnDirBase.setToolTipText(I18N.getBtnChoosePathToolTip());
+        btnDirBase.setText(Buttons.getString("choosePathText"));
+        btnDirBase.setToolTipText(Buttons.getString("choosePathToolTip"));
         btnDirBase.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -280,7 +353,7 @@ public class SettingsWidget {
     private void createBigDataDirComposite(Group group) {
         GridData gridData;
         Label dirBigDataLabel = new Label(group, SWT.NONE);
-        dirBigDataLabel.setText(I18N.getLabelTextDirBigData());
+        dirBigDataLabel.setText(Labels.getString("bigDataPath"));
         dirBigDataLabel.setLayoutData(new GridData());
 
         dirBigDataTextField = new Text(group, SWT.SINGLE | SWT.BORDER);
@@ -305,7 +378,7 @@ public class SettingsWidget {
         dirBigDataTextField.setLayoutData(gridData);
 
         Button btnDirBigData = new Button(group, SWT.NONE);
-        btnDirBigData.setText(I18N.getBtnChoosePath());
+        btnDirBigData.setText(Buttons.getString("choosePathText"));
         btnDirBigData.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -313,14 +386,14 @@ public class SettingsWidget {
             }
         });
 
-        btnDirBigData.setToolTipText(I18N.getBtnChoosePathToolTip());
+        btnDirBigData.setToolTipText(Buttons.getString("choosePathToolTip"));
         btnDirBigData.setLayoutData(new GridData());
     }
 
     private void createBigDataTemplateDirComposite(Group group) {
         GridData gridData;
         Label dirBigDataTemplateLabel = new Label(group, SWT.NONE);
-        dirBigDataTemplateLabel.setText(I18N.getLabelTextDirBigDataTemplate());
+        dirBigDataTemplateLabel.setText(Labels.getString("bigDataPathDefault"));
         dirBigDataTemplateLabel.setLayoutData(new GridData());
 
         dirBigDataTemplateTextField = new Text(group, SWT.SINGLE | SWT.BORDER);
@@ -345,7 +418,7 @@ public class SettingsWidget {
         dirBigDataTemplateTextField.setLayoutData(gridData);
 
         Button btnDirBigDataTemplate = new Button(group, SWT.NONE);
-        btnDirBigDataTemplate.setText(I18N.getBtnChoosePath());
+        btnDirBigDataTemplate.setText(Buttons.getString("choosePathText"));
         btnDirBigDataTemplate.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -353,7 +426,7 @@ public class SettingsWidget {
             }
         });
 
-        btnDirBigDataTemplate.setToolTipText(I18N.getBtnChoosePathToolTip());
+        btnDirBigDataTemplate.setToolTipText(Buttons.getString("choosePathToolTip"));
         btnDirBigDataTemplate.setLayoutData(new GridData());
     }
 
@@ -362,8 +435,8 @@ public class SettingsWidget {
         compositeBottomBtns.setLayout(new FillLayout());
 
         Button btnDefaultSettings = new Button(compositeBottomBtns, SWT.NONE);
-        btnDefaultSettings.setText(I18N.getBtnDefaultSettings());
-        btnDefaultSettings.setToolTipText(I18N.getBtnDefaultSettingsToolTip());
+        btnDefaultSettings.setText(Buttons.getString("defaultSettingsText"));
+        btnDefaultSettings.setToolTipText(Buttons.getString("defaultSettingsToolTip"));
         btnDefaultSettings.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -372,8 +445,8 @@ public class SettingsWidget {
         });
 
         Button btnCancel = new Button(compositeBottomBtns, SWT.NONE);
-        btnCancel.setText(I18N.getBtnCancelLabel());
-        btnCancel.setToolTipText(I18N.getBtnCancelLabelToolTip());
+        btnCancel.setText(Buttons.getString("cancelText"));
+        btnCancel.setToolTipText(Buttons.getString("cancelToolTip"));
         btnCancel.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -382,8 +455,8 @@ public class SettingsWidget {
         });
 
         Button btnOk = new Button(compositeBottomBtns, SWT.NONE);
-        btnOk.setText(I18N.getBtnOKLabel());
-        btnOk.setToolTipText(I18N.getBtnOKLabel());
+        btnOk.setText(Buttons.getString("okText"));
+        btnOk.setToolTipText(Buttons.getString("okToolTip"));
         btnOk.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -406,7 +479,7 @@ public class SettingsWidget {
         compositeGeneralAndFormat.setLayoutData(gridData);
 
         groupGeneral = new Group(compositeGeneralAndFormat, SWT.NONE);
-        groupGeneral.setText(I18N.getGroupTitleGeneralSettings());
+        groupGeneral.setText(Labels.getString("settingsGeneralText"));
         groupGeneral.setLayout(new GridLayout(1, false));
 
         createGroupGeneral(width / 2);
@@ -415,7 +488,7 @@ public class SettingsWidget {
         groupGeneral.setLayoutData(gridData2);
 
         groupFormat = new Group(compositeGeneralAndFormat, SWT.NONE);
-        groupFormat.setText(I18N.getGroupTitleFormatSettings());
+        groupFormat.setText(Labels.getString("formatSettingsText"));
         groupFormat.setLayout(new GridLayout(1, false));
 
         createGroupFormat(width / 2);
@@ -435,7 +508,7 @@ public class SettingsWidget {
         compositeWidgetSettings.setLayoutData(gridData);
 
         groupTidyUpWidget = new Group(compositeWidgetSettings, SWT.NONE);
-        groupTidyUpWidget.setText(I18N.getGroupTitleTidyUpSettings());
+        groupTidyUpWidget.setText(Labels.getString("tidyUpSettingsText"));
         groupTidyUpWidget.setLayout(new GridLayout(1, false));
 
         createGroupTidyUp(width / 2);
@@ -444,7 +517,7 @@ public class SettingsWidget {
         groupTidyUpWidget.setLayoutData(gridData2);
 
         groupConverterWidget = new Group(compositeWidgetSettings, SWT.NONE);
-        groupConverterWidget.setText(I18N.getGroupTitleConverterSettings());
+        groupConverterWidget.setText(Labels.getString("converterSettingsText"));
         groupConverterWidget.setLayout(new GridLayout(1, false));
 
         createGroupConverter(width / 2);
@@ -473,11 +546,11 @@ public class SettingsWidget {
 
         chkBoxEliminateZeroCoordinates = new Button(composite, SWT.CHECK);
         chkBoxEliminateZeroCoordinates.setSelection(Boolean.parseBoolean(Main.pref.getUserPref(PreferenceHandler.CONVERTER_SETTING_ELIMINATE_ZERO_COORDINATE)));
-        chkBoxEliminateZeroCoordinates.setText(I18N.getBtnEliminateZeroCoordinate());
+        chkBoxEliminateZeroCoordinates.setText(CheckBoxes.getString("eliminateZeroCoordinates"));
 
         chkBoxLTOPUseZenithDistance = new Button(composite, SWT.CHECK);
         chkBoxLTOPUseZenithDistance.setSelection(Boolean.parseBoolean(Main.pref.getUserPref(PreferenceHandler.CONVERTER_SETTING_LTOP_USE_ZENITH_DISTANCE)));
-        chkBoxLTOPUseZenithDistance.setText(I18N.getBtnChkBoxLTOPUseZenithDistance());
+        chkBoxLTOPUseZenithDistance.setText(CheckBoxes.getString("useZenithDistanceLTOP"));
     }
 
     private void createGroupConverterComposite2(int width) {
@@ -491,7 +564,7 @@ public class SettingsWidget {
         composite2.setLayoutData(gridData);
 
         Label minimumPointDistanceLabel = new Label(composite2, SWT.NONE);
-        minimumPointDistanceLabel.setText(I18N.getLabelTextMinimumPointDistanceLabel());
+        minimumPointDistanceLabel.setText(Labels.getString("minimumPointDistance"));
 
         pointIdenticalDistance = new Text(composite2, SWT.BORDER);
         pointIdenticalDistance.setText(Main.pref.getUserPref(PreferenceHandler.CONVERTER_SETTING_POINT_IDENTICAL_DISTANCE));
@@ -524,7 +597,7 @@ public class SettingsWidget {
         compositeZeissRecDialect.setLayoutData(gridData);
 
         Label zeissRecDialectLabel = new Label(compositeZeissRecDialect, SWT.NONE);
-        zeissRecDialectLabel.setText(I18N.getLabelTextZeissRecDialect());
+        zeissRecDialectLabel.setText(Labels.getString("zeissRECDialect"));
 
         groupZeissRECFormat = new Group(compositeZeissRecDialect, SWT.NONE);
         groupZeissRECFormat.setLayout(new GridLayout(4, false));
@@ -572,7 +645,7 @@ public class SettingsWidget {
 
         chkBoxUseSpaceAtLineEnd = new Button(composite, SWT.CHECK);
         chkBoxUseSpaceAtLineEnd.setSelection(Boolean.parseBoolean(Main.pref.getUserPref(PreferenceHandler.GSI_SETTING_LINE_ENDING_WITH_BLANK)));
-        chkBoxUseSpaceAtLineEnd.setText(I18N.getBtnUseSpaceAtLineEnd());
+        chkBoxUseSpaceAtLineEnd.setText(CheckBoxes.getString("useSpaceAtLineEnd"));
     }
 
     private void createGroupGeneral(int width) {
@@ -586,7 +659,7 @@ public class SettingsWidget {
         composite.setLayoutData(gridData);
 
         Label editStringLabel = new Label(composite, SWT.NONE);
-        editStringLabel.setText(I18N.getLabelTextEditStringLabel());
+        editStringLabel.setText(Labels.getString("editString"));
 
         identifierEditStringTextField = new Text(composite, SWT.BORDER);
         identifierEditStringTextField.setText(Main.pref.getUserPref(PreferenceHandler.PARAM_EDIT_STRING));
@@ -608,7 +681,7 @@ public class SettingsWidget {
         identifierEditStringTextField.setLayoutData(gridData);
 
         Label editCodeLabel = new Label(composite, SWT.NONE);
-        editCodeLabel.setText(I18N.getLabelTextCodeStringLabel());
+        editCodeLabel.setText(Labels.getString("codeString"));
 
         identifierCodeStringTextField = new Text(composite, SWT.BORDER);
         identifierCodeStringTextField.setText(Main.pref.getUserPref(PreferenceHandler.PARAM_CODE_STRING));
@@ -632,7 +705,7 @@ public class SettingsWidget {
 
     private void createGroupPaths(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(I18N.getGroupTitlePathSettings());
+        group.setText(Labels.getString("pathSettingsText"));
 
         GridLayout gridLayout = new GridLayout();
         gridLayout.numColumns = 3;
@@ -674,7 +747,7 @@ public class SettingsWidget {
     private void createProjectDirComposite(Group group) {
         GridData gridData;
         Label dirProjectLabel = new Label(group, SWT.NONE);
-        dirProjectLabel.setText(I18N.getLabelTextDirProject());
+        dirProjectLabel.setText(Labels.getString("projectPath"));
         dirProjectLabel.setLayoutData(new GridData());
 
         dirProjectTextField = new Text(group, SWT.SINGLE | SWT.BORDER);
@@ -699,7 +772,7 @@ public class SettingsWidget {
         dirProjectTextField.setLayoutData(gridData);
 
         Button btnDirProject = new Button(group, SWT.NONE);
-        btnDirProject.setText(I18N.getBtnChoosePath());
+        btnDirProject.setText(Buttons.getString("choosePathText"));
         btnDirProject.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -707,14 +780,14 @@ public class SettingsWidget {
             }
         });
 
-        btnDirProject.setToolTipText(I18N.getBtnChoosePathToolTip());
+        btnDirProject.setToolTipText(Buttons.getString("choosePathToolTip"));
         btnDirProject.setLayoutData(new GridData());
     }
 
     private void createProjectDirTemplateComposite(Group group) {
         GridData gridData;
         Label dirProjectTemplateLabel = new Label(group, SWT.NONE);
-        dirProjectTemplateLabel.setText(I18N.getLabelTextDirProjectTemplate());
+        dirProjectTemplateLabel.setText(Labels.getString("projectPathDefault"));
         dirProjectTemplateLabel.setLayoutData(new GridData());
 
         dirProjectTemplateTextField = new Text(group, SWT.SINGLE | SWT.BORDER);
@@ -739,7 +812,7 @@ public class SettingsWidget {
         dirProjectTemplateTextField.setLayoutData(gridData);
 
         Button btnDirProjectTemplate = new Button(group, SWT.NONE);
-        btnDirProjectTemplate.setText(I18N.getBtnChoosePath());
+        btnDirProjectTemplate.setText(Buttons.getString("choosePathText"));
         btnDirProjectTemplate.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -747,14 +820,14 @@ public class SettingsWidget {
             }
         });
 
-        btnDirProjectTemplate.setToolTipText(I18N.getBtnChoosePathToolTip());
+        btnDirProjectTemplate.setToolTipText(Buttons.getString("choosePathToolTip"));
         btnDirProjectTemplate.setLayoutData(new GridData());
     }
 
     private void createTidyUpFreeStationComposite(Composite composite) {
         GridData gridData;
         Label freeStationLabel = new Label(composite, SWT.NONE);
-        freeStationLabel.setText(I18N.getLabelTextIdentifierFreeStation());
+        freeStationLabel.setText(Labels.getString("freeStationIdentifier"));
 
         identifierFreeStationTextField = new Text(composite, SWT.BORDER);
         identifierFreeStationTextField.setText(Main.pref.getUserPref(PreferenceHandler.PARAM_FREE_STATION_STRING));
@@ -779,7 +852,7 @@ public class SettingsWidget {
     private void createTidyUpKnownStationComposite(Composite composite) {
         GridData gridData;
         Label stationLabel = new Label(composite, SWT.NONE);
-        stationLabel.setText(I18N.getLabelTextIdentifierStation());
+        stationLabel.setText(Labels.getString("stationIdentifier"));
 
         identifierKnownStationTextField = new Text(composite, SWT.BORDER);
         identifierKnownStationTextField.setText(Main.pref.getUserPref(PreferenceHandler.PARAM_KNOWN_STATION_STRING));
@@ -806,7 +879,7 @@ public class SettingsWidget {
     private void createTidyUpLTOPComposite(Composite composite) {
         GridData gridData;
         Label ltopLabel = new Label(composite, SWT.NONE);
-        ltopLabel.setText(I18N.getLabelTextIdentifierLTOP());
+        ltopLabel.setText(Labels.getString("ltopIdentifier"));
 
         identifierLTOPTextField = new Text(composite, SWT.BORDER);
         identifierLTOPTextField.setText(Main.pref.getUserPref(PreferenceHandler.PARAM_LTOP_STRING));
@@ -833,7 +906,7 @@ public class SettingsWidget {
     private void createTidyUpStakeOutComposite(Composite composite) {
         GridData gridData;
         Label stakeOutLabel = new Label(composite, SWT.NONE);
-        stakeOutLabel.setText(I18N.getLabelTextIdentifierStakeOutPoint());
+        stakeOutLabel.setText(Labels.getString("stakeOutIdentifier"));
 
         identifierControlPointTextField = new Text(composite, SWT.BORDER);
         identifierControlPointTextField.setText(Main.pref.getUserPref(PreferenceHandler.PARAM_CONTROL_POINT_STRING));
@@ -875,7 +948,7 @@ public class SettingsWidget {
                 actionBtnCancel();
             }
         });
-        innerShell.setText(I18N.getWidgetTitleSettingsWidget());
+        innerShell.setText(Labels.getString("settingsText"));
         innerShell.setSize(width, height);
         innerShell.setLayout(gridLayout);
         innerShell.setLayoutData(gridData);
@@ -899,77 +972,77 @@ public class SettingsWidget {
 
     private void processDirAdminTemplateTextOperations() {
         if (!Main.pref.isDefaultSettingsGenerated()) {
-            DirectoryDialogs.showAdvancedDirectoryDialog(innerShell, dirAdminTemplateTextField, I18N.getFileChooserDirAdminTemplateTitle(),
-                    I18N.getFileChooserDirAdminTemplateMessage(), dirAdminTemplateTextField.getText());
+            DirectoryDialogs.showAdvancedDirectoryDialog(innerShell, dirAdminTemplateTextField, FileChoosers.getString("dirAdminTemplateTitle"),
+                    FileChoosers.getString("dirAdminTemplateMessage"), dirAdminTemplateTextField.getText());
         } else {
-            DirectoryDialogs.showAdvancedDirectoryDialog(innerShell, dirAdminTemplateTextField, I18N.getFileChooserDirAdminTemplateTitle(),
-                    I18N.getFileChooserDirAdminTemplateMessage(), dirBaseTextField.getText());
+            DirectoryDialogs.showAdvancedDirectoryDialog(innerShell, dirAdminTemplateTextField, FileChoosers.getString("dirAdminTemplateTitle"),
+                    FileChoosers.getString("dirAdminTemplateMessage"), dirBaseTextField.getText());
         }
         dirBigDataTextField.setFocus();
     }
 
     private void processDirAdminTextOperations() {
         if (!Main.pref.isDefaultSettingsGenerated()) {
-            DirectoryDialogs.showAdvancedDirectoryDialog(innerShell, dirAdminTextField, I18N.getFileChooserDirAdminTitle(),
-                    I18N.getFileChooserDirAdminMessage(), dirAdminTextField.getText());
+            DirectoryDialogs.showAdvancedDirectoryDialog(innerShell, dirAdminTextField, FileChoosers.getString("dirAdminTitle"),
+                    FileChoosers.getString("dirAdminMessage"), dirAdminTextField.getText());
         } else {
-            DirectoryDialogs.showAdvancedDirectoryDialog(innerShell, dirAdminTextField, I18N.getFileChooserDirAdminTitle(),
-                    I18N.getFileChooserDirAdminMessage(), dirBaseTextField.getText());
+            DirectoryDialogs.showAdvancedDirectoryDialog(innerShell, dirAdminTextField, FileChoosers.getString("dirAdminTitle"),
+                    FileChoosers.getString("dirAdminMessage"), dirBaseTextField.getText());
         }
         dirAdminTemplateTextField.setFocus();
     }
 
     private void processDirBaseTextOperations() {
         if (!Main.pref.isDefaultSettingsGenerated()) {
-            DirectoryDialogs.showAdvancedDirectoryDialog(innerShell, dirBaseTextField, I18N.getFileChooserDirBaseTitle(),
-                    I18N.getFileChooserDirBaseMessage(), dirBaseTextField.getText());
+            DirectoryDialogs.showAdvancedDirectoryDialog(innerShell, dirBaseTextField, FileChoosers.getString("dirBaseTitle"),
+                    FileChoosers.getString("dirBaseMessage"), dirBaseTextField.getText());
         } else {
-            DirectoryDialogs.showAdvancedDirectoryDialog(innerShell, dirBaseTextField, I18N.getFileChooserDirBaseTitle(),
-                    I18N.getFileChooserDirBaseMessage(), Main.pref.getUserPref(PreferenceHandler.DIR_BASE));
+            DirectoryDialogs.showAdvancedDirectoryDialog(innerShell, dirBaseTextField, FileChoosers.getString("dirBaseTitle"),
+                    FileChoosers.getString("dirBaseMessage"), Main.pref.getUserPref(PreferenceHandler.DIR_BASE));
         }
         dirProjectTextField.setFocus();
     }
 
     private void processDirBigDataTemplateTextOperations() {
         if (!Main.pref.isDefaultSettingsGenerated()) {
-            DirectoryDialogs.showAdvancedDirectoryDialog(innerShell, dirBigDataTemplateTextField, I18N.getFileChooserDirBigDataTemplateTitle(),
-                    I18N.getFileChooserDirBigDataTemplateMessage(), dirBigDataTemplateTextField.getText());
+            DirectoryDialogs.showAdvancedDirectoryDialog(innerShell, dirBigDataTemplateTextField, FileChoosers.getString("dirBigDataTemplateTitle"),
+                    FileChoosers.getString("dirBigDataTemplateMessage"), dirBigDataTemplateTextField.getText());
         } else {
-            DirectoryDialogs.showAdvancedDirectoryDialog(innerShell, dirBigDataTemplateTextField, I18N.getFileChooserDirBigDataTemplateTitle(),
-                    I18N.getFileChooserDirBigDataTemplateMessage(), dirBaseTextField.getText());
+            DirectoryDialogs.showAdvancedDirectoryDialog(innerShell, dirBigDataTemplateTextField, FileChoosers.getString("dirBigDataTemplateTitle"),
+                    FileChoosers.getString("dirBigDataTemplateMessage"), dirBaseTextField.getText());
         }
         identifierFreeStationTextField.setFocus();
     }
 
     private void processDirBigDataTextOperations() {
         if (!Main.pref.isDefaultSettingsGenerated()) {
-            DirectoryDialogs.showAdvancedDirectoryDialog(innerShell, dirBigDataTextField, I18N.getFileChooserDirBigDataTitle(),
-                    I18N.getFileChooserDirBigDataMessage(), dirBigDataTextField.getText());
+            DirectoryDialogs.showAdvancedDirectoryDialog(innerShell, dirBigDataTextField, FileChoosers.getString("dirBigDataTitle"),
+                    FileChoosers.getString("dirBigDataMessage"), dirBigDataTextField.getText());
         } else {
-            DirectoryDialogs.showAdvancedDirectoryDialog(innerShell, dirBigDataTextField, I18N.getFileChooserDirBigDataTitle(),
-                    I18N.getFileChooserDirBigDataMessage(), dirBaseTextField.getText());
+            DirectoryDialogs.showAdvancedDirectoryDialog(innerShell, dirBigDataTextField, FileChoosers.getString("dirBigDataTitle"),
+                    FileChoosers.getString("dirBigDataMessage"), dirBaseTextField.getText());
         }
         dirBigDataTemplateTextField.setFocus();
     }
 
     private void processDirProjectTemplateTextOperations() {
         if (!Main.pref.isDefaultSettingsGenerated()) {
-            DirectoryDialogs.showAdvancedDirectoryDialog(innerShell, dirProjectTemplateTextField, I18N.getFileChooserDirProjectTemplateTitle(),
-                    I18N.getFileChooserDirProjectTemplateMessage(), dirProjectTemplateTextField.getText());
+            DirectoryDialogs.showAdvancedDirectoryDialog(innerShell, dirProjectTemplateTextField, FileChoosers.getString("dirProjectTemplateTitle"),
+                    FileChoosers.getString("dirProjectTemplateMessage"), dirProjectTemplateTextField.getText());
         } else {
-            DirectoryDialogs.showAdvancedDirectoryDialog(innerShell, dirProjectTemplateTextField, I18N.getFileChooserDirProjectTemplateTitle(),
-                    I18N.getFileChooserDirProjectTemplateMessage(), dirBaseTextField.getText());
+            DirectoryDialogs.showAdvancedDirectoryDialog(innerShell, dirProjectTemplateTextField, FileChoosers.getString("dirProjectTemplateTitle"),
+                    FileChoosers.getString("dirProjectTemplateMessage"), dirBaseTextField.getText());
         }
         dirAdminTextField.setFocus();
     }
 
     private void processDirProjectTextOperations() {
         if (!Main.pref.isDefaultSettingsGenerated()) {
-            DirectoryDialogs.showAdvancedDirectoryDialog(innerShell, dirProjectTextField, I18N.getFileChooserDirProjectTitle(),
-                    I18N.getFileChooserDirProjectMessage(), dirProjectTextField.getText());
+            DirectoryDialogs.showAdvancedDirectoryDialog(innerShell, dirProjectTextField, FileChoosers.getString("dirProjectTitle"),
+                    FileChoosers.getString("dirProjectMessage"), dirProjectTextField.getText());
         } else {
-            DirectoryDialogs.showAdvancedDirectoryDialog(innerShell, dirProjectTextField, I18N.getFileChooserDirProjectTitle(),
-                    I18N.getFileChooserDirProjectMessage(), dirBaseTextField.getText());
+            DirectoryDialogs.showAdvancedDirectoryDialog(innerShell, dirProjectTextField, FileChoosers.getString("dirProjectTitle"),
+                    FileChoosers.getString("dirProjectMessage"), dirBaseTextField.getText());
         }
         dirProjectTemplateTextField.setFocus();
     }

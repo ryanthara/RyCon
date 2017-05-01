@@ -23,7 +23,9 @@ import de.ryanthara.ja.rycon.data.PreferenceHandler;
 import de.ryanthara.ja.rycon.gui.UpdateDialog;
 import de.ryanthara.ja.rycon.gui.custom.MessageBoxes;
 import de.ryanthara.ja.rycon.gui.custom.StatusBar;
-import de.ryanthara.ja.rycon.i18n.I18N;
+import de.ryanthara.ja.rycon.i18n.Errors;
+import de.ryanthara.ja.rycon.i18n.Labels;
+import de.ryanthara.ja.rycon.i18n.Messages;
 import de.ryanthara.ja.rycon.tools.Updater;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -204,7 +206,8 @@ public abstract class Main {
                 Display display = new Display();
                 Shell shell = new Shell(display);
 
-                int rc = MessageBoxes.showMessageBox(shell, SWT.ICON_ERROR | SWT.YES | SWT.NO, I18N.getErrorTitleJavaVersion(), I18N.getErrorTextJavaVersion());
+                int rc = MessageBoxes.showMessageBox(shell, SWT.ICON_ERROR | SWT.YES | SWT.NO,
+                        Errors.getString("javaVersionText"), Errors.getString("javaVersionMessage"));
 
                 if (rc == SWT.YES) {
                     try {
@@ -257,8 +260,8 @@ public abstract class Main {
                 Shell shell = new Shell(display);
 
                 UpdateDialog updateDialog = new UpdateDialog(shell);
-                updateDialog.setText(I18N.getInfoTitleRyCONUpdate());
-                updateDialog.setMessage(I18N.getInfoTextRyCONUpdate());
+                updateDialog.setText(Labels.getString("ryCONUpdateText"));
+                updateDialog.setMessage(Messages.getString("ryCONUpdate"));
                 updateDialog.setWhatsNewInfo(updater.getWhatsNew());
                 int returnCode = updateDialog.open();
 

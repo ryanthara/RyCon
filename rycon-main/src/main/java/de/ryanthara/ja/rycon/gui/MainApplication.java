@@ -23,7 +23,9 @@ import de.ryanthara.ja.rycon.data.Version;
 import de.ryanthara.ja.rycon.gui.custom.MessageBoxes;
 import de.ryanthara.ja.rycon.gui.custom.StatusBar;
 import de.ryanthara.ja.rycon.gui.widget.*;
-import de.ryanthara.ja.rycon.i18n.I18N;
+import de.ryanthara.ja.rycon.i18n.Buttons;
+import de.ryanthara.ja.rycon.i18n.Labels;
+import de.ryanthara.ja.rycon.i18n.Messages;
 import de.ryanthara.ja.rycon.tools.ImageConverter;
 import de.ryanthara.ja.rycon.tools.ShellPositioner;
 import org.eclipse.swt.SWT;
@@ -92,13 +94,13 @@ public class MainApplication extends Main {
     }
 
     private void actionBtn0() {
-        statusBar.setStatus(I18N.getStatusExitInitialized(), OK);
+        statusBar.setStatus(Labels.getString("exitInitialized"), OK);
         shell.getDisplay().dispose();
     }
 
     private void actionBtn1() {
         new GeneratorWidget();
-        statusBar.setStatus(I18N.getStatusGeneratorInitialized(), OK);
+        statusBar.setStatus(Labels.getString("generatorInitialized"), OK);
     }
 
     private void actionBtn2() {
@@ -109,22 +111,22 @@ public class MainApplication extends Main {
 
     private void actionBtn3() {
         new TidyUpWidget();
-        statusBar.setStatus(I18N.getStatusCleanInitialized(), OK);
+        statusBar.setStatus(Labels.getString("tidyUpInitialized"), OK);
     }
 
     private void actionBtn4() {
         new CodeSplitterWidget();
-        statusBar.setStatus(I18N.getStatusSplitterInitialized(), OK);
+        statusBar.setStatus(Labels.getString("splitFilesInitialized"), OK);
     }
 
     private void actionBtn5() {
         new LevellingWidget();
-        statusBar.setStatus(I18N.getStatusLevelInitialized(), OK);
+        statusBar.setStatus(Labels.getString("levellingInitialized"), OK);
     }
 
     private void actionBtn6() {
         new ConverterWidget();
-        statusBar.setStatus(I18N.getStatusConverterInitialized(), OK);
+        statusBar.setStatus(Labels.getString("converterInitialized"), OK);
     }
 
     private void actionBtn7() {
@@ -141,7 +143,7 @@ public class MainApplication extends Main {
 
     private void actionBtn9() {
         new SettingsWidget();
-        statusBar.setStatus(I18N.getStatusSettingsOpened(), OK);
+        statusBar.setStatus(Labels.getString("settingsInitialized"), OK);
     }
 
     private void addKeyBoardInputFilter(final Shell shell) {
@@ -210,8 +212,8 @@ public class MainApplication extends Main {
         Button btnExit = new Button(composite, SWT.PUSH);
         btnExit.setAlignment(SWT.LEFT);
         btnExit.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/icons/btn_exit.png"));
-        btnExit.setText(I18N.getBtnExitLabel());
-        btnExit.setToolTipText(I18N.getBtnExitLabelToolTip());
+        btnExit.setText(Buttons.getString("exitText"));
+        btnExit.setToolTipText(Buttons.getString("exitToolTip"));
 
         btnExit.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -228,8 +230,8 @@ public class MainApplication extends Main {
         Button btnToolboxProject = new Button(composite, SWT.PUSH);
         btnToolboxProject.setAlignment(SWT.LEFT);
         btnToolboxProject.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/icons/btn_project.png"));
-        btnToolboxProject.setText(I18N.getBtnGeneratorLabel());
-        btnToolboxProject.setToolTipText(I18N.getBtnGeneratorLabelToolTip());
+        btnToolboxProject.setText(Buttons.getString("generatorText"));
+        btnToolboxProject.setToolTipText(Buttons.getString("generatorToolTip"));
 
         btnToolboxProject.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -246,8 +248,8 @@ public class MainApplication extends Main {
         Button btnToolboxCopyTool = new Button(composite, SWT.PUSH);
         btnToolboxCopyTool.setAlignment(SWT.LEFT);
         btnToolboxCopyTool.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/icons/btn_copy.png"));
-        btnToolboxCopyTool.setText(I18N.getBtnCopyLabel());
-        btnToolboxCopyTool.setToolTipText(I18N.getBtnCopyLabelToolTip());
+        btnToolboxCopyTool.setText(Buttons.getString("importText"));
+        btnToolboxCopyTool.setToolTipText(Buttons.getString("importToolTip"));
 
         btnToolboxCopyTool.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -264,8 +266,8 @@ public class MainApplication extends Main {
         Button btnToolboxClean = new Button(composite, SWT.PUSH);
         btnToolboxClean.setAlignment(SWT.LEFT);
         btnToolboxClean.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/icons/btn_clean.png"));
-        btnToolboxClean.setText(I18N.getBtnCleanLabel());
-        btnToolboxClean.setToolTipText(I18N.getBtnCleanLabelToolTip());
+        btnToolboxClean.setText(Buttons.getString("cleanText"));
+        btnToolboxClean.setToolTipText(Buttons.getString("cleanToolTip"));
 
         btnToolboxClean.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -284,8 +286,8 @@ public class MainApplication extends Main {
         Button btnToolboxSplitter = new Button(composite, SWT.PUSH);
         btnToolboxSplitter.setAlignment(SWT.LEFT);
         btnToolboxSplitter.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/icons/btn_code.png"));
-        btnToolboxSplitter.setText(I18N.getBtnSplitterLabel());
-        btnToolboxSplitter.setToolTipText(I18N.getBtnSplitterLabelToolTip());
+        btnToolboxSplitter.setText(Buttons.getString("splitterText"));
+        btnToolboxSplitter.setToolTipText(Buttons.getString("splitterToolTip"));
 
         btnToolboxSplitter.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -304,8 +306,8 @@ public class MainApplication extends Main {
         Button btnToolboxLeveling = new Button(composite, SWT.PUSH);
         btnToolboxLeveling.setAlignment(SWT.LEFT);
         btnToolboxLeveling.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/icons/btn_level.png"));
-        btnToolboxLeveling.setText(I18N.getBtnLevelingLabel());
-        btnToolboxLeveling.setToolTipText(I18N.getBtnLevelingLabelToolTip());
+        btnToolboxLeveling.setText(Buttons.getString("levellingText"));
+        btnToolboxLeveling.setToolTipText(Buttons.getString("levellingToolTip"));
 
         btnToolboxLeveling.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -324,8 +326,8 @@ public class MainApplication extends Main {
         Button btnToolboxConvert = new Button(composite, SWT.PUSH);
         btnToolboxConvert.setAlignment(SWT.LEFT);
         btnToolboxConvert.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/icons/btn_convert.png"));
-        btnToolboxConvert.setText(I18N.getBtnConvertLabel());
-        btnToolboxConvert.setToolTipText(I18N.getBtnConvertLabelToolTip());
+        btnToolboxConvert.setText(Buttons.getString("convertText"));
+        btnToolboxConvert.setToolTipText(Buttons.getString("convertToolTip"));
 
         btnToolboxConvert.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -342,8 +344,8 @@ public class MainApplication extends Main {
         Button btnTransformation = new Button(composite, SWT.PUSH);
         btnTransformation.setAlignment(SWT.LEFT);
         btnTransformation.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/icons/btn_transformation.png"));
-        btnTransformation.setText(I18N.getBtnTransformationLabel());
-        btnTransformation.setToolTipText(I18N.getBtnTransformationLabelToolTip());
+        btnTransformation.setText(Buttons.getString("transformationText"));
+        btnTransformation.setToolTipText(Buttons.getString("transformationToolTip"));
 
         btnTransformation.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -360,8 +362,8 @@ public class MainApplication extends Main {
         Button btnPrint = new Button(composite, SWT.PUSH);
         btnPrint.setAlignment(SWT.LEFT);
         btnPrint.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/icons/btn_printer.png"));
-        btnPrint.setText(I18N.getBtnPrintLabel());
-        btnPrint.setToolTipText(I18N.getBtnPrintLabelToolTip());
+        btnPrint.setText(Buttons.getString("printText"));
+        btnPrint.setToolTipText(Buttons.getString("printToolTip"));
 
         btnPrint.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -378,8 +380,8 @@ public class MainApplication extends Main {
         Button btnSettings = new Button(composite, SWT.PUSH);
         btnSettings.setAlignment(SWT.LEFT);
         btnSettings.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/icons/btn_settings.png"));
-        btnSettings.setText(I18N.getBtnSettingsMainLabel());
-        btnSettings.setToolTipText(I18N.getBtnSettingsMainLabelToolTip());
+        btnSettings.setText(Buttons.getString("settingsText"));
+        btnSettings.setToolTipText(Buttons.getString("settingsToolTip"));
 
         btnSettings.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -406,7 +408,7 @@ public class MainApplication extends Main {
 
     private StatusBar createStatusBar(Shell shell) {
         StatusBar statusBar = new StatusBar(shell);
-        statusBar.setStatus(I18N.getStatusRyCONInitialized(), OK);
+        statusBar.setStatus(Labels.getString("ryCONInitialized"), OK);
         Main.statusBar = statusBar;
 
         FormData formDataStatus = new FormData();
@@ -431,7 +433,7 @@ public class MainApplication extends Main {
             final Menu menu = new Menu(shell, SWT.POP_UP);
 
             MenuItem webItem = new MenuItem(menu, SWT.PUSH);
-            webItem.setText(I18N.getTrayMenuItemWebsite());
+            webItem.setText(Labels.getString("websiteItemTrayMenu"));
             webItem.addListener(SWT.Selection, new Listener() {
                 @Override
                 public void handleEvent(Event event) {
@@ -440,7 +442,7 @@ public class MainApplication extends Main {
             });
 
             MenuItem helpItem = new MenuItem(menu, SWT.PUSH);
-            helpItem.setText(I18N.getTrayMenuItemHelp());
+            helpItem.setText(Labels.getString("helpItemTrayMenu"));
             helpItem.addListener(SWT.Selection, new Listener() {
                 @Override
                 public void handleEvent(Event event) {
@@ -449,7 +451,7 @@ public class MainApplication extends Main {
             });
 
             MenuItem settingsItem = new MenuItem(menu, SWT.PUSH);
-            settingsItem.setText(I18N.getTrayMenuItemSettings());
+            settingsItem.setText(Labels.getString("settingsItemTrayMenu"));
             settingsItem.addListener(SWT.Selection, new Listener() {
                 @Override
                 public void handleEvent(Event event) {
@@ -462,12 +464,12 @@ public class MainApplication extends Main {
             new MenuItem(menu, SWT.SEPARATOR);
 
             MenuItem infoItem = new MenuItem(menu, SWT.PUSH);
-            infoItem.setText(I18N.getTrayMenuItemInfo() + Version.getBuildNumber() + " (" + Version.getBuildDate() + ")");
+            infoItem.setText(Labels.getString("infoItemTrayMenu") + Version.getBuildNumber() + " (" + Version.getBuildDate() + ")");
 
             new MenuItem(menu, SWT.SEPARATOR);
 
             MenuItem exitItem = new MenuItem(menu, SWT.PUSH);
-            exitItem.setText(I18N.getTrayMenuItemExit());
+            exitItem.setText(Labels.getString("exitItemTrayMenu"));
             exitItem.addListener(SWT.Selection, new Listener() {
                 @Override
                 public void handleEvent(Event event) {
@@ -545,7 +547,7 @@ public class MainApplication extends Main {
 
         // Dock icon for OS X and Windows task bar
         shell.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/RyCON_blank256x256.png"));
-        shell.setText(I18N.getApplicationTitle());
+        shell.setText(Labels.getString("applicationTitle"));
 
         FormLayout formLayout = new FormLayout();
         shell.setLayout(formLayout);
@@ -580,7 +582,7 @@ public class MainApplication extends Main {
         StatusBar statusBar = createStatusBar(shell);
 
         if (pref.isDefaultSettingsGenerated()) {
-            statusBar.setStatus(I18N.getMsgNewConfigFileGenerated(), WARNING);
+            statusBar.setStatus(Messages.getString("newConfigFileGenerated"), WARNING);
         }
 
         shell.pack();

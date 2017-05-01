@@ -20,7 +20,8 @@ package de.ryanthara.ja.rycon.gui.custom;
 
 import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.check.TextCheck;
-import de.ryanthara.ja.rycon.i18n.I18N;
+import de.ryanthara.ja.rycon.i18n.Buttons;
+import de.ryanthara.ja.rycon.i18n.Labels;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -98,7 +99,7 @@ public class InputFieldsComposite extends Composite {
 
     private void createContents() {
         Group group = new Group(this, SWT.NONE);
-        group.setText(I18N.getGroupTitlePathSelection());
+        group.setText(Labels.getString("pathSelectionText"));
 
         GridLayout gridLayout = new GridLayout();
         gridLayout.marginHeight = 5;
@@ -124,7 +125,7 @@ public class InputFieldsComposite extends Composite {
     private Button createDestinationComposite(Group group) {
         GridData gridData;
         Label destination = new Label(group, SWT.NONE);
-        destination.setText(I18N.getLabelTextDestination());
+        destination.setText(Labels.getString("destinationText"));
         destination.setLayoutData(new GridData());
 
         destinationTextField = new Text(group, SWT.SINGLE | SWT.BORDER);
@@ -142,7 +143,7 @@ public class InputFieldsComposite extends Composite {
         destinationTextField.setLayoutData(gridData);
 
         Button btnDestination = new Button(group, SWT.NONE);
-        btnDestination.setText(I18N.getBtnChoosePath());
+        btnDestination.setText(Buttons.getString("choosePathText"));
         btnDestination.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -150,7 +151,7 @@ public class InputFieldsComposite extends Composite {
             }
         });
 
-        btnDestination.setToolTipText(I18N.getBtnChoosePathToolTip());
+        btnDestination.setToolTipText(Buttons.getString("choosePathToolTip"));
         btnDestination.setLayoutData(new GridData());
         return btnDestination;
     }
@@ -158,7 +159,7 @@ public class InputFieldsComposite extends Composite {
     private Button createSourceComposite(Group group) {
         GridData gridData;
         final Label source = new Label(group, SWT.NONE);
-        source.setText(I18N.getLabelTextSource());
+        source.setText(Labels.getString("source"));
 
         sourceTextField = new Text(group, SWT.BORDER);
         sourceTextField.addListener(SWT.Traverse, new Listener() {
@@ -189,8 +190,8 @@ public class InputFieldsComposite extends Composite {
         sourceTextField.setLayoutData(gridData);
 
         Button btnSource = new Button(group, SWT.NONE);
-        btnSource.setText(I18N.getBtnChooseFiles());
-        btnSource.setToolTipText(I18N.getBtnChooseFilesToolTip());
+        btnSource.setText(Buttons.getString("chooseFilesText"));
+        btnSource.setToolTipText(Buttons.getString("chooseFilesToolTip"));
         btnSource.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {

@@ -18,7 +18,8 @@
 package de.ryanthara.ja.rycon.gui.widget.generate;
 
 import de.ryanthara.ja.rycon.gui.widget.GeneratorWidget;
-import de.ryanthara.ja.rycon.i18n.I18N;
+import de.ryanthara.ja.rycon.i18n.Errors;
+import de.ryanthara.ja.rycon.i18n.Warnings;
 
 /**
  * Instances of this class holds the warn and error messages of the {@link GeneratorWidget}.
@@ -38,7 +39,7 @@ public class ProjectCopyWarnAndErrorMessages implements CopyWarnAndErrorMessage 
      */
     @Override
     public String getErrorMessage(String number) {
-        return String.format(I18N.getMsgCreateDirProjectExist(), number);
+        return String.format(Errors.getString("projectDirCopy"), number);
     }
 
     /**
@@ -50,7 +51,7 @@ public class ProjectCopyWarnAndErrorMessages implements CopyWarnAndErrorMessage 
      */
     @Override
     public String getWarnMessage(String number) {
-        return String.format(I18N.getMsgCreateDirProjectWarning(), number);
+        return String.format(Warnings.getString("projectDirExists"), number);
     }
 
 } // end of ProjectCopyWarnAndErrorMessages

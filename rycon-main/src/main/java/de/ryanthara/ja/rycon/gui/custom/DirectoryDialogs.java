@@ -18,7 +18,8 @@
 package de.ryanthara.ja.rycon.gui.custom;
 
 import de.ryanthara.ja.rycon.data.PreferenceHandler;
-import de.ryanthara.ja.rycon.i18n.I18N;
+import de.ryanthara.ja.rycon.i18n.Errors;
+import de.ryanthara.ja.rycon.i18n.Labels;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Shell;
@@ -40,7 +41,8 @@ public class DirectoryDialogs {
         if ((pathAsString != null) && (Files.exists(Paths.get(pathAsString)))) {
             textField.setText(pathAsString);
         } else {
-            MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING, I18N.getMsgBoxTitleWarning(), I18N.getMsgDirNotFound());
+            MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING,
+                    Labels.getString("warningTextMsgBox"), Errors.getString("directoryNotFound"));
         }
     }
 

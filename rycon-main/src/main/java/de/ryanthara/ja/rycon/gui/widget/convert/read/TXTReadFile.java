@@ -19,7 +19,8 @@ package de.ryanthara.ja.rycon.gui.widget.convert.read;
 
 import de.ryanthara.ja.rycon.gui.custom.MessageBoxes;
 import de.ryanthara.ja.rycon.gui.widget.ConverterWidget;
-import de.ryanthara.ja.rycon.i18n.I18N;
+import de.ryanthara.ja.rycon.i18n.Labels;
+import de.ryanthara.ja.rycon.i18n.Messages;
 import de.ryanthara.ja.rycon.io.LineReader;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
@@ -94,8 +95,8 @@ public class TXTReadFile implements ReadFile {
             }
         } else {
             System.err.println("File " + file2Read.getFileName() + " could not be read.");
-            MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR, I18N.getMsgBoxTitleError(),
-                    I18N.getMsgConvertReaderTXTFailed());
+            MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR, Labels.getString("errorTextMsgBox"),
+                    Messages.getString("readerTXTFailed"));
 
         }
 

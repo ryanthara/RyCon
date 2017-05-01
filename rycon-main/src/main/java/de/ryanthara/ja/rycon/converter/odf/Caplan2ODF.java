@@ -18,7 +18,7 @@
 package de.ryanthara.ja.rycon.converter.odf;
 
 import de.ryanthara.ja.rycon.elements.CaplanBlock;
-import de.ryanthara.ja.rycon.i18n.I18N;
+import de.ryanthara.ja.rycon.i18n.Labels;
 import org.odftoolkit.simple.SpreadsheetDocument;
 import org.odftoolkit.simple.table.Cell;
 import org.odftoolkit.simple.table.Table;
@@ -72,27 +72,27 @@ public class Caplan2ODF {
 
             if (writeCommentRow) {
                 cell = table.getCellByPosition(colIndex, rowIndex);
-                cell.setStringValue(I18N.getCaplanColumnTyp("pointNumber"));
+                cell.setStringValue(Labels.getCaplanColumnTyp("pointNumber"));
                 colIndex = colIndex + 1;
 
                 cell = table.getCellByPosition(colIndex, rowIndex);
-                cell.setStringValue(I18N.getCaplanColumnTyp("easting"));
+                cell.setStringValue(Labels.getCaplanColumnTyp("easting"));
                 colIndex = colIndex + 1;
 
                 cell = table.getCellByPosition(colIndex, rowIndex);
-                cell.setStringValue(I18N.getCaplanColumnTyp("northing"));
+                cell.setStringValue(Labels.getCaplanColumnTyp("northing"));
                 colIndex = colIndex + 1;
 
                 cell = table.getCellByPosition(colIndex, rowIndex);
-                cell.setStringValue(I18N.getCaplanColumnTyp("height"));
+                cell.setStringValue(Labels.getCaplanColumnTyp("height"));
                 colIndex = colIndex + 1;
 
                 cell = table.getCellByPosition(colIndex, rowIndex);
-                cell.setStringValue(I18N.getCaplanColumnTyp("object"));
+                cell.setStringValue(Labels.getCaplanColumnTyp("object"));
                 colIndex = colIndex + 1;
 
                 cell = table.getCellByPosition(colIndex, rowIndex);
-                cell.setStringValue(I18N.getCaplanColumnTyp("attribute"));
+                cell.setStringValue(Labels.getCaplanColumnTyp("attribute"));
 
                 rowIndex = rowIndex + 1;
             }
