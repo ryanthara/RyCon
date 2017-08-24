@@ -80,6 +80,7 @@ public class EditorBoolean extends Editor<Boolean> {
 
 
         System.out.println(super.getPreferenceTab());
+        System.out.println("Toll");
 
         System.out.println("createControl: " + super.getPreferenceTab().getConfiguration().getStringNo());
 
