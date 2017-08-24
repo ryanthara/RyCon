@@ -19,11 +19,14 @@ package de.ryanthara.ja.rycon.converter.csv;
 
 import de.ryanthara.ja.rycon.converter.gsi.BaseToolsGSI;
 import de.ryanthara.ja.rycon.elements.GSIBlock;
-import de.ryanthara.ja.rycon.i18n.GSIWordIndices;
+import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
+import de.ryanthara.ja.rycon.i18n.WordIndices;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.TreeSet;
+
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.WORDINDICES;
 
 /**
  * This class provides functions to convert measurement files from Leica GSI format (GSI8 and GSI16)
@@ -67,7 +70,7 @@ public class GSI2CSV {
             int counter = 0;
 
             for (Integer wordIndex : foundWordIndices) {
-                builder.append(GSIWordIndices.getWordIndexDescription(wordIndex));
+                builder.append(ResourceBundleUtils.getLangString(WORDINDICES, WordIndices.valueOf("WI"+wordIndex)));
 
                 if (counter < foundWordIndices.size() - 1) {
                     builder.append(separator);

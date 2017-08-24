@@ -19,12 +19,19 @@ package de.ryanthara.ja.rycon.core;
 
 import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.converter.gsi.BaseToolsGSI;
+import de.ryanthara.ja.rycon.data.DefaultKeys;
 import de.ryanthara.ja.rycon.gui.custom.MessageBoxes;
 import de.ryanthara.ja.rycon.i18n.Labels;
+import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 import de.ryanthara.ja.rycon.i18n.Warnings;
 import org.eclipse.swt.SWT;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LABELS;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.WARNINGS;
 
 /**
  * Instances of this class provides functions to clean up a LTOP measurement file in the Leica GSI format.
@@ -47,6 +54,8 @@ import java.util.ArrayList;
  * @since 12
  */
 public class GSILTOPClean {
+
+    private final static Logger logger = Logger.getLogger(GSILTOPClean.class.getName());
 
     private ArrayList<String> readStringLines;
 
@@ -80,6 +89,10 @@ public class GSILTOPClean {
      * @return clean up LTOP MES file
      */
     public ArrayList<String> processLTOPClean() {
+
+        final String paramFreeStationString = DefaultKeys.PARAM_FREE_STATION_STRING.getValue();
+        final String paramControlPointString = DefaultKeys.PARAM_CONTROL_POINT_STRING.getValue();
+
         ArrayList<String> result = new ArrayList<>();
 
         /*
@@ -104,11 +117,11 @@ public class GSILTOPClean {
             switch (tokens) {
                 case 5:         // station line
                     // detect two free station lines and delete the first one of them from the result array list
-                    if (previousLine.contains(Main.getParamFreeStationString())) {
+                    if (previousLine.contains(paramFreeStationString)) {
                         result.remove(result.size() - 1);
                     }
 
-                    currentStation = line.substring(line.indexOf(Main.getParamFreeStationString()), line.indexOf(" "));
+                    currentStation = line.substring(line.indexOf(paramFreeStationString), line.indexOf(" "));
                     result.add(line);
 
                     range = 0;
@@ -118,26 +131,27 @@ public class GSILTOPClean {
                 case 6:         // polar measurement line
                     // previous line contains a free station and a maximum of 4 reference points is used
                     if ((status == 0) & (range < 4)) {
-                        if (line.contains(Main.getParamControlPointString())) {     // control point
+                        if (line.contains(paramControlPointString)) {     // control point
                             range = range + 1;
                             status = 5;
                         } else {                                                    // reference point
                             range = range + 1;
                         }
                     } else if ((status == 0) & (range == 4)) {                       // no control point in range
-                        MessageBoxes.showMessageBox(Main.shell, SWT.ICON_WARNING, Labels.getString("warningTextMsgBox"),
-                                String.format(Warnings.getString("noControlPointsLTOP"), currentStation));
+                        MessageBoxes.showMessageBox(Main.shell, SWT.ICON_WARNING,
+                                ResourceBundleUtils.getLangString(LABELS, Labels.warningTextMsgBox),
+                                String.format(ResourceBundleUtils.getLangString(WARNINGS, Warnings.noControlPointsLTOP), currentStation));
 
                         range = range + 1;
                     } else {
-                        if (!line.contains(Main.getParamControlPointString())) {
+                        if (!line.contains(paramControlPointString)) {
                             result.add(line);
                         }
                     }
                     break;
 
                 default:
-                    System.err.println("GSILTOPClean.processLTOPClean() : line contains less or more tokens " + line);
+                    logger.log(Level.FINE, "line contains less or more tokens than expected. " + line);
             }
 
             previousLine = line;

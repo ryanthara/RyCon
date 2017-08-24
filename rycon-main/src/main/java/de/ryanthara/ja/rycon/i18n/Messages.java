@@ -1,7 +1,7 @@
 /*
- * License: GPL. Copyright 2014- (C) by Sebastian Aust (https://www.ryanthara.de/)
+ * License: GPL. Copyright 2016- (C) by Sebastian Aust (https://www.ryanthara.de/)
  *
- * This file is part of the package de.ryanthara.ja.rycon.tools
+ * This file is part of the package de.ryanthara.ja.rycon.i18n
  *
  * This package is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -17,63 +17,40 @@
  */
 package de.ryanthara.ja.rycon.i18n;
 
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
-
 /**
- * Messages handles character string for multi-language support in RyCON.
+ * The <tt>Messages</tt> enumeration holds all the texts for the messages of <tt>RyCON</tt>.
  * <p>
- * The strings for different message texts are stored in the Resource Bundle MessageBundle and loaded from this class.
- * <p>
- * <h3>Changes:</h3>
- * <ul>
- * <li>2: code improvements and clean up </li>
- * <li>1: basic implementation </li>
- * </ul>
+ * This enumeration is used for encapsulating the data. The interface {@link ResourceKeys}
+ * is used to access different enumerations in the class {@link ResourceBundleUtils}.
  *
  * @author sebastian
- * @version 2
- * @since 1
+ * @version 1
+ * @since 2.0
  */
-public class Messages {
+public enum Messages implements ResourceKeys {
 
-    private static final String BUNDLE_NAME = "de/ryanthara/ja/rycon/gui/MessageBundle";
-    private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
-
-    /**
-     * Return the key-text-pair which represents the character string.
-     *
-     * @param key key to look up
-     *
-     * @return matched text
-     */
-    public static String getString(String key) {
-        try {
-            return RESOURCE_BUNDLE.getString(key);
-        } catch (MissingResourceException e) {
-            return '!' + key + '!';
-        }
-    }
-
-    /**
-     * Helper for string preparation to differ between singular and plural text.
-     * <p>
-     * In the properties file the String "§§" is used as separator. The values
-     * for singular is set with {@code Main.TEXT_SINGULAR} and for plural is
-     * set with {@code Main.TEXT_PLURAL}
-     *
-     * @param key key to look up
-     * @param singular set to get a singular or plural text back
-     *
-     * @return singular or plural string message
-     */
-    public static String prepareString(String key, boolean singular) {
-        String[] s = Messages.getString(key).split("§§");
-        if (singular) {
-            return s[0];
-        } else {
-            return s[1];
-        }
-    }
+    adminAndBigDataAndProjectGenerated,
+    adminAndBigDataGenerated,
+    adminAndProjectGenerated,
+    adminFolderGenerated,
+    bigDataAndProjectGenerated,
+    bigDataFolderGenerated,
+    cardReaderFilesCopySuccessful,
+    conversionMessage,
+    conversionStatus,
+    levellingStatus,
+    levellingMessage,
+    newConfigFileGenerated,
+    projectFolderGenerated,
+    splitFilesMessage,
+    splitFilesStatus,
+    tidyUpMessage,
+    tidyUpStatus,
+    ryCONUpdate,
+    settingsDefaultGenerated,
+    settingsGenerated,
+    transferCopyMessage,
+    transferMoveMessage,
+    transferText,
 
 } // end of Messages

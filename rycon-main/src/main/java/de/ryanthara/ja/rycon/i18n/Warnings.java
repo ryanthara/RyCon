@@ -1,5 +1,5 @@
 /*
- * License: GPL. Copyright 2017- (C) by Sebastian Aust (https://www.ryanthara.de/)
+ * License: GPL. Copyright 2016- (C) by Sebastian Aust (https://www.ryanthara.de/)
  *
  * This file is part of the package de.ryanthara.ja.rycon.i18n
  *
@@ -17,41 +17,23 @@
  */
 package de.ryanthara.ja.rycon.i18n;
 
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
-
 /**
- * Warnings handles character string for multi-language support in RyCON.
+ * The <tt>Warnings</tt> enumeration holds all the texts for the warning messages of <tt>RyCON</tt>.
  * <p>
- * The strings for different warn messages are stored in the Resource Bundle WarningsBundle and loaded from this class.
- * <p>
- * <h3>Changes:</h3>
- * <ul>
- * <li>1: basic implementation </li>
- * </ul>
+ * This enumeration is used for encapsulating the data. The interface {@link ResourceKeys}
+ * is used to access different enumerations in the class {@link ResourceBundleUtils}.
  *
  * @author sebastian
  * @version 1
- * @since 1
+ * @since 2.0
  */
-public class Warnings {
+public enum Warnings implements ResourceKeys {
 
-    private static final String BUNDLE_NAME = "de/ryanthara/ja/rycon/gui/WarningsBundle";
-    private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
+    adminDirExists,
+    bigDataDirExists,
+    emptyTextField,
+    fileExists,
+    noControlPointsLTOP,
+    projectDirExists
 
-    /**
-     * Returns the key-text-pair which represents the character string.
-     *
-     * @param key key to look up
-     *
-     * @return matched text
-     */
-    public static String getString(String key) {
-        try {
-            return RESOURCE_BUNDLE.getString(key);
-        } catch (MissingResourceException e) {
-            return '!' + key + '!';
-        }
-    }
-
-} // end of Buttons
+} // end of Warnings

@@ -30,10 +30,10 @@ package de.ryanthara.ja.rycon.data;
 public class Version {
 
     private static final short buildNumber = 25;
-    private static final short majorRelease = 0;
-    private static final short minorRelease = 9;
-    private static final short patchLevel = 11;
-    private static final String buildDate = "2016-05-03";
+    private static final short majorRelease = 1;
+    private static final short minorRelease = 0;
+    private static final short patchLevel = 0;
+    private static final String buildDate = "2017-05-03";
 
     /**
      * Returns the build date of RyCON as string.

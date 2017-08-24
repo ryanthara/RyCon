@@ -18,7 +18,7 @@
 
 package de.ryanthara.ja.rycon.tools;
 
-import de.ryanthara.ja.rycon.Main;
+import de.ryanthara.ja.rycon.data.DefaultKeys;
 import de.ryanthara.ja.rycon.data.Version;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -67,6 +67,7 @@ public class Updater {
      *
      * @return success
      */
+    // TODO correct return null
     public boolean checkForUpdate() {
         boolean success = false;
 
@@ -98,7 +99,7 @@ public class Updater {
         }
 
         try {
-            URL updateUrl = new URL(Main.RyCON_UPDATE_URL);
+            URL updateUrl = new URL(DefaultKeys.RyCON_UPDATE_URL.getValue());
             URLConnection con = updateUrl.openConnection();
 
             if (con.getContentLength() > 0) {
@@ -168,7 +169,7 @@ public class Updater {
         StringBuilder builder = new StringBuilder();
 
         try {
-            URL whatsNewURL = new URL(Main.RyCON_WHATS_NEW_URL);
+            URL whatsNewURL = new URL(DefaultKeys.RyCON_WHATS_NEW_URL.getValue());
             BufferedReader in = new BufferedReader(new InputStreamReader(whatsNewURL.openStream()));
 
             String inputLine;

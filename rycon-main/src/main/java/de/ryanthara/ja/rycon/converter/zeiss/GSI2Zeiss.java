@@ -44,9 +44,9 @@ public class GSI2Zeiss {
     /**
      * Converts a Leica GSI formatted measurement or coordinate based file into a Zeiss REC formatted file.
      *
-     * @param dialect dialect of the destination file
+     * @param dialect dialect of the target file
      *
-     * @return string lines of the destination file
+     * @return string lines of the target file
      */
     public ArrayList<String> convertGSI2REC(ZeissDialect dialect) {
         ArrayList<String> result = new ArrayList<>();

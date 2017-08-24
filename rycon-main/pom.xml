@@ -7,6 +7,18 @@
     <artifactId>rycon-main</artifactId>
     <packaging>jar</packaging>
     <name>RyCON as program with user interface</name>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
     <!-- inherit all the things which are global for RyCON -->
     <parent>

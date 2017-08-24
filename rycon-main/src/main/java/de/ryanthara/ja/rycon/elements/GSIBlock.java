@@ -17,11 +17,14 @@
  */
 package de.ryanthara.ja.rycon.elements;
 
-import de.ryanthara.ja.rycon.i18n.GSIWordIndices;
+import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
+import de.ryanthara.ja.rycon.i18n.WordIndices;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Arrays;
+
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.WORDINDICES;
 
 /**
  * Instances of this class represents an object to store and handle the values of a Leica GSI block.
@@ -133,7 +136,7 @@ public class GSIBlock {
      * Constructs a new instance of this class given its GSI8/GSI16 identifier, the word index, the information
      * related to data, the sign and the data string.
      * <p>
-     * This constructor is additionally used to change between GSI8 and GSI16 data in the levelling widget.
+     * This constructor is additionally used to change between GSI8 and GSI16 data in the levelling widgets.
      *
      * @param isGSI16     boolean for indicating a GSI16 file
      * @param wordIndex   word index (pos 1-2)
@@ -288,7 +291,7 @@ public class GSIBlock {
                 s = fillWithSpaces(length + 2, s);
                 break;
             default:
-                s = GSIWordIndices.getWordIndexDescription(9999);
+                s = ResourceBundleUtils.getLangString(WORDINDICES, WordIndices.WI9999);
                 System.err.println("GSIBlock.toPrintFormatTXT() : block contains the wrong word index " + dataGSI);
         }
 

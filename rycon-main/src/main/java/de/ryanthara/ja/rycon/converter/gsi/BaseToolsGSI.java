@@ -18,7 +18,7 @@
 package de.ryanthara.ja.rycon.converter.gsi;
 
 import de.ryanthara.ja.rycon.Main;
-import de.ryanthara.ja.rycon.data.PreferenceHandler;
+import de.ryanthara.ja.rycon.data.PreferenceKeys;
 import de.ryanthara.ja.rycon.elements.GSIBlock;
 import de.ryanthara.ja.rycon.tools.SortHelper;
 
@@ -154,7 +154,7 @@ public class BaseToolsGSI {
      * @return prepared string
      */
     public static String prepareLineEnding(String stringToPrepare) {
-        boolean concatBlankAtLineEnding = Boolean.parseBoolean(Main.pref.getUserPref(PreferenceHandler.GSI_SETTING_LINE_ENDING_WITH_BLANK));
+        boolean concatBlankAtLineEnding = Boolean.parseBoolean(Main.pref.getUserPreference(PreferenceKeys.GSI_SETTING_LINE_ENDING_WITH_BLANK));
 
         if (concatBlankAtLineEnding) {
             if (!stringToPrepare.endsWith(" ")) {

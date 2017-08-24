@@ -22,6 +22,7 @@ import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.gui.custom.MessageBoxes;
 import de.ryanthara.ja.rycon.i18n.Errors;
 import de.ryanthara.ja.rycon.i18n.Labels;
+import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 import de.ryanthara.ja.rycon.i18n.Warnings;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Text;
@@ -30,6 +31,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.StringTokenizer;
+
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.ERRORS;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LABELS;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.WARNINGS;
 
 /**
  * This class implements different kind of checks for {@link Text} fields.
@@ -43,21 +48,22 @@ import java.util.StringTokenizer;
 public class TextCheck {
 
     /**
-     * Checks the source and destination {@link Text} fields for being valid files and returns the valid ones
+     * Checks the source and target {@link Text} fields for being valid files and returns the valid ones
      * as a {@link Path} array.
      *
      * @param source      the source text field
-     * @param destination the destination text field
+     * @param target the target text field
      * @param chosenFiles the chosen files to be checked
      *
      * @return the valid chosen files
      */
-    public static Path[] checkSourceAndDestinationText(Text source, Text destination, Path... chosenFiles) {
+    public static Path[] checkSourceAndTargetText(Text source, Text target, Path... chosenFiles) {
         Path[] files2read = null;
 
-        if (isEmpty(source) || isEmpty(destination)) {
+        if (isEmpty(source) || isEmpty(target)) {
             MessageBoxes.showMessageBox(Main.shell, SWT.ICON_WARNING,
-                    Labels.getString("warningTextMsgBox"), Warnings.getString("emptyTextField"));
+                    ResourceBundleUtils.getLangString(LABELS, Labels.warningTextMsgBox),
+                    ResourceBundleUtils.getLangString(WARNINGS, Warnings.emptyTextField));
 
             files2read = new Path[0];
         } else if (chosenFiles == null) {
@@ -71,13 +77,14 @@ public class TextCheck {
                     files2read[i] = Paths.get(s);
                 } else {
                     MessageBoxes.showMessageBox(Main.shell, SWT.ICON_WARNING,
-                            Labels.getString("warningTextMsgBox"), Errors.getString("fileExistsNot"));
+                            ResourceBundleUtils.getLangString(LABELS, Labels.warningTextMsgBox),
+                            ResourceBundleUtils.getLangString(ERRORS, Errors.fileExistsNot));
                 }
             }
 
-            Path destinationPath = Paths.get(destination.getText());
+            Path targetPath = Paths.get(target.getText());
 
-            if (!(Files.isDirectory(destinationPath) && files2read.length > 0)) {
+            if (!(Files.isDirectory(targetPath) && files2read.length > 0)) {
                 files2read = new Path[0];
             }
         } else if (chosenFiles.length > 0) {

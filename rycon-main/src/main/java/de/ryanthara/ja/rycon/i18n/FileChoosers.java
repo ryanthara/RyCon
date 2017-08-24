@@ -1,5 +1,5 @@
 /*
- * License: GPL. Copyright 2017- (C) by Sebastian Aust (https://www.ryanthara.de/)
+ * License: GPL. Copyright 2016- (C) by Sebastian Aust (https://www.ryanthara.de/)
  *
  * This file is part of the package de.ryanthara.ja.rycon.i18n
  *
@@ -17,42 +17,49 @@
  */
 package de.ryanthara.ja.rycon.i18n;
 
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
-
 /**
- * FileChoosers handles character string for multi-language support in RyCON.
+ * The <tt>FileChoosers</tt> enumeration holds all the texts for the file choosers of <tt>RyCON</tt>.
  * <p>
- * The strings for different FileChoosers texts are stored in the Resource Bundle FileChoosers and loaded
- * from this class.
- * <p>
- * <h3>Changes:</h3>
- * <ul>
- * <li>1: basic implementation </li>
- * </ul>
+ * This enumeration is used for encapsulating the data. The interface {@link ResourceKeys}
+ * is used to access different enumerations in the class {@link ResourceBundleUtils}.
  *
  * @author sebastian
  * @version 1
- * @since 1
+ * @since 2.0
  */
-public class FileChoosers {
+public enum FileChoosers implements ResourceKeys {
 
-    private static final String BUNDLE_NAME = "de/ryanthara/ja/rycon/gui/FileChoosers";
-    private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
-
-    /**
-     * Returns the key-text-pair which represents the character string.
-     *
-     * @param key key to look up
-     *
-     * @return matched text
-     */
-    public static String getString(String key) {
-        try {
-            return RESOURCE_BUNDLE.getString(key);
-        } catch (MissingResourceException e) {
-            return '!' + key + '!';
-        }
-    }
+    cardReaderMessage,
+    cardReaderTitle,
+    converterSourceMessage,
+    converterSourceTitle,
+    dirAdminTitle,
+    dirAdminMessage,
+    dirAdminTemplateMessage,
+    dirAdminTemplateTitle,
+    dirBaseMessage,
+    dirBaseTitle,
+    dirBigDataTitle,
+    dirBigDataMessage,
+    dirBigDataTemplateTitle,
+    dirBigDataTemplateMessage,
+    dirProjectMessage,
+    dirProjectTitle,
+    dirProjectTemplateMessage,
+    dirProjectTemplateTitle,
+    filterNameCadwork,
+    filterNameCSV,
+    filterNameGSI,
+    filterNameK,
+    filterNameLTOP,
+    filterNameNIGRA,
+    filterNameTXT,
+    filterNameZeiss,
+    levellingSourceMessage,
+    levellingSourceTitle,
+    splitterSourceMessage,
+    splitterSourceText,
+    tidyUpSourceMessage,
+    lastProjectPathTitle, lastProjectPathMessage, tidyUpSourceTitle
 
 } // end of FileChoosers

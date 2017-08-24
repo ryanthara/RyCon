@@ -19,13 +19,16 @@ package de.ryanthara.ja.rycon.converter.odf;
 
 import de.ryanthara.ja.rycon.converter.gsi.BaseToolsGSI;
 import de.ryanthara.ja.rycon.elements.GSIBlock;
-import de.ryanthara.ja.rycon.i18n.GSIWordIndices;
+import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
+import de.ryanthara.ja.rycon.i18n.WordIndices;
 import org.odftoolkit.simple.SpreadsheetDocument;
 import org.odftoolkit.simple.table.Cell;
 import org.odftoolkit.simple.table.Table;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.WORDINDICES;
 
 /**
  * Instances of this class provides functions to convert measurement or coordinate files from Leica GSI format
@@ -75,7 +78,7 @@ public class GSI2ODF {
                     cell = table.getCellByPosition(colIndex, 0);
                     colIndex = colIndex + 1;
 
-                    cell.setStringValue(GSIWordIndices.getWordIndexDescription(wordIndex));
+                    cell.setStringValue(ResourceBundleUtils.getLangString(WORDINDICES, WordIndices.valueOf("WI"+wordIndex)));
                 }
                 rowIndex = rowIndex + 1;
             }

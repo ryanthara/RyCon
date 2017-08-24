@@ -60,7 +60,7 @@ public class SplashScreen {
      */
     public SplashScreen(Display display) {
 
-        final Image image = new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/RyCON_SplashScreen.png");
+        final Image image = new ImageConverter().convertToImage(display, Images.splashScreen.getPath());
         final Shell shell = new Shell(SWT.ON_TOP);
         final ProgressBar progressBar = new ProgressBar(shell, SWT.NONE);
         progressBar.setMaximum(SPLASH_MAX);
@@ -91,28 +91,28 @@ public class SplashScreen {
         infoTextData.bottom = new FormAttachment(progressBar, -50);
         infoText.setLayoutData(infoTextData);
 
+
+        shell.addDisposeListener(disposeEvent -> image.dispose());
+
         shell.pack();
 
         shell.setLocation(ShellPositioner.centerShellOnPrimaryMonitor(shell));
         shell.open();
 
-        display.asyncExec(new Runnable() {
-            @Override
-            public void run() {
-                for (splashPos = 0; splashPos < SPLASH_MAX; splashPos++) {
-                    try {
-                        Thread.sleep(20);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    progressBar.setSelection(splashPos);
+        display.asyncExec(() -> {
+            for (splashPos = 0; splashPos < SPLASH_MAX; splashPos++) {
+                try {
+                    Thread.sleep(20);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-
-                // RyCONApplication.mainApplication.initUI();
-
-                shell.close();
-                image.dispose();
+                progressBar.setSelection(splashPos);
             }
+
+            // RyCONApplication.mainApplication.initUI();
+
+            shell.close();
+            image.dispose();
         });
 
         while (splashPos != SPLASH_MAX) {

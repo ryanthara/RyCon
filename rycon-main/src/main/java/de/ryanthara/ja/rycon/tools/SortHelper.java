@@ -32,6 +32,7 @@ import java.util.Comparator;
  * @see <a href="https://docs.oracle.com/javase/tutorial/collections/interfaces/order.html">Javadoc</a>
  * @since 12
  */
+// TODO: 29.07.17 implement a clean compare function with equals(), hash() and compare() for RyCON
 public class SortHelper {
 
     /**

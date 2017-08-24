@@ -1,5 +1,5 @@
 /*
- * License: GPL. Copyright 2017- (C) by Sebastian Aust (https://www.ryanthara.de/)
+ * License: GPL. Copyright 2016- (C) by Sebastian Aust (https://www.ryanthara.de/)
  *
  * This file is part of the package de.ryanthara.ja.rycon.i18n
  *
@@ -17,41 +17,39 @@
  */
 package de.ryanthara.ja.rycon.i18n;
 
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
-
 /**
- * CheckBoxes handles character string for multi-language support in RyCON.
+ * The <tt>CheckBoxes</tt> enumeration holds all the texts for the checkboxes of <tt>RyCON</tt>.
  * <p>
- * The strings for different CheckBox texts are stored in the Resource Bundle CheckBoxBundle and loaded from this class.
- * <p>
- * <h3>Changes:</h3>
- * <ul>
- * <li>1: basic implementation </li>
- * </ul>
+ * This enumeration is used for encapsulating the data. The interface {@link ResourceKeys}
+ * is used to access different enumerations in the class {@link ResourceBundleUtils}.
  *
  * @author sebastian
  * @version 1
- * @since 1
+ * @since 2.0
  */
-public class CheckBoxes {
+public enum CheckBoxes implements ResourceKeys {
 
-    private static final String BUNDLE_NAME = "de/ryanthara/ja/rycon/gui/CheckBoxBundle";
-    private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
-
-    /**
-     * Returns the key-text-pair which represents the character string.
-     *
-     * @param key key to look up
-     *
-     * @return matched text
-     */
-    public static String getString(String key) {
-        try {
-            return RESOURCE_BUNDLE.getString(key);
-        } catch (MissingResourceException e) {
-            return '!' + key + '!';
-        }
-    }
+    createAdminFolder,
+    createBigDataFolder,
+    createProjectFolder,
+    eliminateDuplicatePointsLTOP,
+    eliminateZeroCoordinates,
+    HoldControlPointsTidyUp,
+    HoldStationsTidyUp,
+    insertCodeColumn,
+    levellingIgnoreChangePoints,
+    moveTransferWidget,
+    openFileManager,
+    separatorCSVSemiColon,
+    separatorTXTSpace,
+    sortOutputFileByNumberLTOP,
+    sourceContainsCodeChk,
+    useSimpleKFormatChk,
+    useSpaceAtLineEnd,
+    useZenithDistanceLTOP,
+    useZeroHeightsCadwork,
+    writeCodeColumn,
+    writeCodeZeroSplitter,
+    overWriteExistingFiles, writeCommentLine
 
 } // end of CheckBoxes

@@ -17,13 +17,14 @@
  */
 package de.ryanthara.ja.rycon.check;
 
+import java.io.File;
 import java.nio.file.*;
 import java.util.ArrayList;
 
 /**
  * This class implements different kind of checks for {@link Path} objects.
  * <p>
- * RyCON now uses path objects for better file handling.
+ * RyCON now uses path objects for better file handling and a better error detection.
  *
  * @author sebastian
  * @version 2
@@ -68,21 +69,50 @@ public class PathCheck {
      * @param file directory URL as String
      *
      * @return true if is directory and exists
+     *
+     * @throws IllegalArgumentException is thrown if file is null or an empty string
      */
-    static boolean isDirectory(String file) {
+    public static boolean isDirectory(String file) throws IllegalArgumentException {
+        if (file == null) {
+            throw new IllegalArgumentException();
+        } else if (file.equalsIgnoreCase("")) {
+            throw new IllegalArgumentException();
+        }
+
         Path path = Paths.get(file);
 
         return Files.exists(path) && Files.isDirectory(path);
     }
 
     /**
-     * Checks a given String URL to be an existing and valid file.
+     * Checks a given <tt>Files URL</tt> to be an existing and valid file.
      *
      * @param file file URL as String
      *
      * @return true if is file and exists
+     *
+     * @throws IllegalArgumentException is thrown if file is null or an empty string
      */
-    static boolean isFile(String file) {
+    public static boolean isFile(File file) throws IllegalArgumentException {
+        return isFile(file.getPath());
+    }
+
+    /**
+     * Checks a given <tt>String URL</tt> to be an existing and valid file.
+     *
+     * @param file file URL as String
+     *
+     * @return true if is file and exists
+     *
+     * @throws IllegalArgumentException is thrown if file is null or empty string
+     */
+    public static boolean isFile(String file) throws IllegalArgumentException {
+        if (file == null) {
+            throw new IllegalArgumentException();
+        } else if (file.equalsIgnoreCase("")) {
+            throw new IllegalArgumentException();
+        }
+
         Path path = Paths.get(file);
 
         return Files.exists(path) && Files.isRegularFile(path);

@@ -18,7 +18,7 @@
 package de.ryanthara.ja.rycon.gui;
 
 /**
- * This enumeration is used for the drag'n drop enabled widget buttons of the {@link MainApplication}.
+ * This enumeration is used for the drag'n drop enabled widgets buttons of the {@link MainApplication}.
  *
  * @author sebastian
  * @version 1

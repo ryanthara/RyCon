@@ -18,13 +18,16 @@
 package de.ryanthara.ja.rycon.converter.ltop;
 
 import de.ryanthara.ja.rycon.Main;
-import de.ryanthara.ja.rycon.data.PreferenceHandler;
+import de.ryanthara.ja.rycon.data.PreferenceKeys;
 import de.ryanthara.ja.rycon.data.Version;
 import de.ryanthara.ja.rycon.elements.RyPoint;
 import de.ryanthara.ja.rycon.i18n.Labels;
+import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 
 import java.text.DateFormat;
 import java.util.*;
+
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LABELS;
 
 /**
  * BaseToolsLTOP implements basic operations on text based measurement and coordinate files for LTOP.
@@ -77,7 +80,7 @@ class BaseToolsLTOP {
         double d = 0.03;
 
         try {
-            d = Double.parseDouble(Main.pref.getUserPref(PreferenceHandler.CONVERTER_SETTING_POINT_IDENTICAL_DISTANCE));
+            d = Double.parseDouble(Main.pref.getUserPreference(PreferenceKeys.CONVERTER_SETTING_POINT_IDENTICAL_DISTANCE));
         } catch (NumberFormatException e) {
             System.err.println("Can't convert maximum distance to double in eliminateDuplicatePoints()");
             e.printStackTrace();
@@ -167,7 +170,7 @@ class BaseToolsLTOP {
                                       String geoid, String eta, String xi) {
 
         // check for null coordinate
-        if (Boolean.parseBoolean(Main.pref.getUserPref(PreferenceHandler.CONVERTER_SETTING_ELIMINATE_ZERO_COORDINATE))) {
+        if (Boolean.parseBoolean(Main.pref.getUserPreference(PreferenceKeys.CONVERTER_SETTING_ELIMINATE_ZERO_COORDINATE))) {
             String xyz = northing.trim().concat(easting.trim()).concat(height.trim());
             xyz = xyz.replace('.', '0');
 
@@ -228,7 +231,7 @@ class BaseToolsLTOP {
         df = DateFormat.getDateTimeInstance(/* dateStyle */ DateFormat.LONG,
                                             /* timeStyle */ DateFormat.MEDIUM);
 
-        result.add(String.format(firstLineIdentifier + " " + Labels.getString("commentLineLTOP"), Version.getVersion(), df.format(d)));
+        result.add(String.format(firstLineIdentifier + " " + ResourceBundleUtils.getLangString(LABELS, Labels.commentLineLTOP), Version.getVersion(), df.format(d)));
     }
 
 }  // end of BaseToolsLTOP

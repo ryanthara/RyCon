@@ -19,7 +19,7 @@ package de.ryanthara.ja.rycon.core;
 
 import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.converter.gsi.BaseToolsGSI;
-import de.ryanthara.ja.rycon.data.PreferenceHandler;
+import de.ryanthara.ja.rycon.data.PreferenceKeys;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -59,9 +59,9 @@ public class GSITidyUp {
      */
     public ArrayList<String> processTidyUp(boolean holdStations, boolean holdControlPoints) {
         // initialize values and prepare string with additional zeros for identification
-        String controlPointIdentifier = Main.pref.getUserPref(PreferenceHandler.PARAM_CONTROL_POINT_STRING);
-        String freeStationIdentifier = "000" + Main.pref.getUserPref(PreferenceHandler.PARAM_FREE_STATION_STRING);
-        String stationIdentifier = "000" + Main.pref.getUserPref(PreferenceHandler.PARAM_KNOWN_STATION_STRING);
+        String controlPointIdentifier = Main.pref.getUserPreference(PreferenceKeys.PARAM_CONTROL_POINT_STRING);
+        String freeStationIdentifier = "000" + Main.pref.getUserPreference(PreferenceKeys.PARAM_FREE_STATION_STRING);
+        String stationIdentifier = "000" + Main.pref.getUserPreference(PreferenceKeys.PARAM_KNOWN_STATION_STRING);
 
         ArrayList<String> result = new ArrayList<>();
 

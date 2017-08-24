@@ -19,13 +19,16 @@ package de.ryanthara.ja.rycon.converter.excel;
 
 import de.ryanthara.ja.rycon.converter.gsi.BaseToolsGSI;
 import de.ryanthara.ja.rycon.elements.GSIBlock;
-import de.ryanthara.ja.rycon.i18n.GSIWordIndices;
+import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
+import de.ryanthara.ja.rycon.i18n.WordIndices;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.WorkbookUtil;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.util.ArrayList;
+
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.WORDINDICES;
 
 /**
  * This class provides functions to convert measurement or coordinate files from the Leica GSI format
@@ -84,7 +87,7 @@ public class GSI2Excel {
                 cell = row.createCell(cellNumber);
                 cellNumber++;
 
-                cell.setCellValue(GSIWordIndices.getWordIndexDescription(wordIndex));
+                cell.setCellValue(ResourceBundleUtils.getLangString(WORDINDICES, WordIndices.valueOf("WI"+wordIndex)));
             }
         }
 

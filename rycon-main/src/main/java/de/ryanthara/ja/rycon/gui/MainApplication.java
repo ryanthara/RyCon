@@ -18,14 +18,15 @@
 package de.ryanthara.ja.rycon.gui;
 
 import de.ryanthara.ja.rycon.Main;
-import de.ryanthara.ja.rycon.data.PreferenceHandler;
+import de.ryanthara.ja.rycon.check.PathCheck;
+import de.ryanthara.ja.rycon.data.DefaultKeys;
+import de.ryanthara.ja.rycon.data.PreferenceKeys;
 import de.ryanthara.ja.rycon.data.Version;
 import de.ryanthara.ja.rycon.gui.custom.MessageBoxes;
 import de.ryanthara.ja.rycon.gui.custom.StatusBar;
-import de.ryanthara.ja.rycon.gui.widget.*;
-import de.ryanthara.ja.rycon.i18n.Buttons;
-import de.ryanthara.ja.rycon.i18n.Labels;
-import de.ryanthara.ja.rycon.i18n.Messages;
+import de.ryanthara.ja.rycon.gui.preferences.PreferencesDialog;
+import de.ryanthara.ja.rycon.gui.widgets.*;
+import de.ryanthara.ja.rycon.i18n.*;
 import de.ryanthara.ja.rycon.tools.ImageConverter;
 import de.ryanthara.ja.rycon.tools.ShellPositioner;
 import org.eclipse.swt.SWT;
@@ -36,14 +37,28 @@ import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.*;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 
+import java.awt.*;
+import java.io.IOException;
+import java.net.URI;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Optional;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 import static de.ryanthara.ja.rycon.gui.MainApplicationDnDButtons.*;
 import static de.ryanthara.ja.rycon.gui.custom.Status.OK;
 import static de.ryanthara.ja.rycon.gui.custom.Status.WARNING;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.*;
 
 /**
  * Instances of this class are the main application of RyCON.
@@ -59,6 +74,7 @@ import static de.ryanthara.ja.rycon.gui.custom.Status.WARNING;
  */
 public class MainApplication extends Main {
 
+    private final static Logger logger = Logger.getLogger(MainApplication.class.getName());
     private boolean firstStart;
     private int operations;
     private Display display;
@@ -77,12 +93,39 @@ public class MainApplication extends Main {
         initUI();
     }
 
+    /*
+     * Sets the default logging level of <tt>RyCON</tt> to 'SEVERE'.
+     * <p>
+     * Different logging levels can be set with the command line interface.
+     * @see de.ryanthara.ja.rycon.cli.CmdLineInterfaceParser
+     */
+    private static void initLogging() {
+        // avoid console logging
+        LogManager.getLogManager().reset();
+
+        Main.loggingLevel = Level.SEVERE;
+
+        logger.setLevel(Main.loggingLevel);
+
+        try {
+            FileHandler fh = new FileHandler("RyCON_logfile%g.xml", 1024 * 1024, 10, true);
+
+            Main.fileHandler = fh;
+
+            logger.addHandler(fh);
+            logger.log(Level.INFO, "logging with level '" + Main.loggingLevel.getName() + "' for RyCON enabled successful");
+        } catch (IOException e) {
+            System.err.println("Can not access file 'RyCON_logfile[n].xml' " + e.getMessage());
+        }
+    }
+
     /**
      * Main application startup.
      *
      * @param args command line arguments
      */
     public static void main(String... args) {
+        initLogging();
         checkCommandLineInterfaceArguments(args);
         checkJavaVersion();
         checkRyCONVersion();
@@ -94,39 +137,38 @@ public class MainApplication extends Main {
     }
 
     private void actionBtn0() {
-        statusBar.setStatus(Labels.getString("exitInitialized"), OK);
+        statusBar.setStatus(ResourceBundleUtils.getLangString(LABELS, Labels.exitInitialized), OK);
         shell.getDisplay().dispose();
     }
 
     private void actionBtn1() {
         new GeneratorWidget();
-        statusBar.setStatus(Labels.getString("generatorInitialized"), OK);
+        statusBar.setStatus(ResourceBundleUtils.getLangString(LABELS, Labels.generatorInitialized), OK);
     }
 
     private void actionBtn2() {
-        MessageBoxes.showMessageBox(shell, SWT.ICON_WARNING, "Warning", "Not implemented yet.");
         new TransferWidget();
-        statusBar.setStatus("not implemented yet.", WARNING);
+        statusBar.setStatus(ResourceBundleUtils.getLangString(LABELS, Labels.transferInitialized), OK);
     }
 
     private void actionBtn3() {
         new TidyUpWidget();
-        statusBar.setStatus(Labels.getString("tidyUpInitialized"), OK);
+        statusBar.setStatus(ResourceBundleUtils.getLangString(LABELS, Labels.tidyUpInitialized), OK);
     }
 
     private void actionBtn4() {
         new CodeSplitterWidget();
-        statusBar.setStatus(Labels.getString("splitFilesInitialized"), OK);
+        statusBar.setStatus(ResourceBundleUtils.getLangString(LABELS, Labels.splitFilesInitialized), OK);
     }
 
     private void actionBtn5() {
         new LevellingWidget();
-        statusBar.setStatus(Labels.getString("levellingInitialized"), OK);
+        statusBar.setStatus(ResourceBundleUtils.getLangString(LABELS, Labels.levellingInitialized), OK);
     }
 
     private void actionBtn6() {
         new ConverterWidget();
-        statusBar.setStatus(Labels.getString("converterInitialized"), OK);
+        statusBar.setStatus(ResourceBundleUtils.getLangString(LABELS, Labels.converterInitialized), OK);
     }
 
     private void actionBtn7() {
@@ -143,131 +185,77 @@ public class MainApplication extends Main {
 
     private void actionBtn9() {
         new SettingsWidget();
-        statusBar.setStatus(Labels.getString("settingsInitialized"), OK);
+        statusBar.setStatus(ResourceBundleUtils.getLangString(LABELS, Labels.settingsInitialized), OK);
     }
 
     private void addKeyBoardInputFilter(final Shell shell) {
-        display.addFilter(SWT.KeyDown, new Listener() {
-            @Override
-            public void handleEvent(Event event) {
-                if (!getSubShellStatus()) {
-                    switch (event.keyCode) {
-                        case '1':
-                            actionBtn1();
-                            break;
+        display.addFilter(SWT.KeyDown, event -> {
+            if (!getSubShellStatus()) {
+                switch (event.keyCode) {
+                    case '1':
+                        actionBtn1();
+                        break;
 
-                        case '2':
-                            actionBtn2();
-                            break;
+                    case '2':
+                        actionBtn2();
+                        break;
 
-                        case '3':
-                            actionBtn3();
-                            break;
+                    case '3':
+                        actionBtn3();
+                        break;
 
-                        case '4':
-                            actionBtn4();
-                            break;
+                    case '4':
+                        actionBtn4();
+                        break;
 
-                        case '5':
-                            actionBtn5();
-                            break;
+                    case '5':
+                        actionBtn5();
+                        break;
 
-                        case '6':
-                            actionBtn6();
-                            break;
+                    case '6':
+                        actionBtn6();
+                        break;
 
-                        case '7':
-                            actionBtn7();
-                            break;
+                    case '7':
+                        actionBtn7();
+                        break;
 
-                        case '8':
-                            actionBtn8();
-                            break;
+                    case '8':
+                        actionBtn8();
+                        break;
 
-                        case '9':
-                            actionBtn9();
-                            break;
+                    case '9':
+                        actionBtn9();
+                        break;
 
-                        case '0':
-                            actionBtn0();
-                            break;
+                    case '0':
+                        actionBtn0();
+                        break;
 
-                        case 'c':
-                            shell.setLocation(ShellPositioner.centerShellOnPrimaryMonitor(shell));
-                            break;
+                    case 'c':
+                        shell.setLocation(ShellPositioner.centerShellOnPrimaryMonitor(shell));
+                        break;
 
-                        case 'p':
-                            new SettingsWidget();
-                            break;
+                    case 'p':
+                        new PreferencesDialog();
+                        break;
 
-                        default:
-                            System.err.println("MainApplication.addKeyBoardInputFilter() : unsupported key pressed " + event.keyCode);
-                    }
+                    case 't':
+                        test();
+
+                    default:
+                        System.err.println("MainApplication.addKeyBoardInputFilter() : unsupported key pressed " + event.keyCode);
                 }
             }
         });
     }
 
-    private void createButtonExit(Composite composite) {
-        Button btnExit = new Button(composite, SWT.PUSH);
-        btnExit.setAlignment(SWT.LEFT);
-        btnExit.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/icons/btn_exit.png"));
-        btnExit.setText(Buttons.getString("exitText"));
-        btnExit.setToolTipText(Buttons.getString("exitToolTip"));
-
-        btnExit.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                actionBtn0();
-            }
-        });
-
-        GridData gridData = new GridData(getRyCON_GRID_WIDTH(), getRyCON_GRID_HEIGHT());
-        btnExit.setLayoutData(gridData);
-    }
-
-    private void createButtonProject(Composite composite) {
-        Button btnToolboxProject = new Button(composite, SWT.PUSH);
-        btnToolboxProject.setAlignment(SWT.LEFT);
-        btnToolboxProject.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/icons/btn_project.png"));
-        btnToolboxProject.setText(Buttons.getString("generatorText"));
-        btnToolboxProject.setToolTipText(Buttons.getString("generatorToolTip"));
-
-        btnToolboxProject.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                actionBtn1();
-            }
-        });
-
-        GridData gridData = new GridData(getRyCON_GRID_WIDTH(), getRyCON_GRID_HEIGHT());
-        btnToolboxProject.setLayoutData(gridData);
-    }
-
-    private void createButtonCopyTool(Composite composite) {
-        Button btnToolboxCopyTool = new Button(composite, SWT.PUSH);
-        btnToolboxCopyTool.setAlignment(SWT.LEFT);
-        btnToolboxCopyTool.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/icons/btn_copy.png"));
-        btnToolboxCopyTool.setText(Buttons.getString("importText"));
-        btnToolboxCopyTool.setToolTipText(Buttons.getString("importToolTip"));
-
-        btnToolboxCopyTool.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                actionBtn2();
-            }
-        });
-
-        GridData gridData = new GridData(getRyCON_GRID_WIDTH(), getRyCON_GRID_HEIGHT());
-        btnToolboxCopyTool.setLayoutData(gridData);
-    }
-
     private void createButtonCleanTool(Composite composite) {
         Button btnToolboxClean = new Button(composite, SWT.PUSH);
         btnToolboxClean.setAlignment(SWT.LEFT);
-        btnToolboxClean.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/icons/btn_clean.png"));
-        btnToolboxClean.setText(Buttons.getString("cleanText"));
-        btnToolboxClean.setToolTipText(Buttons.getString("cleanToolTip"));
+        btnToolboxClean.setImage(new ImageConverter().convertToImage(display, Images.btnClean.getPath()));
+        btnToolboxClean.setText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.cleanText));
+        btnToolboxClean.setToolTipText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.cleanToolTip));
 
         btnToolboxClean.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -276,58 +264,18 @@ public class MainApplication extends Main {
             }
         });
 
-        GridData gridData = new GridData(getRyCON_GRID_WIDTH(), getRyCON_GRID_HEIGHT());
+        GridData gridData = new GridData(Sizes.RyCON_GRID_WIDTH.getValue(), Sizes.RyCON_GRID_HEIGHT.getValue());
         btnToolboxClean.setLayoutData(gridData);
 
         handleDropTarget(btnToolboxClean, CLEAN);
     }
 
-    private void createButtonSplitTool(Composite composite) {
-        Button btnToolboxSplitter = new Button(composite, SWT.PUSH);
-        btnToolboxSplitter.setAlignment(SWT.LEFT);
-        btnToolboxSplitter.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/icons/btn_code.png"));
-        btnToolboxSplitter.setText(Buttons.getString("splitterText"));
-        btnToolboxSplitter.setToolTipText(Buttons.getString("splitterToolTip"));
-
-        btnToolboxSplitter.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                actionBtn4();
-            }
-        });
-
-        GridData gridData = new GridData(getRyCON_GRID_WIDTH(), getRyCON_GRID_HEIGHT());
-        btnToolboxSplitter.setLayoutData(gridData);
-
-        handleDropTarget(btnToolboxSplitter, SPLIT);
-    }
-
-    private void createButtonLevelTool(Composite composite) {
-        Button btnToolboxLeveling = new Button(composite, SWT.PUSH);
-        btnToolboxLeveling.setAlignment(SWT.LEFT);
-        btnToolboxLeveling.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/icons/btn_level.png"));
-        btnToolboxLeveling.setText(Buttons.getString("levellingText"));
-        btnToolboxLeveling.setToolTipText(Buttons.getString("levellingToolTip"));
-
-        btnToolboxLeveling.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                actionBtn5();
-            }
-        });
-
-        GridData gridData = new GridData(getRyCON_GRID_WIDTH(), getRyCON_GRID_HEIGHT());
-        btnToolboxLeveling.setLayoutData(gridData);
-
-        handleDropTarget(btnToolboxLeveling, LEVELLING);
-    }
-
     private void createButtonConvertTool(Composite composite) {
         Button btnToolboxConvert = new Button(composite, SWT.PUSH);
         btnToolboxConvert.setAlignment(SWT.LEFT);
-        btnToolboxConvert.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/icons/btn_convert.png"));
-        btnToolboxConvert.setText(Buttons.getString("convertText"));
-        btnToolboxConvert.setToolTipText(Buttons.getString("convertToolTip"));
+        btnToolboxConvert.setImage(new ImageConverter().convertToImage(display, Images.btnConvert.getPath()));
+        btnToolboxConvert.setText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.convertText));
+        btnToolboxConvert.setToolTipText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.convertToolTip));
 
         btnToolboxConvert.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -336,34 +284,72 @@ public class MainApplication extends Main {
             }
         });
 
-        GridData gridData = new GridData(getRyCON_GRID_WIDTH(), getRyCON_GRID_HEIGHT());
+        GridData gridData = new GridData(Sizes.RyCON_GRID_WIDTH.getValue(), Sizes.RyCON_GRID_HEIGHT.getValue());
         btnToolboxConvert.setLayoutData(gridData);
     }
 
-    private void createButtonTransformationTool(Composite composite) {
-        Button btnTransformation = new Button(composite, SWT.PUSH);
-        btnTransformation.setAlignment(SWT.LEFT);
-        btnTransformation.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/icons/btn_transformation.png"));
-        btnTransformation.setText(Buttons.getString("transformationText"));
-        btnTransformation.setToolTipText(Buttons.getString("transformationToolTip"));
+    private void createButtonCopyTool(Composite composite) {
+        Button btnToolboxCopyTool = new Button(composite, SWT.PUSH);
+        btnToolboxCopyTool.setAlignment(SWT.LEFT);
+        btnToolboxCopyTool.setImage(new ImageConverter().convertToImage(display, Images.btnCopy.getPath()));
+        btnToolboxCopyTool.setText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.importText));
+        btnToolboxCopyTool.setToolTipText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.importToolTip));
 
-        btnTransformation.addSelectionListener(new SelectionAdapter() {
+        btnToolboxCopyTool.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                actionBtn7();
+                actionBtn2();
             }
         });
 
-        GridData gridData = new GridData(getRyCON_GRID_WIDTH(), getRyCON_GRID_HEIGHT());
-        btnTransformation.setLayoutData(gridData);
+        GridData gridData = new GridData(Sizes.RyCON_GRID_WIDTH.getValue(), Sizes.RyCON_GRID_HEIGHT.getValue());
+        btnToolboxCopyTool.setLayoutData(gridData);
+    }
+
+    private void createButtonExit(Composite composite) {
+        Button btnExit = new Button(composite, SWT.PUSH);
+        btnExit.setAlignment(SWT.LEFT);
+        btnExit.setImage(new ImageConverter().convertToImage(display, Images.btnExit.getPath()));
+        btnExit.setText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.exitText));
+        btnExit.setToolTipText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.exitToolTip));
+
+        btnExit.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                actionBtn0();
+            }
+        });
+
+        GridData gridData = new GridData(Sizes.RyCON_GRID_WIDTH.getValue(), Sizes.RyCON_GRID_HEIGHT.getValue());
+        btnExit.setLayoutData(gridData);
+    }
+
+    private void createButtonLevelTool(Composite composite) {
+        Button btnToolboxLeveling = new Button(composite, SWT.PUSH);
+        btnToolboxLeveling.setAlignment(SWT.LEFT);
+        btnToolboxLeveling.setImage(new ImageConverter().convertToImage(display, Images.btnLevel.getPath()));
+        btnToolboxLeveling.setText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.levellingText));
+        btnToolboxLeveling.setToolTipText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.levellingToolTip));
+
+        btnToolboxLeveling.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                actionBtn5();
+            }
+        });
+
+        GridData gridData = new GridData(Sizes.RyCON_GRID_WIDTH.getValue(), Sizes.RyCON_GRID_HEIGHT.getValue());
+        btnToolboxLeveling.setLayoutData(gridData);
+
+        handleDropTarget(btnToolboxLeveling, LEVELLING);
     }
 
     private void createButtonPrintTool(Composite composite) {
         Button btnPrint = new Button(composite, SWT.PUSH);
         btnPrint.setAlignment(SWT.LEFT);
-        btnPrint.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/icons/btn_printer.png"));
-        btnPrint.setText(Buttons.getString("printText"));
-        btnPrint.setToolTipText(Buttons.getString("printToolTip"));
+        btnPrint.setImage(new ImageConverter().convertToImage(display, Images.btnPrint.getPath()));
+        btnPrint.setText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.printText));
+        btnPrint.setToolTipText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.printToolTip));
 
         btnPrint.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -372,16 +358,36 @@ public class MainApplication extends Main {
             }
         });
 
-        GridData gridData = new GridData(getRyCON_GRID_WIDTH(), getRyCON_GRID_HEIGHT());
+        GridData gridData = new GridData(Sizes.RyCON_GRID_WIDTH.getValue(), Sizes.RyCON_GRID_HEIGHT.getValue());
         btnPrint.setLayoutData(gridData);
+
+        btnPrint.setEnabled(false);
+    }
+
+    private void createButtonProject(Composite composite) {
+        Button btnToolboxProject = new Button(composite, SWT.PUSH);
+        btnToolboxProject.setAlignment(SWT.LEFT);
+        btnToolboxProject.setImage(new ImageConverter().convertToImage(display, Images.btnProject.getPath()));
+        btnToolboxProject.setText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.generatorText));
+        btnToolboxProject.setToolTipText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.generatorToolTip));
+
+        btnToolboxProject.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                actionBtn1();
+            }
+        });
+
+        GridData gridData = new GridData(Sizes.RyCON_GRID_WIDTH.getValue(), Sizes.RyCON_GRID_HEIGHT.getValue());
+        btnToolboxProject.setLayoutData(gridData);
     }
 
     private void createButtonSettingsTool(Composite composite) {
         Button btnSettings = new Button(composite, SWT.PUSH);
         btnSettings.setAlignment(SWT.LEFT);
-        btnSettings.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/icons/btn_settings.png"));
-        btnSettings.setText(Buttons.getString("settingsText"));
-        btnSettings.setToolTipText(Buttons.getString("settingsToolTip"));
+        btnSettings.setImage(new ImageConverter().convertToImage(display, Images.btnSettings.getPath()));
+        btnSettings.setText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.settingsText));
+        btnSettings.setToolTipText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.settingsToolTip));
 
         btnSettings.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -390,33 +396,63 @@ public class MainApplication extends Main {
             }
         });
 
-        GridData gridData = new GridData(getRyCON_GRID_WIDTH(), getRyCON_GRID_HEIGHT());
+        GridData gridData = new GridData(Sizes.RyCON_GRID_WIDTH.getValue(), Sizes.RyCON_GRID_HEIGHT.getValue());
         btnSettings.setLayoutData(gridData);
     }
 
-    private void createWithoutFunction(Composite composite) {
-        Button btnWithoutFunction = new Button(composite, SWT.PUSH);
-        btnWithoutFunction.setAlignment(SWT.LEFT);
-        //btnWithoutFunction.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/icons/btn_exit.png"));
-        //btnWithoutFunction.setText(I18N.getBtnExitLabel());
-        //btnWithoutFunction.setToolTipText(I18N.getBtnExitLabelToolTip());
-        btnWithoutFunction.setEnabled(false);
+    private void createButtonSplitTool(Composite composite) {
+        Button btnToolboxSplitter = new Button(composite, SWT.PUSH);
+        btnToolboxSplitter.setAlignment(SWT.LEFT);
+        btnToolboxSplitter.setImage(new ImageConverter().convertToImage(display, Images.btnSplit.getPath()));
+        btnToolboxSplitter.setText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.splitterText));
+        btnToolboxSplitter.setToolTipText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.splitterToolTip));
 
-        GridData gridData = new GridData(getRyCON_GRID_WIDTH(), getRyCON_GRID_HEIGHT());
-        btnWithoutFunction.setLayoutData(gridData);
+        btnToolboxSplitter.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                actionBtn4();
+            }
+        });
+
+        GridData gridData = new GridData(Sizes.RyCON_GRID_WIDTH.getValue(), Sizes.RyCON_GRID_HEIGHT.getValue());
+        btnToolboxSplitter.setLayoutData(gridData);
+
+        handleDropTarget(btnToolboxSplitter, SPLIT);
+    }
+
+    private void createButtonTransformationTool(Composite composite) {
+        Button btnTransformation = new Button(composite, SWT.PUSH);
+        btnTransformation.setAlignment(SWT.LEFT);
+        btnTransformation.setImage(new ImageConverter().convertToImage(display, Images.btnTransformation.getPath()));
+        btnTransformation.setText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.transformationText));
+        btnTransformation.setToolTipText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.transformationToolTip));
+
+        btnTransformation.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                actionBtn7();
+            }
+        });
+
+        GridData gridData = new GridData(Sizes.RyCON_GRID_WIDTH.getValue(), Sizes.RyCON_GRID_HEIGHT.getValue());
+        btnTransformation.setLayoutData(gridData);
+
+        btnTransformation.setEnabled(false);
     }
 
     private StatusBar createStatusBar(Shell shell) {
         StatusBar statusBar = new StatusBar(shell);
-        statusBar.setStatus(Labels.getString("ryCONInitialized"), OK);
+        statusBar.setStatus(ResourceBundleUtils.getLangString(LABELS, Labels.ryCONInitialized), OK);
+
         Main.statusBar = statusBar;
 
         FormData formDataStatus = new FormData();
-        formDataStatus.width = 3 * getRyCON_GRID_WIDTH() + 2; // width of the status bar!
+        formDataStatus.width = 3 * Sizes.RyCON_GRID_WIDTH.getValue() + 2; // width of the status bar!
         formDataStatus.bottom = new FormAttachment(100, -8);
         formDataStatus.left = new FormAttachment(0, 8);
 
         statusBar.setLayoutData(formDataStatus);
+
         return statusBar;
     }
 
@@ -427,62 +463,49 @@ public class MainApplication extends Main {
             System.err.println("System tray functionality is not available on your system.");
         } else {
             final TrayItem item = new TrayItem(tray, SWT.NONE);
-            item.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/RyCON_TrayIcon64x64.png"));
+            item.setImage(new ImageConverter().convertToImage(display, Images.trayIcon64.getPath()));
             item.setToolTipText("RyCON: " + Version.getBuildNumber() + " <--> " + Version.getBuildDate());
 
             final Menu menu = new Menu(shell, SWT.POP_UP);
 
             MenuItem webItem = new MenuItem(menu, SWT.PUSH);
-            webItem.setText(Labels.getString("websiteItemTrayMenu"));
-            webItem.addListener(SWT.Selection, new Listener() {
-                @Override
-                public void handleEvent(Event event) {
-                    Main.openURI(Main.RyCON_WEBSITE);
-                }
-            });
+            webItem.setText(ResourceBundleUtils.getLangString(LABELS, Labels.websiteItemTrayMenu));
+            webItem.addListener(SWT.Selection, event -> openRyCONWebsite());
 
             MenuItem helpItem = new MenuItem(menu, SWT.PUSH);
-            helpItem.setText(Labels.getString("helpItemTrayMenu"));
-            helpItem.addListener(SWT.Selection, new Listener() {
-                @Override
-                public void handleEvent(Event event) {
-                    Main.openURI(Main.RyCON_WEBSITE_HELP);
-                }
-            });
+            helpItem.setText(ResourceBundleUtils.getLangString(LABELS, Labels.helpItemTrayMenu));
+            helpItem.addListener(SWT.Selection, event -> openRyCONWebsiteHelp());
 
             MenuItem settingsItem = new MenuItem(menu, SWT.PUSH);
-            settingsItem.setText(Labels.getString("settingsItemTrayMenu"));
-            settingsItem.addListener(SWT.Selection, new Listener() {
-                @Override
-                public void handleEvent(Event event) {
-                    if (!Main.isSettingsWidgetOpen()) {
-                        new SettingsWidget();
-                    }
+            settingsItem.setText(ResourceBundleUtils.getLangString(LABELS, Labels.settingsItemTrayMenu));
+            settingsItem.addListener(SWT.Selection, event -> {
+                if (!Main.isSettingsWidgetOpen()) {
+                    new SettingsWidget();
                 }
             });
 
             new MenuItem(menu, SWT.SEPARATOR);
 
             MenuItem infoItem = new MenuItem(menu, SWT.PUSH);
-            infoItem.setText(Labels.getString("infoItemTrayMenu") + Version.getBuildNumber() + " (" + Version.getBuildDate() + ")");
+            infoItem.setText(ResourceBundleUtils.getLangString(LABELS, Labels.infoItemTrayMenu) + Version.getBuildNumber() + " (" + Version.getBuildDate() + ")");
 
             new MenuItem(menu, SWT.SEPARATOR);
 
             MenuItem exitItem = new MenuItem(menu, SWT.PUSH);
-            exitItem.setText(Labels.getString("exitItemTrayMenu"));
-            exitItem.addListener(SWT.Selection, new Listener() {
-                @Override
-                public void handleEvent(Event event) {
-                    actionBtn0();
-                }
-            });
+            exitItem.setText(ResourceBundleUtils.getLangString(LABELS, Labels.exitItemTrayMenu));
+            exitItem.addListener(SWT.Selection, event -> actionBtn0());
 
-            item.addListener(SWT.MenuDetect, new Listener() {
-                public void handleEvent(Event event) {
-                    menu.setVisible(true);
-                }
-            });
+            item.addListener(SWT.MenuDetect, event -> menu.setVisible(true));
         }
+    }
+
+    private void createWithoutFunction(Composite composite) {
+        Button btnWithoutFunction = new Button(composite, SWT.PUSH);
+        btnWithoutFunction.setAlignment(SWT.LEFT);
+        btnWithoutFunction.setEnabled(false);
+
+        GridData gridData = new GridData(Sizes.RyCON_GRID_WIDTH.getValue(), Sizes.RyCON_GRID_HEIGHT.getValue());
+        btnWithoutFunction.setLayoutData(gridData);
     }
 
     private void enableDNDSupport() {
@@ -536,7 +559,7 @@ public class MainApplication extends Main {
      * </ul>
      */
     private void initUI() {
-        Display.setAppName(Main.getRyCONAppName());
+        Display.setAppName(ResourceBundleUtils.getLangString(ResourceBundles.LABELS, Labels.applicationName));
         display = new Display();
 
         // initialize a shell and make it global
@@ -546,8 +569,9 @@ public class MainApplication extends Main {
         createTrayIcon();
 
         // Dock icon for OS X and Windows task bar
-        shell.setImage(new ImageConverter().convertToImage(display, "/de/ryanthara/ja/rycon/gui/RyCON_blank256x256.png"));
-        shell.setText(Labels.getString("applicationTitle"));
+        shell.setImage(new ImageConverter().convertToImage(display, Images.taskIcon.getPath()));
+        shell.setText(ResourceBundleUtils.getLangString(LABELS, Labels.applicationTitle));
+        shell.setText(ResourceBundleUtils.getLangString(LABELS, Labels.applicationTitle));
 
         FormLayout formLayout = new FormLayout();
         shell.setLayout(formLayout);
@@ -582,13 +606,15 @@ public class MainApplication extends Main {
         StatusBar statusBar = createStatusBar(shell);
 
         if (pref.isDefaultSettingsGenerated()) {
-            statusBar.setStatus(Messages.getString("newConfigFileGenerated"), WARNING);
+            statusBar.setStatus(ResourceBundleUtils.getLangString(MESSAGES, Messages.newConfigFileGenerated), WARNING);
+
+            logger.log(Level.INFO, "default settings generated");
         }
 
         shell.pack();
 
         // size depends on the grid size
-        shell.setSize(3 * getRyCON_GRID_WIDTH() + 20, 4 * getRyCON_GRID_HEIGHT() + 80);
+        shell.setSize(3 * Sizes.RyCON_GRID_WIDTH.getValue() + 20, 4 * Sizes.RyCON_GRID_HEIGHT.getValue() + 80);
 
         // set the window position (last position or centered)
         shell.setLocation(ShellPositioner.positShell(shell));
@@ -611,11 +637,7 @@ public class MainApplication extends Main {
             }
         });
 
-        shell.addListener(SWT.Move, new Listener() {
-            public void handleEvent(Event e) {
-                saveWindowPosition();
-            }
-        });
+        shell.addListener(SWT.Move, e -> saveWindowPosition());
 
         shell.open();
 
@@ -632,13 +654,39 @@ public class MainApplication extends Main {
         display.dispose();
     }
 
+    private void openRyCONWebsite() {
+        Optional<URI> uri = DefaultKeys.JAVA_WEBSITE.getURI();
+
+        try {
+            if (uri.isPresent()) {
+                Desktop.getDesktop().browse(uri.get());
+            }
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "can not open the RyCON website " + uri.get().getPath()
+                    + " with the default browser.", e);
+        }
+    }
+
+    private void openRyCONWebsiteHelp() {
+        Optional<URI> uri = DefaultKeys.JAVA_WEBSITE.getURI();
+
+        try {
+            if (uri.isPresent()) {
+                Desktop.getDesktop().browse(uri.get());
+            }
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "can not open the RyCON help website " + uri.get().getPath()
+                    + " with the default browser.", e);
+        }
+    }
+
     private void saveWindowPosition() {
         // find out on which display RyCON is visible
         Monitor[] monitors = shell.getDisplay().getMonitors();
 
         if (monitors.length == 1) {         // only one display
-            Main.pref.setUserPref(PreferenceHandler.LAST_USED_DISPLAY, "0");
-            Main.pref.setUserPref(PreferenceHandler.LAST_POS_PRIMARY_MONITOR,
+            Main.pref.setUserPreference(PreferenceKeys.LAST_USED_DISPLAY, "0");
+            Main.pref.setUserPreference(PreferenceKeys.LAST_POS_PRIMARY_MONITOR,
                     Integer.toString(shell.getLocation().x).concat(",").concat(Integer.toString(shell.getLocation().y)));
         } else if (monitors.length > 1) {   // multi display solutions
             // Monitor activeMonitor = null;
@@ -646,13 +694,26 @@ public class MainApplication extends Main {
             for (int i = 0; i < monitors.length; i++) {
                 if (monitors[i].getBounds().intersects(r)) {
                     // activeMonitor = monitors[i];
-                    Main.pref.setUserPref(PreferenceHandler.LAST_USED_DISPLAY, Integer.toString(i));
-                    Main.pref.setUserPref(PreferenceHandler.LAST_POS_SECONDARY_MONITOR,
+                    Main.pref.setUserPreference(PreferenceKeys.LAST_USED_DISPLAY, Integer.toString(i));
+                    Main.pref.setUserPreference(PreferenceKeys.LAST_POS_SECONDARY_MONITOR,
                             Integer.toString(shell.getLocation().x).concat(",").concat(Integer.toString(shell.getLocation().y)));
                 }
             }
 
         }
+    }
+
+    private void test() {
+        System.out.println("### TEST ###");
+
+        //Main.pref.setUserPreference(PreferenceKeys.LAST_USED_PROJECTS, "[]");
+        //Main.pref.setUserPreference(PreferenceKeys.OVERWRITE_EXISTING, "true");
+
+
+
+
+        PathCheck.isFile("");
+
     }
 
 } // end of MainApplication

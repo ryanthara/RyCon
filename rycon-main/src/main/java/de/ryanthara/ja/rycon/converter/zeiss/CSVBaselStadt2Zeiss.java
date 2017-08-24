@@ -42,7 +42,7 @@ public class CSVBaselStadt2Zeiss {
      * Converts a comma separated coordinate file from the geodata server Basel Stadt (Switzerland)
      * into a Zeiss REC formatted file.
      *
-     * @param dialect dialect of the destination file
+     * @param dialect dialect of the target file
      *
      * @return converted Zeiss REC file as {@code ArrayList<String>}
      */

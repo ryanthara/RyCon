@@ -18,12 +18,11 @@
 
 package de.ryanthara.ja.rycon.gui.custom;
 
-import de.ryanthara.ja.rycon.events.StatusInformationEvent;
 import de.ryanthara.ja.rycon.events.StatusInformationListener;
+import de.ryanthara.ja.rycon.gui.Images;
 import de.ryanthara.ja.rycon.tools.ImageConverter;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
@@ -53,7 +52,7 @@ public class StatusBar extends Composite {
     private Image iconWarning;
     private Label icon;
     private Label message;
-    private Vector<StatusInformationListener> statusInformationListeners;
+    private Vector statusInformationListeners;
 
     /**
      * Constructs a new instance of this class given it's parent composite and the style.
@@ -68,60 +67,22 @@ public class StatusBar extends Composite {
     public StatusBar(Composite parent) {
         super(parent, org.eclipse.swt.SWT.NONE);
 
-        prepareIcons();
-
-        FormLayout formLayout = new FormLayout();
-        formLayout.marginHeight = 5;
-        setLayout(formLayout);
-
-        icon = new Label(this, org.eclipse.swt.SWT.NONE);
-        message = new Label(this, org.eclipse.swt.SWT.NONE);
-
-        FormData data = new FormData();
-
-        // TODO here comes the progress bar
-
-        data.left = new FormAttachment(0, 0);
-        message.setLayoutData(data);
-
-        data = new FormData();
-        data.right = new FormAttachment(100, 0);
-        icon.setLayoutData(data);
-
-        statusInformationListeners = new Vector();
-
-        addStatusInformationListener(new StatusInformationListener() {
-            @Override
-            public void notification(StatusInformationEvent e) {
-                message.setText(e.getStatusText());
-            }
-        });
-
-        // dispose not used elements (icons, etc...) to clean up memory
-        addDisposeListener(new DisposeListener() {
-            public void widgetDisposed(DisposeEvent e) {
-                StatusBar.this.dispose();
-            }
-        });
+        createContent();
     }
 
     /**
-     * Add the {@link StatusInformationListener} method.
+     * Give Layout classes or other widgets the option to determine the size of this custom widget.
+     * In this case the Layout, of the parent Composite, is able to align its child widgets properly.
      *
-     * @param listener the {@link StatusInformationListener} to be added
-     */
-    @SuppressWarnings("unchecked")
-    public void addStatusInformationListener(StatusInformationListener listener) {
-        statusInformationListeners.addElement(listener);
-    }
-
-    /**
-     * Remove the {@link StatusInformationListener} method.
+     * @param wHint   width
+     * @param hHint   height
+     * @param changed changed
      *
-     * @param listener the {@link StatusInformationListener} to be removed
+     * @return result of super() call
      */
-    public void removeStatusInformationListener(StatusInformationListener listener) {
-        statusInformationListeners.removeElement(listener);
+    @Override
+    public Point computeSize(int wHint, int hHint, boolean changed) {
+        return super.computeSize(wHint, hHint, changed);
     }
 
     /**
@@ -158,10 +119,56 @@ public class StatusBar extends Composite {
         layout(true);
     }
 
+    /**
+     * Add the {@link StatusInformationListener} method.
+     *
+     * @param listener the {@link StatusInformationListener} to be added
+     */
+    @SuppressWarnings("unchecked")
+    private void addStatusInformationListener(StatusInformationListener listener) {
+        statusInformationListeners.addElement(listener);
+    }
+
+    private void createContent() {
+        /* Throws an SWTException if the receiver can not be accessed by the caller. */
+        checkWidget();
+
+        prepareIcons();
+
+        FormLayout formLayout = new FormLayout();
+        formLayout.marginHeight = 5;
+        setLayout(formLayout);
+
+        icon = new Label(this, org.eclipse.swt.SWT.NONE);
+        message = new Label(this, org.eclipse.swt.SWT.NONE);
+
+        FormData data = new FormData();
+
+        // TODO here comes the progress bar
+
+        data.left = new FormAttachment(0, 0);
+        message.setLayoutData(data);
+
+        data = new FormData();
+        data.right = new FormAttachment(100, 0);
+        icon.setLayoutData(data);
+
+        statusInformationListeners = new Vector();
+
+        addStatusInformationListener(e -> message.setText(e.getStatusText()));
+
+        // dispose not used elements (icons, etc...) to clean up memory
+        addDisposeListener(e -> {
+            iconError.dispose();
+            iconOK.dispose();
+            iconWarning.dispose();
+        });
+    }
+
     private void prepareIcons() {
-        iconError = new ImageConverter().convertToImage(Display.getCurrent(), "/de/ryanthara/ja/rycon/gui/icons/10-error.png");
-        iconOK = new ImageConverter().convertToImage(Display.getCurrent(), "/de/ryanthara/ja/rycon/gui/icons/20-ok.png");
-        iconWarning = new ImageConverter().convertToImage(Display.getCurrent(), "/de/ryanthara/ja/rycon/gui/icons/15-warning.png");
+        iconError = new ImageConverter().convertToImage(Display.getCurrent(), Images.iconError.getPath());
+        iconOK = new ImageConverter().convertToImage(Display.getCurrent(), Images.iconOK.getPath());
+        iconWarning = new ImageConverter().convertToImage(Display.getCurrent(), Images.iconWarning.getPath());
     }
 
 } // end of StatusBar

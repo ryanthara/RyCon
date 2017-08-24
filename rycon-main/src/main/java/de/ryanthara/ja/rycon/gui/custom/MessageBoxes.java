@@ -39,10 +39,12 @@ public class MessageBoxes {
      *
      * @return int value
      */
-    public static int showMessageBox(Shell innerShell, int icon, String text, String message) {
+    public static int showMessageBox(final Shell innerShell, final int icon, final String text, final String message) {
         MessageBox messageBox = new MessageBox(innerShell, icon);
+
         messageBox.setText(text);
         messageBox.setMessage(message);
+
         return messageBox.open();
     }
 

@@ -24,9 +24,10 @@ import org.eclipse.swt.widgets.Text;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Optional;
 
 /**
- * This class implements a simple static access to swt {@link FileDialog} and it's functionality to RyCON.
+ * <tt>FileDialogs</tt> implements a simple static access to swt {@link FileDialog} and it's functionality to RyCON.
  *
  * @author sebastian
  * @version 2
@@ -34,7 +35,7 @@ import java.nio.file.Paths;
  */
 public class FileDialogs {
 
-    private static Path[] handleFile(FileDialog fileDialog, Text source, Text destination) {
+    private static Path[] handleFile(FileDialog fileDialog, Text source, Text target) {
         String[] files = fileDialog.getFileNames();
 
         Path[] files2read = new Path[files.length];
@@ -51,7 +52,7 @@ public class FileDialogs {
         }
 
         source.setText(concatString);
-        destination.setText(fileDialog.getFilterPath());
+        target.setText(fileDialog.getFilterPath());
 
         return files2read;
     }
@@ -67,12 +68,13 @@ public class FileDialogs {
      * @param filterExtensions allowed extensions
      * @param filterNames      description of allowed extensions
      * @param source           source text field
-     * @param destination      destination text field
+     * @param target           target text field
      *
      * @return chosen files as {@link Path} array
      */
-    public static Path[] showAdvancedFileDialog(Shell innerShell, String filterPath, String text, String[] filterExtensions,
-                                                String[] filterNames, Text source, Text destination) {
+    public static Optional<Path[]> showAdvancedFileDialog(Shell innerShell, String filterPath, String text, String[] filterExtensions,
+                                                         String[] filterNames, Text source, Text target) {
+
         FileDialog fileDialog = new FileDialog(innerShell, org.eclipse.swt.SWT.MULTI);
         fileDialog.setFilterPath(filterPath);
         fileDialog.setText(text);
@@ -80,9 +82,9 @@ public class FileDialogs {
         fileDialog.setFilterNames(filterNames);
 
         if (fileDialog.open() != null) {
-            return handleFile(fileDialog, source, destination);
+            return Optional.of(handleFile(fileDialog, source, target));
         } else {
-            return null;
+            return Optional.empty();
         }
     }
 

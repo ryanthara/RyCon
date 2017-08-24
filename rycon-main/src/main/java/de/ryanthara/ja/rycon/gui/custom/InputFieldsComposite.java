@@ -18,15 +18,17 @@
 
 package de.ryanthara.ja.rycon.gui.custom;
 
-import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.check.TextCheck;
+import de.ryanthara.ja.rycon.gui.Sizes;
 import de.ryanthara.ja.rycon.i18n.Buttons;
 import de.ryanthara.ja.rycon.i18n.Labels;
+import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
@@ -35,6 +37,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.BUTTONS;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LABELS;
 
 /**
  * Instances of this class implements a custom composite with two labels, two text fields and two buttons for
@@ -47,12 +52,13 @@ import java.nio.file.Paths;
 public class InputFieldsComposite extends Composite {
 
     private final Object callingObject;
-    private Text destinationTextField;
+    private Text targetTextField;
     private Text sourceTextField;
 
     /**
      * Constructs a new instance of this class given a calling object, the parent composite and a style.
-     *  @param callingObject reference to the calling object
+     *
+     * @param callingObject reference to the calling object
      * @param parent        parent composite (e.g. the parent shell)
      */
     public InputFieldsComposite(Object callingObject, Composite parent) {
@@ -62,12 +68,18 @@ public class InputFieldsComposite extends Composite {
     }
 
     /**
-     * Returns the complete destination text field as an object for full access to it.
+     * Give Layout classes or other widgets the option to determine the size of this custom widget.
+     * In this case the Layout, of the parent Composite, is able to align its child widgets properly.
      *
-     * @return destination text field
+     * @param wHint   width
+     * @param hHint   height
+     * @param changed changed
+     *
+     * @return result of super() call
      */
-    public Text getDestinationTextField() {
-        return destinationTextField;
+    @Override
+    public Point computeSize(int wHint, int hHint, boolean changed) {
+        return super.computeSize(wHint, hHint, changed);
     }
 
     /**
@@ -80,12 +92,12 @@ public class InputFieldsComposite extends Composite {
     }
 
     /**
-     * Sets the text of the destination text field.
+     * Returns the complete target text field as an object for full access to it.
      *
-     * @param text the text to be set
+     * @return target text field
      */
-    public void setDestinationTextFieldText(String text) {
-        destinationTextField.setText(text);
+    public Text getTargetTextField() {
+        return targetTextField;
     }
 
     /**
@@ -97,9 +109,21 @@ public class InputFieldsComposite extends Composite {
         sourceTextField.setText(text);
     }
 
+    /**
+     * Sets the text of the target text field.
+     *
+     * @param text the text to be set
+     */
+    public void setTargetTextFieldText(String text) {
+        targetTextField.setText(text);
+    }
+
     private void createContents() {
+        /* Throws an SWTException if the receiver can not be accessed by the caller. */
+        checkWidget();
+
         Group group = new Group(this, SWT.NONE);
-        group.setText(Labels.getString("pathSelectionText"));
+        group.setText(ResourceBundleUtils.getLangString(LABELS, Labels.pathSelectionText));
 
         GridLayout gridLayout = new GridLayout();
         gridLayout.marginHeight = 5;
@@ -108,58 +132,23 @@ public class InputFieldsComposite extends Composite {
         group.setLayout(gridLayout);
 
         GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
-        gridData.widthHint = Main.getRyCONWidgetWidth();
+        gridData.widthHint = Sizes.RyCON_WIDGET_WIDTH.getValue();
         group.setLayoutData(gridData);
 
         // return the buttons is for tabulator key order
         Button btnSource = createSourceComposite(group);
-        Button btnDestination = createDestinationComposite(group);
+        Button btnTarget = createTargetComposite(group);
 
         Control[] tabulatorKeyOrder = new Control[]{
-                sourceTextField, btnSource, destinationTextField, btnDestination
+                sourceTextField, btnSource, targetTextField, btnTarget
         };
 
         group.setTabList(tabulatorKeyOrder);
     }
 
-    private Button createDestinationComposite(Group group) {
-        GridData gridData;
-        Label destination = new Label(group, SWT.NONE);
-        destination.setText(Labels.getString("destinationText"));
-        destination.setLayoutData(new GridData());
-
-        destinationTextField = new Text(group, SWT.SINGLE | SWT.BORDER);
-        destinationTextField.addListener(SWT.Traverse, new Listener() {
-            @Override
-            public void handleEvent(Event event) {
-                // prevent this shortcut for execute when the text fields are empty
-                InputFieldsComposite.this.handleEvent(event, destinationTextField);
-            }
-        });
-
-        gridData = new GridData();
-        gridData.horizontalAlignment = GridData.FILL;
-        gridData.grabExcessHorizontalSpace = true;
-        destinationTextField.setLayoutData(gridData);
-
-        Button btnDestination = new Button(group, SWT.NONE);
-        btnDestination.setText(Buttons.getString("choosePathText"));
-        btnDestination.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                doButtonAction("actionBtnDestination");
-            }
-        });
-
-        btnDestination.setToolTipText(Buttons.getString("choosePathToolTip"));
-        btnDestination.setLayoutData(new GridData());
-        return btnDestination;
-    }
-
     private Button createSourceComposite(Group group) {
-        GridData gridData;
         final Label source = new Label(group, SWT.NONE);
-        source.setText(Labels.getString("source"));
+        source.setText(ResourceBundleUtils.getLangString(LABELS, Labels.source));
 
         sourceTextField = new Text(group, SWT.BORDER);
         sourceTextField.addListener(SWT.Traverse, new Listener() {
@@ -179,19 +168,19 @@ public class InputFieldsComposite extends Composite {
             public void modifyText(ModifyEvent modifyEvent) {
                 if (TextCheck.isFileExists(sourceTextField)) {
                     Path path = Paths.get(sourceTextField.getText());
-                    destinationTextField.setText(path.getParent().toString());
+                    targetTextField.setText(path.getParent().toString());
                 }
             }
         });
 
-        gridData = new GridData();
+        GridData gridData = new GridData();
         gridData.horizontalAlignment = GridData.FILL;
         gridData.grabExcessHorizontalSpace = true;
         sourceTextField.setLayoutData(gridData);
 
         Button btnSource = new Button(group, SWT.NONE);
-        btnSource.setText(Buttons.getString("chooseFilesText"));
-        btnSource.setToolTipText(Buttons.getString("chooseFilesToolTip"));
+        btnSource.setText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.chooseFilesText));
+        btnSource.setToolTipText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.chooseFilesToolTip));
         btnSource.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -202,13 +191,45 @@ public class InputFieldsComposite extends Composite {
         gridData = new GridData();
         gridData.horizontalAlignment = SWT.FILL;
         btnSource.setLayoutData(gridData);
+
         return btnSource;
     }
 
-    private void doButtonAction(String destination) {
+    private Button createTargetComposite(Group group) {
+        Label target = new Label(group, SWT.NONE);
+        target.setText(ResourceBundleUtils.getLangString(LABELS, Labels.targetText));
+        target.setLayoutData(new GridData());
+
+        targetTextField = new Text(group, SWT.SINGLE | SWT.BORDER);
+        targetTextField.addListener(SWT.Traverse, event -> {
+            // prevent this shortcut for execute when the text fields are empty
+            InputFieldsComposite.this.handleEvent(event, targetTextField);
+        });
+
+        GridData gridData = new GridData();
+        gridData.horizontalAlignment = GridData.FILL;
+        gridData.grabExcessHorizontalSpace = true;
+        targetTextField.setLayoutData(gridData);
+
+        Button btnTarget = new Button(group, SWT.NONE);
+        btnTarget.setText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.choosePathText));
+        btnTarget.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                doButtonAction("actionBtnTarget");
+            }
+        });
+
+        btnTarget.setToolTipText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.choosePathToolTip));
+        btnTarget.setLayoutData(new GridData());
+
+        return btnTarget;
+    }
+
+    private void doButtonAction(String target) {
         Class<?> clazz = callingObject.getClass();
         try {
-            Method method = clazz.getDeclaredMethod(destination);
+            Method method = clazz.getDeclaredMethod(target);
             method.setAccessible(true);
 
             try {
@@ -222,7 +243,7 @@ public class InputFieldsComposite extends Composite {
     }
 
     private void handleEvent(Event event, Text text) {
-        if (!(this.sourceTextField.getText().trim().equals("") || (destinationTextField.getText().trim().equals("")))) {
+        if (!(this.sourceTextField.getText().trim().equals("") || (targetTextField.getText().trim().equals("")))) {
             if (((event.stateMask & SWT.SHIFT) == SWT.SHIFT) && (event.detail == SWT.TRAVERSE_RETURN)) {
                 doButtonAction("actionBtnOk");
             } else if (((event.stateMask & SWT.CTRL) == SWT.CTRL) && (event.detail == SWT.TRAVERSE_RETURN)) {

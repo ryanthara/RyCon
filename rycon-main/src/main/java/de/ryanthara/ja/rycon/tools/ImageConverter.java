@@ -97,6 +97,7 @@ public class ImageConverter {
      *
      * @return converted BufferedImage as ImageData
      */
+    // TODO correct return null
     private ImageData convertToImageData(BufferedImage bufferedImage) {
         if (bufferedImage.getColorModel() instanceof DirectColorModel) {
             DirectColorModel colorModel = (DirectColorModel) bufferedImage.getColorModel();

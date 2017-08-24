@@ -40,9 +40,9 @@ public class TXT2Zeiss {
     /**
      * Converts a text formatted coordinate file (nr x y (z) or nr code x y z) into a Zeiss REC formatted file.
      *
-     * @param dialect dialect of the destination file
+     * @param dialect dialect of the target file
      *
-     * @return string lines of the destination file
+     * @return string lines of the target file
      */
     public ArrayList<String> convertTXT2REC(ZeissDialect dialect) {
         ArrayList<String> result = new ArrayList<>();

@@ -18,13 +18,16 @@
 package de.ryanthara.ja.rycon.converter.excel;
 
 import de.ryanthara.ja.rycon.elements.CaplanBlock;
-import de.ryanthara.ja.rycon.i18n.Labels;
+import de.ryanthara.ja.rycon.i18n.Columns;
+import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.WorkbookUtil;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.util.ArrayList;
+
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.COLUMNS;
 
 /**
  * Instances of this class provides functions to convert a Caplan K formatted coordinate file
@@ -82,27 +85,27 @@ public class Caplan2Excel {
             rowNumber++;
 
             cell = row.createCell(cellNumber);
-            cell.setCellValue(Labels.getCaplanColumnTyp("pointNumber"));
+            cell.setCellValue(ResourceBundleUtils.getLangString(COLUMNS, Columns.pointNumber));
             cellNumber++;
 
             cell = row.createCell(cellNumber);
-            cell.setCellValue(Labels.getCaplanColumnTyp("easting"));
+            cell.setCellValue(ResourceBundleUtils.getLangString(COLUMNS, Columns.easting));
             cellNumber++;
 
             cell = row.createCell(cellNumber);
-            cell.setCellValue(Labels.getCaplanColumnTyp("northing"));
+            cell.setCellValue(ResourceBundleUtils.getLangString(COLUMNS, Columns.northing));
             cellNumber++;
 
             cell = row.createCell(cellNumber);
-            cell.setCellValue(Labels.getCaplanColumnTyp("height"));
+            cell.setCellValue(ResourceBundleUtils.getLangString(COLUMNS, Columns.height));
             cellNumber++;
 
             cell = row.createCell(cellNumber);
-            cell.setCellValue(Labels.getCaplanColumnTyp("object"));
+            cell.setCellValue(ResourceBundleUtils.getLangString(COLUMNS, Columns.object));
             cellNumber++;
 
             cell = row.createCell(cellNumber);
-            cell.setCellValue(Labels.getCaplanColumnTyp("attribute"));
+            cell.setCellValue(ResourceBundleUtils.getLangString(COLUMNS, Columns.attribute));
         }
 
         for (String line : readStringLines) {

@@ -18,13 +18,16 @@
 package de.ryanthara.ja.rycon.converter.odf;
 
 import de.ryanthara.ja.rycon.elements.CaplanBlock;
-import de.ryanthara.ja.rycon.i18n.Labels;
+import de.ryanthara.ja.rycon.i18n.Columns;
+import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 import org.odftoolkit.simple.SpreadsheetDocument;
 import org.odftoolkit.simple.table.Cell;
 import org.odftoolkit.simple.table.Table;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.COLUMNS;
 
 /**
  * Instances of this class provides functions to convert a Caplan K formatted coordinate file
@@ -72,27 +75,27 @@ public class Caplan2ODF {
 
             if (writeCommentRow) {
                 cell = table.getCellByPosition(colIndex, rowIndex);
-                cell.setStringValue(Labels.getCaplanColumnTyp("pointNumber"));
+                cell.setStringValue(ResourceBundleUtils.getLangString(COLUMNS, Columns.pointNumber));
                 colIndex = colIndex + 1;
 
                 cell = table.getCellByPosition(colIndex, rowIndex);
-                cell.setStringValue(Labels.getCaplanColumnTyp("easting"));
+                cell.setStringValue(ResourceBundleUtils.getLangString(COLUMNS, Columns.easting));
                 colIndex = colIndex + 1;
 
                 cell = table.getCellByPosition(colIndex, rowIndex);
-                cell.setStringValue(Labels.getCaplanColumnTyp("northing"));
+                cell.setStringValue(ResourceBundleUtils.getLangString(COLUMNS, Columns.northing));
                 colIndex = colIndex + 1;
 
                 cell = table.getCellByPosition(colIndex, rowIndex);
-                cell.setStringValue(Labels.getCaplanColumnTyp("height"));
+                cell.setStringValue(ResourceBundleUtils.getLangString(COLUMNS, Columns.height));
                 colIndex = colIndex + 1;
 
                 cell = table.getCellByPosition(colIndex, rowIndex);
-                cell.setStringValue(Labels.getCaplanColumnTyp("object"));
+                cell.setStringValue(ResourceBundleUtils.getLangString(COLUMNS, Columns.object));
                 colIndex = colIndex + 1;
 
                 cell = table.getCellByPosition(colIndex, rowIndex);
-                cell.setStringValue(Labels.getCaplanColumnTyp("attribute"));
+                cell.setStringValue(ResourceBundleUtils.getLangString(COLUMNS, Columns.attribute));
 
                 rowIndex = rowIndex + 1;
             }

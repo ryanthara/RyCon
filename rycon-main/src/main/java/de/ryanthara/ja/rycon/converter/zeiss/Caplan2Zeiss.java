@@ -45,9 +45,9 @@ public class Caplan2Zeiss {
     /**
      * Converts a Caplan K formatted coordinate file into a Zeiss REC formatted file.
      *
-     * @param dialect dialect of the destination file
+     * @param dialect dialect of the target file
      *
-     * @return string lines of the destination file
+     * @return string lines of the target file
      */
     public ArrayList<String> convertK2REC(ZeissDialect dialect) {
         ArrayList<String> result = new ArrayList<>();

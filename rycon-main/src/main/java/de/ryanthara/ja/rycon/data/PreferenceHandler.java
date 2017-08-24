@@ -18,10 +18,14 @@
 
 package de.ryanthara.ja.rycon.data;
 
-import de.ryanthara.ja.rycon.Main;
+import de.ryanthara.ja.rycon.i18n.Labels;
+import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
+import de.ryanthara.ja.rycon.i18n.ResourceBundles;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.prefs.PreferenceChangeEvent;
 import java.util.prefs.PreferenceChangeListener;
 import java.util.prefs.Preferences;
@@ -30,11 +34,11 @@ import java.util.prefs.Preferences;
  * Instances of this class provides functions for handling system and user settings for RyCON.
  * <p>
  * The less needed configuration settings of RyCON are stored with the mechanism of the
- * JAVA Preferences API in the system and user area of your computer.
+ * JAVA PreferenceKeys API in the system and user area of your computer.
  * <p>
  * The settings are stored:
  * - Under Windows in a location like 'HKEY_CURRENT_USER\Software\JavaSoft\Prefs\de\ryanthara\ja'
- * - Under OS X in a location ~/Library/Preferences/de.ryanthara.ja.plist
+ * - Under OS X in a location ~/Library/PreferenceKeys/de.ryanthara.ja.plist
  * - Under *nix in a location /etc/.java/.systemPrefs
  *
  * @author sebastian
@@ -42,175 +46,7 @@ import java.util.prefs.Preferences;
  * @since 1
  */
 public class PreferenceHandler implements PreferenceChangeListener {
-
-    /**
-     * Member for the preference key of the converter setting for the used Zeiss REC dialect.
-     *
-     * @since 7
-     */
-    public static final String CONVERTER_SETTING_ZEISS_DIALECT = "converter_setting_zeiss_dialect";
-
-    /**
-     * Member for the preference key of the converter setting for zero coordinates.
-     *
-     * @since 6
-     */
-    public static final String CONVERTER_SETTING_ELIMINATE_ZERO_COORDINATE = "converter_setting_eliminate_zero_coordinate";
-
-    /**
-     * Member for the preference key of the converter setting for LTOP use zenith distance instead of height angle.
-     *
-     * @since 6
-     */
-    public static final String CONVERTER_SETTING_LTOP_USE_ZENITH_DISTANCE = "converter_setting_ltop_use_zenith_distance";
-
-    /**
-     * Member for the preference key of the minimum distance for identify two points being equal.
-     *
-     * @since 6
-     */
-    public static final String CONVERTER_SETTING_POINT_IDENTICAL_DISTANCE = "converter_setting_point_identical_distance";
-
-    /**
-     * Member for the preference key of the GSI setting for line ending.
-     * <p>
-     * Only a problem with the Autocad import tool of RAPP INFRA AG.
-     *
-     * @since 5
-     */
-    public final static String GSI_SETTING_LINE_ENDING_WITH_BLANK = "gsi_setting_line_ending_with_blank";
-
-    /**
-     * Member for the preference key of the base directory value.
-     *
-     * @since 3
-     */
-    public final static String DIR_BASE = "dir_base";
-
-    /**
-     * Member for the preference key of the big data directory value.
-     *
-     * @since 6
-     */
-    public final static String DIR_BIG_DATA = "dir_big_data";
-
-    /**
-     * Member for the preference key of the big data template directory value.
-     *
-     * @since 6
-     */
-    public final static String DIR_BIG_DATA_TEMPLATE = "dir_big_data_template";
-
-    /**
-     * Member for the preference key of the admin directory value.
-     *
-     * @since 3
-     */
-    public final static String DIR_ADMIN = "dir_admin";
-
-    /**
-     * Member for the preference key of the admin template directory value.
-     *
-     * @since 3
-     */
-    public final static String DIR_ADMIN_TEMPLATE = "dir_admin_template";
-
-    /**
-     * Member for the preference key of the project directory value.
-     *
-     * @since 3
-     */
-    public final static String DIR_PROJECT = "dir_projects";
-
-    /**
-     * Member for the preference key of the project template directory value.
-     *
-     * @since 3
-     */
-    public final static String DIR_PROJECT_TEMPLATE = "dir_projects_template";
-
-    /**
-     * Member for the preference key for the edit string.
-     *
-     * @since 6
-     */
-    public final static String PARAM_CODE_STRING = "param_code_string";
-
-    /**
-     * Member for the preference key for the control point identifier string.
-     *
-     * @since 3
-     */
-    public final static String PARAM_CONTROL_POINT_STRING = "param_control_point_string";
-
-    /**
-     * Member for the preference key for the edit string.
-     *
-     * @since 6
-     */
-    public final static String PARAM_EDIT_STRING = "param_edit_string";
-
-    /**
-     * Member for the preference key for the free station identifier string.
-     *
-     * @since 3
-     */
-    public final static String PARAM_FREE_STATION_STRING = "param_free_station_string";
-
-    /**
-     * Member for the preference key for the free station identifier string.
-     *
-     * @since 3
-     */
-    public final static String PARAM_KNOWN_STATION_STRING = "param_known_station_string";
-
-    /**
-     * Member for the preference key for the RyCON position on the first monitor.
-     */
-    public final static String LAST_POS_PRIMARY_MONITOR = "param_pos_primary_monitor";
-
-    /**
-     * Member for the preference key for the RyCON position on the second monitor.
-     */
-    public final static String LAST_POS_SECONDARY_MONITOR = "param_pos_secondary_monitor";
-
-    /**
-     * Member for the preference key for the last used display RyCON was shown on.
-     */
-    public final static String LAST_USED_DISPLAY = "-1";
-
-    /**
-     * Member for the preference key for the LTOP string.
-     */
-    public static final String PARAM_LTOP_STRING = "param_ltop_string";
-
-    /**
-     * Member for the preference key of the build and version number value.
-     *
-     * @since 3
-     */
-    private final static String BUILD_VERSION = "build_version";
-
-    /**
-     * Member for the preference key of the generate value.
-     *
-     * @since 3
-     */
-    private final static String GENERATOR = "generate";
-
-    /**
-     * Member for the preference key of the information string value.
-     *
-     * @since 3
-     */
-    private final static String INFORMATION_STRING = "information_string";
-
-    /**
-     * Member for the preference key for the last used directory.
-     *
-     * @since 3
-     */
-    private final static String USER_LAST_USED_DIR = "user_last_used_dir";
+    private final static Logger logger = Logger.getLogger(PreferenceHandler.class.getName());
     private boolean isDefaultSettingsGenerated = false;
     private Preferences userPreferences;
 
@@ -220,14 +56,17 @@ public class PreferenceHandler implements PreferenceChangeListener {
     public PreferenceHandler() {
         userPreferences = Preferences.userRoot().node("/de/ryanthara/rycon");
 
-        if (!userPreferences.get(PreferenceHandler.GENERATOR, "").equals(Main.getRyCONAppName())) {
-            System.out.println("DEFAULT SETTINGS GENERATED");
+        if (!getUserPreference(PreferenceKeys.GENERATOR).equals(ResourceBundleUtils.getLangString(ResourceBundles.LABELS, Labels.applicationName))) {
             createDefaultSettings();
+
             isDefaultSettingsGenerated = true;
+
+            logger.log(Level.INFO, "default settings generated");
         }
 
         // add listener to the node and not to an instance of it!
         Preferences.userRoot().node("/de/ryanthara/rycon").addPreferenceChangeListener(this);
+        logger.log(Level.FINE, "preference change listener added");
     }
 
     /**
@@ -241,8 +80,8 @@ public class PreferenceHandler implements PreferenceChangeListener {
     public static String checkUserPrefPathExist(String pathToBeChecked) {
         if (Files.exists(Paths.get(pathToBeChecked))) {
             return pathToBeChecked;
-        } else if (Files.exists(Paths.get(PreferenceHandler.DIR_BASE))) {
-            return PreferenceHandler.DIR_BASE;
+        } else if (Files.exists(Paths.get(PreferenceKeys.DIR_BASE.name()))) {
+            return PreferenceKeys.DIR_BASE.name();
         } else {
             return System.getenv().get("HOME");
         }
@@ -251,14 +90,14 @@ public class PreferenceHandler implements PreferenceChangeListener {
     /**
      * Returns a system preference by given name.
      *
-     * @param prefName name of the system preference to be read
+     * @param preference reference to the preference to be read
      *
      * @return system preference as String
      *
      * @since 3
      */
-    public String getUserPref(String prefName) {
-        return userPreferences.get(prefName, "");
+    public String getUserPreference(PreferenceKeys preference) {
+        return userPreferences.get(preference.name(), "");
     }
 
     /**
@@ -289,19 +128,19 @@ public class PreferenceHandler implements PreferenceChangeListener {
      */
     @Override
     public void preferenceChange(PreferenceChangeEvent evt) {
-        System.out.println("called preferenceChange");
+        logger.log(Level.FINE, "called preferenceChange");
     }
 
     /**
-     * Sets a defined system preference by name and value.
+     * Sets a defined system preference by reference to the preference object and value.
      *
-     * @param prefName name of the system preference to be set
-     * @param value    value to be set
+     * @param preference reference to the preference object to be set
+     * @param value      value to be set
      *
      * @since 3
      */
-    public void setUserPref(String prefName, String value) {
-        userPreferences.put(prefName, value);
+    public void setUserPreference(final PreferenceKeys preference, final String value) {
+        userPreferences.put(preference.name(), value);
     }
 
     /**
@@ -323,6 +162,7 @@ public class PreferenceHandler implements PreferenceChangeListener {
      * <li>'CONVERTER_SETTING_LTOP_USE_ZENITH_DISTANCE' -  'false' </li>
      * <li>'CONVERTER_SETTING_ZEISS_DIALECT' - 'M5' </li>
      * <li>'GSI_SETTING_LINE_ENDING_WITH_BLANK' -  'true' </li>
+     * <li>'OVERWRITE_EXISTING' - 'false' </li>
      * <li>'PARAM_CODE_STRING' - 'CODE' </li>
      * <li>'PARAM_CONTROL_POINT_STRING' - 'STKE' </li>
      * <li>'PARAM_EDIT_STRING' - 'EDIT' </li>
@@ -330,6 +170,7 @@ public class PreferenceHandler implements PreferenceChangeListener {
      * <li>'PARAM_LTOP_STRING' - 'LTOP' </li>
      * <li>'PARAM_STAKE_OUT_STRING' - 'ST' </li>
      * <li>'LAST_USED_DISPLAY' - '-1' </li>
+     * <li>'LAST_USED_PROJECTS' - '[]' </li>
      * <li>'LAST_POS_PRIMARY_MONITOR' - '-9999,-9999' </li>
      * <li>'LAST_POS_SECONDARY_MONITOR' - '-9998,-9998' </li>
      * <li>'USER_LAST_USED_DIR' - '.' </li>
@@ -340,44 +181,50 @@ public class PreferenceHandler implements PreferenceChangeListener {
      */
     private void createDefaultSettings() {
         // general settings
-        userPreferences.put(GENERATOR, Main.getRyCONAppName());
-        userPreferences.put(BUILD_VERSION, Version.getBuildNumber() + Version.getBuildDate());
-        userPreferences.put(INFORMATION_STRING, Main.getRyCONWebsite());
-        userPreferences.put(PARAM_CODE_STRING, Main.getParamCodeString());
-        userPreferences.put(PARAM_EDIT_STRING, Main.getParamEditString());
+        setUserPreference(PreferenceKeys.GENERATOR, ResourceBundleUtils.getLangString(ResourceBundles.LABELS, Labels.applicationName));
+        setUserPreference(PreferenceKeys.BUILD_VERSION, Version.getBuildNumber() + Version.getBuildDate());
+        setUserPreference(PreferenceKeys.INFORMATION_STRING, DefaultKeys.RyCON_WEBSITE.getValue());
+        setUserPreference(PreferenceKeys.OVERWRITE_EXISTING, DefaultKeys.OVERWRITE_EXISTING.getValue());
+        setUserPreference(PreferenceKeys.PARAM_CODE_STRING, DefaultKeys.PARAM_CODE_STRING.getValue());
+        setUserPreference(PreferenceKeys.PARAM_EDIT_STRING, DefaultKeys.PARAM_EDIT_STRING.getValue());
 
         // display settings
-        userPreferences.put(LAST_USED_DISPLAY, Main.getLastUsedDisplay());
-        userPreferences.put(LAST_POS_PRIMARY_MONITOR, Main.getLastPosPrimaryMonitor());
-        userPreferences.put(LAST_POS_SECONDARY_MONITOR, Main.getLastPosSecondaryMonitor());
+        setUserPreference(PreferenceKeys.LAST_USED_DISPLAY, DefaultKeys.LAST_USED_DISPLAY.getValue());
+        setUserPreference(PreferenceKeys.LAST_POS_PRIMARY_MONITOR, DefaultKeys.LAST_POS_PRIMARY_MONITOR.getValue());
+        setUserPreference(PreferenceKeys.LAST_POS_SECONDARY_MONITOR, DefaultKeys.LAST_POS_SECONDARY_MONITOR.getValue());
 
         // user settings
-        userPreferences.put(USER_LAST_USED_DIR, System.getProperty("user.home"));
+        setUserPreference(PreferenceKeys.USER_LAST_USED_DIR, System.getProperty("user.home"));
 
-        // parameters for module #1 - clean up
-        userPreferences.put(PARAM_CONTROL_POINT_STRING, Main.getParamControlPointString());
-        userPreferences.put(PARAM_FREE_STATION_STRING, Main.getParamFreeStationString());
-        userPreferences.put(PARAM_KNOWN_STATION_STRING, Main.getParamKnownStationString());
-        userPreferences.put(PARAM_LTOP_STRING, Main.getParamLTOPString());
+        // paths for module #1 - project generation
+        setUserPreference(PreferenceKeys.DIR_BASE, DefaultKeys.DIR_BASE.getValue());
+        setUserPreference(PreferenceKeys.DIR_ADMIN, DefaultKeys.DIR_ADMIN.getValue());
+        setUserPreference(PreferenceKeys.DIR_ADMIN_TEMPLATE, DefaultKeys.DIR_ADMIN_TEMPLATE.getValue());
+        setUserPreference(PreferenceKeys.DIR_BIG_DATA, DefaultKeys.DIR_BIG_DATA.getValue());
+        setUserPreference(PreferenceKeys.DIR_BIG_DATA_TEMPLATE, DefaultKeys.DIR_BIG_DATA_TEMPLATE.getValue());
+        setUserPreference(PreferenceKeys.DIR_PROJECT, DefaultKeys.DIR_PROJECT.getValue());
+        setUserPreference(PreferenceKeys.DIR_PROJECT_TEMPLATE, DefaultKeys.DIR_PROJECT_TEMPLATE.getValue());
 
-        // parameters for module #4 - converter
-        userPreferences.put(CONVERTER_SETTING_ELIMINATE_ZERO_COORDINATE, Main.getParamEliminateZeroCoordinates());
-        userPreferences.put(CONVERTER_SETTING_LTOP_USE_ZENITH_DISTANCE, Main.getParamLTOPUseZenithDistance());
-        userPreferences.put(CONVERTER_SETTING_ZEISS_DIALECT, Main.getParamZeissRecDialect());
+        // parameters for module #2 transfer widgets
+        setUserPreference(PreferenceKeys.LAST_USED_PROJECTS, "[]");
+
+        // parameters for module #3 - clean up
+        setUserPreference(PreferenceKeys.PARAM_CONTROL_POINT_STRING, DefaultKeys.PARAM_CONTROL_POINT_STRING.getValue());
+        setUserPreference(PreferenceKeys.PARAM_FREE_STATION_STRING, DefaultKeys.PARAM_FREE_STATION_STRING.getValue());
+        setUserPreference(PreferenceKeys.PARAM_KNOWN_STATION_STRING, DefaultKeys.PARAM_KNOWN_STATION_STRING.getValue());
+        setUserPreference(PreferenceKeys.PARAM_LTOP_STRING, DefaultKeys.PARAM_LTOP_STRING.getValue());
+
+        // parameters for module #6 - converter
+        setUserPreference(PreferenceKeys.CONVERTER_SETTING_ELIMINATE_ZERO_COORDINATE, DefaultKeys.CONVERTER_SETTING_ELIMINATE_ZERO_COORDINATE.getValue());
+        setUserPreference(PreferenceKeys.CONVERTER_SETTING_LTOP_USE_ZENITH_DISTANCE, DefaultKeys.CONVERTER_SETTING_LTOP_USE_ZENITH_DISTANCE.getValue());
+        setUserPreference(PreferenceKeys.CONVERTER_SETTING_ZEISS_DIALECT, DefaultKeys.CONVERTER_SETTING_ZEISS_DIALECT.getValue());
 
         // GSI file format settings
-        userPreferences.put(GSI_SETTING_LINE_ENDING_WITH_BLANK, Main.getGSISettingLineEnding());
+        setUserPreference(PreferenceKeys.GSI_SETTING_LINE_ENDING_WITH_BLANK, DefaultKeys.GSI_SETTING_LINE_ENDING_WITH_BLANK.getValue());
 
-        // paths for module #5 - project generation
-        userPreferences.put(DIR_BASE, Main.getDirBase());
-        userPreferences.put(DIR_ADMIN, Main.getDirAdmin());
-        userPreferences.put(DIR_ADMIN_TEMPLATE, Main.getDirAdminTemplate());
-        userPreferences.put(DIR_BIG_DATA, Main.getDirBigData());
-        userPreferences.put(DIR_BIG_DATA_TEMPLATE, Main.getDirBigDataTemplate());
-        userPreferences.put(DIR_PROJECT, Main.getDirProject());
-        userPreferences.put(DIR_PROJECT_TEMPLATE, Main.getDirProjectTemplate());
+        logger.log(Level.INFO, "default settings generated");
 
         isDefaultSettingsGenerated = true;
     }
 
-} // end of Preferences
+} // end of PreferenceKeys

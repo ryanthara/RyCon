@@ -22,14 +22,17 @@ import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.util.EnumSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static java.nio.file.FileVisitResult.CONTINUE;
 import static java.nio.file.FileVisitResult.SKIP_SUBTREE;
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 import static java.nio.file.StandardCopyOption.COPY_ATTRIBUTES;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 /**
- * This class implements static access to basic file io-operations for copying, etc.
+ * <tt>FileUtils</tt> implements static access to basic file io-operations for copying, etc.
  * <p>
  * Because of the fact that there are a lot of users who has not the current java version
  * running, RyCON still not uses any functions of java version 8 in versions lower than 2.
@@ -40,61 +43,135 @@ import static java.nio.file.StandardCopyOption.COPY_ATTRIBUTES;
  */
 public class FileUtils {
 
+    private final static Logger logger = Logger.getLogger(FileUtils.class.getName());
+
     /**
-     * Copies a file or directory and it's subdirectories recursively from source to destination location.
+     * Copies a file or directory and it's subdirectories recursively from source to target location.
      * <p>
      * Alternatively the Apache Commons IO functions can be used for the same task. But at the moment
-     * RyCON uses as less external libraries as necessary.
+     * <tt>RyCON</tt> uses as less external libraries as necessary.
      * <p>
      * This code is inspired from the <a href='http://docs.oracle.com/javase/tutorial/essential/io/examples/Copy.java'>Java Tutorial</a>.
      *
-     * @param source      source location files and folders to be copied
-     * @param destination destination location files and folders to be copied
+     * @param source source location files and folders to be copied
+     * @param target target location files and folders to be copied
      *
      * @throws IOException copying failed
      */
-    public static void copy(Path source, Path destination) throws IOException {
+    public static void copy(Path source, Path target) throws IOException {
         if (Files.isDirectory(source)) {
-            copyDirectory(source, destination);
+            copyDirectory(source, target, false);
         } else {
-            copyFile(source, destination);
+            copyFile(source, target, false);
         }
     }
 
-    private static void copyDirectory(Path source, Path destination) throws IOException {
+    /**
+     * Copies a file or directory and it's subdirectories recursively from source to target location.
+     * <p>
+     * With this overloaded method it is possible to overwrite files or directories.
+     * <p>
+     * Alternatively the Apache Commons IO functions can be used for the same task. But at the moment
+     * <tt>RyCON</tt> uses as less external libraries as necessary.
+     * <p>
+     * This code is inspired from the <a href='http://docs.oracle.com/javase/tutorial/essential/io/examples/Copy.java'>Java Tutorial</a>.
+     *
+     * @param source source location files and folders to be copied
+     * @param target target location files and folders to be copied
+     *
+     * @throws IOException copying failed
+     */
+    public static void copy(Path source, Path target, boolean overWriteExisting) throws IOException {
+        if (Files.isDirectory(source)) {
+            copyDirectory(source, target, overWriteExisting);
+        } else {
+            copyFile(source, target, overWriteExisting);
+        }
+    }
+
+    private static void copyDirectory(Path source, Path target, boolean overWriteExisting) throws IOException {
         // follow links when copying files
         EnumSet<FileVisitOption> opts = EnumSet.of(FileVisitOption.FOLLOW_LINKS);
-        TreeCopier tc = new TreeCopier(source, destination);
+        TreeCopier tc = new TreeCopier(source, target, overWriteExisting);
         Files.walkFileTree(source, opts, Integer.MAX_VALUE, tc);
     }
 
     /*
-    Copies a file, and only a file, without following symbolic links.
+     * Copy a file, and only a file, without following symbolic links.
      */
-    private static void copyFile(Path source, Path destination) throws IOException {
-        try {
-            Files.copy(source, destination, NOFOLLOW_LINKS);
-        } catch (UnsupportedOperationException ex) {
-            System.err.println("Unable to copy file - UnsupportedOperationException");
-        } catch (FileAlreadyExistsException ex) {
-            System.err.println("Unable to copy file - FileAlreadyExistsException");
-        } catch (IOException ex) {
-            System.err.format("Unable to copy: %s: %s%n", source, ex);
+    private static void copyFile(Path source, Path target, boolean overWriteExisting) throws IOException {
+        if (overWriteExisting) {
+            Files.copy(source, target, NOFOLLOW_LINKS, REPLACE_EXISTING);
+        } else {
+            Files.copy(source, target, NOFOLLOW_LINKS);
         }
     }
 
     /**
+     * Moves a file from source to target location.
+     * <p>
+     * Alternatively the Apache Commons IO functions can be used for the same task. But at the moment
+     * <tt>RyCON</tt> uses as less external libraries as necessary.
+     * <p>
+     * This code is inspired from the <a href='http://docs.oracle.com/javase/tutorial/essential/io/examples/Copy.java'>Java Tutorial</a>.
+     *
+     * @param source source location files and folders to be copied
+     * @param target target location files and folders to be copied
+     *
+     * @throws IOException copying failed
+     */
+    public static void move(Path source, Path target) throws IOException {
+        if (!Files.isDirectory(source)) {
+            moveFile(source, target, false);
+        }
+    }
+
+    /**
+     * Moves a file from source to target location.
+     * <p>
+     * With this overloaded method it is possible to overwrite files.
+     * <p>
+     * Alternatively the Apache Commons IO functions can be used for the same task. But at the moment
+     * <tt>RyCON</tt> uses as less external libraries as necessary.
+     * <p>
+     * This code is inspired from the <a href='http://docs.oracle.com/javase/tutorial/essential/io/examples/Copy.java'>Java Tutorial</a>.
+     *
+     * @param source source location files and folders to be copied
+     * @param target target location files and folders to be copied
+     *
+     * @throws IOException copying failed
+     */
+    public static void move(Path source, Path target, boolean overWriteExisting) throws IOException {
+        if (!Files.isDirectory(source)) {
+            moveFile(source, target, overWriteExisting);
+        }
+    }
+
+    /*
+     * Moves a file, and only a file, without following symbolic links.
+     */
+    private static void moveFile(Path source, Path target, boolean overWriteExisting) throws IOException {
+        if (overWriteExisting) {
+            Files.move(source, target, NOFOLLOW_LINKS, REPLACE_EXISTING);
+        } else {
+            Files.move(source, target, NOFOLLOW_LINKS);
+        }
+    }
+
+    /*
      * A {@code FileVisitor} that copies a file-tree ("cp -r")
      */
     private static class TreeCopier implements FileVisitor<Path> {
         private final Path source;
-        private final Path destination;
+        private final Path target;
         private final boolean preserve;
+        private final boolean overWriteExisting;
 
-        TreeCopier(Path source, Path destination) {
+        TreeCopier(Path source, Path target, boolean overWriteExisting) {
             this.source = source;
-            this.destination = destination;
+            this.target = target;
             this.preserve = false;
+            this.overWriteExisting = overWriteExisting;
         }
 
         /**
@@ -117,12 +194,12 @@ public class FileUtils {
         public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
             // fix up modification time of directory when done
             if (exc == null && preserve) {
-                Path newDir = destination.resolve(source.relativize(dir));
+                Path newDir = target.resolve(source.relativize(dir));
                 try {
                     FileTime time = Files.getLastModifiedTime(dir);
                     Files.setLastModifiedTime(newDir, time);
-                } catch (IOException x) {
-                    System.err.format("Unable to copy all attributes to: %s: %s%n", newDir, x);
+                } catch (IOException e) {
+                    logger.log(Level.SEVERE, "unable to copy all attributes to: " + newDir, e);
                 }
             }
 
@@ -152,14 +229,14 @@ public class FileUtils {
             CopyOption[] options = (preserve) ?
                     new CopyOption[]{COPY_ATTRIBUTES} : new CopyOption[0];
 
-            Path newDir = destination.resolve(source.relativize(dir));
+            Path newDir = target.resolve(source.relativize(dir));
 
             try {
                 Files.copy(dir, newDir, options);
-            } catch (FileAlreadyExistsException x) {
+            } catch (FileAlreadyExistsException e) {
                 // ignore
-            } catch (IOException x) {
-                System.err.format("Unable to create: %s: %s%n", newDir, x);
+            } catch (IOException e) {
+                logger.log(Level.SEVERE, "unable to create: " + newDir, e);
                 return SKIP_SUBTREE;
             }
 
@@ -178,7 +255,7 @@ public class FileUtils {
          */
         @Override
         public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-            copyFile(file, destination.resolve(source.relativize(file)));
+            copyFile(file, target.resolve(source.relativize(file)), overWriteExisting);
 
             return CONTINUE;
         }
@@ -198,9 +275,9 @@ public class FileUtils {
         @Override
         public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
             if (exc instanceof FileSystemLoopException) {
-                System.err.println("cycle detected: " + file);
+                logger.log(Level.SEVERE, "cycle detected: " + file, exc);
             } else {
-                System.err.format("Unable to copy: %s: %s%n", file, exc);
+                logger.log(Level.SEVERE, "Unable to copy: " + file, exc);
             }
 
             return CONTINUE;

@@ -19,7 +19,7 @@
 package de.ryanthara.ja.rycon.tools;
 
 import de.ryanthara.ja.rycon.Main;
-import de.ryanthara.ja.rycon.data.PreferenceHandler;
+import de.ryanthara.ja.rycon.data.PreferenceKeys;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Monitor;
@@ -47,8 +47,8 @@ public class ShellPositioner {
      * Calculate the centered shell location and return it als <code>Point</code> object.
      * <p>
      * The centered shell location depends on the screen size and the shell size. To calculate
-     * these parameters are read from the display and shell objects from the calling widget.
-     * The coordinates of the centered shell location represents the upper left corner of the widget.
+     * these parameters are read from the display and shell objects from the calling widgets.
+     * The coordinates of the centered shell location represents the upper left corner of the widgets.
      *
      * @param parent the parent shell
      *
@@ -68,14 +68,14 @@ public class ShellPositioner {
     public static Point positShell(Shell shell) {
         Monitor[] monitors = shell.getDisplay().getMonitors();
 
-        if (Main.pref.getUserPref(PreferenceHandler.LAST_USED_DISPLAY).equals("-1")) {
+        if (Main.pref.getUserPreference(PreferenceKeys.LAST_USED_DISPLAY).equals("-1")) {
             return centerShellOnPrimaryMonitor(shell);
-        } else if (monitors.length >= Integer.parseInt(Main.pref.getUserPref(PreferenceHandler.LAST_USED_DISPLAY))) {
+        } else if (monitors.length >= Integer.parseInt(Main.pref.getUserPreference(PreferenceKeys.LAST_USED_DISPLAY))) {
             String s;
-            if (Main.pref.getUserPref(PreferenceHandler.LAST_USED_DISPLAY).equals("0")) {
-                s = Main.pref.getUserPref(PreferenceHandler.LAST_POS_PRIMARY_MONITOR);
+            if (Main.pref.getUserPreference(PreferenceKeys.LAST_USED_DISPLAY).equals("0")) {
+                s = Main.pref.getUserPreference(PreferenceKeys.LAST_POS_PRIMARY_MONITOR);
             } else {
-                s = Main.pref.getUserPref(PreferenceHandler.LAST_POS_SECONDARY_MONITOR);
+                s = Main.pref.getUserPreference(PreferenceKeys.LAST_POS_SECONDARY_MONITOR);
             }
             String[] coords = s.split(",");
             return new Point(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]));

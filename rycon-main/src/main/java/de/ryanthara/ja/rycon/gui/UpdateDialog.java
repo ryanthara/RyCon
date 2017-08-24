@@ -19,6 +19,7 @@
 package de.ryanthara.ja.rycon.gui;
 
 import de.ryanthara.ja.rycon.i18n.Buttons;
+import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 import de.ryanthara.ja.rycon.tools.ShellPositioner;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTError;
@@ -38,7 +39,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.*;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 
 import java.awt.*;
@@ -46,6 +46,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.StringTokenizer;
+
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.BUTTONS;
 
 /**
  * UpdateDialog implements an update dialog for RyCON.
@@ -119,6 +121,10 @@ public class UpdateDialog extends Dialog {
         shell.setLocation(ShellPositioner.centerShellOnPrimaryMonitor(shell));
         shell.pack();
         shell.open();
+
+        shell.addDisposeListener(disposeEvent -> {
+            image.dispose();
+        });
 
         Display display = getParent().getDisplay();
         while (!shell.isDisposed()) {
@@ -216,8 +222,8 @@ public class UpdateDialog extends Dialog {
         buttonArea.setLayoutData(data);
 
         Button close = new Button(buttonArea, SWT.PUSH);
-        close.setText(Buttons.getString("okAndExitText"));
-        close.setToolTipText(Buttons.getString("okAndExitToolTip"));
+        close.setText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.okAndExitText));
+        close.setToolTipText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.okAndExitToolTip));
         close.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent selectionEvent) {
@@ -232,8 +238,8 @@ public class UpdateDialog extends Dialog {
         close.setLayoutData(closeBtnData);
 
         Button openBrowser = new Button(buttonArea, SWT.PUSH);
-        openBrowser.setText(Buttons.getString("okAndOpenBrowserText"));
-        openBrowser.setToolTipText(Buttons.getString("okAndOpenBrowserToolTip"));
+        openBrowser.setText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.okAndOpenBrowserText));
+        openBrowser.setToolTipText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.okAndOpenBrowserToolTip));
         openBrowser.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent selectionEvent) {
@@ -293,12 +299,10 @@ public class UpdateDialog extends Dialog {
          * the line break has to be forced!
          * see: http://book.javanb.com/swt-the-standard-widget-toolkit/ch15lev1sec12.html
          */
-        textLabel.addListener(SWT.Resize, new Listener() {
-            public void handleEvent(Event event) {
-                Rectangle bounds = textLabel.getBounds();
-                data.widthHint = bounds.width;
-                shell.layout();
-            }
+        textLabel.addListener(SWT.Resize, event -> {
+            Rectangle bounds = textLabel.getBounds();
+            data.widthHint = bounds.width;
+            shell.layout();
         });
     }
 
