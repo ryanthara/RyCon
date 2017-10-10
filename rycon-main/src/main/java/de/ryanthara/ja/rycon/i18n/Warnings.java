@@ -18,7 +18,7 @@
 package de.ryanthara.ja.rycon.i18n;
 
 /**
- * The <tt>Warnings</tt> enumeration holds all the texts for the warning messages of <tt>RyCON</tt>.
+ * The {@code Warnings} enumeration holds all the texts for the warning messages of {@code RyCON}.
  * <p>
  * This enumeration is used for encapsulating the data. The interface {@link ResourceKeys}
  * is used to access different enumerations in the class {@link ResourceBundleUtils}.

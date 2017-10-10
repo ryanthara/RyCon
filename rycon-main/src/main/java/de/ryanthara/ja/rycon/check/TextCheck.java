@@ -18,13 +18,14 @@
 
 package de.ryanthara.ja.rycon.check;
 
-import de.ryanthara.ja.rycon.Main;
-import de.ryanthara.ja.rycon.gui.custom.MessageBoxes;
+import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
 import de.ryanthara.ja.rycon.i18n.Errors;
 import de.ryanthara.ja.rycon.i18n.Labels;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 import de.ryanthara.ja.rycon.i18n.Warnings;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import java.nio.file.Files;
@@ -32,9 +33,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.StringTokenizer;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.ERRORS;
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LABELS;
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.WARNINGS;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.*;
 
 /**
  * This class implements different kind of checks for {@link Text} fields.
@@ -52,7 +51,7 @@ public class TextCheck {
      * as a {@link Path} array.
      *
      * @param source      the source text field
-     * @param target the target text field
+     * @param target      the target text field
      * @param chosenFiles the chosen files to be checked
      *
      * @return the valid chosen files
@@ -60,8 +59,11 @@ public class TextCheck {
     public static Path[] checkSourceAndTargetText(Text source, Text target, Path... chosenFiles) {
         Path[] files2read = null;
 
+        final Shell shell = Display.getCurrent().getActiveShell();
+
         if (isEmpty(source) || isEmpty(target)) {
-            MessageBoxes.showMessageBox(Main.shell, SWT.ICON_WARNING,
+
+            MessageBoxes.showMessageBox(shell, SWT.ICON_WARNING,
                     ResourceBundleUtils.getLangString(LABELS, Labels.warningTextMsgBox),
                     ResourceBundleUtils.getLangString(WARNINGS, Warnings.emptyTextField));
 
@@ -73,10 +75,10 @@ public class TextCheck {
             for (int i = 0; i < st.countTokens(); i++) {
                 String s = st.nextToken();
 
-                if (PathCheck.isFile(s)) {
+                if (PathCheck.fileExists(s)) {
                     files2read[i] = Paths.get(s);
                 } else {
-                    MessageBoxes.showMessageBox(Main.shell, SWT.ICON_WARNING,
+                    MessageBoxes.showMessageBox(shell, SWT.ICON_WARNING,
                             ResourceBundleUtils.getLangString(LABELS, Labels.warningTextMsgBox),
                             ResourceBundleUtils.getLangString(ERRORS, Errors.fileExistsNot));
                 }
@@ -102,7 +104,7 @@ public class TextCheck {
      * @return true if directory exist
      */
     public static boolean isDirExists(Text textField) {
-        return PathCheck.isDirectory(textField.getText());
+        return PathCheck.directoryExists(textField.getText());
     }
 
     /**
@@ -145,7 +147,7 @@ public class TextCheck {
      * @return true if file exist
      */
     public static boolean isFileExists(Text textField) {
-        return PathCheck.isFile(textField.getText());
+        return PathCheck.fileExists(textField.getText());
     }
 
 } // end of TextCheck

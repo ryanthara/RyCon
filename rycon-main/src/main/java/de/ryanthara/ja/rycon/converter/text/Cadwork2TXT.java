@@ -1,6 +1,6 @@
 package de.ryanthara.ja.rycon.converter.text;
 
-import de.ryanthara.ja.rycon.tools.NumberFormatter;
+import de.ryanthara.ja.rycon.util.NumberFormatter;
 
 import java.util.ArrayList;
 

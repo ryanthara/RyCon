@@ -1,7 +1,7 @@
 /*
  * License: GPL. Copyright 2016- (C) by Sebastian Aust (https://www.ryanthara.de/)
  *
- * This file is part of the package de.ryanthara.ja.rycon.tools
+ * This file is part of the package de.ryanthara.ja.rycon.ui.tools
  *
  * This package is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -20,7 +20,7 @@ package de.ryanthara.ja.rycon.converter.gsi;
 import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.data.PreferenceKeys;
 import de.ryanthara.ja.rycon.elements.GSIBlock;
-import de.ryanthara.ja.rycon.tools.SortHelper;
+import de.ryanthara.ja.rycon.util.SortHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -146,7 +146,7 @@ public class BaseToolsGSI {
     /**
      * Prepares the line ending with an additional white space character.
      * <p>
-     * For some reasons (e.g. self written Autocad VBA tools) it is necessary to add an additional white space
+     * For some reasons (e.g. self written Autocad VBA util) it is necessary to add an additional white space
      * at the end of a line. This is done with this helper.
      *
      * @param stringToPrepare string to prepare with line ending

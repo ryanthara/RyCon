@@ -18,8 +18,8 @@
 package de.ryanthara.ja.rycon.i18n;
 
 /**
- * The <tt>ResourceBundles</tt> enumeration holds the paths to all resource bundles
- * for <tt>RyCON</tt>.
+ * The {@code ResourceBundles} enumeration holds the paths to all resource bundles
+ * for {@code RyCON}.
  * <p>
  * This enumeration is used for encapsulating the data. The access to the different
  * is done in the class {@link ResourceBundleUtils}.
@@ -30,16 +30,16 @@ package de.ryanthara.ja.rycon.i18n;
  */
 public enum ResourceBundles {
 
-    BUTTONS("de/ryanthara/ja/rycon/gui/Buttons"),
-    COLUMNS("de/ryanthara/ja/rycon/gui/Columns"),
-    CHECKBOXES("de/ryanthara/ja/rycon/gui/CheckBoxes"),
-    ERRORS("de/ryanthara/ja/rycon/gui/Errors"),
-    FILECHOOSERS("de/ryanthara/ja/rycon/gui/FileChoosers"),
-    LABELS("de/ryanthara/ja/rycon/gui/Labels"),
-    MESSAGES("de/ryanthara/ja/rycon/gui/Messages"),
-    PREFERENCES("de/ryanthara/ja/rycon/gui/Preferences"),
-    WARNINGS("de/ryanthara/ja/rycon/gui/Warnings"),
-    WORDINDICES("de/ryanthara/ja/rycon/gui/LeicaGSIWordIndices");
+    BUTTONS("de/ryanthara/ja/rycon/ui/Buttons"),
+    COLUMNS("de/ryanthara/ja/rycon/ui/Columns"),
+    CHECKBOXES("de/ryanthara/ja/rycon/ui/CheckBoxes"),
+    ERRORS("de/ryanthara/ja/rycon/ui/Errors"),
+    FILECHOOSERS("de/ryanthara/ja/rycon/ui/FileChoosers"),
+    LABELS("de/ryanthara/ja/rycon/ui/Labels"),
+    MESSAGES("de/ryanthara/ja/rycon/ui/Messages"),
+    PREFERENCES("de/ryanthara/ja/rycon/ui/Preferences"),
+    WARNINGS("de/ryanthara/ja/rycon/ui/Warnings"),
+    WORDINDICES("de/ryanthara/ja/rycon/ui/LeicaGSIWordIndices");
 
     private String bundleName;
 

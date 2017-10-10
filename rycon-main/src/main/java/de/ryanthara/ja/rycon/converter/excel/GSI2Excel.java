@@ -55,8 +55,9 @@ public class GSI2Excel {
     /**
      * Converts a GSI file element by element into an Excel file.
      *
-     * @param isXLS     selector to distinguish between XLS and XLSX file extension
-     * @param sheetName name of the sheet (file name from input file)
+     * @param isXLS           selector to distinguish between XLS and XLSX file extension
+     * @param sheetName       name of the sheet (file name from input file)
+     * @param writeCommentRow writes a comment row to the output file
      *
      * @return success conversion success
      */
@@ -87,7 +88,7 @@ public class GSI2Excel {
                 cell = row.createCell(cellNumber);
                 cellNumber++;
 
-                cell.setCellValue(ResourceBundleUtils.getLangString(WORDINDICES, WordIndices.valueOf("WI"+wordIndex)));
+                cell.setCellValue(ResourceBundleUtils.getLangString(WORDINDICES, WordIndices.valueOf("WI" + wordIndex)));
             }
         }
 

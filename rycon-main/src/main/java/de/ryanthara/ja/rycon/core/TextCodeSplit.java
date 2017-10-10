@@ -1,7 +1,7 @@
 /*
  * License: GPL. Copyright 2014- (C) by Sebastian Aust (https://www.ryanthara.de/)
  *
- * This file is part of the package de.ryanthara.ja.rycon.tools
+ * This file is part of the package de.ryanthara.ja.rycon.ui.tools
  *
  * This package is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -18,7 +18,7 @@
 package de.ryanthara.ja.rycon.core;
 
 import de.ryanthara.ja.rycon.elements.RyBlock;
-import de.ryanthara.ja.rycon.tools.SortHelper;
+import de.ryanthara.ja.rycon.util.SortHelper;
 
 import java.util.ArrayList;
 import java.util.StringTokenizer;

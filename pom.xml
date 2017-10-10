@@ -17,8 +17,8 @@
         <developer>
             <id>saust</id>
             <name>Sebastian Aust</name>
-            <email>number at ryanthara dot de</email>
-            <url>http://number.ryanthara.de/</url>
+            <email>code at ryanthara dot de</email>
+            <url>http://code.ryanthara.de/</url>
             <timezone>+1</timezone>
             <roles>
                 <role>architect</role>
@@ -92,7 +92,7 @@
     <!-- define properties -->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <targetJdk>1.7</targetJdk>
+        <targetJdk>1.8</targetJdk>
     </properties>
 
     <!-- build management -->
@@ -102,7 +102,7 @@
             <extension>
                 <groupId>org.apache.maven.wagon</groupId>
                 <artifactId>wagon-file</artifactId>
-                <version>2.10</version>
+                <version>3.0.0</version>
             </extension>
         </extensions>
 
@@ -112,14 +112,14 @@
                 <!-- assemble an application bundle or distribution from an assembly descriptor -->
                 <plugin>
                     <artifactId>maven-assembly-plugin</artifactId>
-                    <version>2.6</version>
+                    <version>3.1.0</version>
                 </plugin>
 
                 <!-- The goals for the Compiler Plugin are bound to their respective phases in the build lifecycle. -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.5.1</version>
+                    <version>3.7.0</version>
                     <configuration>
                         <!-- put your configurations here -->
                         <source>${targetJdk}</source>
@@ -131,7 +131,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>2.10.3</version>
+                    <version>3.0.0-M1</version>
                     <configuration>
                         <doctitle>RyCON ${project.version} API</doctitle>
                         <windowtitle>RyCON ${project.version} API</windowtitle>
@@ -146,7 +146,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
-                    <version>2.6</version>
+                    <version>3.0.2</version>
                     <configuration>
                         <!-- your example configuration here -->
                         <archive>
@@ -159,7 +159,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-resources-plugin</artifactId>
-                    <version>2.7</version>
+                    <version>3.0.2</version>
                     <configuration>
                         <encoding>UTF8</encoding>
                     </configuration>
@@ -170,16 +170,14 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-shade-plugin</artifactId>
-                    <!--<version>1.7.1</version>-->
-                    <version>2.4.3</version>
+                    <version>3.1.0</version>
                 </plugin>
                 <!-- a cross-platform tool for wrapping Java applications distributed as jars in
                 lightweight Windows native executables.  -->
                 <plugin>
                     <groupId>com.akathist.maven.plugins.launch4j</groupId>
                     <artifactId>launch4j-maven-plugin</artifactId>
-                    <version>1.7.8</version>
-                    <!--<version>1.7.9</version>-->
+                    <version>1.7.21</version>
                 </plugin>
                 <!-- give a build number -->
                 <plugin>
@@ -192,7 +190,8 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>build-helper-maven-plugin</artifactId>
-                    <version>1.10</version>
+                    <!--<version>1.10</version>-->
+                    <version>3.0.0</version>
                 </plugin>
 
                 <!-- automatic character encoding conversion for i18n support -->
@@ -272,5 +271,4 @@
         <module>RyCON_Win32</module>
         <module>RyCON_Win64</module>
     </modules>
-
 </project>

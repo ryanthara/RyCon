@@ -21,14 +21,14 @@ import de.ryanthara.ja.rycon.cli.CmdLineInterfaceException;
 import de.ryanthara.ja.rycon.cli.CmdLineInterfaceParser;
 import de.ryanthara.ja.rycon.data.DefaultKeys;
 import de.ryanthara.ja.rycon.data.PreferenceHandler;
-import de.ryanthara.ja.rycon.gui.UpdateDialog;
-import de.ryanthara.ja.rycon.gui.custom.MessageBoxes;
-import de.ryanthara.ja.rycon.gui.custom.StatusBar;
+import de.ryanthara.ja.rycon.ui.UpdateDialog;
+import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
+import de.ryanthara.ja.rycon.ui.custom.StatusBar;
 import de.ryanthara.ja.rycon.i18n.Errors;
 import de.ryanthara.ja.rycon.i18n.Labels;
 import de.ryanthara.ja.rycon.i18n.Messages;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
-import de.ryanthara.ja.rycon.tools.Updater;
+import de.ryanthara.ja.rycon.util.Updater;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -46,7 +46,7 @@ import java.util.logging.Logger;
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.*;
 
 /**
- * <tt>Main</tt> implements values, constants and objects for the complete RyCON application as an abstract class.
+ * {@code Main} implements values, constants and objects for the complete RyCON application as an abstract class.
  * <p>
  * This class was implemented after version 1 of RyCON to get easier access to different things.
  * The main idea to do this step was influenced by the code base of JOSM, which is the most popular
@@ -75,7 +75,7 @@ public abstract class Main {
      */
     public static FileHandler fileHandler;
     /**
-     * The reference to the logging level for <tt>RyCON</tt>.
+     * The reference to the logging level for {@code RyCON}.
      */
     public static Level loggingLevel;
     /**
@@ -83,13 +83,9 @@ public abstract class Main {
      */
     public static int countFileOps = -1;
     /**
-     * The reference to the global application preferences handler.
+     * The reference to the global application pref handler.
      */
     public static PreferenceHandler pref;
-    /**
-     * The reference to the global application shell.
-     */
-    public static Shell shell;
     /**
      * The reference to the global application status bar.
      */
@@ -160,8 +156,6 @@ public abstract class Main {
      * <p>
      * At minimum a JRE version of 1.7 is necessary and must be installed on the
      * target system.
-     *
-     * @return current JAVA version
      *
      * @since 2
      */

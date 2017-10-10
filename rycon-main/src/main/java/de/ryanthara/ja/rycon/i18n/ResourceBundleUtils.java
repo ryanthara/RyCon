@@ -21,7 +21,7 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 /**
- * The <tt>ResourceBundleUtils</tt> prepares all the texts for <tt>RyCON</tt>.
+ * The {@code ResourceBundleUtils} prepares all the texts for {@code RyCON}.
  *
  * @author sebastian
  * @version 1

@@ -52,8 +52,9 @@ public class Cadwork2Excel {
     /**
      * Converts a coordinate file from Cadwork (node.dat) into a Microsoft Excel file.
      *
-     * @param isXLS     selector to distinguish between XLS and XLSX file extension
-     * @param sheetName name of the sheet (file name from input file)
+     * @param isXLS           selector to distinguish between XLS and XLSX file extension
+     * @param sheetName       name of the sheet (file name from input file)
+     * @param writeCommentRow writes a comment row to the output file
      *
      * @return success of the conversion
      */

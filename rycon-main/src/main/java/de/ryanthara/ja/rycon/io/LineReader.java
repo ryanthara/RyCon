@@ -26,7 +26,7 @@ import java.util.ArrayList;
 
 /**
  * Instances of this class implements functions to read a text based path line by line and stores it's values
- * in an {code ArrayList<String>}.
+ * in an {@code ArrayList<String>}.
  * <p>
  * A couple of things are implemented as additional functionality. At the moment there is no thread safety
  * implemented or planed due to some reasons.
@@ -96,7 +96,7 @@ public class LineReader {
     }
 
     /**
-     * Read a path line by line and returns the read success.
+     * Reads a path line by line and returns the read success.
      * <p>
      * Additionally with the parameter 'comment', there is the possibility to use
      * a {@code String} as comment sign. These lines will be ignored and not read.

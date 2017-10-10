@@ -17,36 +17,33 @@
  */
 package de.ryanthara.ja.rycon.file.filter;
 
-import java.io.File;
-import java.io.FileFilter;
+import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Path;
 
 /**
- * A filter for files in the Leica GSI format with the ending '.gsi'.
- * <p>
- * Instances of this interface may be passed to the listFiles(FileFilter) method of the File class.
+ * A filter for files in the Leica GSI format with the file ending '.gsi'.
  *
  * @author sebastian
  * @version 1
  * @since 25
  */
-public class GSIFileFilter implements FileFilter {
+public class GSIFileFilter implements DirectoryStream.Filter<Path> {
 
     /**
-     * Tests whether or not the specified abstract pathname should be
-     * included in a pathname list.
+     * Decides if the given directory entry should be accepted or filtered.
      *
-     * @param pathname The abstract pathname to be tested
+     * @param entry the directory entry to be tested
      *
-     * @return <code>true</code> if and only if <code>pathname</code>
-     * should be included
+     * @return {@code true} if the directory entry should be accepted
+     *
+     * @throws IOException If an I/O error occurs
      */
     @Override
-    public boolean accept(File pathname) {
-        if (pathname.getName().toLowerCase().endsWith(".gsi")) {
-            return true;
-        }
+    public boolean accept(Path entry) throws IOException {
+        final String fileName = entry.getFileName().toString();
 
-        return false;
+        return fileName.toLowerCase().endsWith(".gsi");
     }
 
-} // end of TXTFileFilter
+} // end of GSIFileFilter

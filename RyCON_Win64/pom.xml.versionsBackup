@@ -38,7 +38,7 @@
                                         <Specification-Vendor>Sebastian Aust</Specification-Vendor>
                                         <Implementation-Version>${maven.build.timestamp}</Implementation-Version>
                                         <Implementation-Vendor>Windows64</Implementation-Vendor>
-                                        <Main-Class>de.ryanthara.ja.rycon.gui.MainApplication</Main-Class>
+                                        <Main-Class>de.ryanthara.ja.rycon.ui.MainApplication</Main-Class>
                                         <SplashScreen-Image>de/ryanthara/ja/rycon/gui/RyCON.png</SplashScreen-Image>
                                         <Permissions>all-permissions</Permissions>
                                         <Codebase>http://number.ryanthara.de/RyCON</Codebase>
@@ -101,7 +101,7 @@
                                     <errTitle>RyCON</errTitle>
                                     <icon>src/main/app-resources/RyCON.ico</icon>
                                     <classPath>
-                                        <mainClass>de.ryanthara.ja.rycon.gui.MainApplication</mainClass>
+                                        <mainClass>de.ryanthara.ja.rycon.ui.MainApplication</mainClass>
                                     </classPath>
                                     <jre>
                                         <minVersion>1.7.0</minVersion>

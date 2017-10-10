@@ -1,7 +1,7 @@
 /*
  * License: GPL. Copyright 2016- (C) by Sebastian Aust (https://www.ryanthara.de/)
  *
- * This file is part of the package de.ryanthara.ja.rycon.tools
+ * This file is part of the package de.ryanthara.ja.rycon.ui.tools
  *
  * This package is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -22,10 +22,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Instances of this class provides command line interface functions to <tt>RyCON</tt>.
+ * Instances of this class provides command line interface functions to {@code RyCON}.
  * <p>
- * <tt>RyCON's</tt> options can be set with a few command line arguments. The following arguments
- * will be supported in the current version of <tt>RyCON</tt>.
+ * {@code RyCON's} options can be set with a few command line arguments. The following arguments
+ * will be supported in the current version of {@code RyCON}.
  * <code>
  * --help                      displays a help message on the terminal
  * --debug=[level]             enable debug mode - level could be 'SEVERE WARNING INFO CONFIG FINE FINER FINEST'
@@ -35,12 +35,12 @@ import java.util.logging.Logger;
  * --targetBtnNumber=[number]  selects the target button by a given number
  * </code>
  * <p>
- * The language of <tt>RyCON</tt> is set by ISO 639 alpha-2 or alpha-3 language code values.
+ * The language of {@code RyCON} is set by ISO 639 alpha-2 or alpha-3 language code values.
  * For example use 'en' for english or 'de' for german language.
  * <p>
- * Due to some reasons in the development cycle of <tt>RyCON</tt>, the function to parse one file name into
+ * Due to some reasons in the development cycle of {@code RyCON}, the function to parse one file name into
  * the source text field, and the possibility to select radio buttons was implemented. This functionality
- * is available for the {@link de.ryanthara.ja.rycon.gui.widgets.ConverterWidget}.
+ * is available for the {@link de.ryanthara.ja.rycon.ui.widgets.ConverterWidget}.
  *
  * @author sebastian
  * @version 5
@@ -161,7 +161,7 @@ public class CmdLineInterfaceParser {
     }
 
     private void printHelp() {
-        System.out.println();
+        System.out.println("\n");
         System.out.println("usage: java -jar RyCON_[version].jar [one or more arguments]");
         System.out.println(" --help                     shows this help");
         System.out.println(" --debug=[level]            enable debug mode - level could be 'SEVERE WARNING INFO CONFIG FINE FINER FINEST'");
@@ -169,16 +169,16 @@ public class CmdLineInterfaceParser {
         System.out.println(" --file=[input files]       sets the value of input files into the source text field");
         System.out.println(" --sourceBtnNumber=[number] selects the source button by a given number");
         System.out.println(" --targetBtnNumber=[number] selects the target button by a given number");
-        System.out.println();
+        System.out.println("\n");
     }
 
     private void printUsageAdvice() {
         String usage = "usage: java -jar RyCON_[].jar --debug[level] --help --locale=[alpha-2 or alpha-3 language code] ";
         usage = usage.concat("--file=[input files] --sourceBtnNumber=[number] --targetBtnNumber=[number] ");
 
-        System.out.println();
+        System.out.println("\n");
         System.out.println(usage);
-        System.out.println();
+        System.out.println("\n");
     }
 
 } // end of CmdLineInterfaceParser

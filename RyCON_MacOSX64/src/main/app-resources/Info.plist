@@ -9,7 +9,7 @@
 	<key>CFBundleIconFile</key>
 	<string>RyCON.icns</string>
 	<key>CFBundleIdentifier</key>
-	<string>de.ryanthara.ja.rycon.gui.MainApplication</string>
+	<string>de.ryanthara.ja.rycon.ui.MainApplication</string>
 	<key>CFBundleDisplayName</key>
 	<string>RyCON for Mac OS X (64bit)</string>
 	<key>CFBundleInfoDictionaryVersion</key>

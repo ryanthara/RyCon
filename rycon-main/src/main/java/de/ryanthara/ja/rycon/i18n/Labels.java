@@ -18,7 +18,7 @@
 package de.ryanthara.ja.rycon.i18n;
 
 /**
- * The <tt>Labels</tt> enumeration holds all the label texts for <tt>RyCON</tt>.
+ * The {@code Labels} enumeration holds all the label texts for {@code RyCON}.
  * <p>
  * This enumeration is used for encapsulating the data. The interface {@link ResourceKeys}
  * is used to access different enumerations in the class {@link ResourceBundleUtils}.
@@ -29,11 +29,13 @@ package de.ryanthara.ja.rycon.i18n;
  */
 public enum Labels implements ResourceKeys {
 
+    adminDescription,
     adminPath,
     adminPathDefault,
     adviceText,
     applicationName,
     applicationTitle,
+    bigDataDescription,
     bigDataPath,
     bigDataPathDefault,
     cardReaderPath,
@@ -66,9 +68,15 @@ public enum Labels implements ResourceKeys {
     ltopIdentifier,
     minimumPointDistance,
     newConfigFileGenerated,
+    newestFolderText,
     optionsText,
     pathSelectionText,
     pathSettingsText,
+    preferencesDialogMessage,
+    preferencesDialogText,
+    preferencesDialogOkButtonText,
+    preferencesDialogOkButtonTooltip,
+    projectDescription,
     projectNumber,
     projectPath,
     projectPathDefault,
@@ -98,11 +106,11 @@ public enum Labels implements ResourceKeys {
     tipSplitterWidget,
     tipTidyUpWidget,
     tipTransferWidget,
-    transferCardReaderText,
     transferInitialized,
     transferTargetText,
+    txtCsvGroup,
     warningTextMsgBox,
     websiteItemTrayMenu,
-    zeissRECDialect
+    zeissRECDialect,
 
 } // end of Labels

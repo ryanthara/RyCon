@@ -18,7 +18,7 @@
 package de.ryanthara.ja.rycon.i18n;
 
 /**
- * The <tt>Buttons</tt> enumeration holds all the texts for the buttons of <tt>RyCON</tt>.
+ * The {@code Buttons} enumeration holds all the texts for the buttons of {@code RyCON}.
  * <p>
  * This enumeration is used for encapsulating the data. The interface {@link ResourceKeys}
  * is used to access different enumerations in the class {@link ResourceBundleUtils}.
@@ -29,6 +29,8 @@ package de.ryanthara.ja.rycon.i18n;
  */
 public enum Buttons implements ResourceKeys {
 
+    aboutText,
+    aboutToolTip,
     cancelText,
     cancelToolTip,
     chooseFilesText,
@@ -39,18 +41,16 @@ public enum Buttons implements ResourceKeys {
     cleanToolTip,
     convertText,
     convertToolTip,
-    copyText,
-    importText,
-    importToolTip,
     defaultSettingsText,
     defaultSettingsToolTip,
     exitText,
     exitToolTip,
     generatorText,
     generatorToolTip,
+    importText,
+    importToolTip,
     levellingText,
     levellingToolTip,
-    moveText,
     okAndExitText,
     okAndExitToolTip,
     okAndOpenBrowserText,
@@ -66,6 +66,7 @@ public enum Buttons implements ResourceKeys {
     splitterText,
     splitterToolTip,
     transformationText,
-    transformationToolTip
+    transformationToolTip,
+    txtCsvSpecialFormat,
 
 } // end of Buttons

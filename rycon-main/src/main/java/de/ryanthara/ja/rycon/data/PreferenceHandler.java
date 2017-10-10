@@ -26,6 +26,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.prefs.BackingStoreException;
 import java.util.prefs.PreferenceChangeEvent;
 import java.util.prefs.PreferenceChangeListener;
 import java.util.prefs.Preferences;
@@ -70,12 +71,14 @@ public class PreferenceHandler implements PreferenceChangeListener {
     }
 
     /**
-     * Check a path which is stored in the user preferences of RyCON.
+     * Checks a path which is stored in the user preferences of RyCON.
      * <p>
      * If the path doesn't exists, RyCON tries to use the value of the base dir. If the base dir doesn't exist,
      * then the value of the "HOME" variable of the system will be returned.
      *
      * @param pathToBeChecked stored path which has to be checked
+     *
+     * @return checked path from user preference
      */
     public static String checkUserPrefPathExist(String pathToBeChecked) {
         if (Files.exists(Paths.get(pathToBeChecked))) {
@@ -85,6 +88,38 @@ public class PreferenceHandler implements PreferenceChangeListener {
         } else {
             return System.getenv().get("HOME");
         }
+    }
+
+    /**
+     * Returns the keys of the user preference object.
+     *
+     * @return keys array
+     *
+     * @throws BackingStoreException thrown exception
+     */
+    public String[] getKeys() throws BackingStoreException {
+        return userPreferences.keys();
+    }
+
+    /**
+     * Returns a specified user preference by a given position in the node array.
+     *
+     * @param position array position
+     *
+     * @return
+     */
+    public String getUserPref(int position) {
+        String key = null;
+
+        try {
+            if (position < getKeys().length) {
+                key = getKeys()[position];
+            }
+        } catch (BackingStoreException e) {
+            e.printStackTrace();
+        }
+
+        return userPreferences.get(key, "");
     }
 
     /**
@@ -132,6 +167,26 @@ public class PreferenceHandler implements PreferenceChangeListener {
     }
 
     /**
+     * Removes the user preference by a given key.
+     *
+     * @param key key of the user preference to be removed
+     */
+    public void removeUserPreference(String key) {
+        userPreferences.remove(key);
+    }
+
+    /**
+     * Removes a set of user preferences by a array of given keys.
+     *
+     * @param keys key of the user preference to be removed
+     */
+    public void removeUserPreference(String[] keys) {
+        for (String key : keys) {
+            userPreferences.remove(key);
+        }
+    }
+
+    /**
      * Sets a defined system preference by reference to the preference object and value.
      *
      * @param preference reference to the preference object to be set
@@ -143,8 +198,13 @@ public class PreferenceHandler implements PreferenceChangeListener {
         userPreferences.put(preference.name(), value);
     }
 
+    @Override
+    public String toString() {
+        return userPreferences.toString();
+    }
+
     /**
-     * Fills in the default values for RyCON into user preferences.
+     * Fills in the default values for RyCON into user pref.
      * <p>
      * Default settings are generated for the following parameters (parameter name - value).
      * <ul>
@@ -207,6 +267,15 @@ public class PreferenceHandler implements PreferenceChangeListener {
 
         // parameters for module #2 transfer widgets
         setUserPreference(PreferenceKeys.LAST_USED_PROJECTS, "[]");
+        /* Leica Geosystems card structure */
+        setUserPreference(PreferenceKeys.DIR_CARD_READER_DATA_FILES, "Data");
+        setUserPreference(PreferenceKeys.DIR_CARD_READER_EXPORT_FILES, "Gsi");
+        setUserPreference(PreferenceKeys.DIR_CARD_READER_JOB_FILES, "DBX");
+
+        // TODO remove Rapp dependency to a more general behaviour
+        setUserPreference(PreferenceKeys.DIR_PROJECT_LOG_FILES, "08.Bearb_Rapp/Messdaten/LOG");
+        setUserPreference(PreferenceKeys.DIR_PROJECT_MEASUREMENT_FILES, "08.Bearb_Rapp/Messdaten/GSI");
+        setUserPreference(PreferenceKeys.DIR_PROJECT_JOB_FILES, "08.Bearb_Rapp/Messdaten/DBX");
 
         // parameters for module #3 - clean up
         setUserPreference(PreferenceKeys.PARAM_CONTROL_POINT_STRING, DefaultKeys.PARAM_CONTROL_POINT_STRING.getValue());

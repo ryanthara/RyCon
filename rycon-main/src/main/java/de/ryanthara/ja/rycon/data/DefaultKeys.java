@@ -24,9 +24,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * The <tt>DefaultKeys</tt> enumeration holds all the default values for <tt>RyCON</tt>.
+ * The {@code DefaultKeys} enumeration holds all the default values for {@code RyCON}.
  * <p>
- * This enumeration is used for encapsulating the data.
+ * This enumeration is used for encapsulating the data and error minimization.
  *
  * @author sebastian
  * @version 1
@@ -48,6 +48,12 @@ public enum DefaultKeys {
     DIR_PROJECT_TEMPLATE("./projects/template-folder"),
     GSI_SETTING_LINE_ENDING_WITH_BLANK("true"),
 
+    // transfer widget
+    // TODO remove Rapp dependency to a more general behaviour
+    DIR_PROJECT_LOG_FILES( "08.Bearb_Rapp/Messdaten/LOG"),
+    DIR_PROJECT_MEASUREMENT_FILES( "08.Bearb_Rapp/Messdaten/GSI"),
+    DIR_PROJECT_JOB_FILES( "08.Bearb_Rapp/Messdaten/DBX"),
+
     LAST_POS_PRIMARY_MONITOR("-9999, -9999"),
     LAST_POS_SECONDARY_MONITOR("-9998, -9998"),
     LAST_USED_DISPLAY("-1"),
@@ -66,7 +72,7 @@ public enum DefaultKeys {
     RyCON_WEBSITE_HELP("https://code.ryanthara.de/RyCON/help"),
     RyCON_WHATS_NEW_URL("https://code.ryanthara.de/content/3-RyCON/_whats.new"),
 
-    JAVA_WEBSITE("https://java.com/en/");
+    JAVA_WEBSITE("https://java.com/");
 
     private final static Logger logger = Logger.getLogger(DefaultKeys.class.getName());
     private String value;
@@ -91,24 +97,19 @@ public enum DefaultKeys {
     }
 
     /**
-     * Returns the default key value as URL.
+     * Returns the value of the default key.
      *
-     * @return default key value as URL
-    public Optional<URL> getURL() {
-        try {
-            return Optional.of(new URL(value));
-        } catch (MalformedURLException e) {
-            logger.log(Level.SEVERE, "wrong value to create URL: " + value, e);
-        }
-
-        return Optional.empty();
-    }
+     * @return the default key value
      */
-
     public String getValue() {
         return value;
     }
 
+    /**
+     * Returns the default key value as string.
+     *
+     * @return the default key value as string
+     */
     @Override
     public String toString() {
         return value;

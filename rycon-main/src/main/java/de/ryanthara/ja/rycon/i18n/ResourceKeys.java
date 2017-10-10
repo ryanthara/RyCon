@@ -18,8 +18,8 @@
 package de.ryanthara.ja.rycon.i18n;
 
 /**
- * The <tt>{@link ResourceKeys}</tt> interface is used to encapsulate the resource
- * bundles that are used for <tt>RyCON</tt>.
+ * The {@code {@link ResourceKeys}} interface is used to encapsulate the resource
+ * bundles that are used for {@code RyCON}.
  *
  * All resource bundles are organized in the package {@link de.ryanthara.ja.rycon.i18n}
  * and grouped by element or message type.

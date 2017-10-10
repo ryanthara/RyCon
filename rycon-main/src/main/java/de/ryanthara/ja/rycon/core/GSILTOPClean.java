@@ -1,7 +1,7 @@
 /*
  * License: GPL. Copyright 2016- (C) by Sebastian Aust (https://www.ryanthara.de/)
  *
- * This file is part of the package de.ryanthara.ja.rycon.tools
+ * This file is part of the package de.ryanthara.ja.rycon.ui.tools
  *
  * This package is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -17,14 +17,15 @@
  */
 package de.ryanthara.ja.rycon.core;
 
-import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.converter.gsi.BaseToolsGSI;
 import de.ryanthara.ja.rycon.data.DefaultKeys;
-import de.ryanthara.ja.rycon.gui.custom.MessageBoxes;
+import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
 import de.ryanthara.ja.rycon.i18n.Labels;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 import de.ryanthara.ja.rycon.i18n.Warnings;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -138,7 +139,9 @@ public class GSILTOPClean {
                             range = range + 1;
                         }
                     } else if ((status == 0) & (range == 4)) {                       // no control point in range
-                        MessageBoxes.showMessageBox(Main.shell, SWT.ICON_WARNING,
+                        final Shell shell = Display.getCurrent().getActiveShell();
+
+                        MessageBoxes.showMessageBox(shell, SWT.ICON_WARNING,
                                 ResourceBundleUtils.getLangString(LABELS, Labels.warningTextMsgBox),
                                 String.format(ResourceBundleUtils.getLangString(WARNINGS, Warnings.noControlPointsLTOP), currentStation));
 

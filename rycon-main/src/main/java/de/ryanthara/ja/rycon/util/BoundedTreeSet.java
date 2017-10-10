@@ -23,13 +23,13 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 /**
- * This <tt>TreeSet</tt> has boundaries and ensures, that it never grows beyond a maximum size.
+ * This {@code TreeSet} has boundaries and ensures, that it never grows beyond a maximum size.
  * <p>
- * The last element ist removed if the size of the <tt>TreeSet</tt> gets bigger than the maximum size.
+ * The last element ist removed if the size of the {@code TreeSet} gets bigger than the maximum size.
  *
  * @author sebastian
  * @version 1
- * @see {@link http://www.java2s.com/Code/Java/Collections-Data-Structure/ATreeSetthatensuresitnevergrowsbeyondamaxsize.htm}
+ * @see <a href="http://www.java2s.com/Code/Java/Collections-Data-Structure/ATreeSetthatensuresitnevergrowsbeyondamaxsize.htm">www.java2s.com</a>
  * @since 25
  */
 public class BoundedTreeSet<E> extends TreeSet<E> {

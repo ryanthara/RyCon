@@ -1,7 +1,7 @@
 /*
  * License: GPL. Copyright 2016- (C) by Sebastian Aust (https://www.ryanthara.de/)
  *
- * This file is part of the package de.ryanthara.ja.rycon.tools
+ * This file is part of the package de.ryanthara.ja.rycon.ui.tools
  *
  * This package is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -17,7 +17,7 @@
  */
 package de.ryanthara.ja.rycon.converter.caplan;
 
-import de.ryanthara.ja.rycon.tools.NumberFormatter;
+import de.ryanthara.ja.rycon.util.NumberFormatter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,8 +47,9 @@ public class CSV2K {
      *
      * @param useSimpleFormat  option to write a reduced K file which is compatible to Z+F LaserControl
      * @param writeCommentLine option to write a comment line into the K file with basic information
+     * @param writeCodeColumn  option to write a code column into the output file
      *
-     * @return converted K file as ArrayList<String>
+     * @return converted K file as {@code ArrayList<String>}
      */
     public ArrayList<String> convertCSV2K(boolean useSimpleFormat, boolean writeCommentLine, boolean writeCodeColumn) {
         ArrayList<String> result = new ArrayList<>();

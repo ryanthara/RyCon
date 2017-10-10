@@ -16,7 +16,7 @@
  * this package. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import de.ryanthara.ja.rycon.gui.MainApplication;
+import de.ryanthara.ja.rycon.ui.MainApplication;
 
 /**
  * RyCON is the entry point of the program.

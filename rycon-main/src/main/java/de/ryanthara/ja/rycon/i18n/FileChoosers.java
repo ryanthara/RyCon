@@ -18,7 +18,7 @@
 package de.ryanthara.ja.rycon.i18n;
 
 /**
- * The <tt>FileChoosers</tt> enumeration holds all the texts for the file choosers of <tt>RyCON</tt>.
+ * The {@code FileChoosers} enumeration holds all the texts for the file choosers of {@code RyCON}.
  * <p>
  * This enumeration is used for encapsulating the data. The interface {@link ResourceKeys}
  * is used to access different enumerations in the class {@link ResourceBundleUtils}.
@@ -30,23 +30,23 @@ package de.ryanthara.ja.rycon.i18n;
 public enum FileChoosers implements ResourceKeys {
 
     cardReaderMessage,
-    cardReaderTitle,
+    cardReaderText,
     converterSourceMessage,
-    converterSourceTitle,
-    dirAdminTitle,
+    converterSourceText,
     dirAdminMessage,
+    dirAdminText,
     dirAdminTemplateMessage,
-    dirAdminTemplateTitle,
+    dirAdminTemplateText,
     dirBaseMessage,
-    dirBaseTitle,
-    dirBigDataTitle,
+    dirBaseText,
     dirBigDataMessage,
-    dirBigDataTemplateTitle,
+    dirBigDataText,
     dirBigDataTemplateMessage,
+    dirBigDataTemplateText,
     dirProjectMessage,
-    dirProjectTitle,
+    dirProjectText,
     dirProjectTemplateMessage,
-    dirProjectTemplateTitle,
+    dirProjectTemplateText,
     filterNameCadwork,
     filterNameCSV,
     filterNameGSI,
@@ -55,11 +55,13 @@ public enum FileChoosers implements ResourceKeys {
     filterNameNIGRA,
     filterNameTXT,
     filterNameZeiss,
+    lastProjectPathMessage,
+    lastProjectPathText,
     levellingSourceMessage,
-    levellingSourceTitle,
+    levellingSourceText,
     splitterSourceMessage,
     splitterSourceText,
     tidyUpSourceMessage,
-    lastProjectPathTitle, lastProjectPathMessage, tidyUpSourceTitle
+    tidyUpSourceText
 
 } // end of FileChoosers

@@ -53,7 +53,7 @@ var activeTableTab = "activeTableTab";
     <ul class="navList">
         <li>Prev&nbsp;Class</li>
         <li><a href="../../../../../../de/ryanthara/ja/rycon/gui/notifier/NotificationType.html"
-               title="enum in de.ryanthara.ja.rycon.gui.notifier"><span class="typeNameLink">Next&nbsp;Class</span></a>
+               title="enum in de.ryanthara.ja.rycon.ui.notifier"><span class="typeNameLink">Next&nbsp;Class</span></a>
         </li>
     </ul>
     <ul class="navList">
@@ -99,7 +99,7 @@ var activeTableTab = "activeTableTab";
 <!-- ========= END OF TOP NAVBAR ========= -->
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
-    <div class="subTitle">de.ryanthara.ja.rycon.gui.notifier</div>
+    <div class="subTitle">de.ryanthara.ja.rycon.ui.notifier</div>
     <h2 title="Class NotificationPopupWidget" class="title">Class NotificationPopupWidget</h2>
 </div>
 <div class="contentContainer">
@@ -107,7 +107,7 @@ var activeTableTab = "activeTableTab";
         <li>java.lang.Object</li>
         <li>
             <ul class="inheritance">
-                <li>de.ryanthara.ja.rycon.gui.notifier.NotificationPopupWidget</li>
+                <li>de.ryanthara.ja.rycon.ui.notifier.NotificationPopupWidget</li>
             </ul>
         </li>
     </ul>
@@ -179,7 +179,7 @@ extends java.lang.Object</pre>
                                     <number><span class="memberNameLink"><a
                                             href="../../../../../../de/ryanthara/ja/rycon/gui/notifier/NotificationPopupWidget.html#backgroundGradient">backgroundGradient</a></span>
                                     </number>
-                                    <div class="block">Member for the shell gradient background color - bottom layer
+                                    <div class="block">Member for the parentShell gradient background color - bottom layer
                                     </div>
                                 </td>
                             </tr>
@@ -191,7 +191,7 @@ extends java.lang.Object</pre>
                                     <number><span class="memberNameLink"><a
                                             href="../../../../../../de/ryanthara/ja/rycon/gui/notifier/NotificationPopupWidget.html#borderColor">borderColor</a></span>
                                     </number>
-                                    <div class="block">Member for the shell border color.</div>
+                                    <div class="block">Member for the parentShell border color.</div>
                                 </td>
                             </tr>
                             <tr class="rowColor">
@@ -281,7 +281,7 @@ extends java.lang.Object</pre>
                                     <number><span class="memberNameLink"><a
                                             href="../../../../../../de/ryanthara/ja/rycon/gui/notifier/NotificationPopupWidget.html#foregroundGradient">foregroundGradient</a></span>
                                     </number>
-                                    <div class="block">Member for the shell gradient foreground color - top layer</div>
+                                    <div class="block">Member for the parentShell gradient foreground color - top layer</div>
                                 </td>
                             </tr>
                             <tr class="rowColor">
@@ -292,7 +292,7 @@ extends java.lang.Object</pre>
                                     <number><span class="memberNameLink"><a
                                             href="../../../../../../de/ryanthara/ja/rycon/gui/notifier/NotificationPopupWidget.html#innerShell">innerShell</a></span>
                                     </number>
-                                    <div class="block">Member for the inner shell.</div>
+                                    <div class="block">Member for the inner parentShell.</div>
                                 </td>
                             </tr>
                             <tr class="altColor">
@@ -366,9 +366,9 @@ extends java.lang.Object</pre>
                                 </td>
                                 <td class="colLast">
                                     <number><span class="memberNameLink"><a
-                                            href="../../../../../../de/ryanthara/ja/rycon/gui/notifier/NotificationPopupWidget.html#fadeIn-org.eclipse.swt.widgets.Shell-">fadeIn</a></span>(org.eclipse.swt.widgets.Shell&nbsp;shell)
+                                            href="../../../../../../de/ryanthara/ja/rycon/gui/notifier/NotificationPopupWidget.html#fadeIn-org.eclipse.swt.widgets.Shell-">fadeIn</a></span>(org.eclipse.swt.widgets.Shell&nbsp;parentShell)
                                     </number>
-                                    <div class="block">Fades in a shell.</div>
+                                    <div class="block">Fades in a parentShell.</div>
                                 </td>
                             </tr>
                             <tr id="i1" class="rowColor">
@@ -377,9 +377,9 @@ extends java.lang.Object</pre>
                                 </td>
                                 <td class="colLast">
                                     <number><span class="memberNameLink"><a
-                                            href="../../../../../../de/ryanthara/ja/rycon/gui/notifier/NotificationPopupWidget.html#fadeOut-org.eclipse.swt.widgets.Shell-">fadeOut</a></span>(org.eclipse.swt.widgets.Shell&nbsp;shell)
+                                            href="../../../../../../de/ryanthara/ja/rycon/gui/notifier/NotificationPopupWidget.html#fadeOut-org.eclipse.swt.widgets.Shell-">fadeOut</a></span>(org.eclipse.swt.widgets.Shell&nbsp;parentShell)
                                     </number>
-                                    <div class="block">Fades out a shell.</div>
+                                    <div class="block">Fades out a parentShell.</div>
                                 </td>
                             </tr>
                             <tr id="i2" class="altColor">
@@ -388,10 +388,10 @@ extends java.lang.Object</pre>
                                 </td>
                                 <td class="colLast">
                                     <number><span class="memberNameLink"><a
-                                            href="../../../../../../de/ryanthara/ja/rycon/gui/notifier/NotificationPopupWidget.html#notify-java.lang.String-java.lang.String-de.ryanthara.ja.rycon.gui.notifier.NotificationType-int-">notify</a></span>(java.lang.String&nbsp;title,
+                                            href="../../../../../../de/ryanthara/ja/rycon/gui/notifier/NotificationPopupWidget.html#notify-java.lang.String-java.lang.String-de.ryanthara.ja.rycon.ui.notifier.NotificationType-int-">notify</a></span>(java.lang.String&nbsp;title,
                                         java.lang.String&nbsp;message,
                                         <a href="../../../../../../de/ryanthara/ja/rycon/gui/notifier/NotificationType.html"
-                                           title="enum in de.ryanthara.ja.rycon.gui.notifier">NotificationType</a>&nbsp;typeIdentifier,
+                                           title="enum in de.ryanthara.ja.rycon.ui.notifier">NotificationType</a>&nbsp;typeIdentifier,
                                         int&nbsp;time)
                                     </number>
                                     <div class="block">Shows a NotificationPopupWidget which can be set up by a couple
@@ -405,7 +405,7 @@ extends java.lang.Object</pre>
                                 </td>
                                 <td class="colLast">
                                     <number><span class="memberNameLink"><a
-                                            href="../../../../../../de/ryanthara/ja/rycon/gui/notifier/NotificationPopupWidget.html#startTimer-org.eclipse.swt.widgets.Shell-">startTimer</a></span>(org.eclipse.swt.widgets.Shell&nbsp;shell)
+                                            href="../../../../../../de/ryanthara/ja/rycon/gui/notifier/NotificationPopupWidget.html#startTimer-org.eclipse.swt.widgets.Shell-">startTimer</a></span>(org.eclipse.swt.widgets.Shell&nbsp;parentShell)
                                     </number>
                                     <div class="block">Starts a timer to enable automatic fade out the popup after the
                                         time.
@@ -471,7 +471,7 @@ extends java.lang.Object</pre>
                                 <dl>
                                     <dt><span class="seeLabel">See Also:</span></dt>
                                     <dd>
-                                        <a href="../../../../../../constant-values.html#de.ryanthara.ja.rycon.gui.notifier.NotificationPopupWidget.FADE_TIMER">Constant
+                                        <a href="../../../../../../constant-values.html#de.ryanthara.ja.rycon.ui.notifier.NotificationPopupWidget.FADE_TIMER">Constant
                                             Field Values</a></dd>
                                 </dl>
                             </li>
@@ -487,7 +487,7 @@ extends java.lang.Object</pre>
                                 <dl>
                                     <dt><span class="seeLabel">See Also:</span></dt>
                                     <dd>
-                                        <a href="../../../../../../constant-values.html#de.ryanthara.ja.rycon.gui.notifier.NotificationPopupWidget.FADE_IN_STEP">Constant
+                                        <a href="../../../../../../constant-values.html#de.ryanthara.ja.rycon.ui.notifier.NotificationPopupWidget.FADE_IN_STEP">Constant
                                             Field Values</a></dd>
                                 </dl>
                             </li>
@@ -503,7 +503,7 @@ extends java.lang.Object</pre>
                                 <dl>
                                     <dt><span class="seeLabel">See Also:</span></dt>
                                     <dd>
-                                        <a href="../../../../../../constant-values.html#de.ryanthara.ja.rycon.gui.notifier.NotificationPopupWidget.FADE_OUT_STEP">Constant
+                                        <a href="../../../../../../constant-values.html#de.ryanthara.ja.rycon.ui.notifier.NotificationPopupWidget.FADE_OUT_STEP">Constant
                                             Field Values</a></dd>
                                 </dl>
                             </li>
@@ -519,7 +519,7 @@ extends java.lang.Object</pre>
                                 <dl>
                                     <dt><span class="seeLabel">See Also:</span></dt>
                                     <dd>
-                                        <a href="../../../../../../constant-values.html#de.ryanthara.ja.rycon.gui.notifier.NotificationPopupWidget.FINAL_ALPHA">Constant
+                                        <a href="../../../../../../constant-values.html#de.ryanthara.ja.rycon.ui.notifier.NotificationPopupWidget.FINAL_ALPHA">Constant
                                             Field Values</a></dd>
                                 </dl>
                             </li>
@@ -531,7 +531,7 @@ extends java.lang.Object</pre>
                             <li class="blockList">
                                 <h4>innerShell</h4>
                                 <pre>private static&nbsp;org.eclipse.swt.widgets.Shell innerShell</pre>
-                                <div class="block">Member for the inner shell.</div>
+                                <div class="block">Member for the inner parentShell.</div>
                             </li>
                         </ul>
                         <a name="backgroundGradient">
@@ -541,7 +541,7 @@ extends java.lang.Object</pre>
                             <li class="blockList">
                                 <h4>backgroundGradient</h4>
                                 <pre>private static&nbsp;org.eclipse.swt.graphics.Color backgroundGradient</pre>
-                                <div class="block">Member for the shell gradient background color - bottom layer</div>
+                                <div class="block">Member for the parentShell gradient background color - bottom layer</div>
                             </li>
                         </ul>
                         <a name="borderColor">
@@ -551,7 +551,7 @@ extends java.lang.Object</pre>
                             <li class="blockList">
                                 <h4>borderColor</h4>
                                 <pre>private static&nbsp;org.eclipse.swt.graphics.Color borderColor</pre>
-                                <div class="block">Member for the shell border color.</div>
+                                <div class="block">Member for the parentShell border color.</div>
                             </li>
                         </ul>
                         <a name="foregroundColor">
@@ -571,7 +571,7 @@ extends java.lang.Object</pre>
                             <li class="blockList">
                                 <h4>foregroundGradient</h4>
                                 <pre>private static&nbsp;org.eclipse.swt.graphics.Color foregroundGradient</pre>
-                                <div class="block">Member for the shell gradient foreground color - top layer</div>
+                                <div class="block">Member for the parentShell gradient foreground color - top layer</div>
                             </li>
                         </ul>
                         <a name="oldImage">
@@ -638,13 +638,13 @@ extends java.lang.Object</pre>
                         <ul class="blockList">
                             <li class="blockList">
                                 <h4>fadeIn</h4>
-                                <pre>private static&nbsp;void&nbsp;fadeIn(org.eclipse.swt.widgets.Shell&nbsp;shell)</pre>
-                                <div class="block">Fades in a shell.</div>
+                                <pre>private static&nbsp;void&nbsp;fadeIn(org.eclipse.swt.widgets.Shell&nbsp;parentShell)</pre>
+                                <div class="block">Fades in a parentShell.</div>
                                 <dl>
                                     <dt><span class="paramLabel">Parameters:</span></dt>
                                     <dd>
-                                        <number>shell</number>
-                                        - shell to fade in
+                                        <number>parentShell</number>
+                                        - parentShell to fade in
                                     </dd>
                                 </dl>
                             </li>
@@ -655,18 +655,18 @@ extends java.lang.Object</pre>
                         <ul class="blockList">
                             <li class="blockList">
                                 <h4>fadeOut</h4>
-                                <pre>private static&nbsp;void&nbsp;fadeOut(org.eclipse.swt.widgets.Shell&nbsp;shell)</pre>
-                                <div class="block">Fades out a shell.</div>
+                                <pre>private static&nbsp;void&nbsp;fadeOut(org.eclipse.swt.widgets.Shell&nbsp;parentShell)</pre>
+                                <div class="block">Fades out a parentShell.</div>
                                 <dl>
                                     <dt><span class="paramLabel">Parameters:</span></dt>
                                     <dd>
-                                        <number>shell</number>
-                                        - shell to fade out
+                                        <number>parentShell</number>
+                                        - parentShell to fade out
                                     </dd>
                                 </dl>
                             </li>
                         </ul>
-                        <a name="notify-java.lang.String-java.lang.String-de.ryanthara.ja.rycon.gui.notifier.NotificationType-int-">
+                        <a name="notify-java.lang.String-java.lang.String-de.ryanthara.ja.rycon.ui.notifier.NotificationType-int-">
                             <!--   -->
                         </a>
                         <ul class="blockList">
@@ -675,7 +675,7 @@ extends java.lang.Object</pre>
                                 <pre>public static&nbsp;void&nbsp;notify(java.lang.String&nbsp;title,
                           java.lang.String&nbsp;message,
                           <a href="../../../../../../de/ryanthara/ja/rycon/gui/notifier/NotificationType.html"
-                             title="enum in de.ryanthara.ja.rycon.gui.notifier">NotificationType</a>&nbsp;typeIdentifier,
+                             title="enum in de.ryanthara.ja.rycon.ui.notifier">NotificationType</a>&nbsp;typeIdentifier,
                           int&nbsp;time)</pre>
                                 <div class="block">Shows a NotificationPopupWidget which can be set up by a couple of
                                     parameters.
@@ -708,15 +708,15 @@ extends java.lang.Object</pre>
                         <ul class="blockListLast">
                             <li class="blockList">
                                 <h4>startTimer</h4>
-                                <pre>private static&nbsp;void&nbsp;startTimer(org.eclipse.swt.widgets.Shell&nbsp;shell)</pre>
+                                <pre>private static&nbsp;void&nbsp;startTimer(org.eclipse.swt.widgets.Shell&nbsp;parentShell)</pre>
                                 <div class="block">Starts a timer to enable automatic fade out the popup after the
                                     time.
                                 </div>
                                 <dl>
                                     <dt><span class="paramLabel">Parameters:</span></dt>
                                     <dd>
-                                        <number>shell</number>
-                                        - shell object to fade out
+                                        <number>parentShell</number>
+                                        - parentShell object to fade out
                                     </dd>
                                 </dl>
                             </li>
@@ -751,7 +751,7 @@ extends java.lang.Object</pre>
     <ul class="navList">
         <li>Prev&nbsp;Class</li>
         <li><a href="../../../../../../de/ryanthara/ja/rycon/gui/notifier/NotificationType.html"
-               title="enum in de.ryanthara.ja.rycon.gui.notifier"><span class="typeNameLink">Next&nbsp;Class</span></a>
+               title="enum in de.ryanthara.ja.rycon.ui.notifier"><span class="typeNameLink">Next&nbsp;Class</span></a>
         </li>
     </ul>
     <ul class="navList">

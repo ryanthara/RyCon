@@ -17,35 +17,88 @@
  */
 package de.ryanthara.ja.rycon.i18n;
 
-import de.ryanthara.ja.rycon.gui.preferences.PreferencesDialog;
+import de.ryanthara.ja.rycon.ui.widgets.SettingsWidget;
 
 /**
- * This enumeration is used for all the strings in the preference tabs of the {@link PreferencesDialog}.
+ * This enumeration is used for all the strings in the preference tabs of the {@link SettingsWidget}.
  * <p>
- * Therefore the order of the enum is made by hand and follows the module order.
+ * Therefore the order of the enum is made by hand and follows the tab order.
  *
  * @author sebastian
  * @version 1
  * @since 12
  */
 public enum Preferences implements ResourceKeys {
+    // categories
+    categoryFormats,
+    categoryGeneral,
+    categoryModules,
+    categoryPaths,
+
+    // configurations
+    labelNo,
+    labelOk,
+    labelYes,
+    toolTipDefault,
+    toolTipUndo,
 
     // general tab
     generalTabTitle,
     generalTabToolTip,
+    groupGeneralSettingsTitle,
+    overwriteExistingFiles,
+    fileCompletionConverter,
+    fileCompletionSplitter,
+    equalPointsMinimumDistance,
 
     // path tab
     pathTabTitle,
     pathTabToolTip,
+    pathGroupBase,
+    pathBaseLabel,
 
-    // tidy up tab
-    tidyUpTabTitle,
-    tidyUpTabToolText,
+    pathGroupAdmin,
+    pathAdminFolderLabel,
+    pathAdminTemplateLabel,
+
+    pathGroupProject,
+    pathProjectFolderLabel,
+    pathProjectTemplateLabel,
+
+    pathGroupBigData,
+    pathBigDataFolderLabel,
+    pathBigDataTemplateLabel,
+
+    pathBtnText,
+    pathBtnToolTip,
+
+    // file formats tab
+    formatsTabTitle,
+    formatsTabToolTip,
+    groupFormatsTitle,
+    addSpaceAtLineEnd,
+    defaultZeissFormat,
 
     // converter tab
     converterTabTitle,
-    converterTabToolText,
+    converterTabToolTip,
     converterTabGroupLTOP,
     converterTabGroupZeiss,
+
+    // modules tab
+    modulesTabTitle,
+    modulesTabToolTip,
+
+    // tidy up group
+    modulesTabGroupTitleTidyUp,
+    tidyUpIdentifierFreeStation,
+    tidyUpIdentifierKnownStation,
+    tidyUpIdentifierLTOP,
+    tidyUpIdentifierStakeOut,
+
+    // converter group
+    modulesTabGroupTitleConverter,
+    convertZeroCoordinates,
+    ltopUseZenithDistance,
 
 } // end of Preferences

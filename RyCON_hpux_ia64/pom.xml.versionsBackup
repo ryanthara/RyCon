@@ -38,7 +38,7 @@
                                         <Specification-Vendor>Sebastian Aust</Specification-Vendor>
                                         <Implementation-Version>${maven.build.timestamp.clone}</Implementation-Version>
                                         <Implementation-Vendor>HPUX_IA64</Implementation-Vendor>
-                                        <Main-Class>de.ryanthara.ja.rycon.gui.MainApplication</Main-Class>
+                                        <Main-Class>de.ryanthara.ja.rycon.ui.MainApplication</Main-Class>
                                         <SplashScreen-Image>de/ryanthara/ja/rycon/gui/RyCON.png</SplashScreen-Image>                <Permissions>all-permissions</Permissions>
                                         <Codebase>http://number.ryanthara.de/RyCON</Codebase>
                                         <Application-Name>RyCON</Application-Name>

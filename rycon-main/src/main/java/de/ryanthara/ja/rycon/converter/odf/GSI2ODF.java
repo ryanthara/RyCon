@@ -55,7 +55,8 @@ public class GSI2ODF {
     /**
      * Converts a Leica GSI file element by element into an Open Document Format spreadsheet file.
      *
-     * @param sheetName name of the sheet (file name from input file)
+     * @param sheetName       name of the sheet (file name from input file)
+     * @param writeCommentRow write comment row to the output file
      *
      * @return success conversion success
      */
@@ -78,7 +79,7 @@ public class GSI2ODF {
                     cell = table.getCellByPosition(colIndex, 0);
                     colIndex = colIndex + 1;
 
-                    cell.setStringValue(ResourceBundleUtils.getLangString(WORDINDICES, WordIndices.valueOf("WI"+wordIndex)));
+                    cell.setStringValue(ResourceBundleUtils.getLangString(WORDINDICES, WordIndices.valueOf("WI" + wordIndex)));
                 }
                 rowIndex = rowIndex + 1;
             }

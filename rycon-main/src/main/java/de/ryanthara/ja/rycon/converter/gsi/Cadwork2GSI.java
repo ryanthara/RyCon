@@ -1,7 +1,7 @@
 /*
  * License: GPL. Copyright 2016- (C) by Sebastian Aust (https://www.ryanthara.de/)
  *
- * This file is part of the package de.ryanthara.ja.rycon.tools
+ * This file is part of the package de.ryanthara.ja.rycon.ui.tools
  *
  * This package is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -36,7 +36,7 @@ public class Cadwork2GSI {
      * Constructs a new instance of this class with a parameter for the  {@code ArrayList<String>} with the read line based
      * text files from Cadwork CAD program (node.dat).
      *
-     * @param readStringLines ArrayList<String> with read lines from node.dat file
+     * @param readStringLines {@code ArrayList<String>} with read lines from node.dat file
      */
     public Cadwork2GSI(ArrayList<String> readStringLines) {
         this.readStringLines = readStringLines;
