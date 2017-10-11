@@ -25,10 +25,7 @@ import de.ryanthara.ja.rycon.ui.Sizes;
 import de.ryanthara.ja.rycon.ui.custom.BottomButtonBar;
 import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
 import de.ryanthara.ja.rycon.ui.util.ShellPositioner;
-import de.ryanthara.ja.rycon.ui.widgets.generate.AdminCopyWarnAndErrorMessage;
-import de.ryanthara.ja.rycon.ui.widgets.generate.BigDataCopyWarnAndErrorMessage;
-import de.ryanthara.ja.rycon.ui.widgets.generate.CopyWarnAndErrorMessage;
-import de.ryanthara.ja.rycon.ui.widgets.generate.ProjectCopyWarnAndErrorMessages;
+import de.ryanthara.ja.rycon.ui.widgets.generate.WarnAndErrorType;
 import de.ryanthara.ja.rycon.util.FileUtils;
 import de.ryanthara.ja.rycon.util.OpenInFileManager;
 import org.eclipse.swt.SWT;
@@ -38,8 +35,6 @@ import org.eclipse.swt.widgets.*;
 
 import java.io.IOException;
 import java.nio.file.*;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -47,25 +42,25 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.*;
 import static de.ryanthara.ja.rycon.ui.custom.Status.OK;
 
 /**
- * A widget which is used to generate folders and substructures from template
- * folders in a given folder structure on the server by given point number.
+ * The {@code GeneratorWidget} class represents a complete widget of RyCON,
+ * which is used to generate folders and substructures by a given point number.
  * <p>
- * The {@code GeneratorWidget} is a complete widget of RyCON which is used to
- * generate folders in a given server structure. By a given project number the
- * needed folders will be created and will be opened in the default file manager
- * of the used operating system.
+ * The needed folders will be created based upon a template folder. Afterwards
+ * it is opened in the default file manager of the used operating system.
+ * <p>
+ * Therefore the user has to put the number or text into a text field and
+ * take the choice which kind of folders {@code RyCON} has to generate.
+ * <p>
+ * For better user experience and as note for the user, the recent folders
+ * are shown for administration, big data and project folder.
  *
  * @author sebastian
- * @version 5
+ * @version 6
  * @since 1
  */
-public class GeneratorWidget extends AbstractWidget {
+public final class GeneratorWidget extends AbstractWidget {
 
-    private static final int TYPE_PROJECT = 1;
-    private static final int TYPE_ADMIN = 2;
-    private static final int TYPE_BIG_DATA = 3;
     private final static Logger logger = Logger.getLogger(GeneratorWidget.class.getName());
-    private static Map<Integer, CopyWarnAndErrorMessage> messages;
     private final Shell parent;
     private Button chkBoxCreateAdminFolder;
     private Button chkBoxCreateBigDataFolder;
@@ -73,6 +68,9 @@ public class GeneratorWidget extends AbstractWidget {
     private Button chkBoxOpenFileManager;
     private Text inputNumber;
     private Shell innerShell;
+    private Label adminPath;
+    private Label bigDataPath;
+    private Label projectPath;
 
     /**
      * Constructs a new instance with parameter.
@@ -84,7 +82,6 @@ public class GeneratorWidget extends AbstractWidget {
     public GeneratorWidget(final Shell parent) {
         this.parent = parent;
 
-        initMaps();
         initUI();
     }
 
@@ -105,6 +102,9 @@ public class GeneratorWidget extends AbstractWidget {
             return false;
         } else {
             if (generateFolders(number)) {
+
+                updateNewestFileTextFields();
+
                 // set status text
                 String helper = "";
 
@@ -176,7 +176,7 @@ public class GeneratorWidget extends AbstractWidget {
         innerShell.open();
     }
 
-    private boolean copyFile(String number, String directoryTemplate, int type, Path copyTargetPath) {
+    private boolean copyFile(String number, String directoryTemplate, WarnAndErrorType type, Path copyTargetPath) {
         boolean success = false;
 
         Path copySourcePath = Paths.get(directoryTemplate);
@@ -192,7 +192,7 @@ public class GeneratorWidget extends AbstractWidget {
             logger.log(Level.SEVERE, e.getMessage());
 
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR, ResourceBundleUtils.getLangString(LABELS, Labels.errorTextMsgBox),
-                    messages.get(type).getErrorMessage(number));
+                    type.getErrorMessage().getErrorMessage(number));
         }
 
         return success;
@@ -266,19 +266,19 @@ public class GeneratorWidget extends AbstractWidget {
         Label adminDescription = new Label(group, SWT.NONE);
         adminDescription.setText(ResourceBundleUtils.getLangString(LABELS, Labels.adminDescription));
 
-        Label adminPath = new Label(group, SWT.NONE);
+        adminPath = new Label(group, SWT.NONE);
         adminPath.setText(getAdminPathString());
 
         Label bigDataDescription = new Label(group, SWT.NONE);
         bigDataDescription.setText(ResourceBundleUtils.getLangString(LABELS, Labels.bigDataDescription));
 
-        Label bigDataPath = new Label(group, SWT.NONE);
+        bigDataPath = new Label(group, SWT.NONE);
         bigDataPath.setText(getBigDataPathString());
 
         Label projectDescription = new Label(group, SWT.NONE);
         projectDescription.setText(ResourceBundleUtils.getLangString(LABELS, Labels.projectDescription));
 
-        Label projectPath = new Label(group, SWT.NONE);
+        projectPath = new Label(group, SWT.NONE);
         projectPath.setText(getProjectPathString());
     }
 
@@ -315,14 +315,14 @@ public class GeneratorWidget extends AbstractWidget {
         String dir = Main.pref.getUserPreference(PreferenceKeys.DIR_ADMIN);
         String dirTemplate = Main.pref.getUserPreference(PreferenceKeys.DIR_ADMIN_TEMPLATE);
 
-        return generateFoldersHelper(number, dir, dirTemplate, TYPE_ADMIN);
+        return generateFoldersHelper(number, dir, dirTemplate, WarnAndErrorType.ADMIN);
     }
 
     private boolean generateBigDataFolder(String number) {
         String dir = Main.pref.getUserPreference(PreferenceKeys.DIR_BIG_DATA);
         String dirTemplate = Main.pref.getUserPreference(PreferenceKeys.DIR_BIG_DATA_TEMPLATE);
 
-        return generateFoldersHelper(number, dir, dirTemplate, TYPE_BIG_DATA);
+        return generateFoldersHelper(number, dir, dirTemplate, WarnAndErrorType.BIG_DATA);
     }
 
     private boolean generateFolders(String number) {
@@ -382,7 +382,7 @@ public class GeneratorWidget extends AbstractWidget {
         return isAdminFolderGenerated & isBigDataFolderGenerated & isProjectFolderGenerated;
     }
 
-    private boolean generateFoldersHelper(String number, String directory, String directoryTemplate, int type) {
+    private boolean generateFoldersHelper(String number, String directory, String directoryTemplate, WarnAndErrorType type) {
         boolean success = false;
 
         Path copyTargetPath = Paths.get(directory + FileSystems.getDefault().getSeparator() + number);
@@ -392,7 +392,7 @@ public class GeneratorWidget extends AbstractWidget {
 
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING,
                     ResourceBundleUtils.getLangString(LABELS, Labels.warningTextMsgBox),
-                    messages.get(type).getWarnMessage(number));
+                    type.getErrorMessage().getWarnMessage(number));
         } else {
             success = copyFile(number, directoryTemplate, type, copyTargetPath);
         }
@@ -404,7 +404,7 @@ public class GeneratorWidget extends AbstractWidget {
         String dir = Main.pref.getUserPreference(PreferenceKeys.DIR_PROJECT);
         String dirTemplate = Main.pref.getUserPreference(PreferenceKeys.DIR_PROJECT_TEMPLATE);
 
-        return generateFoldersHelper(number, dir, dirTemplate, TYPE_PROJECT);
+        return generateFoldersHelper(number, dir, dirTemplate, WarnAndErrorType.PROJECT);
     }
 
     private String getAdminPathString() {
@@ -423,13 +423,6 @@ public class GeneratorWidget extends AbstractWidget {
         Path projectPath = Paths.get(Main.pref.getUserPreference(PreferenceKeys.DIR_PROJECT));
 
         return FileUtils.getNewestFolder(projectPath);
-    }
-
-    private void initMaps() {
-        messages = new HashMap<>();
-        messages.put(TYPE_PROJECT, new ProjectCopyWarnAndErrorMessages());
-        messages.put(TYPE_ADMIN, new AdminCopyWarnAndErrorMessage());
-        messages.put(TYPE_BIG_DATA, new BigDataCopyWarnAndErrorMessage());
     }
 
     /**
@@ -493,6 +486,13 @@ public class GeneratorWidget extends AbstractWidget {
         } catch (IOException e) {
             logger.log(Level.WARNING, "can not read directory '02.Vertrag'");
         }
+    }
+
+    private void updateNewestFileTextFields() {
+        System.out.println("UPDATE");
+        adminPath.setText(getAdminPathString());
+        bigDataPath.setText(getBigDataPathString());
+        projectPath.setText(getProjectPathString());
     }
 
 }  // end of GeneratorWidget
