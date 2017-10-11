@@ -17,22 +17,22 @@
  */
 package de.ryanthara.ja.rycon.ui.widgets.generate;
 
-import de.ryanthara.ja.rycon.ui.widgets.GeneratorWidget;
 import de.ryanthara.ja.rycon.i18n.Errors;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 import de.ryanthara.ja.rycon.i18n.Warnings;
+import de.ryanthara.ja.rycon.ui.widgets.GeneratorWidget;
 
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.ERRORS;
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.WARNINGS;
 
 /**
- * Instances of this class holds the warn and error messages of the {@link GeneratorWidget}.
+ * Instances of this class holds the warning and error messages of the {@link GeneratorWidget}.
  *
  * @author sebastian
  * @version 1
  * @since 12
  */
-public class ProjectCopyWarnAndErrorMessages implements CopyWarnAndErrorMessage {
+public final class ProjectCopyWarnAndErrorMessages implements CopyWarnAndErrorMessage {
 
     /**
      * Prepares the error message string for the given project number string.
