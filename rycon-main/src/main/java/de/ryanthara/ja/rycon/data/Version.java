@@ -18,7 +18,10 @@
 package de.ryanthara.ja.rycon.data;
 
 /**
- * Version implements all static information about the current RyCON version.
+ * The {@code Version} class holds static information about the current RyCON version
+ * and it's development cycle.
+ * <p>
+ * With a couple of static methods a simple access to the values is realized.
  * <p>
  * Every new version change of RyCON has to be filled in here! This is necessary
  * because of the online check for a new version of RyCON.
@@ -27,13 +30,13 @@ package de.ryanthara.ja.rycon.data;
  * @version 3
  * @since 1
  */
-public class Version {
+public final class Version {
 
+    private static final String buildDate = "2017-10-10";
     private static final short buildNumber = 25;
-    private static final short majorRelease = 1;
+    private static final short majorRelease = 2;
     private static final short minorRelease = 0;
     private static final short patchLevel = 0;
-    private static final String buildDate = "2017-05-03";
 
     /**
      * Returns the build date of RyCON as string.
@@ -81,9 +84,9 @@ public class Version {
     }
 
     /**
-     * Returns the current version of RyCON as string value (major.minor.patch).
+     * Returns the current version of RyCON as string value (major.minor.patch_level).
      *
-     * @return the major.minor.patch as version string
+     * @return the {@code major.minor.patch_level} as concatenated version string
      */
     public static String getVersion() {
         return Short.toString(majorRelease) + "." + Short.toString(minorRelease) + "." + Short.toString(patchLevel);
