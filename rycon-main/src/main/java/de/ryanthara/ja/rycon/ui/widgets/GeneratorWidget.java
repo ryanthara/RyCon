@@ -40,6 +40,7 @@ import java.util.logging.Logger;
 
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.*;
 import static de.ryanthara.ja.rycon.ui.custom.Status.OK;
+import static de.ryanthara.ja.rycon.ui.custom.Status.WARNING;
 
 /**
  * The {@code GeneratorWidget} class represents a complete widget of RyCON,
@@ -231,7 +232,7 @@ public final class GeneratorWidget extends AbstractWidget {
         Group group = new Group(innerShell, SWT.NONE);
         group.setText(ResourceBundleUtils.getLangString(LABELS, Labels.newestFolderText));
 
-        GridLayout gridLayout = new GridLayout(2, true);
+        GridLayout gridLayout = new GridLayout(2, false);
 
         GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
         gridData.widthHint = width - 24;
@@ -245,17 +246,32 @@ public final class GeneratorWidget extends AbstractWidget {
         adminPath = new Label(group, SWT.NONE);
         adminPath.setText(getAdminPathString());
 
+        gridData = new GridData();
+        gridData.grabExcessHorizontalSpace = true;
+        gridData.horizontalAlignment = GridData.FILL;
+        adminPath.setLayoutData(gridData);
+
         Label bigDataDescription = new Label(group, SWT.NONE);
         bigDataDescription.setText(ResourceBundleUtils.getLangString(LABELS, Labels.bigDataDescription));
 
         bigDataPath = new Label(group, SWT.NONE);
         bigDataPath.setText(getBigDataPathString());
 
+        gridData = new GridData();
+        gridData.grabExcessHorizontalSpace = true;
+        gridData.horizontalAlignment = GridData.FILL;
+        bigDataPath.setLayoutData(gridData);
+
         Label projectDescription = new Label(group, SWT.NONE);
         projectDescription.setText(ResourceBundleUtils.getLangString(LABELS, Labels.projectDescription));
 
         projectPath = new Label(group, SWT.NONE);
         projectPath.setText(getProjectPathString());
+
+        gridData = new GridData();
+        gridData.grabExcessHorizontalSpace = true;
+        gridData.horizontalAlignment = GridData.FILL;
+        projectPath.setLayoutData(gridData);
     }
 
     private void createGroupOptions(int width) {
@@ -320,42 +336,44 @@ public final class GeneratorWidget extends AbstractWidget {
             isProjectFolderGenerated = generateProjectFolder(number);
         }
 
-        String message = "";
+        if (isAdminFolderGenerated || isBigDataFolderGenerated || isProjectFolderGenerated) {
+            String message = "";
 
-        if (isAdminFolderGenerated && isBigDataFolderGenerated && isProjectFolderGenerated) {
-            message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.adminAndBigDataAndProjectGenerated), number);
-        } else if (isAdminFolderGenerated && isBigDataFolderGenerated) {
-            message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.adminAndBigDataGenerated), number);
-        } else if (isAdminFolderGenerated && isProjectFolderGenerated) {
-            message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.adminAndProjectGenerated), number);
-        } else if (isBigDataFolderGenerated && isProjectFolderGenerated) {
-            message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.bigDataAndProjectGenerated), number);
-        } else if (isAdminFolderGenerated) {
-            message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.adminFolderGenerated), number);
-        } else if (isBigDataFolderGenerated) {
-            message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.bigDataFolderGenerated), number);
-        } else if (isProjectFolderGenerated) {
-            message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.projectFolderGenerated), number);
-        }
-
-        MessageBoxes.showMessageBox(innerShell, SWT.ICON_INFORMATION,
-                ResourceBundleUtils.getLangString(LABELS, Labels.informationTextMsgBox), message);
-
-        if (chkBoxOpenFileManager.getSelection()) {
-            final String delimiter = FileSystems.getDefault().getSeparator();
-
-            if (isAdminFolderGenerated) {
-                final String path = Main.pref.getUserPreference(PreferenceKeys.DIR_ADMIN) + delimiter + number;
-
-                OpenInFileManager.openFolder(path);
+            if (isAdminFolderGenerated && isBigDataFolderGenerated && isProjectFolderGenerated) {
+                message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.adminAndBigDataAndProjectGenerated), number);
+            } else if (isAdminFolderGenerated && isBigDataFolderGenerated) {
+                message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.adminAndBigDataGenerated), number);
+            } else if (isAdminFolderGenerated && isProjectFolderGenerated) {
+                message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.adminAndProjectGenerated), number);
+            } else if (isBigDataFolderGenerated && isProjectFolderGenerated) {
+                message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.bigDataAndProjectGenerated), number);
+            } else if (isAdminFolderGenerated) {
+                message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.adminFolderGenerated), number);
             } else if (isBigDataFolderGenerated) {
-                final String path = Main.pref.getUserPreference(PreferenceKeys.DIR_BIG_DATA) + delimiter + number;
-
-                OpenInFileManager.openFolder(path);
+                message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.bigDataFolderGenerated), number);
             } else if (isProjectFolderGenerated) {
-                final String path = Main.pref.getUserPreference(PreferenceKeys.DIR_PROJECT) + delimiter + number;
+                message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.projectFolderGenerated), number);
+            }
 
-                OpenInFileManager.openFolder(path);
+            MessageBoxes.showMessageBox(innerShell, SWT.ICON_INFORMATION,
+                    ResourceBundleUtils.getLangString(LABELS, Labels.informationTextMsgBox), message);
+
+            if (chkBoxOpenFileManager.getSelection()) {
+                final String delimiter = FileSystems.getDefault().getSeparator();
+
+                if (isAdminFolderGenerated) {
+                    final String path = Main.pref.getUserPreference(PreferenceKeys.DIR_ADMIN) + delimiter + number;
+
+                    OpenInFileManager.openFolder(path);
+                } else if (isBigDataFolderGenerated) {
+                    final String path = Main.pref.getUserPreference(PreferenceKeys.DIR_BIG_DATA) + delimiter + number;
+
+                    OpenInFileManager.openFolder(path);
+                } else if (isProjectFolderGenerated) {
+                    final String path = Main.pref.getUserPreference(PreferenceKeys.DIR_PROJECT) + delimiter + number;
+
+                    OpenInFileManager.openFolder(path);
+                }
             }
         }
     }
@@ -366,7 +384,7 @@ public final class GeneratorWidget extends AbstractWidget {
         Path copyTargetPath = Paths.get(directory + FileSystems.getDefault().getSeparator() + number);
 
         if (Files.exists(copyTargetPath)) {
-            Main.statusBar.setStatus("", OK);
+            Main.statusBar.setStatus("", WARNING);
 
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING,
                     ResourceBundleUtils.getLangString(LABELS, Labels.warningTextMsgBox),
