@@ -101,36 +101,12 @@ public final class GeneratorWidget extends AbstractWidget {
 
             return false;
         } else {
-            if (generateFolders(number)) {
+            generateFolders(number);
 
-                updateNewestFileTextFields();
-
-                // set status text
-                String helper = "";
-
-                if (chkBoxCreateAdminFolder.getSelection() && chkBoxCreateBigDataFolder.getSelection() && chkBoxCreateProjectFolder.getSelection()) {
-                    helper = ResourceBundleUtils.getLangString(MESSAGES, Messages.adminAndBigDataAndProjectGenerated);
-                } else if (chkBoxCreateAdminFolder.getSelection() && chkBoxCreateBigDataFolder.getSelection()) {
-                    helper = ResourceBundleUtils.getLangString(MESSAGES, Messages.adminAndBigDataGenerated);
-                } else if (chkBoxCreateAdminFolder.getSelection() && chkBoxCreateProjectFolder.getSelection()) {
-                    helper = ResourceBundleUtils.getLangString(MESSAGES, Messages.adminAndProjectGenerated);
-                } else if (chkBoxCreateBigDataFolder.getSelection() && chkBoxCreateProjectFolder.getSelection()) {
-                    helper = ResourceBundleUtils.getLangString(MESSAGES, Messages.bigDataAndProjectGenerated);
-                } else if (chkBoxCreateAdminFolder.getSelection()) {
-                    helper = ResourceBundleUtils.getLangString(MESSAGES, Messages.adminFolderGenerated);
-                } else if (chkBoxCreateBigDataFolder.getSelection()) {
-                    helper = ResourceBundleUtils.getLangString(MESSAGES, Messages.bigDataFolderGenerated);
-                } else if (chkBoxCreateProjectFolder.getSelection()) {
-                    helper = ResourceBundleUtils.getLangString(MESSAGES, Messages.projectFolderGenerated);
-                }
-
-                final String status = String.format(helper, number);
-
-                Main.statusBar.setStatus(status, OK);
-            }
-
-            return true;
+            updateNewestFileTextFields();
         }
+
+        return true;
     }
 
     void actionBtnOkAndExit() {
@@ -325,7 +301,7 @@ public final class GeneratorWidget extends AbstractWidget {
         return generateFoldersHelper(number, dir, dirTemplate, WarnAndErrorType.BIG_DATA);
     }
 
-    private boolean generateFolders(String number) {
+    private void generateFolders(String number) {
         boolean isAdminFolderGenerated = false;
         boolean isBigDataFolderGenerated = false;
         boolean isProjectFolderGenerated = false;
@@ -335,9 +311,11 @@ public final class GeneratorWidget extends AbstractWidget {
 
             renameSpecialFiles(number);
         }
+
         if (chkBoxCreateBigDataFolder.getSelection()) {
             isBigDataFolderGenerated = generateBigDataFolder(number);
         }
+
         if (chkBoxCreateProjectFolder.getSelection()) {
             isProjectFolderGenerated = generateProjectFolder(number);
         }
@@ -363,23 +341,23 @@ public final class GeneratorWidget extends AbstractWidget {
         MessageBoxes.showMessageBox(innerShell, SWT.ICON_INFORMATION,
                 ResourceBundleUtils.getLangString(LABELS, Labels.informationTextMsgBox), message);
 
-        final String delimiter = FileSystems.getDefault().getSeparator();
+        if (chkBoxOpenFileManager.getSelection()) {
+            final String delimiter = FileSystems.getDefault().getSeparator();
 
-        if (isAdminFolderGenerated & chkBoxOpenFileManager.getSelection()) {
-            final String path = Main.pref.getUserPreference(PreferenceKeys.DIR_ADMIN) + delimiter + number;
+            if (isAdminFolderGenerated) {
+                final String path = Main.pref.getUserPreference(PreferenceKeys.DIR_ADMIN) + delimiter + number;
 
-            OpenInFileManager.openFolder(path);
-        } else if (isBigDataFolderGenerated & chkBoxOpenFileManager.getSelection()) {
-            final String path = Main.pref.getUserPreference(PreferenceKeys.DIR_BIG_DATA) + delimiter + number;
+                OpenInFileManager.openFolder(path);
+            } else if (isBigDataFolderGenerated) {
+                final String path = Main.pref.getUserPreference(PreferenceKeys.DIR_BIG_DATA) + delimiter + number;
 
-            OpenInFileManager.openFolder(path);
-        } else if (isProjectFolderGenerated & chkBoxOpenFileManager.getSelection()) {
-            final String path = Main.pref.getUserPreference(PreferenceKeys.DIR_PROJECT) + delimiter + number;
+                OpenInFileManager.openFolder(path);
+            } else if (isProjectFolderGenerated) {
+                final String path = Main.pref.getUserPreference(PreferenceKeys.DIR_PROJECT) + delimiter + number;
 
-            OpenInFileManager.openFolder(path);
+                OpenInFileManager.openFolder(path);
+            }
         }
-
-        return isAdminFolderGenerated & isBigDataFolderGenerated & isProjectFolderGenerated;
     }
 
     private boolean generateFoldersHelper(String number, String directory, String directoryTemplate, WarnAndErrorType type) {
@@ -489,7 +467,6 @@ public final class GeneratorWidget extends AbstractWidget {
     }
 
     private void updateNewestFileTextFields() {
-        System.out.println("UPDATE");
         adminPath.setText(getAdminPathString());
         bigDataPath.setText(getBigDataPathString());
         projectPath.setText(getProjectPathString());
