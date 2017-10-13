@@ -43,9 +43,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
 import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,6 +53,8 @@ import java.util.logging.Logger;
 
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.*;
 import static de.ryanthara.ja.rycon.ui.custom.Status.OK;
+import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
+import static java.nio.file.StandardWatchEventKinds.ENTRY_DELETE;
 
 // TODO: 12.08.17  implement clean and elegant workflow and error handling path
 // - no card available
@@ -518,8 +518,10 @@ public class TransferWidget extends AbstractWidget {
         Label cardReaderLabel = new Label(group, SWT.NONE);
         cardReaderLabel.setText(ResourceBundleUtils.getLangString(LABELS, Labels.cardReaderPath));
 
+        Path cardReader = Paths.get(Main.pref.getUserPreference(PreferenceKeys.DIR_CARD_READER));
+
         cardReaderPath = new Text(group, SWT.SINGLE | SWT.BORDER);
-        cardReaderPath.setText(Main.pref.getUserPreference(PreferenceKeys.DIR_CARD_READER));
+        cardReaderPath.setText(cardReader.toString());
 
         // platform independent key handling for ENTER, TAB, ...
         // TODO change bad listener with a better one
@@ -539,6 +541,8 @@ public class TransferWidget extends AbstractWidget {
 
         // reacts on keyboard or clipboard input for updating the lists
         cardReaderPath.addModifyListener(arg0 -> checkCardReaderPathAndUpdateListsAndPreferences());
+
+        addCardReaderPathListener(cardReader);
 
         gridData = new GridData();
         gridData.grabExcessHorizontalSpace = true;
@@ -564,6 +568,30 @@ public class TransferWidget extends AbstractWidget {
         };
 
         group.setTabList(tabulatorKeyOrder);
+    }
+
+    private void addCardReaderPathListener(Path dir) {
+        try {
+            WatchService watcher = dir.getFileSystem().newWatchService();
+            dir.register(watcher,
+                    ENTRY_CREATE,
+                    StandardWatchEventKinds.ENTRY_MODIFY,
+                    ENTRY_DELETE);
+
+            WatchKey watchKey = watcher.take();
+
+            java.util.List<WatchEvent<?>> events = watchKey.pollEvents();
+            for (WatchEvent event : events) {
+                if (event.kind().name().equals(ENTRY_CREATE.name())) {
+                    System.out.println("Someone just created the file '" + event.context().toString() + "'.");
+                } else if (event.kind().name().equals(ENTRY_DELETE.name())) {
+                    System.out.println("Someone just delete the file '" + event.context().toString() + "'.");
+                }
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error: " + e.toString());
+        }
     }
 
     private void createGroupChooseData(int width) {
