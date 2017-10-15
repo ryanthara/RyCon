@@ -18,6 +18,7 @@
 package de.ryanthara.ja.rycon.ui;
 
 import de.ryanthara.ja.rycon.Main;
+import de.ryanthara.ja.rycon.check.PathCheck;
 import de.ryanthara.ja.rycon.data.DefaultKeys;
 import de.ryanthara.ja.rycon.data.PreferenceKeys;
 import de.ryanthara.ja.rycon.data.Version;
@@ -152,8 +153,22 @@ public class MainApplication extends Main {
     }
 
     private void actionBtn02() {
-        new TransferWidget(shell);
-        statusBar.setStatus(ResourceBundleUtils.getLangString(LABELS, Labels.transferInitialized), OK);
+        Path cardReaderPath = Paths.get(Main.pref.getUserPreference(PreferenceKeys.DIR_CARD_READER));
+
+        if (PathCheck.directoryExists(cardReaderPath)) {
+            try {
+                if (PathCheck.directoryContainsSubfolder(cardReaderPath, 1)) {
+                    new TransferWidget(shell);
+                    statusBar.setStatus(ResourceBundleUtils.getLangString(LABELS, Labels.transferInitialized), OK);
+                } else {
+                    MessageBoxes.showMessageBox(shell, SWT.ICON_WARNING,
+                            ResourceBundleUtils.getLangString(WARNINGS, Warnings.noCardReaderExistsText),
+                            ResourceBundleUtils.getLangString(WARNINGS, Warnings.noCardReaderExistsMessage));
+                }
+            } catch (IOException e) {
+                logger.log(Level.SEVERE, "Card reader path doesn't contains subfolder for level 1");
+            }
+        }
     }
 
     private void actionBtn03() {
