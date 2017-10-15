@@ -592,7 +592,7 @@ public class MainApplication extends Main {
 
         Display.setAppName(appName);
 
-        display = new Display();
+        display = Display.getDefault();
 
         if (SWT.getPlatform().equals("cocoa")) {
             Listener aboutListener = event -> about();
@@ -758,8 +758,6 @@ public class MainApplication extends Main {
         System.out.println(Main.pref.getUserPreference(PreferenceKeys.DIR_CARD_READER_DATA_FILES));
         System.out.println(Main.pref.getUserPreference(PreferenceKeys.DIR_CARD_READER_EXPORT_FILES));
 
-        System.out.println(Main.pref.getUserPreference(PreferenceKeys.GENERATOR));
-
         System.out.println(DefaultKeys.values().length);
 
         try {
@@ -784,46 +782,6 @@ public class MainApplication extends Main {
         } catch (BackingStoreException e) {
             e.printStackTrace();
         }
-
-/*
-        Path dir = Paths.get("/Users/sebastian/Coder/_RyCON/Entwicklung/CF-Card");
-
-        System.out.println(dir.toFile().exists());
-
-        System.out.println("Now watching the current directory ...");
-
-        try {
-            WatchService watcher = dir.getFileSystem().newWatchService();
-            dir.register(watcher,
-                    ENTRY_CREATE,
-                    StandardWatchEventKinds.ENTRY_MODIFY,
-                    StandardWatchEventKinds.ENTRY_DELETE);
-
-            WatchKey watchKey = watcher.take();
-
-            List<WatchEvent<?>> events = watchKey.pollEvents();
-            for (WatchEvent event : events) {
-                if (event.kind().name().equals(ENTRY_CREATE.name())) {
-                    System.out.println("Someone just created the file '" + event.context().toString() + "'.");
-                } else if (event.kind().name().equals(ENTRY_DELETE.name())) {
-                    System.out.println("Someone just delete the file '" + event.context().toString() + "'.");
-                }
-            }
-
-        } catch (Exception e) {
-            System.out.println("Error: " + e.toString());
-        }
-*/
-
-
-
-        /*
-        Main.pref.setUserPreference(PreferenceKeys.DIR_PROJECT_LOG_FILES, "08.Bearb_Rapp/Messdaten/LOG");
-        Main.pref.setUserPreference(PreferenceKeys.DIR_PROJECT_MEASUREMENT_FILES, "08.Bearb_Rapp/Messdaten/GSI");
-        Main.pref.setUserPreference(PreferenceKeys.DIR_PROJECT_JOB_FILES, "08.Bearb_Rapp/Messdaten/DBX");
-        */
-        //Main.pref.setUserPreference(PreferenceKeys.LAST_USED_PROJECTS, "[]");
-        //Main.pref.setUserPreference(PreferenceKeys.OVERWRITE_EXISTING, "true");
 
     }
 
