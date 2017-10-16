@@ -18,8 +18,11 @@
 package de.ryanthara.ja.rycon.check;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.*;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The {@code PathCheck} implements different kind of checks for {@link Path} objects.
@@ -31,7 +34,31 @@ import java.util.ArrayList;
  * @version 2
  * @since 12
  */
-public class PathCheck {
+public final class PathCheck {
+
+    /**
+     * Checks if a given {@code Path URL} contains subfolder with the maximum depth give by parameter.
+     *
+     * @param directoryToCheck path to be checked
+     * @param maxDepth         maximum depth to search for subfolder
+     *
+     * @return true if directory contains subfolder
+     *
+     * @throws IOException
+     */
+    public static boolean directoryContainsSubfolder(Path directoryToCheck, int maxDepth) throws IOException {
+        List<Path> subfolder = Files.walk(directoryToCheck, maxDepth)
+                .filter(Files::isDirectory)
+                .collect(Collectors.toList());
+
+        subfolder.remove(0);
+
+        if (subfolder.size() > 0) {
+            return true;
+        }
+
+        return false;
+    }
 
     /**
      * Checks a given {@code Path URL} to be an existing and valid directory.
