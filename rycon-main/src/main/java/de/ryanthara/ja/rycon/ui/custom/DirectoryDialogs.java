@@ -33,7 +33,7 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.ERRORS;
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LABELS;
 
 /**
- * This class implements a simple static access to swt {@link DirectoryDialog} and it's functionality to RyCON.
+ * This class implements a simple static access to swt {@link DirectoryDialog} and it's functionality for RyCON.
  *
  * @author sebastian
  * @version 1
@@ -42,17 +42,20 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LABELS;
 public class DirectoryDialogs {
 
     private static void handlePath(Shell innerShell, Text textField, String pathAsString) {
-        if ((pathAsString != null) && (Files.exists(Paths.get(pathAsString)))) {
-            textField.setText(pathAsString);
-        } else {
-            MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING,
-                    ResourceBundleUtils.getLangString(LABELS, Labels.warningTextMsgBox),
-                    ResourceBundleUtils.getLangString(ERRORS, Errors.directoryNotFound));
+        // check for hitting the cancel button
+        if (pathAsString != null) {
+            if (Files.exists(Paths.get(pathAsString))) {
+                textField.setText(pathAsString);
+            } else {
+                MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING,
+                        ResourceBundleUtils.getLangString(LABELS, Labels.warningTextMsgBox),
+                        ResourceBundleUtils.getLangString(ERRORS, Errors.directoryNotFound));
+            }
         }
     }
 
     /**
-     * Shows a {@link DirectoryDialog} which is used in different widgets of RyCON's ui.
+     * Shows a {@link DirectoryDialog} which is used in different widgets of RyCON's graphical user interface.
      * <p>
      * The filter path is checked against a stored value in the pref file of RyCON.
      *
@@ -68,7 +71,9 @@ public class DirectoryDialogs {
         directoryDialog.setMessage(message);
         directoryDialog.setFilterPath(PreferenceHandler.checkUserPrefPathExist(checkedFilterPath));
 
-        handlePath(innerShell, textField, directoryDialog.open());
+        final String dir = directoryDialog.open();
+
+        handlePath(innerShell, textField, dir);
     }
 
 } // end of DirectoryDialogs
