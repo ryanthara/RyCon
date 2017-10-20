@@ -22,7 +22,7 @@ package de.ryanthara.ja.rycon.i18n;
  * for {@code RyCON}.
  * <p>
  * This enumeration is used for encapsulating the data. The access to the different
- * is done in the class {@link ResourceBundleUtils}.
+ * resource bundles is done in the class {@link ResourceBundleUtils}.
  *
  * @author sebastian
  * @version 1
@@ -51,6 +51,11 @@ public enum ResourceBundles {
         return bundleName;
     }
 
+    /**
+     * Returns the bundle name and the bundle string.
+     *
+     * @return concat bundle name string
+     */
     @Override
     public String toString() {
         return bundleName;
