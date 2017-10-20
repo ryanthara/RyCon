@@ -47,6 +47,11 @@ public enum ResourceBundles {
         this.bundleName = bundleName;
     }
 
+    /**
+     * Returns the bundle name string.
+     *
+     * @return bundle name string
+     */
     public String getBundleName() {
         return bundleName;
     }
@@ -58,7 +63,7 @@ public enum ResourceBundles {
      */
     @Override
     public String toString() {
-        return bundleName;
+        return super.toString() + " " + bundleName;
     }
 
 } // end of ResourceBundles
