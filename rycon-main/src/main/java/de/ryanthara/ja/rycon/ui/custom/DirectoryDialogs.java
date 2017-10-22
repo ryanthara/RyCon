@@ -42,15 +42,12 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LABELS;
 public class DirectoryDialogs {
 
     private static void handlePath(Shell innerShell, Text textField, String pathAsString) {
-        // check for hitting the cancel button
-        if (pathAsString != null) {
-            if (Files.exists(Paths.get(pathAsString))) {
-                textField.setText(pathAsString);
-            } else {
-                MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING,
-                        ResourceBundleUtils.getLangString(LABELS, Labels.warningTextMsgBox),
-                        ResourceBundleUtils.getLangString(ERRORS, Errors.directoryNotFound));
-            }
+        if (Files.exists(Paths.get(pathAsString))) {
+            textField.setText(pathAsString);
+        } else {
+            MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING,
+                    ResourceBundleUtils.getLangString(LABELS, Labels.warningTextMsgBox),
+                    ResourceBundleUtils.getLangString(ERRORS, Errors.directoryNotFound));
         }
     }
 
@@ -73,7 +70,10 @@ public class DirectoryDialogs {
 
         final String dir = directoryDialog.open();
 
-        handlePath(innerShell, textField, dir);
+        // check for hitting the cancel button
+        if (dir != null) {
+            handlePath(innerShell, textField, dir);
+        }
     }
 
 } // end of DirectoryDialogs
