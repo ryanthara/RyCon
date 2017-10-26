@@ -67,7 +67,7 @@ public final class PathCheck {
      *
      * @throws IllegalArgumentException is thrown if directory is null or an empty String
      */
-    public static boolean directoryExists(final Path directoryToCheck) throws IllegalArgumentException {
+    public static boolean directoryExists(final Path directoryToCheck) {
         if (directoryToCheck == null) {
             throw new IllegalArgumentException();
         }
@@ -165,6 +165,17 @@ public final class PathCheck {
         }
 
         return temp.toArray(new Path[temp.size()]);
+    }
+
+    /**
+     * Checks a given {@code Path} if it exists in the file system and is readable.
+     *
+     * @param path path to be checked
+     *
+     * @return true if path exists in the file system and is readable
+     */
+    public static boolean isReadable(Path path) {
+        return fileExists(path) || Files.isReadable(path);
     }
 
     /**
