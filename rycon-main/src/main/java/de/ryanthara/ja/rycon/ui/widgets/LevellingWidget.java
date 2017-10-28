@@ -20,7 +20,7 @@ package de.ryanthara.ja.rycon.ui.widgets;
 import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.util.check.PathCheck;
 import de.ryanthara.ja.rycon.util.check.TextCheck;
-import de.ryanthara.ja.rycon.core.converter.gsi.Nigra2GSI;
+import de.ryanthara.ja.rycon.core.converter.gsi.Nigra2Gsi;
 import de.ryanthara.ja.rycon.core.GsiLevelling2Cad;
 import de.ryanthara.ja.rycon.data.PreferenceKeys;
 import de.ryanthara.ja.rycon.i18n.*;
@@ -333,8 +333,8 @@ public class LevellingWidget extends AbstractWidget {
                     GsiLevelling2Cad gsiLevelling2Cad = new GsiLevelling2Cad(readFile);
                     writeFile = gsiLevelling2Cad.processLevelling2Cad(holdChangePoints);
                 } else if (fileNameAndSuffix[1].equalsIgnoreCase("ASC")) {
-                    Nigra2GSI nigra2GSI = new Nigra2GSI(readFile);
-                    writeFile = nigra2GSI.convertNIGRA2GSI(Main.getGSI16());
+                    Nigra2Gsi nigra2Gsi = new Nigra2Gsi(readFile);
+                    writeFile = nigra2Gsi.convertNIGRA2GSI(Main.getGSI16());
                 } else {
                     System.err.println("File " + file2read.getFileName() + " is not supported (yet).");
                     break;

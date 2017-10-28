@@ -29,7 +29,7 @@ import java.util.StringTokenizer;
  * @version 1
  * @since 12
  */
-public class Nigra2GSI {
+public class Nigra2Gsi {
 
     private ArrayList<String> readStringLines;
 
@@ -38,7 +38,7 @@ public class Nigra2GSI {
      *
      * @param readStringLines read lines
      */
-    public Nigra2GSI(ArrayList<String> readStringLines) {
+    public Nigra2Gsi(ArrayList<String> readStringLines) {
         this.readStringLines = readStringLines;
     }
 
@@ -86,4 +86,4 @@ public class Nigra2GSI {
         return BaseToolsGsi.lineTransformation(isGSI16, blocksInLines);
     }
 
-} // end of Nigra2GSI
+} // end of Nigra2Gsi

@@ -31,7 +31,7 @@ import java.util.Iterator;
  * @version 2
  * @since 12
  */
-public class GSITidyUp {
+public class GsiTidyUp {
 
     private ArrayList<String> readStringLines;
 
@@ -40,7 +40,7 @@ public class GSITidyUp {
      *
      * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
      */
-    public GSITidyUp(ArrayList<String> readStringLines) {
+    public GsiTidyUp(ArrayList<String> readStringLines) {
         this.readStringLines = readStringLines;
     }
 
@@ -193,4 +193,4 @@ public class GSITidyUp {
         return result;
     }
 
-} // end of GSITidyUp
+} // end of GsiTidyUp

@@ -20,9 +20,9 @@ package de.ryanthara.ja.rycon.ui.widgets;
 
 import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.core.GsiLtopClean;
+import de.ryanthara.ja.rycon.core.GsiTidyUp;
 import de.ryanthara.ja.rycon.util.check.PathCheck;
 import de.ryanthara.ja.rycon.util.check.TextCheck;
-import de.ryanthara.ja.rycon.core.GSITidyUp;
 import de.ryanthara.ja.rycon.core.LogfileClean;
 import de.ryanthara.ja.rycon.data.PreferenceKeys;
 import de.ryanthara.ja.rycon.i18n.*;
@@ -327,7 +327,7 @@ public class TidyUpWidget extends AbstractWidget {
                     writeFile = gsiLtopClean.processLTOPClean();
                     file2write = path.toString().substring(0, path.toString().length() - 4) + "_" + ltopString + ".GSI";
                 } else if (fileName.toUpperCase().endsWith("GSI")) {
-                    GSITidyUp gsiTidyUp = new GSITidyUp(readFile);
+                    GsiTidyUp gsiTidyUp = new GsiTidyUp(readFile);
                     writeFile = gsiTidyUp.processTidyUp(holdStations, holdControlPoints);
                     file2write = path.toString().substring(0, path.toString().length() - 4) + "_" + editString + ".GSI";
                 } else if (fileName.toUpperCase().endsWith("LOGFILE.TXT")) {
