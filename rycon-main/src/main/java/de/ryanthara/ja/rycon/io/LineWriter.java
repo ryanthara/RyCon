@@ -18,32 +18,39 @@
 package de.ryanthara.ja.rycon.io;
 
 import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- * Instances of this class provides functions to write an {@code ArrayList<String>} line by line into a file.
+ * Instances of this class provide functions to write an {@code ArrayList<String>} line by line into a file.
  * <p>
  * A couple of things are implemented as additional functionality. At the moment, there is no thread safety
  * implemented or planed.
+ * <p>
+ * With version 4 {@link LineWriter} is using only java.nio functions.
  *
  * @author sebastian
- * @version 3
+ * @version 4
  * @since 1
  */
-public class LineWriter {
+public final class LineWriter {
 
-    private final String fileName;
+    private final static Logger logger = Logger.getLogger(LineWriter.class.getName());
+
+    private final Path fileName;
     private int writtenLines = -1;
 
     /**
-     * Constructs a new instance of this class with the filename as {@code String} parameter.
+     * Constructs a new instance of this class with the filename as {@code Path} parameter.
      *
-     * @param fileName filename as {@code String}
+     * @param fileName filename as {@code Path}
      */
-    public LineWriter(String fileName) {
+    public LineWriter(final Path fileName) {
         this.fileName = fileName;
     }
 
@@ -59,36 +66,38 @@ public class LineWriter {
 
     /**
      * Writes a given {@code ArrayList<String>} line by line to the file system.
+     * <p>
+     * This second version of the writeFile method uses java.nio functions to write the file
+     * buffered to the file system.
      *
-     * @param lines given list to write into the file
+     * @param lines lines to be written to the file
      *
-     * @return success true if the file is written successfully
+     * @return write file success - true if the file was written otherwise false
      *
-     * @throws IllegalArgumentException Throws an {@link IllegalArgumentException} when the lines parameter is null
+     * @throws IllegalArgumentException throws an {@link IllegalArgumentException} when the lines parameter is null
      */
-    public boolean writeFile(ArrayList<String> lines) {
+    public boolean writeFile(final ArrayList<String> lines) {
         boolean success = false;
-        PrintWriter pw = null;
 
         if (lines == null) {
             throw new IllegalArgumentException();
-        }
+        } else {
+            final Charset charset = Charset.forName("UTF-8");
 
-        try {
-            pw = new PrintWriter(new BufferedWriter(new FileWriter(fileName)), true);
+            writtenLines = 0;
 
-            for (String line : lines) {
-                pw.println(line);
-                writtenLines = writtenLines + 1;
-            }
-        } catch (IOException e) {
-            System.err.format("File %s could not be written to the file system.", fileName);
-            e.printStackTrace();
-        } finally {
-            if (pw != null) {
-                pw.close();
-                writtenLines = writtenLines + 1;
+            try (BufferedWriter writer = Files.newBufferedWriter(fileName, charset)) {
+                for (String line : lines) {
+                    writer.write(line);
+                    writer.newLine();
+
+                    writtenLines = writtenLines + 1;
+                }
+
                 success = true;
+            } catch (IOException e) {
+                logger.log(Level.SEVERE, "IOException occurred while file writing in line " + writtenLines + ". ");
+                logger.log(Level.SEVERE, e.getMessage());
             }
         }
 
