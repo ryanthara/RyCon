@@ -57,13 +57,7 @@ public class PreferenceHandler implements PreferenceChangeListener {
     public PreferenceHandler() {
         userPreferences = Preferences.userRoot().node("/de/ryanthara/rycon");
 
-        if (!getUserPreference(PreferenceKeys.GENERATOR).equals(ResourceBundleUtils.getLangString(ResourceBundles.LABELS, Labels.applicationName))) {
-            createDefaultSettings();
-
-            isDefaultSettingsGenerated = true;
-
-            logger.log(Level.INFO, "default settings generated");
-        }
+        initKeys();
 
         // add listener to the node and not to an instance of it!
         Preferences.userRoot().node("/de/ryanthara/rycon").addPreferenceChangeListener(this);
@@ -81,13 +75,15 @@ public class PreferenceHandler implements PreferenceChangeListener {
      * @return checked path from user preference
      */
     public static String checkUserPrefPathExist(String pathToBeChecked) {
-        if (Files.exists(Paths.get(pathToBeChecked))) {
-            return pathToBeChecked;
-        } else if (Files.exists(Paths.get(PreferenceKeys.DIR_BASE.name()))) {
-            return PreferenceKeys.DIR_BASE.name();
-        } else {
-            return System.getenv().get("HOME");
+        if (pathToBeChecked != null) {
+            if (Files.exists(Paths.get(pathToBeChecked))) {
+                return pathToBeChecked;
+            } else if (Files.exists(Paths.get(PreferenceKeys.DIR_BASE.name()))) {
+                return PreferenceKeys.DIR_BASE.name();
+            }
         }
+
+        return System.getenv().get("HOME");
     }
 
     /**
@@ -106,9 +102,9 @@ public class PreferenceHandler implements PreferenceChangeListener {
      *
      * @param position array position
      *
-     * @return
+     * @return system preference as string
      */
-    public String getUserPref(int position) {
+    public String getUserPreference(int position) {
         String key = null;
 
         try {
@@ -127,7 +123,7 @@ public class PreferenceHandler implements PreferenceChangeListener {
      *
      * @param preference reference to the preference to be read
      *
-     * @return system preference as String
+     * @return system preference as string
      *
      * @since 3
      */
@@ -168,6 +164,8 @@ public class PreferenceHandler implements PreferenceChangeListener {
 
     /**
      * Removes the user preference by a given key.
+     * <p>
+     * This function is used only for development issues of RyCON.
      *
      * @param key key of the user preference to be removed
      */
@@ -176,11 +174,11 @@ public class PreferenceHandler implements PreferenceChangeListener {
     }
 
     /**
-     * Removes a set of user preferences by a array of given keys.
+     * Removes a set of user preferences by an array of given keys.
      *
      * @param keys key of the user preference to be removed
      */
-    public void removeUserPreference(String[] keys) {
+    private void removeUserPreference(String[] keys) {
         for (String key : keys) {
             userPreferences.remove(key);
         }
@@ -204,13 +202,31 @@ public class PreferenceHandler implements PreferenceChangeListener {
     }
 
     /**
-     * Fills in the default values for RyCON into user pref.
+     * Fills in the default values for RyCON into user preference.
      * <p>
-     * Default settings are generated for the following parameters (parameter name - value).
+     * Default settings are generated for the following parameters (parameter name - value):
+     * <p>
+     * <h3>General settings</h3>
      * <ul>
+     * <li>'BUILD_VERSION' - 'version : YYYY-MM-DD' </li>
      * <li>'GENERATOR' - 'RyCON' </li>
-     * <li>'BUILD_VERSION' - 'version - build date' </li>
-     * <li>'INFORMATION' - 'information string' </li>
+     * <li>'INFORMATION_STRING' - 'information string' </li>
+     * <li>'OVERWRITE_EXISTING' - 'false' </li>
+     * <li>'PARAM_CODE_STRING' - 'CODE' </li>
+     * <li>'PARAM_CONTROL_POINT_STRING' - 'STKE' </li>
+     * </ul>
+     * <h3>Display settings</h3>
+     * <ul>
+     * <li>'LAST_USED_DISPLAY' - '-1' </li>
+     * <li>'LAST_POS_PRIMARY_MONITOR' - '-9999,-9999' </li>
+     * <li>'LAST_POS_SECONDARY_MONITOR' - '-9998,-9998' </li>
+     * </ul>
+     * <h3>User settings</h3>
+     * <ul>
+     * <li>'USER_LAST_USED_DIR' - '.' </li>
+     * </ul>
+     * <h3>Paths for module 1 - project generation</h3>
+     * <ul>
      * <li>'DIR_BASE' - '.' </li>
      * <li>'DIR_ADMIN' - './admin' </li>
      * <li>'DIR_ADMIN_TEMPLATE' - './admin/template-folder' </li>
@@ -218,22 +234,31 @@ public class PreferenceHandler implements PreferenceChangeListener {
      * <li>'DIR_BIG_DATA_TEMPLATE' - './big_data/template-folder' </li>
      * <li>'DIR_PROJECT' - './project' </li>
      * <li>'DIR_PROJECT_TEMPLATE' - './project/template-folder' </li>
-     * <li>'CONVERTER_SETTING_ELIMINATE_ZERO_COORDINATE' -  'true' </li>
-     * <li>'CONVERTER_SETTING_LTOP_USE_ZENITH_DISTANCE' -  'false' </li>
-     * <li>'CONVERTER_SETTING_ZEISS_DIALECT' - 'M5' </li>
-     * <li>'GSI_SETTING_LINE_ENDING_WITH_BLANK' -  'true' </li>
-     * <li>'OVERWRITE_EXISTING' - 'false' </li>
-     * <li>'PARAM_CODE_STRING' - 'CODE' </li>
-     * <li>'PARAM_CONTROL_POINT_STRING' - 'STKE' </li>
+     * </ul>
+     * <h3>Parameters for module 2 - transfer widget</h3>
+     * <ul>
+     * <li>'LAST_USED_PROJECTS' - '[]' </li>
+     * <li>'DIR_CARD_READER_DATA_FILES' - 'Data' </li>
+     * <li>'DIR_CARD_READER_EXPORT_FILES' - 'GSI' </li>
+     * <li>'DIR_CARD_READER_JOB_FILES' - 'DBX' </li>
+     * </ul>
+     * <h3>Parameters for module 3 - tidy up widget</h3>
+     * <ul>
      * <li>'PARAM_EDIT_STRING' - 'EDIT' </li>
      * <li>'PARAM_FREE_STATION_STRING' - 'FS' </li>
      * <li>'PARAM_LTOP_STRING' - 'LTOP' </li>
      * <li>'PARAM_STAKE_OUT_STRING' - 'ST' </li>
-     * <li>'LAST_USED_DISPLAY' - '-1' </li>
-     * <li>'LAST_USED_PROJECTS' - '[]' </li>
-     * <li>'LAST_POS_PRIMARY_MONITOR' - '-9999,-9999' </li>
-     * <li>'LAST_POS_SECONDARY_MONITOR' - '-9998,-9998' </li>
-     * <li>'USER_LAST_USED_DIR' - '.' </li>
+     * </ul>
+     * <h3>Parameters for module 6 - converter widget</h3>
+     * <ul>
+     * <li>'CONVERTER_SETTING_ELIMINATE_ZERO_COORDINATE' -  'true' </li>
+     * <li>'CONVERTER_SETTING_LTOP_USE_ZENITH_DISTANCE' -  'false' </li>
+     * <li>'CONVERTER_SETTING_POINT_IDENTICAL_DISTANCE' - '0.03' </li>
+     * <li>'CONVERTER_SETTING_ZEISS_DIALECT' - 'M5' </li>
+     * </ul>
+     * <h3>File format settings</h3>
+     * <ul>
+     * <li>'GSI_SETTING_LINE_ENDING_WITH_BLANK' -  'true' </li>
      * </ul>
      * <p>
      * It is <b>highly recommend</b> that the user will overwrite this settings to his preferred values
@@ -241,8 +266,8 @@ public class PreferenceHandler implements PreferenceChangeListener {
      */
     private void createDefaultSettings() {
         // general settings
+        setUserPreference(PreferenceKeys.BUILD_VERSION, Version.getBuildNumber() + " : " + Version.getBuildDate());
         setUserPreference(PreferenceKeys.GENERATOR, ResourceBundleUtils.getLangString(ResourceBundles.LABELS, Labels.applicationName));
-        setUserPreference(PreferenceKeys.BUILD_VERSION, Version.getBuildNumber() + Version.getBuildDate());
         setUserPreference(PreferenceKeys.INFORMATION_STRING, DefaultKeys.RyCON_WEBSITE.getValue());
         setUserPreference(PreferenceKeys.OVERWRITE_EXISTING, DefaultKeys.OVERWRITE_EXISTING.getValue());
         setUserPreference(PreferenceKeys.PARAM_CODE_STRING, DefaultKeys.PARAM_CODE_STRING.getValue());
@@ -267,6 +292,7 @@ public class PreferenceHandler implements PreferenceChangeListener {
 
         // parameters for module #2 transfer widgets
         setUserPreference(PreferenceKeys.LAST_USED_PROJECTS, "[]");
+        setUserPreference(PreferenceKeys.DIR_CARD_READER, DefaultKeys.DIR_CARD_READER.getValue());
         /* Leica Geosystems card structure */
         setUserPreference(PreferenceKeys.DIR_CARD_READER_DATA_FILES, "Data");
         setUserPreference(PreferenceKeys.DIR_CARD_READER_EXPORT_FILES, "Gsi");
@@ -277,7 +303,7 @@ public class PreferenceHandler implements PreferenceChangeListener {
         setUserPreference(PreferenceKeys.DIR_PROJECT_MEASUREMENT_FILES, "08.Bearb_Rapp/Messdaten/GSI");
         setUserPreference(PreferenceKeys.DIR_PROJECT_JOB_FILES, "08.Bearb_Rapp/Messdaten/DBX");
 
-        // parameters for module #3 - clean up
+        // parameters for module #3 - tidy up
         setUserPreference(PreferenceKeys.PARAM_CONTROL_POINT_STRING, DefaultKeys.PARAM_CONTROL_POINT_STRING.getValue());
         setUserPreference(PreferenceKeys.PARAM_FREE_STATION_STRING, DefaultKeys.PARAM_FREE_STATION_STRING.getValue());
         setUserPreference(PreferenceKeys.PARAM_KNOWN_STATION_STRING, DefaultKeys.PARAM_KNOWN_STATION_STRING.getValue());
@@ -286,6 +312,7 @@ public class PreferenceHandler implements PreferenceChangeListener {
         // parameters for module #6 - converter
         setUserPreference(PreferenceKeys.CONVERTER_SETTING_ELIMINATE_ZERO_COORDINATE, DefaultKeys.CONVERTER_SETTING_ELIMINATE_ZERO_COORDINATE.getValue());
         setUserPreference(PreferenceKeys.CONVERTER_SETTING_LTOP_USE_ZENITH_DISTANCE, DefaultKeys.CONVERTER_SETTING_LTOP_USE_ZENITH_DISTANCE.getValue());
+        setUserPreference(PreferenceKeys.CONVERTER_SETTING_POINT_IDENTICAL_DISTANCE, DefaultKeys.CONVERTER_SETTING_POINT_IDENTICAL_DISTANCE.getValue());
         setUserPreference(PreferenceKeys.CONVERTER_SETTING_ZEISS_DIALECT, DefaultKeys.CONVERTER_SETTING_ZEISS_DIALECT.getValue());
 
         // GSI file format settings
@@ -294,6 +321,49 @@ public class PreferenceHandler implements PreferenceChangeListener {
         logger.log(Level.INFO, "default settings generated");
 
         isDefaultSettingsGenerated = true;
+    }
+
+    private void initKeys() {
+        // Create default settings when the generator key doesn't contains the value 'RyCON'
+        if (!getUserPreference(PreferenceKeys.GENERATOR).equals(ResourceBundleUtils.getLangString(ResourceBundles.LABELS, Labels.applicationName))) {
+            createDefaultSettings();
+
+            isDefaultSettingsGenerated = true;
+
+            logger.log(Level.INFO, "default settings generated");
+        } else {
+            // Checks the stored node for valid keys and for length.
+            // This is used to handle updates for RyCON, hence the user can use existing preferences.
+            try {
+                final int countDefaultPreferenceKeys = DefaultKeys.values().length;
+                final int countStoredPreferenceKeys = getKeys().length;
+
+                if (countDefaultPreferenceKeys != countStoredPreferenceKeys) {
+                    // fetch old keys and values
+                    final String[] oldKeys = userPreferences.keys();
+                    final String[] oldValues = new String[oldKeys.length];
+
+                    for (int i = 0; i < oldKeys.length; i++) {
+                        oldValues[i] = getUserPreference(PreferenceKeys.valueOf(oldKeys[i]));
+                    }
+
+                    // delete the old preference keys (lower_chars) and their values
+                    removeUserPreference(oldKeys);
+
+                    createDefaultSettings();
+
+                    // transfer values from old keys to the new ones
+                    for (int i = 0; i < oldKeys.length; i++) {
+                        setUserPreference(PreferenceKeys.valueOf(oldKeys[i].toUpperCase()), oldValues[i]);
+                    }
+
+                    logger.log(Level.FINE, "Not needed preference keys deleted.");
+                    logger.log(Level.INFO, "settings successful transferred");
+                }
+            } catch (BackingStoreException e) {
+                logger.log(Level.SEVERE, "Can't write settings back. " + e.getMessage());
+            }
+        }
     }
 
 } // end of PreferenceKeys

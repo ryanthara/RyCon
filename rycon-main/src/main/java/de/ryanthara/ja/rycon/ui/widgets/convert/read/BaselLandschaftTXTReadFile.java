@@ -22,7 +22,7 @@ import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
 import de.ryanthara.ja.rycon.i18n.Errors;
 import de.ryanthara.ja.rycon.i18n.Labels;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
-import de.ryanthara.ja.rycon.io.LineReader;
+import de.ryanthara.ja.rycon.nio.LineReader;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 
@@ -96,7 +96,7 @@ public class BaselLandschaftTXTReadFile implements ReadFile {
 
         LineReader lineReader = new LineReader(file2Read);
 
-        if (lineReader.readFile()) {
+        if (lineReader.readFile(false)) {
             if ((readStringFile = lineReader.getLines()) != null) {
                 success = true;
             }

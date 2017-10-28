@@ -18,14 +18,14 @@
 package de.ryanthara.ja.rycon.ui.widgets;
 
 import de.ryanthara.ja.rycon.Main;
-import de.ryanthara.ja.rycon.check.PathCheck;
-import de.ryanthara.ja.rycon.check.TextCheck;
-import de.ryanthara.ja.rycon.converter.gsi.Nigra2GSI;
-import de.ryanthara.ja.rycon.core.GSILevelling2Cad;
+import de.ryanthara.ja.rycon.util.check.PathCheck;
+import de.ryanthara.ja.rycon.util.check.TextCheck;
+import de.ryanthara.ja.rycon.core.converter.gsi.Nigra2GSI;
+import de.ryanthara.ja.rycon.core.GsiLevelling2Cad;
 import de.ryanthara.ja.rycon.data.PreferenceKeys;
 import de.ryanthara.ja.rycon.i18n.*;
-import de.ryanthara.ja.rycon.io.LineReader;
-import de.ryanthara.ja.rycon.io.LineWriter;
+import de.ryanthara.ja.rycon.nio.LineReader;
+import de.ryanthara.ja.rycon.nio.LineWriter;
 import de.ryanthara.ja.rycon.ui.Sizes;
 import de.ryanthara.ja.rycon.ui.custom.*;
 import de.ryanthara.ja.rycon.ui.util.ShellPositioner;
@@ -236,14 +236,18 @@ public class LevellingWidget extends AbstractWidget {
         }
 
         Optional<Path[]> files = FileDialogs.showAdvancedFileDialog(
-                innerShell, filterPath,
-                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.splitterSourceText), acceptableFileSuffixes,
-                filterNames, inputFieldsComposite.getSourceTextField(), inputFieldsComposite.getTargetTextField());
+                innerShell,
+                filterPath,
+                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.levellingSourceText),
+                acceptableFileSuffixes,
+                filterNames,
+                inputFieldsComposite.getSourceTextField(),
+                inputFieldsComposite.getTargetTextField());
 
         if (files.isPresent()) {
             files2read = files.get();
         } else {
-            logger.log(Level.SEVERE, "can not get the read files");
+            logger.log(Level.SEVERE, "can't get the read files");
         }
     }
 
@@ -263,8 +267,9 @@ public class LevellingWidget extends AbstractWidget {
         }
 
         DirectoryDialogs.showAdvancedDirectoryDialog(innerShell, input,
-                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.levellingSourceText),
-                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.levellingSourceMessage), filterPath);
+                DirectoryDialogsTypes.DIR_GENERAL.getText(),
+                DirectoryDialogsTypes.DIR_GENERAL.getMessage(),
+                filterPath);
     }
 
     private void createDescription(int width) {
@@ -317,7 +322,7 @@ public class LevellingWidget extends AbstractWidget {
         for (Path file2read : files2read) {
             LineReader lineReader = new LineReader(file2read);
 
-            if (lineReader.readFile()) {
+            if (lineReader.readFile(false)) {
                 ArrayList<String> readFile = lineReader.getLines();
 
                 String[] fileNameAndSuffix = file2read.getFileName().toString().split("\\.(?=[^.]+$)");
@@ -325,7 +330,7 @@ public class LevellingWidget extends AbstractWidget {
                 ArrayList<String> writeFile;
 
                 if (fileNameAndSuffix[1].equalsIgnoreCase("GSI")) {
-                    GSILevelling2Cad gsiLevelling2Cad = new GSILevelling2Cad(readFile);
+                    GsiLevelling2Cad gsiLevelling2Cad = new GsiLevelling2Cad(readFile);
                     writeFile = gsiLevelling2Cad.processLevelling2Cad(holdChangePoints);
                 } else if (fileNameAndSuffix[1].equalsIgnoreCase("ASC")) {
                     Nigra2GSI nigra2GSI = new Nigra2GSI(readFile);
@@ -337,7 +342,8 @@ public class LevellingWidget extends AbstractWidget {
 
                 String file2write = file2read.toString().substring(0, file2read.toString().length() - 4) + "_LEVEL.GSI";
 
-                LineWriter lineWriter = new LineWriter(file2write);
+                // TODO Use WriteFile2Disk instead this
+                LineWriter lineWriter = new LineWriter(Paths.get(file2write));
 
                 if (lineWriter.writeFile(writeFile)) {
                     counter = counter + 1;

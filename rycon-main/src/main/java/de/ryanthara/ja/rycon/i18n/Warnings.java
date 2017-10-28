@@ -33,7 +33,10 @@ public enum Warnings implements ResourceKeys {
     bigDataDirExists,
     emptyTextField,
     fileExists,
+    fileExistsOverwrite,
     noControlPointsLTOP,
+    noCardReaderExistsMessage,
+    noCardReaderExistsText,
     projectDirExists
 
 } // end of Warnings

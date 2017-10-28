@@ -18,7 +18,7 @@
 package de.ryanthara.ja.rycon.ui.widgets.convert.write;
 
 import de.ryanthara.ja.rycon.data.DefaultKeys;
-import de.ryanthara.ja.rycon.file.FileToolsExcel;
+import de.ryanthara.ja.rycon.nio.FileToolsExcel;
 import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
 import de.ryanthara.ja.rycon.i18n.Labels;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
@@ -70,7 +70,7 @@ class WriteExcel2Disk {
 
             int returnValue = MessageBoxes.showMessageBox(shell, SWT.ICON_WARNING | SWT.YES | SWT.NO,
                     ResourceBundleUtils.getLangString(LABELS, Labels.warningTextMsgBox),
-                    String.format(ResourceBundleUtils.getLangString(WARNINGS, Warnings.fileExists), outputFileName));
+                    String.format(ResourceBundleUtils.getLangString(WARNINGS, Warnings.fileExistsOverwrite), outputFileName));
 
             if (returnValue == SWT.YES) {
                 if (suffix.equalsIgnoreCase(".xls")) {

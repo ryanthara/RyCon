@@ -12,10 +12,10 @@ de.ryanthara.ja.rycon.converter.text
 de.ryanthara.ja.rycon.converter.zeiss
 de.ryanthara.ja.rycon.core
 de.ryanthara.ja.rycon.data
-de.ryanthara.ja.rycon.elements
-de.ryanthara.ja.rycon.events
+de.ryanthara.ja.rycon.core.elements
+de.ryanthara.ja.rycon.ui.events
 de.ryanthara.ja.rycon.file
-de.ryanthara.ja.rycon.file.filter
+de.ryanthara.ja.rycon.nio.filter
 de.ryanthara.ja.rycon.ui
 de.ryanthara.ja.rycon.ui.custom
 de.ryanthara.ja.rycon.ui.preferences
@@ -29,6 +29,6 @@ de.ryanthara.ja.rycon.ui.widgets.convert.read
 de.ryanthara.ja.rycon.ui.widgets.convert.write
 de.ryanthara.ja.rycon.ui.widgets.generate
 de.ryanthara.ja.rycon.i18n
-de.ryanthara.ja.rycon.io
+de.ryanthara.ja.rycon.nio
 de.ryanthara.ja.rycon.ui.util
 de.ryanthara.ja.rycon.util

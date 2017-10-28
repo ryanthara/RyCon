@@ -51,17 +51,17 @@ public enum FileChoosers implements ResourceKeys {
     filterNameCSV,
     filterNameGSI,
     filterNameK,
+    filterNameLogfileTXT,
     filterNameLTOP,
     filterNameNIGRA,
     filterNameTXT,
     filterNameZeiss,
+    generalMessage,
+    generalText,
     lastProjectPathMessage,
     lastProjectPathText,
-    levellingSourceMessage,
     levellingSourceText,
-    splitterSourceMessage,
     splitterSourceText,
-    tidyUpSourceMessage,
     tidyUpSourceText
 
 } // end of FileChoosers

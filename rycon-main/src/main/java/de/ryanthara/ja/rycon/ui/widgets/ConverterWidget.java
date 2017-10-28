@@ -18,18 +18,15 @@
 package de.ryanthara.ja.rycon.ui.widgets;
 
 import de.ryanthara.ja.rycon.Main;
-import de.ryanthara.ja.rycon.check.TextCheck;
-import de.ryanthara.ja.rycon.converter.csv.BaseToolsCSV;
-import de.ryanthara.ja.rycon.converter.excel.BaseToolsExcel;
-import de.ryanthara.ja.rycon.converter.text.BaseToolsTXT;
-import de.ryanthara.ja.rycon.converter.zeiss.ZeissDialect;
+import de.ryanthara.ja.rycon.core.converter.csv.BaseToolsCsv;
+import de.ryanthara.ja.rycon.util.check.TextCheck;
+import de.ryanthara.ja.rycon.core.converter.excel.BaseToolsExcel;
+import de.ryanthara.ja.rycon.core.converter.text.BaseToolsTxt;
+import de.ryanthara.ja.rycon.core.converter.zeiss.ZeissDialect;
 import de.ryanthara.ja.rycon.data.PreferenceKeys;
 import de.ryanthara.ja.rycon.i18n.*;
 import de.ryanthara.ja.rycon.ui.Sizes;
-import de.ryanthara.ja.rycon.ui.custom.BottomButtonBar;
-import de.ryanthara.ja.rycon.ui.custom.DirectoryDialogs;
-import de.ryanthara.ja.rycon.ui.custom.InputFieldsComposite;
-import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
+import de.ryanthara.ja.rycon.ui.custom.*;
 import de.ryanthara.ja.rycon.ui.util.RadioHelper;
 import de.ryanthara.ja.rycon.ui.util.ShellPositioner;
 import de.ryanthara.ja.rycon.ui.widgets.convert.FileFilterIndex;
@@ -215,7 +212,7 @@ public class ConverterWidget extends AbstractWidget {
         }
 
         fileDialog.setFilterPath(filterPath);
-        fileDialog.setText(ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.tidyUpSourceText));
+        fileDialog.setText(ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.converterSourceText));
 
         fileDialog.setFilterExtensions(CSV.getExtensionsArray());
         fileDialog.setFilterNames(CSV.getFilterNamesArray());
@@ -269,8 +266,9 @@ public class ConverterWidget extends AbstractWidget {
         }
 
         DirectoryDialogs.showAdvancedDirectoryDialog(innerShell, input,
-                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.converterSourceText),
-                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.converterSourceMessage), filterPath);
+                DirectoryDialogsTypes.DIR_GENERAL.getText(),
+                DirectoryDialogsTypes.DIR_GENERAL.getMessage(),
+                filterPath);
     }
 
     private void createCompositeSourceTarget() {
@@ -528,8 +526,8 @@ public class ConverterWidget extends AbstractWidget {
         GSIFormat = sourceNumber == 0 ? Main.getGSI8() : Main.getGSI16();
 
         // prepares a parameter object for reducing parameter field size
-        String separatorCSV = chkBoxCSVSemiColonSeparator.getSelection() ? BaseToolsCSV.SEPARATOR_SEMICOLON : BaseToolsCSV.SEPARATOR_COMMA;
-        String separatorTXT = chkBoxTXTSpaceSeparator.getSelection() ? BaseToolsTXT.SEPARATOR_SPACE : BaseToolsTXT.SEPARATOR_TAB;
+        String separatorCSV = chkBoxCSVSemiColonSeparator.getSelection() ? BaseToolsCsv.SEPARATOR_SEMICOLON : BaseToolsCsv.SEPARATOR_COMMA;
+        String separatorTXT = chkBoxTXTSpaceSeparator.getSelection() ? BaseToolsTxt.SEPARATOR_SPACE : BaseToolsTxt.SEPARATOR_TAB;
         ZeissDialect dialect = ZeissDialect.valueOf(Main.pref.getUserPreference(PreferenceKeys.CONVERTER_SETTING_ZEISS_DIALECT));
 
         WriteParameter parameter = new WriteParameter(sourceNumber, GSIFormat,

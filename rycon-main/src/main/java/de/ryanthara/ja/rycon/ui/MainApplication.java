@@ -18,7 +18,7 @@
 package de.ryanthara.ja.rycon.ui;
 
 import de.ryanthara.ja.rycon.Main;
-import de.ryanthara.ja.rycon.check.PathCheck;
+import de.ryanthara.ja.rycon.util.check.PathCheck;
 import de.ryanthara.ja.rycon.data.DefaultKeys;
 import de.ryanthara.ja.rycon.data.PreferenceKeys;
 import de.ryanthara.ja.rycon.data.Version;
@@ -649,8 +649,8 @@ public class MainApplication extends Main {
         createButtonSplitTool(compositeGrid);
         createButtonLevelTool(compositeGrid);
         createButtonConvertTool(compositeGrid);
+        createWithoutFunction(compositeGrid);
         createButtonTransformationTool(compositeGrid);
-        createButtonPrintTool(compositeGrid);
         createButtonSettingsTool(compositeGrid);
         createWithoutFunction(compositeGrid);
         createButtonAbout(compositeGrid);
@@ -742,6 +742,9 @@ public class MainApplication extends Main {
         shell.getDisplay().dispose();
     }
 
+    /*
+     * Called after window movement.
+     */
     private void saveWindowPosition() {
         // find out on which display RyCON is visible
         Monitor[] monitors = shell.getDisplay().getMonitors();
@@ -767,27 +770,26 @@ public class MainApplication extends Main {
 
     private void test() {
         System.out.println("### TEST ###");
+        System.out.println("");
 
+        /*
         System.out.println(Main.pref.getUserPreference(PreferenceKeys.DIR_CARD_READER));
         System.out.println(Main.pref.getUserPreference(PreferenceKeys.DIR_CARD_READER_JOB_FILES));
         System.out.println(Main.pref.getUserPreference(PreferenceKeys.DIR_CARD_READER_DATA_FILES));
         System.out.println(Main.pref.getUserPreference(PreferenceKeys.DIR_CARD_READER_EXPORT_FILES));
+        */
 
-        System.out.println(DefaultKeys.values().length);
+
+
+        System.out.println("Default keys: " + DefaultKeys.values().length);
 
         try {
-            System.out.println(Main.pref.getKeys().length);
+            System.out.println("Stored keys: " + Main.pref.getKeys().length);
         } catch (BackingStoreException e) {
             e.printStackTrace();
         }
 
         try {
-
-            pref.removeUserPreference("-1");
-            pref.removeUserPreference("true");
-            pref.removeUserPreference("generator");
-            pref.removeUserPreference("information_string");
-
             int i = 0;
 
             for (String s : pref.getKeys()) {
@@ -798,6 +800,8 @@ public class MainApplication extends Main {
             e.printStackTrace();
         }
 
+        System.out.println("");
+        System.out.println("### END OF TEST ###");
     }
 
 } // end of MainApplication

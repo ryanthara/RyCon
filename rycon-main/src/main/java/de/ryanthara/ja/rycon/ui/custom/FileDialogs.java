@@ -73,7 +73,7 @@ public class FileDialogs {
      * @return chosen files as {@link Path} array
      */
     public static Optional<Path[]> showAdvancedFileDialog(Shell innerShell, String filterPath, String text, String[] filterExtensions,
-                                                         String[] filterNames, Text source, Text target) {
+                                                          String[] filterNames, Text source, Text target) {
 
         FileDialog fileDialog = new FileDialog(innerShell, org.eclipse.swt.SWT.MULTI);
         fileDialog.setFilterPath(filterPath);

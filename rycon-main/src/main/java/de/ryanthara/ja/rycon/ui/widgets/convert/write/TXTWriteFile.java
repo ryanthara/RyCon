@@ -17,7 +17,7 @@
  */
 package de.ryanthara.ja.rycon.ui.widgets.convert.write;
 
-import de.ryanthara.ja.rycon.converter.text.*;
+import de.ryanthara.ja.rycon.core.converter.text.*;
 import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
 import de.ryanthara.ja.rycon.ui.widgets.convert.SourceButton;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -79,43 +79,43 @@ public class TXTWriteFile implements WriteFile {
         switch (SourceButton.fromIndex(parameter.getSourceNumber())) {
             case GSI8:
             case GSI16:
-                GSI2TXT gsi2TXT = new GSI2TXT(readStringFile);
-                writeFile = gsi2TXT.convertGSI2TXT(parameter.getSeparatorTXT(), parameter.isGSI16(), parameter.isWriteCommentLine());
+                Gsi2Txt gsi2Txt = new Gsi2Txt(readStringFile);
+                writeFile = gsi2Txt.convertGSI2TXT(parameter.getSeparatorTXT(), parameter.isGSI16(), parameter.isWriteCommentLine());
                 break;
 
             case TXT:
                 break;
 
             case CSV:
-                CSV2TXT csv2TXT = new CSV2TXT(readCSVFile);
-                writeFile = csv2TXT.convertCSV2TXT(parameter.getSeparatorTXT());
+                Csv2Txt csv2Txt = new Csv2Txt(readCSVFile);
+                writeFile = csv2Txt.convertCSV2TXT(parameter.getSeparatorTXT());
                 break;
 
             case CAPLAN_K:
-                Caplan2TXT caplan2TXT = new Caplan2TXT(readStringFile);
-                writeFile = caplan2TXT.convertK2TXT(parameter.getSeparatorTXT(), parameter.isKFormatUseSimpleFormat(),
+                Caplan2Txt caplan2Txt = new Caplan2Txt(readStringFile);
+                writeFile = caplan2Txt.convertK2TXT(parameter.getSeparatorTXT(), parameter.isKFormatUseSimpleFormat(),
                         parameter.isWriteCommentLine(), parameter.isWriteCodeColumn());
                 break;
 
             case ZEISS_REC:
-                Zeiss2TXT zeiss2TXT = new Zeiss2TXT(readStringFile);
-                writeFile = zeiss2TXT.convertZeiss2TXT(parameter.getSeparatorTXT());
+                Zeiss2Txt zeiss2Txt = new Zeiss2Txt(readStringFile);
+                writeFile = zeiss2Txt.convertZeiss2TXT(parameter.getSeparatorTXT());
                 break;
 
             case CADWORK:
-                Cadwork2TXT cadwork2TXT = new Cadwork2TXT(readStringFile);
-                writeFile = cadwork2TXT.convertCadwork2TXT(parameter.getSeparatorTXT(), parameter.isWriteCodeColumn(),
+                Cadwork2Txt cadwork2Txt = new Cadwork2Txt(readStringFile);
+                writeFile = cadwork2Txt.convertCadwork2TXT(parameter.getSeparatorTXT(), parameter.isWriteCodeColumn(),
                         parameter.isCadworkUseZeroHeights());
                 break;
 
             case BASEL_STADT:
-                CSVBaselStadt2TXT csvBaselStadt2TXT = new CSVBaselStadt2TXT(readCSVFile);
-                writeFile = csvBaselStadt2TXT.convertCSVBaselStadt2TXT(parameter.getSeparatorTXT());
+                CsvBaselStadt2Txt csvBaselStadt2Txt = new CsvBaselStadt2Txt(readCSVFile);
+                writeFile = csvBaselStadt2Txt.convertCSVBaselStadt2TXT(parameter.getSeparatorTXT());
                 break;
 
             case BASEL_LANDSCHAFT:
-                TXTBaselLandschaft2TXT txtBaselLandschaft2TXT = new TXTBaselLandschaft2TXT(readStringFile);
-                writeFile = txtBaselLandschaft2TXT.convertTXTBaselLandschaft2TXT(parameter.getSeparatorTXT(), parameter.isWriteCodeColumn());
+                TxtBaselLandschaft2Txt TxtBaselLandschaft2Txt = new TxtBaselLandschaft2Txt(readStringFile);
+                writeFile = TxtBaselLandschaft2Txt.convertTXTBaselLandschaft2TXT(parameter.getSeparatorTXT(), parameter.isWriteCodeColumn());
                 break;
 
             default:

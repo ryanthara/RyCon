@@ -20,11 +20,12 @@ package de.ryanthara.ja.rycon.ui.widgets;
 import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.data.DefaultKeys;
 import de.ryanthara.ja.rycon.data.PreferenceKeys;
-import de.ryanthara.ja.rycon.ui.preferences.PreferencesDialog;
-import de.ryanthara.ja.rycon.ui.preferences.pref.*;
 import de.ryanthara.ja.rycon.i18n.Labels;
 import de.ryanthara.ja.rycon.i18n.Preferences;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
+import de.ryanthara.ja.rycon.ui.custom.DirectoryDialogsTypes;
+import de.ryanthara.ja.rycon.ui.preferences.PreferencesDialog;
+import de.ryanthara.ja.rycon.ui.preferences.pref.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 
@@ -33,7 +34,7 @@ import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static de.ryanthara.ja.rycon.converter.zeiss.ZeissDialect.*;
+import static de.ryanthara.ja.rycon.core.converter.zeiss.ZeissDialect.*;
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LABELS;
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.PREFERENCES;
 
@@ -66,6 +67,14 @@ public class SettingsWidget {
         createDialog();
     }
 
+    /*
+     * Adds a keyboard input filter to close the dialog with the escape key
+     */
+    private void addKeyboardInputFilter(Shell parent) {
+        parent.getDisplay().addFilter(SWT.KeyDown, event -> {
+        });
+    }
+
     private void createDialog() {
         PreferencesDialog dialog = new PreferencesDialog(
                 parent,
@@ -80,13 +89,6 @@ public class SettingsWidget {
         addKeyboardInputFilter(parent);
 
         dialog.open();
-    }
-
-    /*
-     * Adds a keyboard input filter to close the dialog with the escape key
-     */
-    private void addKeyboardInputFilter(Shell parent) {
-        parent.getDisplay().addFilter(SWT.KeyDown, event -> {});
     }
 
     private void createTabFormats(PreferencesDialog dialog) {
@@ -296,7 +298,8 @@ public class SettingsWidget {
 
         dialog.addPreference(new PreferencePath(
                 ResourceBundleUtils.getLangString(PREFERENCES, Preferences.pathBaseLabel),
-                Paths.get(DefaultKeys.DIR_BASE.getValue())) {
+                Paths.get(DefaultKeys.DIR_BASE.getValue()),
+                DirectoryDialogsTypes.DIR_BASE) {
 
             @Override
             public Path getValue() {
@@ -313,7 +316,8 @@ public class SettingsWidget {
 
         dialog.addPreference(new PreferencePath(
                 ResourceBundleUtils.getLangString(PREFERENCES, Preferences.pathAdminFolderLabel),
-                Paths.get(DefaultKeys.DIR_ADMIN.getValue())) {
+                Paths.get(DefaultKeys.DIR_ADMIN.getValue()),
+                DirectoryDialogsTypes.DIR_ADMIN) {
 
             @Override
             public Path getValue() {
@@ -328,7 +332,8 @@ public class SettingsWidget {
 
         dialog.addPreference(new PreferencePath(
                 ResourceBundleUtils.getLangString(PREFERENCES, Preferences.pathAdminTemplateLabel),
-                Paths.get(DefaultKeys.DIR_ADMIN_TEMPLATE.getValue())) {
+                Paths.get(DefaultKeys.DIR_ADMIN_TEMPLATE.getValue()),
+                DirectoryDialogsTypes.DIR_ADMIN_TEMPLATE) {
 
             @Override
             public Path getValue() {
@@ -345,7 +350,8 @@ public class SettingsWidget {
 
         dialog.addPreference(new PreferencePath(
                 ResourceBundleUtils.getLangString(PREFERENCES, Preferences.pathProjectFolderLabel),
-                Paths.get(DefaultKeys.DIR_PROJECT.getValue())) {
+                Paths.get(DefaultKeys.DIR_PROJECT.getValue()),
+                DirectoryDialogsTypes.DIR_PROJECT) {
 
             @Override
             public Path getValue() {
@@ -360,7 +366,8 @@ public class SettingsWidget {
 
         dialog.addPreference(new PreferencePath(
                 ResourceBundleUtils.getLangString(PREFERENCES, Preferences.pathProjectTemplateLabel),
-                Paths.get(DefaultKeys.DIR_PROJECT_TEMPLATE.getValue())) {
+                Paths.get(DefaultKeys.DIR_PROJECT_TEMPLATE.getValue()),
+                DirectoryDialogsTypes.DIR_PROJECT_TEMPLATE) {
 
             @Override
             public Path getValue() {
@@ -377,7 +384,8 @@ public class SettingsWidget {
 
         dialog.addPreference(new PreferencePath(
                 ResourceBundleUtils.getLangString(PREFERENCES, Preferences.pathBigDataFolderLabel),
-                Paths.get(DefaultKeys.DIR_BIG_DATA.getValue())) {
+                Paths.get(DefaultKeys.DIR_BIG_DATA.getValue()),
+                DirectoryDialogsTypes.DIR_BIG_DATA) {
 
             @Override
             public Path getValue() {
@@ -392,7 +400,8 @@ public class SettingsWidget {
 
         dialog.addPreference(new PreferencePath(
                 ResourceBundleUtils.getLangString(PREFERENCES, Preferences.pathBigDataTemplateLabel),
-                Paths.get(DefaultKeys.DIR_BIG_DATA_TEMPLATE.getValue())) {
+                Paths.get(DefaultKeys.DIR_BIG_DATA_TEMPLATE.getValue()),
+                DirectoryDialogsTypes.DIR_BIG_DATA_TEMPLATE) {
 
             @Override
             public Path getValue() {

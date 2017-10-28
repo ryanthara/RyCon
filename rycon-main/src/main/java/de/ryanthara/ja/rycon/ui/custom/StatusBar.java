@@ -18,7 +18,7 @@
 
 package de.ryanthara.ja.rycon.ui.custom;
 
-import de.ryanthara.ja.rycon.events.StatusInformationListener;
+import de.ryanthara.ja.rycon.ui.events.StatusInformationListener;
 import de.ryanthara.ja.rycon.ui.Images;
 import de.ryanthara.ja.rycon.ui.image.ImageConverter;
 import org.eclipse.swt.graphics.Image;

@@ -18,7 +18,7 @@
 package de.ryanthara.ja.rycon.ui.widgets;
 
 import de.ryanthara.ja.rycon.Main;
-import de.ryanthara.ja.rycon.check.PathCheck;
+import de.ryanthara.ja.rycon.util.check.PathCheck;
 import de.ryanthara.ja.rycon.data.PreferenceKeys;
 import de.ryanthara.ja.rycon.i18n.*;
 import de.ryanthara.ja.rycon.ui.Sizes;
@@ -89,6 +89,7 @@ public final class GeneratorWidget extends AbstractWidget {
     void actionBtnCancel() {
         Main.setSubShellStatus(false);
         Main.statusBar.setStatus("", OK);
+
         innerShell.dispose();
     }
 

@@ -18,15 +18,15 @@
 package de.ryanthara.ja.rycon.ui.widgets;
 
 import de.ryanthara.ja.rycon.Main;
-import de.ryanthara.ja.rycon.check.PathCheck;
-import de.ryanthara.ja.rycon.check.TextCheck;
-import de.ryanthara.ja.rycon.core.GSICodeSplit;
+import de.ryanthara.ja.rycon.core.GsiCodeSplit;
+import de.ryanthara.ja.rycon.util.check.PathCheck;
+import de.ryanthara.ja.rycon.util.check.TextCheck;
 import de.ryanthara.ja.rycon.core.TextCodeSplit;
 import de.ryanthara.ja.rycon.data.DefaultKeys;
 import de.ryanthara.ja.rycon.data.PreferenceKeys;
 import de.ryanthara.ja.rycon.i18n.*;
-import de.ryanthara.ja.rycon.io.LineReader;
-import de.ryanthara.ja.rycon.io.LineWriter;
+import de.ryanthara.ja.rycon.nio.LineReader;
+import de.ryanthara.ja.rycon.nio.LineWriter;
 import de.ryanthara.ja.rycon.ui.Sizes;
 import de.ryanthara.ja.rycon.ui.custom.*;
 import de.ryanthara.ja.rycon.ui.util.ShellPositioner;
@@ -235,8 +235,13 @@ public class CodeSplitterWidget extends AbstractWidget {
         }
 
         Optional<Path[]> files = FileDialogs.showAdvancedFileDialog(
-                innerShell, filterPath, ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.splitterSourceText), acceptableFileSuffixes,
-                filterNames, inputFieldsComposite.getSourceTextField(), inputFieldsComposite.getTargetTextField());
+                innerShell,
+                filterPath,
+                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.splitterSourceText),
+                acceptableFileSuffixes,
+                filterNames,
+                inputFieldsComposite.getSourceTextField(),
+                inputFieldsComposite.getTargetTextField());
 
         if (files.isPresent()) {
             files2read = files.get();
@@ -261,8 +266,9 @@ public class CodeSplitterWidget extends AbstractWidget {
         }
 
         DirectoryDialogs.showAdvancedDirectoryDialog(innerShell, input,
-                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.splitterSourceText),
-                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.splitterSourceMessage), filterPath);
+                DirectoryDialogsTypes.DIR_GENERAL.getText(),
+                DirectoryDialogsTypes.DIR_GENERAL.getMessage(),
+                filterPath);
     }
 
     private void createDescription(int width) {
@@ -317,7 +323,7 @@ public class CodeSplitterWidget extends AbstractWidget {
                                 ArrayList<String> readFile) {
         final String paramCodeString = DefaultKeys.PARAM_CODE_STRING.getValue();
 
-        GSICodeSplit gsiCodeSplit = new GSICodeSplit(readFile);
+        GsiCodeSplit gsiCodeSplit = new GsiCodeSplit(readFile);
         ArrayList<ArrayList<String>> writeFile = gsiCodeSplit.processCodeSplit(insertCodeColumn, writeFileWithCodeZero);
 
         Iterator<Integer> codeIterator = gsiCodeSplit.getFoundCodes().iterator();
@@ -329,7 +335,8 @@ public class CodeSplitterWidget extends AbstractWidget {
             String file2write = file2read.toString().substring(0, file2read.toString().length() - 4) + "_" +
                     paramCodeString + "-" + code + ".GSI";
 
-            LineWriter lineWriter = new LineWriter(file2write);
+            // TODO Use WriteFile2Disk instead this
+            LineWriter lineWriter = new LineWriter(Paths.get(file2write));
 
             if (lineWriter.writeFile(lines)) {
                 counter = counter + 1;
@@ -356,7 +363,8 @@ public class CodeSplitterWidget extends AbstractWidget {
             String file2write = file2read.toString().substring(0, file2read.toString().length() - 4) + "_" +
                     paramCodeString + "-" + code + ".TXT";
 
-            LineWriter lineWriter = new LineWriter(file2write);
+            // TODO Use WriteFile2Disk instead this
+            LineWriter lineWriter = new LineWriter(Paths.get(file2write));
 
             if (lineWriter.writeFile(lines)) {
                 counter = counter + 1;
@@ -372,7 +380,7 @@ public class CodeSplitterWidget extends AbstractWidget {
         for (Path path : files2read) {
             LineReader lineReader = new LineReader(path);
 
-            if (lineReader.readFile()) {
+            if (lineReader.readFile(false)) {
                 ArrayList<String> readFile = lineReader.getLines();
 
                 // processFileOperations by differ between txt oder gsi files

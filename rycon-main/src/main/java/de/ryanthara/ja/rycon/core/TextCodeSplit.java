@@ -17,7 +17,7 @@
  */
 package de.ryanthara.ja.rycon.core;
 
-import de.ryanthara.ja.rycon.elements.RyBlock;
+import de.ryanthara.ja.rycon.core.elements.RyBlock;
 import de.ryanthara.ja.rycon.util.SortHelper;
 
 import java.util.ArrayList;

@@ -17,7 +17,7 @@
  */
 package de.ryanthara.ja.rycon.ui.widgets.convert.write;
 
-import de.ryanthara.ja.rycon.converter.gsi.*;
+import de.ryanthara.ja.rycon.core.converter.gsi.*;
 import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
 import de.ryanthara.ja.rycon.ui.widgets.convert.SourceButton;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -82,17 +82,17 @@ public class GSIWriteFile implements WriteFile {
         switch (SourceButton.fromIndex(parameter.getSourceNumber())) {
             case GSI8:
             case GSI16:
-                GSI8vsGSI16 gsi8vsGSI16 = new GSI8vsGSI16(readStringFile);
-                writeFile = gsi8vsGSI16.convertGSI8vsGSI16(isGSI16);
+                Gsi8vsGsi16 gsi8VsGsi16 = new Gsi8vsGsi16(readStringFile);
+                writeFile = gsi8VsGsi16.convertGSI8vsGSI16(isGSI16);
                 break;
 
             case TXT:
-                TXT2GSI txt2GSI = new TXT2GSI(readStringFile);
-                writeFile = txt2GSI.convertTXT2GSI(isGSI16, parameter.sourceContainsCode());
+                Txt2Gsi txt2Gsi = new Txt2Gsi(readStringFile);
+                writeFile = txt2Gsi.convertTXT2GSI(isGSI16, parameter.sourceContainsCode());
                 break;
 
             case CSV:
-                CSV2GSI csv2GSI = new CSV2GSI(readCSVFile);
+                Csv2Gsi csv2GSI = new Csv2Gsi(readCSVFile);
                 writeFile = csv2GSI.convertCSV2GSI(isGSI16, parameter.sourceContainsCode());
                 break;
 
@@ -102,23 +102,23 @@ public class GSIWriteFile implements WriteFile {
                 break;
 
             case ZEISS_REC:
-                Zeiss2GSI zeiss2GSI = new Zeiss2GSI(readStringFile);
-                writeFile = zeiss2GSI.convertZeiss2GSI(isGSI16);
+                Zeiss2Gsi zeiss2Gsi = new Zeiss2Gsi(readStringFile);
+                writeFile = zeiss2Gsi.convertZeiss2GSI(isGSI16);
                 break;
 
             case CADWORK:
-                Cadwork2GSI cadwork2GSI = new Cadwork2GSI(readStringFile);
-                writeFile = cadwork2GSI.convertCadwork2GSI(isGSI16, parameter.isWriteCodeColumn(), parameter.isCadworkUseZeroHeights());
+                Cadwork2Gsi cadwork2Gsi = new Cadwork2Gsi(readStringFile);
+                writeFile = cadwork2Gsi.convertCadwork2GSI(isGSI16, parameter.isWriteCodeColumn(), parameter.isCadworkUseZeroHeights());
                 break;
 
             case BASEL_STADT:
-                CSVBaselStadt2GSI csvBaselStadt2GSI = new CSVBaselStadt2GSI(readCSVFile);
-                writeFile = csvBaselStadt2GSI.convertCSVBaselStadt2GSI(isGSI16, parameter.sourceContainsCode());
+                CsvBaselStadt2Gsi csvBaselStadt2Gsi = new CsvBaselStadt2Gsi(readCSVFile);
+                writeFile = csvBaselStadt2Gsi.convertCSVBaselStadt2GSI(isGSI16, parameter.sourceContainsCode());
                 break;
 
             case BASEL_LANDSCHAFT:
-                TXTBaselLandschaft2GSI txtBaselLandschaft2GSI = new TXTBaselLandschaft2GSI(readStringFile);
-                writeFile = txtBaselLandschaft2GSI.convertTXTBaselLandschaft2GSI(isGSI16, parameter.isWriteCodeColumn());
+                TxtBaselLandschaft2Gsi txtBaselLandschaft2Gsi = new TxtBaselLandschaft2Gsi(readStringFile);
+                writeFile = txtBaselLandschaft2Gsi.convertTXTBaselLandschaft2GSI(isGSI16, parameter.isWriteCodeColumn());
                 break;
 
             default:

@@ -17,7 +17,7 @@
  */
 package de.ryanthara.ja.rycon.ui.widgets.convert.write;
 
-import de.ryanthara.ja.rycon.converter.zeiss.*;
+import de.ryanthara.ja.rycon.core.converter.zeiss.*;
 import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
 import de.ryanthara.ja.rycon.ui.widgets.convert.SourceButton;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -80,17 +80,17 @@ public class ZeissWriteFile implements WriteFile {
         switch (SourceButton.fromIndex(parameter.getSourceNumber())) {
             case GSI8:
             case GSI16:
-                GSI2Zeiss gsi2Zeiss = new GSI2Zeiss(readStringFile);
+                Gsi2Zeiss gsi2Zeiss = new Gsi2Zeiss(readStringFile);
                 writeFile = gsi2Zeiss.convertGSI2REC(parameter.getDialect());
                 break;
 
             case TXT:
-                TXT2Zeiss txt2Zeiss = new TXT2Zeiss(readStringFile);
+                Txt2Zeiss txt2Zeiss = new Txt2Zeiss(readStringFile);
                 writeFile = txt2Zeiss.convertTXT2REC(parameter.getDialect());
                 break;
 
             case CSV:
-                CSV2Zeiss csv2Zeiss = new CSV2Zeiss(readCSVFile);
+                Csv2Zeiss csv2Zeiss = new Csv2Zeiss(readCSVFile);
                 writeFile = csv2Zeiss.convertCSV2REC(parameter.getDialect());
                 break;
 
@@ -108,12 +108,12 @@ public class ZeissWriteFile implements WriteFile {
                 break;
 
             case BASEL_STADT:
-                CSVBaselStadt2Zeiss csvBaselStadt2Zeiss = new CSVBaselStadt2Zeiss(readCSVFile);
+                CsvBaselStadt2Zeiss csvBaselStadt2Zeiss = new CsvBaselStadt2Zeiss(readCSVFile);
                 writeFile = csvBaselStadt2Zeiss.convertCSVBaselStadt2REC(parameter.getDialect());
                 break;
 
             case BASEL_LANDSCHAFT:
-                TXTBaselLandschaft2Zeiss txtBaselLandschaft2Zeiss = new TXTBaselLandschaft2Zeiss(readStringFile);
+                TxtBaselLandschaft2Zeiss txtBaselLandschaft2Zeiss = new TxtBaselLandschaft2Zeiss(readStringFile);
                 writeFile = txtBaselLandschaft2Zeiss.convertTXTBaselLandschaft2REC(parameter.getDialect());
                 break;
 

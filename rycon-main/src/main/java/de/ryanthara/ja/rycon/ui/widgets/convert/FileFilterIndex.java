@@ -84,7 +84,7 @@ public enum FileFilterIndex {
     }
 
     /**
-     * Return all stored file filter names as one string array.
+     * Returns all stored file filter names as one string array.
      *
      * @return file filter names
      */

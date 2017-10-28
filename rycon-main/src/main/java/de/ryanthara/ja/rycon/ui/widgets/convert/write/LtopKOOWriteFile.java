@@ -17,7 +17,7 @@
  */
 package de.ryanthara.ja.rycon.ui.widgets.convert.write;
 
-import de.ryanthara.ja.rycon.converter.ltop.*;
+import de.ryanthara.ja.rycon.core.converter.ltop.*;
 import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
 import de.ryanthara.ja.rycon.ui.widgets.convert.SourceButton;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -79,50 +79,50 @@ public class LtopKOOWriteFile implements WriteFile {
         switch (SourceButton.fromIndex(parameter.getSourceNumber())) {
             case GSI8:
             case GSI16:
-                GSI2LTOP gsi2LTOP = new GSI2LTOP(readStringFile);
-                writeFile = gsi2LTOP.convertGSI2KOO(parameter.isLtopEliminateDuplicatePoints(),
+                Gsi2Ltop gsi2Ltop = new Gsi2Ltop(readStringFile);
+                writeFile = gsi2Ltop.convertGSI2KOO(parameter.isLtopEliminateDuplicatePoints(),
                         parameter.isLtopSortOutputFileByNumber());
                 break;
 
             case TXT:
-                TXT2LTOP txt2LTOP = new TXT2LTOP(readStringFile);
-                writeFile = txt2LTOP.convertTXT2KOO(parameter.isLtopEliminateDuplicatePoints(),
+                Txt2Ltop txt2Ltop = new Txt2Ltop(readStringFile);
+                writeFile = txt2Ltop.convertTXT2KOO(parameter.isLtopEliminateDuplicatePoints(),
                         parameter.isLtopSortOutputFileByNumber());
                 break;
 
             case CSV:
-                CSV2LTOP csv2LTOP = new CSV2LTOP(readCSVFile);
-                writeFile = csv2LTOP.convertCSV2KOO(parameter.isLtopEliminateDuplicatePoints(),
+                Csv2Ltop csv2Ltop = new Csv2Ltop(readCSVFile);
+                writeFile = csv2Ltop.convertCSV2KOO(parameter.isLtopEliminateDuplicatePoints(),
                         parameter.isLtopSortOutputFileByNumber());
                 break;
 
             case CAPLAN_K:
-                Caplan2LTOP caplan2LTOP = new Caplan2LTOP(readStringFile);
-                writeFile = caplan2LTOP.convertK2KOO(parameter.isLtopEliminateDuplicatePoints(),
+                Caplan2Ltop caplan2Ltop = new Caplan2Ltop(readStringFile);
+                writeFile = caplan2Ltop.convertK2KOO(parameter.isLtopEliminateDuplicatePoints(),
                         parameter.isLtopSortOutputFileByNumber());
                 break;
 
             case ZEISS_REC:
-                Zeiss2LTOP zeiss2LTOP = new Zeiss2LTOP(readStringFile);
-                writeFile = zeiss2LTOP.convertZeiss2KOO(parameter.isLtopEliminateDuplicatePoints(),
+                Zeiss2Ltop zeiss2Ltop = new Zeiss2Ltop(readStringFile);
+                writeFile = zeiss2Ltop.convertZeiss2KOO(parameter.isLtopEliminateDuplicatePoints(),
                         parameter.isLtopSortOutputFileByNumber());
                 break;
 
             case CADWORK:
-                Cadwork2LTOP cadwork2LTOP = new Cadwork2LTOP(readStringFile);
-                writeFile = cadwork2LTOP.convertCadwork2KOO(parameter.isCadworkUseZeroHeights(),
+                Cadwork2Ltop cadwork2Ltop = new Cadwork2Ltop(readStringFile);
+                writeFile = cadwork2Ltop.convertCadwork2KOO(parameter.isCadworkUseZeroHeights(),
                         parameter.isLtopEliminateDuplicatePoints(), parameter.isLtopSortOutputFileByNumber());
                 break;
 
             case BASEL_STADT:
-                CSVBaselStadt2LTOP csvBaselStadt2LTOP = new CSVBaselStadt2LTOP(readCSVFile);
-                writeFile = csvBaselStadt2LTOP.convertCSVBaselStadt2KOO(parameter.isLtopEliminateDuplicatePoints(),
+                CsvBaselStadt2Ltop csvBaselStadt2Ltop = new CsvBaselStadt2Ltop(readCSVFile);
+                writeFile = csvBaselStadt2Ltop.convertCSVBaselStadt2KOO(parameter.isLtopEliminateDuplicatePoints(),
                         parameter.isLtopSortOutputFileByNumber());
                 break;
 
             case BASEL_LANDSCHAFT:
-                TXTBaselLandschaft2LTOP txtBaselLandschaft2LTOP = new TXTBaselLandschaft2LTOP(readStringFile);
-                writeFile = txtBaselLandschaft2LTOP.convertTXTBaselLandschaft2KOO(parameter.isLtopEliminateDuplicatePoints(),
+                TxtBaselLandschaft2Ltop txtBaselLandschaft2Ltop = new TxtBaselLandschaft2Ltop(readStringFile);
+                writeFile = txtBaselLandschaft2Ltop.convertTXTBaselLandschaft2KOO(parameter.isLtopEliminateDuplicatePoints(),
                         parameter.isLtopSortOutputFileByNumber());
                 break;
 

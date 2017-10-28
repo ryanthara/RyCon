@@ -18,11 +18,11 @@
 package de.ryanthara.ja.rycon.ui.widgets.convert.write;
 
 import de.ryanthara.ja.rycon.data.DefaultKeys;
-import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
 import de.ryanthara.ja.rycon.i18n.Labels;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 import de.ryanthara.ja.rycon.i18n.Warnings;
-import de.ryanthara.ja.rycon.io.LineWriter;
+import de.ryanthara.ja.rycon.nio.LineWriter;
+import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -36,49 +36,54 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LABELS;
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.WARNINGS;
 
 /**
- * This class implements static file writing functions for line based files.
+ * This class implements static file writing functions for line based files output files.
  *
  * @author sebastian
  * @version 2
  * @since 12
  */
-class WriteFile2Disk {
+final class WriteFile2Disk {
 
-    private static String prepareOutputFileName(Path path, String suffix) {
-        final String paramEditString = DefaultKeys.PARAM_EDIT_STRING.getValue();
+    private static Path prepareOutputFileName(final Path path, final String fileNameExtension) {
+        final String fileNameWithoutExtension = path.toString().substring(0, path.toString().length() - 4);
+        final String newFileName = fileNameWithoutExtension + "_" + DefaultKeys.PARAM_EDIT_STRING.getValue() + fileNameExtension;
 
-        return path.toString().substring(0, path.toString().length() - 4) + "_" + paramEditString + suffix;
+        return Paths.get(newFileName);
     }
 
     /**
-     * Writes a line based string file from an {@link ArrayList} to the file system and returns write success.
+     * Writes a line based string file from an {@link ArrayList} to the file system and returns the write success.
+     * <p>
+     * Within this method a check for existing files is implemented. If a file exists, the user ist asked if the
+     * file has to be overwritten or not.
      *
-     * @param path      {@link Path} object
-     * @param writeFile prepared string lines for writing
-     * @param suffix    file suffix
+     * @param path              {@link Path} object where to write into
+     * @param writeFile         prepared string lines for writing
+     * @param fileNameExtension file file name extension
      *
      * @return write success
      */
-    static boolean writeFile2Disk(Path path, ArrayList<String> writeFile, String suffix) {
+    static boolean writeFile2Disk(Path path, ArrayList<String> writeFile, String fileNameExtension) {
         boolean success;
-        String outputFileName = prepareOutputFileName(path, suffix);
 
-        if (Files.exists(Paths.get(outputFileName))) {
+        final Path outputFile = prepareOutputFileName(path, fileNameExtension);
+
+        if (Files.exists(outputFile)) {
             final Shell shell = Display.getCurrent().getActiveShell();
 
             int returnValue = MessageBoxes.showMessageBox(shell, SWT.ICON_WARNING | SWT.YES | SWT.NO,
                     ResourceBundleUtils.getLangString(LABELS, Labels.warningTextMsgBox),
-                    String.format(ResourceBundleUtils.getLangString(WARNINGS, Warnings.fileExists), outputFileName));
+                    String.format(ResourceBundleUtils.getLangString(WARNINGS, Warnings.fileExistsOverwrite), outputFile.getFileName().toString()));
 
             if (returnValue == SWT.YES) {
-                LineWriter lineWriter = new LineWriter(outputFileName);
+                LineWriter lineWriter = new LineWriter(outputFile);
 
                 success = lineWriter.writeFile(writeFile);
             } else {
                 success = false;
             }
         } else {
-            success = new LineWriter(outputFileName).writeFile(writeFile);
+            success = new LineWriter(outputFile).writeFile(writeFile);
         }
 
         return success;

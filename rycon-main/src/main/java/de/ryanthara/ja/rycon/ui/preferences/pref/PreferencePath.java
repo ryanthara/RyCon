@@ -17,6 +17,7 @@
  */
 package de.ryanthara.ja.rycon.ui.preferences.pref;
 
+import de.ryanthara.ja.rycon.ui.custom.DirectoryDialogsTypes;
 import de.ryanthara.ja.rycon.ui.preferences.editor.Editor;
 import de.ryanthara.ja.rycon.ui.preferences.editor.EditorPath;
 import de.ryanthara.ja.rycon.ui.preferences.validator.Validator;
@@ -36,8 +37,10 @@ import java.nio.file.Path;
  */
 public abstract class PreferencePath extends Preference<Path> {
 
+    private DirectoryDialogsTypes dialogType;
+
     /**
-     * Constructs a new instance of {@code PreferenceInteger} according to the parameter.
+     * Constructs a new instance of {@code PreferencePath} according to the parameter.
      *
      * @param label text string of the preference
      */
@@ -46,7 +49,7 @@ public abstract class PreferencePath extends Preference<Path> {
     }
 
     /**
-     * Constructs a new instance of {@code PreferenceInteger} according to the parameters.
+     * Constructs a new instance of {@code PreferencePath} according to the parameters.
      *
      * @param label       text string of the preference
      * @param defaultPath default value for the preference
@@ -56,13 +59,24 @@ public abstract class PreferencePath extends Preference<Path> {
     }
 
     /**
+     * Constructs a new instance of {@code PreferencePath} according to the parameters.
+     *
+     * @param label       text string of the preference
+     * @param defaultPath default value for the preference
+     */
+    protected PreferencePath(String label, Path defaultPath, DirectoryDialogsTypes dialogType) {
+        super(label, defaultPath);
+        this.dialogType = dialogType;
+    }
+
+    /**
      * Returns the corresponding editor.
      *
      * @return the editor
      */
     @Override
     public Editor<Path> getEditor() {
-        return new EditorPath(getDialog(), getDefault());
+        return new EditorPath(getDialog(), getDefault(), dialogType);
     }
 
     /**

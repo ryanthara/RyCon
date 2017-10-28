@@ -17,16 +17,24 @@
  */
 package de.ryanthara.ja.rycon.ui.preferences.editor;
 
-import de.ryanthara.ja.rycon.ui.preferences.PreferencesDialog;
-import de.ryanthara.ja.rycon.ui.preferences.validator.Validator;
+import de.ryanthara.ja.rycon.Main;
+import de.ryanthara.ja.rycon.util.check.TextCheck;
+import de.ryanthara.ja.rycon.data.PreferenceKeys;
 import de.ryanthara.ja.rycon.i18n.Preferences;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
+import de.ryanthara.ja.rycon.ui.custom.DirectoryDialogs;
+import de.ryanthara.ja.rycon.ui.custom.DirectoryDialogsTypes;
+import de.ryanthara.ja.rycon.ui.preferences.PreferencesDialog;
+import de.ryanthara.ja.rycon.ui.preferences.validator.Validator;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
 
 import java.nio.file.Path;
@@ -46,6 +54,7 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.PREFERENCES;
  */
 public class EditorPath extends Editor<Path> {
 
+    private DirectoryDialogsTypes dialogType;
     private Text text;
 
     /**
@@ -56,6 +65,18 @@ public class EditorPath extends Editor<Path> {
      */
     public EditorPath(PreferencesDialog dialog, Path defaultPath) {
         super(dialog, null, defaultPath);
+    }
+
+    /**
+     * Creates a new instance.
+     *
+     * @param dialog      parent dialog
+     * @param defaultPath default path for the editor
+     * @param dialogType  dialog type
+     */
+    public EditorPath(PreferencesDialog dialog, Path defaultPath, DirectoryDialogsTypes dialogType) {
+        super(dialog, null, defaultPath);
+        this.dialogType = dialogType;
     }
 
     /**
@@ -113,10 +134,16 @@ public class EditorPath extends Editor<Path> {
         button.setToolTipText(ResourceBundleUtils.getLangString(PREFERENCES, Preferences.pathBtnToolTip));
         button.setLayoutData(gridData);
 
+        button.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                openFileDialog();
+            }
+        });
+
         super.createUndoButton(parent);
         super.createDefaultButton(parent);
         super.update();
-
     }
 
     /**
@@ -164,6 +191,20 @@ public class EditorPath extends Editor<Path> {
     @Override
     String format(Path path) {
         return path.toString();
+    }
+
+    private void openFileDialog() {
+        String filterPath = Main.pref.getUserPreference(PreferenceKeys.DIR_BASE);
+
+        // Set the initial filter path according to anything selected or typed in
+        if (!TextCheck.isEmpty(text)) {
+            if (TextCheck.isDirExists(text)) {
+                filterPath = text.getText();
+            }
+        }
+
+        DirectoryDialogs.showAdvancedDirectoryDialog(Display.getDefault().getActiveShell(), text,
+                dialogType.getText(), dialogType.getMessage(), filterPath);
     }
 
 } // end of EditorPath

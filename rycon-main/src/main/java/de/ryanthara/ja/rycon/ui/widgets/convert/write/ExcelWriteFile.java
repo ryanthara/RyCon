@@ -17,7 +17,7 @@
  */
 package de.ryanthara.ja.rycon.ui.widgets.convert.write;
 
-import de.ryanthara.ja.rycon.converter.excel.*;
+import de.ryanthara.ja.rycon.core.converter.excel.*;
 import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
 import de.ryanthara.ja.rycon.ui.widgets.convert.SourceButton;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -94,21 +94,21 @@ public class ExcelWriteFile implements WriteFile {
         switch (SourceButton.fromIndex(parameter.getSourceNumber())) {
             case GSI8:
             case GSI16:
-                GSI2Excel gsi2Excel = new GSI2Excel(readStringFile);
+                Gsi2Excel gsi2Excel = new Gsi2Excel(readStringFile);
                 if (gsi2Excel.convertGSI2Excel(isXLS, path.getFileName().toString(), parameter.isWriteCommentLine())) {
                     workbook = gsi2Excel.getWorkbook();
                 }
                 break;
 
             case TXT:
-                TXT2Excel txt2Excel = new TXT2Excel(readStringFile);
+                Txt2Excel txt2Excel = new Txt2Excel(readStringFile);
                 if (txt2Excel.convertTXT2Excel(isXLS, path.getFileName().toString())) {
                     workbook = txt2Excel.getWorkbook();
                 }
                 break;
 
             case CSV:
-                CSV2Excel csv2Excel = new CSV2Excel(readCSVFile);
+                Csv2Excel csv2Excel = new Csv2Excel(readCSVFile);
                 if (csv2Excel.convertCSV2Excel(isXLS, path.getFileName().toString())) {
                     workbook = csv2Excel.getWorkbook();
                 }
@@ -136,14 +136,14 @@ public class ExcelWriteFile implements WriteFile {
                 break;
 
             case BASEL_STADT:
-                CSVBaselStadt2Excel csvBaselStadt2Excel = new CSVBaselStadt2Excel(readCSVFile);
+                CsvBaselStadt2Excel csvBaselStadt2Excel = new CsvBaselStadt2Excel(readCSVFile);
                 if (csvBaselStadt2Excel.convertCSVBaselStadt2Excel(isXLS, path.getFileName().toString(), parameter.isWriteCommentLine())) {
                     workbook = csvBaselStadt2Excel.getWorkbook();
                 }
                 break;
 
             case BASEL_LANDSCHAFT:
-                TXTBaselLandschaft2Excel txtBaselLandschaft2Excel = new TXTBaselLandschaft2Excel(readStringFile);
+                TxtBaselLandschaft2Excel txtBaselLandschaft2Excel = new TxtBaselLandschaft2Excel(readStringFile);
                 if (txtBaselLandschaft2Excel.convertTXTBaselLand2Excel(isXLS, path.getFileName().toString(), parameter.isWriteCommentLine())) {
                     workbook = txtBaselLandschaft2Excel.getWorkbook();
                 }

@@ -19,14 +19,15 @@
 package de.ryanthara.ja.rycon.ui.widgets;
 
 import de.ryanthara.ja.rycon.Main;
-import de.ryanthara.ja.rycon.check.PathCheck;
-import de.ryanthara.ja.rycon.check.TextCheck;
-import de.ryanthara.ja.rycon.core.GSILTOPClean;
+import de.ryanthara.ja.rycon.core.GsiLtopClean;
+import de.ryanthara.ja.rycon.util.check.PathCheck;
+import de.ryanthara.ja.rycon.util.check.TextCheck;
 import de.ryanthara.ja.rycon.core.GSITidyUp;
+import de.ryanthara.ja.rycon.core.LogfileClean;
 import de.ryanthara.ja.rycon.data.PreferenceKeys;
 import de.ryanthara.ja.rycon.i18n.*;
-import de.ryanthara.ja.rycon.io.LineReader;
-import de.ryanthara.ja.rycon.io.LineWriter;
+import de.ryanthara.ja.rycon.nio.LineReader;
+import de.ryanthara.ja.rycon.nio.LineWriter;
 import de.ryanthara.ja.rycon.ui.Sizes;
 import de.ryanthara.ja.rycon.ui.custom.*;
 import de.ryanthara.ja.rycon.ui.util.ShellPositioner;
@@ -36,7 +37,9 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -46,21 +49,22 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.*;
 import static de.ryanthara.ja.rycon.ui.custom.Status.OK;
 
 /**
- * Instances of this class implements a complete widgets and it's functionality.
+ * Instances of this class implement a complete widgets and it's functionality.
  * <p>
- * With the TidyUpWidget of RyCON it is possible to clean up coordinate and
- * measurement files with a simple 'intelligence'.
+ * With the TidyUpWidget of RyCON it is possible to clean up coordinate, measurement
+ * and <tt>Leica Geosystems</tt> logfile.txt files with a simple 'intelligence'.
  *
  * @author sebastian
- * @version 8
+ * @version 9
  * @since 1
  */
 public class TidyUpWidget extends AbstractWidget {
 
     private final static Logger logger = Logger.getLogger(TidyUpWidget.class.getName());
 
-    private final String[] acceptableFileSuffixes = new String[]{"*.gsi", "*.gsl"};
+    private final String[] acceptableFileSuffixes = new String[]{"*.gsi", "*.gsl", "*.txt"};
     private Shell parent;
+    private Button chkBoxCleanBlocksByContent;
     private Button chkBoxHoldControlPoints;
     private Button chkBoxHoldStations;
     private Path[] files2read;
@@ -106,18 +110,7 @@ public class TidyUpWidget extends AbstractWidget {
     public void executeDropInjection() {
         if ((files2read != null) && (files2read.length > 0)) {
             if (processFileOperationsDND()) {
-                String status;
-
-                final String helper = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.tidyUpStatus), Main.countFileOps);
-
-                // use counter to display different text on the status bar
-                if (Main.countFileOps == 1) {
-                    status = StringUtils.singularPluralMessage(helper, Main.TEXT_SINGULAR);
-                } else {
-                    status = StringUtils.singularPluralMessage(helper, Main.TEXT_PLURAL);
-                }
-
-                Main.statusBar.setStatus(status, OK);
+                updateStatus();
             }
         }
     }
@@ -145,19 +138,9 @@ public class TidyUpWidget extends AbstractWidget {
 
         if ((files2read != null) && (files2read.length > 0)) {
             if (processFileOperations()) {
-                String status;
-
-                final String helper = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.tidyUpStatus), Main.countFileOps);
-
-                // use counter to display different text on the status bar
-                if (Main.countFileOps == 1) {
-                    status = StringUtils.singularPluralMessage(helper, Main.TEXT_SINGULAR);
-                } else {
-                    status = StringUtils.singularPluralMessage(helper, Main.TEXT_PLURAL);
-                }
-
-                Main.statusBar.setStatus(status, OK);
+                updateStatus();
             }
+
             return true;
         }
 
@@ -216,7 +199,8 @@ public class TidyUpWidget extends AbstractWidget {
     private void actionBtnSource() {
         String[] filterNames = new String[]{
                 ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameGSI),
-                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameLTOP)
+                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameLTOP),
+                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameLogfileTXT)
         };
 
         String filterPath = Main.pref.getUserPreference(PreferenceKeys.DIR_PROJECT);
@@ -233,9 +217,12 @@ public class TidyUpWidget extends AbstractWidget {
         }
 
         Optional<Path[]> files = FileDialogs.showAdvancedFileDialog(
-                innerShell, filterPath,
+                innerShell,
+                filterPath,
                 ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.tidyUpSourceText),
-                acceptableFileSuffixes, filterNames, inputFieldsComposite.getSourceTextField(),
+                acceptableFileSuffixes,
+                filterNames,
+                inputFieldsComposite.getSourceTextField(),
                 inputFieldsComposite.getTargetTextField());
 
         if (files.isPresent()) {
@@ -261,8 +248,9 @@ public class TidyUpWidget extends AbstractWidget {
         }
 
         DirectoryDialogs.showAdvancedDirectoryDialog(innerShell, input,
-                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.tidyUpSourceText),
-                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.tidyUpSourceMessage), filterPath);
+                DirectoryDialogsTypes.DIR_GENERAL.getText(),
+                DirectoryDialogsTypes.DIR_GENERAL.getMessage(),
+                filterPath);
 
     }
 
@@ -312,6 +300,10 @@ public class TidyUpWidget extends AbstractWidget {
         chkBoxHoldStations = new Button(group, SWT.CHECK);
         chkBoxHoldStations.setSelection(false);
         chkBoxHoldStations.setText(ResourceBundleUtils.getLangString(CHECKBOXES, CheckBoxes.holdStationsTidyUp));
+
+        chkBoxCleanBlocksByContent = new Button(group, SWT.CHECK);
+        chkBoxCleanBlocksByContent.setSelection(true);
+        chkBoxCleanBlocksByContent.setText(ResourceBundleUtils.getLangString(CHECKBOXES, CheckBoxes.cleanBlocksByContent));
     }
 
     private int fileOperations(boolean holdStations, boolean holdControlPoints) {
@@ -323,28 +315,31 @@ public class TidyUpWidget extends AbstractWidget {
         for (Path path : files2read) {
             lineReader = new LineReader(path);
 
-            if (lineReader.readFile()) {
+            if (lineReader.readFile(false)) {
                 ArrayList<String> readFile = lineReader.getLines();
                 ArrayList<String> writeFile = null;
                 String file2write = null;
 
-                // processFileOperations and differ between 'normal' GSI files and LTOP 'GSL' files (case insensitive)
-                PathMatcher matcherGSI = FileSystems.getDefault().getPathMatcher("regex:(?iu:.+\\.GSI)");
-                PathMatcher matcherGSL = FileSystems.getDefault().getPathMatcher("regex:(?iu:.+\\.GSL)");
+                final String fileName = path.getFileName().toString();
 
-                if (matcherGSL.matches(path)) {
-                    GSILTOPClean gsiltopClean = new GSILTOPClean(readFile);
-                    writeFile = gsiltopClean.processLTOPClean();
+                if (fileName.toUpperCase().endsWith(".GSL")) {
+                    GsiLtopClean gsiLtopClean = new GsiLtopClean(readFile);
+                    writeFile = gsiLtopClean.processLTOPClean();
                     file2write = path.toString().substring(0, path.toString().length() - 4) + "_" + ltopString + ".GSI";
-                } else if (matcherGSI.matches(path)) {
+                } else if (fileName.toUpperCase().endsWith("GSI")) {
                     GSITidyUp gsiTidyUp = new GSITidyUp(readFile);
                     writeFile = gsiTidyUp.processTidyUp(holdStations, holdControlPoints);
                     file2write = path.toString().substring(0, path.toString().length() - 4) + "_" + editString + ".GSI";
+                } else if (fileName.toUpperCase().endsWith("LOGFILE.TXT")) {
+                    LogfileClean logfileClean = new LogfileClean(readFile);
+                    writeFile = logfileClean.processTidyUp(chkBoxCleanBlocksByContent.getSelection());
+                    file2write = path.toString().substring(0, path.toString().length() - 4) + "_" + editString + ".txt";
                 }
 
                 // write file line by line
-                if (file2write != null) {
-                    LineWriter lineWriter = new LineWriter(file2write);
+                if (writeFile != null && file2write != null) {
+                    // TODO Use WriteFile2Disk instead this
+                    LineWriter lineWriter = new LineWriter(Paths.get(file2write));
                     if (lineWriter.writeFile(writeFile)) {
                         counter = counter + 1;
                     }
@@ -408,6 +403,21 @@ public class TidyUpWidget extends AbstractWidget {
         } else {
             return false;
         }
+    }
+
+    private void updateStatus() {
+        String status;
+
+        final String helper = ResourceBundleUtils.getLangString(MESSAGES, Messages.tidyUpStatus);
+
+        // use counter to display different text on the status bar
+        if (Main.countFileOps == 1) {
+            status = String.format(StringUtils.singularPluralMessage(helper, Main.TEXT_SINGULAR), Main.countFileOps);
+        } else {
+            status = String.format(StringUtils.singularPluralMessage(helper, Main.TEXT_PLURAL), Main.countFileOps);
+        }
+
+        Main.statusBar.setStatus(status, OK);
     }
 
 } // end of TidyUpWidget

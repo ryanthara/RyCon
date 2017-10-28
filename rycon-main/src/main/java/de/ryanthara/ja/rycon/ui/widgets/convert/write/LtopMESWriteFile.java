@@ -18,8 +18,8 @@
 package de.ryanthara.ja.rycon.ui.widgets.convert.write;
 
 import de.ryanthara.ja.rycon.Main;
-import de.ryanthara.ja.rycon.converter.ltop.GSI2MES;
-import de.ryanthara.ja.rycon.converter.ltop.Zeiss2LTOP;
+import de.ryanthara.ja.rycon.core.converter.ltop.Gsi2Mes;
+import de.ryanthara.ja.rycon.core.converter.ltop.Zeiss2Ltop;
 import de.ryanthara.ja.rycon.data.PreferenceKeys;
 import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
 import de.ryanthara.ja.rycon.ui.widgets.convert.SourceButton;
@@ -78,14 +78,14 @@ public class LtopMESWriteFile implements WriteFile {
         switch (SourceButton.fromIndex(parameter.getSourceNumber())) {
             case GSI8:
             case GSI16:
-                GSI2MES gsi2MES = new GSI2MES(readStringFile);
-                writeFile = gsi2MES.convertGSI2MES(Boolean.parseBoolean(Main.pref.getUserPreference(
+                Gsi2Mes gsi2Mes = new Gsi2Mes(readStringFile);
+                writeFile = gsi2Mes.convertGSI2MES(Boolean.parseBoolean(Main.pref.getUserPreference(
                         PreferenceKeys.CONVERTER_SETTING_LTOP_USE_ZENITH_DISTANCE)));
                 break;
 
             case ZEISS_REC:
-                Zeiss2LTOP zeiss2LTOP = new Zeiss2LTOP(readStringFile);
-                writeFile = zeiss2LTOP.convertZeiss2MES(Boolean.parseBoolean(Main.pref.getUserPreference(
+                Zeiss2Ltop zeiss2Ltop = new Zeiss2Ltop(readStringFile);
+                writeFile = zeiss2Ltop.convertZeiss2MES(Boolean.parseBoolean(Main.pref.getUserPreference(
                         PreferenceKeys.CONVERTER_SETTING_LTOP_USE_ZENITH_DISTANCE)));
                 break;
 

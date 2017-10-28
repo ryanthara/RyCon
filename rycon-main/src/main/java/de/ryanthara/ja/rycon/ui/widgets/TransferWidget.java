@@ -18,16 +18,17 @@
 package de.ryanthara.ja.rycon.ui.widgets;
 
 import de.ryanthara.ja.rycon.Main;
-import de.ryanthara.ja.rycon.check.PathCheck;
-import de.ryanthara.ja.rycon.check.TextCheck;
+import de.ryanthara.ja.rycon.util.check.PathCheck;
+import de.ryanthara.ja.rycon.util.check.TextCheck;
 import de.ryanthara.ja.rycon.data.PreferenceKeys;
-import de.ryanthara.ja.rycon.file.filter.FileFileFilter;
-import de.ryanthara.ja.rycon.file.filter.GSIFileFilter;
-import de.ryanthara.ja.rycon.file.filter.TXTFileFilter;
+import de.ryanthara.ja.rycon.nio.filter.FilesFilter;
+import de.ryanthara.ja.rycon.nio.filter.GsiFilter;
+import de.ryanthara.ja.rycon.nio.filter.TxtFilter;
 import de.ryanthara.ja.rycon.i18n.*;
 import de.ryanthara.ja.rycon.ui.Sizes;
 import de.ryanthara.ja.rycon.ui.custom.BottomButtonBar;
 import de.ryanthara.ja.rycon.ui.custom.DirectoryDialogs;
+import de.ryanthara.ja.rycon.ui.custom.DirectoryDialogsTypes;
 import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
 import de.ryanthara.ja.rycon.ui.util.ShellPositioner;
 import de.ryanthara.ja.rycon.util.BoundedTreeSet;
@@ -43,7 +44,10 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
 import java.io.IOException;
-import java.nio.file.*;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,16 +57,6 @@ import java.util.logging.Logger;
 
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.*;
 import static de.ryanthara.ja.rycon.ui.custom.Status.OK;
-import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
-import static java.nio.file.StandardWatchEventKinds.ENTRY_DELETE;
-
-// TODO: 12.08.17  implement clean and elegant workflow and error handling path
-// - no card available
-// - insert empty card or one with wrong folder structure
-// - read path and update lists
-// - add project number with or without path
-// - copy files
-// - moveFile files
 
 /**
  * A widget which is used to transfer measurement data from a card reader
@@ -100,6 +94,7 @@ public class TransferWidget extends AbstractWidget {
     private List jobList;
     private List lastUsedProjectsList;
     private BoundedTreeSet<String> lastUsedProjects;
+    private int countCopiedFiles;
 
     /**
      * Constructs the {@link TransferWidget} without parameters.
@@ -124,6 +119,8 @@ public class TransferWidget extends AbstractWidget {
     boolean actionBtnOk() {
         boolean success;
 
+        countCopiedFiles = 0;
+
         if (checkCardReaderPath()) {
             // one or more items selected in a list
             final int number = dataList.getSelectionCount() + exportList.getSelectionCount() + jobList.getSelectionCount();
@@ -139,20 +136,23 @@ public class TransferWidget extends AbstractWidget {
                     }
 
                     String helper, message;
+
                     if (chkBoxMoveOption.getSelection()) {
                         helper = ResourceBundleUtils.getLangString(MESSAGES, Messages.transferMoveMessage);
                     } else {
                         helper = ResourceBundleUtils.getLangString(MESSAGES, Messages.transferCopyMessage);
                     }
 
-                    if (number == 1) {
-                        message = String.format(StringUtils.singularPluralMessage(helper, Main.TEXT_SINGULAR), number);
+                    if (countCopiedFiles == 1) {
+                        message = String.format(StringUtils.singularPluralMessage(helper, Main.TEXT_SINGULAR), countCopiedFiles);
                     } else {
-                        message = String.format(StringUtils.singularPluralMessage(helper, Main.TEXT_PLURAL), number);
+                        message = String.format(StringUtils.singularPluralMessage(helper, Main.TEXT_PLURAL), countCopiedFiles);
                     }
 
-                    MessageBoxes.showMessageBox(parent, SWT.ICON_INFORMATION,
-                            ResourceBundleUtils.getLangString(MESSAGES, Messages.transferText), message);
+                    if (countCopiedFiles > 0) {
+                        MessageBoxes.showMessageBox(parent, SWT.ICON_INFORMATION,
+                                ResourceBundleUtils.getLangString(MESSAGES, Messages.transferText), message);
+                    }
 
                     return success;
                 } else {
@@ -233,8 +233,9 @@ public class TransferWidget extends AbstractWidget {
         }
 
         DirectoryDialogs.showAdvancedDirectoryDialog(innerShell, cardReaderPath,
-                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.cardReaderText),
-                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.cardReaderMessage), filterPath);
+                DirectoryDialogsTypes.DIR_CARD_READER.getText(),
+                DirectoryDialogsTypes.DIR_CARD_READER.getMessage(),
+                filterPath);
 
         checkCardReaderPathAndUpdateListsAndPreferences();
     }
@@ -250,8 +251,9 @@ public class TransferWidget extends AbstractWidget {
         }
 
         DirectoryDialogs.showAdvancedDirectoryDialog(innerShell, targetProjectPath,
-                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.dirProjectText),
-                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.dirProjectMessage), filterPath);
+                DirectoryDialogsTypes.DIR_PROJECT.getText(),
+                DirectoryDialogsTypes.DIR_PROJECT.getMessage(),
+                filterPath);
     }
 
     /**
@@ -330,7 +332,11 @@ public class TransferWidget extends AbstractWidget {
                 FileUtils.copy(source, target, overwriteExisting);
             }
 
+            countCopiedFiles++;
+
             success = true;
+        } catch (FileAlreadyExistsException e) {
+            showFileExistsWarning(target);
         } catch (IOException e) {
             if (source != null && target != null) {
                 logger.log(Level.SEVERE, "error while copying " + source.getFileName().toString() +
@@ -349,9 +355,6 @@ public class TransferWidget extends AbstractWidget {
         return copyMoveExportFiles(overwriteExisting) | copyMoveJobFiles(overwriteExisting) | copyMoveDataFiles(overwriteExisting);
     }
 
-    /*
-     * The file 'logfile.txt' can not be chosen and is copied automatically if it is present.
-     */
     private boolean copyMoveDataFiles(boolean overwriteExisting) {
         final String delimiter = FileSystems.getDefault().getSeparator();
 
@@ -363,41 +366,28 @@ public class TransferWidget extends AbstractWidget {
         if (PathCheck.directoryExists(dir)) {
             String destinationPath = targetProjectPath.getText() + delimiter + Main.pref.getUserPreference(PreferenceKeys.DIR_PROJECT_LOG_FILES);
 
-            // no file is selected -> copy 'logfile.txt'
-            if (selectedDataFiles.length == 0) {
-                final String logFile = dir + delimiter + "logfile.txt";
+            boolean success;
 
-                if (PathCheck.fileExists(logFile)) {
-                    final LocalDate localDate = LocalDate.now();
-                    final Path source = Paths.get(logFile);
-                    final Path target = Paths.get(destinationPath + delimiter + localDate.toString() + "_logfile.txt");
+            for (String dataFileName : selectedDataFiles) {
+                success = false;
 
-                    return copyFiles(source, target, overwriteExisting);
-                }
-            } else {
-                boolean success = false;
+                for (Path source : allDatas) {
+                    if (PathCheck.fileExists(source)) {
+                        if (source.endsWith(dataFileName)) {
+                            Path target;
 
-                for (String dataFileName : selectedDataFiles) {
-                    success = false;
+                            // insert current date into logfile name
+                            if (source.endsWith("logfile.txt")) {
+                                final LocalDate localDate = LocalDate.now();
+                                final String logFileName = source.getFileName().toString();
+                                final String newFileName = logFileName.replaceAll("logfile.txt", localDate.toString() + "_logfile.txt");
 
-                    for (Path source : allDatas) {
-                        if (PathCheck.fileExists(source)) {
-                            if (source.endsWith(dataFileName)) {
-                                Path target;
-
-                                // insert current date into logfile name
-                                if (source.endsWith("logfile.txt")) {
-                                    final LocalDate localDate = LocalDate.now();
-                                    final String logFileName = source.getFileName().toString();
-                                    final String newFileName = logFileName.replaceAll("logfile.txt", localDate.toString() + "_logfile.txt");
-
-                                    target = Paths.get(destinationPath + delimiter + newFileName);
-                                } else {
-                                    target = Paths.get(destinationPath + delimiter + source.getFileName().toString());
-                                }
-
-                                success = copyFiles(source, target, overwriteExisting);
+                                target = Paths.get(destinationPath + delimiter + newFileName);
+                            } else {
+                                target = Paths.get(destinationPath + delimiter + source.getFileName().toString());
                             }
+
+                            success = copyFiles(source, target, overwriteExisting);
                         }
                     }
                 }
@@ -432,17 +422,7 @@ public class TransferWidget extends AbstractWidget {
                             final String dest = targetProjectPath.getText() + delimiter + Main.pref.getUserPreference(PreferenceKeys.DIR_PROJECT_MEASUREMENT_FILES);
                             final Path target = Paths.get(dest + delimiter + source.getFileName().toString());
 
-                            try {
-                                if (chkBoxMoveOption.getSelection()) {
-                                    FileUtils.move(source, target, overwriteExisting);
-                                } else {
-                                    FileUtils.copy(source, target, overwriteExisting);
-                                }
-                                success = true;
-                            } catch (IOException e) {
-                                logger.log(Level.SEVERE, "error while copying export file from " + source.getFileName() +
-                                        " to " + target.getFileName(), e);
-                            }
+                            success = copyFiles(source, target, overwriteExisting);
                         }
                     }
                 }
@@ -478,17 +458,7 @@ public class TransferWidget extends AbstractWidget {
                             final String dest = targetProjectPath.getText() + delimiter + Main.pref.getUserPreference(PreferenceKeys.DIR_PROJECT_JOB_FILES);
                             final Path target = Paths.get(dest + delimiter + source.getFileName().toString());
 
-                            try {
-                                if (chkBoxMoveOption.getSelection()) {
-                                    FileUtils.move(source, target, overwriteExisting);
-                                } else {
-                                    FileUtils.copy(source, target, overwriteExisting);
-                                }
-                                success = true;
-                            } catch (IOException e) {
-                                logger.log(Level.SEVERE, "error while copying job file from " + source.getFileName() +
-                                        " to " + target.getFileName(), e);
-                            }
+                            success = copyFiles(source, target, overwriteExisting);
                         }
                     }
                 }
@@ -542,8 +512,6 @@ public class TransferWidget extends AbstractWidget {
         // reacts on keyboard or clipboard input for updating the lists
         cardReaderPath.addModifyListener(arg0 -> checkCardReaderPathAndUpdateListsAndPreferences());
 
-        addCardReaderPathListener(cardReader);
-
         gridData = new GridData();
         gridData.grabExcessHorizontalSpace = true;
         gridData.horizontalAlignment = GridData.FILL;
@@ -568,30 +536,6 @@ public class TransferWidget extends AbstractWidget {
         };
 
         group.setTabList(tabulatorKeyOrder);
-    }
-
-    private void addCardReaderPathListener(Path dir) {
-        try {
-            WatchService watcher = dir.getFileSystem().newWatchService();
-            dir.register(watcher,
-                    ENTRY_CREATE,
-                    StandardWatchEventKinds.ENTRY_MODIFY,
-                    ENTRY_DELETE);
-
-            WatchKey watchKey = watcher.take();
-
-            java.util.List<WatchEvent<?>> events = watchKey.pollEvents();
-            for (WatchEvent event : events) {
-                if (event.kind().name().equals(ENTRY_CREATE.name())) {
-                    System.out.println("Someone just created the file '" + event.context().toString() + "'.");
-                } else if (event.kind().name().equals(ENTRY_DELETE.name())) {
-                    System.out.println("Someone just delete the file '" + event.context().toString() + "'.");
-                }
-            }
-
-        } catch (Exception e) {
-            System.out.println("Error: " + e.toString());
-        }
     }
 
     private void createGroupChooseData(int width) {
@@ -619,6 +563,11 @@ public class TransferWidget extends AbstractWidget {
         jobGroup.setLayout(gridLayout);
 
         jobList = new List(jobGroup, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
+        jobList.addListener(SWT.DefaultSelection, e -> {
+            for (int aSelection : jobList.getSelectionIndices()) {
+                jobList.deselect(aSelection);
+            }
+        });
 
         gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
         gridData.heightHint = groupHeight;
@@ -634,6 +583,11 @@ public class TransferWidget extends AbstractWidget {
         exportGroup.setLayout(gridLayout);
 
         exportList = new List(exportGroup, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
+        exportList.addListener(SWT.DefaultSelection, e -> {
+            for (int aSelection : exportList.getSelectionIndices()) {
+                exportList.deselect(aSelection);
+            }
+        });
 
         gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
         gridData.heightHint = groupHeight;
@@ -649,6 +603,11 @@ public class TransferWidget extends AbstractWidget {
         dataGroup.setLayout(gridLayout);
 
         dataList = new List(dataGroup, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
+        dataList.addListener(SWT.DefaultSelection, e -> {
+            for (int aSelection : dataList.getSelectionIndices()) {
+                dataList.deselect(aSelection);
+            }
+        });
 
         gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
         gridData.heightHint = groupHeight;
@@ -840,7 +799,7 @@ public class TransferWidget extends AbstractWidget {
         final String dataFilesDir = cardReaderPath + FileSystems.getDefault().getSeparator() +
                 Main.pref.getUserPreference(PreferenceKeys.DIR_CARD_READER_DATA_FILES);
 
-        final ArrayList<Path> dataFileDirContent = FileUtils.listFiles(dataFilesDir, new TXTFileFilter());
+        final ArrayList<Path> dataFileDirContent = FileUtils.listFiles(dataFilesDir, new TxtFilter());
 
         allDatas = new TreeSet<>();
 
@@ -868,7 +827,7 @@ public class TransferWidget extends AbstractWidget {
         final String exportFilesDir = cardReaderPath + FileSystems.getDefault().getSeparator() +
                 Main.pref.getUserPreference(PreferenceKeys.DIR_CARD_READER_EXPORT_FILES);
 
-        final ArrayList<Path> exportFileDirContentGSI = FileUtils.listFiles(exportFilesDir, new GSIFileFilter());
+        final ArrayList<Path> exportFileDirContentGSI = FileUtils.listFiles(exportFilesDir, new GsiFilter());
 
         allExports = new TreeSet<>();
 
@@ -880,7 +839,7 @@ public class TransferWidget extends AbstractWidget {
             }
         }
 
-        final ArrayList<Path> exportFileDirContentTXT = FileUtils.listFiles(exportFilesDir, new TXTFileFilter());
+        final ArrayList<Path> exportFileDirContentTXT = FileUtils.listFiles(exportFilesDir, new TxtFilter());
 
         if (exportFileDirContentTXT != null) {
             for (Path path : exportFileDirContentTXT) {
@@ -906,7 +865,7 @@ public class TransferWidget extends AbstractWidget {
         final String jobFilesDir = cardReaderPath + FileSystems.getDefault().getSeparator() +
                 Main.pref.getUserPreference(PreferenceKeys.DIR_CARD_READER_JOB_FILES);
 
-        final ArrayList<Path> jobFileDirContent = FileUtils.listFiles(jobFilesDir, new FileFileFilter());
+        final ArrayList<Path> jobFileDirContent = FileUtils.listFiles(jobFilesDir, new FilesFilter());
 
         TreeSet<String> allJobs = new TreeSet<>();
 
@@ -942,6 +901,12 @@ public class TransferWidget extends AbstractWidget {
         MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR,
                 ResourceBundleUtils.getLangString(LABELS, Labels.errorTextMsgBox),
                 ResourceBundleUtils.getLangString(ERRORS, Errors.cardReaderPathNotExists));
+    }
+
+    private void showFileExistsWarning(Path path) {
+        MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING,
+                ResourceBundleUtils.getLangString(LABELS, Labels.warningTextMsgBox),
+                String.format(ResourceBundleUtils.getLangString(WARNINGS, Warnings.fileExists), path.getFileName()));
     }
 
     /*

@@ -102,23 +102,6 @@ public class PreferencesDialog {
     }
 
     /**
-     * Adds a new category to the dialog with name and icon which is shown as a {@link TabItem}.
-     *
-     * @param name  name of the tab
-     * @param image image on the tab
-     */
-    private void addCategory(String name, Image image) {
-        if (name == null) {
-            throw new NullPointerException("name must not be null");
-        }
-
-        this.category = name;
-        this.images.put(name, image);
-        this.categories.add(name);
-        this.preferences.put(name, new ArrayList<>());
-    }
-
-    /**
      * Adds a new {@link Group} to the tab.
      *
      * @param text group text
@@ -168,6 +151,31 @@ public class PreferencesDialog {
         }
     }
 
+    private void actionBtnSave() {
+        Main.pref.setDefaultSettingsGenerated(false);
+        Main.setSubShellStatus(false);
+        Main.statusBar.setStatus("", OK);
+
+        widgetDispose();
+    }
+
+    /**
+     * Adds a new category to the dialog with name and icon which is shown as a {@link TabItem}.
+     *
+     * @param name  name of the tab
+     * @param image image on the tab
+     */
+    private void addCategory(String name, Image image) {
+        if (name == null) {
+            throw new NullPointerException("name must not be null");
+        }
+
+        this.category = name;
+        this.images.put(name, image);
+        this.categories.add(name);
+        this.preferences.put(name, new ArrayList<>());
+    }
+
     /**
      * Creates the button bar with the save settings button.
      *
@@ -199,14 +207,6 @@ public class PreferencesDialog {
         });
 
         saveButton.setEnabled(hasChanged());
-    }
-
-    private void actionBtnSave() {
-        Main.pref.setDefaultSettingsGenerated(false);
-        Main.setSubShellStatus(false);
-        Main.statusBar.setStatus("", OK);
-
-        widgetDispose();
     }
 
     /**

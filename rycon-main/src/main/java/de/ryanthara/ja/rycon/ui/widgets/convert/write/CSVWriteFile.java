@@ -17,7 +17,7 @@
  */
 package de.ryanthara.ja.rycon.ui.widgets.convert.write;
 
-import de.ryanthara.ja.rycon.converter.csv.*;
+import de.ryanthara.ja.rycon.core.converter.csv.*;
 import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
 import de.ryanthara.ja.rycon.ui.widgets.convert.SourceButton;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -80,41 +80,41 @@ public class CSVWriteFile implements WriteFile {
         switch (SourceButton.fromIndex(parameter.getSourceNumber())) {
             case GSI8:
             case GSI16:
-                GSI2CSV gsi2CSV = new GSI2CSV(readStringFile);
-                writeFile = gsi2CSV.convertGSI2CSV(parameter.getSeparatorCSV(), parameter.isWriteCommentLine());
+                Gsi2Csv gsi2Csv = new Gsi2Csv(readStringFile);
+                writeFile = gsi2Csv.convertGSI2CSV(parameter.getSeparatorCSV(), parameter.isWriteCommentLine());
                 break;
 
             case TXT:
-                TXT2CSV txt2CSV = new TXT2CSV(readStringFile);
-                writeFile = txt2CSV.convertTXT2CSV(parameter.getSeparatorCSV());
+                Txt2Csv txt2Csv = new Txt2Csv(readStringFile);
+                writeFile = txt2Csv.convertTXT2CSV(parameter.getSeparatorCSV());
                 break;
 
             case CSV:
                 break;
 
             case CAPLAN_K:
-                Caplan2CSV caplan2CSV = new Caplan2CSV(readStringFile);
-                writeFile = caplan2CSV.convertK2CSV(parameter.getSeparatorCSV(), parameter.isKFormatUseSimpleFormat(), parameter.isWriteCommentLine(), parameter.isWriteCodeColumn());
+                Caplan2Csv caplan2Csv = new Caplan2Csv(readStringFile);
+                writeFile = caplan2Csv.convertK2CSV(parameter.getSeparatorCSV(), parameter.isKFormatUseSimpleFormat(), parameter.isWriteCommentLine(), parameter.isWriteCodeColumn());
                 break;
 
             case ZEISS_REC:
-                Zeiss2CSV zeiss2CSV = new Zeiss2CSV(readStringFile);
-                zeiss2CSV.convertZeiss2CSV(parameter.getSeparatorCSV());
+                Zeiss2Csv zeiss2Csv = new Zeiss2Csv(readStringFile);
+                zeiss2Csv.convertZeiss2CSV(parameter.getSeparatorCSV());
                 break;
 
             case CADWORK:
-                Cadwork2CSV cadwork2CSV = new Cadwork2CSV(readStringFile);
-                writeFile = cadwork2CSV.convertCadwork2CSV(parameter.getSeparatorCSV(), parameter.isWriteCommentLine(), parameter.isWriteCodeColumn(), parameter.isCadworkUseZeroHeights());
+                Cadwork2Csv cadwork2Csv = new Cadwork2Csv(readStringFile);
+                writeFile = cadwork2Csv.convertCadwork2CSV(parameter.getSeparatorCSV(), parameter.isWriteCommentLine(), parameter.isWriteCodeColumn(), parameter.isCadworkUseZeroHeights());
                 break;
 
             case BASEL_STADT:
-                CSVBaselStadt2CSV csvBaselStadt2CSV = new CSVBaselStadt2CSV(readCSVFile);
-                writeFile = csvBaselStadt2CSV.convertCSVBaselStadt2CSV(parameter.getSeparatorCSV());
+                CsvBaselStadt2Csv csvBaselStadt2Csv = new CsvBaselStadt2Csv(readCSVFile);
+                writeFile = csvBaselStadt2Csv.convertCSVBaselStadt2CSV(parameter.getSeparatorCSV());
                 break;
 
             case BASEL_LANDSCHAFT:
-                TXTBaselLandschaft2CSV txtBaselLandschaft2CSV = new TXTBaselLandschaft2CSV(readStringFile);
-                writeFile = txtBaselLandschaft2CSV.convertTXTBaselLandschaft2CSV(parameter.getSeparatorCSV());
+                TxtBaselLandschaft2Csv txtBaselLandschaft2Csv = new TxtBaselLandschaft2Csv(readStringFile);
+                writeFile = txtBaselLandschaft2Csv.convertTXTBaselLandschaft2CSV(parameter.getSeparatorCSV());
                 break;
 
             default:

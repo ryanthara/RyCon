@@ -29,6 +29,7 @@ package de.ryanthara.ja.rycon.i18n;
  */
 public enum CheckBoxes implements ResourceKeys {
 
+    cleanBlocksByContent,
     createAdminFolder,
     createBigDataFolder,
     createProjectFolder,

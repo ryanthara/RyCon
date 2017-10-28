@@ -17,7 +17,7 @@
  */
 package de.ryanthara.ja.rycon.ui.widgets.convert.write;
 
-import de.ryanthara.ja.rycon.converter.zeiss.ZeissDialect;
+import de.ryanthara.ja.rycon.core.converter.zeiss.ZeissDialect;
 
 /**
  * Instances of this class holds parameter for the writing classes in the package {@link de.ryanthara.ja.rycon.ui.widgets.convert.write}

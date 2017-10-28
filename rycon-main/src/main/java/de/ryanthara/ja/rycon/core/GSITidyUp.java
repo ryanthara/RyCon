@@ -18,7 +18,7 @@
 package de.ryanthara.ja.rycon.core;
 
 import de.ryanthara.ja.rycon.Main;
-import de.ryanthara.ja.rycon.converter.gsi.BaseToolsGSI;
+import de.ryanthara.ja.rycon.core.converter.gsi.BaseToolsGsi;
 import de.ryanthara.ja.rycon.data.PreferenceKeys;
 
 import java.util.ArrayList;
@@ -51,6 +51,8 @@ public class GSITidyUp {
      * structure in the measurement file. Stations are identified by word index (WI).
      * The control and stake out points are identified by the order in the file and
      * with the stake out pattern (e.g. 'STKE').
+     * <p>
+     * Due to some limitations issues there is no better 'intelligence' at the moment.
      *
      * @param holdStations      decide to hold station lines
      * @param holdControlPoints decide to hold control points
@@ -123,11 +125,11 @@ public class GSITidyUp {
             currentLine = readStringLines.get(i);
 
             // detect two face measurement for target measurement
-            String currentPointNumber = BaseToolsGSI.getPointNumber(currentLine);
-            String previousPointNumber = BaseToolsGSI.getPointNumber(previousLine);
+            String currentPointNumber = BaseToolsGsi.getPointNumber(currentLine);
+            String previousPointNumber = BaseToolsGsi.getPointNumber(previousLine);
 
             // detect line type
-            if (BaseToolsGSI.isTargetLine(currentLine)) {
+            if (BaseToolsGsi.isTargetLine(currentLine)) {
                 helperArray[i] = 1;
 
                 if (currentPointNumber.equals(previousPointNumber)) {
@@ -169,7 +171,7 @@ public class GSITidyUp {
         for (int i = 0; i < helperArray.length; i++) {
             int value = helperArray[i];
 
-            String resultLine = BaseToolsGSI.prepareLineEnding(readStringLines.get(i));
+            String resultLine = BaseToolsGsi.prepareLineEnding(readStringLines.get(i));
 
             if (value == 9) {
                 result.add(resultLine);

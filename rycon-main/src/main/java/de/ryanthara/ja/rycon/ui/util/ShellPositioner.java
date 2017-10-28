@@ -67,6 +67,10 @@ public class ShellPositioner {
     public static Point positShell(Shell shell) {
         Monitor[] monitors = shell.getDisplay().getMonitors();
 
+        System.out.println("monitors.length() " + monitors.length);
+        System.out.println("Last used Display: " + Main.pref.getUserPreference(PreferenceKeys.LAST_USED_DISPLAY));
+        //Main.pref.setUserPreference(PreferenceKeys.LAST_USED_DISPLAY, "-1");
+
         if (Main.pref.getUserPreference(PreferenceKeys.LAST_USED_DISPLAY).equals("-1")) {
             return centerShellOnPrimaryMonitor(shell);
         } else if (monitors.length >= Integer.parseInt(Main.pref.getUserPreference(PreferenceKeys.LAST_USED_DISPLAY))) {

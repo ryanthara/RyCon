@@ -18,7 +18,7 @@
 
 package de.ryanthara.ja.rycon.ui.custom;
 
-import de.ryanthara.ja.rycon.check.TextCheck;
+import de.ryanthara.ja.rycon.util.check.TextCheck;
 import de.ryanthara.ja.rycon.i18n.Buttons;
 import de.ryanthara.ja.rycon.i18n.Labels;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;

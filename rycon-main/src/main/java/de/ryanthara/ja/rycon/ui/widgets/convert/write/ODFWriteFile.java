@@ -17,7 +17,7 @@
  */
 package de.ryanthara.ja.rycon.ui.widgets.convert.write;
 
-import de.ryanthara.ja.rycon.converter.odf.*;
+import de.ryanthara.ja.rycon.core.converter.odf.*;
 import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
 import de.ryanthara.ja.rycon.ui.widgets.convert.SourceButton;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -70,58 +70,58 @@ public class ODFWriteFile implements WriteFile {
         switch (SourceButton.fromIndex(parameter.getSourceNumber())) {
             case GSI8:
             case GSI16:
-                GSI2ODF gsi2ODF = new GSI2ODF(readStringFile);
-                if (gsi2ODF.convertGSI2ODS(path.getFileName(), parameter.isWriteCommentLine())) {
-                    spreadsheetDocument = gsi2ODF.getSpreadsheetDocument();
+                Gsi2Odf gsi2Odf = new Gsi2Odf(readStringFile);
+                if (gsi2Odf.convertGSI2ODS(path.getFileName(), parameter.isWriteCommentLine())) {
+                    spreadsheetDocument = gsi2Odf.getSpreadsheetDocument();
                 }
                 break;
 
             case TXT:
-                TXT2ODF txt2ODF = new TXT2ODF(readStringFile);
-                if (txt2ODF.convertTXT2ODS(path.getFileName())) {
-                    spreadsheetDocument = txt2ODF.getSpreadsheetDocument();
+                Txt2Odf txt2Odf = new Txt2Odf(readStringFile);
+                if (txt2Odf.convertTXT2ODS(path.getFileName())) {
+                    spreadsheetDocument = txt2Odf.getSpreadsheetDocument();
                 }
                 break;
 
             case CSV:
-                CSV2ODF csv2ODF = new CSV2ODF(readCSVFile);
-                if (csv2ODF.convertCSV2ODS(path.getFileName())) {
-                    spreadsheetDocument = csv2ODF.getSpreadsheetDocument();
+                Csv2Odf csv2Odf = new Csv2Odf(readCSVFile);
+                if (csv2Odf.convertCSV2ODS(path.getFileName())) {
+                    spreadsheetDocument = csv2Odf.getSpreadsheetDocument();
                 }
                 break;
 
             case CAPLAN_K:
-                Caplan2ODF caplan2ODF = new Caplan2ODF(readStringFile);
-                if (caplan2ODF.convertCaplan2ODS(path.getFileName(), parameter.isWriteCommentLine())) {
-                    spreadsheetDocument = caplan2ODF.getSpreadsheetDocument();
+                Caplan2Odf caplan2Odf = new Caplan2Odf(readStringFile);
+                if (caplan2Odf.convertCaplan2ODS(path.getFileName(), parameter.isWriteCommentLine())) {
+                    spreadsheetDocument = caplan2Odf.getSpreadsheetDocument();
                 }
                 break;
 
             case ZEISS_REC:
-                Zeiss2ODF zeiss2ODF = new Zeiss2ODF(readStringFile);
-                if (zeiss2ODF.convertZeiss2ODS(path.getFileName())) {
-                    spreadsheetDocument = zeiss2ODF.getSpreadsheetDocument();
+                Zeiss2Odf zeiss2Odf = new Zeiss2Odf(readStringFile);
+                if (zeiss2Odf.convertZeiss2ODS(path.getFileName())) {
+                    spreadsheetDocument = zeiss2Odf.getSpreadsheetDocument();
                 }
                 break;
 
             case CADWORK:
-                Cadwork2ODF cadwork2ODF = new Cadwork2ODF(readStringFile);
-                if (cadwork2ODF.convertCadwork2ODS(path.getFileName(), parameter.isWriteCommentLine())) {
-                    spreadsheetDocument = cadwork2ODF.getSpreadsheetDocument();
+                Cadwork2Odf cadwork2Odf = new Cadwork2Odf(readStringFile);
+                if (cadwork2Odf.convertCadwork2ODS(path.getFileName(), parameter.isWriteCommentLine())) {
+                    spreadsheetDocument = cadwork2Odf.getSpreadsheetDocument();
                 }
                 break;
 
             case BASEL_STADT:
-                CSVBaselStadt2ODF csvBaselStadt2ODF = new CSVBaselStadt2ODF(readCSVFile);
-                if (csvBaselStadt2ODF.convertCSVBaselStadt2ODS(path.getFileName(), parameter.isWriteCommentLine())) {
-                    spreadsheetDocument = csvBaselStadt2ODF.getSpreadsheetDocument();
+                CsvBaselStadt2Odf csvBaselStadt2Odf = new CsvBaselStadt2Odf(readCSVFile);
+                if (csvBaselStadt2Odf.convertCSVBaselStadt2ODS(path.getFileName(), parameter.isWriteCommentLine())) {
+                    spreadsheetDocument = csvBaselStadt2Odf.getSpreadsheetDocument();
                 }
                 break;
 
             case BASEL_LANDSCHAFT:
-                TXTBaselLandschaft2ODF txtBaselLandschaft2ODF = new TXTBaselLandschaft2ODF(readStringFile);
-                if (txtBaselLandschaft2ODF.convertTXTBaselLandschaft2ODS(path.getFileName(), parameter.isWriteCommentLine())) {
-                    spreadsheetDocument = txtBaselLandschaft2ODF.getSpreadsheetDocument();
+                TxtBaselLandschaft2Odf txtBaselLandschaft2Odf = new TxtBaselLandschaft2Odf(readStringFile);
+                if (txtBaselLandschaft2Odf.convertTXTBaselLandschaft2ODS(path.getFileName(), parameter.isWriteCommentLine())) {
+                    spreadsheetDocument = txtBaselLandschaft2Odf.getSpreadsheetDocument();
                 }
                 break;
 

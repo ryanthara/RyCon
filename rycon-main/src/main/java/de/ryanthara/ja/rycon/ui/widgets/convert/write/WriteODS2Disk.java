@@ -18,7 +18,7 @@
 package de.ryanthara.ja.rycon.ui.widgets.convert.write;
 
 import de.ryanthara.ja.rycon.data.DefaultKeys;
-import de.ryanthara.ja.rycon.file.FileToolsODF;
+import de.ryanthara.ja.rycon.nio.FileToolsOdf;
 import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
 import de.ryanthara.ja.rycon.i18n.Labels;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
@@ -62,18 +62,18 @@ class WriteODS2Disk {
         boolean writeSuccess;
         String outputFileName = prepareOutputFileName(path, ".ods");
 
-        FileToolsODF fileToolsODF = new FileToolsODF(spreadsheetDocument);
+        FileToolsOdf fileToolsOdf = new FileToolsOdf(spreadsheetDocument);
 
         if (Files.exists(Paths.get(outputFileName))) {
             final Shell shell = Display.getCurrent().getActiveShell();
 
             int returnValue = MessageBoxes.showMessageBox(shell, SWT.ICON_WARNING | SWT.YES | SWT.NO,
                     ResourceBundleUtils.getLangString(LABELS, Labels.warningTextMsgBox),
-                    String.format(ResourceBundleUtils.getLangString(WARNINGS, Warnings.fileExists), outputFileName));
+                    String.format(ResourceBundleUtils.getLangString(WARNINGS, Warnings.fileExistsOverwrite), outputFileName));
 
-            writeSuccess = returnValue == SWT.YES && fileToolsODF.writeODS(outputFileName);
+            writeSuccess = returnValue == SWT.YES && fileToolsOdf.writeODS(outputFileName);
         } else {
-            writeSuccess = fileToolsODF.writeODS(outputFileName);
+            writeSuccess = fileToolsOdf.writeODS(outputFileName);
         }
 
         return writeSuccess;

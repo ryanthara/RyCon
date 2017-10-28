@@ -19,6 +19,7 @@ package de.ryanthara.ja.rycon.util;
 
 import java.io.IOException;
 import java.nio.file.*;
+import java.nio.file.DirectoryStream.Filter;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ import static java.nio.file.StandardCopyOption.COPY_ATTRIBUTES;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 /**
- * {@code FileUtils} implements static access to basic file io-operations for copying, etc.
+ * {@code FileUtils} implements static access to basic file nio-operations for copying, etc.
  * <p>
  * Because of the fact that there are a lot of users who has not the current java version
  * running, RyCON still not uses any functions of java version 8 in versions lower than 2.
@@ -123,20 +124,19 @@ public class FileUtils {
      */
     public static String getNewestFolder(Path dir) {
         // get the recent folder by using a simple comparator by lastModified filed
-        Optional<Path> lastFilePath = null;
+        Optional<Path> lastFilePath;
 
         try {
             lastFilePath = Files.list(dir)              // get the stream with full directory listing
                     .filter(f -> Files.isDirectory(f))  // include subdirectories into the listing, ignore files
                     .max(Comparator.comparingLong(f2 -> f2.toFile().lastModified()));
 
+            // check for empty folder
+            if (lastFilePath.isPresent()) {
+                return lastFilePath.get().getName(lastFilePath.get().getNameCount() - 1).toString();
+            }
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Can't get the newest file in directory " + dir.toString());
-        }
-
-        // check for empty folder
-        if (lastFilePath.isPresent()) {
-            return lastFilePath.get().getName(lastFilePath.get().getNameCount() - 1).toString();
         }
 
         return "";
@@ -150,7 +150,7 @@ public class FileUtils {
      *
      * @return directory content as list
      */
-    public static ArrayList<Path> listFiles(String directory, DirectoryStream.Filter filter) {
+    public static ArrayList<Path> listFiles(String directory, Filter filter) {
         final Path dir = Paths.get(directory);
 
         ArrayList<Path> fileNames = new ArrayList<>();

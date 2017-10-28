@@ -17,7 +17,7 @@
  */
 package de.ryanthara.ja.rycon.ui.widgets.convert.write;
 
-import de.ryanthara.ja.rycon.converter.caplan.*;
+import de.ryanthara.ja.rycon.core.converter.caplan.*;
 import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
 import de.ryanthara.ja.rycon.ui.widgets.convert.SourceButton;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -79,17 +79,17 @@ public class CaplanWriteFile implements WriteFile {
         switch (SourceButton.fromIndex(parameter.getSourceNumber())) {
             case GSI8:
             case GSI16:
-                GSI2K gsi2K = new GSI2K(readStringFile);
+                Gsi2K gsi2K = new Gsi2K(readStringFile);
                 writeFile = gsi2K.convertGSI2K(parameter.isKFormatUseSimpleFormat(), parameter.isWriteCommentLine());
                 break;
 
             case TXT:
-                TXT2K txt2K = new TXT2K(readStringFile);
+                Txt2K txt2K = new Txt2K(readStringFile);
                 writeFile = txt2K.convertTXT2K(parameter.isKFormatUseSimpleFormat(), parameter.isWriteCommentLine(), parameter.isWriteCodeColumn());
                 break;
 
             case CSV:
-                CSV2K csv2K = new CSV2K(readCSVFile);
+                Csv2K csv2K = new Csv2K(readCSVFile);
                 writeFile = csv2K.convertCSV2K(parameter.isKFormatUseSimpleFormat(), parameter.isWriteCommentLine(), parameter.isWriteCodeColumn());
                 break;
 
@@ -107,12 +107,12 @@ public class CaplanWriteFile implements WriteFile {
                 break;
 
             case BASEL_STADT:
-                CSVBaselStadt2K csvBaselStadt2K = new CSVBaselStadt2K(readCSVFile);
+                CsvBaselStadt2K csvBaselStadt2K = new CsvBaselStadt2K(readCSVFile);
                 writeFile = csvBaselStadt2K.convertCSVBaselStadt2K(parameter.isKFormatUseSimpleFormat(), parameter.isWriteCommentLine());
                 break;
 
             case BASEL_LANDSCHAFT:
-                TXTBaselLandschaft2K txtBaselLandschaft2K = new TXTBaselLandschaft2K(readStringFile);
+                TxtBaselLandschaft2K txtBaselLandschaft2K = new TxtBaselLandschaft2K(readStringFile);
                 writeFile = txtBaselLandschaft2K.convertTXTBaselLandschaft2K(parameter.isKFormatUseSimpleFormat(), parameter.isWriteCommentLine(), parameter.isWriteCodeColumn());
                 break;
 

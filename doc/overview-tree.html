@@ -85,10 +85,10 @@
 <li><a href="de/ryanthara/ja/rycon/converter/zeiss/package-tree.html">de.ryanthara.ja.rycon.converter.zeiss</a>, </li>
 <li><a href="de/ryanthara/ja/rycon/core/package-tree.html">de.ryanthara.ja.rycon.core</a>, </li>
 <li><a href="de/ryanthara/ja/rycon/data/package-tree.html">de.ryanthara.ja.rycon.data</a>, </li>
-<li><a href="de/ryanthara/ja/rycon/elements/package-tree.html">de.ryanthara.ja.rycon.elements</a>, </li>
-<li><a href="de/ryanthara/ja/rycon/events/package-tree.html">de.ryanthara.ja.rycon.events</a>, </li>
+<li><a href="de/ryanthara/ja/rycon/elements/package-tree.html">de.ryanthara.ja.rycon.core.elements</a>, </li>
+<li><a href="de/ryanthara/ja/rycon/events/package-tree.html">de.ryanthara.ja.rycon.ui.events</a>, </li>
 <li><a href="de/ryanthara/ja/rycon/file/package-tree.html">de.ryanthara.ja.rycon.file</a>, </li>
-<li><a href="de/ryanthara/ja/rycon/file/filter/package-tree.html">de.ryanthara.ja.rycon.file.filter</a>, </li>
+<li><a href="de/ryanthara/ja/rycon/file/filter/package-tree.html">de.ryanthara.ja.rycon.nio.filter</a>, </li>
 <li><a href="de/ryanthara/ja/rycon/gui/package-tree.html">de.ryanthara.ja.rycon.ui</a>, </li>
 <li><a href="de/ryanthara/ja/rycon/gui/custom/package-tree.html">de.ryanthara.ja.rycon.ui.custom</a>, </li>
 <li><a href="de/ryanthara/ja/rycon/gui/preferences/package-tree.html">de.ryanthara.ja.rycon.ui.preferences</a>, </li>
@@ -102,7 +102,7 @@
 <li><a href="de/ryanthara/ja/rycon/gui/widgets/convert/write/package-tree.html">de.ryanthara.ja.rycon.ui.widgets.convert.write</a>, </li>
 <li><a href="de/ryanthara/ja/rycon/gui/widgets/generate/package-tree.html">de.ryanthara.ja.rycon.ui.widgets.generate</a>, </li>
 <li><a href="de/ryanthara/ja/rycon/i18n/package-tree.html">de.ryanthara.ja.rycon.i18n</a>, </li>
-<li><a href="de/ryanthara/ja/rycon/io/package-tree.html">de.ryanthara.ja.rycon.io</a>, </li>
+<li><a href="de/ryanthara/ja/rycon/io/package-tree.html">de.ryanthara.ja.rycon.nio</a>, </li>
 <li><a href="de/ryanthara/ja/rycon/tools/package-tree.html">de.ryanthara.ja.rycon.ui.util</a>, </li>
 <li><a href="de/ryanthara/ja/rycon/util/package-tree.html">de.ryanthara.ja.rycon.util</a></li>
 </ul>
@@ -151,7 +151,7 @@
 <li type="circle">de.ryanthara.ja.rycon.converter.odf.<a href="de/ryanthara/ja/rycon/converter/odf/Caplan2ODF.html" title="class in de.ryanthara.ja.rycon.converter.odf"><span class="typeNameLink">Caplan2ODF</span></a></li>
 <li type="circle">de.ryanthara.ja.rycon.converter.text.<a href="de/ryanthara/ja/rycon/converter/text/Caplan2TXT.html" title="class in de.ryanthara.ja.rycon.converter.text"><span class="typeNameLink">Caplan2TXT</span></a></li>
 <li type="circle">de.ryanthara.ja.rycon.converter.zeiss.<a href="de/ryanthara/ja/rycon/converter/zeiss/Caplan2Zeiss.html" title="class in de.ryanthara.ja.rycon.converter.zeiss"><span class="typeNameLink">Caplan2Zeiss</span></a></li>
-<li type="circle">de.ryanthara.ja.rycon.elements.<a href="de/ryanthara/ja/rycon/elements/CaplanBlock.html" title="class in de.ryanthara.ja.rycon.elements"><span class="typeNameLink">CaplanBlock</span></a></li>
+<li type="circle">de.ryanthara.ja.rycon.core.elements.<a href="de/ryanthara/ja/rycon/elements/CaplanBlock.html" title="class in de.ryanthara.ja.rycon.core.elements"><span class="typeNameLink">CaplanBlock</span></a></li>
 <li type="circle">de.ryanthara.ja.rycon.ui.widgets.convert.read.<a href="de/ryanthara/ja/rycon/gui/widgets/convert/read/CaplanReadFile.html" title="class in de.ryanthara.ja.rycon.ui.widgets.convert.read"><span class="typeNameLink">CaplanReadFile</span></a> (implements de.ryanthara.ja.rycon.ui.widgets.convert.read.<a href="de/ryanthara/ja/rycon/gui/widgets/convert/read/ReadFile.html" title="interface in de.ryanthara.ja.rycon.ui.widgets.convert.read">ReadFile</a>)</li>
 <li type="circle">de.ryanthara.ja.rycon.ui.widgets.convert.write.<a href="de/ryanthara/ja/rycon/gui/widgets/convert/write/CaplanWriteFile.html" title="class in de.ryanthara.ja.rycon.ui.widgets.convert.write"><span class="typeNameLink">CaplanWriteFile</span></a> (implements de.ryanthara.ja.rycon.ui.widgets.convert.write.<a href="de/ryanthara/ja/rycon/gui/widgets/convert/write/WriteFile.html" title="interface in de.ryanthara.ja.rycon.ui.widgets.convert.write">WriteFile</a>)</li>
 <li type="circle">de.ryanthara.ja.rycon.cli.<a href="de/ryanthara/ja/rycon/cli/CmdLineInterfaceParser.html" title="class in de.ryanthara.ja.rycon.cli"><span class="typeNameLink">CmdLineInterfaceParser</span></a></li>
@@ -193,15 +193,15 @@
 </li>
 <li type="circle">java.util.EventObject (implements java.io.Serializable)
 <ul>
-<li type="circle">de.ryanthara.ja.rycon.events.<a href="de/ryanthara/ja/rycon/events/StatusInformationEvent.html" title="class in de.ryanthara.ja.rycon.events"><span class="typeNameLink">StatusInformationEvent</span></a></li>
+<li type="circle">de.ryanthara.ja.rycon.ui.events.<a href="de/ryanthara/ja/rycon/events/StatusInformationEvent.html" title="class in de.ryanthara.ja.rycon.ui.events"><span class="typeNameLink">StatusInformationEvent</span></a></li>
 </ul>
 </li>
 <li type="circle">de.ryanthara.ja.rycon.ui.widgets.convert.write.<a href="de/ryanthara/ja/rycon/gui/widgets/convert/write/ExcelWriteFile.html" title="class in de.ryanthara.ja.rycon.ui.widgets.convert.write"><span class="typeNameLink">ExcelWriteFile</span></a> (implements de.ryanthara.ja.rycon.ui.widgets.convert.write.<a href="de/ryanthara/ja/rycon/gui/widgets/convert/write/WriteFile.html" title="interface in de.ryanthara.ja.rycon.ui.widgets.convert.write">WriteFile</a>)</li>
 <li type="circle">de.ryanthara.ja.rycon.ui.custom.<a href="de/ryanthara/ja/rycon/gui/custom/FileDialogs.html" title="class in de.ryanthara.ja.rycon.ui.custom"><span class="typeNameLink">FileDialogs</span></a></li>
-<li type="circle">de.ryanthara.ja.rycon.file.filter.<a href="de/ryanthara/ja/rycon/file/filter/FileFileFilter.html" title="class in de.ryanthara.ja.rycon.file.filter"><span class="typeNameLink">FileFileFilter</span></a> (implements java.io.FileFilter)</li>
+<li type="circle">de.ryanthara.ja.rycon.nio.filter.<a href="de/ryanthara/ja/rycon/file/filter/FileFileFilter.html" title="class in de.ryanthara.ja.rycon.nio.filter"><span class="typeNameLink">FileFileFilter</span></a> (implements java.io.FileFilter)</li>
 <li type="circle">de.ryanthara.ja.rycon.file.<a href="de/ryanthara/ja/rycon/file/FileToolsExcel.html" title="class in de.ryanthara.ja.rycon.file"><span class="typeNameLink">FileToolsExcel</span></a></li>
 <li type="circle">de.ryanthara.ja.rycon.file.<a href="de/ryanthara/ja/rycon/file/FileToolsODF.html" title="class in de.ryanthara.ja.rycon.file"><span class="typeNameLink">FileToolsODF</span></a></li>
-<li type="circle">de.ryanthara.ja.rycon.io.<a href="de/ryanthara/ja/rycon/io/FileUtils.html" title="class in de.ryanthara.ja.rycon.io"><span class="typeNameLink">FileUtils</span></a></li>
+<li type="circle">de.ryanthara.ja.rycon.nio.<a href="de/ryanthara/ja/rycon/io/FileUtils.html" title="class in de.ryanthara.ja.rycon.nio"><span class="typeNameLink">FileUtils</span></a></li>
 <li type="circle">de.ryanthara.ja.rycon.ui.widgets.<a href="de/ryanthara/ja/rycon/gui/widgets/GeneratorWidget.html" title="class in de.ryanthara.ja.rycon.ui.widgets"><span class="typeNameLink">GeneratorWidget</span></a></li>
 <li type="circle">de.ryanthara.ja.rycon.converter.csv.<a href="de/ryanthara/ja/rycon/converter/csv/GSI2CSV.html" title="class in de.ryanthara.ja.rycon.converter.csv"><span class="typeNameLink">GSI2CSV</span></a></li>
 <li type="circle">de.ryanthara.ja.rycon.converter.excel.<a href="de/ryanthara/ja/rycon/converter/excel/GSI2Excel.html" title="class in de.ryanthara.ja.rycon.converter.excel"><span class="typeNameLink">GSI2Excel</span></a></li>
@@ -212,9 +212,9 @@
 <li type="circle">de.ryanthara.ja.rycon.converter.text.<a href="de/ryanthara/ja/rycon/converter/text/GSI2TXT.html" title="class in de.ryanthara.ja.rycon.converter.text"><span class="typeNameLink">GSI2TXT</span></a></li>
 <li type="circle">de.ryanthara.ja.rycon.converter.zeiss.<a href="de/ryanthara/ja/rycon/converter/zeiss/GSI2Zeiss.html" title="class in de.ryanthara.ja.rycon.converter.zeiss"><span class="typeNameLink">GSI2Zeiss</span></a></li>
 <li type="circle">de.ryanthara.ja.rycon.converter.gsi.<a href="de/ryanthara/ja/rycon/converter/gsi/GSI8vsGSI16.html" title="class in de.ryanthara.ja.rycon.converter.gsi"><span class="typeNameLink">GSI8vsGSI16</span></a></li>
-<li type="circle">de.ryanthara.ja.rycon.elements.<a href="de/ryanthara/ja/rycon/elements/GSIBlock.html" title="class in de.ryanthara.ja.rycon.elements"><span class="typeNameLink">GSIBlock</span></a></li>
+<li type="circle">de.ryanthara.ja.rycon.core.elements.<a href="de/ryanthara/ja/rycon/elements/GSIBlock.html" title="class in de.ryanthara.ja.rycon.core.elements"><span class="typeNameLink">GSIBlock</span></a></li>
 <li type="circle">de.ryanthara.ja.rycon.core.<a href="de/ryanthara/ja/rycon/core/GSICodeSplit.html" title="class in de.ryanthara.ja.rycon.core"><span class="typeNameLink">GSICodeSplit</span></a></li>
-<li type="circle">de.ryanthara.ja.rycon.file.filter.<a href="de/ryanthara/ja/rycon/file/filter/GSIFileFilter.html" title="class in de.ryanthara.ja.rycon.file.filter"><span class="typeNameLink">GSIFileFilter</span></a> (implements java.io.FileFilter)</li>
+<li type="circle">de.ryanthara.ja.rycon.nio.filter.<a href="de/ryanthara/ja/rycon/file/filter/GSIFileFilter.html" title="class in de.ryanthara.ja.rycon.nio.filter"><span class="typeNameLink">GSIFileFilter</span></a> (implements java.io.FileFilter)</li>
 <li type="circle">de.ryanthara.ja.rycon.core.<a href="de/ryanthara/ja/rycon/core/GSILevelling2Cad.html" title="class in de.ryanthara.ja.rycon.core"><span class="typeNameLink">GSILevelling2Cad</span></a></li>
 <li type="circle">de.ryanthara.ja.rycon.core.<a href="de/ryanthara/ja/rycon/core/GSILTOPClean.html" title="class in de.ryanthara.ja.rycon.core"><span class="typeNameLink">GSILTOPClean</span></a></li>
 <li type="circle">de.ryanthara.ja.rycon.ui.widgets.convert.read.<a href="de/ryanthara/ja/rycon/gui/widgets/convert/read/GSIReadFile.html" title="class in de.ryanthara.ja.rycon.ui.widgets.convert.read"><span class="typeNameLink">GSIReadFile</span></a> (implements de.ryanthara.ja.rycon.ui.widgets.convert.read.<a href="de/ryanthara/ja/rycon/gui/widgets/convert/read/ReadFile.html" title="interface in de.ryanthara.ja.rycon.ui.widgets.convert.read">ReadFile</a>)</li>
@@ -222,8 +222,8 @@
 <li type="circle">de.ryanthara.ja.rycon.ui.widgets.convert.write.<a href="de/ryanthara/ja/rycon/gui/widgets/convert/write/GSIWriteFile.html" title="class in de.ryanthara.ja.rycon.ui.widgets.convert.write"><span class="typeNameLink">GSIWriteFile</span></a> (implements de.ryanthara.ja.rycon.ui.widgets.convert.write.<a href="de/ryanthara/ja/rycon/gui/widgets/convert/write/WriteFile.html" title="interface in de.ryanthara.ja.rycon.ui.widgets.convert.write">WriteFile</a>)</li>
 <li type="circle">de.ryanthara.ja.rycon.ui.util.<a href="de/ryanthara/ja/rycon/tools/ImageConverter.html" title="class in de.ryanthara.ja.rycon.ui.util"><span class="typeNameLink">ImageConverter</span></a></li>
 <li type="circle">de.ryanthara.ja.rycon.ui.widgets.<a href="de/ryanthara/ja/rycon/gui/widgets/LevellingWidget.html" title="class in de.ryanthara.ja.rycon.ui.widgets"><span class="typeNameLink">LevellingWidget</span></a></li>
-<li type="circle">de.ryanthara.ja.rycon.io.<a href="de/ryanthara/ja/rycon/io/LineReader.html" title="class in de.ryanthara.ja.rycon.io"><span class="typeNameLink">LineReader</span></a></li>
-<li type="circle">de.ryanthara.ja.rycon.io.<a href="de/ryanthara/ja/rycon/io/LineWriter.html" title="class in de.ryanthara.ja.rycon.io"><span class="typeNameLink">LineWriter</span></a></li>
+<li type="circle">de.ryanthara.ja.rycon.nio.<a href="de/ryanthara/ja/rycon/io/LineReader.html" title="class in de.ryanthara.ja.rycon.nio"><span class="typeNameLink">LineReader</span></a></li>
+<li type="circle">de.ryanthara.ja.rycon.nio.<a href="de/ryanthara/ja/rycon/io/LineWriter.html" title="class in de.ryanthara.ja.rycon.nio"><span class="typeNameLink">LineWriter</span></a></li>
 <li type="circle">de.ryanthara.ja.rycon.ui.widgets.convert.write.<a href="de/ryanthara/ja/rycon/gui/widgets/convert/write/LtopKOOWriteFile.html" title="class in de.ryanthara.ja.rycon.ui.widgets.convert.write"><span class="typeNameLink">LtopKOOWriteFile</span></a> (implements de.ryanthara.ja.rycon.ui.widgets.convert.write.<a href="de/ryanthara/ja/rycon/gui/widgets/convert/write/WriteFile.html" title="interface in de.ryanthara.ja.rycon.ui.widgets.convert.write">WriteFile</a>)</li>
 <li type="circle">de.ryanthara.ja.rycon.ui.widgets.convert.write.<a href="de/ryanthara/ja/rycon/gui/widgets/convert/write/LtopMESWriteFile.html" title="class in de.ryanthara.ja.rycon.ui.widgets.convert.write"><span class="typeNameLink">LtopMESWriteFile</span></a> (implements de.ryanthara.ja.rycon.ui.widgets.convert.write.<a href="de/ryanthara/ja/rycon/gui/widgets/convert/write/WriteFile.html" title="interface in de.ryanthara.ja.rycon.ui.widgets.convert.write">WriteFile</a>)</li>
 <li type="circle">de.ryanthara.ja.rycon.<a href="de/ryanthara/ja/rycon/Main.html" title="class in de.ryanthara.ja.rycon"><span class="typeNameLink">Main</span></a>
@@ -261,14 +261,14 @@
 <li type="circle">de.ryanthara.ja.rycon.ui.util.<a href="de/ryanthara/ja/rycon/tools/RadioHelper.html" title="class in de.ryanthara.ja.rycon.ui.util"><span class="typeNameLink">RadioHelper</span></a></li>
 <li type="circle">de.ryanthara.ja.rycon.i18n.<a href="de/ryanthara/ja/rycon/i18n/ResourceBundleUtils.html" title="class in de.ryanthara.ja.rycon.i18n"><span class="typeNameLink">ResourceBundleUtils</span></a></li>
 <li type="circle">de.ryanthara.ja.rycon.ui.preferences.util.<a href="de/ryanthara/ja/rycon/gui/preferences/util/Resources.html" title="class in de.ryanthara.ja.rycon.ui.preferences.util"><span class="typeNameLink">Resources</span></a></li>
-<li type="circle">de.ryanthara.ja.rycon.elements.<a href="de/ryanthara/ja/rycon/elements/RyBlock.html" title="class in de.ryanthara.ja.rycon.elements"><span class="typeNameLink">RyBlock</span></a></li>
+<li type="circle">de.ryanthara.ja.rycon.core.elements.<a href="de/ryanthara/ja/rycon/elements/RyBlock.html" title="class in de.ryanthara.ja.rycon.core.elements"><span class="typeNameLink">RyBlock</span></a></li>
 <li type="circle">de.ryanthara.ja.rycon.ui.<a href="de/ryanthara/ja/rycon/gui/RyCONLauncher.html" title="class in de.ryanthara.ja.rycon.ui"><span class="typeNameLink">RyCONLauncher</span></a></li>
-<li type="circle">de.ryanthara.ja.rycon.elements.<a href="de/ryanthara/ja/rycon/elements/RyPoint.html" title="class in de.ryanthara.ja.rycon.elements"><span class="typeNameLink">RyPoint</span></a></li>
+<li type="circle">de.ryanthara.ja.rycon.core.elements.<a href="de/ryanthara/ja/rycon/elements/RyPoint.html" title="class in de.ryanthara.ja.rycon.core.elements"><span class="typeNameLink">RyPoint</span></a></li>
 <li type="circle">de.ryanthara.ja.rycon.ui.widgets.<a href="de/ryanthara/ja/rycon/gui/widgets/SettingsWidget.html" title="class in de.ryanthara.ja.rycon.ui.widgets"><span class="typeNameLink">SettingsWidget</span></a></li>
 <li type="circle">de.ryanthara.ja.rycon.ui.util.<a href="de/ryanthara/ja/rycon/tools/ShellPositioner.html" title="class in de.ryanthara.ja.rycon.ui.util"><span class="typeNameLink">ShellPositioner</span></a></li>
 <li type="circle">de.ryanthara.ja.rycon.ui.util.<a href="de/ryanthara/ja/rycon/tools/SortHelper.html" title="class in de.ryanthara.ja.rycon.ui.util"><span class="typeNameLink">SortHelper</span></a></li>
 <li type="circle">de.ryanthara.ja.rycon.ui.<a href="de/ryanthara/ja/rycon/gui/SplashScreen.html" title="class in de.ryanthara.ja.rycon.ui"><span class="typeNameLink">SplashScreen</span></a></li>
-<li type="circle">de.ryanthara.ja.rycon.events.<a href="de/ryanthara/ja/rycon/events/StatusInformationEventSource.html" title="class in de.ryanthara.ja.rycon.events"><span class="typeNameLink">StatusInformationEventSource</span></a></li>
+<li type="circle">de.ryanthara.ja.rycon.ui.events.<a href="de/ryanthara/ja/rycon/events/StatusInformationEventSource.html" title="class in de.ryanthara.ja.rycon.ui.events"><span class="typeNameLink">StatusInformationEventSource</span></a></li>
 <li type="circle">de.ryanthara.ja.rycon.ui.util.<a href="de/ryanthara/ja/rycon/tools/StringUtils.html" title="class in de.ryanthara.ja.rycon.ui.util"><span class="typeNameLink">StringUtils</span></a></li>
 <li type="circle">de.ryanthara.ja.rycon.check.<a href="de/ryanthara/ja/rycon/check/TextCheck.html" title="class in de.ryanthara.ja.rycon.check"><span class="typeNameLink">TextCheck</span></a></li>
 <li type="circle">de.ryanthara.ja.rycon.core.<a href="de/ryanthara/ja/rycon/core/TextCodeSplit.html" title="class in de.ryanthara.ja.rycon.core"><span class="typeNameLink">TextCodeSplit</span></a></li>
@@ -299,7 +299,7 @@
 <li type="circle">de.ryanthara.ja.rycon.converter.odf.<a href="de/ryanthara/ja/rycon/converter/odf/TXTBaselLandschaft2ODF.html" title="class in de.ryanthara.ja.rycon.converter.odf"><span class="typeNameLink">TXTBaselLandschaft2ODF</span></a></li>
 <li type="circle">de.ryanthara.ja.rycon.converter.text.<a href="de/ryanthara/ja/rycon/converter/text/TXTBaselLandschaft2TXT.html" title="class in de.ryanthara.ja.rycon.converter.text"><span class="typeNameLink">TXTBaselLandschaft2TXT</span></a></li>
 <li type="circle">de.ryanthara.ja.rycon.converter.zeiss.<a href="de/ryanthara/ja/rycon/converter/zeiss/TXTBaselLandschaft2Zeiss.html" title="class in de.ryanthara.ja.rycon.converter.zeiss"><span class="typeNameLink">TXTBaselLandschaft2Zeiss</span></a></li>
-<li type="circle">de.ryanthara.ja.rycon.file.filter.<a href="de/ryanthara/ja/rycon/file/filter/TXTFileFilter.html" title="class in de.ryanthara.ja.rycon.file.filter"><span class="typeNameLink">TXTFileFilter</span></a> (implements java.io.FileFilter)</li>
+<li type="circle">de.ryanthara.ja.rycon.nio.filter.<a href="de/ryanthara/ja/rycon/file/filter/TXTFileFilter.html" title="class in de.ryanthara.ja.rycon.nio.filter"><span class="typeNameLink">TXTFileFilter</span></a> (implements java.io.FileFilter)</li>
 <li type="circle">de.ryanthara.ja.rycon.ui.widgets.convert.read.<a href="de/ryanthara/ja/rycon/gui/widgets/convert/read/TXTReadFile.html" title="class in de.ryanthara.ja.rycon.ui.widgets.convert.read"><span class="typeNameLink">TXTReadFile</span></a> (implements de.ryanthara.ja.rycon.ui.widgets.convert.read.<a href="de/ryanthara/ja/rycon/gui/widgets/convert/read/ReadFile.html" title="interface in de.ryanthara.ja.rycon.ui.widgets.convert.read">ReadFile</a>)</li>
 <li type="circle">de.ryanthara.ja.rycon.ui.widgets.convert.write.<a href="de/ryanthara/ja/rycon/gui/widgets/convert/write/TXTWriteFile.html" title="class in de.ryanthara.ja.rycon.ui.widgets.convert.write"><span class="typeNameLink">TXTWriteFile</span></a> (implements de.ryanthara.ja.rycon.ui.widgets.convert.write.<a href="de/ryanthara/ja/rycon/gui/widgets/convert/write/WriteFile.html" title="interface in de.ryanthara.ja.rycon.ui.widgets.convert.write">WriteFile</a>)</li>
 <li type="circle">de.ryanthara.ja.rycon.ui.util.<a href="de/ryanthara/ja/rycon/tools/Updater.html" title="class in de.ryanthara.ja.rycon.ui.util"><span class="typeNameLink">Updater</span></a></li>
@@ -336,7 +336,7 @@
 <li type="circle">de.ryanthara.ja.rycon.converter.ltop.<a href="de/ryanthara/ja/rycon/converter/ltop/Zeiss2LTOP.html" title="class in de.ryanthara.ja.rycon.converter.ltop"><span class="typeNameLink">Zeiss2LTOP</span></a></li>
 <li type="circle">de.ryanthara.ja.rycon.converter.odf.<a href="de/ryanthara/ja/rycon/converter/odf/Zeiss2ODF.html" title="class in de.ryanthara.ja.rycon.converter.odf"><span class="typeNameLink">Zeiss2ODF</span></a></li>
 <li type="circle">de.ryanthara.ja.rycon.converter.text.<a href="de/ryanthara/ja/rycon/converter/text/Zeiss2TXT.html" title="class in de.ryanthara.ja.rycon.converter.text"><span class="typeNameLink">Zeiss2TXT</span></a></li>
-<li type="circle">de.ryanthara.ja.rycon.elements.<a href="de/ryanthara/ja/rycon/elements/ZeissBlock.html" title="class in de.ryanthara.ja.rycon.elements"><span class="typeNameLink">ZeissBlock</span></a></li>
+<li type="circle">de.ryanthara.ja.rycon.core.elements.<a href="de/ryanthara/ja/rycon/elements/ZeissBlock.html" title="class in de.ryanthara.ja.rycon.core.elements"><span class="typeNameLink">ZeissBlock</span></a></li>
 <li type="circle">de.ryanthara.ja.rycon.converter.zeiss.<a href="de/ryanthara/ja/rycon/converter/zeiss/ZeissDecoder.html" title="class in de.ryanthara.ja.rycon.converter.zeiss"><span class="typeNameLink">ZeissDecoder</span></a></li>
 <li type="circle">de.ryanthara.ja.rycon.ui.widgets.convert.read.<a href="de/ryanthara/ja/rycon/gui/widgets/convert/read/ZeissReadFile.html" title="class in de.ryanthara.ja.rycon.ui.widgets.convert.read"><span class="typeNameLink">ZeissReadFile</span></a> (implements de.ryanthara.ja.rycon.ui.widgets.convert.read.<a href="de/ryanthara/ja/rycon/gui/widgets/convert/read/ReadFile.html" title="interface in de.ryanthara.ja.rycon.ui.widgets.convert.read">ReadFile</a>)</li>
 <li type="circle">de.ryanthara.ja.rycon.ui.widgets.convert.write.<a href="de/ryanthara/ja/rycon/gui/widgets/convert/write/ZeissWriteFile.html" title="class in de.ryanthara.ja.rycon.ui.widgets.convert.write"><span class="typeNameLink">ZeissWriteFile</span></a> (implements de.ryanthara.ja.rycon.ui.widgets.convert.write.<a href="de/ryanthara/ja/rycon/gui/widgets/convert/write/WriteFile.html" title="interface in de.ryanthara.ja.rycon.ui.widgets.convert.write">WriteFile</a>)</li>
@@ -348,7 +348,7 @@
 <li type="circle">de.ryanthara.ja.rycon.ui.widgets.generate.<a href="de/ryanthara/ja/rycon/gui/widgets/generate/CopyWarnAndErrorMessage.html" title="interface in de.ryanthara.ja.rycon.ui.widgets.generate"><span class="typeNameLink">CopyWarnAndErrorMessage</span></a></li>
 <li type="circle">java.util.EventListener
 <ul>
-<li type="circle">de.ryanthara.ja.rycon.events.<a href="de/ryanthara/ja/rycon/events/StatusInformationListener.html" title="interface in de.ryanthara.ja.rycon.events"><span class="typeNameLink">StatusInformationListener</span></a></li>
+<li type="circle">de.ryanthara.ja.rycon.ui.events.<a href="de/ryanthara/ja/rycon/events/StatusInformationListener.html" title="interface in de.ryanthara.ja.rycon.ui.events"><span class="typeNameLink">StatusInformationListener</span></a></li>
 </ul>
 </li>
 <li type="circle">de.ryanthara.ja.rycon.ui.widgets.convert.read.<a href="de/ryanthara/ja/rycon/gui/widgets/convert/read/ReadFile.html" title="interface in de.ryanthara.ja.rycon.ui.widgets.convert.read"><span class="typeNameLink">ReadFile</span></a></li>

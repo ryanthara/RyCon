@@ -18,7 +18,7 @@
 
 package de.ryanthara.ja.rycon.ui.preferences.validator;
 
-import de.ryanthara.ja.rycon.check.PathCheck;
+import de.ryanthara.ja.rycon.util.check.PathCheck;
 
 import java.nio.file.Path;
 

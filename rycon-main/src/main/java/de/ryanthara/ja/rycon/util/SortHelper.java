@@ -17,8 +17,8 @@
  */
 package de.ryanthara.ja.rycon.util;
 
-import de.ryanthara.ja.rycon.elements.GSIBlock;
-import de.ryanthara.ja.rycon.elements.RyBlock;
+import de.ryanthara.ja.rycon.core.elements.GsiBlock;
+import de.ryanthara.ja.rycon.core.elements.RyBlock;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -52,13 +52,13 @@ public class SortHelper {
     }
 
     /**
-     * Sorts an {@code ArrayList<GSIBlock>} of {@code GSIBlock} elements by word index (WI).
+     * Sorts an {@code ArrayList<GsiBlock>} of {@code GsiBlock} elements by word index (WI).
      * <p>
      * The line doesn't contains two or more blocks with the same word index.
      *
-     * @param gsiBlocks {@code ArrayList<GSIBlock>} to be sorted by word index (WI)
+     * @param gsiBlocks {@code ArrayList<GsiBlock>} to be sorted by word index (WI)
      */
-    public static void sortByWordIndex(ArrayList<GSIBlock> gsiBlocks) {
+    public static void sortByWordIndex(ArrayList<GsiBlock> gsiBlocks) {
         Collections.sort(gsiBlocks, (o1, o2) -> {
             if (o1.getWordIndex() > o2.getWordIndex()) {
                 return 1;

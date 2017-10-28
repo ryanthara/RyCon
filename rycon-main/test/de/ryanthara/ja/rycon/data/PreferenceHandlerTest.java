@@ -1,57 +1,61 @@
 package de.ryanthara.ja.rycon.data;
 
-import de.ryanthara.ja.rycon.Main;
 import org.junit.jupiter.api.Test;
 
 import java.util.prefs.BackingStoreException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 class PreferenceHandlerTest {
+
+    private final PreferenceHandler preferenceHandler = new PreferenceHandler();
+
     @Test
     void checkUserPrefPathExist() {
-        fail("not implemented yet");
+        final String dirBase = preferenceHandler.getUserPreference(PreferenceKeys.DIR_BASE);
+        assertEquals(dirBase, PreferenceHandler.checkUserPrefPathExist(dirBase));
+
+        assertTrue(System.getenv().get("HOME") == PreferenceHandler.checkUserPrefPathExist(null));
+        assertEquals(".", PreferenceHandler.checkUserPrefPathExist("."));
+        assertTrue(System.getenv().get("HOME") == PreferenceHandler.checkUserPrefPathExist("./?öT2-"));
     }
 
     @Test
     void getKeys() {
-        fail("not implemented yet");
+        try {
+            final int countStoredPreferenceKeys = preferenceHandler.getKeys().length;
+
+            assertTrue(countStoredPreferenceKeys > 0, "Key length is: " + countStoredPreferenceKeys);
+        } catch (BackingStoreException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
     void getUserPreference() {
-        fail("not implemented yet");
+        assertEquals("RyCON", preferenceHandler.getUserPreference(PreferenceKeys.GENERATOR));
+        assertNotEquals("", preferenceHandler.getUserPreference(0));
     }
 
     @Test
     void isDefaultSettingsGenerated() {
-        fail("not implemented yet");
+        assertFalse(preferenceHandler.isDefaultSettingsGenerated());
     }
 
     @Test
     void setDefaultSettingsGenerated() {
-        fail("not implemented yet");
-    }
+        assertFalse(preferenceHandler.isDefaultSettingsGenerated());
 
-    @Test
-    void preferenceChange() {
-        fail("not implemented yet");
-    }
+        preferenceHandler.setDefaultSettingsGenerated(true);
 
-    @Test
-    void setUserPreference() {
-        fail("not implemented yet");
+        assertTrue(preferenceHandler.isDefaultSettingsGenerated());
     }
 
     @Test
     void testStoredPreferencesLength() {
         try {
-            final int countStoredPreferenceKeys = Main.pref.getKeys().length;
             final int countDefaultPreferenceKeys = DefaultKeys.values().length;
-
-            System.out.println(countDefaultPreferenceKeys);
-            System.out.println(countStoredPreferenceKeys);
+            final int countStoredPreferenceKeys = preferenceHandler.getKeys().length;
 
             assertEquals(countStoredPreferenceKeys, countDefaultPreferenceKeys);
         } catch (BackingStoreException e) {
@@ -59,4 +63,4 @@ class PreferenceHandlerTest {
         }
     }
 
-}
+} // end of PreferenceHandlerTest
