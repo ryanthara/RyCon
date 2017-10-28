@@ -18,18 +18,20 @@
 
 package de.ryanthara.ja.rycon.io;
 
+import com.sun.istack.internal.NotNull;
+import de.ryanthara.ja.rycon.check.PathCheck;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
 /**
- * Instances of this class implements functions to read a text based path line by line and stores it's values
- * in an {@code ArrayList<String>}.
+ * Instances of this class implement functions to read a text based file line by line
+ * and stores its values in an {@code ArrayList<String>}.
  * <p>
- * A couple of things are implemented as additional functionality. At the moment there is no thread safety
- * implemented or planed due to some reasons.
+ * A couple of things are implemented as additional functionality. At the moment there
+ * is no thread safety implemented or planed due to some reasons.
  *
  * @author sebastian
  * @version 4
@@ -37,22 +39,28 @@ import java.util.ArrayList;
  */
 public class LineReader {
 
+    /**
+     * Identifier for indicating that the file to read doesn't has comment lines inside.
+     */
+    public final static String NO_COMMENT_LINE = "nCIgö5BQ";
+
     private final Path path;
     private int countReadLines = -1;
     private int countStoredLines = -1;
     private ArrayList<String> lines = null;
 
     /**
-     * Constructs a new instance of this class with a parameter that accepts a {@link Path} object for the file to be read.
+     * Constructs a new instance of this class with a parameter that accepts a {@link Path} object
+     * for the file to be read.
      *
-     * @param path file name as path object
+     * @param path file to read as path object
      */
     public LineReader(Path path) {
         this.path = path;
     }
 
     /**
-     * Return the number of read lines.
+     * Returns the number of read lines from the file.
      * <p>
      * By default the value is set to -1, which shows, that no line has been read.
      *
@@ -64,9 +72,11 @@ public class LineReader {
     }
 
     /**
-     * Return the number of stored lines.
+     * Returns the number of stored read lines in the {@code ArrayList<String>}.
      * <p>
-     * By default the value is set to -1, which shows, that no read line has been stored to the {@code ArrayList<String>}.
+     * By default the value is set to -1, which shows, that no read line
+     * has been stored to the {@code ArrayList<String>}. This is for comparison
+     * the read and stored number of lines.
      *
      * @return number of stored lines
      */
@@ -89,10 +99,12 @@ public class LineReader {
     /**
      * Read a path line by line and return the read success.
      *
+     * @param skipEmptyLines should empty lines be skipped
+     *
      * @return success of path reading
      */
-    public boolean readFile() {
-        return readFile(null);
+    public boolean readFile(boolean skipEmptyLines) {
+        return readFile(skipEmptyLines, LineReader.NO_COMMENT_LINE);
     }
 
     /**
@@ -101,18 +113,19 @@ public class LineReader {
      * Additionally with the parameter 'comment', there is the possibility to use
      * a {@code String} as comment sign. These lines will be ignored and not read.
      *
-     * @param comment String for comment signs
+     * @param skipEmptyLines should empty lines be skipped
+     * @param comment        String for comment signs
      *
      * @return success of path reading
      */
-    private boolean readFile(String comment) {
+    private boolean readFile(final boolean skipEmptyLines, @NotNull final String comment) {
         boolean success = false;
         lines = new ArrayList<>();
         FileInputStream fileInputStream = null;
         String line;
 
         // check path for a couple of things
-        if (path == null || !Files.exists(path) || !Files.isRegularFile(path) || !Files.isReadable(path)) {
+        if (!PathCheck.isReadable(path)) {
             return false;
         } else {
             try {
@@ -120,23 +133,26 @@ public class LineReader {
 
                 try {
                     fileInputStream.getChannel().lock(0, Long.MAX_VALUE, true);
+
                     try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(fileInputStream, StandardCharsets.UTF_8))) {
 
                         // read the lines into an ArrayList
                         while ((line = bufferedReader.readLine()) != null) {
                             countReadLines = countReadLines + 1;
-                            if (!line.trim().equals("")) {
-                                if (comment == null) {
-                                    lines.add(line);
-                                    countStoredLines = countStoredLines + 1;
-                                } else {
-                                    if (!line.startsWith(comment)) {
+
+                            if (comment.equals(NO_COMMENT_LINE) || !line.startsWith(comment)) {
+                                if (skipEmptyLines) {
+                                    if (!line.trim().equals("")) {
                                         lines.add(line);
                                         countStoredLines = countStoredLines + 1;
                                     }
+                                } else {
+                                    lines.add(line);
+                                    countStoredLines = countStoredLines + 1;
                                 }
                             }
                         }
+
                         // hack to get rid of the -1 initialization
                         countReadLines = countReadLines + 1;
                         countStoredLines = countStoredLines + 1;
@@ -164,6 +180,7 @@ public class LineReader {
                     e.printStackTrace();
                 }
             }
+
             return success;
         }
     }
