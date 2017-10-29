@@ -649,8 +649,9 @@ public class MainApplication extends Main {
         createButtonSplitTool(compositeGrid);
         createButtonLevelTool(compositeGrid);
         createButtonConvertTool(compositeGrid);
-        createWithoutFunction(compositeGrid);
+        //createWithoutFunction(compositeGrid);
         createButtonTransformationTool(compositeGrid);
+        createButtonPrintTool(compositeGrid);
         createButtonSettingsTool(compositeGrid);
         createWithoutFunction(compositeGrid);
         createButtonAbout(compositeGrid);

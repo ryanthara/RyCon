@@ -18,6 +18,7 @@
 package de.ryanthara.ja.rycon.ui.widgets.convert.write;
 
 import de.ryanthara.ja.rycon.core.converter.caplan.*;
+import de.ryanthara.ja.rycon.nio.WriteFile2Disk;
 import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
 import de.ryanthara.ja.rycon.ui.widgets.convert.SourceButton;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -34,7 +35,7 @@ import java.util.List;
  * @version 2
  * @since 12
  */
-public class CaplanWriteFile implements WriteFile {
+public class CaplanWriter implements Writer {
 
     private final Path path;
     private final ArrayList<String> readStringFile;
@@ -42,14 +43,14 @@ public class CaplanWriteFile implements WriteFile {
     private final WriteParameter parameter;
 
     /**
-     * Constructs the {@link CaplanWriteFile} with a set of parameters.
+     * Constructs the {@link CaplanWriter} with a set of parameters.
      *
-     * @param path           read path object for writing
-     * @param readCSVFile    read csv file
-     * @param readStringFile read string file
-     * @param parameter      the write parameter object
+     * @param path           reader path object for writing
+     * @param readCSVFile    reader csv file
+     * @param readStringFile reader string file
+     * @param parameter      the writer parameter object
      */
-    public CaplanWriteFile(Path path, ArrayList<String> readStringFile, List<String[]> readCSVFile, WriteParameter parameter) {
+    public CaplanWriter(Path path, ArrayList<String> readStringFile, List<String[]> readCSVFile, WriteParameter parameter) {
         this.path = path;
         this.readStringFile = readStringFile;
         this.readCSVFile = readCSVFile;
@@ -59,7 +60,7 @@ public class CaplanWriteFile implements WriteFile {
     /**
      * Returns true if the prepared {@link SpreadsheetDocument} for file writing was written to the file system.
      *
-     * @return write success
+     * @return writer success
      */
     @Override
     public boolean writeSpreadsheetDocument() {
@@ -118,10 +119,10 @@ public class CaplanWriteFile implements WriteFile {
 
             default:
                 writeFile = null;
-                System.err.println("CaplanWriteFile.writeStringFile() : unknown file format " + SourceButton.fromIndex(parameter.getSourceNumber()));
+                System.err.println("CaplanWriter.writeStringFile() : unknown file format " + SourceButton.fromIndex(parameter.getSourceNumber()));
         }
 
-        if (WriteFile2Disk.writeFile2Disk(path, writeFile, ".K")) {
+        if (WriteFile2Disk.writeFile2Disk(path, writeFile, "",".K")) {
             success = true;
         }
 
@@ -131,11 +132,11 @@ public class CaplanWriteFile implements WriteFile {
     /**
      * Returns true if the prepared {@link Workbook} for file writing was written to the file system.
      *
-     * @return write success
+     * @return writer success
      */
     @Override
     public boolean writeWorkbookFile() {
         return false;
     }
 
-} // end of CaplanWriteFile
+} // end of CaplanWriter

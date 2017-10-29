@@ -18,6 +18,7 @@
 package de.ryanthara.ja.rycon.ui.widgets.convert.write;
 
 import de.ryanthara.ja.rycon.core.converter.excel.*;
+import de.ryanthara.ja.rycon.nio.WriteExcel2Disk;
 import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
 import de.ryanthara.ja.rycon.ui.widgets.convert.SourceButton;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -35,7 +36,7 @@ import java.util.List;
  * @version 2
  * @since 12
  */
-public class ExcelWriteFile implements WriteFile {
+public class ExcelWriter implements Writer {
 
     private final boolean isXLS;
     private final ArrayList<String> readStringFile;
@@ -44,16 +45,16 @@ public class ExcelWriteFile implements WriteFile {
     private final WriteParameter parameter;
 
     /**
-     * Constructs the {@link ExcelWriteFile} with a set of parameters.
+     * Constructs the {@link ExcelWriter} with a set of parameters.
      *
-     * @param path           read file object for writing
-     * @param readCSVFile    read csv file
-     * @param readStringFile read string file
-     * @param parameter      the write parameter object^
+     * @param path           reader file object for writing
+     * @param readCSVFile    reader csv file
+     * @param readStringFile reader string file
+     * @param parameter      the writer parameter object^
      * @param isXLS          true if is XLS
      */
-    public ExcelWriteFile(Path path, ArrayList<String> readStringFile, List<String[]> readCSVFile,
-                          WriteParameter parameter, boolean isXLS) {
+    public ExcelWriter(Path path, ArrayList<String> readStringFile, List<String[]> readCSVFile,
+                       WriteParameter parameter, boolean isXLS) {
         this.path = path;
         this.readStringFile = readStringFile;
         this.readCSVFile = readCSVFile;
@@ -64,7 +65,7 @@ public class ExcelWriteFile implements WriteFile {
     /**
      * Returns true if the prepared {@link SpreadsheetDocument} for file writing was written to the file system.
      *
-     * @return write success
+     * @return writer success
      */
     @Override
     public boolean writeSpreadsheetDocument() {
@@ -84,7 +85,7 @@ public class ExcelWriteFile implements WriteFile {
     /**
      * Returns true if the prepared {@link Workbook} for file writing was written to the file system.
      *
-     * @return write success
+     * @return writer success
      */
     @Override
     public boolean writeWorkbookFile() {
@@ -151,7 +152,7 @@ public class ExcelWriteFile implements WriteFile {
 
             default:
                 workbook = null;
-                System.err.println("ExcelWriteFile.writeStringFile() : unknown file format " + SourceButton.fromIndex(parameter.getSourceNumber()));
+                System.err.println("ExcelWriter.writeStringFile() : unknown file format " + SourceButton.fromIndex(parameter.getSourceNumber()));
 
         }
 
@@ -164,4 +165,4 @@ public class ExcelWriteFile implements WriteFile {
         return success;
     }
 
-} // end of ExcelWriteFile
+} // end of ExcelWriter

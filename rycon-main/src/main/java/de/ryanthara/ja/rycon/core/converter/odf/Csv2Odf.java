@@ -38,7 +38,7 @@ public class Csv2Odf {
     private SpreadsheetDocument spreadsheetDocument;
 
     /**
-     * Constructs a new instance of this class with a parameter for read line based CSV files.
+     * Constructs a new instance of this class with a parameter for reader line based CSV files.
      *
      * @param readCSVLines {@code List<String[]>} with lines as {@code String[]}
      */

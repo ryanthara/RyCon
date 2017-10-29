@@ -36,7 +36,7 @@ public class CsvBaselStadt2Ltop {
     private List<String[]> readCSVLines = null;
 
     /**
-     * Class constructor for read line based CSV files from the geodata server Basel Stadt (Switzerland).
+     * Class constructor for reader line based CSV files from the geodata server Basel Stadt (Switzerland).
      *
      * @param readCSVLines {@code List<String[]>} with lines as {@code String[]}
      */

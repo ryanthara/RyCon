@@ -37,7 +37,7 @@ public class Csv2Excel {
     private Workbook workbook;
 
     /**
-     * Class constructor for read line based CSV files.
+     * Class constructor for reader line based CSV files.
      *
      * @param readCSVLines {@code List<String[]>} with lines as {@code String[]}
      */

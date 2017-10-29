@@ -46,7 +46,7 @@ public class ShellPositioner {
      * Calculate the centered shell location and return it als <code>Point</code> object.
      * <p>
      * The centered shell location depends on the screen size and the shell size. To calculate
-     * these parameters are read from the display and shell objects from the calling widgets.
+     * these parameters are reader from the display and shell objects from the calling widgets.
      * The coordinates of the centered shell location represents the upper left corner of the widgets.
      *
      * @param parent the parent shell

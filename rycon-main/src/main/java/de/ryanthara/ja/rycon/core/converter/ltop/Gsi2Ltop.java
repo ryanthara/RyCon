@@ -39,7 +39,7 @@ public class Gsi2Ltop {
     private BaseToolsGsi baseToolsGsi;
 
     /**
-     * Class constructor for read line based text files.
+     * Class constructor for reader line based text files.
      *
      * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
      */

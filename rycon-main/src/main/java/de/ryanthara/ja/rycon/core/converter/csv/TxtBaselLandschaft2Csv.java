@@ -32,7 +32,7 @@ public class TxtBaselLandschaft2Csv {
     private ArrayList<String> readStringLines;
 
     /**
-     * Class constructor for read line based text files in different formats.
+     * Class constructor for reader line based text files in different formats.
      *
      * @param readStringLines {@code ArrayList<String>} with lines in text format
      */

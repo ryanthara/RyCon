@@ -27,7 +27,7 @@ import java.util.List;
  * Instances of this class provides functions to convert and prepare levelling files in the Leica GSI format
  * for CAD import.
  * <p>
- * Therefore a raising northing and easting coordinate value is added to every read height line.
+ * Therefore a raising northing and easting coordinate value is added to every reader height line.
  *
  * @author sebastian
  * @version 1
@@ -38,7 +38,7 @@ public class GsiLevelling2Cad {
     private ArrayList<String> readStringLines;
 
     /**
-     * Constructs a new instance of this class given a read line based text file in the Leica GSI format.
+     * Constructs a new instance of this class given a reader line based text file in the Leica GSI format.
      *
      * @param readStringLines {@code ArrayList<String>} with lines in Leica GSI format
      */
@@ -69,7 +69,7 @@ public class GsiLevelling2Cad {
             - identify a station line (one token)
             - identify point line with height (four tokens)
             - identify change points and maybe ignore them (point number is '0')
-            - grab the relevant information and prepare the write output
+            - grab the relevant information and prepare the writer output
          */
 
         for (String line : readStringLines) {
@@ -80,7 +80,7 @@ public class GsiLevelling2Cad {
                 line = line.substring(1, line.length());
             }
 
-            // split read line into separate Strings
+            // split reader line into separate Strings
             List<String> lineSplit = new ArrayList<>((line.length() + size - 1) / size);
             for (int i = 0; i < line.length(); i += size) {
                 lineSplit.add(line.substring(i, Math.min(line.length(), i + size)));

@@ -37,7 +37,7 @@ public class Gsi2Txt {
     private BaseToolsGsi baseToolsGsi;
 
     /**
-     * Class constructor for read line based GSI files.
+     * Class constructor for reader line based GSI files.
      *
      * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
      */

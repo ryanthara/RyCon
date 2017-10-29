@@ -30,27 +30,27 @@ import java.util.ArrayList;
  * @version 1
  * @since 12
  */
-public interface WriteFile {
+public interface Writer {
 
     /**
      * Returns true if the prepared {@link SpreadsheetDocument} for file writing was written to the file system.
      *
-     * @return write success
+     * @return writer success
      */
     boolean writeSpreadsheetDocument();
 
     /**
      * Returns true if the prepared {@link ArrayList} for file writing was written to the file system.
      *
-     * @return write success
+     * @return writer success
      */
     boolean writeStringFile();
 
     /**
      * Returns true if the prepared {@link Workbook} for file writing was written to the file system.
      *
-     * @return write success
+     * @return writer success
      */
     boolean writeWorkbookFile();
 
-} // end of WriteFile
+} // end of Writer

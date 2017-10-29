@@ -17,7 +17,8 @@
  */
 package de.ryanthara.ja.rycon.ui.widgets.convert.write;
 
-import de.ryanthara.ja.rycon.core.converter.text.*;
+import de.ryanthara.ja.rycon.core.converter.csv.*;
+import de.ryanthara.ja.rycon.nio.WriteFile2Disk;
 import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
 import de.ryanthara.ja.rycon.ui.widgets.convert.SourceButton;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -28,13 +29,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Instances of this class are used for writing text files from the {@link ConverterWidget} of RyCON.
+ * Instances of this class are used for writing comma separated values (CSV) files
+ * from the {@link ConverterWidget} of RyCON.
  *
  * @author sebastian
  * @version 2
  * @since 12
  */
-public class TXTWriteFile implements WriteFile {
+public class CsvWriter implements Writer {
 
     private final Path path;
     private final ArrayList<String> readStringFile;
@@ -42,14 +44,14 @@ public class TXTWriteFile implements WriteFile {
     private final WriteParameter parameter;
 
     /**
-     * Constructs the {@link TXTWriteFile} with a set of parameters.
+     * Constructs the {@link CsvWriter} with a set of parameters.
      *
-     * @param path           read file object for writing
-     * @param readCSVFile    read csv file
-     * @param readStringFile read string file
-     * @param parameter      the write parameter object
+     * @param path           reader path object for writing
+     * @param readCSVFile    reader csv file
+     * @param readStringFile reader string file
+     * @param parameter      the writer parameter object
      */
-    public TXTWriteFile(Path path, ArrayList<String> readStringFile, List<String[]> readCSVFile, WriteParameter parameter) {
+    public CsvWriter(Path path, ArrayList<String> readStringFile, List<String[]> readCSVFile, WriteParameter parameter) {
         this.path = path;
         this.readStringFile = readStringFile;
         this.readCSVFile = readCSVFile;
@@ -59,7 +61,7 @@ public class TXTWriteFile implements WriteFile {
     /**
      * Returns true if the prepared {@link SpreadsheetDocument} for file writing was written to the file system.
      *
-     * @return write success
+     * @return writer success
      */
     @Override
     public boolean writeSpreadsheetDocument() {
@@ -79,51 +81,49 @@ public class TXTWriteFile implements WriteFile {
         switch (SourceButton.fromIndex(parameter.getSourceNumber())) {
             case GSI8:
             case GSI16:
-                Gsi2Txt gsi2Txt = new Gsi2Txt(readStringFile);
-                writeFile = gsi2Txt.convertGSI2TXT(parameter.getSeparatorTXT(), parameter.isGSI16(), parameter.isWriteCommentLine());
+                Gsi2Csv gsi2Csv = new Gsi2Csv(readStringFile);
+                writeFile = gsi2Csv.convertGSI2CSV(parameter.getSeparatorCSV(), parameter.isWriteCommentLine());
                 break;
 
             case TXT:
+                Txt2Csv txt2Csv = new Txt2Csv(readStringFile);
+                writeFile = txt2Csv.convertTXT2CSV(parameter.getSeparatorCSV());
                 break;
 
             case CSV:
-                Csv2Txt csv2Txt = new Csv2Txt(readCSVFile);
-                writeFile = csv2Txt.convertCSV2TXT(parameter.getSeparatorTXT());
                 break;
 
             case CAPLAN_K:
-                Caplan2Txt caplan2Txt = new Caplan2Txt(readStringFile);
-                writeFile = caplan2Txt.convertK2TXT(parameter.getSeparatorTXT(), parameter.isKFormatUseSimpleFormat(),
-                        parameter.isWriteCommentLine(), parameter.isWriteCodeColumn());
+                Caplan2Csv caplan2Csv = new Caplan2Csv(readStringFile);
+                writeFile = caplan2Csv.convertK2CSV(parameter.getSeparatorCSV(), parameter.isKFormatUseSimpleFormat(), parameter.isWriteCommentLine(), parameter.isWriteCodeColumn());
                 break;
 
             case ZEISS_REC:
-                Zeiss2Txt zeiss2Txt = new Zeiss2Txt(readStringFile);
-                writeFile = zeiss2Txt.convertZeiss2TXT(parameter.getSeparatorTXT());
+                Zeiss2Csv zeiss2Csv = new Zeiss2Csv(readStringFile);
+                zeiss2Csv.convertZeiss2CSV(parameter.getSeparatorCSV());
                 break;
 
             case CADWORK:
-                Cadwork2Txt cadwork2Txt = new Cadwork2Txt(readStringFile);
-                writeFile = cadwork2Txt.convertCadwork2TXT(parameter.getSeparatorTXT(), parameter.isWriteCodeColumn(),
-                        parameter.isCadworkUseZeroHeights());
+                Cadwork2Csv cadwork2Csv = new Cadwork2Csv(readStringFile);
+                writeFile = cadwork2Csv.convertCadwork2CSV(parameter.getSeparatorCSV(), parameter.isWriteCommentLine(), parameter.isWriteCodeColumn(), parameter.isCadworkUseZeroHeights());
                 break;
 
             case BASEL_STADT:
-                CsvBaselStadt2Txt csvBaselStadt2Txt = new CsvBaselStadt2Txt(readCSVFile);
-                writeFile = csvBaselStadt2Txt.convertCSVBaselStadt2TXT(parameter.getSeparatorTXT());
+                CsvBaselStadt2Csv csvBaselStadt2Csv = new CsvBaselStadt2Csv(readCSVFile);
+                writeFile = csvBaselStadt2Csv.convertCSVBaselStadt2CSV(parameter.getSeparatorCSV());
                 break;
 
             case BASEL_LANDSCHAFT:
-                TxtBaselLandschaft2Txt TxtBaselLandschaft2Txt = new TxtBaselLandschaft2Txt(readStringFile);
-                writeFile = TxtBaselLandschaft2Txt.convertTXTBaselLandschaft2TXT(parameter.getSeparatorTXT(), parameter.isWriteCodeColumn());
+                TxtBaselLandschaft2Csv txtBaselLandschaft2Csv = new TxtBaselLandschaft2Csv(readStringFile);
+                writeFile = txtBaselLandschaft2Csv.convertTXTBaselLandschaft2CSV(parameter.getSeparatorCSV());
                 break;
 
             default:
                 writeFile = null;
-                System.err.println("TXTWriteFile.writeStringFile() : unknown file format " + SourceButton.fromIndex(parameter.getSourceNumber()));
+                System.err.println("CsvWriter.writeStringFile() : unknown file format " + SourceButton.fromIndex(parameter.getSourceNumber()));
         }
 
-        if (WriteFile2Disk.writeFile2Disk(path, writeFile, ".TXT")) {
+        if (WriteFile2Disk.writeFile2Disk(path, writeFile, "", ".CSV")) {
             success = true;
         }
 
@@ -133,11 +133,11 @@ public class TXTWriteFile implements WriteFile {
     /**
      * Returns true if the prepared {@link Workbook} for file writing was written to the file system.
      *
-     * @return write success
+     * @return writer success
      */
     @Override
     public boolean writeWorkbookFile() {
         return false;
     }
 
-} // end of TXTWriteFile
+} // end of CsvWriter

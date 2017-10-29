@@ -38,10 +38,10 @@ public class Cadwork2Odf {
     private SpreadsheetDocument spreadsheetDocument;
 
     /**
-     * Constructs a new instance of this class for read line based text files from Cadwork CAD program
+     * Constructs a new instance of this class for reader line based text files from Cadwork CAD program
      * in node.dat file format.
      *
-     * @param readStringLines {@code ArrayList<String>} with read lines from node.dat file
+     * @param readStringLines {@code ArrayList<String>} with reader lines from node.dat file
      */
     public Cadwork2Odf(ArrayList<String> readStringLines) {
         this.readStringLines = readStringLines;
@@ -53,7 +53,7 @@ public class Cadwork2Odf {
      * Cadwork node.dat files are tab separated.
      *
      * @param sheetName       name of the sheet (file name from input file)
-     * @param writeCommentRow write comment row
+     * @param writeCommentRow writer comment row
      *
      * @return success conversion
      */

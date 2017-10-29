@@ -15,13 +15,11 @@
  * You should have received a copy of the GNU General Public License along with
  * this package. If not, see <http://www.gnu.org/licenses/>.
  */
-package de.ryanthara.ja.rycon.ui.widgets.convert.write;
+package de.ryanthara.ja.rycon.nio;
 
-import de.ryanthara.ja.rycon.data.DefaultKeys;
 import de.ryanthara.ja.rycon.i18n.Labels;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 import de.ryanthara.ja.rycon.i18n.Warnings;
-import de.ryanthara.ja.rycon.nio.LineWriter;
 import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -36,37 +34,42 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LABELS;
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.WARNINGS;
 
 /**
- * This class implements static file writing functions for line based files output files.
+ * This class implements static file writing functions for line based output files.
  *
  * @author sebastian
  * @version 2
  * @since 12
  */
-final class WriteFile2Disk {
+public final class WriteFile2Disk {
 
-    private static Path prepareOutputFileName(final Path path, final String fileNameExtension) {
+    private static Path prepareOutputFileName(final Path path, final String editString, final String fileNameExtension) {
         final String fileNameWithoutExtension = path.toString().substring(0, path.toString().length() - 4);
-        final String newFileName = fileNameWithoutExtension + "_" + DefaultKeys.PARAM_EDIT_STRING.getValue() + fileNameExtension;
 
-        return Paths.get(newFileName);
+        if (editString.equals("")) {
+            return Paths.get(fileNameWithoutExtension + fileNameExtension);
+        } else {
+            return Paths.get(fileNameWithoutExtension + "_" + editString + fileNameExtension);
+        }
     }
 
     /**
-     * Writes a line based string file from an {@link ArrayList} to the file system and returns the write success.
+     * Writes a line based string file from an {@link ArrayList} to the file system and returns the writer success.
      * <p>
-     * Within this method a check for existing files is implemented. If a file exists, the user ist asked if the
+     * Within this method a check for existing files is implemented. If a file exists, the user is asked if the
      * file has to be overwritten or not.
      *
-     * @param path              {@link Path} object where to write into
+     * @param path              {@link Path} object where to writer into
      * @param writeFile         prepared string lines for writing
+     * @param editString        the edit string which is inserted before the file name extension
      * @param fileNameExtension file file name extension
      *
-     * @return write success
+     * @return writer success
      */
-    static boolean writeFile2Disk(Path path, ArrayList<String> writeFile, String fileNameExtension) {
+    public static boolean writeFile2Disk(final Path path, final ArrayList<String> writeFile,
+                                         final String editString, final String fileNameExtension) {
         boolean success;
 
-        final Path outputFile = prepareOutputFileName(path, fileNameExtension);
+        final Path outputFile = prepareOutputFileName(path, editString, fileNameExtension);
 
         if (Files.exists(outputFile)) {
             final Shell shell = Display.getCurrent().getActiveShell();

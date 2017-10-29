@@ -43,7 +43,7 @@ public class Caplan2Excel {
     private Workbook workbook;
 
     /**
-     * Constructs a new instance of this class with the read Caplan K file {@link ArrayList} string as parameter.
+     * Constructs a new instance of this class with the reader Caplan K file {@link ArrayList} string as parameter.
      *
      * @param readStringLines {@code ArrayList<String>} with lines in Caplan K format
      */
@@ -56,7 +56,7 @@ public class Caplan2Excel {
      *
      * @param isXLS           selector to distinguish between XLS and XLSX file extension
      * @param sheetName       name of the sheet (file name from input file)
-     * @param writeCommentRow write comment row
+     * @param writeCommentRow writer comment row
      *
      * @return success conversion success
      */

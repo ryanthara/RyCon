@@ -121,7 +121,7 @@ public class PreferenceHandler implements PreferenceChangeListener {
     /**
      * Returns a system preference by given name.
      *
-     * @param preference reference to the preference to be read
+     * @param preference reference to the preference to be reader
      *
      * @return system preference as string
      *
@@ -361,7 +361,7 @@ public class PreferenceHandler implements PreferenceChangeListener {
                     logger.log(Level.INFO, "settings successful transferred");
                 }
             } catch (BackingStoreException e) {
-                logger.log(Level.SEVERE, "Can't write settings back. " + e.getMessage());
+                logger.log(Level.SEVERE, "Can't writer settings back. " + e.getMessage());
             }
         }
     }

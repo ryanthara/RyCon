@@ -19,18 +19,18 @@ package de.ryanthara.ja.rycon.ui.widgets;
 
 import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.core.GsiCodeSplit;
-import de.ryanthara.ja.rycon.util.check.PathCheck;
-import de.ryanthara.ja.rycon.util.check.TextCheck;
 import de.ryanthara.ja.rycon.core.TextCodeSplit;
 import de.ryanthara.ja.rycon.data.DefaultKeys;
 import de.ryanthara.ja.rycon.data.PreferenceKeys;
 import de.ryanthara.ja.rycon.i18n.*;
 import de.ryanthara.ja.rycon.nio.LineReader;
-import de.ryanthara.ja.rycon.nio.LineWriter;
+import de.ryanthara.ja.rycon.nio.WriteFile2Disk;
 import de.ryanthara.ja.rycon.ui.Sizes;
 import de.ryanthara.ja.rycon.ui.custom.*;
 import de.ryanthara.ja.rycon.ui.util.ShellPositioner;
 import de.ryanthara.ja.rycon.util.StringUtils;
+import de.ryanthara.ja.rycon.util.check.PathCheck;
+import de.ryanthara.ja.rycon.util.check.TextCheck;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -246,7 +246,7 @@ public class CodeSplitterWidget extends AbstractWidget {
         if (files.isPresent()) {
             files2read = files.get();
         } else {
-            logger.log(Level.SEVERE, "can not get the read files");
+            logger.log(Level.SEVERE, "can not get the reader files");
         }
     }
 
@@ -319,26 +319,20 @@ public class CodeSplitterWidget extends AbstractWidget {
         chkBoxWriteCodeZero.setText(ResourceBundleUtils.getLangString(CHECKBOXES, CheckBoxes.writeCodeZeroSplitter));
     }
 
-    private int executeSplitGSI(boolean insertCodeColumn, boolean writeFileWithCodeZero, int counter, Path file2read,
+    private int executeSplitGsi(boolean insertCodeColumn, boolean writeFileWithCodeZero, int counter, Path file2read,
                                 ArrayList<String> readFile) {
-        final String paramCodeString = DefaultKeys.PARAM_CODE_STRING.getValue();
 
         GsiCodeSplit gsiCodeSplit = new GsiCodeSplit(readFile);
         ArrayList<ArrayList<String>> writeFile = gsiCodeSplit.processCodeSplit(insertCodeColumn, writeFileWithCodeZero);
 
         Iterator<Integer> codeIterator = gsiCodeSplit.getFoundCodes().iterator();
 
-        // write file by file with one code
+        // writer file by file with one code
         for (ArrayList<String> lines : writeFile) {
-            int code = codeIterator.next();
 
-            String file2write = file2read.toString().substring(0, file2read.toString().length() - 4) + "_" +
-                    paramCodeString + "-" + code + ".GSI";
+            final String editString = DefaultKeys.PARAM_CODE_STRING.getValue() + "-" + codeIterator.next();
 
-            // TODO Use WriteFile2Disk instead this
-            LineWriter lineWriter = new LineWriter(Paths.get(file2write));
-
-            if (lineWriter.writeFile(lines)) {
+            if (WriteFile2Disk.writeFile2Disk(file2read, lines, editString, "GSI")) {
                 counter = counter + 1;
             }
         }
@@ -349,24 +343,17 @@ public class CodeSplitterWidget extends AbstractWidget {
     private int executeSplitTxt(boolean insertCodeColumn, boolean writeFileWithCodeZero, int counter, Path file2read,
                                 ArrayList<String> readFile) {
 
-        final String paramCodeString = DefaultKeys.PARAM_CODE_STRING.getValue();
-
         TextCodeSplit textCodeSplit = new TextCodeSplit(readFile);
         ArrayList<ArrayList<String>> writeFile = textCodeSplit.processCodeSplit(insertCodeColumn, writeFileWithCodeZero);
 
         Iterator<Integer> codeIterator = textCodeSplit.getFoundCodes().iterator();
 
-        // write file by file with one code
+        // writer file by file with one code
         for (ArrayList<String> lines : writeFile) {
-            int code = codeIterator.next();
 
-            String file2write = file2read.toString().substring(0, file2read.toString().length() - 4) + "_" +
-                    paramCodeString + "-" + code + ".TXT";
+            final String editString = Main.pref.getUserPreference(PreferenceKeys.PARAM_CODE_STRING) + "-" + codeIterator.next();
 
-            // TODO Use WriteFile2Disk instead this
-            LineWriter lineWriter = new LineWriter(Paths.get(file2write));
-
-            if (lineWriter.writeFile(lines)) {
+            if (WriteFile2Disk.writeFile2Disk(file2read, lines, editString, "TXT")) {
                 counter = counter + 1;
             }
         }
@@ -386,18 +373,19 @@ public class CodeSplitterWidget extends AbstractWidget {
                 // processFileOperations by differ between txt oder gsi files
 
                 // processFileOperations and differ between 'normal' GSI files and LTOP 'GSL' files
+                // TODO remove path matcher
                 PathMatcher matcherGSI = FileSystems.getDefault().getPathMatcher("regex:(?iu:.+\\.GSI)");
                 PathMatcher matcherTXT = FileSystems.getDefault().getPathMatcher("regex:(?iu:.+\\.TXT)");
 
                 if (matcherGSI.matches(path)) {
-                    counter = executeSplitGSI(insertCodeColumn, writeFileWithCodeZero, counter, path, readFile);
+                    counter = executeSplitGsi(insertCodeColumn, writeFileWithCodeZero, counter, path, readFile);
                 } else if (matcherTXT.matches(path)) {
                     counter = executeSplitTxt(insertCodeColumn, writeFileWithCodeZero, counter, path, readFile);
                 } else {
                     System.err.println("File format of " + path.getFileName() + " are not supported.");
                 }
             } else {
-                System.err.println("File " + path.getFileName() + " could not be read.");
+                System.err.println("File " + path.getFileName() + " could not be reader.");
             }
         }
 
@@ -443,7 +431,7 @@ public class CodeSplitterWidget extends AbstractWidget {
     }
 
     private boolean processFileOperationsDND() {
-        // no code column and write file for lines without code
+        // no code column and writer file for lines without code
         int counter = fileOperations(false, true);
 
         if (counter > 0) {

@@ -35,7 +35,7 @@ public class TxtBaselLandschaft2Ltop {
     private ArrayList<String> readStringLines;
 
     /**
-     * Class constructor for read line based text files.
+     * Class constructor for reader line based text files.
      *
      * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
      */

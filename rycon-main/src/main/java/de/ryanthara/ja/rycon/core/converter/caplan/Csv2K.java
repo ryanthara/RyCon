@@ -34,7 +34,7 @@ public class Csv2K {
     private List<String[]> readCSVLines = null;
 
     /**
-     * Constructs a new instance of this class with a parameter for read line based comma separated values (CSV) files.
+     * Constructs a new instance of this class with a parameter for reader line based comma separated values (CSV) files.
      *
      * @param readCSVLines {@code List<String[]>} with lines as {@code String[]}
      */
@@ -45,9 +45,9 @@ public class Csv2K {
     /**
      * Converts a CSV file (nr;x;y(;z) or nr;code;x;y;z) into a Caplan K file.
      *
-     * @param useSimpleFormat  option to write a reduced K file which is compatible to Z+F LaserControl
-     * @param writeCommentLine option to write a comment line into the K file with basic information
-     * @param writeCodeColumn  option to write a code column into the output file
+     * @param useSimpleFormat  option to writer a reduced K file which is compatible to Z+F LaserControl
+     * @param writeCommentLine option to writer a comment line into the K file with basic information
+     * @param writeCodeColumn  option to writer a code column into the output file
      *
      * @return converted K file as {@code ArrayList<String>}
      */

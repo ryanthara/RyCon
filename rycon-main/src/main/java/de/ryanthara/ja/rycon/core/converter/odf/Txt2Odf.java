@@ -38,7 +38,7 @@ public class Txt2Odf {
     private SpreadsheetDocument spreadsheetDocument;
 
     /**
-     * Constructs a new instance of this class for read line based text files as parameter.
+     * Constructs a new instance of this class for reader line based text files as parameter.
      *
      * @param readStringLines {@code ArrayList<String>} with lines in text format
      */

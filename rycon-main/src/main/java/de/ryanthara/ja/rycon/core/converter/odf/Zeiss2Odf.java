@@ -40,7 +40,7 @@ public class Zeiss2Odf {
     private SpreadsheetDocument spreadsheetDocument;
 
     /**
-     * Constructs a new instance of this class with a parameter for the read line based Zeiss REC files in
+     * Constructs a new instance of this class with a parameter for the reader line based Zeiss REC files in
      * different dialects (R4, R5, REC500 and M5).
      *
      * @param readStringLines {@code ArrayList<String>} with lines in text format

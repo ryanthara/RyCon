@@ -61,6 +61,7 @@ public enum PreferenceKeys {
     PARAM_FREE_STATION_STRING,
     PARAM_KNOWN_STATION_STRING,
     PARAM_LTOP_STRING,
+    PARAM_LEVEL_STRING,
     USER_LAST_USED_DIR
 
 } // end of PreferenceKeys

@@ -160,7 +160,7 @@ public class FileUtils {
                 fileNames.add(path);
             }
         } catch (IOException ex) {
-            logger.log(Level.WARNING, "Can not read directory: " + directory);
+            logger.log(Level.WARNING, "Can not reader directory: " + directory);
         }
 
         return fileNames;
@@ -303,7 +303,7 @@ public class FileUtils {
 
         /**
          * Invoked for a file that could not be visited. This method is invoked
-         * if the file's attributes could not be read, the file is a directory
+         * if the file's attributes could not be reader, the file is a directory
          * that could not be opened, and other reasons.
          *
          * @param file a reference to the file

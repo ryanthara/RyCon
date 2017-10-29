@@ -40,7 +40,7 @@ public class Zeiss2Gsi {
     private ArrayList<String> readStringLines;
 
     /**
-     * Constructs a new instance of this class given an {@code ArrayList<String} that contains the read lines
+     * Constructs a new instance of this class given an {@code ArrayList<String} that contains the reader lines
      * in the Zeiss REC format and it's dialects (R4, R5, REC500 and M5).
      * <p>
      * The differentiation of the content is done by the called method.
@@ -106,7 +106,7 @@ public class Zeiss2Gsi {
                             blocks = new ArrayList<>();
                         }
 
-                        // prepare the read line results for the new point
+                        // prepare the reader line results for the new point
                         pointNumber = decoder.getPointNumber();
 
                         writeLineCounter = writeLineCounter + 1;
@@ -412,13 +412,13 @@ public class Zeiss2Gsi {
     }
 
     /*
-    Writes values that are read from more than one Zeiss REC line into one GSI block (e.g. date and time,
+    Writes values that are reader from more than one Zeiss REC line into one GSI block (e.g. date and time,
     or ppm and prism constant)
      */
     private void writeMultiLinedValues(ArrayList<GsiBlock> blocks, boolean isGSI16) {
         // date and time
         if ((dateLine == timeLine) || (dateLine == timeLine + 1)) {
-            // write blocks for date and time strings
+            // writer blocks for date and time strings
             blocks.add(new GsiBlock(isGSI16, 18, format1));
             blocks.add(new GsiBlock(isGSI16, 19, format2));
 
@@ -426,13 +426,13 @@ public class Zeiss2Gsi {
             dateLine = -1;
             timeLine = -1;
         } else if (dateLine > timeLine) {
-            // write block for date string
+            // writer block for date string
             blocks.add(new GsiBlock(isGSI16, 18, format1));
 
             // reset helper value
             dateLine = -1;
         } else if (timeLine > dateLine) {
-            // write block for time string
+            // writer block for time string
             blocks.add(new GsiBlock(isGSI16, 19, format1));
 
             // reset helper value
@@ -441,7 +441,7 @@ public class Zeiss2Gsi {
 
         // ppm and prism constant
         if ((constantLine >= ppmLine + 1) || (constantLine <= ppmLine + 1)) {
-            // write block
+            // writer block
             blocks.add(new GsiBlock(isGSI16, 51, ppmAndAdditionConstant));
 
             // reset helper values

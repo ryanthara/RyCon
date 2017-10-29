@@ -35,7 +35,7 @@ public class CsvBaselStadt2K {
     private List<String[]> readCSVLines = null;
 
     /**
-     * Constructs a new instance of this class with a parameter for read line based comma separated values (CSV) files
+     * Constructs a new instance of this class with a parameter for reader line based comma separated values (CSV) files
      * from the geodata server Basel Stadt (Switzerland).
      *
      * @param readCSVLines {@code List<String[]>} with lines as {@code String[]}
@@ -48,8 +48,8 @@ public class CsvBaselStadt2K {
      * Converts a comma separated coordinate file from the geodata server Basel Stadt (Switzerland)
      * into a Zeiss REC file.
      *
-     * @param useSimpleFormat  option to write a reduced K file which is compatible to Z+F LaserControl
-     * @param writeCommentLine option to write a comment line into the K file with basic information
+     * @param useSimpleFormat  option to writer a reduced K file which is compatible to Z+F LaserControl
+     * @param writeCommentLine option to writer a comment line into the K file with basic information
      *
      * @return converted K file as {@code ArrayList<String>}
      */

@@ -21,7 +21,7 @@ import org.odftoolkit.simple.SpreadsheetDocument;
 
 
 /**
- * Instances of this class provides basic file operations to write Open Document Format spreadsheet files.
+ * Instances of this class provides basic file operations to writer Open Document Format spreadsheet files.
  *
  * @author sebastian
  * @version 2

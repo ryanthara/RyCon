@@ -31,7 +31,7 @@ public class Gsi8vsGsi16 {
     private ArrayList<String> readStringLines;
 
     /**
-     * Constructs a new instance of this class with a parameter for the read line based GSI formatted files.
+     * Constructs a new instance of this class with a parameter for the reader line based GSI formatted files.
      *
      * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
      */

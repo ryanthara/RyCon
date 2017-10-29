@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 /**
- * Instances of this class provides basic file operations to write Microsoft xls, xlsx, ... files.
+ * Instances of this class provides basic file operations to writer Microsoft xls, xlsx, ... files.
  *
  * @author sebastian
  * @version 2
@@ -49,7 +49,7 @@ public class FileToolsExcel {
      *
      * @param writeFile file to be written
      *
-     * @return success write success
+     * @return success writer success
      */
     public boolean writeXLS(Path writeFile) {
         try (FileOutputStream fileOut = new FileOutputStream(writeFile.toFile())) {
@@ -70,7 +70,7 @@ public class FileToolsExcel {
      *
      * @param writeFile path to be written
      *
-     * @return success write success
+     * @return success writer success
      */
     public boolean writeXLSX(Path writeFile) {
         boolean writeSuccess = false;

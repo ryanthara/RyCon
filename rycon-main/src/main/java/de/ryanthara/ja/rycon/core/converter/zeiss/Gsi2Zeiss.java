@@ -32,10 +32,10 @@ public class Gsi2Zeiss {
 
     /**
      * Constructs a new instance of this class given an {@code ArrayList<String>} with
-     * the read GSI lines as {@code String}.
+     * the reader GSI lines as {@code String}.
      * <p>
      *
-     * @param readStringLines read GSI lines
+     * @param readStringLines reader GSI lines
      */
     public Gsi2Zeiss(ArrayList<String> readStringLines) {
         baseToolsGsi = new BaseToolsGsi(readStringLines);
@@ -136,7 +136,7 @@ public class Gsi2Zeiss {
             }
 
             /*
-             write the information from the place holder value to the result array list and
+             writer the information from the place holder value to the result array list and
              differ between coordinate or measurement files
              */
             if (isStationLine) {

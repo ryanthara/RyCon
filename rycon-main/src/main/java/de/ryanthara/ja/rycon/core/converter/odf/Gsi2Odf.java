@@ -44,7 +44,7 @@ public class Gsi2Odf {
     private SpreadsheetDocument spreadsheetDocument;
 
     /**
-     * Constructs a new instance of this class for read Leica GSI files as parameter.
+     * Constructs a new instance of this class for reader Leica GSI files as parameter.
      *
      * @param readStringLines {@code ArrayList<String>} with lines in text format
      */
@@ -56,7 +56,7 @@ public class Gsi2Odf {
      * Converts a Leica GSI file element by element into an Open Document Format spreadsheet file.
      *
      * @param sheetName       name of the sheet (file name from input file)
-     * @param writeCommentRow write comment row to the output file
+     * @param writeCommentRow writer comment row to the output file
      *
      * @return success conversion success
      */

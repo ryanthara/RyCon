@@ -39,7 +39,7 @@ public class CsvBaselStadt2Odf {
     private SpreadsheetDocument spreadsheetDocument;
 
     /**
-     * Constructs a new instance of this class for read line based CSV files from the geodata server Basel Stadt (Switzerland).
+     * Constructs a new instance of this class for reader line based CSV files from the geodata server Basel Stadt (Switzerland).
      *
      * @param readCSVLines {@code List<String[]>} with lines as {@code String[]}
      */
@@ -51,7 +51,7 @@ public class CsvBaselStadt2Odf {
      * Convert a CSV file from the geodata server Basel Stadt (Switzerland) into an Open Document Format spreadsheet file.
      *
      * @param sheetName       name of the sheet (file name from input file)
-     * @param writeCommentRow write comment row
+     * @param writeCommentRow writer comment row
      *
      * @return success conversion success
      */

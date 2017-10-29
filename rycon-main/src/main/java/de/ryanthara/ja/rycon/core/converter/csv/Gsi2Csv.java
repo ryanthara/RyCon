@@ -41,7 +41,7 @@ public class Gsi2Csv {
     private BaseToolsGsi baseToolsGsi;
 
     /**
-     * Class constructor for read line based text files in Leica GSI format (GSI8 or GSI16).
+     * Class constructor for reader line based text files in Leica GSI format (GSI8 or GSI16).
      *
      * @param readStringLines {@code ArrayList<String>} with lines in text format
      */

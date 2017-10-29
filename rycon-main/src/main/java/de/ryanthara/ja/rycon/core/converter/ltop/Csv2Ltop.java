@@ -36,7 +36,7 @@ public class Csv2Ltop {
     private List<String[]> readCSVLines = null;
 
     /**
-     * Constructs a new instance of this class with a parameter for read line based comma separated values (CSV) files.
+     * Constructs a new instance of this class with a parameter for reader line based comma separated values (CSV) files.
      *
      * @param readCSVLines {@code List<String[]>} with lines as {@code String[]}
      */

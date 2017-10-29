@@ -34,10 +34,10 @@ public class Cadwork2K {
     private ArrayList<String> readStringLines;
 
     /**
-     * Constructs a new instance of this class with a parameter for read line based text files from Cadwork CAD program
+     * Constructs a new instance of this class with a parameter for reader line based text files from Cadwork CAD program
      * in node.dat file format.
      *
-     * @param readStringLines {@code ArrayList<String>} with read lines from node.dat file
+     * @param readStringLines {@code ArrayList<String>} with reader lines from node.dat file
      */
     public Cadwork2K(ArrayList<String> readStringLines) {
         this.readStringLines = readStringLines;
@@ -46,9 +46,9 @@ public class Cadwork2K {
     /**
      * Converts a coordinate file from Cadwork CAD program (node.dat) into a Caplan K file.
      *
-     * @param useSimpleFormat  option to write a reduced K file which is compatible to Z+F LaserControl
-     * @param writeCommentLine option to write a comment line into the K file with basic information
-     * @param writeCodeColumn  option to write the code column into the K file
+     * @param useSimpleFormat  option to writer a reduced K file which is compatible to Z+F LaserControl
+     * @param writeCommentLine option to writer a comment line into the K file with basic information
+     * @param writeCodeColumn  option to writer the code column into the K file
      *
      * @return converted Caplan K file as {@code ArrayList<String>}
      */

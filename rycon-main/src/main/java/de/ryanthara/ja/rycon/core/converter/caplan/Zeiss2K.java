@@ -46,7 +46,7 @@ public class Zeiss2K {
     private ArrayList<String> readStringLines;
 
     /**
-     * Constructs a new instance of this class with a parameter for read line base text files in the Zeiss REC format
+     * Constructs a new instance of this class with a parameter for reader line base text files in the Zeiss REC format
      * and it's dialects.
      * <p>
      * The differentiation of the content is done by the called method and it's content analyze functionality.
@@ -70,8 +70,8 @@ public class Zeiss2K {
     /**
      * Converts a measurement file from Zeiss REC format (R4, R5, REC500 or M5) into a Caplan K file.
      *
-     * @param useSimpleFormat  option to write a reduced K file which is compatible to Z+F LaserControl
-     * @param writeCommentLine write comment line to output file
+     * @param useSimpleFormat  option to writer a reduced K file which is compatible to Z+F LaserControl
+     * @param writeCommentLine writer comment line to output file
      *
      * @return converted K file
      */
@@ -119,7 +119,7 @@ public class Zeiss2K {
                         for at least one or more added elements to prevent writing empty lines
                          */
 
-                        // prepare the read line results for the new point
+                        // prepare the reader line results for the new point
                         pointNumber = decoder.getPointNumber();
 
                         writeLineCounter = writeLineCounter + 1;
@@ -166,7 +166,7 @@ public class Zeiss2K {
     }
 
     /*
-    This is used when the option 'useSimpleFormat' is valued to write a reduced K file (no 7 y x z) which is
+    This is used when the option 'useSimpleFormat' is valued to writer a reduced K file (no 7 y x z) which is
     compatible to Z+F LaserControl registration process
      */
     private void fillSimpleFormat(ZeissBlock zeissBlock) {

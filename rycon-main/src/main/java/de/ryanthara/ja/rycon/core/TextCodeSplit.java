@@ -41,7 +41,7 @@ public class TextCodeSplit {
     private TreeSet<Integer> foundCodes;
 
     /**
-     * Constructs a new instance of this class given a read line based text file with a specified format.
+     * Constructs a new instance of this class given a reader line based text file with a specified format.
      *
      * @param arrayList {@code ArrayList<String>} with lines in text format
      */

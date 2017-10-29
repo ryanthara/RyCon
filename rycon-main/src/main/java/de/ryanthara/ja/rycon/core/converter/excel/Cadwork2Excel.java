@@ -41,9 +41,9 @@ public class Cadwork2Excel {
     private Workbook workbook;
 
     /**
-     * Class constructor for read line based text files from Cadwork CAD program in node.dat file format.
+     * Class constructor for reader line based text files from Cadwork CAD program in node.dat file format.
      *
-     * @param readStringLines {@code ArrayList<String>} with read lines from node.dat file
+     * @param readStringLines {@code ArrayList<String>} with reader lines from node.dat file
      */
     public Cadwork2Excel(ArrayList<String> readStringLines) {
         this.readStringLines = readStringLines;

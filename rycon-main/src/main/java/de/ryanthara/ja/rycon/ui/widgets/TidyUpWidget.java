@@ -21,17 +21,17 @@ package de.ryanthara.ja.rycon.ui.widgets;
 import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.core.GsiLtopClean;
 import de.ryanthara.ja.rycon.core.GsiTidyUp;
-import de.ryanthara.ja.rycon.util.check.PathCheck;
-import de.ryanthara.ja.rycon.util.check.TextCheck;
 import de.ryanthara.ja.rycon.core.LogfileClean;
 import de.ryanthara.ja.rycon.data.PreferenceKeys;
 import de.ryanthara.ja.rycon.i18n.*;
 import de.ryanthara.ja.rycon.nio.LineReader;
-import de.ryanthara.ja.rycon.nio.LineWriter;
 import de.ryanthara.ja.rycon.ui.Sizes;
 import de.ryanthara.ja.rycon.ui.custom.*;
 import de.ryanthara.ja.rycon.ui.util.ShellPositioner;
+import de.ryanthara.ja.rycon.nio.WriteFile2Disk;
 import de.ryanthara.ja.rycon.util.StringUtils;
+import de.ryanthara.ja.rycon.util.check.PathCheck;
+import de.ryanthara.ja.rycon.util.check.TextCheck;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -228,7 +228,7 @@ public class TidyUpWidget extends AbstractWidget {
         if (files.isPresent()) {
             files2read = files.get();
         } else {
-            logger.log(Level.SEVERE, "can not get the read files");
+            logger.log(Level.SEVERE, "can not get the reader files");
         }
     }
 
@@ -309,43 +309,42 @@ public class TidyUpWidget extends AbstractWidget {
     private int fileOperations(boolean holdStations, boolean holdControlPoints) {
         int counter = 0;
         LineReader lineReader;
-        String editString = Main.pref.getUserPreference(PreferenceKeys.PARAM_EDIT_STRING);
-        String ltopString = Main.pref.getUserPreference(PreferenceKeys.PARAM_LTOP_STRING);
+        final String editString = Main.pref.getUserPreference(PreferenceKeys.PARAM_EDIT_STRING);
+        final String ltopString = Main.pref.getUserPreference(PreferenceKeys.PARAM_LTOP_STRING);
 
         for (Path path : files2read) {
             lineReader = new LineReader(path);
 
             if (lineReader.readFile(false)) {
                 ArrayList<String> readFile = lineReader.getLines();
-                ArrayList<String> writeFile = null;
-                String file2write = null;
+                ArrayList<String> writeFile;
 
                 final String fileName = path.getFileName().toString();
 
                 if (fileName.toUpperCase().endsWith(".GSL")) {
                     GsiLtopClean gsiLtopClean = new GsiLtopClean(readFile);
                     writeFile = gsiLtopClean.processLTOPClean();
-                    file2write = path.toString().substring(0, path.toString().length() - 4) + "_" + ltopString + ".GSI";
+
+                    if (WriteFile2Disk.writeFile2Disk(path, writeFile, ltopString, ".GSI")) {
+                        counter = counter + 1;
+                    }
                 } else if (fileName.toUpperCase().endsWith("GSI")) {
                     GsiTidyUp gsiTidyUp = new GsiTidyUp(readFile);
                     writeFile = gsiTidyUp.processTidyUp(holdStations, holdControlPoints);
-                    file2write = path.toString().substring(0, path.toString().length() - 4) + "_" + editString + ".GSI";
+
+                    if (WriteFile2Disk.writeFile2Disk(path, writeFile, editString, ".GSI")) {
+                        counter = counter + 1;
+                    }
                 } else if (fileName.toUpperCase().endsWith("LOGFILE.TXT")) {
                     LogfileClean logfileClean = new LogfileClean(readFile);
                     writeFile = logfileClean.processTidyUp(chkBoxCleanBlocksByContent.getSelection());
-                    file2write = path.toString().substring(0, path.toString().length() - 4) + "_" + editString + ".txt";
-                }
 
-                // write file line by line
-                if (writeFile != null && file2write != null) {
-                    // TODO Use WriteFile2Disk instead this
-                    LineWriter lineWriter = new LineWriter(Paths.get(file2write));
-                    if (lineWriter.writeFile(writeFile)) {
+                    if (WriteFile2Disk.writeFile2Disk(path, writeFile, editString, ".txt")) {
                         counter = counter + 1;
                     }
                 }
             } else {
-                System.err.println("File " + path.getFileName() + " could not be read.");
+                System.err.println("File " + path.getFileName() + " could not be reader.");
             }
         }
         return counter;

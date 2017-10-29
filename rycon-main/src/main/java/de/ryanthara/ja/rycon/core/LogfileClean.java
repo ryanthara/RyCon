@@ -35,7 +35,7 @@ public final class LogfileClean {
     private ArrayList<String> readStringLines;
 
     /**
-     * Constructs a new instance of this class given read line based <tt>Leica Geosystems</tt>
+     * Constructs a new instance of this class given reader line based <tt>Leica Geosystems</tt>
      * logfile.txt file.
      *
      * @param readStringLines {@code ArrayList<String>} with lines as {@code String}

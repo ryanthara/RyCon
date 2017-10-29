@@ -35,9 +35,9 @@ public class Txt2Gsi {
 
     /**
      * Constructs a new instance of this class given an {@code ArrayList<String>} that contains
-     * the read txt formatted coordinate file.
+     * the reader txt formatted coordinate file.
      *
-     * @param readStringLines read lines
+     * @param readStringLines reader lines
      */
     public Txt2Gsi(ArrayList<String> readStringLines) {
         this.readStringLines = readStringLines;

@@ -38,7 +38,7 @@ public class TxtBaselLandschaft2Odf {
     private SpreadsheetDocument spreadsheetDocument;
 
     /**
-     * Constructs a new instance of this class for read line based text files in different formats.
+     * Constructs a new instance of this class for reader line based text files in different formats.
      *
      * @param readStringLines {@code ArrayList<String>} with lines in text format
      */
@@ -51,7 +51,7 @@ public class TxtBaselLandschaft2Odf {
      * Open Document Format spreadsheet file.
      *
      * @param sheetName       name of the sheet (file name from input file)
-     * @param writeCommentRow write comment row
+     * @param writeCommentRow writer comment row
      *
      * @return success conversion success
      */

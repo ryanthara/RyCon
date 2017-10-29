@@ -18,6 +18,7 @@
 package de.ryanthara.ja.rycon.ui.widgets.convert.write;
 
 import de.ryanthara.ja.rycon.core.converter.odf.*;
+import de.ryanthara.ja.rycon.nio.WriteOdf2Disk;
 import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
 import de.ryanthara.ja.rycon.ui.widgets.convert.SourceButton;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -35,7 +36,7 @@ import java.util.List;
  * @version 1
  * @since 12
  */
-public class ODFWriteFile implements WriteFile {
+public class OdfWriter implements Writer {
 
     private Path path;
     private ArrayList<String> readStringFile;
@@ -43,14 +44,14 @@ public class ODFWriteFile implements WriteFile {
     private WriteParameter parameter;
 
     /**
-     * Constructs the {@link ODFWriteFile} with a set of parameters.
+     * Constructs the {@link OdfWriter} with a set of parameters.
      *
      * @param path           output file
-     * @param readCSVFile    read csv file
-     * @param readStringFile read string file
-     * @param parameter      the write parameter object
+     * @param readCSVFile    reader csv file
+     * @param readStringFile reader string file
+     * @param parameter      the writer parameter object
      */
-    public ODFWriteFile(Path path, ArrayList<String> readStringFile, List<String[]> readCSVFile, WriteParameter parameter) {
+    public OdfWriter(Path path, ArrayList<String> readStringFile, List<String[]> readCSVFile, WriteParameter parameter) {
         this.path = path;
         this.readStringFile = readStringFile;
         this.readCSVFile = readCSVFile;
@@ -60,7 +61,7 @@ public class ODFWriteFile implements WriteFile {
     /**
      * Returns true if the prepared {@link SpreadsheetDocument} for file writing was written to the file system.
      *
-     * @return write success
+     * @return writer success
      */
     @Override
     public boolean writeSpreadsheetDocument() {
@@ -127,10 +128,10 @@ public class ODFWriteFile implements WriteFile {
 
             default:
                 spreadsheetDocument = null;
-                System.err.println("ODFWriteFile.writeStringFile() : unknown file format " + SourceButton.fromIndex(parameter.getSourceNumber()));
+                System.err.println("OdfWriter.writeStringFile() : unknown file format " + SourceButton.fromIndex(parameter.getSourceNumber()));
         }
 
-        if (WriteODS2Disk.writeODS2Disk(path, spreadsheetDocument)) {
+        if (WriteOdf2Disk.writeOds2Disk(path, spreadsheetDocument)) {
             success = true;
         }
 
@@ -140,7 +141,7 @@ public class ODFWriteFile implements WriteFile {
     /**
      * Returns true if the prepared {@link ArrayList} for file writing was written to the file system.
      *
-     * @return write success
+     * @return writer success
      */
     @Override
     public boolean writeStringFile() {
@@ -150,11 +151,11 @@ public class ODFWriteFile implements WriteFile {
     /**
      * Returns true if the prepared {@link Workbook} for file writing was written to the file system.
      *
-     * @return write success
+     * @return writer success
      */
     @Override
     public boolean writeWorkbookFile() {
         return false;
     }
 
-} // end of ODFWriteFile
+} // end of OdfWriter

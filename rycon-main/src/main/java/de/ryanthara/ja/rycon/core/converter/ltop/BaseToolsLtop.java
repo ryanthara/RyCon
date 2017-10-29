@@ -221,7 +221,7 @@ class BaseToolsLtop {
      * - $$PK for cartesian coordinates
      * - $$EL for geographic coordinates
      *
-     * @param result              ArrayList<String> to write in
+     * @param result              ArrayList<String> to writer in
      * @param firstLineIdentifier identifier for different file type ($$ME, $$PK or $$EL)
      */
     static void writeCommendLine(ArrayList<String> result, String firstLineIdentifier) {

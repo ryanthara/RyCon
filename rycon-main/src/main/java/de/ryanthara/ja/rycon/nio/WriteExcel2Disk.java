@@ -15,18 +15,17 @@
  * You should have received a copy of the GNU General Public License along with
  * this package. If not, see <http://www.gnu.org/licenses/>.
  */
-package de.ryanthara.ja.rycon.ui.widgets.convert.write;
+package de.ryanthara.ja.rycon.nio;
 
 import de.ryanthara.ja.rycon.data.DefaultKeys;
-import de.ryanthara.ja.rycon.nio.FileToolsOdf;
-import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
 import de.ryanthara.ja.rycon.i18n.Labels;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 import de.ryanthara.ja.rycon.i18n.Warnings;
+import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.odftoolkit.simple.SpreadsheetDocument;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -36,13 +35,13 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LABELS;
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.WARNINGS;
 
 /**
- * This class implements static file writing functions for Open Document spreadsheet files.
+ * This class implements static file writing functions for line based files.
  *
  * @author sebastian
  * @version 2
  * @since 12
  */
-class WriteODS2Disk {
+public class WriteExcel2Disk {
 
     private static String prepareOutputFileName(Path path, String suffix) {
         final String paramEditString = DefaultKeys.PARAM_EDIT_STRING.getValue();
@@ -51,18 +50,19 @@ class WriteODS2Disk {
     }
 
     /**
-     * Writes a Open Document spreadsheet from a {@link SpreadsheetDocument} to the file system and returns write success.
+     * Writes a Microsoft Excel (.XLS or .XLSX) file from a {@link Workbook} to the file system and returns writer success.
      *
-     * @param path                path object
-     * @param spreadsheetDocument prepared {@link SpreadsheetDocument} for writing
+     * @param path     path object
+     * @param workbook prepared {@link Workbook} for writing
+     * @param suffix   file suffix
      *
-     * @return write success
+     * @return writer success
      */
-    static boolean writeODS2Disk(Path path, SpreadsheetDocument spreadsheetDocument) {
+    public static boolean writeExcel2Disk(Path path, Workbook workbook, String suffix) {
         boolean writeSuccess;
-        String outputFileName = prepareOutputFileName(path, ".ods");
+        String outputFileName = prepareOutputFileName(path, suffix);
 
-        FileToolsOdf fileToolsOdf = new FileToolsOdf(spreadsheetDocument);
+        FileToolsExcel fileToolsExcel = new FileToolsExcel(workbook);
 
         if (Files.exists(Paths.get(outputFileName))) {
             final Shell shell = Display.getCurrent().getActiveShell();
@@ -71,12 +71,22 @@ class WriteODS2Disk {
                     ResourceBundleUtils.getLangString(LABELS, Labels.warningTextMsgBox),
                     String.format(ResourceBundleUtils.getLangString(WARNINGS, Warnings.fileExistsOverwrite), outputFileName));
 
-            writeSuccess = returnValue == SWT.YES && fileToolsOdf.writeODS(outputFileName);
+            if (returnValue == SWT.YES) {
+                if (suffix.equalsIgnoreCase(".xls")) {
+                    writeSuccess = fileToolsExcel.writeXLS(Paths.get(outputFileName));
+                } else
+                    writeSuccess = suffix.equalsIgnoreCase(".xlsx") && fileToolsExcel.writeXLSX(Paths.get(outputFileName));
+            } else {
+                writeSuccess = false;
+            }
         } else {
-            writeSuccess = fileToolsOdf.writeODS(outputFileName);
+            if (suffix.equalsIgnoreCase(".xls")) {
+                writeSuccess = fileToolsExcel.writeXLS(Paths.get(outputFileName));
+            } else
+                writeSuccess = suffix.equalsIgnoreCase(".xlsx") && fileToolsExcel.writeXLSX(Paths.get(outputFileName));
         }
 
         return writeSuccess;
     }
 
-} // end of WriteODS2Disk
+} // end of WriteExcel2Disk

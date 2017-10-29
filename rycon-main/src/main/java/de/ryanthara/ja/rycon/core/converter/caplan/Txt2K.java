@@ -33,7 +33,7 @@ public class Txt2K {
     private ArrayList<String> readStringLines;
 
     /**
-     * Constructs a new instance of this class with a parameter for read line based coordinate files in text format.
+     * Constructs a new instance of this class with a parameter for reader line based coordinate files in text format.
      *
      * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
      */
@@ -44,9 +44,9 @@ public class Txt2K {
     /**
      * Converts a text file (nr x y (z) or nr code x y z) into a Caplan K file.
      *
-     * @param useSimpleFormat  option to write a reduced K file which is compatible to Z+F LaserControl
-     * @param writeCommentLine option to write a comment line into the K file with basic information
-     * @param writeCodeColumn  option to write a found code into the K file
+     * @param useSimpleFormat  option to writer a reduced K file which is compatible to Z+F LaserControl
+     * @param writeCommentLine option to writer a comment line into the K file with basic information
+     * @param writeCodeColumn  option to writer a found code into the K file
      *
      * @return converted K file as {@code ArrayList<String>}
      */

@@ -174,6 +174,22 @@ public class SettingsWidget {
             }
         });
 
+        dialog.addPreference(new PreferenceString(
+                ResourceBundleUtils.getLangString(PREFERENCES, Preferences.fileCompletionLevelling),
+                DefaultKeys.PARAM_LEVEL_STRING.getValue()) {
+
+            @Override
+            public String getValue() {
+                return Main.pref.getUserPreference(PreferenceKeys.PARAM_LEVEL_STRING);
+            }
+
+            @Override
+            public void setValue(Object obj) {
+                Main.pref.setUserPreference(PreferenceKeys.PARAM_LEVEL_STRING, obj.toString());
+            }
+        });
+
+
         dialog.addPreference(new PreferenceDouble(
                 ResourceBundleUtils.getLangString(PREFERENCES, Preferences.equalPointsMinimumDistance),
                 0.005, 0.10,

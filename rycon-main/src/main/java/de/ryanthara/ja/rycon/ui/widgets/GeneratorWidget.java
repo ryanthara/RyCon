@@ -455,7 +455,7 @@ public final class GeneratorWidget extends AbstractWidget {
                 }
             }
         } catch (IOException e) {
-            logger.log(Level.WARNING, "can not read directory '01.Organisation'");
+            logger.log(Level.WARNING, "can not reader directory '01.Organisation'");
         }
 
         // rename 2017_01nn_Aufwandschätzung_0n.xlsx
@@ -481,7 +481,7 @@ public final class GeneratorWidget extends AbstractWidget {
             }
 
         } catch (IOException e) {
-            logger.log(Level.WARNING, "can not read directory '02.Vertrag'");
+            logger.log(Level.WARNING, "can not reader directory '02.Vertrag'");
         }
     }
 

@@ -46,7 +46,7 @@ public class GsiBlock {
     private String dataGSI, information, sign;
 
     /**
-     * Constructs a new instance of this class given a read GSI block as string.
+     * Constructs a new instance of this class given a reader GSI block as string.
      * <p>
      * This constructor is used for reading Leica GSI formatted files.
      *

@@ -253,7 +253,7 @@ public abstract class Main {
     }
 
     /**
-     * Returns the read command line interface input files as string.
+     * Returns the reader command line interface input files as string.
      *
      * @return cli input files
      */

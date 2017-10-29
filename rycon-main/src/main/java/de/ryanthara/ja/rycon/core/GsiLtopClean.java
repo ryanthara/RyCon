@@ -61,7 +61,7 @@ public class GsiLtopClean {
     private ArrayList<String> readStringLines;
 
     /**
-     * Constructs a new instance of this class given a read line based Leica GSI formatted file.
+     * Constructs a new instance of this class given a reader line based Leica GSI formatted file.
      *
      * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
      */

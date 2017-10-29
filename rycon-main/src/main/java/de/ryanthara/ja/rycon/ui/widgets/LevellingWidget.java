@@ -18,18 +18,18 @@
 package de.ryanthara.ja.rycon.ui.widgets;
 
 import de.ryanthara.ja.rycon.Main;
-import de.ryanthara.ja.rycon.util.check.PathCheck;
-import de.ryanthara.ja.rycon.util.check.TextCheck;
-import de.ryanthara.ja.rycon.core.converter.gsi.Nigra2Gsi;
 import de.ryanthara.ja.rycon.core.GsiLevelling2Cad;
+import de.ryanthara.ja.rycon.core.converter.gsi.Nigra2Gsi;
 import de.ryanthara.ja.rycon.data.PreferenceKeys;
 import de.ryanthara.ja.rycon.i18n.*;
 import de.ryanthara.ja.rycon.nio.LineReader;
-import de.ryanthara.ja.rycon.nio.LineWriter;
+import de.ryanthara.ja.rycon.nio.WriteFile2Disk;
 import de.ryanthara.ja.rycon.ui.Sizes;
 import de.ryanthara.ja.rycon.ui.custom.*;
 import de.ryanthara.ja.rycon.ui.util.ShellPositioner;
 import de.ryanthara.ja.rycon.util.StringUtils;
+import de.ryanthara.ja.rycon.util.check.PathCheck;
+import de.ryanthara.ja.rycon.util.check.TextCheck;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -247,7 +247,7 @@ public class LevellingWidget extends AbstractWidget {
         if (files.isPresent()) {
             files2read = files.get();
         } else {
-            logger.log(Level.SEVERE, "can't get the read files");
+            logger.log(Level.SEVERE, "can't get the reader files");
         }
     }
 
@@ -318,6 +318,7 @@ public class LevellingWidget extends AbstractWidget {
 
     private int fileOperations(boolean holdChangePoints) {
         int counter = 0;
+        final String editString = Main.pref.getUserPreference(PreferenceKeys.PARAM_LEVEL_STRING);
 
         for (Path file2read : files2read) {
             LineReader lineReader = new LineReader(file2read);
@@ -340,16 +341,11 @@ public class LevellingWidget extends AbstractWidget {
                     break;
                 }
 
-                String file2write = file2read.toString().substring(0, file2read.toString().length() - 4) + "_LEVEL.GSI";
-
-                // TODO Use WriteFile2Disk instead this
-                LineWriter lineWriter = new LineWriter(Paths.get(file2write));
-
-                if (lineWriter.writeFile(writeFile)) {
+                if (WriteFile2Disk.writeFile2Disk(file2read, writeFile, editString, "GSI")) {
                     counter = counter + 1;
                 }
             } else {
-                System.err.println("File " + file2read.getFileName() + " could not be read.");
+                System.err.println("File " + file2read.getFileName() + " could not be reader.");
             }
         }
 

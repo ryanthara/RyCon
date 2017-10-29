@@ -19,6 +19,9 @@ package de.ryanthara.ja.rycon.ui.widgets;
 
 import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.core.converter.csv.BaseToolsCsv;
+import de.ryanthara.ja.rycon.ui.widgets.convert.write.WriteParameter;
+import de.ryanthara.ja.rycon.ui.widgets.convert.read.*;
+import de.ryanthara.ja.rycon.ui.widgets.convert.write.*;
 import de.ryanthara.ja.rycon.util.check.TextCheck;
 import de.ryanthara.ja.rycon.core.converter.excel.BaseToolsExcel;
 import de.ryanthara.ja.rycon.core.converter.text.BaseToolsTxt;
@@ -32,8 +35,6 @@ import de.ryanthara.ja.rycon.ui.util.ShellPositioner;
 import de.ryanthara.ja.rycon.ui.widgets.convert.FileFilterIndex;
 import de.ryanthara.ja.rycon.ui.widgets.convert.SourceButton;
 import de.ryanthara.ja.rycon.ui.widgets.convert.TargetButton;
-import de.ryanthara.ja.rycon.ui.widgets.convert.read.*;
-import de.ryanthara.ja.rycon.ui.widgets.convert.write.*;
 import de.ryanthara.ja.rycon.util.StringUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -483,34 +484,34 @@ public class ConverterWidget extends AbstractWidget {
         RadioHelper.selectBtn(groupTarget.getChildren(), Main.getCliTargetBtnNumber());
     }
 
-    private Map<Integer, ReadFile> prepareReadFileMaps() {
-        Map<Integer, ReadFile> readFileMap = new HashMap<>();
-        readFileMap.put(0, new GSIReadFile(innerShell));
-        readFileMap.put(1, new GSIReadFile(innerShell));
-        readFileMap.put(2, new TXTReadFile(innerShell));
-        readFileMap.put(3, new CSVReadFile(innerShell, chkBoxCSVSemiColonSeparator.getSelection()));
-        readFileMap.put(4, new CaplanReadFile(innerShell));
-        readFileMap.put(5, new ZeissReadFile(innerShell));
-        readFileMap.put(6, new CadworkReadFile(innerShell));
-        readFileMap.put(7, new BaselStadtCSVReadFile(innerShell));
-        readFileMap.put(8, new BaselLandschaftTXTReadFile(innerShell));
+    private Map<Integer, Reader> prepareReadFileMaps() {
+        Map<Integer, Reader> readFileMap = new HashMap<>();
+        readFileMap.put(0, new GsiReader(innerShell));
+        readFileMap.put(1, new GsiReader(innerShell));
+        readFileMap.put(2, new TxtReader(innerShell));
+        readFileMap.put(3, new CsvReader(innerShell, chkBoxCSVSemiColonSeparator.getSelection()));
+        readFileMap.put(4, new CaplanReader(innerShell));
+        readFileMap.put(5, new ZeissReader(innerShell));
+        readFileMap.put(6, new CadworkReader(innerShell));
+        readFileMap.put(7, new BaselStadtCsvReader(innerShell));
+        readFileMap.put(8, new BaselLandschaftTxtReader(innerShell));
 
         return readFileMap;
     }
 
-    private Map<Integer, WriteFile> prepareWriteFile(Path path, ArrayList<String> readStringFile, List<String[]> readCSVFile, WriteParameter parameter) {
-        Map<Integer, WriteFile> writeFileMap = new HashMap<>();
-        writeFileMap.put(0, new GSIWriteFile(path, readStringFile, readCSVFile, parameter, Main.getGSI8()));
-        writeFileMap.put(1, new GSIWriteFile(path, readStringFile, readCSVFile, parameter, Main.getGSI16()));
-        writeFileMap.put(2, new TXTWriteFile(path, readStringFile, readCSVFile, parameter));
-        writeFileMap.put(3, new CSVWriteFile(path, readStringFile, readCSVFile, parameter));
-        writeFileMap.put(4, new CaplanWriteFile(path, readStringFile, readCSVFile, parameter));
-        writeFileMap.put(5, new ZeissWriteFile(path, readStringFile, readCSVFile, parameter));
-        writeFileMap.put(6, new LtopKOOWriteFile(path, readStringFile, readCSVFile, parameter));
-        writeFileMap.put(7, new LtopMESWriteFile(path, readStringFile, parameter));
-        writeFileMap.put(8, new ExcelWriteFile(path, readStringFile, readCSVFile, parameter, BaseToolsExcel.isXLSX));
-        writeFileMap.put(9, new ExcelWriteFile(path, readStringFile, readCSVFile, parameter, BaseToolsExcel.isXLS));
-        writeFileMap.put(10, new ODFWriteFile(path, readStringFile, readCSVFile, parameter));
+    private Map<Integer, Writer> prepareWriteFile(Path path, ArrayList<String> readStringFile, List<String[]> readCSVFile, WriteParameter parameter) {
+        Map<Integer, Writer> writeFileMap = new HashMap<>();
+        writeFileMap.put(0, new GsiWriter(path, readStringFile, readCSVFile, parameter, Main.getGSI8()));
+        writeFileMap.put(1, new GsiWriter(path, readStringFile, readCSVFile, parameter, Main.getGSI16()));
+        writeFileMap.put(2, new TxtWriter(path, readStringFile, readCSVFile, parameter));
+        writeFileMap.put(3, new CsvWriter(path, readStringFile, readCSVFile, parameter));
+        writeFileMap.put(4, new CaplanWriter(path, readStringFile, readCSVFile, parameter));
+        writeFileMap.put(5, new ZeissWriter(path, readStringFile, readCSVFile, parameter));
+        writeFileMap.put(6, new LtopKooWriter(path, readStringFile, readCSVFile, parameter));
+        writeFileMap.put(7, new LtopMesWriter(path, readStringFile, parameter));
+        writeFileMap.put(8, new ExcelWriter(path, readStringFile, readCSVFile, parameter, BaseToolsExcel.isXLSX));
+        writeFileMap.put(9, new ExcelWriter(path, readStringFile, readCSVFile, parameter, BaseToolsExcel.isXLS));
+        writeFileMap.put(10, new OdfWriter(path, readStringFile, readCSVFile, parameter));
 
         return writeFileMap;
     }
@@ -540,7 +541,7 @@ public class ConverterWidget extends AbstractWidget {
                 chkBoxWriteCommentLine.getSelection(),
                 separatorCSV, separatorTXT, dialect);
 
-        Map<Integer, ReadFile> readFileMap = prepareReadFileMaps();
+        Map<Integer, Reader> readFileMap = prepareReadFileMaps();
 
         for (Path file2read : files2read) {
             boolean readFileSuccess = false;
@@ -548,7 +549,7 @@ public class ConverterWidget extends AbstractWidget {
             List<String[]> readCSVFile = null;
             ArrayList<String> readStringFile = null;
 
-            // read files (new version)
+            // reader files (new version)
             if (readFileMap.containsKey(sourceNumber)) {
                 if (readFileMap.get(sourceNumber).readFile(file2read)) {
                     if ((readCSVFile = readFileMap.get(sourceNumber).getReadCSVFile()) != null) {
@@ -559,9 +560,9 @@ public class ConverterWidget extends AbstractWidget {
                 }
             }
 
-            // write files (new version)
+            // writer files (new version)
             if (readFileSuccess) {
-                Map<Integer, WriteFile> writeFileMap = prepareWriteFile(file2read, readStringFile, readCSVFile, parameter);
+                Map<Integer, Writer> writeFileMap = prepareWriteFile(file2read, readStringFile, readCSVFile, parameter);
                 if (writeFileMap.containsKey(targetNumber)) {
                     if (writeFileMap.get(targetNumber).writeSpreadsheetDocument()) {
                         counter = counter + 1;

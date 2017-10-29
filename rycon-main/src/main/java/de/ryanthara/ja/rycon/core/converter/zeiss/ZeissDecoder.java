@@ -254,7 +254,7 @@ public class ZeissDecoder {
     }
 
     /**
-     * Returns the current dialect of the read Zeiss REC formatted string line.
+     * Returns the current dialect of the reader Zeiss REC formatted string line.
      *
      * @return current dialect
      */
@@ -272,7 +272,7 @@ public class ZeissDecoder {
     }
 
     /**
-     * Returns the current line number of the read Zeiss REC formatted string line.
+     * Returns the current line number of the reader Zeiss REC formatted string line.
      *
      * @return current line number
      */

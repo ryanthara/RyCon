@@ -32,7 +32,7 @@ public class Zeiss2Ltop {
     private ArrayList<String> readStringLines;
 
     /**
-     * Class constructor for read line based Zeiss REC files in different dialects.
+     * Class constructor for reader line based Zeiss REC files in different dialects.
      *
      * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
      */

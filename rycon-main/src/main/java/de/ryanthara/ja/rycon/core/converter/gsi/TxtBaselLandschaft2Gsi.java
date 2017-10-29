@@ -34,12 +34,12 @@ public class TxtBaselLandschaft2Gsi {
     private ArrayList<String> readStringLines;
 
     /**
-     * Constructs a new instance of this class given an {@code ArrayList<String} that contains the read coordinate file
+     * Constructs a new instance of this class given an {@code ArrayList<String} that contains the reader coordinate file
      * from the geodata server Basel Landschaft (Switzerland).
      * <p>
      * The differentiation of the content is done by the called method.
      *
-     * @param readStringLines read coordinate file
+     * @param readStringLines reader coordinate file
      */
     public TxtBaselLandschaft2Gsi(ArrayList<String> readStringLines) {
         this.readStringLines = readStringLines;
@@ -52,7 +52,7 @@ public class TxtBaselLandschaft2Gsi {
      * With a parameter it is possible to distinguish between GSI8 and GSI16.
      *
      * @param isGSI16             distinguish between GSI8 or GSI16 output
-     * @param useAnnotationColumn write additional information as annotation column (WI 71)
+     * @param useAnnotationColumn writer additional information as annotation column (WI 71)
      *
      * @return converted {@code ArrayList<String>} with lines of text format
      */

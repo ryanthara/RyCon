@@ -18,6 +18,7 @@
 package de.ryanthara.ja.rycon.ui.widgets.convert.write;
 
 import de.ryanthara.ja.rycon.core.converter.gsi.*;
+import de.ryanthara.ja.rycon.nio.WriteFile2Disk;
 import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
 import de.ryanthara.ja.rycon.ui.widgets.convert.SourceButton;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -34,7 +35,7 @@ import java.util.List;
  * @version 1
  * @since 12
  */
-public class GSIWriteFile implements WriteFile {
+public class GsiWriter implements Writer {
 
     private final Path path;
     private final boolean isGSI16;
@@ -43,15 +44,15 @@ public class GSIWriteFile implements WriteFile {
     private final WriteParameter parameter;
 
     /**
-     * Constructs the {@link GSIWriteFile} with a set of parameters.
+     * Constructs the {@link GsiWriter} with a set of parameters.
      *
-     * @param path           read file object as {@link java.nio.file.Path} for writing
-     * @param readStringFile read string file
-     * @param readCSVFile    read csv file
-     * @param parameter      the write parameter object
+     * @param path           reader file object as {@link java.nio.file.Path} for writing
+     * @param readStringFile reader string file
+     * @param readCSVFile    reader csv file
+     * @param parameter      the writer parameter object
      * @param isGSI16        true if is GSI16 format
      */
-    public GSIWriteFile(Path path, ArrayList<String> readStringFile, List<String[]> readCSVFile, WriteParameter parameter, boolean isGSI16) {
+    public GsiWriter(Path path, ArrayList<String> readStringFile, List<String[]> readCSVFile, WriteParameter parameter, boolean isGSI16) {
         this.path = path;
         this.readStringFile = readStringFile;
         this.readCSVFile = readCSVFile;
@@ -62,7 +63,7 @@ public class GSIWriteFile implements WriteFile {
     /**
      * Returns true if the prepared {@link SpreadsheetDocument} for file writing was written to the file system.
      *
-     * @return write success
+     * @return writer success
      */
     @Override
     public boolean writeSpreadsheetDocument() {
@@ -123,11 +124,11 @@ public class GSIWriteFile implements WriteFile {
 
             default:
                 writeFile = null;
-                System.err.println("GSIWriteFile.writeStringFile() : unknown file format " + SourceButton.fromIndex(parameter.getSourceNumber()));
+                System.err.println("GsiWriter.writeStringFile() : unknown file format " + SourceButton.fromIndex(parameter.getSourceNumber()));
 
         }
 
-        if (WriteFile2Disk.writeFile2Disk(path, writeFile, ".GSI")) {
+        if (WriteFile2Disk.writeFile2Disk(path, writeFile, "", ".GSI")) {
             success = true;
         }
 
@@ -137,11 +138,11 @@ public class GSIWriteFile implements WriteFile {
     /**
      * Returns true if the prepared {@link Workbook} for file writing was written to the file system.
      *
-     * @return write success
+     * @return writer success
      */
     @Override
     public boolean writeWorkbookFile() {
         return false;
     }
 
-} // end of GSIWriteFile
+} // end of GsiWriter

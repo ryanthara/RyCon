@@ -43,7 +43,7 @@ public class Zeiss2Excel {
     private Workbook workbook = null;
 
     /**
-     * Class constructor for read line based text files in different formats.
+     * Class constructor for reader line based text files in different formats.
      *
      * @param readStringLines {@code ArrayList<String>} with lines in text format
      */
@@ -56,7 +56,7 @@ public class Zeiss2Excel {
      *
      * @param isXLS           selector to distinguish between XLS and XLSX file extension
      * @param sheetName       name of the sheet (file name from input file)
-     * @param writeCommentRow write comment row
+     * @param writeCommentRow writer comment row
      *
      * @return success conversion success
      */

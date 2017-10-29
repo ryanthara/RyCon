@@ -21,6 +21,7 @@ import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.core.converter.ltop.Gsi2Mes;
 import de.ryanthara.ja.rycon.core.converter.ltop.Zeiss2Ltop;
 import de.ryanthara.ja.rycon.data.PreferenceKeys;
+import de.ryanthara.ja.rycon.nio.WriteFile2Disk;
 import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
 import de.ryanthara.ja.rycon.ui.widgets.convert.SourceButton;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -36,20 +37,20 @@ import java.util.ArrayList;
  * @version 2
  * @since 12
  */
-public class LtopMESWriteFile implements WriteFile {
+public class LtopMesWriter implements Writer {
 
     private final Path path;
     private ArrayList<String> readStringFile;
     private WriteParameter parameter;
 
     /**
-     * Constructs the {@link LtopMESWriteFile} with a set of parameters.
+     * Constructs the {@link LtopMesWriter} with a set of parameters.
      *
-     * @param path           read file object for writing
-     * @param readStringFile read string file
-     * @param parameter      the write parameter object
+     * @param path           reader file object for writing
+     * @param readStringFile reader string file
+     * @param parameter      the writer parameter object
      */
-    public LtopMESWriteFile(Path path, ArrayList<String> readStringFile, WriteParameter parameter) {
+    public LtopMesWriter(Path path, ArrayList<String> readStringFile, WriteParameter parameter) {
         this.path = path;
         this.readStringFile = readStringFile;
         this.parameter = parameter;
@@ -58,7 +59,7 @@ public class LtopMESWriteFile implements WriteFile {
     /**
      * Returns true if the prepared {@link SpreadsheetDocument} for file writing was written to the file system.
      *
-     * @return write success
+     * @return writer success
      */
     @Override
     public boolean writeSpreadsheetDocument() {
@@ -91,10 +92,10 @@ public class LtopMESWriteFile implements WriteFile {
 
             default:
                 writeFile = null;
-                System.err.println("LtopMESWriteFile.writeStringFile() : unknown file format " + SourceButton.fromIndex(parameter.getSourceNumber()));
+                System.err.println("LtopMesWriter.writeStringFile() : unknown file format " + SourceButton.fromIndex(parameter.getSourceNumber()));
         }
 
-        if (WriteFile2Disk.writeFile2Disk(path, writeFile, ".MES")) {
+        if (WriteFile2Disk.writeFile2Disk(path, writeFile, "",".MES")) {
             success = true;
         }
 
@@ -104,11 +105,11 @@ public class LtopMESWriteFile implements WriteFile {
     /**
      * Returns true if the prepared {@link Workbook} for file writing was written to the file system.
      *
-     * @return write success
+     * @return writer success
      */
     @Override
     public boolean writeWorkbookFile() {
         return false;
     }
 
-} // end of LtopMESWriteFile
+} // end of LtopMesWriter

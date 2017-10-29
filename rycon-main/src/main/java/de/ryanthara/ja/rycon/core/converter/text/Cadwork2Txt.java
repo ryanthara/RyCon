@@ -16,9 +16,9 @@ public class Cadwork2Txt {
     private ArrayList<String> readStringLines;
 
     /**
-     * Class constructor for read line based text files from Cadwork CAD program in node.dat file format.
+     * Class constructor for reader line based text files from Cadwork CAD program in node.dat file format.
      *
-     * @param readStringLines {@code ArrayList<String>} with read lines from node.dat file
+     * @param readStringLines {@code ArrayList<String>} with reader lines from node.dat file
      */
     public Cadwork2Txt(ArrayList<String> readStringLines) {
         this.readStringLines = readStringLines;
@@ -30,7 +30,7 @@ public class Cadwork2Txt {
      * With parameter it is possible to set options for writing a code column or zero heights.
      *
      * @param separator       distinguish between tabulator or space as division sign
-     * @param writeCodeColumn use the code column from node.dat and write it out
+     * @param writeCodeColumn use the code column from node.dat and writer it out
      * @param useZeroHeights  use heights with zero (0.000) values
      *
      * @return converted {@code ArrayList<String>} with lines in text format

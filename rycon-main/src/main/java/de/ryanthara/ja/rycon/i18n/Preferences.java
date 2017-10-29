@@ -49,6 +49,7 @@ public enum Preferences implements ResourceKeys {
     overwriteExistingFiles,
     fileCompletionConverter,
     fileCompletionSplitter,
+    fileCompletionLevelling,
     equalPointsMinimumDistance,
 
     // path tab

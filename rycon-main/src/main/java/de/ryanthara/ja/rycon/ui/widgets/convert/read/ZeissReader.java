@@ -17,12 +17,12 @@
  */
 package de.ryanthara.ja.rycon.ui.widgets.convert.read;
 
+import de.ryanthara.ja.rycon.nio.LineReader;
 import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
 import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
 import de.ryanthara.ja.rycon.i18n.Errors;
 import de.ryanthara.ja.rycon.i18n.Labels;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
-import de.ryanthara.ja.rycon.nio.LineReader;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 
@@ -34,13 +34,13 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.ERRORS;
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LABELS;
 
 /**
- * Instances of this class are used for reading Leica GSI files from the {@link ConverterWidget} of RyCON.
+ * Instances of this class are used for reading Zeiss REC files from the {@link ConverterWidget} of RyCON.
  *
  * @author sebastian
- * @version 1
+ * @version 2
  * @since 12
  */
-public class GSIReadFile implements ReadFile {
+public class ZeissReader implements Reader {
 
     private ArrayList<String> readStringFile;
     private Shell innerShell;
@@ -50,17 +50,17 @@ public class GSIReadFile implements ReadFile {
      *
      * @param innerShell reference to the inner shell
      */
-    public GSIReadFile(Shell innerShell) {
+    public ZeissReader(Shell innerShell) {
         this.innerShell = innerShell;
     }
 
     /**
-     * Returns the read CSV lines as {@link List}.
+     * Returns the reader CSV lines as {@link List}.
      * * <p>
      * This method is used vise versa with method {@link #getReadStringLines()}. The one which is not used,
      * returns null for indication.
      *
-     * @return read CSV lines
+     * @return reader CSV lines
      */
     @Override
     // TODO correct return null
@@ -69,12 +69,12 @@ public class GSIReadFile implements ReadFile {
     }
 
     /**
-     * Returns the read string lines as {@link ArrayList}.
+     * Returns the reader string lines as {@link ArrayList}.
      * <p>
      * This method is used vise versa with method {@link #getReadCSVFile()}. The one which is not used,
      * returns null for indication.
      *
-     * @return read string lines
+     * @return reader string lines
      */
     @Override
     public ArrayList<String> getReadStringLines() {
@@ -82,11 +82,11 @@ public class GSIReadFile implements ReadFile {
     }
 
     /**
-     * Reads the Leica GSI file given as parameter and returns the read file success.
+     * Reads the Zeiss REC file given as parameter and returns the reader file success.
      *
-     * @param file2Read read file reference
+     * @param file2Read reader file reference
      *
-     * @return read file success
+     * @return reader file success
      */
     @Override
     public boolean readFile(Path file2Read) {
@@ -99,13 +99,14 @@ public class GSIReadFile implements ReadFile {
                 success = true;
             }
         } else {
-            System.err.println("File " + file2Read.getFileName() + " could not be read.");
+            System.err.println("File " + file2Read.getFileName() + " could not be reader.");
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR,
                     ResourceBundleUtils.getLangString(LABELS, Labels.errorTextMsgBox),
-                    ResourceBundleUtils.getLangString(ERRORS, Errors.gsiReadingFailed));
+                    ResourceBundleUtils.getLangString(ERRORS, Errors.zeissReadingFailed));
+
         }
 
         return success;
     }
 
-} // end of GSIReadFile
+} // end of ZeissReader

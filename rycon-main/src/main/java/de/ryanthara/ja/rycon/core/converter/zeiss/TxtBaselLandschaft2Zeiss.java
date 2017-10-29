@@ -32,7 +32,7 @@ public class TxtBaselLandschaft2Zeiss {
     private final ArrayList<String> readStringLines;
 
     /**
-     * Constructs a new instance of this class with a parameter for the read line based text files from
+     * Constructs a new instance of this class with a parameter for the reader line based text files from
      * the geodata server 'Basel Landschaft' (Switzerland) as string array.
      *
      * @param readStringLines {@code ArrayList<String>} with lines in text format

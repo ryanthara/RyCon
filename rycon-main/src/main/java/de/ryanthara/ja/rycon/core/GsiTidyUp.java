@@ -36,7 +36,7 @@ public class GsiTidyUp {
     private ArrayList<String> readStringLines;
 
     /**
-     * Constructs a new instance of this class given read line based Leica GSI formatted file.
+     * Constructs a new instance of this class given reader line based Leica GSI formatted file.
      *
      * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
      */

@@ -36,7 +36,7 @@ public class Gsi2K {
     private BaseToolsGsi baseToolsGsi;
 
     /**
-     * Constructs a new instance of this class with a parameter for read line based text files in the Leica GSI format.
+     * Constructs a new instance of this class with a parameter for reader line based text files in the Leica GSI format.
      * <p>
      * The differentiation of the content is done by the called method and it's content analyze functionality.
      *
@@ -49,8 +49,8 @@ public class Gsi2K {
     /**
      * Converts a Leica GSI file into a CAPLAN K file.
      *
-     * @param useSimpleFormat  option to write a reduced K file which is compatible to Z+F LaserControl
-     * @param writeCommentLine option to write a comment line into the K file with basic information
+     * @param useSimpleFormat  option to writer a reduced K file which is compatible to Z+F LaserControl
+     * @param writeCommentLine option to writer a comment line into the K file with basic information
      *
      * @return converted K file as {@code ArrayList<String>}
      */

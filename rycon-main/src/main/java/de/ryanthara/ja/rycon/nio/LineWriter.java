@@ -27,7 +27,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Instances of this class provide functions to write an {@code ArrayList<String>} line by line into a file.
+ * Instances of this class provide functions to writer an {@code ArrayList<String>} line by line into a file.
  * <p>
  * A couple of things are implemented as additional functionality. At the moment, there is no thread safety
  * implemented or planed.
@@ -38,7 +38,7 @@ import java.util.logging.Logger;
  * @version 4
  * @since 1
  */
-public final class LineWriter {
+final class LineWriter {
 
     private final static Logger logger = Logger.getLogger(LineWriter.class.getName());
 
@@ -67,18 +67,16 @@ public final class LineWriter {
     /**
      * Writes a given {@code ArrayList<String>} line by line to the file system.
      * <p>
-     * This second version of the writeFile method uses java.nio functions to write the file
+     * This second version of the writeFile method uses java.nio functions to writer the file
      * buffered to the file system.
      *
      * @param lines lines to be written to the file
      *
-     * @return write file success - true if the file was written otherwise false
+     * @return writer file success - true if the file was written otherwise false
      *
      * @throws IllegalArgumentException throws an {@link IllegalArgumentException} when the lines parameter is null
      */
     public boolean writeFile(final ArrayList<String> lines) {
-        boolean success = false;
-
         if (lines == null) {
             throw new IllegalArgumentException();
         } else {
@@ -94,14 +92,14 @@ public final class LineWriter {
                     writtenLines = writtenLines + 1;
                 }
 
-                success = true;
+                return true;
             } catch (IOException e) {
-                logger.log(Level.SEVERE, "IOException occurred while file writing in line " + writtenLines + ". ");
+                logger.log(Level.SEVERE, "IOException occurred while file writing line " + writtenLines + ". ");
                 logger.log(Level.SEVERE, e.getMessage());
             }
         }
 
-        return success;
+        return false;
     }
 
 } // end of LineWriter

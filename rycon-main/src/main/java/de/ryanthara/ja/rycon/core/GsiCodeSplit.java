@@ -38,7 +38,7 @@ public class GsiCodeSplit {
     private TreeSet<Integer> foundCodes;
 
     /**
-     * Constructs a new instance of this class given a read line based text file in Leica GSI format.
+     * Constructs a new instance of this class given a reader line based text file in Leica GSI format.
      *
      * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
      */
@@ -50,7 +50,7 @@ public class GsiCodeSplit {
     /**
      * Returns the found codes as {@code TreeSet<Integer>}.
      * <p>
-     * This method is necessary because of the elimination of the code in the string of the read lines.
+     * This method is necessary because of the elimination of the code in the string of the reader lines.
      *
      * @return found codes as {@code TreeSet<Integer>}
      */

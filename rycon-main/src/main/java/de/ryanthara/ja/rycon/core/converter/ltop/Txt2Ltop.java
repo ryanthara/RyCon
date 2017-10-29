@@ -30,7 +30,7 @@ public class Txt2Ltop {
     private ArrayList<String> readStringLines;
 
     /**
-     * Class constructor for read line based coordinate files in text format.
+     * Class constructor for reader line based coordinate files in text format.
      *
      * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
      */

@@ -30,35 +30,35 @@ import java.util.List;
  * @version 1
  * @since 12
  */
-public interface ReadFile {
+public interface Reader {
 
     /**
-     * Returns the read CSV lines as {@link List}.
+     * Returns the reader CSV lines as {@link List}.
      * * <p>
      * This method is used vise versa with method {@link #getReadStringLines()}. The one which is not used,
      * returns null for indication.
      *
-     * @return read CSV lines
+     * @return reader CSV lines
      */
     List<String[]> getReadCSVFile();
 
     /**
-     * Returns the read string lines as {@link ArrayList}.
+     * Returns the reader string lines as {@link ArrayList}.
      * <p>
      * This method is used vise versa with method {@link #getReadCSVFile()}. The one which is not used,
      * returns null for indication.
      *
-     * @return read string lines
+     * @return reader string lines
      */
     ArrayList<String> getReadStringLines();
 
     /**
-     * Reads the ... file from ... given as parameter and returns the read file success.
+     * Reads the ... file from ... given as parameter and returns the reader file success.
      *
      * @param file2Read {@link Path} reference to file
      *
-     * @return read file success
+     * @return reader file success
      */
     boolean readFile(Path file2Read);
 
-} // end of ReadFile
+} // end of Reader

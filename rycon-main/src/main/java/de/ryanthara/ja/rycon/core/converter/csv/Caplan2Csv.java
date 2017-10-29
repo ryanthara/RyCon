@@ -34,7 +34,7 @@ public class Caplan2Csv {
     public ArrayList<String> readStringLines;
 
     /**
-     * Constructs a new instance of this class with the read Caplan K file {@link ArrayList} string as parameter.
+     * Constructs a new instance of this class with the reader Caplan K file {@link ArrayList} string as parameter.
      *
      * @param readStringLines {@code ArrayList<String>} with lines in Caplan K format
      */
@@ -46,9 +46,9 @@ public class Caplan2Csv {
      * Converts a Caplan K file to a comma separated values (CSV) formatted file.
      *
      * @param separator         used separator sign
-     * @param writeSimpleFormat option to write a reduced K file which is compatible to Z+F LaserControl
-     * @param writeCommentLine  option to write a comment line into the K file with basic information
-     * @param writeCodeColumn   option to write a found code into the K file
+     * @param writeSimpleFormat option to writer a reduced K file which is compatible to Z+F LaserControl
+     * @param writeCommentLine  option to writer a comment line into the K file with basic information
+     * @param writeCodeColumn   option to writer a found code into the K file
      *
      * @return converted K file as {@code ArrayList<String>}
      */

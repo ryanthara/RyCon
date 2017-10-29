@@ -48,7 +48,7 @@ public class BaseToolsGsi {
     private TreeSet<Integer> foundAllWordIndices;
 
     /**
-     * Constructs a new instance of this class with a parameter for the read line based Leica GSI8 or GSI16 file.
+     * Constructs a new instance of this class with a parameter for the reader line based Leica GSI8 or GSI16 file.
      *
      * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
      */
@@ -166,7 +166,7 @@ public class BaseToolsGsi {
     }
 
     /**
-     * Encodes a read string line that contains gsi data into an encapsulated <code>ArrayList</code> of
+     * Encodes a reader string line that contains gsi data into an encapsulated <code>ArrayList</code> of
      * <code>GsiBlock</code>s.
      *
      * @return encoded GSIBlocks
@@ -190,9 +190,9 @@ public class BaseToolsGsi {
     }
 
     /**
-     * Encodes a read GSI string line into an ArrayList of GSIBlocks.
+     * Encodes a reader GSI string line into an ArrayList of GSIBlocks.
      *
-     * @param lines read string lines with GSI content
+     * @param lines reader string lines with GSI content
      *
      * @return encoded ArrayList of GSIBlocks
      */
@@ -209,7 +209,7 @@ public class BaseToolsGsi {
                 line = line.substring(1, line.length());
             }
 
-            // split read line into separate Strings
+            // split reader line into separate Strings
             List<String> lineSplit = new ArrayList<>((line.length() + size - 1) / size);
             for (int i = 0; i < line.length(); i += size) {
                 lineSplit.add(line.substring(i, Math.min(line.length(), i + size)));

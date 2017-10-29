@@ -32,7 +32,7 @@ public class Csv2Txt {
     private List<String[]> readCSVLines;
 
     /**
-     * Constructs a new instance of this class with a parameter for the read line based CSV files.
+     * Constructs a new instance of this class with a parameter for the reader line based CSV files.
      *
      * @param readCSVLines {@code List<String[]>} with lines as {@code String[]}
      */

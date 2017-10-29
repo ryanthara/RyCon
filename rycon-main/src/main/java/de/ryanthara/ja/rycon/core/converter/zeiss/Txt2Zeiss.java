@@ -28,7 +28,7 @@ public class Txt2Zeiss {
     private final ArrayList<String> readStringLines;
 
     /**
-     * Constructs a new instance of this class with a parameter for read line based text files in Zeiss REC format
+     * Constructs a new instance of this class with a parameter for reader line based text files in Zeiss REC format
      * and it's dialects (R4, R5, REC500 and M5).
      *
      * @param readStringLines {@code ArrayList<String>} with lines in text format

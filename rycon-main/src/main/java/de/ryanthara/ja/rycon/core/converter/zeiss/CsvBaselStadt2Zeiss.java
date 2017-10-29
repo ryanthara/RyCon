@@ -29,7 +29,7 @@ public class CsvBaselStadt2Zeiss {
     private List<String[]> readCSVLines = null;
 
     /**
-     * Constructs a new instance of this class given an {@link ArrayList} of strings with the read line based CSV file
+     * Constructs a new instance of this class given an {@link ArrayList} of strings with the reader line based CSV file
      * from the geodata server Basel Stadt (Switzerland).
      *
      * @param readCSVLines {@code List<String[]>} with lines as {@code String[]}

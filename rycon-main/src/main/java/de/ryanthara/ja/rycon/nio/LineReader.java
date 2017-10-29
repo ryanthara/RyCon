@@ -27,7 +27,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 
 /**
- * Instances of this class implement functions to read a text based file line by line
+ * Instances of this class implement functions to reader a text based file line by line
  * and stores its values in an {@code ArrayList<String>}.
  * <p>
  * A couple of things are implemented as additional functionality. At the moment there
@@ -37,10 +37,10 @@ import java.util.ArrayList;
  * @version 4
  * @since 1
  */
-public class LineReader {
+public final class LineReader {
 
     /**
-     * Identifier for indicating that the file to read doesn't has comment lines inside.
+     * Identifier for indicating that the file to reader doesn't has comment lines inside.
      */
     public final static String NO_COMMENT_LINE = "nCIgö5BQ";
 
@@ -51,53 +51,53 @@ public class LineReader {
 
     /**
      * Constructs a new instance of this class with a parameter that accepts a {@link Path} object
-     * for the file to be read.
+     * for the file to be reader.
      *
-     * @param path file to read as path object
+     * @param path file to reader as path object
      */
     public LineReader(Path path) {
         this.path = path;
     }
 
     /**
-     * Returns the number of read lines from the file.
+     * Returns the number of reader lines from the file.
      * <p>
-     * By default the value is set to -1, which shows, that no line has been read.
+     * By default the value is set to -1, which shows, that no line has been reader.
      *
-     * @return number of read lines
+     * @return number of reader lines
      */
-    // TODO Implement the usage of the count read lines to the status bar
+    // TODO Implement the usage of the count reader lines to the status bar
     public int getCountReadLines() {
         return countReadLines;
     }
 
     /**
-     * Returns the number of stored read lines in the {@code ArrayList<String>}.
+     * Returns the number of stored reader lines in the {@code ArrayList<String>}.
      * <p>
-     * By default the value is set to -1, which shows, that no read line
+     * By default the value is set to -1, which shows, that no reader line
      * has been stored to the {@code ArrayList<String>}. This is for comparison
-     * the read and stored number of lines.
+     * the reader and stored number of lines.
      *
      * @return number of stored lines
      */
-    // TODO Implement the usage of the stored read lines to the status bar (better not dropped lines?)
+    // TODO Implement the usage of the stored reader lines to the status bar (better not dropped lines?)
     public int getCountStoredLines() {
         return countStoredLines;
     }
 
     /**
-     * Return the read lines as an {@code ArrayList<String>} object.
+     * Return the reader lines as an {@code ArrayList<String>} object.
      * <p>
-     * The {@code ArrayList<String>} contains every read line, first line on top.s
+     * The {@code ArrayList<String>} contains every reader line, first line on top.s
      *
-     * @return read lines as {@code ArrayList<String>} object
+     * @return reader lines as {@code ArrayList<String>} object
      */
     public ArrayList<String> getLines() {
         return lines;
     }
 
     /**
-     * Read a path line by line and return the read success.
+     * Read a path line by line and return the reader success.
      *
      * @param skipEmptyLines should empty lines be skipped
      *
@@ -108,10 +108,10 @@ public class LineReader {
     }
 
     /**
-     * Reads a path line by line and returns the read success.
+     * Reads a path line by line and returns the reader success.
      * <p>
      * Additionally with the parameter 'comment', there is the possibility to use
-     * a {@code String} as comment sign. These lines will be ignored and not read.
+     * a {@code String} as comment sign. These lines will be ignored and not reader.
      *
      * @param skipEmptyLines should empty lines be skipped
      * @param comment        String for comment signs
@@ -136,7 +136,7 @@ public class LineReader {
 
                     try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(fileInputStream, StandardCharsets.UTF_8))) {
 
-                        // read the lines into an ArrayList
+                        // reader the lines into an ArrayList
                         while ((line = bufferedReader.readLine()) != null) {
                             countReadLines = countReadLines + 1;
 
@@ -165,7 +165,7 @@ public class LineReader {
                     e.printStackTrace();
                 }
             } catch (FileNotFoundException e) {
-                System.err.println("File: " + path.getFileName() + "could not be read.");
+                System.err.println("File: " + path.getFileName() + "could not be reader.");
                 e.printStackTrace();
             } finally {
                 // reset variables back to initialization values

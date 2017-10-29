@@ -20,8 +20,9 @@ package de.ryanthara.ja.rycon.ui.widgets.convert.write;
 import de.ryanthara.ja.rycon.core.converter.zeiss.ZeissDialect;
 
 /**
- * Instances of this class holds parameter for the writing classes in the package {@link de.ryanthara.ja.rycon.ui.widgets.convert.write}
- * and
+ * Instances of this class holds parameter for the writing classes in
+ * the package {@link de.ryanthara.ja.rycon.ui.widgets.convert.write}
+ * and returns them with getter methods.
  */
 public class WriteParameter {
 
@@ -41,8 +42,8 @@ public class WriteParameter {
      * @param ltopEliminateDuplicatePoints eliminate duplicate points
      * @param ltopSortOutputFileByNumber   sort output file by number option
      * @param sourceContainsCode           true if source file contains code column
-     * @param writeCodeColumn              write code column to the output file
-     * @param writeCommentLine             write comment line to the output file
+     * @param writeCodeColumn              writer code column to the output file
+     * @param writeCommentLine             writer comment line to the output file
      * @param separatorCSV                 CSV separator sign
      * @param separatorTXT                 text files separator sign
      * @param dialect                      Zeiss REC format dialect
@@ -87,7 +88,7 @@ public class WriteParameter {
      *
      * @return the csv separator sign
      */
-    public String getSeparatorCSV() {
+    String getSeparatorCSV() {
         return separatorCSV;
     }
 
@@ -96,7 +97,7 @@ public class WriteParameter {
      *
      * @return the txt separator sign
      */
-    public String getSeparatorTXT() {
+    String getSeparatorTXT() {
         return separatorTXT;
     }
 
@@ -114,7 +115,7 @@ public class WriteParameter {
      *
      * @return cadwork use zero heights
      */
-    public boolean isCadworkUseZeroHeights() {
+    boolean isCadworkUseZeroHeights() {
         return cadworkUseZeroHeights;
     }
 
@@ -132,7 +133,7 @@ public class WriteParameter {
      *
      * @return use simple format.
      */
-    public boolean isKFormatUseSimpleFormat() {
+    boolean isKFormatUseSimpleFormat() {
         return kFormatUseSimpleFormat;
     }
 
@@ -141,7 +142,7 @@ public class WriteParameter {
      *
      * @return LTOP remove duplicate points
      */
-    public boolean isLtopEliminateDuplicatePoints() {
+    boolean isLtopEliminateDuplicatePoints() {
         return ltopEliminateDuplicatePoints;
     }
 
@@ -150,7 +151,7 @@ public class WriteParameter {
      *
      * @return LTOP sort KOO file by number
      */
-    public boolean isLtopSortOutputFileByNumber() {
+    boolean isLtopSortOutputFileByNumber() {
         return ltopSortOutputFileByNumber;
     }
 
@@ -164,9 +165,9 @@ public class WriteParameter {
     }
 
     /**
-     * Returns write a comment line.
+     * Returns writer a comment line.
      *
-     * @return write a comment line
+     * @return writer a comment line
      */
     public boolean isWriteCommentLine() {
         return writeCommentLine;
@@ -177,7 +178,7 @@ public class WriteParameter {
      *
      * @return true if source file contains code
      */
-    public boolean sourceContainsCode() {
+    boolean sourceContainsCode() {
         return sourceContainsCode;
     }
 

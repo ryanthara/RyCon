@@ -38,7 +38,7 @@ public class Gsi2Mes {
     private BaseToolsGsi baseToolsGsi;
 
     /**
-     * Class constructor for read line based text files.
+     * Class constructor for reader line based text files.
      *
      * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
      */
@@ -110,7 +110,7 @@ public class Gsi2Mes {
                     String stationLine = "ST".concat(stationNumber).concat("                                  ").concat(instrumentHeight);
 
                     if (horizontalAngleGroup.size() != 0 && verticalAngleGroup.size() != 0 && slopeDistanceGroup.size() != 0) {
-                        // write the ArrayLists
+                        // writer the ArrayLists
                         for (String elevationLine : horizontalAngleGroup) {
                             result.add(elevationLine);
                         }
@@ -198,7 +198,7 @@ public class Gsi2Mes {
                     String slopedDistanceLine = "DS" + number + "            " + slopeDistance + "      "
                             + ppmAndPrismConstant + "         " + targetHeight;
 
-                    // write lines with zero distance as commented line (**DS...)
+                    // writer lines with zero distance as commented line (**DS...)
                     if (slopeDistance.trim().equalsIgnoreCase("0.00000")) {
                         slopedDistanceLine = "**".concat(slopedDistanceLine);
                     }
@@ -209,7 +209,7 @@ public class Gsi2Mes {
                     break;
             }
         }
-        // write the ArrayLists for the last station
+        // writer the ArrayLists for the last station
         for (String elevationLine : horizontalAngleGroup) {
             result.add(elevationLine);
         }

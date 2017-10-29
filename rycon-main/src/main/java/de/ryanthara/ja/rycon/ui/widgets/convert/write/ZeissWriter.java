@@ -18,6 +18,7 @@
 package de.ryanthara.ja.rycon.ui.widgets.convert.write;
 
 import de.ryanthara.ja.rycon.core.converter.zeiss.*;
+import de.ryanthara.ja.rycon.nio.WriteFile2Disk;
 import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
 import de.ryanthara.ja.rycon.ui.widgets.convert.SourceButton;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -35,7 +36,7 @@ import java.util.List;
  * @version 2
  * @since 12
  */
-public class ZeissWriteFile implements WriteFile {
+public class ZeissWriter implements Writer {
 
     private final Path path;
     private final ArrayList<String> readStringFile;
@@ -43,14 +44,14 @@ public class ZeissWriteFile implements WriteFile {
     private final WriteParameter parameter;
 
     /**
-     * Constructs the {@link ZeissWriteFile} with a set of parameters.
+     * Constructs the {@link ZeissWriter} with a set of parameters.
      *
-     * @param path           read file object for writing
-     * @param readCSVFile    read csv file
-     * @param readStringFile read string file
-     * @param parameter      the write parameter object
+     * @param path           reader file object for writing
+     * @param readCSVFile    reader csv file
+     * @param readStringFile reader string file
+     * @param parameter      the writer parameter object
      */
-    public ZeissWriteFile(Path path, ArrayList<String> readStringFile, List<String[]> readCSVFile, WriteParameter parameter) {
+    public ZeissWriter(Path path, ArrayList<String> readStringFile, List<String[]> readCSVFile, WriteParameter parameter) {
         this.path = path;
         this.readStringFile = readStringFile;
         this.readCSVFile = readCSVFile;
@@ -60,7 +61,7 @@ public class ZeissWriteFile implements WriteFile {
     /**
      * Returns true if the prepared {@link SpreadsheetDocument} for file writing was written to the file system.
      *
-     * @return write success
+     * @return writer success
      */
     @Override
     public boolean writeSpreadsheetDocument() {
@@ -74,7 +75,6 @@ public class ZeissWriteFile implements WriteFile {
      */
     @Override
     public boolean writeStringFile() {
-        boolean success = false;
         ArrayList<String> writeFile = null;
 
         switch (SourceButton.fromIndex(parameter.getSourceNumber())) {
@@ -119,24 +119,20 @@ public class ZeissWriteFile implements WriteFile {
 
             default:
                 writeFile = null;
-                System.err.println("ZeissWriteFile.writeStringFile() : unknown file format " + SourceButton.fromIndex(parameter.getSourceNumber()));
+                System.err.println("ZeissWriter.writeStringFile() : unknown file format " + SourceButton.fromIndex(parameter.getSourceNumber()));
         }
 
-        if (WriteFile2Disk.writeFile2Disk(path, writeFile, ".REC")) {
-            success = true;
-        }
-
-        return success;
+        return WriteFile2Disk.writeFile2Disk(path, writeFile, "",".REC");
     }
 
     /**
      * Returns true if the prepared {@link Workbook} for file writing was written to the file system.
      *
-     * @return write success
+     * @return writer success
      */
     @Override
     public boolean writeWorkbookFile() {
         return false;
     }
 
-} // end of ZeissWriteFile
+} // end of ZeissWriter

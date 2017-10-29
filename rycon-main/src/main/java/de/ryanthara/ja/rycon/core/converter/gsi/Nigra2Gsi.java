@@ -36,7 +36,7 @@ public class Nigra2Gsi {
     /**
      * Constructs a new instance of this class with a parameter for the {@code ArrayList<String>}  from Nigra or NigraWin.
      *
-     * @param readStringLines read lines
+     * @param readStringLines reader lines
      */
     public Nigra2Gsi(ArrayList<String> readStringLines) {
         this.readStringLines = readStringLines;

@@ -43,7 +43,7 @@ public class Caplan2Odf {
     private SpreadsheetDocument spreadsheetDocument;
 
     /**
-     * Constructs a new instance of this class with the read Caplan K file {@link ArrayList} string as parameter.
+     * Constructs a new instance of this class with the reader Caplan K file {@link ArrayList} string as parameter.
      *
      * @param readStringLines {@code ArrayList<String>} with lines in Caplan K format
      */
@@ -55,7 +55,7 @@ public class Caplan2Odf {
      * Converts a K file element by element into an Open Document Format spreadsheet file.
      *
      * @param sheetName       name of the sheet (file name from input file)
-     * @param writeCommentRow write comment row
+     * @param writeCommentRow writer comment row
      *
      * @return success conversion success
      */

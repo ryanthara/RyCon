@@ -36,37 +36,34 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.ERRORS;
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LABELS;
 
 /**
- * Instances of this class are used for reading comma separated values (CSV) files from
- * the {@link ConverterWidget} of RyCON.
+ * Instances of this class are used for reading coordinate files (CSV format) from the geodata server
+ * Kanton Basel Stadt (Switzerland) from the {@link ConverterWidget} of RyCON.
  *
  * @author sebastian
- * @version 1
+ * @version 2
  * @since 12
  */
-public class CSVReadFile implements ReadFile {
+public class BaselStadtCsvReader implements Reader {
 
-    private boolean useSemicolonAsSeparator;
     private List<String[]> readCSVFile;
     private Shell innerShell;
 
     /**
      * Constructs a new instance of this class given a reference to the inner shell of the calling object.
      *
-     * @param innerShell              reference to the inner shell
-     * @param useSemicolonAsSeparator use semicolon as separator sign
+     * @param innerShell reference to the inner shell
      */
-    public CSVReadFile(Shell innerShell, boolean useSemicolonAsSeparator) {
+    public BaselStadtCsvReader(Shell innerShell) {
         this.innerShell = innerShell;
-        this.useSemicolonAsSeparator = useSemicolonAsSeparator;
     }
 
     /**
-     * Returns the read CSV lines as {@link List}.
+     * Returns the reader CSV lines as {@link List}.
      * * <p>
      * This method is used vise versa with method {@link #getReadStringLines()}. The one which is not used,
      * returns null for indication.
      *
-     * @return read CSV lines
+     * @return reader CSV lines
      */
     @Override
     public List<String[]> getReadCSVFile() {
@@ -74,12 +71,12 @@ public class CSVReadFile implements ReadFile {
     }
 
     /**
-     * Returns the read string lines as {@link ArrayList}.
+     * Returns the reader string lines as {@link ArrayList}.
      * <p>
      * This method is used vise versa with method {@link #getReadCSVFile()}. The one which is not used,
      * returns null for indication.
      *
-     * @return read string lines
+     * @return reader string lines
      */
     @Override
     // TODO correct return null
@@ -88,31 +85,30 @@ public class CSVReadFile implements ReadFile {
     }
 
     /**
-     * Reads the comma separated values (CSV) file given as parameter and returns the read file success.
+     * Reads the coordinate file in CSV format from the geodata server Basel Stadt (Switzerland) given as parameter
+     * and returns the reader file success.
      *
-     * @param file2Read read path reference
+     * @param file2Read reader file reference
      *
-     * @return read file success
+     * @return reader file success
      */
     @Override
     public boolean readFile(Path file2Read) {
         boolean success = false;
-        char separatorCSV = useSemicolonAsSeparator ? ';' : ',';
 
-        // use opencsv project for reading -> could this be done better?
         try {
-            CSVReader reader = new CSVReader(new FileReader(file2Read.toFile()), separatorCSV);
+            CSVReader reader = new CSVReader(new FileReader(file2Read.toFile()), ';', '"', 0); // do not skip first line!
             readCSVFile = reader.readAll();
 
             success = true;
         } catch (IOException e) {
-            System.err.println("File " + file2Read.getFileName() + " could not be read.");
+            System.err.println("File " + file2Read.getFileName() + " could not be reader.");
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR,
                     ResourceBundleUtils.getLangString(LABELS, Labels.errorTextMsgBox),
-                    ResourceBundleUtils.getLangString(ERRORS, Errors.readerCSVFailed));
+                    ResourceBundleUtils.getLangString(ERRORS, Errors.csvBSReadingFailed));
         }
 
         return success;
     }
 
-} // end of CSVReadFile
+} // end of BaselStadtCsvReader

@@ -195,7 +195,7 @@ public class PreferencesDialog {
             @Override
             public void widgetSelected(final SelectionEvent e) {
 
-                // write preferences only for changed settings
+                // writer preferences only for changed settings
                 for (Entry<Preference<?>, Editor<?>> entry : editors.entrySet()) {
                     if (entry.getValue().hasChanged()) {
                         entry.getKey().setValue(entry.getValue().getValue());

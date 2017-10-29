@@ -37,7 +37,7 @@ public class TxtBaselLandschaft2K {
     private ArrayList<String> readStringLines;
 
     /**
-     * Constructs a new instance of this class with a parameter for read line based text files from the
+     * Constructs a new instance of this class with a parameter for reader line based text files from the
      * geodata Server Basel Landschaft (Switzerland).
      *
      * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
@@ -49,9 +49,9 @@ public class TxtBaselLandschaft2K {
     /**
      * Converts a text formatted file from the geodata server Basel Landschaft (Switzerland) into a K formatted file.
      *
-     * @param useSimpleFormat  option to write a reduced K file which is compatible to Z+F LaserControl
-     * @param writeCodeColumn  option to write a found code into the K file
-     * @param writeCommentLine option to write a comment line into the K file with basic information
+     * @param useSimpleFormat  option to writer a reduced K file which is compatible to Z+F LaserControl
+     * @param writeCodeColumn  option to writer a found code into the K file
+     * @param writeCommentLine option to writer a comment line into the K file with basic information
      *
      * @return converted K file as {@code ArrayList<String>}
      */

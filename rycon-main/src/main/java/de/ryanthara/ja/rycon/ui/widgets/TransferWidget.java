@@ -772,11 +772,11 @@ public class TransferWidget extends AbstractWidget {
         if (PathCheck.directoryExists(storedCardReaderPath)) {
             readCardFolders(storedCardReaderPath);
 
-            logger.log(Level.INFO, "card reader path successful read");
+            logger.log(Level.INFO, "card reader path successful reader");
         } else {
             showCardReaderNotExitsWarning();
 
-            logger.log(Level.INFO, "could not read card reader path");
+            logger.log(Level.INFO, "could not reader card reader path");
         }
     }
 

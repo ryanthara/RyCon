@@ -35,7 +35,7 @@ public class Zeiss2Csv {
     private ArrayList<String> readStringLines;
 
     /**
-     * Class constructor for read line based Zeiss REC files in different dialects.
+     * Class constructor for reader line based Zeiss REC files in different dialects.
      * <p>
      * The differentiation of the content is done by the called method.
      *

@@ -102,7 +102,7 @@ class BaseToolsCaplanK {
      * All input string parameters of this method are automatically transformed to the
      * right length with cut off oversize strings.
      *
-     * @param useSimpleFormat write simple formatted output file
+     * @param useSimpleFormat writer simple formatted output file
      * @param number          point number
      * @param valency         valency value
      * @param easting         easting coordinate
@@ -137,7 +137,7 @@ class BaseToolsCaplanK {
     /**
      * Writes the comment line into a given {@code ArrayList<String>} object.
      *
-     * @param result ArrayList<String> to write in
+     * @param result ArrayList<String> to writer in
      */
     public static void writeCommentLine(ArrayList<String> result) {
         String commentLine1 = "!---+----1----+----2----+----3----+----4----+----5----+----6----+----7----+----8";
