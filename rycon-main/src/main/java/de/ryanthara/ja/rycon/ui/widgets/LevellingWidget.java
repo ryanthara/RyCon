@@ -368,12 +368,12 @@ public class LevellingWidget extends AbstractWidget {
         if (counter > 0) {
             String message;
 
-            final String helper = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.levellingMessage), counter);
+            final String helper = ResourceBundleUtils.getLangString(MESSAGES, Messages.levellingMessage);
 
             if (counter == 1) {
-                message = StringUtils.singularPluralMessage(helper, Main.TEXT_SINGULAR);
+                message = String.format(StringUtils.singularPluralMessage(helper, Main.TEXT_SINGULAR), counter);
             } else {
-                message = StringUtils.singularPluralMessage(helper, Main.TEXT_PLURAL);
+                message = String.format(StringUtils.singularPluralMessage(helper, Main.TEXT_PLURAL), counter);
             }
 
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_INFORMATION,
