@@ -18,13 +18,15 @@
 package de.ryanthara.ja.rycon.ui.widgets;
 
 import de.ryanthara.ja.rycon.Main;
-import de.ryanthara.ja.rycon.util.check.PathCheck;
-import de.ryanthara.ja.rycon.util.check.TextCheck;
+import de.ryanthara.ja.rycon.core.GsiTidyUp;
+import de.ryanthara.ja.rycon.core.LogfileClean;
 import de.ryanthara.ja.rycon.data.PreferenceKeys;
+import de.ryanthara.ja.rycon.i18n.*;
+import de.ryanthara.ja.rycon.nio.LineReader;
+import de.ryanthara.ja.rycon.nio.WriteFile2Disk;
 import de.ryanthara.ja.rycon.nio.filter.FilesFilter;
 import de.ryanthara.ja.rycon.nio.filter.GsiFilter;
 import de.ryanthara.ja.rycon.nio.filter.TxtFilter;
-import de.ryanthara.ja.rycon.i18n.*;
 import de.ryanthara.ja.rycon.ui.Sizes;
 import de.ryanthara.ja.rycon.ui.custom.BottomButtonBar;
 import de.ryanthara.ja.rycon.ui.custom.DirectoryDialogs;
@@ -34,6 +36,8 @@ import de.ryanthara.ja.rycon.ui.util.ShellPositioner;
 import de.ryanthara.ja.rycon.util.BoundedTreeSet;
 import de.ryanthara.ja.rycon.util.FileUtils;
 import de.ryanthara.ja.rycon.util.StringUtils;
+import de.ryanthara.ja.rycon.util.check.PathCheck;
+import de.ryanthara.ja.rycon.util.check.TextCheck;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -83,6 +87,8 @@ public class TransferWidget extends AbstractWidget {
     private final static Logger logger = Logger.getLogger(TransferWidget.class.getName());
     private final Shell parent;
     private ArrayList<Path> allJobsFiles;
+    private Button chkBoxCleanLogfile;
+    private Button chkBoxCleanMeasurementFile;
     private Button chkBoxMoveOption;
     private Shell innerShell;
     private Text cardReaderPath;
@@ -383,11 +389,26 @@ public class TransferWidget extends AbstractWidget {
                                 final String newFileName = logFileName.replaceAll("logfile.txt", localDate.toString() + "_logfile.txt");
 
                                 target = Paths.get(destinationPath + delimiter + newFileName);
+
                             } else {
                                 target = Paths.get(destinationPath + delimiter + source.getFileName().toString());
                             }
 
                             success = copyFiles(source, target, overwriteExisting);
+
+                            if (chkBoxCleanLogfile.getSelection() && success) {
+                                final String editString = Main.pref.getUserPreference(PreferenceKeys.PARAM_EDIT_STRING);
+
+                                LineReader lineReader = new LineReader(target);
+
+                                if (lineReader.readFile(false)) {
+                                    LogfileClean logfileClean = new LogfileClean(lineReader.getLines());
+
+                                    ArrayList<String> writeFile = logfileClean.processTidyUp(true);
+
+                                    WriteFile2Disk.writeFile2Disk(target, writeFile, editString, ".txt");
+                                }
+                            }
                         }
                     }
                 }
@@ -423,6 +444,20 @@ public class TransferWidget extends AbstractWidget {
                             final Path target = Paths.get(dest + delimiter + source.getFileName().toString());
 
                             success = copyFiles(source, target, overwriteExisting);
+
+                            if (chkBoxCleanMeasurementFile.getSelection() && success) {
+                                final String editString = Main.pref.getUserPreference(PreferenceKeys.PARAM_EDIT_STRING);
+
+                                LineReader lineReader = new LineReader(target);
+
+                                if (lineReader.readFile(true)) {
+                                    GsiTidyUp gsiTidyUp = new GsiTidyUp(lineReader.getLines());
+
+                                    ArrayList<String> writeFile = gsiTidyUp.processTidyUp(false, false);
+
+                                    WriteFile2Disk.writeFile2Disk(target, writeFile, editString, ".GSI");
+                                }
+                            }
                         }
                     }
                 }
@@ -763,6 +798,14 @@ public class TransferWidget extends AbstractWidget {
         chkBoxMoveOption = new Button(group, SWT.CHECK);
         chkBoxMoveOption.setSelection(false);
         chkBoxMoveOption.setText(ResourceBundleUtils.getLangString(CHECKBOXES, CheckBoxes.moveTransferWidget));
+
+        chkBoxCleanMeasurementFile = new Button(group, SWT.CHECK);
+        chkBoxCleanMeasurementFile.setSelection(false);
+        chkBoxCleanMeasurementFile.setText(ResourceBundleUtils.getLangString(CHECKBOXES, CheckBoxes.cleanMeasurementFile));
+
+        chkBoxCleanLogfile = new Button(group, SWT.CHECK);
+        chkBoxCleanLogfile.setSelection(false);
+        chkBoxCleanLogfile.setText(ResourceBundleUtils.getLangString(CHECKBOXES, CheckBoxes.cleanLogfile));
     }
 
     private void initCardReading() {
