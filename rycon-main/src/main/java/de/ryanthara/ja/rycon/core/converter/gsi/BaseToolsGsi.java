@@ -18,13 +18,15 @@
 package de.ryanthara.ja.rycon.core.converter.gsi;
 
 import de.ryanthara.ja.rycon.Main;
-import de.ryanthara.ja.rycon.data.PreferenceKeys;
 import de.ryanthara.ja.rycon.core.elements.GsiBlock;
+import de.ryanthara.ja.rycon.data.PreferenceKeys;
 import de.ryanthara.ja.rycon.util.SortHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Instances of this class implements several basic operations on Leica GSI files.
@@ -41,6 +43,7 @@ import java.util.TreeSet;
  * @version 2
  * @since 12
  */
+// TODO Implement argument checks for substring operations
 public class BaseToolsGsi {
 
     private ArrayList<ArrayList<GsiBlock>> encodedBlocks;
@@ -89,19 +92,33 @@ public class BaseToolsGsi {
     }
 
     /**
-     * Checks a valid Leica GSI formatted string line for being a target line (three times the coordinate is zero)
-     * or for being a free station line.
+     * Checks a valid Leica Geosystems GSI formatted string line for being a one face target line.
+     * <p>
+     * The one face target line contains three times the zero coordinate.
      *
-     * @param line line to be checked
+     * @param line line to be checked for one face target line
      *
-     * @return true if line is a target line
+     * @return true if line is a one face target line
      */
     public static boolean isTargetLine(String line) {
+        String pattern;
+
+        // differ between GSI8 and GSI16 format
         if (line.startsWith("*")) {
-            return (line.split("0000000000000000").length - 1) == 3;
+            pattern = "0000000000000000";
         } else {
-            return (line.split("00000000").length - 1) == 3;
+            pattern = "00000000";
         }
+
+        Pattern p = Pattern.compile(pattern);
+        Matcher m = p.matcher(line);
+        int founds = 0;
+
+        while (m.find()) {
+            founds = founds + 1;
+        }
+
+        return founds == 3;
     }
 
     /**
