@@ -29,7 +29,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Instances of this class implements several basic operations on Leica GSI files.
+ * Instances of <tt>BaseToolsGsi</tt> implements several basic operations
+ * on Leica Geosystems GSI files.
  * <p>
  * The Leica Geo Serial Interface (GSI) is a general purpose, serial data
  * interface for bi-directional communication between TPS Total Stations,
@@ -38,33 +39,46 @@ import java.util.regex.Pattern;
  * The GSI interface is composed in a sequence of blocks, ending with a
  * terminator (CR or CR/LF). The later introduced enhanced GSI16 format
  * starts every line with a <code>*</code> sign.
+ * <p>
+ * Du to some issues or personal limitations sometimes a blank is added
+ * to line endings. This is wrong, but <tt>RyCON</tt> can handle it.
  *
  * @author sebastian
- * @version 2
+ * @version 3
  * @since 12
  */
-// TODO Implement argument checks for substring operations
 public class BaseToolsGsi {
 
+    private static TreeSet<Integer> foundAllWordIndices = new TreeSet<>();
     private ArrayList<ArrayList<GsiBlock>> encodedBlocks;
     private ArrayList<String> readStringLines;
-    private TreeSet<Integer> foundAllWordIndices;
 
     /**
-     * Constructs a new instance of this class with a parameter for the reader line based Leica GSI8 or GSI16 file.
+     * Constructs a new instance of this class with a parameter for
+     * the read line based Leica GSI8 or GSI16 file.
      *
      * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
      */
     public BaseToolsGsi(ArrayList<String> readStringLines) {
         this.readStringLines = readStringLines;
-        this.foundAllWordIndices = new TreeSet<>();
         this.encodedBlocks = blockEncoder(readStringLines);
     }
 
+    private static String getBlockByWordIndex(final ArrayList<GsiBlock> blocks, final int wordIndex) {
+        for (GsiBlock block : blocks) {
+            if (block.getWordIndex() == wordIndex) {
+                return block.toString();
+            }
+        }
+
+        return "";
+    }
+
     /**
-     * Returns the block size (number of characters) of a GSI block depending on it's format (GSI8 = 16, GSI16 = 24).
+     * Returns the block size (number of characters) of a GSI block depending on
+     * it's format (GSI8 = 16, GSI16 = 24).
      *
-     * @param line line to check
+     * @param line GSI formatted line to check for block size
      *
      * @return block size
      */
@@ -81,18 +95,22 @@ public class BaseToolsGsi {
      *
      * @param line Leica GSI formatted line
      *
-     * @return point number
+     * @return point number or empty string if line is empty string
      */
-    public static String getPointNumber(String line) {
-        if (line.startsWith("*")) {
-            return line.substring(8, 24);
+    public static String getPointNumber(final String line) {
+        if (!line.equalsIgnoreCase("")) {
+            if (line.startsWith("*")) {
+                return line.substring(8, 24);
+            } else {
+                return line.substring(8, 16);
+            }
         } else {
-            return line.substring(8, 16);
+            return "";
         }
     }
 
     /**
-     * Checks a valid Leica Geosystems GSI formatted string line for being a one face target line.
+     * Checks a valid <tt>Leica Geosystems</tt> GSI formatted string line for being a one face target line.
      * <p>
      * The one face target line contains three times the zero coordinate.
      *
@@ -101,6 +119,15 @@ public class BaseToolsGsi {
      * @return true if line is a one face target line
      */
     public static boolean isTargetLine(String line) {
+        ArrayList<GsiBlock> blocks = lineEncoder(line);
+
+        final String block11 = getBlockByWordIndex(blocks, 11);
+        final String block81 = getBlockByWordIndex(blocks, 81);
+        final String block82 = getBlockByWordIndex(blocks, 82);
+        final String block83 = getBlockByWordIndex(blocks, 83);
+
+        final String decodedLine = block11 + " " + block81 + " " + block82 + " " + block83;
+
         String pattern;
 
         // differ between GSI8 and GSI16 format
@@ -111,7 +138,7 @@ public class BaseToolsGsi {
         }
 
         Pattern p = Pattern.compile(pattern);
-        Matcher m = p.matcher(line);
+        Matcher m = p.matcher(decodedLine);
         int founds = 0;
 
         while (m.find()) {
@@ -121,9 +148,39 @@ public class BaseToolsGsi {
         return founds == 3;
     }
 
+    private static ArrayList<GsiBlock> lineEncoder(String line) {
+        ArrayList<GsiBlock> blocks = new ArrayList<>();
+
+        if (!line.equalsIgnoreCase("")) {
+            int size = BaseToolsGsi.getBlockSize(line);
+
+            if (size == 24) {
+                line = line.substring(1, line.length());
+            }
+
+            // split reader line into separate Strings
+            List<String> lineSplit = new ArrayList<>((line.length() + size - 1) / size);
+            for (int i = 0; i < line.length(); i += size) {
+                lineSplit.add(line.substring(i, Math.min(line.length(), i + size)));
+            }
+
+            // used instead of 'deprecated' StringTokenizer here
+            for (String blockAsString : lineSplit) {
+                GsiBlock block = new GsiBlock(blockAsString);
+                blocks.add(block);
+                foundAllWordIndices.add(block.getWordIndex());
+            }
+
+            // sort every 'line' of GSI blocks by word index (WI)
+            SortHelper.sortByWordIndex(blocks);
+        }
+
+        return blocks;
+    }
+
     /**
      * Transforms a line of encoded {@code GsiBlock}s into a string line and fill it up into an
-     * {@code ArrayList<String>} for later on file writing.
+     * {@code ArrayList<String>} for later file writing.
      *
      * @param isGSI16          distinguish between GSI8 or GSI16 output format
      * @param encodedGSIBlocks ArrayList<ArrayList<GsiBlock>> of encoded GSIBlocks
@@ -163,8 +220,8 @@ public class BaseToolsGsi {
     /**
      * Prepares the line ending with an additional white space character.
      * <p>
-     * For some reasons (e.g. self written Autocad VBA util) it is necessary to add an additional white space
-     * at the end of a line. This is done with this helper.
+     * For some reasons (e.g. self written Autocad VBA utilities) it is necessary to add
+     * an additional white space at the end of a line. This is done with this helper.
      *
      * @param stringToPrepare string to prepare with line ending
      *
@@ -183,8 +240,8 @@ public class BaseToolsGsi {
     }
 
     /**
-     * Encodes a reader string line that contains gsi data into an encapsulated <code>ArrayList</code> of
-     * <code>GsiBlock</code>s.
+     * Encodes a reader string line that contains gsi data into an encapsulated <code>ArrayList</code>
+     * of <code>GsiBlock</code>s.
      *
      * @return encoded GSIBlocks
      */
@@ -197,8 +254,8 @@ public class BaseToolsGsi {
     }
 
     /**
-     * Returns all found word indices (WI) from the complete Leica GSI file as one {@code TreeSet<Integer>}
-     * without duplicates.
+     * Returns all found word indices (WI) from the complete Leica Geosystems GSI file
+     * as one {@code TreeSet<Integer>} without duplicates.
      *
      * @return all found word indices as {@code TreeSet<Integer>}
      */
@@ -207,43 +264,17 @@ public class BaseToolsGsi {
     }
 
     /**
-     * Encodes a reader GSI string line into an ArrayList of GSIBlocks.
+     * Encodes a read GSI string line into an ArrayList of GSIBlocks.
      *
-     * @param lines reader string lines with GSI content
+     * @param lines read string lines with GSI content
      *
      * @return encoded ArrayList of GSIBlocks
      */
     private ArrayList<ArrayList<GsiBlock>> blockEncoder(ArrayList<String> lines) {
-        ArrayList<GsiBlock> blocks;
         ArrayList<ArrayList<GsiBlock>> blocksInLines = new ArrayList<>();
 
         for (String line : lines) {
-            blocks = new ArrayList<>();
-
-            int size = BaseToolsGsi.getBlockSize(line);
-
-            if (size == 24) {
-                line = line.substring(1, line.length());
-            }
-
-            // split reader line into separate Strings
-            List<String> lineSplit = new ArrayList<>((line.length() + size - 1) / size);
-            for (int i = 0; i < line.length(); i += size) {
-                lineSplit.add(line.substring(i, Math.min(line.length(), i + size)));
-            }
-
-            // used instead of 'deprecated' StringTokenizer here
-            for (String blockAsString : lineSplit) {
-                GsiBlock block = new GsiBlock(blockAsString);
-                blocks.add(block);
-                foundAllWordIndices.add(block.getWordIndex());
-            }
-
-            // sort every 'line' of GSI blocks by word index (WI)
-            SortHelper.sortByWordIndex(blocks);
-
-            // fill in the sorted 'line' of blocks into an array
-            blocksInLines.add(blocks);
+            blocksInLines.add(lineEncoder(line));
         }
 
         return blocksInLines;
