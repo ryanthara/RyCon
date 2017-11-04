@@ -18,7 +18,6 @@
 package de.ryanthara.ja.rycon.ui;
 
 import de.ryanthara.ja.rycon.Main;
-import de.ryanthara.ja.rycon.util.check.PathCheck;
 import de.ryanthara.ja.rycon.data.DefaultKeys;
 import de.ryanthara.ja.rycon.data.PreferenceKeys;
 import de.ryanthara.ja.rycon.data.Version;
@@ -29,6 +28,7 @@ import de.ryanthara.ja.rycon.ui.custom.StatusBar;
 import de.ryanthara.ja.rycon.ui.image.ImageConverter;
 import de.ryanthara.ja.rycon.ui.util.ShellPositioner;
 import de.ryanthara.ja.rycon.ui.widgets.*;
+import de.ryanthara.ja.rycon.util.check.PathCheck;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.*;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -561,10 +561,18 @@ public class MainApplication extends Main {
     }
 
     private void handleDropTarget(Button button, final MainApplicationDnDButtons dnDButtons) {
-        DropTarget targetLevelling = new DropTarget(button, operations);
-        targetLevelling.setTransfer(types);
+        DropTarget targets = new DropTarget(button, operations);
+        targets.setTransfer(types);
 
-        targetLevelling.addDropListener(new DropTargetAdapter() {
+        targets.addDropListener(new DropTargetAdapter() {
+
+            public void dragEnter(DropTargetEvent event) {
+                shell.setCursor(display.getSystemCursor(SWT.CURSOR_HAND));
+            }
+
+            public void dragLeave(DropTargetEvent event) {
+                shell.setCursor(null);
+            }
 
             public void drop(DropTargetEvent event) {
                 if (fileTransfer.isSupportedType(event.currentDataType)) {
@@ -779,7 +787,6 @@ public class MainApplication extends Main {
         System.out.println(Main.pref.getUserPreference(PreferenceKeys.DIR_CARD_READER_DATA_FILES));
         System.out.println(Main.pref.getUserPreference(PreferenceKeys.DIR_CARD_READER_EXPORT_FILES));
         */
-
 
 
         System.out.println("Default keys: " + DefaultKeys.values().length);

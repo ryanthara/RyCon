@@ -43,6 +43,7 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static de.ryanthara.ja.rycon.Main.countFileOps;
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.*;
 import static de.ryanthara.ja.rycon.ui.custom.Status.OK;
 
@@ -110,13 +111,13 @@ public class LevellingWidget extends AbstractWidget {
             if (processFileOperationsDND()) {
                 String status;
 
-                final String helper = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.levellingStatus), Main.countFileOps);
+                final String helper = ResourceBundleUtils.getLangString(MESSAGES, Messages.levellingStatus);
 
                 // use counter to display different text on the status bar
-                if (Main.countFileOps == 1) {
-                    status = StringUtils.singularPluralMessage(helper, Main.TEXT_SINGULAR);
+                if (countFileOps == 1) {
+                    status = String.format(StringUtils.singularPluralMessage(helper, Main.TEXT_SINGULAR), countFileOps);
                 } else {
-                    status = StringUtils.singularPluralMessage(helper, Main.TEXT_PLURAL);
+                    status = String.format(StringUtils.singularPluralMessage(helper, Main.TEXT_PLURAL), countFileOps);
                 }
 
                 Main.statusBar.setStatus(status, OK);
@@ -149,13 +150,13 @@ public class LevellingWidget extends AbstractWidget {
             if (processFileOperations()) {
                 String status;
 
-                final String helper = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.levellingStatus), Main.countFileOps);
+                final String helper = ResourceBundleUtils.getLangString(MESSAGES, Messages.levellingStatus);
 
                 // use counter to display different text on the status bar
                 if (Main.countFileOps == 1) {
-                    status = StringUtils.singularPluralMessage(helper, Main.TEXT_SINGULAR);
+                    status = String.format(StringUtils.singularPluralMessage(helper, Main.TEXT_SINGULAR), Main.countFileOps);
                 } else {
-                    status = StringUtils.singularPluralMessage(helper, Main.TEXT_PLURAL);
+                    status = String.format(StringUtils.singularPluralMessage(helper, Main.TEXT_PLURAL), Main.countFileOps);
                 }
 
                 Main.statusBar.setStatus(status, OK);
@@ -380,7 +381,7 @@ public class LevellingWidget extends AbstractWidget {
                     ResourceBundleUtils.getLangString(LABELS, Labels.successTextMsgBox), message);
 
             // set the counter for status bar information
-            Main.countFileOps = counter;
+            countFileOps = counter;
             success = true;
         } else {
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING,
@@ -399,7 +400,7 @@ public class LevellingWidget extends AbstractWidget {
 
         if (counter > 0) {
             // set the counter for status bar information
-            Main.countFileOps = counter;
+            countFileOps = counter;
             return true;
         } else {
             return false;

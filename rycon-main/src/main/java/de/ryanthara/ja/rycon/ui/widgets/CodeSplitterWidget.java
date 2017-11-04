@@ -111,13 +111,13 @@ public class CodeSplitterWidget extends AbstractWidget {
             if (processFileOperationsDND()) {
                 String status;
 
-                final String helper = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.splitFilesStatus), Main.countFileOps);
+                final String helper = ResourceBundleUtils.getLangString(MESSAGES, Messages.splitFilesStatus);
 
                 // use counter to display different text on the status bar
                 if (Main.countFileOps == 1) {
-                    status = StringUtils.singularPluralMessage(helper, Main.TEXT_SINGULAR);
+                    status = String.format(StringUtils.singularPluralMessage(helper, Main.TEXT_SINGULAR), Main.countFileOps);
                 } else {
-                    status = StringUtils.singularPluralMessage(helper, Main.TEXT_PLURAL);
+                    status = String.format(StringUtils.singularPluralMessage(helper, Main.TEXT_PLURAL), Main.countFileOps);
                 }
 
                 Main.statusBar.setStatus(status, Status.OK);
@@ -151,13 +151,13 @@ public class CodeSplitterWidget extends AbstractWidget {
             if (processFileOperations()) {
                 String status;
 
-                final String helper = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.splitFilesStatus), Main.countFileOps);
+                final String helper = ResourceBundleUtils.getLangString(MESSAGES, Messages.splitFilesStatus);
 
                 // use counter to display different text on the status bar
                 if (Main.countFileOps == 1) {
-                    status = StringUtils.singularPluralMessage(helper, Main.TEXT_SINGULAR);
+                    status = String.format(StringUtils.singularPluralMessage(helper, Main.TEXT_SINGULAR), Main.countFileOps);
                 } else {
-                    status = StringUtils.singularPluralMessage(helper, Main.TEXT_PLURAL);
+                    status = String.format(StringUtils.singularPluralMessage(helper, Main.TEXT_PLURAL), Main.countFileOps);
                 }
 
                 Main.statusBar.setStatus(status, Status.OK);
@@ -365,27 +365,30 @@ public class CodeSplitterWidget extends AbstractWidget {
         int counter = 0;
 
         for (Path path : files2read) {
-            LineReader lineReader = new LineReader(path);
+            // first attempt to ignore logfile.txt files
+            if (!path.toString().toLowerCase().contains("logfile.txt")) {
+                LineReader lineReader = new LineReader(path);
 
-            if (lineReader.readFile(false)) {
-                ArrayList<String> readFile = lineReader.getLines();
+                if (lineReader.readFile(false)) {
+                    ArrayList<String> readFile = lineReader.getLines();
 
-                // processFileOperations by differ between txt oder gsi files
+                    // processFileOperations by differ between txt oder gsi files
 
-                // processFileOperations and differ between 'normal' GSI files and LTOP 'GSL' files
-                // TODO remove path matcher
-                PathMatcher matcherGSI = FileSystems.getDefault().getPathMatcher("regex:(?iu:.+\\.GSI)");
-                PathMatcher matcherTXT = FileSystems.getDefault().getPathMatcher("regex:(?iu:.+\\.TXT)");
+                    // processFileOperations and differ between 'normal' GSI files and LTOP 'GSL' files
+                    // TODO remove path matcher
+                    PathMatcher matcherGSI = FileSystems.getDefault().getPathMatcher("regex:(?iu:.+\\.GSI)");
+                    PathMatcher matcherTXT = FileSystems.getDefault().getPathMatcher("regex:(?iu:.+\\.TXT)");
 
-                if (matcherGSI.matches(path)) {
-                    counter = executeSplitGsi(insertCodeColumn, writeFileWithCodeZero, counter, path, readFile);
-                } else if (matcherTXT.matches(path)) {
-                    counter = executeSplitTxt(insertCodeColumn, writeFileWithCodeZero, counter, path, readFile);
+                    if (matcherGSI.matches(path)) {
+                        counter = executeSplitGsi(insertCodeColumn, writeFileWithCodeZero, counter, path, readFile);
+                    } else if (matcherTXT.matches(path)) {
+                        counter = executeSplitTxt(insertCodeColumn, writeFileWithCodeZero, counter, path, readFile);
+                    } else {
+                        System.err.println("File format of " + path.getFileName() + " are not supported.");
+                    }
                 } else {
-                    System.err.println("File format of " + path.getFileName() + " are not supported.");
+                    System.err.println("File " + path.getFileName() + " could not be reader.");
                 }
-            } else {
-                System.err.println("File " + path.getFileName() + " could not be reader.");
             }
         }
 
@@ -406,12 +409,12 @@ public class CodeSplitterWidget extends AbstractWidget {
         if (counter > 0) {
             String message;
 
-            final String helper = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.splitFilesMessage), counter);
+            final String helper = ResourceBundleUtils.getLangString(MESSAGES, Messages.splitFilesMessage);
 
             if (counter == 1) {
-                message = StringUtils.singularPluralMessage(helper, Main.TEXT_SINGULAR);
+                message = String.format(StringUtils.singularPluralMessage(helper, Main.TEXT_SINGULAR), counter);
             } else {
-                message = StringUtils.singularPluralMessage(helper, Main.TEXT_PLURAL);
+                message = String.format(StringUtils.singularPluralMessage(helper, Main.TEXT_PLURAL), counter);
             }
 
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_INFORMATION,

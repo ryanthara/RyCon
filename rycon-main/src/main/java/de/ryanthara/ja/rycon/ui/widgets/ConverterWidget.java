@@ -19,10 +19,6 @@ package de.ryanthara.ja.rycon.ui.widgets;
 
 import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.core.converter.csv.BaseToolsCsv;
-import de.ryanthara.ja.rycon.ui.widgets.convert.write.WriteParameter;
-import de.ryanthara.ja.rycon.ui.widgets.convert.read.*;
-import de.ryanthara.ja.rycon.ui.widgets.convert.write.*;
-import de.ryanthara.ja.rycon.util.check.TextCheck;
 import de.ryanthara.ja.rycon.core.converter.excel.BaseToolsExcel;
 import de.ryanthara.ja.rycon.core.converter.text.BaseToolsTxt;
 import de.ryanthara.ja.rycon.core.converter.zeiss.ZeissDialect;
@@ -35,7 +31,10 @@ import de.ryanthara.ja.rycon.ui.util.ShellPositioner;
 import de.ryanthara.ja.rycon.ui.widgets.convert.FileFilterIndex;
 import de.ryanthara.ja.rycon.ui.widgets.convert.SourceButton;
 import de.ryanthara.ja.rycon.ui.widgets.convert.TargetButton;
+import de.ryanthara.ja.rycon.ui.widgets.convert.read.*;
+import de.ryanthara.ja.rycon.ui.widgets.convert.write.*;
 import de.ryanthara.ja.rycon.util.StringUtils;
+import de.ryanthara.ja.rycon.util.check.TextCheck;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -126,13 +125,13 @@ public class ConverterWidget extends AbstractWidget {
             if (processFileOperations()) {
                 String status;
 
-                final String helper = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.conversionStatus), Main.countFileOps);
+                final String helper = ResourceBundleUtils.getLangString(MESSAGES, Messages.conversionStatus);
 
                 // use counter to display different text on the status bar
                 if (Main.countFileOps == 1) {
-                    status = StringUtils.singularPluralMessage(helper, Main.TEXT_SINGULAR);
+                    status = String.format(StringUtils.singularPluralMessage(helper, Main.TEXT_SINGULAR), Main.countFileOps);
                 } else {
-                    status = StringUtils.singularPluralMessage(helper, Main.TEXT_PLURAL);
+                    status = String.format(StringUtils.singularPluralMessage(helper, Main.TEXT_PLURAL), Main.countFileOps);
                 }
 
                 Main.statusBar.setStatus(status, OK);
@@ -578,12 +577,12 @@ public class ConverterWidget extends AbstractWidget {
         if (counter > 0) {
             String message;
 
-            final String helper = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.conversionMessage), counter);
+            final String helper = ResourceBundleUtils.getLangString(MESSAGES, Messages.conversionMessage);
 
             if (counter == 1) {
-                message = StringUtils.singularPluralMessage(helper, Main.TEXT_SINGULAR);
+                message = String.format(StringUtils.singularPluralMessage(helper, Main.TEXT_SINGULAR), counter);
             } else {
-                message = StringUtils.singularPluralMessage(helper, Main.TEXT_PLURAL);
+                message = String.format(StringUtils.singularPluralMessage(helper, Main.TEXT_PLURAL), counter);
             }
 
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_INFORMATION,

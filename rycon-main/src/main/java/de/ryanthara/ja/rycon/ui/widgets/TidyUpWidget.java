@@ -25,10 +25,10 @@ import de.ryanthara.ja.rycon.core.LogfileClean;
 import de.ryanthara.ja.rycon.data.PreferenceKeys;
 import de.ryanthara.ja.rycon.i18n.*;
 import de.ryanthara.ja.rycon.nio.LineReader;
+import de.ryanthara.ja.rycon.nio.WriteFile2Disk;
 import de.ryanthara.ja.rycon.ui.Sizes;
 import de.ryanthara.ja.rycon.ui.custom.*;
 import de.ryanthara.ja.rycon.ui.util.ShellPositioner;
-import de.ryanthara.ja.rycon.nio.WriteFile2Disk;
 import de.ryanthara.ja.rycon.util.StringUtils;
 import de.ryanthara.ja.rycon.util.check.PathCheck;
 import de.ryanthara.ja.rycon.util.check.TextCheck;
@@ -62,7 +62,7 @@ public class TidyUpWidget extends AbstractWidget {
 
     private final static Logger logger = Logger.getLogger(TidyUpWidget.class.getName());
 
-    private final String[] acceptableFileSuffixes = new String[]{"*.gsi", "*.gsl", "*.txt"};
+    private final String[] acceptableFileSuffixes = {"*.gsi", "*.gsl", "*.txt"};
     private Shell parent;
     private Button chkBoxCleanBlocksByContent;
     private Button chkBoxHoldControlPoints;
@@ -293,13 +293,13 @@ public class TidyUpWidget extends AbstractWidget {
         group.setLayout(gridLayout);
         group.setLayoutData(gridData);
 
-        chkBoxHoldControlPoints = new Button(group, SWT.CHECK);
-        chkBoxHoldControlPoints.setSelection(false);
-        chkBoxHoldControlPoints.setText(ResourceBundleUtils.getLangString(CHECKBOXES, CheckBoxes.holdControlPointsTidyUp));
-
         chkBoxHoldStations = new Button(group, SWT.CHECK);
         chkBoxHoldStations.setSelection(false);
         chkBoxHoldStations.setText(ResourceBundleUtils.getLangString(CHECKBOXES, CheckBoxes.holdStationsTidyUp));
+
+        chkBoxHoldControlPoints = new Button(group, SWT.CHECK);
+        chkBoxHoldControlPoints.setSelection(false);
+        chkBoxHoldControlPoints.setText(ResourceBundleUtils.getLangString(CHECKBOXES, CheckBoxes.holdControlPointsTidyUp));
 
         chkBoxCleanBlocksByContent = new Button(group, SWT.CHECK);
         chkBoxCleanBlocksByContent.setSelection(true);
@@ -321,23 +321,27 @@ public class TidyUpWidget extends AbstractWidget {
 
                 final String fileName = path.getFileName().toString();
 
-                if (fileName.toUpperCase().endsWith(".GSL")) {
-                    GsiLtopClean gsiLtopClean = new GsiLtopClean(readFile);
-                    writeFile = gsiLtopClean.processLTOPClean();
-
-                    if (WriteFile2Disk.writeFile2Disk(path, writeFile, ltopString, ".GSI")) {
-                        counter = counter + 1;
-                    }
-                } else if (fileName.toUpperCase().endsWith("GSI")) {
+                if (fileName.toUpperCase().endsWith("GSI")) {
                     GsiTidyUp gsiTidyUp = new GsiTidyUp(readFile);
                     writeFile = gsiTidyUp.processTidyUp(holdStations, holdControlPoints);
 
                     if (WriteFile2Disk.writeFile2Disk(path, writeFile, editString, ".GSI")) {
                         counter = counter + 1;
                     }
+                } else if (fileName.toUpperCase().endsWith(".GSL")) {
+                    GsiLtopClean gsiLtopClean = new GsiLtopClean(readFile);
+                    writeFile = gsiLtopClean.processLTOPClean();
+
+                    if (WriteFile2Disk.writeFile2Disk(path, writeFile, ltopString, ".GSI")) {
+                        counter = counter + 1;
+                    }
                 } else if (fileName.toUpperCase().endsWith("LOGFILE.TXT")) {
                     LogfileClean logfileClean = new LogfileClean(readFile);
-                    writeFile = logfileClean.processTidyUp(chkBoxCleanBlocksByContent.getSelection());
+                    if (chkBoxCleanBlocksByContent != null) {
+                        writeFile = logfileClean.processTidyUp(chkBoxCleanBlocksByContent.getSelection());
+                    } else {
+                        writeFile = logfileClean.processTidyUp(true);
+                    }
 
                     if (WriteFile2Disk.writeFile2Disk(path, writeFile, editString, ".txt")) {
                         counter = counter + 1;
@@ -347,6 +351,7 @@ public class TidyUpWidget extends AbstractWidget {
                 System.err.println("File " + path.getFileName() + " could not be reader.");
             }
         }
+
         return counter;
     }
 
@@ -381,7 +386,7 @@ public class TidyUpWidget extends AbstractWidget {
             Main.countFileOps = counter;
             success = true;
         } else {
-            final String message = String.format(ResourceBundleUtils.getLangString(ERRORS, Errors.tidyUpFailed), counter);
+            final String message = ResourceBundleUtils.getLangString(ERRORS, Errors.tidyUpFailed);
 
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING,
                     ResourceBundleUtils.getLangString(LABELS, Labels.errorTextMsgBox), message);

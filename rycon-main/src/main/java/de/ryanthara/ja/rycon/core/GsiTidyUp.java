@@ -22,13 +22,19 @@ import de.ryanthara.ja.rycon.core.converter.gsi.BaseToolsGsi;
 import de.ryanthara.ja.rycon.data.PreferenceKeys;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 /**
- * Instances of this class provides functions to clean up a Leica GSI formatted file with some smart functions.
+ * Instances of {@code GsiTidyUp} provides functions to clean up a
+ * Leica Geosystems GSI formatted file with some smart functions.
+ * <p>
+ * With version 3 the tidy up function is completely rewritten and
+ * fully operational.
  *
  * @author sebastian
- * @version 2
+ * @version 3
  * @since 12
  */
 public class GsiTidyUp {
@@ -36,7 +42,8 @@ public class GsiTidyUp {
     private ArrayList<String> readStringLines;
 
     /**
-     * Constructs a new instance of this class given reader line based Leica GSI formatted file.
+     * Constructs a new instance of this class given a line based
+     * Leica Geosystems GSI formatted file.
      *
      * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
      */
@@ -45,152 +52,182 @@ public class GsiTidyUp {
     }
 
     /**
-     * Tidy up resurrection (stations) and control point measurements from files.
+     * Tidies up structured measurement files with a simple 'intelligence'.
      * <p>
-     * RyCON uses 'intelligence' to tidy up resurrection and control points by a given
-     * structure in the measurement file. Stations are identified by word index (WI).
-     * The control and stake out points are identified by the order in the file and
-     * with the stake out pattern (e.g. 'STKE').
-     * <p>
-     * Due to some limitations issues there is no better 'intelligence' at the moment.
+     * The following aspects are become considerate.
+     * <ul>
+     * <li>Single or double station lines are tidied up</li>
+     * <li>target point measurements are tidied up</li>
+     * <li>control point measurements are tidied up</li>
+     * </ul>
+     * The simple 'intelligence' of RyCON tries to handle special structures and indifferent
+     * line sequences which can be identified by the order or a special naming, like 'STKE'
+     * for example, what is the identification for the control points.
      *
-     * @param holdStations      decide to hold station lines
-     * @param holdControlPoints decide to hold control points
+     * @param holdStations      hold the station lines
+     * @param holdControlPoints hold the control point lines
      *
-     * @return converted {@code ArrayList<ArrayList<String>>} for writing
+     * @return tidied up measurement file
      */
     public ArrayList<String> processTidyUp(boolean holdStations, boolean holdControlPoints) {
-        // initialize values and prepare string with additional zeros for identification
-        String controlPointIdentifier = Main.pref.getUserPreference(PreferenceKeys.PARAM_CONTROL_POINT_STRING);
-        String freeStationIdentifier = "000" + Main.pref.getUserPreference(PreferenceKeys.PARAM_FREE_STATION_STRING);
-        String stationIdentifier = "000" + Main.pref.getUserPreference(PreferenceKeys.PARAM_KNOWN_STATION_STRING);
-
         ArrayList<String> result = new ArrayList<>();
 
-        // handle special case / exception when the file starts with one or more free station or (station) lines
-        String firstRow = readStringLines.get(0).toUpperCase();
+        // remove one or more station line at the beginning when the checkbox hold stations is not set
 
-        if (firstRow.startsWith("*")) {
-            freeStationIdentifier = "00000000" + freeStationIdentifier;
-            stationIdentifier = "00000000" + stationIdentifier;
-        }
+        if (!holdStations) {
+            Iterator<String> iterator = readStringLines.iterator();
+            while (iterator.hasNext()) {
+                if (checkIsStationLine(iterator.next())) {
+                    iterator.remove();
+                } else {
+                    break;
+                }
+            }
 
-        // breaking out of nested loops with a label called 'breakOut'
-        breakOut:
+            // remove duplicate station lines in the file when the checkbox hold stations is not set
+            boolean currentIsStationLine = false;
 
-        if (firstRow.contains(freeStationIdentifier) || firstRow.contains(stationIdentifier)) {
-            for (Iterator<String> iter = readStringLines.iterator(); iter.hasNext(); ) {
-                firstRow = iter.next();
-                if (firstRow.toUpperCase().contains(freeStationIdentifier) || firstRow.toUpperCase().contains(stationIdentifier)) {
-                    if (!holdStations) {
-                        iter.remove();
-                    }
-                } else if (firstRow.toUpperCase().contains(controlPointIdentifier)) {
-                    if (!holdControlPoints) {
-                        iter.remove();
+            Iterator<String> iterator2 = readStringLines.iterator();
+            while (iterator2.hasNext()) {
+                if (checkIsStationLine(iterator2.next())) {
+                    if (currentIsStationLine) {
+                        iterator2.remove();
+                    } else {
+                        currentIsStationLine = true;
                     }
                 } else {
-                    break breakOut;
+                    currentIsStationLine = false;
                 }
             }
         }
 
-        /*
-         * Use a helper array to identify the different lines by 'type'.
-         *
-         * type:
-         * =================================
-         * 1: target measurement
-         * 2: free station
-         * 3: stake out value / control points
-         * 9: measurement value
-         */
-        int[] helperArray = new int[readStringLines.size()];
+        // Use a helper array to identify the different lines by 'type'.
+        final lineType[] helperArray = new lineType[readStringLines.size()];
 
         /*
-         * Try to detect single and two face measurements of control points.
+         * Detect target points in one or two face measurements for control point identification.
          *
-         * A one face measured control point contains only zero values as coordinates. A two face
-         * measured control point contains the coordinates of the control point in the first, and
-         * only zeros in the second line. Therefore the comparison has to be made from current
-         * to previous line!
+         * One face measurements are indicated by a measurement line that contains
+         * only zero coordinates. The next line has either a different point number
+         * with zero coordinates or is a free station line.
          *
-         * The first comparison is made with the biggest integer value.
+         * Two face measurements are indicated by two lines with the same point number.
+         * The first line contains the coordinates of the control point, the second one
+         * contains only zero coordinates.
+         *
+         * It is difficult to detect incomplete two face measurement lines or broken
+         * stations.
          */
-        String currentLine;
-        String previousLine = "12345678901234567890" + Integer.toString(Integer.MAX_VALUE);
+        String
+                currLine,
+                nextLine;
 
-        // The operations starts with the last line outside the for-loop!
+        Set<String> targetPointNumbers = new HashSet<>();
+
         for (int i = 0; i < readStringLines.size(); i++) {
-            currentLine = readStringLines.get(i);
+            currLine = readStringLines.get(i);
 
-            // detect two face measurement for target measurement
-            String currentPointNumber = BaseToolsGsi.getPointNumber(currentLine);
-            String previousPointNumber = BaseToolsGsi.getPointNumber(previousLine);
-
-            // detect line type
-            if (BaseToolsGsi.isTargetLine(currentLine)) {
-                helperArray[i] = 1;
-
-                if (currentPointNumber.equals(previousPointNumber)) {
-                    helperArray[i - 1] = 1;
-                } else if (previousPointNumber.contains(controlPointIdentifier)) {
-                    helperArray[i - 1] = 3;
-                }
-            } else if (currentLine.contains(freeStationIdentifier) || currentLine.contains(stationIdentifier)) {
-                helperArray[i] = 2;
-            } else if (currentLine.contains(controlPointIdentifier)) {
-
-                // line above is free station
-                if (previousPointNumber.contains(freeStationIdentifier) || currentPointNumber.contains(stationIdentifier)) {
-                    helperArray[i] = 3;
-                }
-                // line above is the same control point -> stake out point is marked as target point
-                else if (currentPointNumber.equals(previousPointNumber)) {
-                    if (holdControlPoints) {
-                        helperArray[i] = 3;
-                    } else {
-                        helperArray[i] = 1;
-                    }
-                }
-                // line above is control point and not last line -> stake out point is measurement value
-                else {
-                    if (i < readStringLines.size() - 1) {
-                        helperArray[i] = 9;
-                    } else {
-                        helperArray[i] = 3;
-                    }
-                }
+            if (i < readStringLines.size() - 1) {
+                nextLine = readStringLines.get(i + 1);
             } else {
-                helperArray[i] = 9;
+                nextLine = currLine;
             }
-            previousLine = currentLine;
+
+            // detect target point one face measurement
+            if (BaseToolsGsi.isTargetLine(currLine)) {
+                helperArray[i] = lineType.TARGET_POINT;
+
+                targetPointNumbers.add(BaseToolsGsi.getPointNumber(currLine));
+            } else {
+                // detect target point two face measurement
+                if (BaseToolsGsi.isTargetLine(nextLine)) {
+                    if (BaseToolsGsi.getPointNumber(currLine).equalsIgnoreCase(BaseToolsGsi.getPointNumber(nextLine))) {
+                        helperArray[i] = lineType.TARGET_POINT;
+
+                        targetPointNumbers.add(BaseToolsGsi.getPointNumber(currLine));
+                    } else {
+                        // check for control point -> measurement
+                        if (checkIsStationLine(currLine)) { // detect station line
+                            helperArray[i] = lineType.STATION;
+                        } else if (checkIsControlPoint(currLine)) { // detect control points after the station
+                            final String currentPoint = BaseToolsGsi.getPointNumber(currLine);
+                            final String number = "0000" + currentPoint.substring(0, currentPoint.length() - 4);
+
+                            if (targetPointNumbers.contains(number)) {
+                                helperArray[i] = lineType.CONTROL_POINT;
+                            } else {
+                                helperArray[i] = lineType.MEASUREMENT;
+                            }
+                        } else {
+                            helperArray[i] = lineType.MEASUREMENT;
+                        }
+                    }
+                } else if (checkIsStationLine(currLine)) { // detect station line
+                    helperArray[i] = lineType.STATION;
+                } else if (checkIsControlPoint(currLine)) { // detect control points after the station
+                    final String currentPoint = BaseToolsGsi.getPointNumber(currLine);
+                    final String number = "0000" + currentPoint.substring(0, currentPoint.length() - 4);
+
+                    if (targetPointNumbers.contains(number)) {
+                        helperArray[i] = lineType.CONTROL_POINT;
+                    } else {
+                        helperArray[i] = lineType.MEASUREMENT;
+                    }
+                } else {
+                    helperArray[i] = lineType.MEASUREMENT;
+                }
+            }
         }
 
-        // preparing the result lines
+        // add needed points to the result ArrayList<String>
         for (int i = 0; i < helperArray.length; i++) {
-            int value = helperArray[i];
-
-            String resultLine = BaseToolsGsi.prepareLineEnding(readStringLines.get(i));
-
-            if (value == 9) {
-                result.add(resultLine);
-            } else {
-                if (holdStations) {
-                    if (value == 2) {
-                        result.add(resultLine);
+            switch (helperArray[i]) {
+                case CONTROL_POINT:
+                    if (holdControlPoints) {
+                        result.add(readStringLines.get(i));
                     }
-                }
 
-                if (holdControlPoints) {
-                    if (value == 3) {
-                        result.add(resultLine);
+                    break;
+                case MEASUREMENT:
+                    result.add(readStringLines.get(i));
+
+                    break;
+                case STATION:
+                    if (holdStations) {
+                        result.add(readStringLines.get(i));
                     }
-                }
+
+                    break;
+                case TARGET_POINT:
+                    // delete always
+
+                    break;
             }
         }
 
         return result;
     }
+
+    private boolean checkIsControlPoint(String line) {
+        final String controlPointIdentifier = Main.pref.getUserPreference(PreferenceKeys.PARAM_CONTROL_POINT_STRING);
+
+        return line.toUpperCase().contains(controlPointIdentifier);
+    }
+
+    private boolean checkIsStationLine(String line) {
+        // initialize identifiers and add leading zeros for unique string comparison
+        String freeStationIdentifier = "0000" + Main.pref.getUserPreference(PreferenceKeys.PARAM_FREE_STATION_STRING);
+        String stationIdentifier = "0000" + Main.pref.getUserPreference(PreferenceKeys.PARAM_KNOWN_STATION_STRING);
+
+        // adjust identifier for GSI16 format
+        if (line.startsWith("*")) {
+            freeStationIdentifier = "00000000" + freeStationIdentifier;
+            stationIdentifier = "00000000" + stationIdentifier;
+        }
+
+        return line.toUpperCase().contains(freeStationIdentifier) || line.toUpperCase().contains(stationIdentifier);
+    }
+
+    private enum lineType {CONTROL_POINT, MEASUREMENT, STATION, TARGET_POINT}
 
 } // end of GsiTidyUp

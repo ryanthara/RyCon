@@ -138,6 +138,8 @@ public class TransferWidget extends AbstractWidget {
                     if (success) {
                         updateLastUsedProjectsListAndPreferences();
 
+                        checkCardReaderPathAndUpdateListsAndPreferences();
+
                         Main.statusBar.setStatus(ResourceBundleUtils.getLangString(MESSAGES, Messages.cardReaderFilesCopySuccessful), OK);
                     }
 
@@ -977,7 +979,7 @@ public class TransferWidget extends AbstractWidget {
             lastUsedProjectsList.add((String) object);
         }
 
-        // store last used projects to user pref
+        // store last used projects to user preferences
         Main.pref.setUserPreference(PreferenceKeys.LAST_USED_PROJECTS, Arrays.toString(lastUsedProjectsList.getItems()));
     }
 

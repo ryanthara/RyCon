@@ -78,8 +78,8 @@ public final class LogfileClean {
         for (int i = 0; i < readStringLines.size(); i++) {
             currentLine = readStringLines.get(i);
 
-            final String blockBegin = "System 1200 Logfile - Begin";
-            final String blockEnd = "System 1200 Logfile - End";
+            final String blockBegin = "Logfile - Begin";
+            final String blockEnd = "Logfile - End";
 
             if (currentLine.contains(blockBegin)) {
                 start = i;
@@ -165,7 +165,7 @@ public final class LogfileClean {
         if (block != null) {
             result = new ArrayList<>();
 
-            final String identifier = "Stakeout Diff";
+            final String[] identifiers = {"Computed", "Stakeout Diff"};
             boolean noCalculatedPoints = true;
 
             for (int i = 0; i < block.size(); i++) {
@@ -174,7 +174,7 @@ public final class LogfileClean {
                     final String s = block.get(i);
 
                     // detect identifier -> block is not empty
-                    if (s.contains(identifier)) {
+                    if (s.contains(identifiers[0]) || s.contains(identifiers[1])) {
                         noCalculatedPoints = false;
                     }
 
