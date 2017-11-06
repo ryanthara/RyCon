@@ -17,6 +17,9 @@
  */
 package de.ryanthara.ja.rycon.core.converter.text;
 
+import de.ryanthara.ja.rycon.Main;
+import de.ryanthara.ja.rycon.data.PreferenceKeys;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,21 +33,26 @@ import java.util.List;
  */
 public class CsvBaselStadt2Txt {
 
+    private boolean writeZeroHeights;
     private List<String[]> readCSVLines = null;
 
     /**
      * Class constructor for reader line based CSV files from the geodata server Basel Stadt (Switzerland).
      *
-     * @param readCSVLines {@code List<String[]>} with lines as {@code String[]}
+     * @param readCSVLines     {@code List<String[]>} with lines as {@code String[]}
+     * @param writeZeroHeights writes zero coordinates (0.000 metre) into the output file
      */
-    public CsvBaselStadt2Txt(List<String[]> readCSVLines) {
+    public CsvBaselStadt2Txt(List<String[]> readCSVLines, boolean writeZeroHeights) {
         this.readCSVLines = readCSVLines;
+        this.writeZeroHeights = writeZeroHeights;
     }
 
     /**
      * Converts a CSV file from the geodata server Basel Stadt (Switzerland) into a text formatted file.
      * <p>
      * With a parameter it is possible to distinguish between space or tabulator as separator.
+     * <p>
+     * Trailing zeroes are add up til a number of three.
      *
      * @param separator separator sign as {@code String}
      *
@@ -52,6 +60,8 @@ public class CsvBaselStadt2Txt {
      */
     public ArrayList<String> convertCSVBaselStadt2TXT(String separator) {
         ArrayList<String> result = new ArrayList<>();
+
+        boolean addTrailingZeroes = Boolean.parseBoolean(Main.pref.getUserPreference(PreferenceKeys.ADD_TRAILING_ZEROES));
 
         // remove comment line
         readCSVLines.remove(0);
@@ -64,19 +74,41 @@ public class CsvBaselStadt2Txt {
             line = line.concat(separator);
 
             // easting (Y) is in column 3
-            line = line.concat(stringField[2]);
+            String easting = stringField[2];
+
+            if (addTrailingZeroes) {
+                easting = BaseToolsTxt.addTrailingZeroes(easting, 3);
+            }
+
+            line = line.concat(easting);
             line = line.concat(separator);
 
             // northing (X) is in column 4
-            line = line.concat(stringField[3]);
+            String northing = stringField[3];
+
+            if (addTrailingZeroes) {
+                northing = BaseToolsTxt.addTrailingZeroes(northing, 3);
+            }
+
+            line = line.concat(northing);
 
             // height (Z) is in column 5, but not always valued
             if (!stringField[4].equals("")) {
                 line = line.concat(separator);
-                line = line.concat(stringField[4]);
+
+                String height = stringField[4];
+
+                if (addTrailingZeroes) {
+                    height = BaseToolsTxt.addTrailingZeroes(height, 3);
+                }
+
+                line = line.concat(height);
+            } else if (writeZeroHeights) {
+                line = line.concat(separator);
+                line = line.concat("0.000");
             }
 
-            result.add(line.trim());
+                result.add(line.trim());
         }
         return result;
     }

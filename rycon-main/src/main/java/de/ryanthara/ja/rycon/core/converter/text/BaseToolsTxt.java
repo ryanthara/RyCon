@@ -39,4 +39,22 @@ public class BaseToolsTxt {
      */
     public static final String SEPARATOR_TAB = "\t";
 
+    /**
+     * Adds trailing zeroes to the maximum number of digits.
+     *
+     * @param s      string with missing trailing zeroes
+     * @param number maximum number of digits
+     */
+    public static String addTrailingZeroes(final String s, final int number) {
+        String zeroes = "";
+
+        int pos = s.length() - s.lastIndexOf(".");
+
+        for (int i = pos - 1; i < number; i++) {
+            zeroes = zeroes + "0";
+        }
+
+        return s + zeroes;
+    }
+
 } // end of BaseToolsTxt
