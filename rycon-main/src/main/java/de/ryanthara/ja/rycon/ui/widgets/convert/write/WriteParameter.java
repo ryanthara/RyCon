@@ -27,7 +27,7 @@ import de.ryanthara.ja.rycon.core.converter.zeiss.ZeissDialect;
 public class WriteParameter {
 
     private boolean isGSI16, cadworkUseZeroHeights, kFormatUseSimpleFormat, ltopEliminateDuplicatePoints,
-            ltopSortOutputFileByNumber, sourceContainsCode, writeCodeColumn, writeCommentLine;
+            ltopSortOutputFileByNumber, sourceContainsCode, writeCodeColumn, writeCommentLine, writeZeroHeights;
     private int sourceNumber;
     private String separatorCSV, separatorTXT;
     private ZeissDialect dialect;
@@ -44,6 +44,7 @@ public class WriteParameter {
      * @param sourceContainsCode           true if source file contains code column
      * @param writeCodeColumn              writer code column to the output file
      * @param writeCommentLine             writer comment line to the output file
+     * @param writeZeroHeights             write zero heights to the output file
      * @param separatorCSV                 CSV separator sign
      * @param separatorTXT                 text files separator sign
      * @param dialect                      Zeiss REC format dialect
@@ -57,6 +58,7 @@ public class WriteParameter {
                           boolean sourceContainsCode,
                           boolean writeCodeColumn,
                           boolean writeCommentLine,
+                          boolean writeZeroHeights,
                           String separatorCSV,
                           String separatorTXT,
                           ZeissDialect dialect) {
@@ -69,6 +71,7 @@ public class WriteParameter {
         this.sourceContainsCode = sourceContainsCode;
         this.writeCodeColumn = writeCodeColumn;
         this.writeCommentLine = writeCommentLine;
+        this.writeZeroHeights = writeZeroHeights;
         this.separatorCSV = separatorCSV;
         this.separatorTXT = separatorTXT;
         this.dialect = dialect;
@@ -81,6 +84,51 @@ public class WriteParameter {
      */
     public ZeissDialect getDialect() {
         return dialect;
+    }
+
+    /**
+     * Returns the source button number.
+     *
+     * @return source button number
+     */
+    public int getSourceNumber() {
+        return sourceNumber;
+    }
+
+    /**
+     * Returns the GSI indication parameter.
+     *
+     * @return true if is GSI16
+     */
+    public boolean isGSI16() {
+        return isGSI16;
+    }
+
+    /**
+     * Returns use the code column.
+     *
+     * @return use code column
+     */
+    public boolean isWriteCodeColumn() {
+        return writeCodeColumn;
+    }
+
+    /**
+     * Returns write a comment line.
+     *
+     * @return write a comment line
+     */
+    public boolean isWriteCommentLine() {
+        return writeCommentLine;
+    }
+
+    /**
+     * Returns write zero heights (0.000 metre) for missing height coordinates.
+     *
+     * @return write zero heights
+     */
+    public boolean isWriteZeroHeights() {
+        return writeZeroHeights;
     }
 
     /**
@@ -102,30 +150,12 @@ public class WriteParameter {
     }
 
     /**
-     * Returns the source button number.
-     *
-     * @return source button number
-     */
-    public int getSourceNumber() {
-        return sourceNumber;
-    }
-
-    /**
      * Returns the cadwork use zero heights option.
      *
      * @return cadwork use zero heights
      */
     boolean isCadworkUseZeroHeights() {
         return cadworkUseZeroHeights;
-    }
-
-    /**
-     * Returns the GSI indication parameter.
-     *
-     * @return true if is GSI16
-     */
-    public boolean isGSI16() {
-        return isGSI16;
     }
 
     /**
@@ -153,24 +183,6 @@ public class WriteParameter {
      */
     boolean isLtopSortOutputFileByNumber() {
         return ltopSortOutputFileByNumber;
-    }
-
-    /**
-     * Returns use the code column.
-     *
-     * @return use code column
-     */
-    public boolean isWriteCodeColumn() {
-        return writeCodeColumn;
-    }
-
-    /**
-     * Returns writer a comment line.
-     *
-     * @return writer a comment line
-     */
-    public boolean isWriteCommentLine() {
-        return writeCommentLine;
     }
 
     /**
