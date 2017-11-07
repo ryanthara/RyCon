@@ -208,6 +208,7 @@ public class PreferenceHandler implements PreferenceChangeListener {
      * <p>
      * <h3>General settings</h3>
      * <ul>
+     * <li>'ADD_TRAILING_ZEROES' - true</li>
      * <li>'BUILD_VERSION' - 'version : YYYY-MM-DD' </li>
      * <li>'GENERATOR' - 'RyCON' </li>
      * <li>'INFORMATION_STRING' - 'information string' </li>
@@ -266,6 +267,7 @@ public class PreferenceHandler implements PreferenceChangeListener {
      */
     private void createDefaultSettings() {
         // general settings
+        setUserPreference(PreferenceKeys.ADD_TRAILING_ZEROES, DefaultKeys.ADD_TRAILING_ZEROES.getValue());
         setUserPreference(PreferenceKeys.BUILD_VERSION, Version.getBuildNumber() + " : " + Version.getBuildDate());
         setUserPreference(PreferenceKeys.GENERATOR, ResourceBundleUtils.getLangString(ResourceBundles.LABELS, Labels.applicationName));
         setUserPreference(PreferenceKeys.INFORMATION_STRING, DefaultKeys.RyCON_WEBSITE.getValue());

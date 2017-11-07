@@ -55,5 +55,6 @@ public enum CheckBoxes implements ResourceKeys {
     writeCodeColumn,
     writeCodeZeroSplitter,
     writeCommentLine,
+    writeZeroHeights,
 
 } // end of CheckBoxes

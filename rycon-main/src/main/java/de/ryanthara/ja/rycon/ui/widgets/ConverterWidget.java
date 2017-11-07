@@ -78,6 +78,7 @@ public class ConverterWidget extends AbstractWidget {
     private Button chkBoxTXTSpaceSeparator;
     private Button chkBoxWriteCodeColumn;
     private Button chkBoxWriteCommentLine;
+    private Button chkBoxWriteZeroHeights;
     private Path[] files2read;
     private Group groupSource;
     private Group groupTarget;
@@ -108,8 +109,7 @@ public class ConverterWidget extends AbstractWidget {
     }
 
     boolean actionBtnOk() {
-        if (TextCheck.isEmpty(inputFieldsComposite.getSourceTextField()) ||
-                TextCheck.isEmpty(inputFieldsComposite.getTargetTextField())) {
+        if (TextCheck.isEmpty(inputFieldsComposite.getSourceTextField()) || TextCheck.isEmpty(inputFieldsComposite.getTargetTextField())) {
             return false;
         }
 
@@ -378,6 +378,10 @@ public class ConverterWidget extends AbstractWidget {
         chkBoxWriteCodeColumn = new Button(group, SWT.CHECK);
         chkBoxWriteCodeColumn.setSelection(false);
         chkBoxWriteCodeColumn.setText(ResourceBundleUtils.getLangString(CHECKBOXES, CheckBoxes.writeCodeColumn));
+
+        chkBoxWriteZeroHeights = new Button(group, SWT.CHECK);
+        chkBoxWriteZeroHeights.setSelection(false);
+        chkBoxWriteZeroHeights.setText(ResourceBundleUtils.getLangString(CHECKBOXES, CheckBoxes.writeZeroHeights));
     }
 
     private void createRadioButtonsSource(SelectionListener selectionListener, Group group) {
@@ -538,6 +542,7 @@ public class ConverterWidget extends AbstractWidget {
                 chkBoxSourceContainsCode.getSelection(),
                 chkBoxWriteCodeColumn.getSelection(),
                 chkBoxWriteCommentLine.getSelection(),
+                chkBoxWriteZeroHeights.getSelection(),
                 separatorCSV, separatorTXT, dialect);
 
         Map<Integer, Reader> readFileMap = prepareReadFileMaps();

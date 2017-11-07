@@ -110,7 +110,7 @@ public class TxtWriter implements Writer {
                 break;
 
             case BASEL_STADT:
-                CsvBaselStadt2Txt csvBaselStadt2Txt = new CsvBaselStadt2Txt(readCSVFile);
+                CsvBaselStadt2Txt csvBaselStadt2Txt = new CsvBaselStadt2Txt(readCSVFile, parameter.isWriteZeroHeights());
                 writeFile = csvBaselStadt2Txt.convertCSVBaselStadt2TXT(parameter.getSeparatorTXT());
                 break;
 

@@ -97,6 +97,19 @@ public class SettingsWidget {
         dialog.addGroup(ResourceBundleUtils.getLangString(PREFERENCES, Preferences.groupFormatsTitle));
 
         dialog.addPreference(new PreferenceBoolean(
+                ResourceBundleUtils.getLangString(PREFERENCES, Preferences.addTraillingZeroes),
+                Boolean.valueOf(DefaultKeys.ADD_TRAILING_ZEROES.getValue())) {
+
+            public Boolean getValue() {
+                return Boolean.valueOf(Main.pref.getUserPreference(PreferenceKeys.ADD_TRAILING_ZEROES));
+            }
+
+            public void setValue(Object obj) {
+                Main.pref.setUserPreference(PreferenceKeys.ADD_TRAILING_ZEROES, obj.toString());
+            }
+        });
+
+        dialog.addPreference(new PreferenceBoolean(
                 ResourceBundleUtils.getLangString(PREFERENCES, Preferences.addSpaceAtLineEnd),
                 Boolean.valueOf(DefaultKeys.GSI_SETTING_LINE_ENDING_WITH_BLANK.getValue())) {
 

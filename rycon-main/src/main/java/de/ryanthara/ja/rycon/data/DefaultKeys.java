@@ -46,6 +46,8 @@ public enum DefaultKeys {
     DIR_BIG_DATA_TEMPLATE("./big_data/template-folder"),
     DIR_PROJECT("./projects"),
     DIR_PROJECT_TEMPLATE("./projects/template-folder"),
+
+    ADD_TRAILING_ZEROES("true"),
     GSI_SETTING_LINE_ENDING_WITH_BLANK("true"),
 
     // transfer widget

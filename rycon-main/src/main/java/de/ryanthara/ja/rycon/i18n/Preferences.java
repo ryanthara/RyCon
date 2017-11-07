@@ -100,6 +100,6 @@ public enum Preferences implements ResourceKeys {
     // converter group
     modulesTabGroupTitleConverter,
     convertZeroCoordinates,
-    ltopUseZenithDistance,
+    ltopUseZenithDistance, addTraillingZeroes,
 
 } // end of Preferences
