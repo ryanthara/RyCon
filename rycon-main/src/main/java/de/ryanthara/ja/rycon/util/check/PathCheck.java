@@ -43,8 +43,6 @@ public final class PathCheck {
      * @param maxDepth         maximum depth to search for subfolder
      *
      * @return true if directory contains subfolder
-     *
-     * @throws IOException
      */
     public static boolean directoryContainsSubfolder(Path directoryToCheck, int maxDepth) throws IOException {
         List<Path> subfolder = Files.walk(directoryToCheck, maxDepth)
@@ -53,15 +51,14 @@ public final class PathCheck {
 
         subfolder.remove(0);
 
-        if (subfolder.size() > 0) {
-            return true;
-        }
+        return subfolder.size() > 0;
 
-        return false;
     }
 
     /**
      * Checks a given {@code Path URL} to be an existing and valid directory.
+     *
+     * @param directoryToCheck directory to be checked
      *
      * @return true if is directory and exists
      *
@@ -103,7 +100,7 @@ public final class PathCheck {
      *
      * @throws IllegalArgumentException is thrown if file is null or empty string
      */
-    public static boolean fileExists(final String fileToCheck) {
+    static boolean fileExists(final String fileToCheck) {
         if (fileToCheck == null || fileToCheck.equalsIgnoreCase("")) {
             throw new IllegalArgumentException();
         }
