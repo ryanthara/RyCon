@@ -7,6 +7,8 @@ Keywords: RyCON, Converter, Java
 RyCON - ryanthara's converter and more...
 =========================================
 
+![alt text](http://code.ryanthara.de/content/3-rycon/RyCON_1.jpg)
+
 What is it?
 -----------
 
