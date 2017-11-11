@@ -1,7 +1,7 @@
 RyCON - ryanthara's converter and more...
 =========================================
 
-![alt text](https://code.ryanthara.de/content/1-projects/1-rycon/rycon_v2.png)
+![alt text](https://code.ryanthara.de/content/1-projects/1-rycon/rycon_v2.de.png)
 
 What is it?
 -----------
@@ -11,7 +11,8 @@ who deals regular with measurement files and coordinates. With RyCON it is
 possible to clean measurement files, split files by code, convert between
 different file formats and simplify a bit given job and project structures.
 
-RyCON is written in Java and platform independent.
+RyCON is written in Java, platform independent and bilingual. You can get
+a German version and an English one.
 
 
 The latest version
