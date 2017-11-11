@@ -1,7 +1,7 @@
 RyCON - ryanthara's converter and more...
 =========================================
 
-![alt text](https://code.ryanthara.de/content/1-projects/1-rycon/rycon_v2.de.png)
+![RyCON screenshot - german version](https://code.ryanthara.de/content/1-projects/1-rycon/rycon_v2.png)
 
 What is it?
 -----------
