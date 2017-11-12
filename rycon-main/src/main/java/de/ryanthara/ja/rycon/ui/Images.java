@@ -44,6 +44,7 @@ public enum Images {
     iconOK("/de/ryanthara/ja/rycon/ui/icons/20-ok.png"),
     iconWarning("/de/ryanthara/ja/rycon/ui/icons/15-warning.png"),
 
+    aboutIcon("/de/ryanthara/ja/rycon/ui/RyCON_blank128x128.png"),
     splashScreen("/de/ryanthara/ja/rycon/ui/RyCON_SplashScreen.png"),
     taskIcon("/de/ryanthara/ja/rycon/ui/RyCON_blank256x256.png"),
     trayIcon64("/de/ryanthara/ja/rycon/ui/RyCON_TrayIcon64x64.png"),

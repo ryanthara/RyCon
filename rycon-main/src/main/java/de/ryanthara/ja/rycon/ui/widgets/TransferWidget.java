@@ -103,7 +103,7 @@ public class TransferWidget extends AbstractWidget {
     private int countCopiedFiles;
 
     /**
-     * Constructs the {@link TransferWidget} without parameters.
+     * Constructs the {@link TransferWidget} with a parameter for the parent shell.
      * <p>
      * The user interface is initialized in a separate method, which is called from here.
      *
@@ -206,7 +206,7 @@ public class TransferWidget extends AbstractWidget {
 
         innerShell = new Shell(parent, SWT.CLOSE | SWT.DIALOG_TRIM | SWT.MAX | SWT.TITLE | SWT.APPLICATION_MODAL);
         innerShell.addListener(SWT.Close, event -> actionBtnCancel());
-        innerShell.setText(ResourceBundleUtils.getLangString(LABELS, Labels.generatorText));
+        innerShell.setText(ResourceBundleUtils.getLangString(LABELS, Labels.transferText));
         innerShell.setSize(width, height);
 
         innerShell.setLayout(gridLayout);

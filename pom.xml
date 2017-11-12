@@ -6,7 +6,7 @@
     <!-- coordinates -->
     <groupId>de.ryanthara.ja.rycon</groupId>
     <!-- version numbering with properties -->
-    <version>0.9.12-SNAPSHOT</version>
+    <version>2.0.0-SNAPSHOT</version>
     <artifactId>RyCON</artifactId>
     <packaging>pom</packaging>
     <name>RyCON</name>
@@ -207,12 +207,6 @@
                     <version>1.8</version>
                     <configuration>
                         <target>
-                            <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_aix_ppc/target/RyCON_aix_ppc.jar"
-                                  tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_aix_ppc.jar"/>
-                            <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_aix_ppc64/target/RyCON_aix_ppc64.jar"
-                                  tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_aix_ppc64.jar"/>
-                            <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_hpux_ia64/target/RyCON_hpux_ia64.jar"
-                                  tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_hpux_ia64.jar"/>
                             <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_Linux_ppc/target/RyCON_Linux_ppc.jar"
                                   tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_Linux_ppc.jar"/>
                             <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_Linux_ppc64/target/RyCON_Linux_ppc64.jar"
@@ -225,10 +219,6 @@
                                   tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_MacOSX32.app-app.zip"/>
                             <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_MacOSX64/target/RyCON_MacOSX64.app-app.zip"
                                   tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_MacOSX64.app-app.zip"/>
-                            <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_Solaris_sparc/target/RyCON_Solaris_sparc.jar"
-                                  tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_Linux_ppc.jar"/>
-                            <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_Solaris_x86/target/RyCON_Solaris_x86.jar"
-                                  tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_Solaris_x86.jar"/>
                             <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_Win32/target/RyCON_Windows32.exe"
                                   tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_Windows32.exe"/>
                             <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_Win64/target/RyCON_Windows64.exe"
@@ -257,17 +247,12 @@
         <module>rycon-build</module>
         <module>rycon-license</module>
         <module>rycon-main</module>
-        <module>RyCON_aix_ppc</module>
-        <module>RyCON_aix_ppc64</module>
-        <module>RyCON_hpux_ia64</module>
         <module>RyCON_Linux_ppc</module>
         <module>RyCON_Linux_ppc64</module>
         <module>RyCON_Linux_x86</module>
         <module>RyCON_Linux_x86-64</module>
         <module>RyCON_MacOSX32</module>
         <module>RyCON_MacOSX64</module>
-        <module>RyCON_Solaris_sparc</module>
-        <module>RyCON_Solaris_x86</module>
         <module>RyCON_Win32</module>
         <module>RyCON_Win64</module>
     </modules>

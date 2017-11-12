@@ -17,3 +17,4 @@ target/
 .idea/
 # Logging:
 *.log
+*.logfile*.xml

@@ -29,6 +29,8 @@ package de.ryanthara.ja.rycon.i18n;
  */
 public enum Labels implements ResourceKeys {
 
+    aboutInitialized,
+    aboutText,
     adminDescription,
     adminPath,
     adminPathDefault,
@@ -38,6 +40,7 @@ public enum Labels implements ResourceKeys {
     bigDataDescription,
     bigDataPath,
     bigDataPathDefault,
+    buildString,
     cardReaderPath,
     codeString,
     commentLineCaplanK,
@@ -108,6 +111,7 @@ public enum Labels implements ResourceKeys {
     tipTransferWidget,
     transferInitialized,
     transferTargetText,
+    transferText,
     txtCsvGroup,
     warningTextMsgBox,
     websiteItemTrayMenu,

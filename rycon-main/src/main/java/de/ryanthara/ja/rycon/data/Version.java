@@ -17,6 +17,15 @@
  */
 package de.ryanthara.ja.rycon.data;
 
+import de.ryanthara.ja.rycon.i18n.Labels;
+import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LABELS;
+
 /**
  * The {@code Version} class holds static information about the current RyCON version
  * and it's development cycle.
@@ -32,7 +41,9 @@ package de.ryanthara.ja.rycon.data;
  */
 public final class Version {
 
-    private static final String buildDate = "2017-10-10";
+    private static final int buildYear = 2017;
+    private static final int buildMonth = 11;
+    private static final int buildDay = 11;
     private static final short buildNumber = 25;
     private static final short majorRelease = 2;
     private static final short minorRelease = 0;
@@ -44,7 +55,7 @@ public final class Version {
      * @return the build date
      */
     public static String getBuildDate() {
-        return buildDate;
+        return buildYear + "-" + buildMonth + "-" + buildDay;
     }
 
     /**
@@ -54,6 +65,18 @@ public final class Version {
      */
     public static short getBuildNumber() {
         return buildNumber;
+    }
+
+    /**
+     * Returns the current build number and the build date as formatted string.
+     *
+     * @return formatted build string
+     */
+    public static String getBuildString() {
+        LocalDate date = LocalDate.of(buildYear, buildMonth, buildDay);
+        DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL);
+
+        return "Build #" + buildNumber + ResourceBundleUtils.getLangString(LABELS, Labels.buildString) + date.format(formatter);
     }
 
     /**

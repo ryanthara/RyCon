@@ -63,6 +63,7 @@ public abstract class PreferencePath extends Preference<Path> {
      *
      * @param label       text string of the preference
      * @param defaultPath default value for the preference
+     * @param dialogType  used dialog type
      */
     protected PreferencePath(String label, Path defaultPath, DirectoryDialogsTypes dialogType) {
         super(label, defaultPath);

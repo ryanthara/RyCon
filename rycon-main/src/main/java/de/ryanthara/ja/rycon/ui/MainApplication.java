@@ -140,7 +140,7 @@ public class MainApplication extends Main {
 
     // TODO: 18.09.17 implement AboutWidget for RyCON and make a button for it
     private void about() {
-        // new AboutWidget();
+        new AboutWidget(shell);
     }
 
     private void actionBtn00() {
@@ -209,8 +209,8 @@ public class MainApplication extends Main {
     }
 
     private void actionBtn10() {
-        //new AboutWidget(shell);
-        statusBar.setStatus("not implemented yet.", WARNING);
+        new AboutWidget(shell);
+        statusBar.setStatus(ResourceBundleUtils.getLangString(LABELS, Labels.aboutInitialized), OK);
     }
 
     private void addKeyBoardInputFilter(final Shell shell) {

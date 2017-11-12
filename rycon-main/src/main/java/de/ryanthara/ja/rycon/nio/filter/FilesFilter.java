@@ -17,7 +17,6 @@
  */
 package de.ryanthara.ja.rycon.nio.filter;
 
-import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
@@ -38,8 +37,6 @@ public class FilesFilter implements DirectoryStream.Filter<Path> {
      * @param entry the directory entry to be tested
      *
      * @return {@code true} if the directory entry should be accepted
-     *
-     * @throws IOException If an I/O error occurs
      */
     @Override
     public boolean accept(Path entry) {

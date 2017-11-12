@@ -18,7 +18,6 @@
 
 package de.ryanthara.ja.rycon.nio;
 
-import com.sun.istack.internal.NotNull;
 import de.ryanthara.ja.rycon.util.check.PathCheck;
 
 import java.io.*;
@@ -118,7 +117,7 @@ public final class LineReader {
      *
      * @return success of path reading
      */
-    private boolean readFile(final boolean skipEmptyLines, @NotNull final String comment) {
+    private boolean readFile(final boolean skipEmptyLines, final String comment) {
         boolean success = false;
         lines = new ArrayList<>();
         FileInputStream fileInputStream = null;

@@ -44,6 +44,8 @@ public class BaseToolsTxt {
      *
      * @param s      string with missing trailing zeroes
      * @param number maximum number of digits
+     *
+     * @return string s with defined length and possible added trailing zeroes
      */
     public static String addTrailingZeroes(final String s, final int number) {
         String zeroes = "";

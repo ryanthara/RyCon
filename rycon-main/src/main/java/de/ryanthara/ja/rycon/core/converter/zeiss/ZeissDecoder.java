@@ -208,7 +208,6 @@ public class ZeissDecoder {
                 numOfBlocks = numOfBlocks + 1;
 
 
-                System.out.println(line.length());
                 if (line.length() > 66) {
                     block3 = new ZeissBlock(ZeissTypeIdentifier.valueOf(
                             line.substring(REC500[14], REC500[15] + 1).trim()),

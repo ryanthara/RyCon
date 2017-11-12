@@ -43,6 +43,8 @@ public final class PathCheck {
      * @param maxDepth         maximum depth to search for subfolder
      *
      * @return true if directory contains subfolder
+     *
+     * @throws IOException occured IOException
      */
     public static boolean directoryContainsSubfolder(Path directoryToCheck, int maxDepth) throws IOException {
         List<Path> subfolder = Files.walk(directoryToCheck, maxDepth)
