@@ -21,6 +21,19 @@ import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
 
 /**
  * This enumeration is used for the target format radio buttons of the {@link ConverterWidget}.
+ * <p>
+ * There are buttons for the
+ * <ul>
+ * <li>Leica Geosystems GSI8 format</li>
+ * <li>Leica Geosystems GSI16 format</li>
+ * <li>Text based formatted files</li>
+ * <li>Comma separated values formatted files</li>
+ * <li>Zeiss REC formats and it's dialects</li>
+ * <li>LTOP KOO and MES formats</li>
+ * <li>Toporail MEP and TPS formats</li>
+ * <li>Microsoft Excel XLS and XLSX formats</li>
+ * <li>Open Document Foundation format</li>
+ * </ul>
  *
  * @author sebastian
  * @version 1
@@ -36,6 +49,8 @@ public enum TargetButton {
     ZEISS_REC("Zeiss (.REC)"),
     LTOP_KOO("LTOP (.KOO)"),
     LTOP_MES("LTOP (.MES)"),
+    TOPORAIL_MEP("Toporail (.MEP)"),
+    TOPORAIL_PTS("Toporail (.TPS)"),
     EXCEL_XLSX("Excel 2007 (.xlsx)"),
     EXCEL_XLS("Excel '97 (.xls)"),
     ODF_ODS("Open Document Format (.ods)");
