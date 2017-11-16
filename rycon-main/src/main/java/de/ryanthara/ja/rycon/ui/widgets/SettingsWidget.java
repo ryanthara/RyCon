@@ -26,7 +26,6 @@ import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 import de.ryanthara.ja.rycon.ui.custom.DirectoryDialogsTypes;
 import de.ryanthara.ja.rycon.ui.preferences.PreferencesDialog;
 import de.ryanthara.ja.rycon.ui.preferences.pref.*;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 
 import java.nio.file.Path;
@@ -67,14 +66,6 @@ public class SettingsWidget {
         createDialog();
     }
 
-    /*
-     * Adds a keyboard input filter to close the dialog with the escape key
-     */
-    private void addKeyboardInputFilter(Shell parent) {
-        parent.getDisplay().addFilter(SWT.KeyDown, event -> {
-        });
-    }
-
     private void createDialog() {
         PreferencesDialog dialog = new PreferencesDialog(
                 parent,
@@ -86,7 +77,7 @@ public class SettingsWidget {
         createTabFormats(dialog);
         createTabModules(dialog);
 
-        addKeyboardInputFilter(parent);
+        Main.setSettingsWidgetIsOpen(true);
 
         dialog.open();
     }

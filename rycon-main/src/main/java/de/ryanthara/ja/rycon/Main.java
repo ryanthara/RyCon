@@ -21,13 +21,13 @@ import de.ryanthara.ja.rycon.cli.CmdLineInterfaceException;
 import de.ryanthara.ja.rycon.cli.CmdLineInterfaceParser;
 import de.ryanthara.ja.rycon.data.DefaultKeys;
 import de.ryanthara.ja.rycon.data.PreferenceHandler;
-import de.ryanthara.ja.rycon.ui.UpdateDialog;
-import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
-import de.ryanthara.ja.rycon.ui.custom.StatusBar;
 import de.ryanthara.ja.rycon.i18n.Errors;
 import de.ryanthara.ja.rycon.i18n.Labels;
 import de.ryanthara.ja.rycon.i18n.Messages;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
+import de.ryanthara.ja.rycon.ui.UpdateDialog;
+import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
+import de.ryanthara.ja.rycon.ui.custom.StatusBar;
 import de.ryanthara.ja.rycon.util.Updater;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -327,7 +327,7 @@ public abstract class Main {
     }
 
     /**
-     * Returns the status to indicate an open settings widgets.
+     * Returns the status to indicate an open settings widget.
      *
      * @return true if a settings widgets is open
      */
@@ -367,5 +367,14 @@ public abstract class Main {
     // TODO implement cli log level handling
     private static void setLoggingLevel(Level loggingLevel) {
 
+    }
+
+    /**
+     * Sets the status to indicate an open settings widget.
+     *
+     * @param isOpen true if the {@link de.ryanthara.ja.rycon.ui.widgets.SettingsWidget} is open.
+     */
+    public static void setSettingsWidgetIsOpen(boolean isOpen) {
+        isSettingsWidgetOpenStatus = isOpen;
     }
 }  // end of Main

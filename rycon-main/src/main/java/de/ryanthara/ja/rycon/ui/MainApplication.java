@@ -138,7 +138,6 @@ public class MainApplication extends Main {
         new MainApplication();
     }
 
-    // TODO: 18.09.17 implement AboutWidget for RyCON and make a button for it
     private void about() {
         new AboutWidget(shell);
     }
@@ -257,6 +256,10 @@ public class MainApplication extends Main {
                         actionBtn00();
                         break;
 
+                    case 'a':
+                        actionBtn10();
+                        break;
+
                     case 'c':
                         shell.setLocation(ShellPositioner.centerShellOnPrimaryMonitor(shell));
                         break;
@@ -268,8 +271,10 @@ public class MainApplication extends Main {
                     case 't':
                         test();
 
-                    default:
-                        System.err.println("MainApplication.addKeyBoardInputFilter() : unsupported key pressed " + event.keyCode);
+                    case 'ü':
+                        actionBtn10();
+                        break;
+
                 }
             }
         });
@@ -504,7 +509,7 @@ public class MainApplication extends Main {
         final Tray tray = display.getSystemTray();
 
         if (tray == null) {
-            System.err.println("System tray functionality is not available on your system.");
+            logger.log(Level.SEVERE, "System tray functionality is not available on your system.");
         } else {
             final TrayItem item = new TrayItem(tray, SWT.NONE);
             item.setImage(new ImageConverter().convertToImage(display, Images.trayIcon64.getPath()));
