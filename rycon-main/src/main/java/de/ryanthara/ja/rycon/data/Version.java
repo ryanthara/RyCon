@@ -23,6 +23,7 @@ import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.util.Locale;
 
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LABELS;
 
@@ -42,8 +43,8 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LABELS;
 public final class Version {
 
     private static final int buildYear = 2017;
-    private static final int buildMonth = 11;
-    private static final int buildDay = 11;
+    private static final int buildMonth = 12;
+    private static final int buildDay = 02;
     private static final short buildNumber = 25;
     private static final short majorRelease = 2;
     private static final short minorRelease = 0;
@@ -68,13 +69,13 @@ public final class Version {
     }
 
     /**
-     * Returns the current build number and the build date as formatted string.
+     * Returns the current build number and the build date as formatted string for the current locale.
      *
      * @return formatted build string
      */
     public static String getBuildString() {
         LocalDate date = LocalDate.of(buildYear, buildMonth, buildDay);
-        DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL);
+        DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL).withLocale(Locale.getDefault());
 
         return "Build #" + buildNumber + ResourceBundleUtils.getLangString(LABELS, Labels.buildString) + date.format(formatter);
     }
