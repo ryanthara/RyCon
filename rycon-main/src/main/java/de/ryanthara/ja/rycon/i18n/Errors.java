@@ -55,6 +55,8 @@ public enum Errors implements ResourceKeys {
     readerTXTFailed,
     settingsError,
     tidyUpFailed,
+    toporailMepReadingFailed,
+    toporailPtsReadingFailed,
     transferNoDataSelected,
     transferNoDataSelectedText,
     txtBLReadingFailed,

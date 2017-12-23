@@ -348,7 +348,7 @@ public class TidyUpWidget extends AbstractWidget {
                     }
                 }
             } else {
-                System.err.println("File " + path.getFileName() + " could not be reader.");
+                System.err.println("File " + path.getFileName() + " could not be read.");
             }
         }
 

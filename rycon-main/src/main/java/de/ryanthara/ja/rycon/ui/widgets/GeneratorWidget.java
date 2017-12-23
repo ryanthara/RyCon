@@ -18,7 +18,6 @@
 package de.ryanthara.ja.rycon.ui.widgets;
 
 import de.ryanthara.ja.rycon.Main;
-import de.ryanthara.ja.rycon.util.check.PathCheck;
 import de.ryanthara.ja.rycon.data.PreferenceKeys;
 import de.ryanthara.ja.rycon.i18n.*;
 import de.ryanthara.ja.rycon.ui.Sizes;
@@ -28,6 +27,7 @@ import de.ryanthara.ja.rycon.ui.util.ShellPositioner;
 import de.ryanthara.ja.rycon.ui.widgets.generate.WarnAndErrorType;
 import de.ryanthara.ja.rycon.util.FileUtils;
 import de.ryanthara.ja.rycon.util.OpenInFileManager;
+import de.ryanthara.ja.rycon.util.check.PathCheck;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -51,12 +51,14 @@ import static de.ryanthara.ja.rycon.ui.custom.Status.WARNING;
  * <p>
  * Therefore the user has to put the number or text into a text field and
  * take the choice which kind of folders {@code RyCON} has to generate.
+ * It's possible to create two or more folders at the same time, when the
+ * folder names are split by a comma sign (',').
  * <p>
  * For better user experience and as note for the user, the recent folders
  * are shown for administration, big data and project folder.
  *
  * @author sebastian
- * @version 6
+ * @version 7
  * @since 1
  */
 public final class GeneratorWidget extends AbstractWidget {
@@ -94,16 +96,18 @@ public final class GeneratorWidget extends AbstractWidget {
     }
 
     boolean actionBtnOk() {
-        String number = inputNumber.getText();
+        String projectNumber = inputNumber.getText();
 
-        if (number.trim().equals("")) {
+        if (projectNumber.trim().equals("")) {
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING,
                     ResourceBundleUtils.getLangString(LABELS, Labels.warningTextMsgBox),
                     ResourceBundleUtils.getLangString(WARNINGS, Warnings.emptyTextField));
 
             return false;
+        } else if (projectNumber.contains(",")) {
+            createMultipleFolders(projectNumber);
         } else {
-            generateFolders(number);
+            createSingleFolder(projectNumber);
 
             updateNewestFileTextFields();
         }
@@ -304,21 +308,75 @@ public final class GeneratorWidget extends AbstractWidget {
         chkBoxOpenFileManager.setText(ResourceBundleUtils.getLangString(CHECKBOXES, CheckBoxes.openFileManager));
     }
 
-    private boolean generateAdminFolder(String number) {
-        String dir = Main.pref.getUserPreference(PreferenceKeys.DIR_ADMIN);
-        String dirTemplate = Main.pref.getUserPreference(PreferenceKeys.DIR_ADMIN_TEMPLATE);
+    private void createMultipleFolders(String projectNumbers) {
+        boolean areAdminFoldersCreated = false;
+        boolean areBigDataFoldersCreated = false;
+        boolean areProjectFoldersCreated = false;
 
-        return generateFoldersHelper(number, dir, dirTemplate, WarnAndErrorType.ADMIN);
+        final String[] numbers = projectNumbers.split(",");
+
+        // create all folders first
+        for (String number : numbers) {
+            if (!number.trim().equals("")) {
+                if (chkBoxCreateAdminFolder.getSelection()) {
+                    areAdminFoldersCreated = generateAdminFolder(number);
+
+                    renameSpecialFiles(number);
+                }
+
+                if (chkBoxCreateBigDataFolder.getSelection()) {
+                    areBigDataFoldersCreated = generateBigDataFolder(number);
+                }
+
+                if (chkBoxCreateProjectFolder.getSelection()) {
+                    areProjectFoldersCreated = generateProjectFolder(number);
+                }
+            }
+        }
+
+        // show success message after folder creation
+        if (areAdminFoldersCreated || areBigDataFoldersCreated || areProjectFoldersCreated) {
+            String helper = "\n";
+
+            for (String number : numbers) {
+                if (!number.trim().equals("")) {
+                    helper = helper.concat(number + "\n");
+                }
+            }
+
+            String message = "";
+
+            if (areAdminFoldersCreated && areBigDataFoldersCreated && areProjectFoldersCreated) {
+                message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.adminAndBigDataAndProjectsCreated), helper);
+            } else if (areAdminFoldersCreated && areBigDataFoldersCreated) {
+                message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.adminAndBigDatasCreated), helper);
+            } else if (areAdminFoldersCreated && areProjectFoldersCreated) {
+                message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.adminAndProjectsCreated), helper);
+            } else if (areBigDataFoldersCreated && areProjectFoldersCreated) {
+                message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.bigDataAndProjectsCreated), helper);
+            } else if (areAdminFoldersCreated) {
+                message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.adminFoldersCreated), helper);
+            } else if (areBigDataFoldersCreated) {
+                message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.bigDataFoldersCreated), helper);
+            } else if (areProjectFoldersCreated) {
+                message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.projectFoldersCreated), helper);
+            }
+
+            MessageBoxes.showMessageBox(innerShell, SWT.ICON_INFORMATION,
+                    ResourceBundleUtils.getLangString(LABELS, Labels.informationTextMsgBox), message);
+
+            // open every created folder in the file viewer
+            if (chkBoxOpenFileManager.getSelection()) {
+                for (String number : numbers) {
+                    if (!number.trim().equals("")) {
+                        openFolder(number, areAdminFoldersCreated, areBigDataFoldersCreated, areProjectFoldersCreated);
+                    }
+                }
+            }
+        }
     }
 
-    private boolean generateBigDataFolder(String number) {
-        String dir = Main.pref.getUserPreference(PreferenceKeys.DIR_BIG_DATA);
-        String dirTemplate = Main.pref.getUserPreference(PreferenceKeys.DIR_BIG_DATA_TEMPLATE);
-
-        return generateFoldersHelper(number, dir, dirTemplate, WarnAndErrorType.BIG_DATA);
-    }
-
-    private void generateFolders(String number) {
+    private void createSingleFolder(String number) {
         boolean isAdminFolderGenerated = false;
         boolean isBigDataFolderGenerated = false;
         boolean isProjectFolderGenerated = false;
@@ -360,23 +418,23 @@ public final class GeneratorWidget extends AbstractWidget {
                     ResourceBundleUtils.getLangString(LABELS, Labels.informationTextMsgBox), message);
 
             if (chkBoxOpenFileManager.getSelection()) {
-                final String delimiter = FileSystems.getDefault().getSeparator();
-
-                if (isAdminFolderGenerated) {
-                    final String path = Main.pref.getUserPreference(PreferenceKeys.DIR_ADMIN) + delimiter + number;
-
-                    OpenInFileManager.openFolder(path);
-                } else if (isBigDataFolderGenerated) {
-                    final String path = Main.pref.getUserPreference(PreferenceKeys.DIR_BIG_DATA) + delimiter + number;
-
-                    OpenInFileManager.openFolder(path);
-                } else if (isProjectFolderGenerated) {
-                    final String path = Main.pref.getUserPreference(PreferenceKeys.DIR_PROJECT) + delimiter + number;
-
-                    OpenInFileManager.openFolder(path);
-                }
+                openFolder(number, isAdminFolderGenerated, isBigDataFolderGenerated, isProjectFolderGenerated);
             }
         }
+    }
+
+    private boolean generateAdminFolder(String number) {
+        String dir = Main.pref.getUserPreference(PreferenceKeys.DIR_ADMIN);
+        String dirTemplate = Main.pref.getUserPreference(PreferenceKeys.DIR_ADMIN_TEMPLATE);
+
+        return generateFoldersHelper(number, dir, dirTemplate, WarnAndErrorType.ADMIN);
+    }
+
+    private boolean generateBigDataFolder(String number) {
+        String dir = Main.pref.getUserPreference(PreferenceKeys.DIR_BIG_DATA);
+        String dirTemplate = Main.pref.getUserPreference(PreferenceKeys.DIR_BIG_DATA_TEMPLATE);
+
+        return generateFoldersHelper(number, dir, dirTemplate, WarnAndErrorType.BIG_DATA);
     }
 
     private boolean generateFoldersHelper(String number, String directory, String directoryTemplate, WarnAndErrorType type) {
@@ -420,6 +478,24 @@ public final class GeneratorWidget extends AbstractWidget {
         Path projectPath = Paths.get(Main.pref.getUserPreference(PreferenceKeys.DIR_PROJECT));
 
         return FileUtils.getNewestFolder(projectPath);
+    }
+
+    private void openFolder(String number, boolean isAdminFolderGenerated, boolean isBigDataFolderGenerated, boolean isProjectFolderGenerated) {
+        final String delimiter = FileSystems.getDefault().getSeparator();
+
+        if (isAdminFolderGenerated) {
+            final String path = Main.pref.getUserPreference(PreferenceKeys.DIR_ADMIN) + delimiter + number;
+
+            OpenInFileManager.openFolder(path);
+        } else if (isBigDataFolderGenerated) {
+            final String path = Main.pref.getUserPreference(PreferenceKeys.DIR_BIG_DATA) + delimiter + number;
+
+            OpenInFileManager.openFolder(path);
+        } else if (isProjectFolderGenerated) {
+            final String path = Main.pref.getUserPreference(PreferenceKeys.DIR_PROJECT) + delimiter + number;
+
+            OpenInFileManager.openFolder(path);
+        }
     }
 
     /**

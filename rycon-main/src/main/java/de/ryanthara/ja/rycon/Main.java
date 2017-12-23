@@ -377,4 +377,5 @@ public abstract class Main {
     public static void setSettingsWidgetIsOpen(boolean isOpen) {
         isSettingsWidgetOpenStatus = isOpen;
     }
+
 }  // end of Main

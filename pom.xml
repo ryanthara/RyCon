@@ -10,7 +10,7 @@
     <artifactId>RyCON</artifactId>
     <packaging>pom</packaging>
     <name>RyCON</name>
-    <url>http://number.ryanthara.de/RyCON</url>
+    <url>http://code.ryanthara.de/RyCON</url>
 
     <!-- information about the developer -->
     <developers>

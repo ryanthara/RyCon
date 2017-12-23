@@ -346,7 +346,7 @@ public class LevellingWidget extends AbstractWidget {
                     counter = counter + 1;
                 }
             } else {
-                System.err.println("File " + file2read.getFileName() + " could not be reader.");
+                System.err.println("File " + file2read.getFileName() + " could not be read.");
             }
         }
 

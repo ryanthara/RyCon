@@ -17,7 +17,8 @@
  */
 package de.ryanthara.ja.rycon.ui.widgets.convert.write;
 
-import de.ryanthara.ja.rycon.core.converter.text.*;
+import de.ryanthara.ja.rycon.core.converter.toporail.FileType;
+import de.ryanthara.ja.rycon.core.converter.toporail.Gsi2Toporail;
 import de.ryanthara.ja.rycon.nio.WriteFile2Disk;
 import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
 import de.ryanthara.ja.rycon.ui.widgets.convert.SourceButton;
@@ -37,28 +38,37 @@ import java.util.logging.Logger;
  * @version 2
  * @since 12
  */
-public class TxtWriter implements Writer {
+public class ToporailWriter implements Writer {
 
-    private final static Logger logger = Logger.getLogger(TxtWriter.class.getName());
-
+    private final static Logger logger = Logger.getLogger(ToporailWriter.class.getName());
     private final Path path;
     private final ArrayList<String> readStringFile;
     private final List<String[]> readCSVFile;
     private final WriteParameter parameter;
+    private String fileNameExtension;
 
     /**
-     * Constructs the {@link TxtWriter} with a set of parameters.
+     * Constructs the {@link ToporailWriter} with a set of parameters.
      *
      * @param path           reader file object for writing
      * @param readCSVFile    reader csv file
      * @param readStringFile reader string file
      * @param parameter      the writer parameter object
      */
-    public TxtWriter(Path path, ArrayList<String> readStringFile, List<String[]> readCSVFile, WriteParameter parameter) {
+    public ToporailWriter(Path path, ArrayList<String> readStringFile, List<String[]> readCSVFile, WriteParameter parameter, FileType fileTyp) {
         this.path = path;
         this.readStringFile = readStringFile;
         this.readCSVFile = readCSVFile;
         this.parameter = parameter;
+
+        switch (fileTyp) {
+            case MEP:
+                this.fileNameExtension = ".MEP";
+                break;
+            case PTS:
+                this.fileNameExtension = ".TPS";
+                break;
+        }
     }
 
     /**
@@ -72,64 +82,61 @@ public class TxtWriter implements Writer {
     }
 
     /**
-     * Returns the prepared {@link ArrayList} for file writing.
+     * Returns true if the prepared {@link ArrayList} for file writing was written to the file system.
      *
-     * @return array list for file writing
+     * @return writer success
      */
     @Override
     public boolean writeStringFile() {
+        return false;
+    }
+
+    /**
+     * Returns the prepared {@link ArrayList} for file writing.
+     *
+     * @param fileType file typ of the output file (MEP or PTS)
+     *
+     * @return array list for file writing
+     */
+    public boolean writeStringFile(FileType fileType) {
         boolean success = false;
         ArrayList<String> writeFile = null;
 
         switch (SourceButton.fromIndex(parameter.getSourceNumber())) {
             case GSI8:
             case GSI16:
-                Gsi2Txt gsi2Txt = new Gsi2Txt(readStringFile);
-                writeFile = gsi2Txt.convertGSI2TXT(parameter.getSeparatorTXT(), parameter.isGSI16(), parameter.isWriteCommentLine());
+                Gsi2Toporail gsi2Toporail = new Gsi2Toporail(readStringFile);
+                writeFile = gsi2Toporail.convertGsi2Toporail(fileType);
                 break;
 
             case TXT:
                 break;
 
             case CSV:
-                Csv2Txt csv2Txt = new Csv2Txt(readCSVFile);
-                writeFile = csv2Txt.convertCSV2TXT(parameter.getSeparatorTXT());
                 break;
 
             case CAPLAN_K:
-                Caplan2Txt caplan2Txt = new Caplan2Txt(readStringFile);
-                writeFile = caplan2Txt.convertK2TXT(parameter.getSeparatorTXT(), parameter.isKFormatUseSimpleFormat(),
-                        parameter.isWriteCommentLine(), parameter.isWriteCodeColumn());
                 break;
 
             case ZEISS_REC:
-                Zeiss2Txt zeiss2Txt = new Zeiss2Txt(readStringFile);
-                writeFile = zeiss2Txt.convertZeiss2TXT(parameter.getSeparatorTXT());
                 break;
 
             case CADWORK:
-                Cadwork2Txt cadwork2Txt = new Cadwork2Txt(readStringFile);
-                writeFile = cadwork2Txt.convertCadwork2TXT(parameter.getSeparatorTXT(), parameter.isWriteCodeColumn(),
-                        parameter.isCadworkUseZeroHeights());
                 break;
 
             case BASEL_STADT:
-                CsvBaselStadt2Txt csvBaselStadt2Txt = new CsvBaselStadt2Txt(readCSVFile, parameter.isWriteZeroHeights());
-                writeFile = csvBaselStadt2Txt.convertCSVBaselStadt2TXT(parameter.getSeparatorTXT());
                 break;
 
             case BASEL_LANDSCHAFT:
-                TxtBaselLandschaft2Txt TxtBaselLandschaft2Txt = new TxtBaselLandschaft2Txt(readStringFile);
-                writeFile = TxtBaselLandschaft2Txt.convertTXTBaselLandschaft2TXT(parameter.getSeparatorTXT(), parameter.isWriteCodeColumn());
                 break;
 
             default:
                 writeFile = null;
 
-                logger.log(Level.SEVERE, "TxtWriter.writeStringFile() : unknown file format " + SourceButton.fromIndex(parameter.getSourceNumber()));
+                logger.log(Level.SEVERE, "ToporailWriter.writeStringFile() : unknown file format " + SourceButton.fromIndex(parameter.getSourceNumber()));
         }
 
-        if (WriteFile2Disk.writeFile2Disk(path, writeFile, "", ".TXT")) {
+        if (WriteFile2Disk.writeFile2Disk(path, writeFile, "", fileNameExtension)) {
             success = true;
         }
 
@@ -146,4 +153,4 @@ public class TxtWriter implements Writer {
         return false;
     }
 
-} // end of TxtWriter
+} // end of ToporailWriter

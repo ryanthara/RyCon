@@ -29,15 +29,19 @@ import org.odftoolkit.simple.SpreadsheetDocument;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- * Instances of this class are used for writing LTOP MES files from the {@link ConverterWidget} of RyCON.
+ * Instances of this class are used for writing LTOP MES files from the {@link ConverterWidget} of <tt>RyCON</tt>.
  *
  * @author sebastian
  * @version 2
  * @since 12
  */
 public class LtopMesWriter implements Writer {
+
+    private final static Logger logger = Logger.getLogger(LtopMesWriter.class.getName());
 
     private final Path path;
     private ArrayList<String> readStringFile;
@@ -92,10 +96,11 @@ public class LtopMesWriter implements Writer {
 
             default:
                 writeFile = null;
-                System.err.println("LtopMesWriter.writeStringFile() : unknown file format " + SourceButton.fromIndex(parameter.getSourceNumber()));
+
+                logger.log(Level.SEVERE, "LtopMesWriter.writeStringFile() : unknown file format " + SourceButton.fromIndex(parameter.getSourceNumber()));
         }
 
-        if (WriteFile2Disk.writeFile2Disk(path, writeFile, "",".MES")) {
+        if (WriteFile2Disk.writeFile2Disk(path, writeFile, "", ".MES")) {
             success = true;
         }
 

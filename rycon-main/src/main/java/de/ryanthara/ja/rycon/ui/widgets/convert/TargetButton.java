@@ -30,7 +30,7 @@ import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
  * <li>Comma separated values formatted files</li>
  * <li>Zeiss REC formats and it's dialects</li>
  * <li>LTOP KOO and MES formats</li>
- * <li>Toporail MEP and TPS formats</li>
+ * <li>Toporail MEP and PTS formats</li>
  * <li>Microsoft Excel XLS and XLSX formats</li>
  * <li>Open Document Foundation format</li>
  * </ul>
@@ -50,7 +50,7 @@ public enum TargetButton {
     LTOP_KOO("LTOP (.KOO)"),
     LTOP_MES("LTOP (.MES)"),
     TOPORAIL_MEP("Toporail (.MEP)"),
-    TOPORAIL_PTS("Toporail (.TPS)"),
+    TOPORAIL_PTS("Toporail (.PTS)"),
     EXCEL_XLSX("Excel 2007 (.xlsx)"),
     EXCEL_XLS("Excel '97 (.xls)"),
     ODF_ODS("Open Document Format (.ods)");

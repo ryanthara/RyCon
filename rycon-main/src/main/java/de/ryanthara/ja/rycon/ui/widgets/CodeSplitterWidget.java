@@ -387,7 +387,7 @@ public class CodeSplitterWidget extends AbstractWidget {
                         System.err.println("File format of " + path.getFileName() + " are not supported.");
                     }
                 } else {
-                    System.err.println("File " + path.getFileName() + " could not be reader.");
+                    System.err.println("File " + path.getFileName() + " could not be read.");
                 }
             }
         }

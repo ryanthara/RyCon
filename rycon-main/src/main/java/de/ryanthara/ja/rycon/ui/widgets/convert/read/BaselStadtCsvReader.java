@@ -18,11 +18,11 @@
 package de.ryanthara.ja.rycon.ui.widgets.convert.read;
 
 import com.opencsv.CSVReader;
-import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
-import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
 import de.ryanthara.ja.rycon.i18n.Errors;
 import de.ryanthara.ja.rycon.i18n.Labels;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
+import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
+import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 
@@ -31,19 +31,23 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.ERRORS;
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LABELS;
 
 /**
  * Instances of this class are used for reading coordinate files (CSV format) from the geodata server
- * Kanton Basel Stadt (Switzerland) from the {@link ConverterWidget} of RyCON.
+ * Kanton Basel Stadt (Switzerland) from the {@link ConverterWidget} of <tt>RyCON</tt>.
  *
  * @author sebastian
  * @version 2
  * @since 12
  */
 public class BaselStadtCsvReader implements Reader {
+
+    private final static Logger logger = Logger.getLogger(BaselStadtCsvReader.class.getName());
 
     private List<String[]> readCSVFile;
     private Shell innerShell;
@@ -102,7 +106,8 @@ public class BaselStadtCsvReader implements Reader {
 
             success = true;
         } catch (IOException e) {
-            System.err.println("File " + file2Read.getFileName() + " could not be reader.");
+            logger.log(Level.SEVERE, "File " + file2Read.getFileName() + " could not be read.");
+
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR,
                     ResourceBundleUtils.getLangString(LABELS, Labels.errorTextMsgBox),
                     ResourceBundleUtils.getLangString(ERRORS, Errors.csvBSReadingFailed));

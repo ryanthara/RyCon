@@ -17,30 +17,34 @@
  */
 package de.ryanthara.ja.rycon.ui.widgets.convert.read;
 
-import de.ryanthara.ja.rycon.nio.LineReader;
-import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
-import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
 import de.ryanthara.ja.rycon.i18n.Errors;
 import de.ryanthara.ja.rycon.i18n.Labels;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
+import de.ryanthara.ja.rycon.nio.LineReader;
+import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
+import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.ERRORS;
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LABELS;
 
 /**
- * Instances of this class are used for reading Zeiss REC files from the {@link ConverterWidget} of RyCON.
+ * Instances of this class are used for reading Zeiss REC files from the {@link ConverterWidget} of <tt>RyCON</tt>.
  *
  * @author sebastian
  * @version 2
  * @since 12
  */
 public class ZeissReader implements Reader {
+
+    private final static Logger logger = Logger.getLogger(ZeissReader.class.getName());
 
     private ArrayList<String> readStringFile;
     private Shell innerShell;
@@ -99,7 +103,8 @@ public class ZeissReader implements Reader {
                 success = true;
             }
         } else {
-            System.err.println("File " + file2Read.getFileName() + " could not be reader.");
+            logger.log(Level.SEVERE, "File " + file2Read.getFileName() + " could not be read.");
+
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR,
                     ResourceBundleUtils.getLangString(LABELS, Labels.errorTextMsgBox),
                     ResourceBundleUtils.getLangString(ERRORS, Errors.zeissReadingFailed));

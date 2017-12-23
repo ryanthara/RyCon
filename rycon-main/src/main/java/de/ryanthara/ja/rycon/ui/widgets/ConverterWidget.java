@@ -21,6 +21,7 @@ import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.core.converter.csv.BaseToolsCsv;
 import de.ryanthara.ja.rycon.core.converter.excel.BaseToolsExcel;
 import de.ryanthara.ja.rycon.core.converter.text.BaseToolsTxt;
+import de.ryanthara.ja.rycon.core.converter.toporail.FileType;
 import de.ryanthara.ja.rycon.core.converter.zeiss.ZeissDialect;
 import de.ryanthara.ja.rycon.data.PreferenceKeys;
 import de.ryanthara.ja.rycon.i18n.*;
@@ -51,17 +52,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.*;
 import static de.ryanthara.ja.rycon.ui.custom.Status.OK;
 import static de.ryanthara.ja.rycon.ui.widgets.convert.FileFilterIndex.*;
 
 /**
- * Instances of this class implements a complete converter widgets and it's functionality.
+ * Instances of this class implements a complete converter widget and it's functionality.
  * <p>
- * The ConverterWidget of RyCON is used to convert measurement and coordinate
- * files into different formats. RyCON can be used to convert special formats
- * e.g. coordinate files from governmental services in Switzerland
+ * The {@code ConverterWidget} of <tt>RyCON</tt> is used to convert measurement and coordinate
+ * files into different formats.
  *
  * @author sebastian
  * @version 9
@@ -69,6 +71,7 @@ import static de.ryanthara.ja.rycon.ui.widgets.convert.FileFilterIndex.*;
  */
 public class ConverterWidget extends AbstractWidget {
 
+    private final Logger logger = Logger.getLogger(ConverterWidget.class.getName());
     private Button chkBoxCadworkUseZeroHeights;
     private Button chkBoxCSVSemiColonSeparator;
     private Button chkBoxKFormatUseSimpleFormat;
@@ -457,9 +460,16 @@ public class ConverterWidget extends AbstractWidget {
             case BASEL_LANDSCHAFT:
                 fileDialog.setFilterIndex(TXT.ordinal());
                 break;
+            case TOPORAIL_MEP:
+                fileDialog.setFilterIndex(MEP.ordinal());
+                break;
+            case TOPORAIL_PTS:
+                fileDialog.setFilterIndex(PTS.ordinal());
+                break;
             default:
                 fileDialog.setFilterIndex(GSI.ordinal());
-                System.err.println("ConverterWidget.determineFilterIndex() : set default filter index to " + GSI.toString());
+
+                logger.log(Level.SEVERE, "ConverterWidget.determineFilterIndex() : set default filter index to " + GSI.toString());
         }
     }
 
@@ -498,6 +508,8 @@ public class ConverterWidget extends AbstractWidget {
         readFileMap.put(6, new CadworkReader(innerShell));
         readFileMap.put(7, new BaselStadtCsvReader(innerShell));
         readFileMap.put(8, new BaselLandschaftTxtReader(innerShell));
+        readFileMap.put(9, new ToporailReader(innerShell, FileType.MEP));
+        readFileMap.put(10, new ToporailReader(innerShell, FileType.PTS));
 
         return readFileMap;
     }
@@ -512,9 +524,11 @@ public class ConverterWidget extends AbstractWidget {
         writeFileMap.put(5, new ZeissWriter(path, readStringFile, readCSVFile, parameter));
         writeFileMap.put(6, new LtopKooWriter(path, readStringFile, readCSVFile, parameter));
         writeFileMap.put(7, new LtopMesWriter(path, readStringFile, parameter));
-        writeFileMap.put(8, new ExcelWriter(path, readStringFile, readCSVFile, parameter, BaseToolsExcel.isXLSX));
-        writeFileMap.put(9, new ExcelWriter(path, readStringFile, readCSVFile, parameter, BaseToolsExcel.isXLS));
-        writeFileMap.put(10, new OdfWriter(path, readStringFile, readCSVFile, parameter));
+        writeFileMap.put(8, new ToporailWriter(path, readStringFile, readCSVFile, parameter, FileType.MEP));
+        writeFileMap.put(9, new ToporailWriter(path, readStringFile, readCSVFile, parameter, FileType.PTS));
+        writeFileMap.put(10, new ExcelWriter(path, readStringFile, readCSVFile, parameter, BaseToolsExcel.isXLSX));
+        writeFileMap.put(11, new ExcelWriter(path, readStringFile, readCSVFile, parameter, BaseToolsExcel.isXLS));
+        writeFileMap.put(12, new OdfWriter(path, readStringFile, readCSVFile, parameter));
 
         return writeFileMap;
     }

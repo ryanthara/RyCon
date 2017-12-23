@@ -24,6 +24,8 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Instances of this class implement functions to reader a text based file line by line
@@ -33,7 +35,7 @@ import java.util.ArrayList;
  * is no thread safety implemented or planed due to some reasons.
  *
  * @author sebastian
- * @version 4
+ * @version 5
  * @since 1
  */
 public final class LineReader {
@@ -43,6 +45,7 @@ public final class LineReader {
      */
     public final static String NO_COMMENT_LINE = "nCIgö5BQ";
 
+    private final static Logger logger = Logger.getLogger(LineReader.class.getName());
     private final Path path;
     private int countReadLines = -1;
     private int countStoredLines = -1;
@@ -117,7 +120,7 @@ public final class LineReader {
      *
      * @return success of path reading
      */
-    private boolean readFile(final boolean skipEmptyLines, final String comment) {
+    public boolean readFile(final boolean skipEmptyLines, final String comment) {
         boolean success = false;
         lines = new ArrayList<>();
         FileInputStream fileInputStream = null;
@@ -160,23 +163,21 @@ public final class LineReader {
                     }
 
                 } catch (IOException e) {
-                    System.err.println("File " + path.getFileName() + " could not be locked.");
-                    e.printStackTrace();
+                    logger.log(Level.SEVERE, "File " + path.getFileName() + " could not be locked.");
                 }
             } catch (FileNotFoundException e) {
-                System.err.println("File: " + path.getFileName() + "could not be reader.");
-                e.printStackTrace();
+                logger.log(Level.SEVERE, "File: " + path.getFileName() + "could not be read.");
             } finally {
                 // reset variables back to initialization values
                 countReadLines = -1;
                 countStoredLines = -1;
+
                 try {
                     if (fileInputStream != null) {
                         fileInputStream.close();
                     }
                 } catch (IOException e) {
-                    System.err.println("File input stream couldn't be closed.");
-                    e.printStackTrace();
+                    logger.log(Level.SEVERE, "File input stream couldn't be closed.");
                 }
             }
 

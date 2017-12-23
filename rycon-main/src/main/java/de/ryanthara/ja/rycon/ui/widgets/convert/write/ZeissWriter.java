@@ -30,7 +30,7 @@ import java.util.List;
 
 /**
  * Instances of this class are used for writing Zeiss REC files and it's dialects (R4, R5, REC500 and M5)
- * from the {@link ConverterWidget} of RyCON.
+ * from the {@link ConverterWidget} of <tt>RyCON</tt>.
  *
  * @author sebastian
  * @version 2

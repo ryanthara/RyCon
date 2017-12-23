@@ -27,16 +27,20 @@ import org.odftoolkit.simple.SpreadsheetDocument;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Instances of this class are used for writing OpenDocument spreadsheet files
- * from the {@link ConverterWidget} of RyCON.
+ * from the {@link ConverterWidget} of <tt>RyCON</tt>.
  *
  * @author sebastian
  * @version 1
  * @since 12
  */
 public class OdfWriter implements Writer {
+
+    private final static Logger logger = Logger.getLogger(OdfWriter.class.getName());
 
     private Path path;
     private ArrayList<String> readStringFile;
@@ -128,7 +132,8 @@ public class OdfWriter implements Writer {
 
             default:
                 spreadsheetDocument = null;
-                System.err.println("OdfWriter.writeStringFile() : unknown file format " + SourceButton.fromIndex(parameter.getSourceNumber()));
+
+                logger.log(Level.SEVERE, "OdfWriter.writeStringFile() : unknown file format " + SourceButton.fromIndex(parameter.getSourceNumber()));
         }
 
         if (WriteOdf2Disk.writeOds2Disk(path, spreadsheetDocument)) {

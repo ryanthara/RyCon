@@ -127,7 +127,7 @@ public class WriteParameter {
      *
      * @return write zero heights
      */
-    public boolean isWriteZeroHeights() {
+    boolean isWriteZeroHeights() {
         return writeZeroHeights;
     }
 

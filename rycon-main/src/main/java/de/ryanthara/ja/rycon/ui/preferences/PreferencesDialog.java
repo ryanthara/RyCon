@@ -375,6 +375,8 @@ public class PreferencesDialog {
     }
 
     private void widgetDispose() {
+        Main.setSettingsWidgetIsOpen(false);
+
         Main.statusBar.setStatus("", OK);
         innerShell.dispose();
     }

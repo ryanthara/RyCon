@@ -75,7 +75,7 @@ public class Csv2Gsi {
 
         Txt2Gsi txt2Gsi = new Txt2Gsi(result);
 
-        return txt2Gsi.convertTXT2GSI(isGSI16, sourceContainsCodeColumn);
+        return txt2Gsi.convertTxt2Gsi(isGSI16, sourceContainsCodeColumn);
     }
 
 } // end of Csv2Gsi

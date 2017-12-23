@@ -35,9 +35,9 @@ public class Txt2Gsi {
 
     /**
      * Constructs a new instance of this class given an {@code ArrayList<String>} that contains
-     * the reader txt formatted coordinate file.
+     * the read txt formatted coordinate file.
      *
-     * @param readStringLines reader lines
+     * @param readStringLines read lines
      */
     public Txt2Gsi(ArrayList<String> readStringLines) {
         this.readStringLines = readStringLines;
@@ -55,7 +55,7 @@ public class Txt2Gsi {
      *
      * @return converted {@code ArrayList<String>>} with lines
      */
-    public ArrayList<String> convertTXT2GSI(boolean isGSI16, boolean sourceContainsCodeColumn) {
+    public ArrayList<String> convertTxt2Gsi(boolean isGSI16, boolean sourceContainsCodeColumn) {
         ArrayList<GsiBlock> blocks;
         ArrayList<ArrayList<GsiBlock>> blocksInLines = new ArrayList<>();
 
@@ -105,7 +105,7 @@ public class Txt2Gsi {
                     break;
 
                 default:
-                    System.err.println("Txt2Gsi.convertTXT2GSI() : line contains less or more tokens " + line);
+                    System.err.println("Txt2Gsi.convertTxt2Gsi() : line contains less or more tokens " + line);
             }
 
             // check for at least one or more added elements to prevent writing empty lines

@@ -27,16 +27,20 @@ import org.odftoolkit.simple.SpreadsheetDocument;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Instances of this class are used for writing Microsoft Excel (XLS or XLSX) files
- * from the {@link ConverterWidget} of RyCON.
+ * from the {@link ConverterWidget} of <tt>RyCON</tt>.
  *
  * @author sebastian
  * @version 2
  * @since 12
  */
 public class ExcelWriter implements Writer {
+
+    private final static Logger logger = Logger.getLogger(ExcelWriter.class.getName());
 
     private final boolean isXLS;
     private final ArrayList<String> readStringFile;
@@ -152,7 +156,8 @@ public class ExcelWriter implements Writer {
 
             default:
                 workbook = null;
-                System.err.println("ExcelWriter.writeStringFile() : unknown file format " + SourceButton.fromIndex(parameter.getSourceNumber()));
+
+                logger.log(Level.SEVERE, "ExcelWriter.writeStringFile() : unknown file format " + SourceButton.fromIndex(parameter.getSourceNumber()));
 
         }
 

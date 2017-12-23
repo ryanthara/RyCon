@@ -17,9 +17,9 @@
  */
 package de.ryanthara.ja.rycon.ui.widgets.convert;
 
-import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
 import de.ryanthara.ja.rycon.i18n.FileChoosers;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
+import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
 
 import java.util.ArrayList;
 
@@ -34,12 +34,14 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.FILECHOOSERS;
  */
 public enum FileFilterIndex {
 
-    GSI("*.gsi", ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameGSI)),
-    TXT("*.txt", ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameTXT)),
     CSV("*.csv", ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameCSV)),
-    K("*.K", ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameK)),
     DAT("*.dat", ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameCadwork)),
-    REC("*.REC", ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameZeiss));
+    GSI("*.gsi", ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameGSI)),
+    K("*.K", ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameK)),
+    MEP("*.MEP", ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameMEP)),
+    PTS("*.PTS", ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNamePTS)),
+    REC("*.REC", ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameZeiss)),
+    TXT("*.txt", ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameTXT));
 
     private final String extension;
     private final String filterName;

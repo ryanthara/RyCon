@@ -21,6 +21,21 @@ import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
 
 /**
  * This enumeration is used for the source radio buttons of the {@link ConverterWidget}.
+ * <p>
+ * There are buttons for the
+ * <ul>
+ * <li>Leica Geosystems GSI8 format</li>
+ * <li>Leica Geosystems GSI16 format</li>
+ * <li>Text based formatted files</li>
+ * <li>Comma separated values formatted files</li>
+ * <li>Caplan K format</li>
+ * <li>Zeiss REC formats and it's dialects</li>
+ * <li>Cadwork node.dat format</li>
+ * <li>Basel Stadt CSV based format</li>
+ * <li>Basel Landschaft TXT based format</li>
+ * <li>Toporail MEP format</li>
+ * <li>Toporail PTS format</li>
+ * </ul>
  *
  * @author sebastian
  * @version 1
@@ -36,7 +51,9 @@ public enum SourceButton {
     ZEISS_REC("Zeiss (.REC)"),
     CADWORK("cadwork (node.dat)"),
     BASEL_STADT("Basel Stadt (.CSV)"),
-    BASEL_LANDSCHAFT("Basel Landschaft (.TXT)");
+    BASEL_LANDSCHAFT("Basel Landschaft (.TXT)"),
+    TOPORAIL_MEP("Toporail (.MEP)"),
+    TOPORAIL_PTS("Toporail (.PTS)");
 
     private final String text;
 

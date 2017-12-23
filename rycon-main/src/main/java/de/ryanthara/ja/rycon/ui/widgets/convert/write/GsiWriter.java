@@ -18,6 +18,7 @@
 package de.ryanthara.ja.rycon.ui.widgets.convert.write;
 
 import de.ryanthara.ja.rycon.core.converter.gsi.*;
+import de.ryanthara.ja.rycon.core.converter.toporail.FileType;
 import de.ryanthara.ja.rycon.nio.WriteFile2Disk;
 import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
 import de.ryanthara.ja.rycon.ui.widgets.convert.SourceButton;
@@ -27,15 +28,19 @@ import org.odftoolkit.simple.SpreadsheetDocument;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- * Instances of this class are used for writing Leica GSI files from the {@link ConverterWidget} of RyCON.
+ * Instances of this class are used for writing Leica GSI files from the {@link ConverterWidget} of <tt>RyCON</tt>.
  *
  * @author sebastian
  * @version 1
  * @since 12
  */
 public class GsiWriter implements Writer {
+
+    private final static Logger logger = Logger.getLogger(GsiWriter.class.getName());
 
     private final Path path;
     private final boolean isGSI16;
@@ -89,7 +94,7 @@ public class GsiWriter implements Writer {
 
             case TXT:
                 Txt2Gsi txt2Gsi = new Txt2Gsi(readStringFile);
-                writeFile = txt2Gsi.convertTXT2GSI(isGSI16, parameter.sourceContainsCode());
+                writeFile = txt2Gsi.convertTxt2Gsi(isGSI16, parameter.sourceContainsCode());
                 break;
 
             case CSV:
@@ -122,9 +127,20 @@ public class GsiWriter implements Writer {
                 writeFile = txtBaselLandschaft2Gsi.convertTXTBaselLandschaft2GSI(isGSI16, parameter.isWriteCodeColumn());
                 break;
 
+            case TOPORAIL_MEP:
+                Toporail2Gsi toporailMep2Gsi = new Toporail2Gsi(readStringFile);
+                writeFile = toporailMep2Gsi.convertToporail2Gsi(FileType.MEP, isGSI16);
+                break;
+
+            case TOPORAIL_PTS:
+                Toporail2Gsi toporailPts2Gsi = new Toporail2Gsi(readStringFile);
+                writeFile = toporailPts2Gsi.convertToporail2Gsi(FileType.PTS, isGSI16);
+                break;
+
             default:
                 writeFile = null;
-                System.err.println("GsiWriter.writeStringFile() : unknown file format " + SourceButton.fromIndex(parameter.getSourceNumber()));
+
+                logger.log(Level.SEVERE, "GsiWriter.writeStringFile() : unknown file format " + SourceButton.fromIndex(parameter.getSourceNumber()));
 
         }
 

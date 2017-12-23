@@ -17,6 +17,7 @@
  */
 package de.ryanthara.ja.rycon.ui.widgets.convert.read;
 
+import de.ryanthara.ja.rycon.core.converter.toporail.FileType;
 import de.ryanthara.ja.rycon.i18n.Errors;
 import de.ryanthara.ja.rycon.i18n.Labels;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
@@ -36,27 +37,34 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.ERRORS;
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LABELS;
 
 /**
- * Instances of this class are used for reading coordinate files (txt format) from the geodata server
- * Kanton Basel Landschaft (Switzerland) from the {@link ConverterWidget} of <tt>RyCON</tt>.
+ * Instances of this class are used for reading Toporail MEP and PTS files from
+ * the {@link ConverterWidget} of <tt>RyCON</tt>.
+ * <p>
+ * Du to some issues of the Toporail file formats a differentiation is made with
+ * the fileType enumeration.
  *
  * @author sebastian
- * @version 2
- * @since 12
+ * @version 1
+ * @since 25
  */
-public class BaselLandschaftTxtReader implements Reader {
+public class ToporailReader implements Reader {
 
-    private final static Logger logger = Logger.getLogger(BaselLandschaftTxtReader.class.getName());
+    private final static Logger logger = Logger.getLogger(ToporailReader.class.getName());
 
     private ArrayList<String> readStringFile;
     private Shell innerShell;
+    private FileType fileType;
 
     /**
-     * Constructs a new instance of this class given a reference to the inner shell of the calling object.
+     * Constructs a new instance of this class given a reference to the inner shell
+     * of the calling object and the file type of the Toporail file.
      *
      * @param innerShell reference to the inner shell
+     * @param fileType   file type of the Toporail file (MEP or PTS)
      */
-    public BaselLandschaftTxtReader(Shell innerShell) {
+    public ToporailReader(Shell innerShell, FileType fileType) {
         this.innerShell = innerShell;
+        this.fileType = fileType;
     }
 
     /**
@@ -87,8 +95,7 @@ public class BaselLandschaftTxtReader implements Reader {
     }
 
     /**
-     * Reads the text file from the geodata server Basel Landschaft (Switzerland) given as parameter and
-     * returns the reader file success.
+     * Reads the cadwork node.dat file given as parameter and returns the reader file success.
      *
      * @param file2Read reader file reference
      *
@@ -100,20 +107,27 @@ public class BaselLandschaftTxtReader implements Reader {
 
         LineReader lineReader = new LineReader(file2Read);
 
-        if (lineReader.readFile(false)) {
+        if (lineReader.readFile(true, ":")) {
             if ((readStringFile = lineReader.getLines()) != null) {
                 success = true;
             }
         } else {
             logger.log(Level.SEVERE, "File " + file2Read.getFileName() + " could not be read.");
 
+            String errorMessage;
+
+            if (fileType == FileType.MEP) {
+                errorMessage = ResourceBundleUtils.getLangString(ERRORS, Errors.toporailMepReadingFailed);
+            } else {
+                errorMessage = ResourceBundleUtils.getLangString(ERRORS, Errors.toporailPtsReadingFailed);
+            }
+
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR,
-                    ResourceBundleUtils.getLangString(LABELS, Labels.errorTextMsgBox),
-                    ResourceBundleUtils.getLangString(ERRORS, Errors.txtBLReadingFailed));
+                    ResourceBundleUtils.getLangString(LABELS, Labels.errorTextMsgBox), errorMessage);
 
         }
 
         return success;
     }
 
-} // end of BaselLandschaftTxtReader
+} // end of ToporailReader
