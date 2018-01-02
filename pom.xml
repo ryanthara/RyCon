@@ -205,29 +205,30 @@
                 <plugin>
                     <artifactId>maven-antrun-plugin</artifactId>
                     <version>1.8</version>
-                    <configuration>
-                        <target>
-                            <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_Linux_ppc/target/RyCON_Linux_ppc.jar"
-                                  tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_Linux_ppc.jar"/>
-                            <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_Linux_ppc64/target/RyCON_Linux_ppc64.jar"
-                                  tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_Linux_ppc64.jar"/>
-                            <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_Linux_x86/target/RyCON_Linux_x86.jar"
-                                  tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_Linux_x86.jar"/>
-                            <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_Linux_x86-64/target/RyCON_Linux_x86-64.jar"
-                                  tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_Linux_x86-64.jar"/>
-                            <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_MacOSX32/target/RyCON_MacOSX32.app-app.zip"
-                                  tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_MacOSX32.app-app.zip"/>
-                            <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_MacOSX64/target/RyCON_MacOSX64.app-app.zip"
-                                  tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_MacOSX64.app-app.zip"/>
-                            <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_Win32/target/RyCON_Windows32.exe"
-                                  tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_Windows32.exe"/>
-                            <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_Win64/target/RyCON_Windows64.exe"
-                                  tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_Windows64.exe"/>
-                        </target>
-                    </configuration>
                     <executions>
                         <execution>
+                            <id>copy</id>
                             <phase>package</phase>
+                            <configuration>
+                                <target name="copy and rename file">
+                                    <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_Linux_ppc/target/RyCON_Linux_ppc.jar"
+                                          tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_Linux_ppc.jar"/>
+                                    <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_Linux_ppc64/target/RyCON_Linux_ppc64.jar"
+                                          tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_Linux_ppc64.jar"/>
+                                    <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_Linux_x86/target/RyCON_Linux_x86.jar"
+                                          tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_Linux_x86.jar"/>
+                                    <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_Linux_x86-64/target/RyCON_Linux_x86-64.jar"
+                                          tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_Linux_x86-64.jar"/>
+                                    <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_MacOSX32/target/RyCON_MacOSX32.app-app.zip"
+                                          tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_MacOSX31.app-app.zip"/>
+                                    <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_MacOSX64/target/RyCON_MacOSX64.app-app.zip"
+                                          tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_MacOSX63.app-app.zip"/>
+                                    <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_Win32/target/RyCON_Windows32.exe"
+                                          tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_Windows32.exe"/>
+                                    <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_Win64/target/RyCON_Windows64.exe"
+                                          tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_Windows64.exe"/>
+                                </target>
+                            </configuration>
                             <goals>
                                 <goal>run</goal>
                             </goals>

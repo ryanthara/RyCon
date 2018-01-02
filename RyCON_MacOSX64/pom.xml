@@ -45,7 +45,7 @@
                                         <!-- Doesn't work because of an swt bug on OS X
                                         <SplashScreen-Image>de/ryanthara/ja/rycon/ui/RyCON.png</SplashScreen-Image> -->
                                         <Permissions>all-permissions</Permissions>
-                                        <Codebase>http://number.ryanthara.de/RyCON</Codebase>
+                                        <Codebase>https://code.ryanthara.de/RyCON</Codebase>
                                         <Application-Name>RyCON</Application-Name>
                                     </manifestEntries>
                                 </transformer>

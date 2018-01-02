@@ -9,7 +9,7 @@
     <artifactId>RyCON</artifactId>
     <packaging>pom</packaging>
     <name>RyCON</name>
-    <url>http://number.ryanthara.de/RyCON</url>
+    <url>https://code.ryanthara.de/RyCON</url>
 
     <!-- information about the developer -->
     <developers>
@@ -17,7 +17,7 @@
             <id>saust</id>
             <name>Sebastian Aust</name>
             <email>number at ryanthara dot de</email>
-            <url>http://number.ryanthara.de/</url>
+            <url>https://code.ryanthara.de/</url>
             <timezone>+1</timezone>
             <roles>
                 <role>architect</role>

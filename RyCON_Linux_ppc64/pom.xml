@@ -44,7 +44,7 @@
                                         <Main-Class>de.ryanthara.ja.rycon.ui.MainApplication</Main-Class>
                                         <SplashScreen-Image>de/ryanthara/ja/rycon/gui/RyCON.png</SplashScreen-Image>
                                         <Permissions>all-permissions</Permissions>
-                                        <Codebase>http://number.ryanthara.de/RyCON</Codebase>
+                                        <Codebase>https://code.ryanthara.de/RyCON</Codebase>
                                         <Application-Name>RyCON</Application-Name>
                                     </manifestEntries>
                                 </transformer>

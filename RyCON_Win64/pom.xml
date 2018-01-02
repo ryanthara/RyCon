@@ -44,7 +44,7 @@
                                         <Main-Class>de.ryanthara.ja.rycon.ui.MainApplication</Main-Class>
                                         <SplashScreen-Image>de/ryanthara/ja/rycon/gui/RyCON.png</SplashScreen-Image>
                                         <Permissions>all-permissions</Permissions>
-                                        <Codebase>http://number.ryanthara.de/RyCON</Codebase>
+                                        <Codebase>https://code.ryanthara.de/RyCON</Codebase>
                                         <Application-Name>RyCON</Application-Name>
                                     </manifestEntries>
                                 </transformer>
@@ -114,19 +114,16 @@
                                         <fileVersion>
                                             ${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${maven.build.number}.0
                                         </fileVersion>
-                                        <txtFileVersion>${project.version} ${maven.build.number}
-                                            ${maven.build.timestamp}
+                                        <txtFileVersion>${project.version} ${maven.build.number} ${maven.build.timestamp}
                                         </txtFileVersion>
-                                        <fileDescription>RyCON converts, clean, process and process measurement files
-                                            and coordinate data for surveyors
+                                        <fileDescription>RyCON converts, clean, process and process measurement files and coordinate data for surveyors
                                         </fileDescription>
                                         <copyright>Sebastian Aust</copyright>
                                         <productName>RyCON</productName>
                                         <productVersion>
                                             ${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${maven.build.number}.0
                                         </productVersion>
-                                        <txtProductVersion>${project.version} ${maven.build.number}
-                                            ${maven.build.timestamp}
+                                        <txtProductVersion>${project.version} ${maven.build.number} ${maven.build.timestamp}
                                         </txtProductVersion>
                                         <internalName>RyCON for Windows as 64 Bit Executable</internalName>
                                         <originalFilename>RyCON_Windows64.exe</originalFilename>

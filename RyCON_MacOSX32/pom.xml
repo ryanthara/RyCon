@@ -44,7 +44,7 @@
                                         <Main-Class>de.ryanthara.ja.rycon.ui.MainApplication</Main-Class>
                                         <!-- Doesn't work because of an swt bug on OS X -->
                                         <!--<SplashScreen-Image>de/ryanthara/ja/rycon/ui/RyCON_text256x256.png</SplashScreen-Image>-->
-                                        <Codebase>http://number.ryanthara.de/RyCON</Codebase>
+                                        <Codebase>https://code.ryanthara.de/RyCON</Codebase>
                                         <Application-Name>RyCON</Application-Name>
                                     </manifestEntries>
                                 </transformer>
