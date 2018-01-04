@@ -1,9 +1,11 @@
 # Backups:
 *~
 *.bak
+pom.xml.versionsBackup
 # RyCON:
 RyCON.config
 RyCON*/buildNumber.properties
+doc
 # Maven:
 target/
 # Eclipse:

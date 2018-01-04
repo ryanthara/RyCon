@@ -42,13 +42,13 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LABELS;
  */
 public final class Version {
 
-    private static final int buildYear = 2017;
-    private static final int buildMonth = 12;
-    private static final int buildDay = 02;
-    private static final short buildNumber = 25;
+    private static final int buildYear = 2018;
+    private static final int buildMonth = 01;
+    private static final int buildDay = 15;
+    private static final short buildNumber = 26;
     private static final short majorRelease = 2;
     private static final short minorRelease = 0;
-    private static final short patchLevel = 0;
+    private static final short patchLevel = 1;
 
     /**
      * Returns the build date of RyCON as string.
