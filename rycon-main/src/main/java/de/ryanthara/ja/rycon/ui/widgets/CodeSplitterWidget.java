@@ -46,7 +46,7 @@ import java.util.logging.Logger;
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.*;
 
 /**
- * Instances of this class implements a complete widgets and it's functionality to split coordinate files by code.
+ * Instances of this class implements a complete widget and it's functionality to split coordinate files by code.
  * <p>
  * The {@link CodeSplitterWidget} of RyCON is used to split measurement files (GSI or text format)
  * by code into several files. Each generated file contains only lines of one code. The code is added

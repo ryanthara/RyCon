@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <!-- coordinates -->
-    <artifactId>RyCON_Linux_ppc</artifactId>
-    <version>0.9.11</version>
+    <artifactId>RyCON_Linux_ppc32</artifactId>
+    <version>2.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>RyCON for Linux (ppc, 32-bit)</name>
 
@@ -12,7 +13,7 @@
     <parent>
         <groupId>de.ryanthara.ja.rycon</groupId>
         <artifactId>rycon-build</artifactId>
-        <version>0.9.11</version>
+        <version>2.0.0-SNAPSHOT</version>
         <relativePath>../rycon-build/pom.xml</relativePath>
     </parent>
 
@@ -31,16 +32,19 @@
                         <configuration>
                             <finalName>RyCON_Linux_ppc</finalName>
                             <transformers>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <manifestEntries>
                                         <Specification-Title>${project.name}</Specification-Title>
-                                        <Specification-Version>${project.version}-${maven.build.number}</Specification-Version>
+                                        <Specification-Version>${project.version}-${maven.build.number}
+                                        </Specification-Version>
                                         <Specification-Vendor>Sebastian Aust</Specification-Vendor>
                                         <Implementation-Version>${maven.build.timestamp.clone}</Implementation-Version>
                                         <Implementation-Vendor>LINUX_PPC</Implementation-Vendor>
                                         <Main-Class>de.ryanthara.ja.rycon.ui.MainApplication</Main-Class>
-                                        <SplashScreen-Image>de/ryanthara/ja/rycon/gui/RyCON.png</SplashScreen-Image>                <Permissions>all-permissions</Permissions>
-                                        <Codebase>http://number.ryanthara.de/RyCON</Codebase>
+                                        <SplashScreen-Image>de/ryanthara/ja/rycon/gui/RyCON.png</SplashScreen-Image>
+                                        <Permissions>all-permissions</Permissions>
+                                        <Codebase>https://code.ryanthara.de/RyCON</Codebase>
                                         <Application-Name>RyCON</Application-Name>
                                     </manifestEntries>
                                 </transformer>
@@ -73,12 +77,11 @@
             <artifactId>rycon-main</artifactId>
             <version>${project.version}</version>
         </dependency>
-
         <!-- SWT for Linux (ppc, 32-bit) -->
         <dependency>
             <groupId>org.eclipse.swt</groupId>
             <artifactId>org.eclipse.swt.gtk.linux.ppc</artifactId>
-            <version>4.5.2</version>
+            <version>4.6.1</version>
         </dependency>
     </dependencies>
 

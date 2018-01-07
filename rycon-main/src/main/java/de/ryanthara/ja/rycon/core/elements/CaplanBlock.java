@@ -46,7 +46,7 @@ public class CaplanBlock {
 
     private final String line;
     private ArrayList<String> attributes;
-    private boolean isConverted = false;
+    private boolean isConverted;
     private int valency = -1;
     private String number, easting, northing, height, code;
 

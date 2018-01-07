@@ -211,8 +211,8 @@
                             <phase>package</phase>
                             <configuration>
                                 <target name="copy and rename file">
-                                    <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_Linux_ppc/target/RyCON_Linux_ppc.jar"
-                                          tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_Linux_ppc.jar"/>
+                                    <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_Linux_ppc/target/RyCON_Linux_ppc32.jar"
+                                          tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_Linux_ppc32.jar"/>
                                     <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_Linux_ppc64/target/RyCON_Linux_ppc64.jar"
                                           tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_Linux_ppc64.jar"/>
                                     <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_Linux_x86/target/RyCON_Linux_x86.jar"
@@ -248,7 +248,7 @@
         <module>rycon-build</module>
         <module>rycon-license</module>
         <module>rycon-main</module>
-        <module>RyCON_Linux_ppc</module>
+        <module>RyCON_Linux_ppc32</module>
         <module>RyCON_Linux_ppc64</module>
         <module>RyCON_Linux_x86</module>
         <module>RyCON_Linux_x86-64</module>

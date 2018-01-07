@@ -48,9 +48,21 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.*;
 import static de.ryanthara.ja.rycon.ui.custom.Status.OK;
 
 /**
- * Instances of this class implements a complete widgets for process levelling files.
+ * Instances of this class implements a complete widget and it's functionality for processing levelling files.
  * <p>
- * The LevellingWidget of RyCON is used to convert levelling files for cad import.
+ * The {@link LevellingWidget} of RyCON is used to convert levelling files or height lists (GSI or text format)
+ * for CAD import. Each generated file contains only lines of one code. The code is added
+ * to the file name of the written file.
+ * <p>
+ * This version of the CodeSplitterWidget supports the following file types:
+ * <ul>
+ * <li>Leica GSI format files (GSI8 and GSI16)
+ * <li>text files with code (format no, code, x, y, z)
+ * </ul>
+ *
+ *
+ * <p>
+ * The LevellingWidget of RyCON is used to convert levelling or height files for cad import.
  * Therefore a GSI based levelling file is prepared to a coordinate file with
  * no, x, y and measured height values. For the x- and y-values are the count line
  * numbers used.

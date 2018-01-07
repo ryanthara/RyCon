@@ -25,6 +25,9 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * ShellPositioner implements a simple functionality to center RyCONs widgets.
  * <p>
@@ -41,6 +44,8 @@ import org.eclipse.swt.widgets.Shell;
  * @since 1
  */
 public class ShellPositioner {
+
+    private final static Logger logger = Logger.getLogger(ShellPositioner.class.getName());
 
     /**
      * Calculate the centered shell location and return it als <code>Point</code> object.
@@ -67,23 +72,33 @@ public class ShellPositioner {
     public static Point positShell(Shell shell) {
         Monitor[] monitors = shell.getDisplay().getMonitors();
 
-        if (Main.pref.getUserPreference(PreferenceKeys.LAST_USED_DISPLAY).equals("-1")) {
+        final String lastUsedDisplay = Main.pref.getUserPreference(PreferenceKeys.LAST_USED_DISPLAY);
+
+        if (lastUsedDisplay != null && lastUsedDisplay.trim().equals("")) {
             return centerShellOnPrimaryMonitor(shell);
-        } else if (monitors.length >= Integer.parseInt(Main.pref.getUserPreference(PreferenceKeys.LAST_USED_DISPLAY))) {
-            String s;
-
-            if (Main.pref.getUserPreference(PreferenceKeys.LAST_USED_DISPLAY).equals("0")) {
-                s = Main.pref.getUserPreference(PreferenceKeys.LAST_POS_PRIMARY_MONITOR);
-            } else {
-                s = Main.pref.getUserPreference(PreferenceKeys.LAST_POS_SECONDARY_MONITOR);
-            }
-
-            String[] coords = s.split(",");
-
-            return new Point(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]));
+        } else if (lastUsedDisplay.equals("-1")) {
+            return centerShellOnPrimaryMonitor(shell);
         } else {
-            return centerShellOnPrimaryMonitor(shell);
+            try {
+                if (monitors.length >= Integer.parseInt(lastUsedDisplay)) {
+                    String s;
+
+                    if (lastUsedDisplay.equals("0")) {
+                        s = Main.pref.getUserPreference(PreferenceKeys.LAST_POS_PRIMARY_MONITOR);
+                    } else {
+                        s = Main.pref.getUserPreference(PreferenceKeys.LAST_POS_SECONDARY_MONITOR);
+                    }
+
+                    String[] coords = s.split(",");
+
+                    return new Point(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]));
+                }
+            } catch (NumberFormatException e) {
+                logger.log(Level.SEVERE, "Can't parse stored user preference value for positioning. " + e);
+            }
         }
+
+        return centerShellOnPrimaryMonitor(shell);
     }
 
 } // end of ShellPositioner
