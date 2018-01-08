@@ -2,22 +2,29 @@
 *~
 *.bak
 *.pom.xml.versionsBackup
+
 # RyCON:
 RyCON.config
 RyCON*/buildNumber.properties
+
 # Javadoc
-/doc/
+doc/
+
 # Maven:
 target/
+
 # Eclipse:
 .classpath
 .project
 .settings/
+
 # IDEA:
 *.iml
 *.ipr
 *.iws
 .idea/
+
 # Logging:
 *.log
 *.logfile*.xml
+RyCON_logfile*.xml
