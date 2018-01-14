@@ -21,50 +21,80 @@ package de.ryanthara.ja.rycon.data;
  * The {@code PreferenceKeys} enumeration holds all of the preference keys for {@code RyCON}.
  * <p>
  * The default values for the keys are stored in the enum {@link DefaultKeys}.
+ * <p>
+ * Due to some issues with the representation of the windows registry keys, the second version
+ * of the {@code PreferenceKeys} uses this improved implementation with lower case key values.
  *
  * @author sebastian
- * @version 1
+ * @version 2
  * @see PreferenceHandler
  * @since 23
  */
 public enum PreferenceKeys {
 
-    ADD_TRAILING_ZEROES,
-    BUILD_VERSION,
-    CONVERTER_SETTING_ELIMINATE_ZERO_COORDINATE,
-    CONVERTER_SETTING_LTOP_USE_ZENITH_DISTANCE,
-    CONVERTER_SETTING_POINT_IDENTICAL_DISTANCE,
-    CONVERTER_SETTING_ZEISS_DIALECT,
-    DIR_ADMIN,
-    DIR_ADMIN_TEMPLATE,
-    DIR_BASE,
-    DIR_BIG_DATA,
-    DIR_BIG_DATA_TEMPLATE,
-    DIR_CARD_READER,
-    DIR_CARD_READER_DATA_FILES,
-    DIR_CARD_READER_EXPORT_FILES,
-    DIR_CARD_READER_JOB_FILES,
-    DIR_PROJECT,
-    DIR_PROJECT_JOB_FILES,
-    DIR_PROJECT_LAST_USED,
-    DIR_PROJECT_LOG_FILES,
-    DIR_PROJECT_MEASUREMENT_FILES,
-    DIR_PROJECT_TEMPLATE,
-    GENERATOR,
-    GSI_SETTING_LINE_ENDING_WITH_BLANK,
-    INFORMATION_STRING,
-    LAST_POS_PRIMARY_MONITOR,
-    LAST_POS_SECONDARY_MONITOR,
-    LAST_USED_DISPLAY,
-    LAST_USED_PROJECTS,
-    OVERWRITE_EXISTING,
-    PARAM_CODE_STRING,
-    PARAM_CONTROL_POINT_STRING,
-    PARAM_EDIT_STRING,
-    PARAM_FREE_STATION_STRING,
-    PARAM_KNOWN_STATION_STRING,
-    PARAM_LTOP_STRING,
-    PARAM_LEVEL_STRING,
-    USER_LAST_USED_DIR
+    ADD_TRAILING_ZEROES("add_trailing_zeroes"),
+    BUILD_VERSION("build_version"),
+    CONVERTER_SETTING_ELIMINATE_ZERO_COORDINATE("converter_setting_eliminate_zero_coordinate"),
+    CONVERTER_SETTING_LTOP_USE_ZENITH_DISTANCE("converter_setting_ltop_use_zenith_distance"),
+    CONVERTER_SETTING_POINT_IDENTICAL_DISTANCE("converter_setting_point_identical_distance"),
+    CONVERTER_SETTING_ZEISS_DIALECT("converter_setting_zeiss_dialect"),
+    DIR_ADMIN("dir_admin"),
+    DIR_ADMIN_TEMPLATE("dir_admin_template"),
+    DIR_BASE("dir_base"),
+    DIR_BIG_DATA("dir_big_data"),
+    DIR_BIG_DATA_TEMPLATE("dir_big_data_template"),
+    DIR_CARD_READER("dir_card_reader"),
+    DIR_CARD_READER_DATA_FILES("dir_card_reader_data_files"),
+    DIR_CARD_READER_EXPORT_FILES("dir_card_reader_export_files"),
+    DIR_CARD_READER_JOB_FILES("dir_card_reader_job_files"),
+    DIR_PROJECT("dir_project"),
+    DIR_PROJECT_JOB_FILES("dir_project_job_files"),
+    DIR_PROJECT_LAST_USED("dir_project_last_used"),
+    DIR_PROJECT_LOG_FILES("dir_project_log_files"),
+    DIR_PROJECT_MEASUREMENT_FILES("dir_project_measurement_files"),
+    DIR_PROJECT_TEMPLATE("dir_project_template"),
+    GENERATOR("generator"),
+    GSI_SETTING_LINE_ENDING_WITH_BLANK("gsi_setting_line_ending_with_blank"),
+    INFORMATION_STRING("information_string"),
+    LAST_POS_PRIMARY_MONITOR("last_pos_primary_monitor"),
+    LAST_POS_SECONDARY_MONITOR("last_pos_secondary_monitor"),
+    LAST_USED_DISPLAY("last_used_display"),
+    LAST_USED_PROJECTS("last_used_projects"),
+    OVERWRITE_EXISTING("overwrite_existing"),
+    PARAM_CODE_STRING("param_code_string"),
+    PARAM_CONTROL_POINT_STRING("param_control_point_string"),
+    PARAM_EDIT_STRING("param_edit_string"),
+    PARAM_FREE_STATION_STRING("param_free_station_string"),
+    PARAM_KNOWN_STATION_STRING("param_known_station_string"),
+    PARAM_LTOP_STRING("param_ltop_string"),
+    PARAM_LEVEL_STRING("param_level_string"),
+    USER_LAST_USED_DIR("user_last_used_dir");
+
+    private String key;
+
+    PreferenceKeys(String key) {
+        this.key = key;
+    }
+
+    /**
+     * Checks whether the key is inside the {@link PreferenceKeys} enum or not.
+     *
+     * @param key key to be in the enum
+     *
+     * @return true if the enum contains the key
+     */
+    public static boolean contains(final String key) {
+        for (PreferenceKeys prefKey : PreferenceKeys.values()) {
+            if (prefKey.getKey().equals(key)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public String getKey() {
+        return key;
+    }
 
 } // end of PreferenceKeys

@@ -19,6 +19,7 @@ package de.ryanthara.ja.rycon.ui;
 
 import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.data.DefaultKeys;
+import de.ryanthara.ja.rycon.data.PreferenceHandler;
 import de.ryanthara.ja.rycon.data.PreferenceKeys;
 import de.ryanthara.ja.rycon.data.Version;
 import de.ryanthara.ja.rycon.i18n.*;
@@ -256,7 +257,7 @@ public class MainApplication extends Main {
                         actionBtn00();
                         break;
 
-                    case 'a':
+                    case 'a':   // about, english version
                         actionBtn10();
                         break;
 
@@ -268,10 +269,19 @@ public class MainApplication extends Main {
                         new SettingsWidget(shell);
                         break;
 
+                    case 'q':
+                        PreferenceHandler.removeOldKeys1();
+                        break;
+
+                    case 'w':
+                        PreferenceHandler.removeOldKeys2();
+                        break;
+
                     case 't':
                         test();
+                        break;
 
-                    case 'ü':
+                    case 'ü':   // about, german version
                         actionBtn10();
                         break;
 

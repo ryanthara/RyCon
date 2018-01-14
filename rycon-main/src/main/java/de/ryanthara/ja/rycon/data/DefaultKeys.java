@@ -51,14 +51,15 @@ public enum DefaultKeys {
     GSI_SETTING_LINE_ENDING_WITH_BLANK("true"),
 
     // transfer widget
-    // TODO remove Rapp dependency to a more general behaviour
     DIR_CARD_READER("."),
     DIR_CARD_READER_DATA_FILES("Data"),
     DIR_CARD_READER_EXPORT_FILES("Gsi"),
     DIR_CARD_READER_JOB_FILES("DBX"),
-    DIR_PROJECT_LOG_FILES( "08.Bearb_Rapp/Messdaten/LOG"),
-    DIR_PROJECT_MEASUREMENT_FILES( "08.Bearb_Rapp/Messdaten/GSI"),
-    DIR_PROJECT_JOB_FILES( "08.Bearb_Rapp/Messdaten/DBX"),
+
+    // TODO remove Rapp dependency to a more general behaviour
+    DIR_PROJECT_LOG_FILES("08.Bearb_Rapp/Messdaten/LOG"),
+    DIR_PROJECT_MEASUREMENT_FILES("08.Bearb_Rapp/Messdaten/GSI"),
+    DIR_PROJECT_JOB_FILES("08.Bearb_Rapp/Messdaten/DBX"),
 
     LAST_POS_PRIMARY_MONITOR("-9999, -9999"),
     LAST_POS_SECONDARY_MONITOR("-9998, -9998"),

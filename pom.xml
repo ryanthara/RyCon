@@ -208,7 +208,7 @@
                     <executions>
                         <execution>
                             <id>copy</id>
-                            <phase>package</phase>
+                            <phase>site</phase>
                             <configuration>
                                 <target name="copy and rename file">
                                     <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_Linux_ppc/target/RyCON_Linux_ppc32.jar"

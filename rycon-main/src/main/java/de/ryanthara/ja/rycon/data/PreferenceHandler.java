@@ -42,8 +42,8 @@ import java.util.prefs.Preferences;
  * - Under OS X in a location ~/Library/PreferenceKeys/de.ryanthara.ja.plist
  * - Under *nix in a location /etc/.java/.systemPrefs
  * <p>
- * Due to some experiences made during the development cycle of RyCON 2, the preference keys
- * are stored in lower case with an underscore (e.g. 'param_name').
+ * Due to some experiences with Windows REGISTRY made during the development cycle of RyCON 2,
+ * the preference keys are stored in lower case with an underscore (e.g. 'param_name').
  *
  * @author sebastian
  * @version 9
@@ -51,25 +51,29 @@ import java.util.prefs.Preferences;
  */
 public class PreferenceHandler implements PreferenceChangeListener {
     private final static Logger logger = Logger.getLogger(PreferenceHandler.class.getName());
+    private final String currentNode = "/de/ryanthara/rycon2";
+    private final String previousNode = "/de/ryanthara/rycon";
     private boolean isDefaultSettingsGenerated = false;
     private Preferences userPreferences;
 
     /**
      * Constructs a new instance of this class and initializes the configuration handling.
      */
+    // TODO Remove printouts if is working on windows
     public PreferenceHandler() {
         if (checkForVersion2Preferences()) {
+            System.out.println("V2 preferences");
             loadUserPreferences();
         } else if (checkForVersion1Preferences()) {
+            System.out.println("V1 preferences");
             convertUserPreferencesBetweenVersions();
             loadUserPreferences();
         } else {
+            System.out.println("Default settings");
             createDefaultPreferences();
         }
 
-        // add listener to the node and not to an instance of it!
-        Preferences.userRoot().node("/de/ryanthara/rycon").addPreferenceChangeListener(this);
-        logger.log(Level.FINE, "preference change listener added");
+        registerPreferenceChangeListener();
     }
 
     /**
@@ -92,6 +96,28 @@ public class PreferenceHandler implements PreferenceChangeListener {
         }
 
         return System.getenv().get("HOME");
+    }
+
+    public static void removeOldKeys1() {
+        Preferences prefs = Preferences.userRoot().node("/de/ryanthara/rycon");
+        try {
+            prefs.removeNode();
+        } catch (BackingStoreException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("OLD KEYS REMOVED");
+    }
+
+    public static void removeOldKeys2() {
+        Preferences prefs = Preferences.userRoot().node("/de/ryanthara/rycon2");
+        try {
+            prefs.removeNode();
+        } catch (BackingStoreException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("NEW KEYS REMOVED");
     }
 
     /**
@@ -136,7 +162,7 @@ public class PreferenceHandler implements PreferenceChangeListener {
      * @since 3
      */
     public String getUserPreference(PreferenceKeys preference) {
-        return userPreferences.get(preference.name().toLowerCase(), "");
+        return userPreferences.get(preference.getKey(), "");
     }
 
     /**
@@ -178,19 +204,20 @@ public class PreferenceHandler implements PreferenceChangeListener {
      * @param key key of the user preference to be removed
      */
     public void removeUserPreference(String key) {
-        userPreferences.remove(key.toLowerCase());
+        userPreferences.remove(key);
     }
 
     /**
-     * Sets a defined system preference by reference to the preference object and value.
+     * Sets a defined user preference by reference to the preference object and value.
      *
-     * @param preference reference to the preference object to be set
+     * @param preference the preference object to be set
      * @param value      value to be set
      *
      * @since 3
      */
     public void setUserPreference(final PreferenceKeys preference, final String value) {
-        userPreferences.put(preference.name().toLowerCase(), value);
+        System.out.println(preference.getKey() + " " + value);
+        userPreferences.put(preference.getKey(), value);
     }
 
     @Override
@@ -200,7 +227,7 @@ public class PreferenceHandler implements PreferenceChangeListener {
 
     private boolean checkForVersion1Preferences() {
         try {
-            return Preferences.userRoot().nodeExists("/de/ryanthara/rycon");
+            return Preferences.userRoot().nodeExists(previousNode);
         } catch (BackingStoreException e) {
             logger.log(Level.SEVERE, "Can't store user node for RyCON back to user root");
         }
@@ -210,7 +237,7 @@ public class PreferenceHandler implements PreferenceChangeListener {
 
     private boolean checkForVersion2Preferences() {
         try {
-            return Preferences.userRoot().nodeExists("/de/ryanthara/rycon2");
+            return Preferences.userRoot().nodeExists(currentNode);
         } catch (BackingStoreException e) {
             logger.log(Level.SEVERE, "Can't store user node for RyCON 2 back to user root");
         }
@@ -220,27 +247,31 @@ public class PreferenceHandler implements PreferenceChangeListener {
 
     private void convertUserPreferencesBetweenVersions() {
         // load user preferences from RyCON and store them temporary
-        Preferences userPrefsV1 = Preferences.userRoot().node("/de/ryanthara/rycon");
+        Preferences userPrefsV1 = Preferences.userRoot().node(previousNode);
 
         // fetch old keys and values if they exists
         try {
             final String[] oldKeys = userPrefsV1.keys();
             final String[] oldValues = new String[oldKeys.length];
 
-            userPreferences = Preferences.userRoot().node("/de/ryanthara/rycon");
+            userPreferences = Preferences.userRoot().node(previousNode);
 
             for (int i = 0; i < oldKeys.length; i++) {
-                oldValues[i] = getUserPreference(PreferenceKeys.valueOf(oldKeys[i].toUpperCase()));
+                oldValues[i] = getUserPreference(PreferenceKeys.valueOf(oldKeys[i]));
             }
 
-            userPreferences = Preferences.userRoot().node("/de/ryanthara/rycon2");
+            userPreferences = Preferences.userRoot().node(currentNode);
 
             // create default settings
             createDefaultPreferences();
 
             // transfer known values to the RyCON 2 preferences
             for (int i = 0; i < oldKeys.length; i++) {
-                setUserPreference(PreferenceKeys.valueOf(oldKeys[i].toUpperCase()), oldValues[i]);
+                // check whether the old key exists in the new version
+                if (PreferenceKeys.contains(oldKeys[i])) {
+                    // transfer the old value to the new key
+                    setUserPreference(PreferenceKeys.valueOf(oldKeys[i]), oldValues[i]);
+                }
             }
 
             logger.log(Level.INFO, "settings successful transferred from version 1 to version 2");
@@ -319,6 +350,8 @@ public class PreferenceHandler implements PreferenceChangeListener {
      * the keyboard or choose the button 9 - settings.
      */
     private void createDefaultPreferences() {
+        userPreferences = Preferences.userRoot().node(currentNode);
+
         // general settings
         setUserPreference(PreferenceKeys.ADD_TRAILING_ZEROES, DefaultKeys.ADD_TRAILING_ZEROES.getValue());
         setUserPreference(PreferenceKeys.BUILD_VERSION, Version.getBuildNumber() + " : " + Version.getBuildDate());
@@ -380,7 +413,7 @@ public class PreferenceHandler implements PreferenceChangeListener {
     }
 
     private void loadUserPreferences() {
-        userPreferences = Preferences.userRoot().node("/de/ryanthara/rycon2");
+        userPreferences = Preferences.userRoot().node(currentNode);
 
         // Checks the stored node for valid keys and for length.
         // This is used to handle updates for RyCON, hence the user can use existing preferences.
@@ -394,7 +427,7 @@ public class PreferenceHandler implements PreferenceChangeListener {
                 final String[] oldValues = new String[oldKeys.length];
 
                 for (int i = 0; i < oldKeys.length; i++) {
-                    oldValues[i] = getUserPreference(PreferenceKeys.valueOf(oldKeys[i]));
+                    oldValues[i] = getUserPreference(PreferenceKeys.valueOf(oldKeys[i].toUpperCase()));
                 }
 
                 // delete the old preference keys and their values
@@ -404,7 +437,7 @@ public class PreferenceHandler implements PreferenceChangeListener {
 
                 // transfer values from old keys to the new ones
                 for (int i = 0; i < oldKeys.length; i++) {
-                    setUserPreference(PreferenceKeys.valueOf(oldKeys[i]), oldValues[i]);
+                    setUserPreference(PreferenceKeys.valueOf(oldKeys[i].toUpperCase()), oldValues[i]);
                 }
 
                 logger.log(Level.FINE, "Not needed preference keys deleted.");
@@ -415,12 +448,18 @@ public class PreferenceHandler implements PreferenceChangeListener {
         }
     }
 
+    private void registerPreferenceChangeListener() {
+        // add listener to the node and not to an instance of it!
+        Preferences.userRoot().node(currentNode).addPreferenceChangeListener(this);
+        logger.log(Level.FINE, "preference change listener added");
+    }
+
     /**
      * Removes a set of user preferences by an array of given keys.
      *
      * @param keys key of the user preference to be removed
      */
-    private void removeUserPreference(String[] keys) {
+    private void removeUserPreference(String... keys) {
         for (String key : keys) {
             userPreferences.remove(key);
         }
