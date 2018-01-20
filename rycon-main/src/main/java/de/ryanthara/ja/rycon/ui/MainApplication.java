@@ -291,8 +291,7 @@ public class MainApplication extends Main {
     }
 
     private void createButtonAbout(Composite composite) {
-        Button btnAbout = new Button(composite, SWT.PUSH);
-        btnAbout.setAlignment(SWT.LEFT);
+        Button btnAbout = new Button(composite, SWT.PUSH | SWT.LEFT);
         btnAbout.setImage(new ImageConverter().convertToImage(display, Images.btnAbout.getPath()));
         btnAbout.setText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.aboutText));
         btnAbout.setToolTipText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.aboutToolTip));
@@ -310,8 +309,7 @@ public class MainApplication extends Main {
     }
 
     private void createButtonCleanTool(Composite composite) {
-        Button btnToolboxClean = new Button(composite, SWT.PUSH);
-        btnToolboxClean.setAlignment(SWT.LEFT);
+        Button btnToolboxClean = new Button(composite, SWT.PUSH | SWT.LEFT);
         btnToolboxClean.setImage(new ImageConverter().convertToImage(display, Images.btnClean.getPath()));
         btnToolboxClean.setText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.cleanText));
         btnToolboxClean.setToolTipText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.cleanToolTip));
@@ -330,8 +328,7 @@ public class MainApplication extends Main {
     }
 
     private void createButtonConvertTool(Composite composite) {
-        Button btnToolboxConvert = new Button(composite, SWT.PUSH);
-        btnToolboxConvert.setAlignment(SWT.LEFT);
+        Button btnToolboxConvert = new Button(composite, SWT.PUSH | SWT.LEFT);
         btnToolboxConvert.setImage(new ImageConverter().convertToImage(display, Images.btnConvert.getPath()));
         btnToolboxConvert.setText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.convertText));
         btnToolboxConvert.setToolTipText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.convertToolTip));
@@ -348,8 +345,7 @@ public class MainApplication extends Main {
     }
 
     private void createButtonCopyTool(Composite composite) {
-        Button btnToolboxCopyTool = new Button(composite, SWT.PUSH);
-        btnToolboxCopyTool.setAlignment(SWT.LEFT);
+        Button btnToolboxCopyTool = new Button(composite, SWT.PUSH | SWT.LEFT);
         btnToolboxCopyTool.setImage(new ImageConverter().convertToImage(display, Images.btnCopy.getPath()));
         btnToolboxCopyTool.setText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.importText));
         btnToolboxCopyTool.setToolTipText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.importToolTip));
@@ -366,8 +362,7 @@ public class MainApplication extends Main {
     }
 
     private void createButtonExit(Composite composite) {
-        Button btnExit = new Button(composite, SWT.PUSH);
-        btnExit.setAlignment(SWT.LEFT);
+        Button btnExit = new Button(composite, SWT.PUSH | SWT.LEFT);
         btnExit.setImage(new ImageConverter().convertToImage(display, Images.btnExit.getPath()));
         btnExit.setText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.exitText));
         btnExit.setToolTipText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.exitToolTip));
@@ -384,8 +379,7 @@ public class MainApplication extends Main {
     }
 
     private void createButtonLevelTool(Composite composite) {
-        Button btnToolboxLeveling = new Button(composite, SWT.PUSH);
-        btnToolboxLeveling.setAlignment(SWT.LEFT);
+        Button btnToolboxLeveling = new Button(composite, SWT.PUSH | SWT.LEFT);
         btnToolboxLeveling.setImage(new ImageConverter().convertToImage(display, Images.btnLevel.getPath()));
         btnToolboxLeveling.setText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.levellingText));
         btnToolboxLeveling.setToolTipText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.levellingToolTip));
@@ -404,8 +398,7 @@ public class MainApplication extends Main {
     }
 
     private void createButtonPrintTool(Composite composite) {
-        Button btnPrint = new Button(composite, SWT.PUSH);
-        btnPrint.setAlignment(SWT.LEFT);
+        Button btnPrint = new Button(composite, SWT.PUSH | SWT.LEFT);
         btnPrint.setImage(new ImageConverter().convertToImage(display, Images.btnPrint.getPath()));
         btnPrint.setText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.printText));
         btnPrint.setToolTipText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.printToolTip));
@@ -424,8 +417,7 @@ public class MainApplication extends Main {
     }
 
     private void createButtonProject(Composite composite) {
-        Button btnToolboxProject = new Button(composite, SWT.PUSH);
-        btnToolboxProject.setAlignment(SWT.LEFT);
+        Button btnToolboxProject = new Button(composite, SWT.PUSH | SWT.LEFT);
         btnToolboxProject.setImage(new ImageConverter().convertToImage(display, Images.btnProject.getPath()));
         btnToolboxProject.setText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.generatorText));
         btnToolboxProject.setToolTipText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.generatorToolTip));
@@ -442,8 +434,7 @@ public class MainApplication extends Main {
     }
 
     private void createButtonSettingsTool(Composite composite) {
-        Button btnSettings = new Button(composite, SWT.PUSH);
-        btnSettings.setAlignment(SWT.LEFT);
+        Button btnSettings = new Button(composite, SWT.PUSH | SWT.LEFT);
         btnSettings.setImage(new ImageConverter().convertToImage(display, Images.btnSettings.getPath()));
         btnSettings.setText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.settingsText));
         btnSettings.setToolTipText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.settingsToolTip));
@@ -460,8 +451,7 @@ public class MainApplication extends Main {
     }
 
     private void createButtonSplitTool(Composite composite) {
-        Button btnToolboxSplitter = new Button(composite, SWT.PUSH);
-        btnToolboxSplitter.setAlignment(SWT.LEFT);
+        Button btnToolboxSplitter = new Button(composite, SWT.PUSH | SWT.LEFT);
         btnToolboxSplitter.setImage(new ImageConverter().convertToImage(display, Images.btnSplit.getPath()));
         btnToolboxSplitter.setText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.splitterText));
         btnToolboxSplitter.setToolTipText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.splitterToolTip));
@@ -480,8 +470,7 @@ public class MainApplication extends Main {
     }
 
     private void createButtonTransformationTool(Composite composite) {
-        Button btnTransformation = new Button(composite, SWT.PUSH);
-        btnTransformation.setAlignment(SWT.LEFT);
+        Button btnTransformation = new Button(composite, SWT.PUSH | SWT.LEFT);
         btnTransformation.setImage(new ImageConverter().convertToImage(display, Images.btnTransformation.getPath()));
         btnTransformation.setText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.transformationText));
         btnTransformation.setToolTipText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.transformationToolTip));
