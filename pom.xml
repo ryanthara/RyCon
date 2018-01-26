@@ -86,7 +86,7 @@
     <scm>
         <connection>scm:git:https://github.com/ryanthara/RyCon</connection>
         <developerConnection>scm:git:git@github.com:ryanthara/RyCon.git</developerConnection>
-        <tag>0.9.12-SNAPSHOT</tag>
+        <tag>2.0.0-SNAPSHOT</tag>
     </scm>
 
     <!-- define properties -->
