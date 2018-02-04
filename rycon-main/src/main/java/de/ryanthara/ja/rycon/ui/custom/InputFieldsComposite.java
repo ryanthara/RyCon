@@ -149,13 +149,13 @@ public class InputFieldsComposite extends Composite {
 
         sourceTextField = new Text(group, SWT.BORDER);
         sourceTextField.addListener(SWT.Traverse, event -> {
-            // prevent this shortcut for execute when the text fields are empty
+            // prevent shortcuts for execute when the text fields are empty
             InputFieldsComposite.this.handleEvent(event, sourceTextField);
         });
 
         /*
-        Because of this listener there is a different behaviour of the source
-        text field implemented. From injected file names the path is not removed.
+         * The source text field has to use a different behaviour for dropped and
+         * dialog selected files. The path from injected files is not removed.
          */
         sourceTextField.addModifyListener(modifyEvent -> {
             if (TextCheck.isFileExists(sourceTextField)) {
@@ -193,7 +193,7 @@ public class InputFieldsComposite extends Composite {
 
         targetTextField = new Text(group, SWT.SINGLE | SWT.BORDER);
         targetTextField.addListener(SWT.Traverse, event -> {
-            // prevent this shortcut for execute when the text fields are empty
+            // prevent shortcuts for execute when the text fields are empty
             InputFieldsComposite.this.handleEvent(event, targetTextField);
         });
 

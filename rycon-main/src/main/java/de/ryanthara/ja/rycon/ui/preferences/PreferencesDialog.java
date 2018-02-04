@@ -194,7 +194,6 @@ public class PreferencesDialog {
         saveButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(final SelectionEvent e) {
-
                 // writer preferences only for changed settings
                 for (Entry<Preference<?>, Editor<?>> entry : editors.entrySet()) {
                     if (entry.getValue().hasChanged()) {

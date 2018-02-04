@@ -216,7 +216,6 @@ public class PreferenceHandler implements PreferenceChangeListener {
      * @since 3
      */
     public void setUserPreference(final PreferenceKeys preference, final String value) {
-        System.out.println(preference.getKey() + " " + value);
         userPreferences.put(preference.getKey(), value);
     }
 

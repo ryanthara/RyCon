@@ -215,8 +215,9 @@ public final class GeneratorWidget extends AbstractWidget {
 
         inputNumber = new Text(group, SWT.SINGLE | SWT.BORDER);
 
-        // platform independent key handling for ENTER, TAB, ...
-        // TODO change bad listener with a better one
+        /*
+         * platform independent key handling for ENTER to prevent action handling on empty text field
+         */
         inputNumber.addListener(SWT.Traverse, event -> {
             if (!inputNumber.getText().trim().equals("")) {
                 if ((event.stateMask & SWT.SHIFT) == SWT.SHIFT && event.detail == SWT.TRAVERSE_RETURN) {
@@ -344,7 +345,7 @@ public final class GeneratorWidget extends AbstractWidget {
                 }
             }
 
-            String message = "";
+            String message;
 
             if (areAdminFoldersCreated && areBigDataFoldersCreated && areProjectFoldersCreated) {
                 message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.adminAndBigDataAndProjectsCreated), helper);
@@ -358,7 +359,7 @@ public final class GeneratorWidget extends AbstractWidget {
                 message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.adminFoldersCreated), helper);
             } else if (areBigDataFoldersCreated) {
                 message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.bigDataFoldersCreated), helper);
-            } else if (areProjectFoldersCreated) {
+            } else {
                 message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.projectFoldersCreated), helper);
             }
 
@@ -396,7 +397,7 @@ public final class GeneratorWidget extends AbstractWidget {
         }
 
         if (isAdminFolderGenerated || isBigDataFolderGenerated || isProjectFolderGenerated) {
-            String message = "";
+            String message;
 
             if (isAdminFolderGenerated && isBigDataFolderGenerated && isProjectFolderGenerated) {
                 message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.adminAndBigDataAndProjectGenerated), number);
@@ -410,7 +411,7 @@ public final class GeneratorWidget extends AbstractWidget {
                 message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.adminFolderGenerated), number);
             } else if (isBigDataFolderGenerated) {
                 message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.bigDataFolderGenerated), number);
-            } else if (isProjectFolderGenerated) {
+            } else {
                 message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.projectFolderGenerated), number);
             }
 
@@ -424,17 +425,45 @@ public final class GeneratorWidget extends AbstractWidget {
     }
 
     private boolean generateAdminFolder(String number) {
-        String dir = Main.pref.getUserPreference(PreferenceKeys.DIR_ADMIN);
-        String dirTemplate = Main.pref.getUserPreference(PreferenceKeys.DIR_ADMIN_TEMPLATE);
+        final String dir = Main.pref.getUserPreference(PreferenceKeys.DIR_ADMIN);
+        final String dirTemplate = Main.pref.getUserPreference(PreferenceKeys.DIR_ADMIN_TEMPLATE);
 
-        return generateFoldersHelper(number, dir, dirTemplate, WarnAndErrorType.ADMIN);
+        /*
+         * Check admin dir and admin template dir for identity. They must not be equal,
+         * because of the recursive file copy operations to fetch all the sub folders and
+         * nested files in there.
+         */
+        if (dir.equals(dirTemplate)) {
+            final String message = ResourceBundleUtils.getLangString(MESSAGES, Messages.adminDirEqualityMessage);
+
+            MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR,
+                    ResourceBundleUtils.getLangString(ERRORS, Errors.adminDirEquality), message);
+
+            return false;
+        } else {
+            return generateFoldersHelper(number, dir, dirTemplate, WarnAndErrorType.ADMIN);
+        }
     }
 
     private boolean generateBigDataFolder(String number) {
-        String dir = Main.pref.getUserPreference(PreferenceKeys.DIR_BIG_DATA);
-        String dirTemplate = Main.pref.getUserPreference(PreferenceKeys.DIR_BIG_DATA_TEMPLATE);
+        final String dir = Main.pref.getUserPreference(PreferenceKeys.DIR_BIG_DATA);
+        final String dirTemplate = Main.pref.getUserPreference(PreferenceKeys.DIR_BIG_DATA_TEMPLATE);
 
-        return generateFoldersHelper(number, dir, dirTemplate, WarnAndErrorType.BIG_DATA);
+        /*
+         * Check big data dir and big data template dir for identity. They must not be equal,
+         * because of the recursive file copy operations to fetch all the sub folders and
+         * nested files in there.
+         */
+        if (dir.equals(dirTemplate)) {
+            final String message = ResourceBundleUtils.getLangString(MESSAGES, Messages.bigDataDirEqualityMessage);
+
+            MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR,
+                    ResourceBundleUtils.getLangString(ERRORS, Errors.bigDataDirEquality), message);
+
+            return false;
+        } else {
+            return generateFoldersHelper(number, dir, dirTemplate, WarnAndErrorType.BIG_DATA);
+        }
     }
 
     private boolean generateFoldersHelper(String number, String directory, String directoryTemplate, WarnAndErrorType type) {
@@ -456,10 +485,24 @@ public final class GeneratorWidget extends AbstractWidget {
     }
 
     private boolean generateProjectFolder(String number) {
-        String dir = Main.pref.getUserPreference(PreferenceKeys.DIR_PROJECT);
-        String dirTemplate = Main.pref.getUserPreference(PreferenceKeys.DIR_PROJECT_TEMPLATE);
+        final String dir = Main.pref.getUserPreference(PreferenceKeys.DIR_PROJECT);
+        final String dirTemplate = Main.pref.getUserPreference(PreferenceKeys.DIR_PROJECT_TEMPLATE);
 
-        return generateFoldersHelper(number, dir, dirTemplate, WarnAndErrorType.PROJECT);
+        /*
+         * Check project dir and project template dir for identity. They must not be equal,
+         * because of the recursive file copy operations to fetch all the sub folders and
+         * nested files in there.
+         */
+        if (dir.equals(dirTemplate)) {
+            final String message = ResourceBundleUtils.getLangString(MESSAGES, Messages.projectDirEqualityMessage);
+
+            MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR,
+                    ResourceBundleUtils.getLangString(ERRORS, Errors.projectDirEquality), message);
+
+            return false;
+        } else {
+            return generateFoldersHelper(number, dir, dirTemplate, WarnAndErrorType.PROJECT);
+        }
     }
 
     private String getAdminPathString() {

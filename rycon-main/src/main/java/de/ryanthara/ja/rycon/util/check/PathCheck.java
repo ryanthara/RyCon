@@ -17,7 +17,6 @@
  */
 package de.ryanthara.ja.rycon.util.check;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.ArrayList;
@@ -28,7 +27,7 @@ import java.util.stream.Collectors;
  * The {@code PathCheck} implements different kind of checks for {@link Path} objects.
  * <p>
  * RyCON now uses {@link Path} objects for better file handling and a better error detection
- * instead of {@link File} objects.
+ * instead of <tt>java.io.File</tt> objects.
  *
  * @author sebastian
  * @version 2
