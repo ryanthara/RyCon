@@ -123,11 +123,13 @@ public class TransferWidget extends AbstractWidget {
     }
 
     boolean actionBtnOk() {
+        final String storedCardReaderPath = Main.pref.getUserPreference(PreferenceKeys.DIR_CARD_READER);
+
         boolean success;
 
         countCopiedFiles = 0;
 
-        if (checkCardReaderPath()) {
+        if (checkForAvailableLeicaCardStructure(storedCardReaderPath)) {
             // one or more items selected in a list
             final int number = dataList.getSelectionCount() + exportList.getSelectionCount() + jobList.getSelectionCount();
 
@@ -264,20 +266,6 @@ public class TransferWidget extends AbstractWidget {
                 filterPath);
     }
 
-    /**
-     * Checks whether the card reader path exists and if a card is inserted.
-     * <p>
-     * In this version of RyCON the card check is done against a Leica based card structure.
-     *
-     * @return true if card reader path exists and given structure is present
-     */
-    // TODO Implement general card structure test
-    private boolean checkCardReaderPath() {
-        Path cardReaderPath = Paths.get(Main.pref.getUserPreference(PreferenceKeys.DIR_CARD_READER));
-
-        return PathCheck.isValid(cardReaderPath);
-    }
-
     private void checkCardReaderPathAndUpdateListsAndPreferences() {
         final String delimiter = FileSystems.getDefault().getSeparator();
 
@@ -289,6 +277,37 @@ public class TransferWidget extends AbstractWidget {
                 readCardFolders(cardReaderPath.getText());
             }
         }
+    }
+
+    /**
+     * Checks whether the card reader path exists and if a card is inserted.
+     * <p>
+     * In this version of RyCON the card check is done against a Leica based card structure.
+     *
+     * @param cardReaderPathString path of the card reader
+     *
+     * @return true if card reader path exists and given structure is present
+     */
+    private boolean checkForAvailableLeicaCardStructure(String cardReaderPathString) {
+        final Path cardReaderPath = Paths.get(cardReaderPathString);
+
+        if (PathCheck.isValid(cardReaderPath)) {
+            /*
+             * Check for special folder structure of a Leica Geosystems CF-/SD-Card
+             * ./Data - log files
+             * ./DBX  - database files
+             * ./GSI  - GSI files
+             */
+            final String separator = FileSystems.getDefault().getSeparator();
+
+            final Path dataPath = Paths.get(cardReaderPathString + separator + "Data");
+            final Path dbxPath = Paths.get(cardReaderPathString + separator + "DBX");
+            final Path gsiPath = Paths.get(cardReaderPathString + separator + "GSI");
+
+            return PathCheck.isValid(dataPath) & PathCheck.isValid(dbxPath) & PathCheck.isValid(gsiPath);
+        }
+
+        return false;
     }
 
     private boolean checkIsTargetPathValid() {
@@ -374,12 +393,11 @@ public class TransferWidget extends AbstractWidget {
         if (PathCheck.directoryExists(dir)) {
             String destinationPath = targetProjectPath.getText() + delimiter + Main.pref.getUserPreference(PreferenceKeys.DIR_PROJECT_LOG_FILES);
 
-            boolean success;
+            boolean success = false;
 
             for (String dataFileName : selectedDataFiles) {
-                success = false;
-
                 for (Path source : allDatas) {
+
                     if (PathCheck.fileExists(source)) {
                         if (source.endsWith(dataFileName)) {
                             Path target;
@@ -414,9 +432,9 @@ public class TransferWidget extends AbstractWidget {
                         }
                     }
                 }
-
-                return success;
             }
+
+            return success;
         }
 
         return false;
@@ -530,8 +548,10 @@ public class TransferWidget extends AbstractWidget {
         cardReaderPath = new Text(group, SWT.SINGLE | SWT.BORDER);
         cardReaderPath.setText(cardReader.toString());
 
-        // platform independent key handling for ENTER, TAB, ...
-        // TODO change bad listener with a better one
+        /*
+         * platform independent key handling for ENTER to prevent action handling on empty text field
+         * and TAB to be used in a normal way to jump over controls
+         */
         cardReaderPath.addListener(SWT.Traverse, event -> {
             if (!cardReaderPath.getText().trim().equals("")) {
                 if ((event.stateMask & SWT.SHIFT) == SWT.SHIFT && event.detail == SWT.TRAVERSE_RETURN) {
@@ -726,8 +746,10 @@ public class TransferWidget extends AbstractWidget {
             }
         });
 
-        // platform independent key handling for ENTER, TAB, ...
-        // TODO change bad listener with a better one
+        /*
+         * platform independent key handling for ENTER to prevent action handling on empty text field
+         * and TAB to be used in a normal way to jump over controls
+         */
         targetProjectPath.addListener(SWT.Traverse, event -> {
             if (!targetProjectPath.getText().trim().equals("")) {
                 if ((event.stateMask & SWT.SHIFT) == SWT.SHIFT && event.detail == SWT.TRAVERSE_RETURN) {
@@ -811,17 +833,16 @@ public class TransferWidget extends AbstractWidget {
     }
 
     private void initCardReading() {
-        // TODO how to activate the card reading??
         final String storedCardReaderPath = Main.pref.getUserPreference(PreferenceKeys.DIR_CARD_READER);
 
-        if (PathCheck.directoryExists(storedCardReaderPath)) {
+        if (checkForAvailableLeicaCardStructure(storedCardReaderPath)) {
             readCardFolders(storedCardReaderPath);
 
-            logger.log(Level.INFO, "card reader path successful reader");
+            logger.log(Level.INFO, "card reader path successful read");
         } else {
             showCardReaderNotExitsWarning();
 
-            logger.log(Level.INFO, "could not reader card reader path");
+            logger.log(Level.INFO, "could not read card reader path");
         }
     }
 
