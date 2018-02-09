@@ -59,13 +59,10 @@ import static de.ryanthara.ja.rycon.ui.custom.Status.OK;
  * <li>Leica GSI format files (GSI8 and GSI16)
  * <li>text files with code (format no, code, x, y, z)
  * </ul>
- *
- *
  * <p>
- * The LevellingWidget of RyCON is used to convert levelling or height files for cad import.
- * Therefore a GSI based levelling file is prepared to a coordinate file with
- * no, x, y and measured height values. For the x- and y-values are the count line
- * numbers used.
+ * The LevellingWidget of RyCON is used to convert levelling or height files for cad import. Therefore a GSI based
+ * levelling file is prepared to a coordinate file with no, x, y and measured height values. For the x- and y-values
+ * are the count line numbers used.
  * <p>
  * On later versions of RyCON there will be support for more levelling formats.
  *
@@ -358,7 +355,7 @@ public class LevellingWidget extends AbstractWidget {
                     counter = counter + 1;
                 }
             } else {
-                System.err.println("File " + file2read.getFileName() + " could not be read.");
+                logger.log(Level.SEVERE, "File " + file2read.getFileName() + " could not be read.");
             }
         }
 
