@@ -192,23 +192,28 @@ public class MainApplication extends Main {
     }
 
     private void actionBtn07() {
+        new ReportWidget(shell);
+        statusBar.setStatus(ResourceBundleUtils.getLangString(LABELS, Labels.reportInitialized), OK);
+    }
+
+    private void actionBtn08() {
         MessageBoxes.showMessageBox(shell, SWT.ICON_WARNING, "Warning", "Not implemented yet.");
         new TransformationWidget(shell);
         statusBar.setStatus("not implemented yet.", WARNING);
     }
 
-    private void actionBtn08() {
+    private void actionBtn09() {
         MessageBoxes.showMessageBox(shell, SWT.ICON_WARNING, "Warning", "Not implemented yet.");
         new PrinterWidget(shell);
         statusBar.setStatus("not implemented yet.", WARNING);
     }
 
-    private void actionBtn09() {
+    private void actionBtnP() {
         new SettingsWidget(shell);
         statusBar.setStatus(ResourceBundleUtils.getLangString(LABELS, Labels.settingsInitialized), OK);
     }
 
-    private void actionBtn10() {
+    private void actionBtn11() {
         new AboutWidget(shell);
         statusBar.setStatus(ResourceBundleUtils.getLangString(LABELS, Labels.aboutInitialized), OK);
     }
@@ -258,7 +263,7 @@ public class MainApplication extends Main {
                         break;
 
                     case 'a':   // about, english version
-                        actionBtn10();
+                        actionBtn11();
                         break;
 
                     case 'c':
@@ -266,7 +271,7 @@ public class MainApplication extends Main {
                         break;
 
                     case 'p':
-                        new SettingsWidget(shell);
+                        actionBtnP();
                         break;
 
                     case 'q':
@@ -282,7 +287,7 @@ public class MainApplication extends Main {
                         break;
 
                     case 'ü':   // about, german version
-                        actionBtn10();
+                        actionBtn11();
                         break;
 
                 }
@@ -299,13 +304,31 @@ public class MainApplication extends Main {
         btnAbout.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                actionBtn10();
+                actionBtn11();
             }
         });
 
         GridData gridData = new GridData(Sizes.RyCON_GRID_WIDTH.getValue(), Sizes.RyCON_GRID_HEIGHT.getValue());
         btnAbout.setLayoutData(gridData);
+    }
 
+    private void createButtonAnalyzer(Composite composite) {
+        Button btnToolboxAnalyze = new Button(composite, SWT.PUSH | SWT.LEFT);
+        btnToolboxAnalyze.setImage(new ImageConverter().convertToImage(display, Images.btnReport.getPath()));
+        btnToolboxAnalyze.setText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.reportText));
+        btnToolboxAnalyze.setToolTipText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.reportToolTip));
+
+        btnToolboxAnalyze.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                actionBtn09();
+            }
+        });
+
+        GridData gridData = new GridData(Sizes.RyCON_GRID_WIDTH.getValue(), Sizes.RyCON_GRID_HEIGHT.getValue());
+        btnToolboxAnalyze.setLayoutData(gridData);
+
+        handleDropTarget(btnToolboxAnalyze, ANALYZE);
     }
 
     private void createButtonCleanTool(Composite composite) {
@@ -442,7 +465,7 @@ public class MainApplication extends Main {
         btnSettings.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                actionBtn09();
+                actionBtnP();
             }
         });
 
@@ -547,6 +570,9 @@ public class MainApplication extends Main {
         }
     }
 
+    /*
+     * Simple place holder for the grid.
+     */
     private void createWithoutFunction(Composite composite) {
         Button btnWithoutFunction = new Button(composite, SWT.PUSH);
         btnWithoutFunction.setAlignment(SWT.LEFT);
@@ -662,10 +688,10 @@ public class MainApplication extends Main {
         createButtonLevelTool(compositeGrid);
         createButtonConvertTool(compositeGrid);
         //createWithoutFunction(compositeGrid);
+        createButtonAnalyzer(compositeGrid);
         createButtonTransformationTool(compositeGrid);
         createButtonPrintTool(compositeGrid);
         createButtonSettingsTool(compositeGrid);
-        createWithoutFunction(compositeGrid);
         createButtonAbout(compositeGrid);
         createButtonExit(compositeGrid);
 

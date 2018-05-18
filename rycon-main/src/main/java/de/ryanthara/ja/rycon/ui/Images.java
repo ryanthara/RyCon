@@ -36,6 +36,7 @@ public enum Images {
     btnLevel("/de/ryanthara/ja/rycon/ui/icons/btn_level.png"),
     btnPrint("/de/ryanthara/ja/rycon/ui/icons/btn_printer.png"),
     btnProject("/de/ryanthara/ja/rycon/ui/icons/btn_project.png"),
+    btnReport("/de/ryanthara/ja/rycon/ui/icons/btn_report.png"),
     btnSettings("/de/ryanthara/ja/rycon/ui/icons/btn_settings.png"),
     btnSplit("/de/ryanthara/ja/rycon/ui/icons/btn_code.png"),
     btnTransformation("/de/ryanthara/ja/rycon/ui/icons/btn_transformation.png"),

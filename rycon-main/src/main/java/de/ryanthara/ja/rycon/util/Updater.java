@@ -30,11 +30,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 /**
@@ -55,6 +56,8 @@ import java.util.regex.Pattern;
  * @since 3
  */
 public class Updater {
+
+    private final static Logger logger = Logger.getLogger(Updater.class.getName());
 
     private boolean updateAvailable = false;
 
@@ -99,61 +102,64 @@ public class Updater {
 
         try {
             URL updateUrl = new URL(DefaultKeys.RyCON_UPDATE_URL.getValue());
-            URLConnection con = updateUrl.openConnection();
 
-            if (con.getContentLength() > 0) {
-                Scanner scanner = new Scanner(updateUrl.openStream());
+            HttpsURLConnection huc = (HttpsURLConnection) updateUrl.openConnection();
+            huc.setRequestMethod("GET");
+            huc.connect();
 
-                scanner.next();
-                String majorMinor = scanner.next();
+            if (huc.getResponseCode() == 200) { // document found on server
+                if (huc.getContentLength() > 0) {
+                    Scanner scanner = new Scanner(updateUrl.openStream());
 
-                String[] segments = majorMinor.split(Pattern.quote("."));
-                short majorRelease = Short.parseShort(segments[0]);
-                short minorRelease = Short.parseShort(segments[1]);
-                short patchLevel = Short.parseShort(segments[2]);
+                    scanner.next();
+                    String majorMinor = scanner.next();
 
-                scanner.next();
-                short build = scanner.nextShort();
+                    String[] segments = majorMinor.split(Pattern.quote("."));
+                    short majorRelease = Short.parseShort(segments[0]);
+                    short minorRelease = Short.parseShort(segments[1]);
+                    short patchLevel = Short.parseShort(segments[2]);
 
-                scanner.next();
-                String buildDate = scanner.next();
+                    scanner.next();
+                    short build = scanner.nextShort();
 
-                int update = 0;
+                    scanner.next();
+                    String buildDate = scanner.next();
 
-                try {
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                    Date programDate = sdf.parse(Version.getBuildDate());
-                    Date releaseDate = sdf.parse(buildDate);
+                    int update = 0;
 
-                    update = programDate.compareTo(releaseDate);
-                } catch (ParseException e) {
-                    System.err.println("Date String can't be parsed.");
-                    e.printStackTrace();
+                    try {
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                        Date programDate = sdf.parse(Version.getBuildDate());
+                        Date releaseDate = sdf.parse(buildDate);
+
+                        update = programDate.compareTo(releaseDate);
+                    } catch (ParseException e) {
+                        System.err.println("Date String can't be parsed.");
+                        e.printStackTrace();
+                    }
+                    scanner.close();
+
+                    if (majorRelease > Version.getMajorRelease()) {
+                        updateAvailable = true;
+                    } else if (majorRelease == Version.getMajorRelease() && minorRelease > Version.getMinorRelease()) {
+                        updateAvailable = true;
+                    } else if (majorRelease == Version.getMajorRelease() && minorRelease == Version.getMinorRelease()
+                            && patchLevel > Version.getPatchLevel()) {
+                        updateAvailable = true;
+                    } else if (build > Version.getBuildNumber()) {
+                        updateAvailable = true;
+                    } else if (update < 0) {
+                        updateAvailable = true;
+                    }
+                    success = true;
                 }
-                scanner.close();
-
-                if (majorRelease > Version.getMajorRelease()) {
-                    updateAvailable = true;
-                } else if (majorRelease == Version.getMajorRelease() && minorRelease > Version.getMinorRelease()) {
-                    updateAvailable = true;
-                } else if (majorRelease == Version.getMajorRelease() && minorRelease == Version.getMinorRelease()
-                        && patchLevel > Version.getPatchLevel()) {
-                    updateAvailable = true;
-                } else if (build > Version.getBuildNumber()) {
-                    updateAvailable = true;
-                } else if (update < 0) {
-                    updateAvailable = true;
-                }
-                success = true;
-            } else {
-                System.err.println("Online check failed. Please check your network settings");
+            } else if (huc.getResponseCode() == 404) { // document not found on server
+                logger.log(Level.SEVERE, "what's new document not found on server. Error 404");
             }
         } catch (MalformedURLException e) {
-            System.err.println("checkForUpdate() failed: MalformedURLException");
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "checkForUpdate() failed: wrong URL format");
         } catch (IOException e) {
-            System.err.println("checkForUpdate() failed: IOException");
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "checkForUpdate() failed: IOException caused from no internet connection");
         }
 
         return success;
@@ -175,11 +181,10 @@ public class Updater {
             while ((inputLine = in.readLine()) != null) {
                 builder.append(inputLine);
             }
-            in.close();
 
+            in.close();
         } catch (IOException e) {
-            System.err.println("getWhatsNew() failed");
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "getWhatsNew() failed : IOException");
         }
 
         return builder.toString();

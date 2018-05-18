@@ -244,6 +244,7 @@ public class PreferenceHandler implements PreferenceChangeListener {
         return false;
     }
 
+    // TODO find bug here
     private void convertUserPreferencesBetweenVersions() {
         // load user preferences from RyCON and store them temporary
         Preferences userPrefsV1 = Preferences.userRoot().node(previousNode);
@@ -254,6 +255,10 @@ public class PreferenceHandler implements PreferenceChangeListener {
             final String[] oldValues = new String[oldKeys.length];
 
             userPreferences = Preferences.userRoot().node(previousNode);
+
+            for (int i = 0; i < oldKeys.length; i++) {
+                System.out.println(oldKeys[i]);
+            }
 
             for (int i = 0; i < oldKeys.length; i++) {
                 oldValues[i] = getUserPreference(PreferenceKeys.valueOf(oldKeys[i]));

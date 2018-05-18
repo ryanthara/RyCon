@@ -56,6 +56,7 @@ public enum Errors implements ResourceKeys {
     projectDirNotFound,
     readerCSVFailed,
     readerTXTFailed,
+    reportFailed,
     settingsError,
     tidyUpFailed,
     toporailMepReadingFailed,

@@ -35,6 +35,7 @@ public enum Labels implements ResourceKeys {
     adminPath,
     adminPathDefault,
     adviceText,
+    reportInitialized,
     applicationName,
     applicationTitle,
     bigDataDescription,

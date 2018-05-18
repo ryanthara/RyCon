@@ -75,7 +75,7 @@ public enum DefaultKeys {
 
     OVERWRITE_EXISTING("false"),
 
-    RyCON_UPDATE_URL("https://code.ryanthara.de/content/3-RyCON/_current.version"),
+    RyCON_UPDATE_URL("https://code.ryanthara.de/content/1-projects/1-rycon/_current.version"),
     RyCON_WEBSITE("https://code.ryanthara.de/RyCON"),
     RyCON_WEBSITE_HELP("https://code.ryanthara.de/RyCON/help"),
     RyCON_WHATS_NEW_URL("https://code.ryanthara.de/content/3-RyCON/_whats.new"),

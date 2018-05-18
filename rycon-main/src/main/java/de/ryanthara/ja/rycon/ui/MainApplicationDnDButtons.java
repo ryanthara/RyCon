@@ -26,6 +26,6 @@ package de.ryanthara.ja.rycon.ui;
  */
 public enum MainApplicationDnDButtons {
 
-    CLEAN, LEVELLING, SPLIT
+    ANALYZE, CLEAN, LEVELLING, SPLIT
 
 } // end of MainApplicationDnDButtons

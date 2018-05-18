@@ -52,6 +52,8 @@ public enum Messages implements ResourceKeys {
     projectDirEqualityMessage,
     projectFolderGenerated,
     projectFoldersCreated,
+    reportMessage,
+    reportStatus,
     ryCONUpdate,
     splitFilesMessage,
     splitFilesStatus,

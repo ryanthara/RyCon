@@ -126,6 +126,7 @@ public class GsiLevelling2Cad {
                     break;
 
                 default:
+                    // TODO implement default handling here or delete this
                     System.err.println("GsiLevelling2Cad.processLevelling2Cad() : line contains less or more tokens " + lineSplit);
             }
         }
