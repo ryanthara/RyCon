@@ -28,7 +28,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Instances of this class implement functions to reader a text based file line by line
+ * Instances of this class implement functions to read a text based file line by line
  * and stores its values in an {@code ArrayList<String>}.
  * <p>
  * A couple of things are implemented as additional functionality. At the moment there
@@ -41,7 +41,7 @@ import java.util.logging.Logger;
 public final class LineReader {
 
     /**
-     * Identifier for indicating that the file to reader doesn't has comment lines inside.
+     * Identifier for indicating that the file to read doesn't has comment lines inside.
      */
     public final static String NO_COMMENT_LINE = "nCIgö5BQ";
 
@@ -53,53 +53,53 @@ public final class LineReader {
 
     /**
      * Constructs a new instance of this class with a parameter that accepts a {@link Path} object
-     * for the file to be reader.
+     * for the file to be read.
      *
-     * @param path file to reader as path object
+     * @param path file to read as path object
      */
     public LineReader(Path path) {
         this.path = path;
     }
 
     /**
-     * Returns the number of reader lines from the file.
+     * Returns the number of read lines from the file.
      * <p>
-     * By default the value is set to -1, which shows, that no line has been reader.
+     * By default the value is set to -1, which shows, that no line has been read.
      *
-     * @return number of reader lines
+     * @return number of read lines
      */
-    // TODO Implement the usage of the count reader lines to the status bar
+    // TODO Implement the usage of the count read lines to the status bar
     public int getCountReadLines() {
         return countReadLines;
     }
 
     /**
-     * Returns the number of stored reader lines in the {@code ArrayList<String>}.
+     * Returns the number of stored read lines in the {@code ArrayList<String>}.
      * <p>
-     * By default the value is set to -1, which shows, that no reader line
+     * By default the value is set to -1, which shows, that no read line
      * has been stored to the {@code ArrayList<String>}. This is for comparison
-     * the reader and stored number of lines.
+     * the read and stored number of lines.
      *
      * @return number of stored lines
      */
-    // TODO Implement the usage of the stored reader lines to the status bar (better not dropped lines?)
+    // TODO Implement the usage of the stored read lines to the status bar (better not dropped lines?)
     public int getCountStoredLines() {
         return countStoredLines;
     }
 
     /**
-     * Return the reader lines as an {@code ArrayList<String>} object.
+     * Return the read lines as an {@code ArrayList<String>} object.
      * <p>
-     * The {@code ArrayList<String>} contains every reader line, first line on top.s
+     * The {@code ArrayList<String>} contains every read line, first line on top.
      *
-     * @return reader lines as {@code ArrayList<String>} object
+     * @return read lines as {@code ArrayList<String>} object
      */
     public ArrayList<String> getLines() {
         return lines;
     }
 
     /**
-     * Read a path line by line and return the reader success.
+     * Read a path line by line and return the read success.
      *
      * @param skipEmptyLines should empty lines be skipped
      *
@@ -110,10 +110,10 @@ public final class LineReader {
     }
 
     /**
-     * Reads a path line by line and returns the reader success.
+     * Reads a path line by line and returns the read success.
      * <p>
      * Additionally with the parameter 'comment', there is the possibility to use
-     * a {@code String} as comment sign. These lines will be ignored and not reader.
+     * a {@code String} as comment sign. These lines will be ignored and not read.
      *
      * @param skipEmptyLines should empty lines be skipped
      * @param comment        String for comment signs
@@ -163,10 +163,10 @@ public final class LineReader {
                     }
 
                 } catch (IOException e) {
-                    logger.log(Level.SEVERE, "File " + path.getFileName() + " could not be locked.");
+                    logger.log(Level.SEVERE, "File '" + path.getFileName() + "' could not be locked.");
                 }
             } catch (FileNotFoundException e) {
-                logger.log(Level.SEVERE, "File: " + path.getFileName() + "could not be read.");
+                logger.log(Level.SEVERE, "File '" + path.getFileName() + "' could not be read.");
             } finally {
                 // reset variables back to initialization values
                 countReadLines = -1;
