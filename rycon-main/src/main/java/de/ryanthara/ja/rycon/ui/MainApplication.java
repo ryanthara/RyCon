@@ -643,6 +643,24 @@ public class MainApplication extends Main {
     private void initUI() {
         final String appName = ResourceBundleUtils.getLangString(ResourceBundles.LABELS, Labels.applicationName);
 
+        // TODO check this as a better solution to CocoaUIEnhancer class
+
+        /*
+        Desktop desktop = Desktop.getDesktop();
+
+        desktop.setAboutHandler(e ->
+                JOptionPane.showMessageDialog(null, "About dialog")
+        );
+        desktop.setPreferencesHandler(e ->
+                JOptionPane.showMessageDialog(null, "Preferences dialog")
+        );
+        desktop.setQuitHandler((e,r) -> {
+                    JOptionPane.showMessageDialog(null, "Quit dialog");
+                    System.exit(0);
+                }
+        );
+        */
+
         Display.setAppName(appName);
 
         display = Display.getDefault();
