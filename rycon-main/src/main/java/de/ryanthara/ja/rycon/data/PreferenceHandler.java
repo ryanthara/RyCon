@@ -411,6 +411,9 @@ public class PreferenceHandler implements PreferenceChangeListener {
         // GSI file format settings
         setUserPreference(PreferenceKeys.GSI_SETTING_LINE_ENDING_WITH_BLANK, DefaultKeys.GSI_SETTING_LINE_ENDING_WITH_BLANK.getValue());
 
+        // a couple of parameters for better work flow between modules
+        setUserPreference(PreferenceKeys.LAST_COPIED_LOGFILE, DefaultKeys.LAST_COPIED_LOGFILE.getValue());
+
         logger.log(Level.INFO, "default settings generated");
 
         isDefaultSettingsGenerated = true;
