@@ -69,6 +69,7 @@ public enum Labels implements ResourceKeys {
     lastUsedProjects,
     levellingInitialized,
     levellingText,
+    logfilePath,
     ltopIdentifier,
     minimumPointDistance,
     newConfigFileGenerated,

@@ -37,6 +37,7 @@ public enum Buttons implements ResourceKeys {
     cancelToolTip,
     chooseFilesText,
     chooseFilesToolTip,
+    chooseLogfilePathText,
     choosePathText,
     choosePathToolTip,
     cleanText,

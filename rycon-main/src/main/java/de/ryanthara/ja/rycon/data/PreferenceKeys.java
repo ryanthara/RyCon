@@ -56,6 +56,7 @@ public enum PreferenceKeys {
     GENERATOR("generator"),
     GSI_SETTING_LINE_ENDING_WITH_BLANK("gsi_setting_line_ending_with_blank"),
     INFORMATION_STRING("information_string"),
+    LAST_COPIED_LOGFILE("last_copied_logfile"),
     LAST_POS_PRIMARY_MONITOR("last_pos_primary_monitor"),
     LAST_POS_SECONDARY_MONITOR("last_pos_secondary_monitor"),
     LAST_USED_DISPLAY("last_used_display"),

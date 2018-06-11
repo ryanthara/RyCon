@@ -416,6 +416,10 @@ public class TransferWidget extends AbstractWidget {
 
                             success = copyFiles(source, target, overwriteExisting);
 
+                            if (success) {
+                                Main.pref.setUserPreference(PreferenceKeys.LAST_COPIED_LOGFILE, target.toString());
+                            }
+
                             if (chkBoxCleanLogfile.getSelection() && success) {
                                 final String editString = Main.pref.getUserPreference(PreferenceKeys.PARAM_EDIT_STRING);
 

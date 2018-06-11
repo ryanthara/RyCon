@@ -61,6 +61,9 @@ public enum DefaultKeys {
     DIR_PROJECT_MEASUREMENT_FILES("08.Bearb_Rapp/Messdaten/GSI"),
     DIR_PROJECT_JOB_FILES("08.Bearb_Rapp/Messdaten/DBX"),
 
+    // save a couple of values for better work flow between modules
+    LAST_COPIED_LOGFILE(""),
+
     LAST_POS_PRIMARY_MONITOR("-9999, -9999"),
     LAST_POS_SECONDARY_MONITOR("-9998, -9998"),
     LAST_USED_DISPLAY("-1"),

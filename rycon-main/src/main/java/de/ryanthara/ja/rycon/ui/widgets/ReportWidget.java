@@ -18,17 +18,27 @@
 package de.ryanthara.ja.rycon.ui.widgets;
 
 import de.ryanthara.ja.rycon.Main;
-import de.ryanthara.ja.rycon.i18n.Errors;
-import de.ryanthara.ja.rycon.i18n.Labels;
-import de.ryanthara.ja.rycon.i18n.Messages;
-import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
+import de.ryanthara.ja.rycon.data.PreferenceKeys;
+import de.ryanthara.ja.rycon.i18n.*;
+import de.ryanthara.ja.rycon.ui.Sizes;
+import de.ryanthara.ja.rycon.ui.custom.BottomButtonBar;
+import de.ryanthara.ja.rycon.ui.custom.FileDialogs;
 import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
+import de.ryanthara.ja.rycon.ui.util.ShellPositioner;
 import de.ryanthara.ja.rycon.util.StringUtils;
 import de.ryanthara.ja.rycon.util.check.PathCheck;
+import de.ryanthara.ja.rycon.util.check.TextCheck;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.*;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Optional;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.*;
@@ -50,6 +60,7 @@ public class ReportWidget extends AbstractWidget {
     private Shell parent;
     private Path[] files2read;
     private Shell innerShell;
+    private Text logfilePath;
 
     /**
      * Constructs a new instance of this class without parameters.
@@ -93,39 +104,167 @@ public class ReportWidget extends AbstractWidget {
         }
     }
 
-    private boolean processFileOperationsDND() {
-        int counter = fileOperations();
-
-        if (counter > 0) {
-            // set the counter for status bar information
-            Main.countFileOps = counter;
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     @Override
     void actionBtnCancel() {
-
+        Main.setSubShellStatus(false);
+        Main.statusBar.setStatus("", OK);
+        innerShell.dispose();
     }
 
     @Override
     boolean actionBtnOk() {
+        if (TextCheck.isEmpty(logfilePath)) {
+            return false;
+        }
+
+        if ((files2read != null) && (files2read.length > 0)) {
+            if (processFileOperations()) {
+                updateStatus();
+            }
+
+            return true;
+        }
+
         return false;
     }
 
     @Override
     void actionBtnOkAndExit() {
+        if (actionBtnOk()) {
+            Main.setSubShellStatus(false);
+            Main.statusBar.setStatus("", OK);
 
+            innerShell.dispose();
+        }
     }
 
     @Override
     void initUI() {
+        int height = Sizes.RyCON_WIDGET_HEIGHT.getValue();
+        int width = Sizes.RyCON_WIDGET_WIDTH.getValue();
 
+        GridLayout gridLayout = new GridLayout(1, true);
+        gridLayout.marginHeight = 5;
+        gridLayout.marginWidth = 5;
+
+        GridData gridData = new GridData(SWT.FILL, SWT.CENTER, true, true);
+        gridData.heightHint = height;
+        gridData.widthHint = width;
+
+        innerShell = new Shell(parent, SWT.CLOSE | SWT.DIALOG_TRIM | SWT.MAX | SWT.TITLE | SWT.APPLICATION_MODAL);
+        innerShell.addListener(SWT.Close, event -> actionBtnCancel());
+        innerShell.setText(ResourceBundleUtils.getLangString(LABELS, Labels.tidyUpText));
+        innerShell.setSize(width, height);
+
+        innerShell.setLayout(gridLayout);
+        innerShell.setLayoutData(gridData);
+
+        createInputFieldComposite();
+
+        new BottomButtonBar(this, innerShell, BottomButtonBar.OK_AND_EXIT_BUTTON);
+
+        innerShell.setLocation(ShellPositioner.centerShellOnPrimaryMonitor(innerShell));
+
+        Main.setSubShellStatus(true);
+
+        innerShell.pack();
+        innerShell.open();
+    }
+
+    private void actionBtnLogfilePath() {
+        String[] filterNames = new String[]{
+                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameLogfileTXT)
+        };
+
+        String filterPath = Main.pref.getUserPreference(PreferenceKeys.LAST_COPIED_LOGFILE);
+
+        // Set the initial filter path according to anything selected or typed in
+        if (!TextCheck.isEmpty(logfilePath)) {
+            if (TextCheck.isFileExists(logfilePath)) {
+                filterPath = logfilePath.getText();
+            }
+        }
+
+        Optional<Path[]> files = FileDialogs.showAdvancedFileDialog(
+                innerShell,
+                filterPath,
+                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.fileLogfile),
+                acceptableFileSuffixes,
+                filterNames,
+                logfilePath);
+
+        if (files.isPresent()) {
+            files2read = files.get();
+        } else {
+            logger.log(Level.SEVERE, "can not get the 'logfile.txt' files");
+        }
+    }
+
+    private void createInputFieldComposite() {
+        Group group = new Group(innerShell, SWT.NONE);
+
+        GridLayout gridLayout = new GridLayout();
+        gridLayout.marginHeight = 5;
+        gridLayout.marginWidth = 5;
+        gridLayout.numColumns = 3;
+
+        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
+        gridData.widthHint = Sizes.RyCON_WIDGET_WIDTH.getValue();
+
+        group.setLayout(gridLayout);
+        group.setLayoutData(gridData);
+
+        Label logfilePathLabel = new Label(group, SWT.NONE);
+        logfilePathLabel.setText(ResourceBundleUtils.getLangString(LABELS, Labels.logfilePath));
+
+        Path logfile = Paths.get(Main.pref.getUserPreference(PreferenceKeys.LAST_COPIED_LOGFILE));
+
+        logfilePath = new Text(group, SWT.SINGLE | SWT.BORDER);
+        logfilePath.setText(logfile.toString());
+
+        gridData = new GridData();
+        gridData.grabExcessHorizontalSpace = true;
+        gridData.horizontalAlignment = GridData.FILL;
+        logfilePath.setLayoutData(gridData);
+
+        Button btnLogfilePath = new Button(group, SWT.NONE);
+        btnLogfilePath.setText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.chooseLogfilePathText));
+        btnLogfilePath.setToolTipText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.chooseLogfilePathText));
+        btnLogfilePath.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                actionBtnLogfilePath();
+            }
+        });
+
+        gridData = new GridData();
+        gridData.horizontalAlignment = SWT.FILL;
+        btnLogfilePath.setLayoutData(gridData);
+
+        Control[] tabulatorKeyOrder = new Control[]{
+                logfilePath, btnLogfilePath
+        };
+
+        group.setTabList(tabulatorKeyOrder);
     }
 
     private int fileOperations() {
+
+        // read logfile.txt
+
+        // clean logfile.txt
+
+        // grab and count free stations
+
+        // grab and count stake out
+
+        // grab and count reference line
+
+        // grab and count COGO
+
+        // grab and count ??
+
+
 
 
         return 0;
@@ -135,8 +274,7 @@ public class ReportWidget extends AbstractWidget {
         String files = Main.getCLIInputFiles();
 
         if (files != null) {
-            System.out.println("you may analyze this");
-//            inputFieldsComposite.setSourceTextFieldText(files);
+            logfilePath.setText(files);
         }
     }
 
@@ -172,6 +310,18 @@ public class ReportWidget extends AbstractWidget {
         }
 
         return success;
+    }
+
+    private boolean processFileOperationsDND() {
+        int counter = fileOperations();
+
+        if (counter > 0) {
+            // set the counter for status bar information
+            Main.countFileOps = counter;
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private void updateStatus() {

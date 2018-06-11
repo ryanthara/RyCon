@@ -47,6 +47,7 @@ public enum FileChoosers implements ResourceKeys {
     dirProjectText,
     dirProjectTemplateMessage,
     dirProjectTemplateText,
+    fileLogfile,
     filterNameCadwork,
     filterNameCSV,
     filterNameGSI,

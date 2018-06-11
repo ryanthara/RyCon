@@ -312,23 +312,23 @@ public class MainApplication extends Main {
         btnAbout.setLayoutData(gridData);
     }
 
-    private void createButtonAnalyzer(Composite composite) {
-        Button btnToolboxAnalyze = new Button(composite, SWT.PUSH | SWT.LEFT);
-        btnToolboxAnalyze.setImage(new ImageConverter().convertToImage(display, Images.btnReport.getPath()));
-        btnToolboxAnalyze.setText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.reportText));
-        btnToolboxAnalyze.setToolTipText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.reportToolTip));
+    private void createButtonReport(Composite composite) {
+        Button btnToolboxReport = new Button(composite, SWT.PUSH | SWT.LEFT);
+        btnToolboxReport.setImage(new ImageConverter().convertToImage(display, Images.btnReport.getPath()));
+        btnToolboxReport.setText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.reportText));
+        btnToolboxReport.setToolTipText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.reportToolTip));
 
-        btnToolboxAnalyze.addSelectionListener(new SelectionAdapter() {
+        btnToolboxReport.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                actionBtn09();
+                actionBtn07();
             }
         });
 
         GridData gridData = new GridData(Sizes.RyCON_GRID_WIDTH.getValue(), Sizes.RyCON_GRID_HEIGHT.getValue());
-        btnToolboxAnalyze.setLayoutData(gridData);
+        btnToolboxReport.setLayoutData(gridData);
 
-        handleDropTarget(btnToolboxAnalyze, ANALYZE);
+        handleDropTarget(btnToolboxReport, ANALYZE);
     }
 
     private void createButtonCleanTool(Composite composite) {
@@ -501,7 +501,7 @@ public class MainApplication extends Main {
         btnTransformation.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                actionBtn07();
+                actionBtn08();
             }
         });
 
@@ -706,7 +706,7 @@ public class MainApplication extends Main {
         createButtonLevelTool(compositeGrid);
         createButtonConvertTool(compositeGrid);
         //createWithoutFunction(compositeGrid);
-        createButtonAnalyzer(compositeGrid);
+        createButtonReport(compositeGrid);
         createButtonTransformationTool(compositeGrid);
         createButtonPrintTool(compositeGrid);
         createButtonSettingsTool(compositeGrid);

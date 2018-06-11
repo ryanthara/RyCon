@@ -35,6 +35,31 @@ import java.util.Optional;
  */
 public class FileDialogs {
 
+    private static Path[] handleFile(FileDialog fileDialog, Text source) {
+        String[] files = fileDialog.getFileNames();
+
+        Path[] files2read = new Path[files.length];
+
+        String concatString = "";
+        String workingDir = fileDialog.getFilterPath();
+
+        for (int i = 0; i < files.length; i++) {
+            concatString = concatString.concat(workingDir);
+            concatString = concatString.concat(FileSystems.getDefault().getSeparator());
+            concatString = concatString.concat(files[i]);
+
+            if (i < files.length - 1) {
+                concatString = concatString.concat(" ");
+            }
+
+            files2read[i] = Paths.get(workingDir + FileSystems.getDefault().getSeparator() + files[i]);
+        }
+
+        source.setText(concatString);
+
+        return files2read;
+    }
+
     private static Path[] handleFile(FileDialog fileDialog, Text source, Text target) {
         String[] files = fileDialog.getFileNames();
 
@@ -68,13 +93,41 @@ public class FileDialogs {
      * @param filterExtensions allowed extensions
      * @param filterNames      description of allowed extensions
      * @param source           source text field
+     *
+     * @return chosen files as {@link Path} array
+     */
+    public static Optional<Path[]> showAdvancedFileDialog(Shell innerShell, String filterPath, String text, String[] filterExtensions,
+                                                          String[] filterNames, Text source) {
+        FileDialog fileDialog = new FileDialog(innerShell, org.eclipse.swt.SWT.MULTI);
+        fileDialog.setFilterPath(filterPath);
+        fileDialog.setText(text);
+        fileDialog.setFilterExtensions(filterExtensions);
+        fileDialog.setFilterNames(filterNames);
+
+        if (fileDialog.open() != null) {
+            return Optional.of(handleFile(fileDialog, source));
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    /**
+     * Shows a {@link FileDialog} which is used in different widgets of RyCON's ui.
+     * <p>
+     * With a special number of parameters the dialog is fully customizable.
+     *
+     * @param innerShell       shell object
+     * @param filterPath       filter path of the file dialog
+     * @param text             title of the file dialog
+     * @param filterExtensions allowed extensions
+     * @param filterNames      description of allowed extensions
+     * @param source           source text field
      * @param target           target text field
      *
      * @return chosen files as {@link Path} array
      */
     public static Optional<Path[]> showAdvancedFileDialog(Shell innerShell, String filterPath, String text, String[] filterExtensions,
                                                           String[] filterNames, Text source, Text target) {
-
         FileDialog fileDialog = new FileDialog(innerShell, org.eclipse.swt.SWT.MULTI);
         fileDialog.setFilterPath(filterPath);
         fileDialog.setText(text);
