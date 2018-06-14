@@ -117,6 +117,11 @@ public class ReportWidget extends AbstractWidget {
             return false;
         }
 
+        if (files2read.length == 0) {
+            files2read = new Path[1];
+            files2read[0] = Paths.get(logfilePath.getText());
+        }
+
         if ((files2read != null) && (files2read.length > 0)) {
             if (processFileOperations()) {
                 updateStatus();
@@ -250,6 +255,8 @@ public class ReportWidget extends AbstractWidget {
 
     private int fileOperations() {
 
+        System.out.println("File Operations arrived");
+
         // read logfile.txt
 
         // clean logfile.txt
@@ -263,8 +270,6 @@ public class ReportWidget extends AbstractWidget {
         // grab and count COGO
 
         // grab and count ??
-
-
 
 
         return 0;
