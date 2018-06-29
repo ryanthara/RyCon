@@ -165,8 +165,10 @@ public class PreferenceHandler implements PreferenceChangeListener {
         // TODO catch java.lang.IllegalArgumentException: No enum constant for missing preference keys
 
         try {
+            //System.out.println("Try to get UserPreference: " + preference.getKey());
             return userPreferences.get(preference.getKey(), "");
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return "";
         }
     }
@@ -263,7 +265,7 @@ public class PreferenceHandler implements PreferenceChangeListener {
             userPreferences = Preferences.userRoot().node(previousNode);
 
             for (int i = 0; i < oldKeys.length; i++) {
-                System.out.println("existent old keys: " + oldKeys[i]);
+                System.out.println(i + "\texistent old keys: " + oldKeys[i]);
             }
 
             for (int i = 0; i < oldKeys.length; i++) {

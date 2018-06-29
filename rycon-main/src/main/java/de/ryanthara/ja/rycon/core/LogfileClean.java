@@ -17,6 +17,8 @@
  */
 package de.ryanthara.ja.rycon.core;
 
+import de.ryanthara.ja.rycon.core.logfile.leica.Identifier;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,7 +75,7 @@ public final class LogfileClean {
         int start = -1;
         String currentLine;
         ArrayList<String> result = new ArrayList<>();
-        LogfileBlocks currentBlock = null;
+        Identifier currentBlock = null;
 
         for (int i = 0; i < readStringLines.size(); i++) {
             currentLine = readStringLines.get(i);
@@ -128,20 +130,20 @@ public final class LogfileClean {
 
             // detect block type
             if (i == start + 5) {
-                if (currentLine.contains(LogfileBlocks.COGO.getIdentifier())) {
-                    currentBlock = LogfileBlocks.COGO;
+                if (currentLine.contains(Identifier.COGO.getIdentifier())) {
+                    currentBlock = Identifier.COGO;
                 }
 
-                if (currentLine.contains(LogfileBlocks.REFERENCE_LINE.getIdentifier())) {
-                    currentBlock = LogfileBlocks.REFERENCE_LINE;
+                if (currentLine.contains(Identifier.REFERENCE_LINE.getIdentifier())) {
+                    currentBlock = Identifier.REFERENCE_LINE;
                 }
 
-                if (currentLine.contains(LogfileBlocks.SETUP.getIdentifier())) {
-                    currentBlock = LogfileBlocks.SETUP;
+                if (currentLine.contains(Identifier.SETUP.getIdentifier())) {
+                    currentBlock = Identifier.SETUP;
                 }
 
-                if (currentLine.contains(LogfileBlocks.STAKEOUT.getIdentifier())) {
-                    currentBlock = LogfileBlocks.STAKEOUT;
+                if (currentLine.contains(Identifier.STAKEOUT.getIdentifier())) {
+                    currentBlock = Identifier.STAKEOUT;
                 }
             }
 

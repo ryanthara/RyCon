@@ -18,8 +18,11 @@
 package de.ryanthara.ja.rycon.ui.widgets;
 
 import de.ryanthara.ja.rycon.Main;
+import de.ryanthara.ja.rycon.core.LogfileClean;
+import de.ryanthara.ja.rycon.core.logfile.LogfileAnalyzer;
 import de.ryanthara.ja.rycon.data.PreferenceKeys;
 import de.ryanthara.ja.rycon.i18n.*;
+import de.ryanthara.ja.rycon.nio.LineReader;
 import de.ryanthara.ja.rycon.ui.Sizes;
 import de.ryanthara.ja.rycon.ui.custom.BottomButtonBar;
 import de.ryanthara.ja.rycon.ui.custom.FileDialogs;
@@ -37,6 +40,7 @@ import org.eclipse.swt.widgets.*;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -47,6 +51,8 @@ import static de.ryanthara.ja.rycon.ui.custom.Status.OK;
 /**
  * Instances of this class provides functions to analyze log files to show an overview sheet
  * with the results of a stake out or reference line measurement.
+ * <p>
+ * Log files are structured and in a chronological order.
  *
  * @author sebastian
  * @version 1
@@ -158,7 +164,7 @@ public class ReportWidget extends AbstractWidget {
 
         innerShell = new Shell(parent, SWT.CLOSE | SWT.DIALOG_TRIM | SWT.MAX | SWT.TITLE | SWT.APPLICATION_MODAL);
         innerShell.addListener(SWT.Close, event -> actionBtnCancel());
-        innerShell.setText(ResourceBundleUtils.getLangString(LABELS, Labels.tidyUpText));
+        innerShell.setText(ResourceBundleUtils.getLangString(LABELS, Labels.reportText));
         innerShell.setSize(width, height);
 
         innerShell.setLayout(gridLayout);
@@ -226,6 +232,9 @@ public class ReportWidget extends AbstractWidget {
 
         logfilePath = new Text(group, SWT.SINGLE | SWT.BORDER);
         logfilePath.setText(logfile.toString());
+        // prevent shortcuts for execute when the text fields are empty
+        logfilePath.addListener(SWT.Traverse, this::handleEvent);
+
 
         gridData = new GridData();
         gridData.grabExcessHorizontalSpace = true;
@@ -254,25 +263,46 @@ public class ReportWidget extends AbstractWidget {
     }
 
     private int fileOperations() {
+        int counter = 0;
 
-        System.out.println("File Operations arrived");
+        LineReader lineReader;
 
-        // read logfile.txt
+        for (Path path : files2read) {
+            lineReader = new LineReader(path);
 
-        // clean logfile.txt
+            if (lineReader.readFile(false)) {
+                ArrayList<String> readFile = lineReader.getLines();
+                ArrayList<String> cleanFile;
 
-        // grab and count free stations
+                final String fileName = path.getFileName().toString();
 
-        // grab and count stake out
+                if (fileName.toUpperCase().endsWith("LOGFILE.TXT")) {
+                    LogfileClean logfileClean = new LogfileClean(readFile);
+                    cleanFile = logfileClean.processTidyUp(true);
 
-        // grab and count reference line
+                    LogfileAnalyzer logfileAnalyzer = new LogfileAnalyzer(cleanFile);
 
-        // grab and count COGO
+                    if (logfileAnalyzer.analyzeLeicaGeosystemsLogfile()) {
+                        System.out.println("Leica Geosystems logfile.txt analyzed finished.");
 
-        // grab and count ??
+                        counter = counter + 1;
+                    }
+                }
 
+            }
+        }
 
-        return 0;
+        return counter;
+    }
+
+    private void handleEvent(Event event) {
+        if (!(this.logfilePath.getText().trim().equals(""))) {
+            if (((event.stateMask & SWT.SHIFT) == SWT.SHIFT) && (event.detail == SWT.TRAVERSE_RETURN)) {
+                actionBtnOk();
+            } else if (((event.stateMask & SWT.CTRL) == SWT.CTRL) && (event.detail == SWT.TRAVERSE_RETURN)) {
+                actionBtnOkAndExit();
+            }
+        }
     }
 
     private void handleFileInjection() {

@@ -44,15 +44,15 @@ public class WriteExcel2Disk {
     /**
      * Writes a Microsoft Excel (.XLS or .XLSX) file from a {@link Workbook} to the file system and returns writer success.
      *
-     * @param path     path object
-     * @param workbook prepared {@link Workbook} for writing
-     * @param suffix   file suffix
+     * @param path              path object
+     * @param workbook          prepared {@link Workbook} for writing
+     * @param filenameExtension filename extension
      *
      * @return writer success
      */
-    public static boolean writeExcel2Disk(Path path, Workbook workbook, String suffix) {
+    public static boolean writeExcel2Disk(Path path, Workbook workbook, String filenameExtension) {
         boolean writeSuccess;
-        final Path outputFileName = PathUtils.prepareOutputFileName(path, suffix);
+        final Path outputFileName = PathUtils.prepareOutputFileName(path, "", filenameExtension);
         FileToolsExcel fileToolsExcel = new FileToolsExcel(workbook);
 
         if (Files.exists(outputFileName)) {
@@ -63,18 +63,18 @@ public class WriteExcel2Disk {
                     String.format(ResourceBundleUtils.getLangString(WARNINGS, Warnings.fileExistsOverwrite), outputFileName));
 
             if (returnValue == SWT.YES) {
-                if (suffix.equalsIgnoreCase(".xls")) {
+                if (filenameExtension.equalsIgnoreCase(".xls")) {
                     writeSuccess = fileToolsExcel.writeXLS(outputFileName);
                 } else
-                    writeSuccess = suffix.equalsIgnoreCase(".xlsx") && fileToolsExcel.writeXLSX(outputFileName);
+                    writeSuccess = filenameExtension.equalsIgnoreCase(".xlsx") && fileToolsExcel.writeXLSX(outputFileName);
             } else {
                 writeSuccess = false;
             }
         } else {
-            if (suffix.equalsIgnoreCase(".xls")) {
+            if (filenameExtension.equalsIgnoreCase(".xls")) {
                 writeSuccess = fileToolsExcel.writeXLS(outputFileName);
             } else
-                writeSuccess = suffix.equalsIgnoreCase(".xlsx") && fileToolsExcel.writeXLSX(outputFileName);
+                writeSuccess = filenameExtension.equalsIgnoreCase(".xlsx") && fileToolsExcel.writeXLSX(outputFileName);
         }
 
         return writeSuccess;

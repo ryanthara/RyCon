@@ -514,21 +514,23 @@ public class ConverterWidget extends AbstractWidget {
         return readFileMap;
     }
 
-    private Map<Integer, Writer> prepareWriteFile(Path path, ArrayList<String> readStringFile, List<String[]> readCSVFile, WriteParameter parameter) {
+    private Map<Integer, Writer> prepareWriteFile(Path readFile, ArrayList<String> readStringFile, List<String[]> readCSVFile, WriteParameter parameter) {
+        final Path writeFile = Paths.get(inputFieldsComposite.getTargetTextField().getText() + FileSystems.getDefault().getSeparator() + readFile.getFileName());
+
         Map<Integer, Writer> writeFileMap = new HashMap<>();
-        writeFileMap.put(0, new GsiWriter(path, readStringFile, readCSVFile, parameter, Main.getGSI8()));
-        writeFileMap.put(1, new GsiWriter(path, readStringFile, readCSVFile, parameter, Main.getGSI16()));
-        writeFileMap.put(2, new TxtWriter(path, readStringFile, readCSVFile, parameter));
-        writeFileMap.put(3, new CsvWriter(path, readStringFile, readCSVFile, parameter));
-        writeFileMap.put(4, new CaplanWriter(path, readStringFile, readCSVFile, parameter));
-        writeFileMap.put(5, new ZeissWriter(path, readStringFile, readCSVFile, parameter));
-        writeFileMap.put(6, new LtopKooWriter(path, readStringFile, readCSVFile, parameter));
-        writeFileMap.put(7, new LtopMesWriter(path, readStringFile, parameter));
-        writeFileMap.put(8, new ToporailWriter(path, readStringFile, readCSVFile, parameter, FileType.MEP));
-        writeFileMap.put(9, new ToporailWriter(path, readStringFile, readCSVFile, parameter, FileType.PTS));
-        writeFileMap.put(10, new ExcelWriter(path, readStringFile, readCSVFile, parameter, BaseToolsExcel.isXLSX));
-        writeFileMap.put(11, new ExcelWriter(path, readStringFile, readCSVFile, parameter, BaseToolsExcel.isXLS));
-        writeFileMap.put(12, new OdfWriter(path, readStringFile, readCSVFile, parameter));
+        writeFileMap.put(0, new GsiWriter(writeFile, readStringFile, readCSVFile, parameter, Main.getGSI8()));
+        writeFileMap.put(1, new GsiWriter(writeFile, readStringFile, readCSVFile, parameter, Main.getGSI16()));
+        writeFileMap.put(2, new TxtWriter(writeFile, readStringFile, readCSVFile, parameter));
+        writeFileMap.put(3, new CsvWriter(writeFile, readStringFile, readCSVFile, parameter));
+        writeFileMap.put(4, new CaplanWriter(writeFile, readStringFile, readCSVFile, parameter));
+        writeFileMap.put(5, new ZeissWriter(writeFile, readStringFile, readCSVFile, parameter));
+        writeFileMap.put(6, new LtopKooWriter(writeFile, readStringFile, readCSVFile, parameter));
+        writeFileMap.put(7, new LtopMesWriter(writeFile, readStringFile, parameter));
+        writeFileMap.put(8, new ToporailWriter(writeFile, readStringFile, readCSVFile, parameter, FileType.MEP));
+        writeFileMap.put(9, new ToporailWriter(writeFile, readStringFile, readCSVFile, parameter, FileType.PTS));
+        writeFileMap.put(10, new ExcelWriter(writeFile, readStringFile, readCSVFile, parameter, BaseToolsExcel.isXLSX));
+        writeFileMap.put(11, new ExcelWriter(writeFile, readStringFile, readCSVFile, parameter, BaseToolsExcel.isXLS));
+        writeFileMap.put(12, new OdfWriter(writeFile, readStringFile, readCSVFile, parameter));
 
         return writeFileMap;
     }
@@ -567,7 +569,7 @@ public class ConverterWidget extends AbstractWidget {
             List<String[]> readCSVFile = null;
             ArrayList<String> readStringFile = null;
 
-            // reader files (new version)
+            // read files (new version)
             if (readFileMap.containsKey(sourceNumber)) {
                 if (readFileMap.get(sourceNumber).readFile(file2read)) {
                     if ((readCSVFile = readFileMap.get(sourceNumber).getReadCSVFile()) != null) {
@@ -578,7 +580,7 @@ public class ConverterWidget extends AbstractWidget {
                 }
             }
 
-            // writer files (new version)
+            // write files (new version)
             if (readFileSuccess) {
                 Map<Integer, Writer> writeFileMap = prepareWriteFile(file2read, readStringFile, readCSVFile, parameter);
                 if (writeFileMap.containsKey(targetNumber)) {
