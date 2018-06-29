@@ -15,11 +15,13 @@
  * You should have received a copy of the GNU General Public License along with
  * this package. If not, see <http://www.gnu.org/licenses/>.
  */
-package de.ryanthara.ja.rycon.core;
+package de.ryanthara.ja.rycon.core.logfile.leica;
 
 /**
- * The {@code LogfileBlocks} enumeration holds all the identification strings for
+ * The {@code Identifier} enumeration holds all of the identification strings for
  * the <tt>Leica Geosystems</tt> logfile.txt for {@code RyCON}.
+ * <p>
+ * The identifiers are used to find the structure block (e.g. SETUP or STAKE OUT).
  * <p>
  * This enumeration is used for encapsulating the data and error minimization.
  *
@@ -27,16 +29,27 @@ package de.ryanthara.ja.rycon.core;
  * @version 1
  * @since 2.0
  */
-public enum LogfileBlocks {
+public enum Identifier {
 
+    // Identify the different structures
+    GENERAL("Leica System 1200"),
     COGO("Leica System 1200 COGO,"),
     REFERENCE_LINE("Leica System 1200 Reference Line,"),
+    REFERENCE_PLANE("Leica System 1200 Reference Plane,"),
     SETUP("Leica System 1200 Setup,"),
-    STAKEOUT("Leica System 1200 Stakeout,");
+    STAKEOUT("Leica System 1200 Stakeout,"),
+    VOLUME_CALCULATIONS("Leica System 1200, Volume Calculations"),
+
+    // Identify the same general elements used in all structures (original order)
+    INSTRUMENT_TYPE("Instrument Type"),
+    INSTRUMENT_SERIAL("Instrument Serial No."),
+
+    STORE_TO_JOB("Store To Job"),
+    APPLICATION_START("Start\t");
 
     private String identifier;
 
-    LogfileBlocks(String identifier) {
+    Identifier(String identifier) {
         this.identifier = identifier;
     }
 
@@ -59,4 +72,4 @@ public enum LogfileBlocks {
         return identifier;
     }
 
-} // end of LogfileBlocks
+} // end of Identifier

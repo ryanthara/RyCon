@@ -85,6 +85,7 @@ public enum Labels implements ResourceKeys {
     projectNumber,
     projectPath,
     projectPathDefault,
+    reportText,
     ryCONInitialized,
     ryCONUpdateText,
     settingsGeneralText,
