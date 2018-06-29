@@ -328,7 +328,7 @@ public class LevellingWidget extends AbstractWidget {
 
     private int fileOperations(boolean holdChangePoints) {
         int counter = 0;
-        final String editString = Main.pref.getUserPreference(PreferenceKeys.PARAM_LEVEL_STRING);
+        final String levelString = Main.pref.getUserPreference(PreferenceKeys.PARAM_LEVEL_STRING);
 
         for (Path file2read : files2read) {
             LineReader lineReader = new LineReader(file2read);
@@ -351,7 +351,7 @@ public class LevellingWidget extends AbstractWidget {
                     break;
                 }
 
-                if (WriteFile2Disk.writeFile2Disk(file2read, writeFile, editString, "GSI")) {
+                if (WriteFile2Disk.writeFile2Disk(file2read, writeFile, levelString, "GSI")) {
                     counter = counter + 1;
                 }
             } else {
