@@ -57,7 +57,7 @@ public final class WriteFile2Disk {
         if (editString.equals("")) {
             return Paths.get(fileNameWithoutExtension + fileNameExtension);
         } else {
-            return Paths.get(fileNameWithoutExtension + "_" + editString + fileNameExtension);
+            return Paths.get(fileNameWithoutExtension + editString + fileNameExtension);
         }
     }
 
