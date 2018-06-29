@@ -20,7 +20,6 @@ package de.ryanthara.ja.rycon.ui.widgets;
 import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.core.GsiCodeSplit;
 import de.ryanthara.ja.rycon.core.TextCodeSplit;
-import de.ryanthara.ja.rycon.data.DefaultKeys;
 import de.ryanthara.ja.rycon.data.PreferenceKeys;
 import de.ryanthara.ja.rycon.i18n.*;
 import de.ryanthara.ja.rycon.nio.LineReader;
@@ -329,10 +328,9 @@ public class CodeSplitterWidget extends AbstractWidget {
 
         // writer file by file with one code
         for (ArrayList<String> lines : writeFile) {
+            final String codeString = Main.pref.getUserPreference(PreferenceKeys.PARAM_CODE_STRING) + "-" + codeIterator.next();
 
-            final String editString = DefaultKeys.PARAM_CODE_STRING.getValue() + "-" + codeIterator.next();
-
-            if (WriteFile2Disk.writeFile2Disk(file2read, lines, editString, "GSI")) {
+            if (WriteFile2Disk.writeFile2Disk(file2read, lines, codeString, "GSI")) {
                 counter = counter + 1;
             }
         }
@@ -350,7 +348,6 @@ public class CodeSplitterWidget extends AbstractWidget {
 
         // writer file by file with one code
         for (ArrayList<String> lines : writeFile) {
-
             final String editString = Main.pref.getUserPreference(PreferenceKeys.PARAM_CODE_STRING) + "-" + codeIterator.next();
 
             if (WriteFile2Disk.writeFile2Disk(file2read, lines, editString, "TXT")) {
