@@ -17,7 +17,6 @@
  */
 package de.ryanthara.ja.rycon.nio;
 
-import de.ryanthara.ja.rycon.data.DefaultKeys;
 import de.ryanthara.ja.rycon.i18n.Labels;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 import de.ryanthara.ja.rycon.i18n.Warnings;
@@ -29,7 +28,6 @@ import org.odftoolkit.simple.SpreadsheetDocument;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LABELS;
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.WARNINGS;
@@ -43,12 +41,6 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.WARNINGS;
  */
 public class WriteOdf2Disk {
 
-    private static String prepareOutputFileName(Path path, String suffix) {
-        final String paramEditString = DefaultKeys.PARAM_EDIT_STRING.getValue();
-
-        return path.toString().substring(0, path.toString().length() - 4) + "_" + paramEditString + suffix;
-    }
-
     /**
      * Writes a Open Document spreadsheet from a {@link SpreadsheetDocument} to the file system and returns writer success.
      *
@@ -59,11 +51,10 @@ public class WriteOdf2Disk {
      */
     public static boolean writeOds2Disk(Path path, SpreadsheetDocument spreadsheetDocument) {
         boolean writeSuccess;
-        String outputFileName = prepareOutputFileName(path, ".ods");
-
+        final Path outputFileName = PathUtils.prepareOutputFileName(path, ".ods");
         FileToolsOdf fileToolsOdf = new FileToolsOdf(spreadsheetDocument);
 
-        if (Files.exists(Paths.get(outputFileName))) {
+        if (Files.exists(outputFileName)) {
             final Shell shell = Display.getCurrent().getActiveShell();
 
             int returnValue = MessageBoxes.showMessageBox(shell, SWT.ICON_WARNING | SWT.YES | SWT.NO,
