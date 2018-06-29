@@ -17,7 +17,6 @@
  */
 package de.ryanthara.ja.rycon.nio;
 
-import de.ryanthara.ja.rycon.data.DefaultKeys;
 import de.ryanthara.ja.rycon.i18n.Labels;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 import de.ryanthara.ja.rycon.i18n.Warnings;
@@ -29,7 +28,6 @@ import org.eclipse.swt.widgets.Shell;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LABELS;
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.WARNINGS;
@@ -43,12 +41,6 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.WARNINGS;
  */
 public class WriteExcel2Disk {
 
-    private static String prepareOutputFileName(Path path, String suffix) {
-        final String paramEditString = DefaultKeys.PARAM_EDIT_STRING.getValue();
-
-        return path.toString().substring(0, path.toString().length() - 4) + "_" + paramEditString + suffix;
-    }
-
     /**
      * Writes a Microsoft Excel (.XLS or .XLSX) file from a {@link Workbook} to the file system and returns writer success.
      *
@@ -60,11 +52,10 @@ public class WriteExcel2Disk {
      */
     public static boolean writeExcel2Disk(Path path, Workbook workbook, String suffix) {
         boolean writeSuccess;
-        String outputFileName = prepareOutputFileName(path, suffix);
-
+        final Path outputFileName = PathUtils.prepareOutputFileName(path, suffix);
         FileToolsExcel fileToolsExcel = new FileToolsExcel(workbook);
 
-        if (Files.exists(Paths.get(outputFileName))) {
+        if (Files.exists(outputFileName)) {
             final Shell shell = Display.getCurrent().getActiveShell();
 
             int returnValue = MessageBoxes.showMessageBox(shell, SWT.ICON_WARNING | SWT.YES | SWT.NO,
@@ -73,17 +64,17 @@ public class WriteExcel2Disk {
 
             if (returnValue == SWT.YES) {
                 if (suffix.equalsIgnoreCase(".xls")) {
-                    writeSuccess = fileToolsExcel.writeXLS(Paths.get(outputFileName));
+                    writeSuccess = fileToolsExcel.writeXLS(outputFileName);
                 } else
-                    writeSuccess = suffix.equalsIgnoreCase(".xlsx") && fileToolsExcel.writeXLSX(Paths.get(outputFileName));
+                    writeSuccess = suffix.equalsIgnoreCase(".xlsx") && fileToolsExcel.writeXLSX(outputFileName);
             } else {
                 writeSuccess = false;
             }
         } else {
             if (suffix.equalsIgnoreCase(".xls")) {
-                writeSuccess = fileToolsExcel.writeXLS(Paths.get(outputFileName));
+                writeSuccess = fileToolsExcel.writeXLS(outputFileName);
             } else
-                writeSuccess = suffix.equalsIgnoreCase(".xlsx") && fileToolsExcel.writeXLSX(Paths.get(outputFileName));
+                writeSuccess = suffix.equalsIgnoreCase(".xlsx") && fileToolsExcel.writeXLSX(outputFileName);
         }
 
         return writeSuccess;
