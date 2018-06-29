@@ -17,6 +17,8 @@
  */
 package de.ryanthara.ja.rycon.nio;
 
+import de.ryanthara.ja.rycon.Main;
+import de.ryanthara.ja.rycon.data.PreferenceKeys;
 import de.ryanthara.ja.rycon.i18n.Labels;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 import de.ryanthara.ja.rycon.i18n.Warnings;
@@ -35,6 +37,9 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.WARNINGS;
 
 /**
  * This class implements static file writing functions for line based output files.
+ * <p>
+ * Due to some little enhancements and the move from {@link String} based filenames and paths to {@link Path},
+ * some {@link PathUtils} functions are used. They based on the popular org.apache.commons.io.FilenameUtils.java class.
  *
  * @author sebastian
  * @version 2
@@ -43,7 +48,11 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.WARNINGS;
 public final class WriteFile2Disk {
 
     private static Path prepareOutputFileName(final Path path, final String editString, final String fileNameExtension) {
-        final String fileNameWithoutExtension = path.toString().substring(0, path.toString().length() - 4);
+        final String fileNameWithoutExtension = PathUtils.removeExtension(path).toString();
+
+        System.out.println(PreferenceKeys.PARAM_EDIT_STRING);
+
+        System.out.println(Main.pref.getUserPreference(PreferenceKeys.PARAM_EDIT_STRING));
 
         if (editString.equals("")) {
             return Paths.get(fileNameWithoutExtension + fileNameExtension);
