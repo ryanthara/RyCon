@@ -73,7 +73,7 @@ public enum Labels implements ResourceKeys {
     ltopIdentifier,
     minimumPointDistance,
     newConfigFileGenerated,
-    newestFolderText,
+    recentFolderText,
     optionsText,
     pathSelectionText,
     pathSettingsText,

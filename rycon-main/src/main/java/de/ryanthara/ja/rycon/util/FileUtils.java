@@ -116,13 +116,13 @@ public class FileUtils {
     }
 
     /**
-     * Returns the newest folder name in a given directory.
+     * Returns the recent folder name in a given directory.
      *
      * @param dir path reference to the folder
      *
      * @return folder name
      */
-    public static String getNewestFolder(Path dir) {
+    public static String getRecentFolder(Path dir) {
         // get the recent folder by using a simple comparator by lastModified filed
         Optional<Path> lastFilePath;
 
@@ -136,7 +136,7 @@ public class FileUtils {
                 return lastFilePath.get().getName(lastFilePath.get().getNameCount() - 1).toString();
             }
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Can't get the newest file in directory " + dir.toString());
+            logger.log(Level.SEVERE, "Can't get the recent file in directory " + dir.toString());
         }
 
         return "";
