@@ -343,7 +343,7 @@ public final class GeneratorWidget extends AbstractWidget {
                 }
             }
 
-            String message = "";
+            String message;
 
             if (areAdminFoldersCreated && areBigDataFoldersCreated && areProjectFoldersCreated) {
                 message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.adminAndBigDataAndProjectsCreated), helper);
@@ -357,7 +357,7 @@ public final class GeneratorWidget extends AbstractWidget {
                 message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.adminFoldersCreated), helper);
             } else if (areBigDataFoldersCreated) {
                 message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.bigDataFoldersCreated), helper);
-            } else if (areProjectFoldersCreated){
+            } else {
                 message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.projectFoldersCreated), helper);
             }
 
@@ -395,13 +395,13 @@ public final class GeneratorWidget extends AbstractWidget {
         }
 
         if (isAdminFolderGenerated || isBigDataFolderGenerated || isProjectFolderGenerated) {
-            String message = "";
+            String message;
 
             if (isAdminFolderGenerated) {
                 message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.adminFolderGenerated), number);
             } else if (isBigDataFolderGenerated) {
                 message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.bigDataFolderGenerated), number);
-            } else if (isProjectFolderGenerated) {
+            } else {
                 message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.projectFolderGenerated), number);
             }
 
