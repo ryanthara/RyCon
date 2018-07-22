@@ -53,10 +53,10 @@ public class PathUtils {
      * This method will handle a file in either Unix or Windows format.
      * The text after the last forward or backslash and before the last dot is returned.
      * <pre>
-     * a/b/c.txt --> c
-     * a.txt     --> a
-     * a/b/c     --> c
-     * a/b/c/    --> ""
+     * a/b/c.txt --&gt; c
+     * a.txt     --&gt; a
+     * a/b/c     --&gt; c
+     * a/b/c/    --&gt; ""
      * </pre>
      * <p>
      * It doesn't matter on which machine the code runs, the output will be the same.
@@ -75,10 +75,10 @@ public class PathUtils {
      * This method will handle a file in either Unix or Windows format.
      * The text after the last forward or backslash is returned.
      * <pre>
-     * a/b/c.txt --> c.txt
-     * a.txt     --> a.txt
-     * a/b/c     --> c
-     * a/b/c/    --> ""
+     * a/b/c.txt --&gt; c.txt
+     * a.txt     --&gt; a.txt
+     * a/b/c     --&gt; c
+     * a/b/c/    --&gt; ""
      * </pre>
      * <p>
      * It doesn't matter on which machine the code runs, the output will be the same.
@@ -167,10 +167,10 @@ public class PathUtils {
      * This method returns the textual part of the filename before the last dot.
      * There must be no directory separator after the dot.
      * <pre>
-     * foo.txt    --> foo
-     * a\b\c.jpg  --> a\b\c
-     * a\b\c      --> a\b\c
-     * a.b\c      --> a.b\c
+     * foo.txt    --&gt; foo
+     * a\b\c.jpg  --&gt; a\b\c
+     * a\b\c      --&gt; a\b\c
+     * a.b\c      --&gt; a.b\c
      * </pre>
      * <p>
      * It doesn't matter on which machine the code runs, the output will be the same.

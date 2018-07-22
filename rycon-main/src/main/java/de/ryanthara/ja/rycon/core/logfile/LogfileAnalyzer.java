@@ -20,6 +20,8 @@ package de.ryanthara.ja.rycon.core.logfile;
 import de.ryanthara.ja.rycon.core.logfile.leica.*;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * The {@code LogfileAnalyzer} implements all the general functions to analyze
@@ -32,6 +34,8 @@ import java.util.ArrayList;
  * @since 2.0
  */
 public class LogfileAnalyzer {
+
+    private final static Logger logger = Logger.getLogger(LogfileAnalyzer.class.getName());
 
     private final ArrayList<String> logfile;
 
@@ -81,12 +85,13 @@ public class LogfileAnalyzer {
                     current = Identifier.COGO;
                 } else if (line.startsWith(Identifier.REFERENCE_LINE.getIdentifier())) {
                     current = Identifier.REFERENCE_LINE;
+                } else if (line.startsWith(Identifier.REFERENCE_PLANE.getIdentifier())) {
+                    current = Identifier.REFERENCE_PLANE;
                 } else if (line.startsWith(Identifier.SETUP.getIdentifier())) {
                     current = Identifier.SETUP;
                 } else if (line.startsWith(Identifier.STAKEOUT.getIdentifier())) {
                     current = Identifier.STAKEOUT;
                 }
-
             }
 
             // skip empty lines
@@ -111,47 +116,54 @@ public class LogfileAnalyzer {
                 CogoStructure cogo = new CogoStructure(lines);
                 cogo.analyze();
 
+                /*
                 System.out.println(": COGO :" + cogo.getInstrumentType() + "::");
                 System.out.println(": COGO :" + cogo.getSerialNo() + "::");
                 System.out.println(": COGO :" + cogo.getStoreToJob() + "::");
                 System.out.println(": COGO :" + cogo.getApplicationStart() + "::");
-
+                */
                 break;
             case SETUP:
                 System.out.println("FOUND CURRENT: SETUP");
                 SetupStructure setup = new SetupStructure(lines);
                 setup.analyze();
-
+                /*
                 System.out.println(": SETUP :" + setup.getInstrumentType() + "::");
                 System.out.println(": SETUP :" + setup.getSerialNo() + "::");
                 System.out.println(": SETUP :" + setup.getStoreToJob() + "::");
                 System.out.println(": SETUP :" + setup.getApplicationStart() + "::");
                 System.out.println(": SETUP :" + setup.getApplicationStartDate() + "::");
                 System.out.println(": SETUP :" + setup.getApplicationStartTime() + "::");
-
+                */
                 break;
             case STAKEOUT:
                 System.out.println("FOUND CURRENT: STAKEOUT");
                 StakeOutStructure stakeOut = new StakeOutStructure(lines);
                 stakeOut.analyze();
-
+                /*
                 System.out.println(": STAKE OUT :" + stakeOut.getInstrumentType() + "::");
                 System.out.println(": STAKE OUT :" + stakeOut.getSerialNo() + "::");
                 System.out.println(": STAKE OUT :" + stakeOut.getStoreToJob() + "::");
                 System.out.println(": STAKE OUT :" + stakeOut.getApplicationStart() + "::");
-
+                */
                 break;
             case REFERENCE_LINE:
                 System.out.println("FOUND CURRENT: REFERENCE LINE");
                 ReferenceLineStructure referenceLine = new ReferenceLineStructure(lines);
                 referenceLine.analyze();
-
+                /*
                 System.out.println(": REFERENCE LINE :" + referenceLine.getInstrumentType() + "::");
                 System.out.println(": REFERENCE LINE :" + referenceLine.getSerialNo() + "::");
                 System.out.println(": REFERENCE LINE :" + referenceLine.getStoreToJob() + "::");
                 System.out.println(": REFERENCE LINE :" + referenceLine.getApplicationStart() + "::");
-
+                */
                 break;
+            case REFERENCE_PLANE:
+                System.out.println("FOUND CURRENT: REFERENCE PLANE");
+                ReferencePlaneStructure referencePlane = new ReferencePlaneStructure(lines);
+                referencePlane.analyze();
+            default:
+                logger.log(Level.SEVERE, "Found one more token: " + current.getIdentifier());
         }
     }
 

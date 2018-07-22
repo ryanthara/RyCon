@@ -18,6 +18,8 @@
 package de.ryanthara.ja.rycon.core.logfile.leica;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 
 /**
  * The {@code VolumeCalculationsStructure} implements functions based on
@@ -41,6 +43,7 @@ public class VolumeCalculationsStructure extends LeicaLogfileBaseStructure {
      */
     public VolumeCalculationsStructure(ArrayList<String> lines) {
         this.lines = lines;
+        this.lines.removeAll(Arrays.asList(null, ""));
     }
 
     /**
@@ -53,13 +56,110 @@ public class VolumeCalculationsStructure extends LeicaLogfileBaseStructure {
     public boolean analyze() {
         boolean success = false;
 
-        System.out.println("COGO structure");
+        System.out.println("VOLUME CALCULATIONS");
 
         super.analyzeHeader(lines);
 
-        for (String line : lines) {
+        Iterator<String> iterator = lines.iterator();
+        while (iterator.hasNext()) {
+
+            /*
+
+            ------------------------------------------------------------
+Leica System 1200, Volume Calculations, Version 8.72 Logfile
+------------------------------------------------------------
+Instrument Type        : TCRP1202+
+Instrument Serial No.    : 264316
+Store to Job        : 1026.320-F
+Volume Calculation Start: 09.11.17, 8:22:32
+-----------------------------------------------------------------------------------
+Volume Calculation Results            Date computed: 08:22:32 -  9.11.17
+Volume Calculation Method    : Deponie
+Volume from Surface        : 1
+  Computed from Point        : ------
+  Computed from Elevation    : -----
+Total Volume : 0.000
+Total Volume : 0.000 CUT
+Total Volume : 0.000 FILL
+Average Thickness (Volume/Area): 0.000
+-----------------------------------------------------------------------------------
+
+------------------------------------------------------------
+Leica System 1200, Volume Calculations, Version 8.72 Logfile
+------------------------------------------------------------
+Instrument Type		: TCRP1202+
+Instrument Serial No.	: 264316
+
+Store to Job		: 1026.320-F
+Volume Calculation Start: 09.11.17, 8:20:58
+
+-----------------------------------------------------------------------------------
+Surface Triangulation Results
+
+Surface Name			: 1	Date: 09.11.17
+--------------------------------------------------------
+
+Total Number of Points		:       6
+
+Points used for Boundary	:       0
+Points inside of Boundary	:       6
+
+
+Total Number of Triangles	:       4
+
+Longest Side of Triangle 2D	:   1.740
+Longest Side of Triangle 3D	:   1.803
+
+Maximum Elevation			: 263.565
+Minimum Elevation			: 262.872
+
+Surface Area 2D			: 2.871		Surface Area 3D 		: 3.259
+Surface Perimeter 2D		: 6.643		Surface Perimeter 3D	: 7.203
+
+-----------------------------------------------------------------------------------
+
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                              System 1200 Logfile - End
+                              System 1200 Logfile - Begin
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+------------------------------------------------------------
+Leica System 1200, Volume Calculations, Version 8.72 Logfile
+------------------------------------------------------------
+Instrument Type		: TCRP1202+
+Instrument Serial No.	: 264316
+
+Store to Job		: 1026.320-F
+Volume Calculation Start: 09.11.17, 8:22:32
+
+-----------------------------------------------------------------------------------
+Volume Calculation Results			Date computed: 08:22:32 -  9.11.17
+
+Volume Calculation Method	: Deponie
+
+Volume from Surface		: 1
+  Computed from Point		: ------
+  Computed from Elevation	: -----
+
+
+Total Volume : 0.000
+
+Total Volume : 0.000 CUT
+Total Volume : 0.000 FILL
+
+Average Thickness (Volume/Area): 0.000
+-----------------------------------------------------------------------------------
+
+
+             */
+
             //System.out.println(line);
         }
+
+        success = true;
 
         return success;
     }

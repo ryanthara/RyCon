@@ -17,7 +17,11 @@
  */
 package de.ryanthara.ja.rycon.core.logfile.leica;
 
+import de.ryanthara.ja.rycon.core.elements.RyPoint;
+import de.ryanthara.ja.rycon.core.elements.RyStakedPoint;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * The {@code StakeOutStructure} implements functions based on the COGO part of
@@ -27,11 +31,18 @@ import java.util.ArrayList;
  *
  * @author sebastian
  * @version 1
- * @since 2.0
+ * @since 27
  */
 public class StakeOutStructure extends LeicaLogfileBaseStructure {
 
     private final ArrayList<String> lines;
+    private ArrayList<RyStakedPoint> stakedPoints;
+    // Results
+    private String pointId;
+    private RyPoint tpsStation;
+    private RyPoint designPoint;
+    private RyPoint stakedPoint;
+    private RyPoint stakeoutDifference;
 
     /**
      * Constructs a new {@code StakeOutStructure} with a parameter for the lines of the structure.
@@ -40,27 +51,82 @@ public class StakeOutStructure extends LeicaLogfileBaseStructure {
      */
     public StakeOutStructure(ArrayList<String> lines) {
         this.lines = lines;
+        this.lines.removeAll(Arrays.asList(null, ""));
+
+        stakedPoints = new ArrayList<>();
     }
 
     /**
-     * Analyze the STAKE OUT structure of the <tt>Leica Geosystems</tt> logfile.txt and
-     * fills the results into the return arrays.
+     * Analyzes the STAKE OUT structure of the <tt>Leica Geosystems</tt> logfile.txt and
+     * fills the results into the return {@link ArrayList} of {@link RyStakedPoint} objects.
      *
      * @return analysis success
      */
     @Override
     public boolean analyze() {
-        boolean success = false;
-
-        System.out.println("STAKE OUT structure");
-
         super.analyzeHeader(lines);
 
         for (String line : lines) {
-            //System.out.println(line);
+            if (line.startsWith(Elements.TPS_STATION.identifier)) {
+                tpsStation = super.getTpsStation(line);
+            } else if (line.startsWith(Elements.POINT_ID.identifier)) {
+                pointId = line.split(":")[1].trim();
+            } else if (line.startsWith(Elements.DESIGN_POINT.identifier)) {
+                designPoint = super.getDesignPoint(line);
+            } else if (line.startsWith(Elements.STAKED_POINT.identifier)) {
+                stakedPoint = super.getStakedPoint(line);
+            } else if (line.startsWith(Elements.STAKEOUT_DIFF.identifier)) {
+                stakeoutDifference = super.getStakeoutDifference(line);
+                stakedPoints.add(new RyStakedPoint(pointId, designPoint, stakedPoint, stakeoutDifference));
+            }
         }
 
-        return success;
+        return stakedPoints.size() > 0;
+    }
+
+    /**
+     * Returns the design point.
+     *
+     * @return design point
+     */
+    public RyPoint getDesignPoint() {
+        return designPoint;
+    }
+
+    /**
+     * Returns the current point id.
+     *
+     * @return current point id
+     */
+    public String getPointId() {
+        return pointId;
+    }
+
+    /**
+     * Returns the staked points as {@link ArrayList} of {@link RyStakedPoint}.
+     *
+     * @return the staked points
+     */
+    public ArrayList<RyStakedPoint> getStakedPoints() {
+        return stakedPoints;
+    }
+
+    /**
+     * Returns the stakeout difference as {@link RyPoint}.
+     *
+     * @return the staked point
+     */
+    public RyPoint getStakeoutDifference() {
+        return stakeoutDifference;
+    }
+
+    /**
+     * Returns the current TPS station as {@link RyPoint}.
+     *
+     * @return the tps station id
+     */
+    public RyPoint getTpsStation() {
+        return tpsStation;
     }
 
     // use original order for enum
@@ -77,4 +143,5 @@ public class StakeOutStructure extends LeicaLogfileBaseStructure {
             this.identifier = identifier;
         }
     }
+
 } // end of StakeOutStructure

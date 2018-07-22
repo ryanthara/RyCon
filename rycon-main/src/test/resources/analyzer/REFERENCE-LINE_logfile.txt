@@ -1,0 +1,54 @@
+                              System 1200 Logfile - Begin
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+------------------------------------------------------
+Leica System 1200 Reference Line, Version 8.72 Logfile
+------------------------------------------------------
+Instrument Type		: USS Defiant
+Instrument Serial No.	: Cmd. LaForge
+
+Store To Job		: 20171009-1
+Reference Line Start	: 09.10.17, 14:05:19
+
+TPS Station		: FS01            	E=           34.204	N=           -5.348	H=          259.397	hi=      0.000
+
+Reference Line Information
+--------------------------
+Reference Line ID		: ------
+Start Point ID		: 72-17           	E=           33.400	N=            9.000	H=          257.820
+End Point ID		: 72-47           	E=           33.400	N=           63.400	H=          257.820
+Length			:           54.400
+Grade (angular); (%)	:           0.0000	;             0.000
+
+Define Reference Line Offsets
+Offset Line		:            0.100
+Shift Line		:            0.200
+Height Offset		:            0.300
+Rotate			:           10.0000
+
+Measured Point
+--------------
+Point ID		: 17.10
+Measured		:	E=           37.640	  N=           -5.878	  H=          257.916	  hr/ha=    0.000
+Line/Offset		:	dL=          -0.001	  dO=          -9.318	  dHO=          0.096
+
+Measured Point
+--------------
+Point ID		: 17.11
+Measured		:	E=           37.641	  N=           -5.879	  H=          257.915	  hr/ha=    0.000
+Line/Offset		:	dL=          -0.002	  dO=          -9.314	  dHO=          0.196
+
+Stakeout Point
+--------------
+Point ID		: 17.1
+Design Point		:  E=           35.150	  N=            9.000	  H=          257.820
+Staked Point		:  E=           35.166	  N=            9.012	  H=          257.250	  hr/ha=    0.100
+Stakeout Difference	: dE=           -0.016	 dN=           -0.012	 dH=            0.570
+Design Line/Offs.	: dL=            0.000	 dO=            1.750	dHO=            0.000
+
+
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                              System 1200 Logfile - End

@@ -1,0 +1,34 @@
+                              System 1200 Logfile - Begin
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+--------------------------------------------
+Leica System 1200 Setup, Vers. 9.03 Logfile
+--------------------------------------------
+Instrument Type		: X-Wing 0.5"
+Instrument Serial No.	: Luke Skywalker
+
+Store to Job		: LO VERDI        
+Setup Start		: 17.04.18, 08:29:29
+
+
+----------------------------
+Setup Method "Known Azimuth"
+----------------------------
+
+Observations
+------------
+Point ID        	     Hz		    V		    SD		    use		refl const
+1               	:     0.0000	   45.0781	     -----	     0.000	  0.0000
+
+Results:
+--------
+Station ID		:          ST-WEST
+				E=          60.000	N=          20.000	H=          15.000
+
+Ori.Corr.		:  -216.7082
+
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                              System 1200 Logfile - End

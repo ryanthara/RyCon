@@ -54,6 +54,7 @@ public class ToporailWriter implements Writer {
      * @param readCSVFile    reader csv file
      * @param readStringFile reader string file
      * @param parameter      the writer parameter object
+     * @param fileTyp        the filetype
      */
     public ToporailWriter(Path path, ArrayList<String> readStringFile, List<String[]> readCSVFile, WriteParameter parameter, FileType fileTyp) {
         this.path = path;

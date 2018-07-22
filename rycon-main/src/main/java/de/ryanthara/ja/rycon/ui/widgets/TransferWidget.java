@@ -304,7 +304,7 @@ public class TransferWidget extends AbstractWidget {
             final Path dbxPath = Paths.get(cardReaderPathString + separator + "DBX");
             final Path gsiPath = Paths.get(cardReaderPathString + separator + "GSI");
 
-            return PathCheck.isValid(dataPath) & PathCheck.isValid(dbxPath) & PathCheck.isValid(gsiPath);
+            return PathCheck.isValid(dataPath) && PathCheck.isValid(dbxPath) && PathCheck.isValid(gsiPath);
         }
 
         return false;
@@ -428,7 +428,7 @@ public class TransferWidget extends AbstractWidget {
                                 if (lineReader.readFile(false)) {
                                     LogfileClean logfileClean = new LogfileClean(lineReader.getLines());
 
-                                    ArrayList<String> writeFile = logfileClean.processTidyUp(true);
+                                    ArrayList<String> writeFile = logfileClean.processClean(true);
 
                                     WriteFile2Disk.writeFile2Disk(target, writeFile, editString, ".txt");
                                 }

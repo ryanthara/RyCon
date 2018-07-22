@@ -1,0 +1,54 @@
+                              System 1200 Logfile - Begin
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+------------------------------------------------------
+Leica System 1200 Reference Plane, Version 8.72 Logfile
+------------------------------------------------------
+Instrument Type		: TCRP1202+
+Instrument Serial No.	: 264316
+
+Store To Job		: 1026.320-FIX
+Reference Plane Start	: 09.11.17, 08:19:08
+
+TPS Station		:             FS01	E=           20.328	N_           36.698	H=          263.145	hi=      0.000
+						X=            0.732	Y=           -2.163	Z=            0.776
+
+Reference Plane Information
+---------------------------
+Reference Plane ID	:               1
+Number of Points	:               3
+
+Offset Limit		:           0.300
+Plane Std Dev		:           -----
+
+Plane Offset		:           0.000
+Origin Point ID		:               1	X=            0.000	Y=            0.000	Z=            0.000
+
+Definition Point ID	:                3	E=           22.288	N=           35.397	H=          262.894	dD=           -0.000	Use Flag=         Ja
+Definition Point ID	:                2	E=           22.680	N=           36.778	H=          262.911	dD=            0.000	Use Flag=         Ja
+Definition Point ID	:                1	E=           22.708	N=           36.779	H=          262.765	dD=            0.000	Use Flag=         Ja
+
+
+Scanning Perimeter
+------------------
+First Perimeter Point	:			E=           22.677	N=           36.748	H=          262.883
+Second Perimeter Point	:			E=           22.317 	N=           35.433	H=          262.794
+
+Horizontal/X Spacing	:           0.050
+Vertical/Z Spacing	:           0.050
+
+Points Scanned		:               7
+Points Skipped		:               0
+
+
+Scanned Points
+--------------
+Scanned Point		:        Scan0001	E=           22.679	N=           36.748	H=          262.883	dD=            0.002	dH=            0.008
+Dist/Height from Plane	:                 	dDist=        0.002	dH=           0.008
+Scanned Point		:        Scan0002	E=           22.665	N=           36.700	H=          262.883	dD=            0.001	dH=            0.008
+Dist/Height from Plane	:                 	dDist=        0.001	dH=           0.008
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                              System 1200 Logfile - End

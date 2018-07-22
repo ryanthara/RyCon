@@ -17,6 +17,8 @@
  */
 package de.ryanthara.ja.rycon.core.elements;
 
+import java.util.Objects;
+
 /**
  * Instances of this class defines an object of type point as 'RyPoint' with coordinates and additional attributes.
  * <p>
@@ -28,8 +30,8 @@ package de.ryanthara.ja.rycon.core.elements;
  */
 public class RyPoint {
 
-    private final double x, y, z;
-    private final String number, printLine;
+    private double x, y, z;
+    private String number, easting, northing, height, printLine, instrumentOrReflectorHeight;
 
     /**
      * Constructs a new instance of this class given a bunch of parameters.
@@ -49,6 +51,104 @@ public class RyPoint {
     }
 
     /**
+     * Constructs a new point with number, eating, northing and height as strings.
+     * <p>
+     * This is used for data encapsulation in the {@link de.ryanthara.ja.rycon.ui.widgets.ReportWidget}.
+     *
+     * @param number   the point number
+     * @param easting  the easting coordinate
+     * @param northing the northing coordinate
+     * @param height   the height
+     */
+    public RyPoint(String number, String easting, String northing, String height) {
+        this.number = number;
+        this.easting = easting;
+        this.northing = northing;
+        this.height = height;
+    }
+
+    /**
+     * Constructs a new point with number, eating, northing and height as strings.
+     * <p>
+     * This is used for data encapsulation in the {@link de.ryanthara.ja.rycon.ui.widgets.ReportWidget}.
+     *
+     * @param number                      the point number
+     * @param easting                     the easting coordinate
+     * @param northing                    the northing coordinate
+     * @param height                      the height
+     * @param instrumentOrReflectorHeight the instrument or reflector height
+     */
+    public RyPoint(String number, String easting, String northing, String height, String instrumentOrReflectorHeight) {
+        this.number = number;
+        this.easting = easting;
+        this.northing = northing;
+        this.height = height;
+        this.instrumentOrReflectorHeight = instrumentOrReflectorHeight;
+    }
+
+    /**
+     * Compares an {@link Object} to the current {@link RyPoint} if they are equal.
+     * <p>
+     * They are equal if they have the same values for point number, easting, northing
+     * and height. Although instrument or reflector height if is set.
+     *
+     * @param obj object to compare
+     *
+     * @return true if equal
+     */
+    @Override
+    public boolean equals(Object obj) {
+        // self check
+        if (this == obj) {
+            return true;
+        }
+
+        // null check
+        if (obj == null) {
+            return false;
+        }
+
+        // type check and cast
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+
+        RyPoint point = (RyPoint) obj;
+
+        // field comparison
+        if (point.getInstrumentOrReflectorHeight() == null) {
+            return Objects.equals(number, point.number)
+                    && Objects.equals(easting, point.easting)
+                    && Objects.equals(northing, point.northing)
+                    && Objects.equals(height, point.height);
+        } else {
+            return Objects.equals(number, point.number)
+                    && Objects.equals(easting, point.easting)
+                    && Objects.equals(northing, point.northing)
+                    && Objects.equals(height, point.height)
+                    && Objects.equals(instrumentOrReflectorHeight, point.instrumentOrReflectorHeight);
+        }
+    }
+
+    /**
+     * Returns the easting string.
+     *
+     * @return the easting
+     */
+    public String getEasting() {
+        return easting;
+    }
+
+    /**
+     * Returns the height string.
+     *
+     * @return the height
+     */
+    public String getHeight() {
+        return height;
+    }
+
+    /**
      * Returns the horizontal distance between this point and the point p2.
      *
      * @param p2 second point
@@ -60,6 +160,24 @@ public class RyPoint {
         double dy = this.getDistanceY(p2);
 
         return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    /**
+     * Returns the instrument or reflector height string.
+     *
+     * @return the instrument or reflector height
+     */
+    public String getInstrumentOrReflectorHeight() {
+        return instrumentOrReflectorHeight;
+    }
+
+    /**
+     * Returns the northing string.
+     *
+     * @return the northing
+     */
+    public String getNorthing() {
+        return northing;
     }
 
     /**
@@ -120,6 +238,22 @@ public class RyPoint {
      */
     public double getZ() {
         return z;
+    }
+
+    /**
+     * Returns a hash code value for the object.
+     *
+     * @return a hash code
+     */
+    @Override
+    public int hashCode() {
+        int hash = 1;
+        hash = hash * 31 + number.hashCode();
+        hash = hash * 31
+                + (height == null ? 0 : height.hashCode())
+                + (printLine == null ? 0 : printLine.hashCode());
+
+        return hash;
     }
 
     /**

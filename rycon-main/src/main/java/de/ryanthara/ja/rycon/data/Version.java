@@ -45,7 +45,7 @@ public final class Version {
     private static final int buildYear = 2018;
     private static final int buildMonth = 01;
     private static final int buildDay = 15;
-    private static final short buildNumber = 26;
+    private static final short buildNumber = 27;
     private static final short majorRelease = 2;
     private static final short minorRelease = 0;
     private static final short patchLevel = 1;

@@ -17,17 +17,15 @@
  */
 package de.ryanthara.ja.rycon.nio;
 
-import de.ryanthara.ja.rycon.Main;
-import de.ryanthara.ja.rycon.data.PreferenceKeys;
 import de.ryanthara.ja.rycon.i18n.Labels;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 import de.ryanthara.ja.rycon.i18n.Warnings;
 import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
+import de.ryanthara.ja.rycon.util.check.PathCheck;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -49,10 +47,6 @@ public final class WriteFile2Disk {
 
     private static Path prepareOutputFileName(final Path path, final String editString, final String fileNameExtension) {
         final String fileNameWithoutExtension = PathUtils.removeExtension(path).toString();
-
-        System.out.println(PreferenceKeys.PARAM_EDIT_STRING);
-
-        System.out.println(Main.pref.getUserPreference(PreferenceKeys.PARAM_EDIT_STRING));
 
         if (editString.equals("")) {
             return Paths.get(fileNameWithoutExtension + fileNameExtension);
@@ -80,12 +74,14 @@ public final class WriteFile2Disk {
 
         final Path outputFile = prepareOutputFileName(path, editString, fileNameExtension);
 
-        if (Files.exists(outputFile)) {
+        if (PathCheck.fileExists(outputFile)) {
             final Shell shell = Display.getCurrent().getActiveShell();
+
+            final String outputFilename = outputFile.getFileName().toString();
 
             int returnValue = MessageBoxes.showMessageBox(shell, SWT.ICON_WARNING | SWT.YES | SWT.NO,
                     ResourceBundleUtils.getLangString(LABELS, Labels.warningTextMsgBox),
-                    String.format(ResourceBundleUtils.getLangString(WARNINGS, Warnings.fileExistsOverwrite), outputFile.getFileName().toString()));
+                    String.format(ResourceBundleUtils.getLangString(WARNINGS, Warnings.fileExistsOverwrite), outputFilename));
 
             if (returnValue == SWT.YES) {
                 LineWriter lineWriter = new LineWriter(outputFile);

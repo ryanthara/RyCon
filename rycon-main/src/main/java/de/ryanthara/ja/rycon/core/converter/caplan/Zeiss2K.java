@@ -21,6 +21,8 @@ import de.ryanthara.ja.rycon.core.converter.zeiss.ZeissDecoder;
 import de.ryanthara.ja.rycon.core.elements.ZeissBlock;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Instances of this class provides functions to convert measurement files from the Zeiss REC format
@@ -31,6 +33,8 @@ import java.util.ArrayList;
  * @since 12
  */
 public class Zeiss2K {
+
+    private final static Logger logger = Logger.getLogger(Zeiss2K.class.getName());
 
     private int valencyIndicator;
 
@@ -176,89 +180,76 @@ public class Zeiss2K {
                 easting = zeissBlock.getValue();
                 valencyIndicator += 3;
                 break;
-
             case n:
                 // northing coordinate
                 northing = zeissBlock.getValue();
                 valencyIndicator += 3;
                 break;
-
             case x:
                 // local easting coordinate
                 easting = zeissBlock.getValue();
                 valencyIndicator += 3;
                 break;
-
             case y:
                 // local northing coordinate
                 northing = zeissBlock.getValue();
                 valencyIndicator += 3;
                 break;
-
             case E_:
                 // easting coordinate
                 easting = zeissBlock.getValue();
                 valencyIndicator += 3;
                 break;
-
             case KR:
                 // information with code and point number
                 number = zeissBlock.getValue();
                 break;
-
             case N_:
                 // northing coordinate
                 northing = zeissBlock.getValue();
                 valencyIndicator += 3;
                 break;
-
             case PI:
                 // general point information
                 number = zeissBlock.getValue();
                 break;
-
             case X:
                 // northing coordinate
                 northing = zeissBlock.getValue();
                 valencyIndicator += 3;
                 break;
-
             case X_:
                 // northing coordinate
                 northing = zeissBlock.getValue();
                 valencyIndicator += 3;
                 break;
-
             case Y:
                 // easting coordinate
                 easting = zeissBlock.getValue();
                 valencyIndicator += 3;
                 break;
-
             case Y_:
                 // easting coordinate
                 easting = zeissBlock.getValue();
                 valencyIndicator += 3;
                 break;
-
             case Z:
                 // height coordinate
                 height = zeissBlock.getValue();
                 valencyIndicator += 4;
                 break;
-
             case ZE:
                 // height coordinate
                 height = zeissBlock.getValue();
                 valencyIndicator += 4;
                 break;
-
             case Z_:
                 // height coordinate
                 height = zeissBlock.getValue();
                 valencyIndicator += 4;
                 break;
-
+            default:
+                logger.log(Level.SEVERE, "Found unknown identifier: " + zeissBlock.getTypeIdentifier().toString());
         }
     }
 

@@ -74,9 +74,7 @@ public class ShellPositioner {
 
         final String lastUsedDisplay = Main.pref.getUserPreference(PreferenceKeys.LAST_USED_DISPLAY);
 
-        if (lastUsedDisplay != null && lastUsedDisplay.trim().equals("")) {
-            return centerShellOnPrimaryMonitor(shell);
-        } else if (lastUsedDisplay.equals("-1")) {
+        if (lastUsedDisplay == null || lastUsedDisplay.trim().equals("") || lastUsedDisplay.equals("-1")) {
             return centerShellOnPrimaryMonitor(shell);
         } else {
             try {

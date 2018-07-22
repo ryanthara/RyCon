@@ -109,7 +109,7 @@ public class Updater {
 
             if (huc.getResponseCode() == 200) { // document found on server
                 if (huc.getContentLength() > 0) {
-                    Scanner scanner = new Scanner(updateUrl.openStream());
+                    Scanner scanner = new Scanner(updateUrl.openStream(), "UTF-8");
 
                     scanner.next();
                     String majorMinor = scanner.next();
@@ -175,7 +175,7 @@ public class Updater {
 
         try {
             URL whatsNewURL = new URL(DefaultKeys.RyCON_WHATS_NEW_URL.getValue());
-            BufferedReader in = new BufferedReader(new InputStreamReader(whatsNewURL.openStream()));
+            BufferedReader in = new BufferedReader(new InputStreamReader(whatsNewURL.openStream(), "UTF-8"));
 
             String inputLine;
             while ((inputLine = in.readLine()) != null) {

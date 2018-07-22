@@ -1,0 +1,41 @@
+                              System 1200 Logfile - Begin
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+--------------------------------------------
+Leica System 1200 COGO, Version 8.72 Logfile
+--------------------------------------------
+Store To Job		: 20170518-01
+COGO Start		: 18.05.17, 12:09:30
+
+Line Calculations - Line Info
+-----------------------------
+Start Point ID		:                2	E=       617187.520	N=       264445.281	H=          284.317
+End Point ID		:                1	E=       617192.135	N=       264452.911	H=          280.218
+Length			:            8.917
+Azimuth			:           34.627
+
+Segmentation Info
+-----------------
+# of Segments		:  6	Seg.Length	 =            1.486
+# of Points		:  5	Method		 =    Anz. Segmente
+Segmentation Results
+--------------------
+Computed		:              100	E=       617188.290	N=       264446.552	H=          283.633
+Segmentation Results
+--------------------
+Computed		:              101	E=       617189.059	N=       264447.824	H=          282.950
+Segmentation Results
+--------------------
+Computed		:              102	E=       617189.828	N=       264449.096	H=          282.267
+Segmentation Results
+--------------------
+Computed		:              103	E=       617190.597	N=       264450.367	H=          281.584
+Segmentation Results
+--------------------
+Computed		:              104	E=       617191.366	N=       264451.639	H=          280.901
+
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                              System 1200 Logfile - End

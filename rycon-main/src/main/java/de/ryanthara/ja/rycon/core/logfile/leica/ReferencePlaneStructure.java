@@ -18,9 +18,11 @@
 package de.ryanthara.ja.rycon.core.logfile.leica;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 
 /**
- * The {@code ReferencePlane} implements functions based on the REFERENCE PLANE part of
+ * The {@code ReferencePlaneStructure} implements functions based on the REFERENCE PLANE part of
  * the <tt>Leica Geosystems</tt> logfile.txt for {@code RyCON}.
  * <p>
  * This is used for encapsulating the data and error minimization.
@@ -29,17 +31,18 @@ import java.util.ArrayList;
  * @version 1
  * @since 2.0
  */
-public class ReferencePlane extends LeicaLogfileBaseStructure {
+public class ReferencePlaneStructure extends LeicaLogfileBaseStructure {
 
     private final ArrayList<String> lines;
 
     /**
-     * Constructs a new {@code ReferencePlane} with a parameter for the lines of the structure.
+     * Constructs a new {@code ReferencePlaneStructure} with a parameter for the lines of the structure.
      *
      * @param lines lines to be analyzed
      */
-    public ReferencePlane(ArrayList<String> lines) {
+    public ReferencePlaneStructure(ArrayList<String> lines) {
         this.lines = lines;
+        this.lines.removeAll(Arrays.asList(null,""));
     }
 
     /**
@@ -56,9 +59,67 @@ public class ReferencePlane extends LeicaLogfileBaseStructure {
 
         super.analyzeHeader(lines);
 
-        for (String line : lines) {
+        Iterator<String> iterator = lines.iterator();
+        while (iterator.hasNext()) {
+
+            String line = iterator.next();
+
+            System.out.println(": " + line);
+
+            /*
+            ------------------------------------------------------
+Leica System 1200 Reference Plane, Version 8.72 Logfile
+------------------------------------------------------
+Instrument Type		: TCRP1202+
+Instrument Serial No.	: 264316
+
+Store To Job		: 1026.320-FIX
+Reference Plane Start	: 09.11.17, 08:19:08
+
+TPS Station		:             FS01	E=           20.328	N_           36.698	H=          263.145	hi=      0.000
+						X=            0.732	Y=           -2.163	Z=            0.776
+
+Reference Plane Information
+---------------------------
+Reference Plane ID	:               1
+Number of Points	:               3
+
+Offset Limit		:           0.300
+Plane Std Dev		:           -----
+
+Plane Offset		:           0.000
+Origin Point ID		:               1	X=            0.000	Y=            0.000	Z=            0.000
+
+Definition Point ID	:                3	E=           22.288	N=           35.397	H=          262.894	dD=           -0.000	Use Flag=         Ja
+Definition Point ID	:                2	E=           22.680	N=           36.778	H=          262.911	dD=            0.000	Use Flag=         Ja
+Definition Point ID	:                1	E=           22.708	N=           36.779	H=          262.765	dD=            0.000	Use Flag=         Ja
+
+
+Scanning Perimeter
+------------------
+First Perimeter Point	:			E=           22.677	N=           36.748	H=          262.883
+Second Perimeter Point	:			E=           22.317 	N=           35.433	H=          262.794
+
+Horizontal/X Spacing	:           0.050
+Vertical/Z Spacing	:           0.050
+
+Points Scanned		:               7
+Points Skipped		:               0
+
+
+Scanned Points
+--------------
+Scanned Point		:        Scan0001	E=           22.679	N=           36.748	H=          262.883	dD=            0.002	dH=            0.008
+Dist/Height from Plane	:                 	dDist=        0.002	dH=           0.008
+Scanned Point		:        Scan0002	E=           22.665	N=           36.700	H=          262.883	dD=            0.001	dH=            0.008
+Dist/Height from Plane	:                 	dDist=        0.001	dH=           0.008
+
+             */
+
             //System.out.println(line);
         }
+
+        success = true;
 
         return success;
     }
@@ -98,4 +159,4 @@ public class ReferencePlane extends LeicaLogfileBaseStructure {
         }
     }
 
-} // end of ReferencePlane
+} // end of ReferencePlaneStructure

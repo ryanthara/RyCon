@@ -26,8 +26,9 @@ import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 
-import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +39,7 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.ERRORS;
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LABELS;
 
 /**
- * Instances of this class are used for reading comma separated values (CSV) files from
+ * Instances of this class are used for reading 'comma separated values' (CSV) files from
  * the {@link ConverterWidget} of <tt>RyCON</tt>.
  *
  * @author sebastian
@@ -105,7 +106,8 @@ public class CsvReader implements Reader {
 
         // use opencsv project for reading -> could this be done better?
         try {
-            CSVReader reader = new CSVReader(new FileReader(file2Read.toFile()), separatorCSV);
+            // CSVReader reader = new CSVReader(new FileReader(file2Read.toFile()), separatorCSV);
+            CSVReader reader = new CSVReader(Files.newBufferedReader(file2Read, Charset.forName("ISO-8859-1")), separatorCSV);
             readCSVFile = reader.readAll();
 
             success = true;

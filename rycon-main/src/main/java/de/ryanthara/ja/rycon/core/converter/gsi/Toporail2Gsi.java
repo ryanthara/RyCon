@@ -22,6 +22,7 @@ import de.ryanthara.ja.rycon.core.elements.GsiBlock;
 import de.ryanthara.ja.rycon.util.SortHelper;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -84,18 +85,17 @@ public class Toporail2Gsi {
                     case "K": // control measurement line
                         blocks = transformControlMeasurementLine(tokens, isGSI16, lineCounter);
                         break;
-
                     case "M": // measurement line
                         blocks = transformMeasurementLine(tokens, isGSI16, lineCounter);
                         break;
-
                     case "P": // coordinate line
                         blocks = transformCoordinateLine(tokens, isGSI16, lineCounter);
                         break;
-
                     case "S": // station line
                         blocks = transformStationLine(tokens, isGSI16, lineCounter);
                         break;
+                    default:
+                        logger.log(Level.SEVERE, "Found unsuported token: " + tokens[0]);
                 }
 
                 if (blocks.size() > 0) {
@@ -155,7 +155,6 @@ public class Toporail2Gsi {
                                 blocks.add(new GsiBlock(isGSI16, 18, year.substring(2, 4) + "000000"));
                                 blocks.add(new GsiBlock(isGSI16, 19, month + day + "0000"));
                             }
-
                             break;
                         case 6: // author
                             blocks.add(new GsiBlock(isGSI16, 71, tokens[6]));
@@ -169,6 +168,8 @@ public class Toporail2Gsi {
                         case 9: // azimuth (gon)
                             blocks.add(new GsiBlock(isGSI16, 21, tokens[9]));
                             break;
+                        default:
+                            logger.log(Level.SEVERE, "Found one more token: " + j);
                     }
                 }
 
@@ -221,6 +222,8 @@ public class Toporail2Gsi {
                 case 7: // comment
                     blocks.add(new GsiBlock(isGSI16, 72, tokens[7]));
                     break;
+                default:
+                    logger.log(Level.SEVERE, "Found one more token: " + j);
             }
         }
 
@@ -259,6 +262,8 @@ public class Toporail2Gsi {
                 case 7: // comment
                     blocks.add(new GsiBlock(isGSI16, 72, tokens[7]));
                     break;
+                default:
+                    logger.log(Level.SEVERE, "Found one more token: " + j);
             }
         }
 
@@ -309,6 +314,8 @@ public class Toporail2Gsi {
                 case 11: // azimuth (gon)
                     blocks.add(new GsiBlock(isGSI16, 74, tokens[11]));
                     break;
+                default:
+                    logger.log(Level.SEVERE, "Found one more token: " + j);
             }
         }
 
@@ -348,6 +355,8 @@ public class Toporail2Gsi {
                 case 7: // comment
                     blocks.add(new GsiBlock(isGSI16, 74, tokens[7]));
                     break;
+                default:
+                    logger.log(Level.SEVERE, "Found one more token: " + j);
             }
         }
 

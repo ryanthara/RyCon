@@ -21,6 +21,8 @@ import de.ryanthara.ja.rycon.core.converter.gsi.BaseToolsGsi;
 import de.ryanthara.ja.rycon.core.elements.GsiBlock;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class provides functions to convert Leica GSI formatted files into
@@ -32,7 +34,9 @@ import java.util.ArrayList;
  */
 public class Gsi2Toporail {
 
-    private final String variant = "B";
+    private final static Logger logger = Logger.getLogger(Gsi2Toporail.class.getName());
+
+    private static final String variant = "B";
 
     private BaseToolsGsi baseToolsGsi;
 
@@ -200,6 +204,8 @@ public class Gsi2Toporail {
                     case 83: // height
                         height = block.toPrintFormatCSV();
                         break;
+                    default:
+                        logger.log(Level.SEVERE, "Found one more word index: " + block.getWordIndex());
                 }
             }
 
@@ -282,6 +288,8 @@ public class Gsi2Toporail {
                     case 83: // height
                         height = block.toPrintFormatCSV();
                         break;
+                    default:
+                        logger.log(Level.SEVERE, "Found one more word index: " + block.getWordIndex());
                 }
             }
 

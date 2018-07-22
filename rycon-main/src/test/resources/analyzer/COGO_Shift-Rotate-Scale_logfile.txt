@@ -1,0 +1,69 @@
+                              System 1200 Logfile - Begin
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+--------------------------------------------
+Leica System 1200 COGO, Version 8.00 Logfile
+--------------------------------------------
+Store To Job		: ABS235
+COGO Start		: 16.11.11, 10:43:01
+
+Shift/Rotate/Scale
+------------------
+Shift dE		:     -5400000.000	Shift dN:           0.000	Shift dHt:           0.000
+Rotate / Scale		:          0.0000g 	1.00000000
+# of Points new		:	      16
+# of Points skippd      :	       0
+Shift/Rotate/Scale - Calc.Points
+--------------------------------
+Computed		:               1	E=      621049.650	N=      263217.922	H=           -----
+Shift/Rotate/Scale - Calc.Points
+--------------------------------
+Computed		:              10	E=      621070.473	N=      263206.064	H=           -----
+Shift/Rotate/Scale - Calc.Points
+--------------------------------
+Computed		:              11	E=      621067.751	N=      263207.324	H=           -----
+Shift/Rotate/Scale - Calc.Points
+--------------------------------
+Computed		:              12	E=      621065.060	N=      263208.650	H=           -----
+Shift/Rotate/Scale - Calc.Points
+--------------------------------
+Computed		:              13	E=      621062.401	N=      263210.040	H=           -----
+Shift/Rotate/Scale - Calc.Points
+--------------------------------
+Computed		:              14	E=      621059.777	N=      263211.493	H=           -----
+Shift/Rotate/Scale - Calc.Points
+--------------------------------
+Computed		:              15	E=      621057.188	N=      263213.008	H=           -----
+Shift/Rotate/Scale - Calc.Points
+--------------------------------
+Computed		:              16	E=      621054.636	N=      263214.586	H=           -----
+Shift/Rotate/Scale - Calc.Points
+--------------------------------
+Computed		:               2	E=      621052.123	N=      263216.224	H=           -----
+Shift/Rotate/Scale - Calc.Points
+--------------------------------
+Computed		:               3	E=      621090.214	N=      263198.951	H=           -----
+Shift/Rotate/Scale - Calc.Points
+--------------------------------
+Computed		:               4	E=      621087.340	N=      263199.811	H=           -----
+Shift/Rotate/Scale - Calc.Points
+--------------------------------
+Computed		:               5	E=      621084.480	N=      263200.715	H=           -----
+Shift/Rotate/Scale - Calc.Points
+--------------------------------
+Computed		:               6	E=      621081.635	N=      263201.668	H=           -----
+Shift/Rotate/Scale - Calc.Points
+--------------------------------
+Computed		:               7	E=      621078.809	N=      263202.675	H=           -----
+Shift/Rotate/Scale - Calc.Points
+--------------------------------
+Computed		:               8	E=      621076.005	N=      263203.740	H=           -----
+Shift/Rotate/Scale - Calc.Points
+--------------------------------
+Computed		:               9	E=      621073.225	N=      263204.869	H=           -----
+
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                              System 1200 Logfile - End

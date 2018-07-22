@@ -1,0 +1,41 @@
+                              System 1200 Logfile - Begin
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+--------------------------------------------
+Leica System 1200 Setup, Vers. 9.03 Logfile
+--------------------------------------------
+Instrument Type		: Millennium Falcon
+Instrument Serial No.	: HanSolo
+
+Store to Job		: 20180626-01     
+Setup Start		: 26.06.18, 08:48:53
+
+
+--------------------------------
+Setup Method "Ori & Ht Transfer"
+--------------------------------
+
+Observations
+------------
+Point ID        	   Hz		    V		    SD		    use		refl const
+3.02            	  183.4384	   71.5158	     3.178	     0.000	  0.0344
+3.02            	   54.8656	   75.6636	     3.692	     0.000	  0.0344
+
+Residuals of Point 3.02            : dHz=   -----	dHeight=	dHD=   -----	Use:    1D
+
+Results
+-------
+Station ID	: FS03            
+		  E=      2610218.287	N=      1267037.378	H=            1.643	hi=      0.000
+
+Ori Corr.	:     0.0000
+
+S. Dev. Height	: 
+S. Dev. Ori	:      -----
+
+
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                              System 1200 Logfile - End

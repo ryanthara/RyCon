@@ -17,6 +17,8 @@
  */
 package de.ryanthara.ja.rycon.core.logfile.leica;
 
+import de.ryanthara.ja.rycon.core.elements.RyPoint;
+
 import java.util.ArrayList;
 
 /**
@@ -31,7 +33,7 @@ import java.util.ArrayList;
  */
 public abstract class LeicaLogfileBaseStructure {
 
-    // same order like logfile
+    // same order like logfile.txt
     private String instrumentType = "unknown";
     private String serialNo = "not available";
     private String storeToJob = "not chosen";
@@ -59,6 +61,15 @@ public abstract class LeicaLogfileBaseStructure {
     }
 
     /**
+     * Returns the application start date and time string.
+     *
+     * @return application start date and time
+     */
+    public String getApplicationStart() {
+        return applicationStart;
+    }
+
+    /**
      * Returns the application start date string.
      *
      * @return application start date
@@ -77,12 +88,25 @@ public abstract class LeicaLogfileBaseStructure {
     }
 
     /**
-     * Returns the application start date and time string.
+     * Returns the computed point as {@link RyPoint}.
      *
-     * @return application start date and time
+     * @param line line that contains the computed point
+     *
+     * @return computed point
      */
-    public String getApplicationStart() {
-        return applicationStart;
+    public RyPoint getComputed(final String line) {
+        return getPoint(line);
+    }
+
+    /**
+     * Returns the end point as {@link RyPoint}.
+     *
+     * @param line line that contains the end point
+     *
+     * @return end point
+     */
+    public RyPoint getEndPoint(final String line) {
+        return getPoint(line);
     }
 
     /**
@@ -113,6 +137,16 @@ public abstract class LeicaLogfileBaseStructure {
     }
 
     /**
+     * Returns a hash code value for the object.
+     *
+     * @return a hash code value
+     */
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    /**
      * Returns the name of the structure.
      *
      * @return structure name
@@ -120,6 +154,136 @@ public abstract class LeicaLogfileBaseStructure {
     @Override
     public String toString() {
         return super.toString();
+    }
+
+    /**
+     * Returns the design line offset as {@link RyPoint}.
+     *
+     * @param line line that contains the design line offset
+     *
+     * @return design line offset
+     */
+    protected RyPoint getDesignLineOffset(String line) {
+        return getPointDesignAndStakeoutDifferenceAndLineOffset(line);
+    }
+
+    /**
+     * Returns the design point as {@link RyPoint}.
+     *
+     * @param line line that contains the design point
+     *
+     * @return design point
+     */
+    protected RyPoint getDesignPoint(String line) {
+        return getPointDesignAndStakeoutDifferenceAndLineOffset(line);
+    }
+
+    /**
+     * Returns the from point of the traverse as {@link RyPoint}.
+     *
+     * @param line line that contains the from point
+     *
+     * @return
+     */
+    protected RyPoint getFromPoint(String line) {
+        return getComputed(line);
+    }
+
+    /**
+     * Returns the measured point from the reference line as {@link RyPoint}.
+     *
+     * @param line line that contains the measured point
+     *
+     * @return measured point
+     */
+    protected RyPoint getMeasuredPoint(String line) {
+        return getPointReflectorHeight(line);
+    }
+
+    /**
+     * Returns the deviation of a measured point from the reference line as {@link RyPoint}.
+     *
+     * @param line line that contains the deviation results
+     *
+     * @return deviation results
+     */
+    protected RyPoint getMeasuredPointDeviation(String line) {
+        return getPointDesignAndStakeoutDifferenceAndLineOffset(line);
+    }
+
+    /**
+     * Returns the second point of an arc as {@link RyPoint}.
+     *
+     * @param line line that contains the second point
+     *
+     * @return second point
+     */
+    protected RyPoint getSecondPoint(String line) {
+        return getPoint(line);
+    }
+
+    /**
+     * Returns the staked point as {@link RyPoint}.
+     *
+     * @param line line that contains the staked point
+     *
+     * @return staked point
+     */
+    protected RyPoint getStakedPoint(String line) {
+        return getPointReflectorHeight(line);
+    }
+
+    /**
+     * Returns the stakeout difference as {@link RyPoint}.
+     *
+     * @param line line that contains the stakeout difference
+     *
+     * @return stake out difference
+     */
+    protected RyPoint getStakeoutDifference(String line) {
+        return getPointDesignAndStakeoutDifferenceAndLineOffset(line);
+    }
+
+    /**
+     * Returns the start point as {@link RyPoint}.
+     *
+     * @param line line that contains the start point
+     *
+     * @return start point
+     */
+    protected RyPoint getStartPoint(final String line) {
+        return getPoint(line);
+    }
+
+    /**
+     * Returns the to point of the traverse as {@link RyPoint}.
+     *
+     * @param line line that contains the to point
+     *
+     * @return
+     */
+    protected RyPoint getToPoint(String line) {
+        return getComputed(line);
+    }
+
+    /**
+     * Returns the TPS Station from a given line as {@link RyPoint}.
+     *
+     * @param line line that contains the station information
+     *
+     * @return tps station point
+     */
+    protected RyPoint getTpsStation(String line) {
+        final String stationLine = line.split(":")[1].trim();
+        final String number = stationLine.substring(0, stationLine.indexOf("\t")).trim();
+
+        final String[] elements = stationLine.split("\\s+");
+        final String easting = elements[2].trim();
+        final String northing = elements[4].trim();
+        final String height = elements[6].trim();
+        final String instrumentHeight = elements[8].trim();
+
+        return new RyPoint(number, easting, northing, height, instrumentHeight);
     }
 
     /**
@@ -149,6 +313,70 @@ public abstract class LeicaLogfileBaseStructure {
                 applicationStart = line.split("\t:")[1].trim();
             }
         }
+    }
+
+    /*
+     * Due to some issues from the logfile.txt a simple split by ':' or space is not possible
+     *
+     * old version: Computed		:              100	E:      613989.977 	N:      265313.169 	H:          264.836
+     * new version: Computed		:              104	E=       617191.366	N=       264451.639	H=          280.901
+     */
+    private RyPoint getPoint(final String line) {
+        // point elements between ':' and string length
+        final String pointLine = line.substring(line.indexOf(":") + 1, line.length()).trim();
+        final String separator = pointLine.contains("E:") ? ":" : "=";
+
+        final String number = pointLine.substring(0, pointLine.indexOf("E" + separator)).trim();
+        final String coordinates = pointLine.substring(pointLine.indexOf("E" + separator), pointLine.length());
+
+        final String[] elements = coordinates.split("\\s+");
+        final String easting = elements[1].trim();
+        final String northing = elements[3].trim();
+
+        if (elements.length > 5) {
+            return new RyPoint(number, easting, northing, elements[5].trim());
+        }
+
+        return new RyPoint(number, easting, northing, "");
+    }
+
+    /*
+     * Used for:
+     *
+     * Design Point			:  E=       621679.285	  N=       259099.912	  H=          370.138
+     * Line/Offset			:	dL=           0.000	  dO=          -0.000	  dHO=         -3.547
+     * Stakeout Diff		: dE=           -0.000	 dN=            0.000	 dH=            0.001
+     * Design Line/Offs.	: dL=            0.000	 dO=            1.750	dHO=            0.000
+     */
+    private RyPoint getPointDesignAndStakeoutDifferenceAndLineOffset(String line) {
+        final String number = line.split(":")[0].trim();
+        final String designPointLine = line.split(":")[1].trim();
+
+        final String[] elements = designPointLine.split("\\s+");
+        final String easting = elements[1].trim();
+        final String northing = elements[3].trim();
+        final String height = elements[5].trim();
+
+        return new RyPoint(number, easting, northing, height);
+    }
+
+    /*
+     * Used for:
+     *
+     * Measured			:	E=       611723.917	  N=       269619.207	  H=          255.594	  hr/ha=    0.000
+     * Staked Point		:  E=       621679.285	  N=       259099.912	  H=          370.137	  hr/ha=    0.000
+     */
+    private RyPoint getPointReflectorHeight(String line) {
+        final String number = line.split(":")[0].trim();
+        final String stakedPointLine = line.split(":")[1].trim();
+
+        final String[] elements = stakedPointLine.split("\\s+");
+        final String easting = elements[1].trim();
+        final String northing = elements[3].trim();
+        final String height = elements[5].trim();
+        final String reflectorHeight = elements[7].trim();
+
+        return new RyPoint(number, easting, northing, height, reflectorHeight);
     }
 
 } // end of LeicaLogfileBaseStructure

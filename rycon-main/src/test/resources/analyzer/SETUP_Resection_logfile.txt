@@ -1,0 +1,52 @@
+                              System 1200 Logfile - Begin
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+--------------------------------------------
+Leica System 1200 Setup, Vers. 9.03 Logfile
+--------------------------------------------
+Instrument Type		: Shuttle
+Instrument Serial No.	: Chewie
+
+Store to Job		: 20180626-01     
+Setup Start		: 26.06.18, 09:53:04
+
+
+------------------------
+Setup Method "Resection"
+------------------------
+
+Observations
+------------
+Point ID        	   Hz		    V		    SD		    use		refl const
+9001            	  316.2384	  101.8207	    10.840	     0.000	  0.0344
+9002            	  338.2548	  101.4151	    11.144	     0.000	  0.0344
+9003            	  122.1084	   99.9900	    49.900	     0.000	  0.0344
+9004            	  124.4605	   99.0518	    38.234	     0.000	  0.0344
+
+Residuals of Point 9001            : dHz=  0.0029	dHeight=  -0.000	dHD=   0.000	Use:    3D
+
+Residuals of Point 9002            : dHz= -0.0018	dHeight=  -0.000	dHD=   0.000	Use:    3D
+
+Residuals of Point 9003            : dHz= -0.0011	dHeight=  -0.000	dHD=  -0.000	Use:    3D
+
+Residuals of Point 9004            : dHz=  0.0018	dHeight=   0.001	dHD=   0.001	Use:    3D
+
+Results
+-------
+Station ID	: FS04            
+		  E=      2610184.057	N=      1267049.603	H=            1.612	hi=      0.000
+
+Ori Corr.	:     2.8074
+Scale		: 
+
+S. Dev. East	:      0.002
+S. Dev. North	:      0.001
+S. Dev. Height	:      0.000
+S. Dev. Ori	:     0.0008
+
+
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                              System 1200 Logfile - End

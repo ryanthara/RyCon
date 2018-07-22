@@ -24,6 +24,8 @@ import de.ryanthara.ja.rycon.util.SortHelper;
 
 import java.util.ArrayList;
 import java.util.TreeSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Instances of this class provides functions to split a Leica GSI file by code into separate files.
@@ -33,6 +35,8 @@ import java.util.TreeSet;
  * @since 12
  */
 public class GsiCodeSplit {
+
+    private final static Logger logger = Logger.getLogger(GsiCodeSplit.class.getName());
 
     private ArrayList<String> readStringLines;
     private TreeSet<Integer> foundCodes;
@@ -89,34 +93,29 @@ public class GsiCodeSplit {
                     case 11:
                         newLine = block.toString();
                         break;
-
                     case 71:
                         code = Integer.parseInt(block.getDataGSI());
                         if (insertCodeBlock) {
                             newLine = newLine != null ? newLine.concat(" " + block.toString()) : null;
                         }
                         break;
-
                     case 81:
                         assert newLine != null;
                         newLine = newLine.concat(" " + block.toString());
                         validCheckHelperValue += 1;
                         break;
-
                     case 82:
                         assert newLine != null;
                         newLine = newLine.concat(" " + block.toString());
                         validCheckHelperValue += 3;
                         break;
-
                     case 83:
                         assert newLine != null;
                         newLine = newLine.concat(" " + block.toString());
                         validCheckHelperValue += 6;
                         break;
-
                     default:
-                        System.err.println("GsiCodeSplit.processCodeSplit() : found wrong word index " + block.toPrintFormatCSV());
+                        logger.log(Level.SEVERE, "GsiCodeSplit.processCodeSplit() : found wrong word index " + block.toPrintFormatCSV());
                 }
             }
 

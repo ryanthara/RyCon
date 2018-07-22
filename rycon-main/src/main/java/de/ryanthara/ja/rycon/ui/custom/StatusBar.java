@@ -18,6 +18,7 @@
 
 package de.ryanthara.ja.rycon.ui.custom;
 
+import de.ryanthara.ja.rycon.ui.events.StatusInformationEvent;
 import de.ryanthara.ja.rycon.ui.events.StatusInformationListener;
 import de.ryanthara.ja.rycon.ui.Images;
 import de.ryanthara.ja.rycon.ui.image.ImageConverter;
@@ -45,7 +46,7 @@ import java.util.Vector;
  * @version 2
  * @since 1
  */
-public class StatusBar extends Composite {
+public class StatusBar extends Composite implements StatusInformationListener {
 
     private Image iconError;
     private Image iconOK;
@@ -83,6 +84,11 @@ public class StatusBar extends Composite {
     @Override
     public Point computeSize(int wHint, int hHint, boolean changed) {
         return super.computeSize(wHint, hHint, changed);
+    }
+
+    @Override
+    public void notification(StatusInformationEvent event) {
+        System.out.println("Status text :" + event.getStatusText());
     }
 
     /**

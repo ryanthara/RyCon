@@ -26,8 +26,9 @@ import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 
-import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -101,7 +102,7 @@ public class BaselStadtCsvReader implements Reader {
         boolean success = false;
 
         try {
-            CSVReader reader = new CSVReader(new FileReader(file2Read.toFile()), ';', '"', 0); // do not skip first line!
+            CSVReader reader = new CSVReader(Files.newBufferedReader(file2Read, Charset.forName("ISO-8859-1")), ';', '"', 0); // do not skip first line!
             readCSVFile = reader.readAll();
 
             success = true;

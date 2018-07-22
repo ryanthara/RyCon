@@ -338,9 +338,9 @@ public class TidyUpWidget extends AbstractWidget {
                 } else if (fileName.toUpperCase().endsWith("LOGFILE.TXT")) {
                     LogfileClean logfileClean = new LogfileClean(readFile);
                     if (chkBoxCleanBlocksByContent != null) {
-                        writeFile = logfileClean.processTidyUp(chkBoxCleanBlocksByContent.getSelection());
+                        writeFile = logfileClean.processClean(chkBoxCleanBlocksByContent.getSelection());
                     } else {
-                        writeFile = logfileClean.processTidyUp(true);
+                        writeFile = logfileClean.processClean(true);
                     }
 
                     if (WriteFile2Disk.writeFile2Disk(path, writeFile, editString, ".txt")) {

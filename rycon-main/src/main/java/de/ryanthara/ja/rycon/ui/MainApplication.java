@@ -208,14 +208,14 @@ public class MainApplication extends Main {
         statusBar.setStatus("not implemented yet.", WARNING);
     }
 
-    private void actionBtnP() {
-        new SettingsWidget(shell);
-        statusBar.setStatus(ResourceBundleUtils.getLangString(LABELS, Labels.settingsInitialized), OK);
-    }
-
     private void actionBtn11() {
         new AboutWidget(shell);
         statusBar.setStatus(ResourceBundleUtils.getLangString(LABELS, Labels.aboutInitialized), OK);
+    }
+
+    private void actionBtnP() {
+        new SettingsWidget(shell);
+        statusBar.setStatus(ResourceBundleUtils.getLangString(LABELS, Labels.settingsInitialized), OK);
     }
 
     private void addKeyBoardInputFilter(final Shell shell) {
@@ -310,25 +310,6 @@ public class MainApplication extends Main {
 
         GridData gridData = new GridData(Sizes.RyCON_GRID_WIDTH.getValue(), Sizes.RyCON_GRID_HEIGHT.getValue());
         btnAbout.setLayoutData(gridData);
-    }
-
-    private void createButtonReport(Composite composite) {
-        Button btnToolboxReport = new Button(composite, SWT.PUSH | SWT.LEFT);
-        btnToolboxReport.setImage(new ImageConverter().convertToImage(display, Images.btnReport.getPath()));
-        btnToolboxReport.setText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.reportText));
-        btnToolboxReport.setToolTipText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.reportToolTip));
-
-        btnToolboxReport.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                actionBtn07();
-            }
-        });
-
-        GridData gridData = new GridData(Sizes.RyCON_GRID_WIDTH.getValue(), Sizes.RyCON_GRID_HEIGHT.getValue());
-        btnToolboxReport.setLayoutData(gridData);
-
-        handleDropTarget(btnToolboxReport, ANALYZE);
     }
 
     private void createButtonCleanTool(Composite composite) {
@@ -454,6 +435,25 @@ public class MainApplication extends Main {
 
         GridData gridData = new GridData(Sizes.RyCON_GRID_WIDTH.getValue(), Sizes.RyCON_GRID_HEIGHT.getValue());
         btnToolboxProject.setLayoutData(gridData);
+    }
+
+    private void createButtonReport(Composite composite) {
+        Button btnToolboxReport = new Button(composite, SWT.PUSH | SWT.LEFT);
+        btnToolboxReport.setImage(new ImageConverter().convertToImage(display, Images.btnReport.getPath()));
+        btnToolboxReport.setText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.reportText));
+        btnToolboxReport.setToolTipText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.reportToolTip));
+
+        btnToolboxReport.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                actionBtn07();
+            }
+        });
+
+        GridData gridData = new GridData(Sizes.RyCON_GRID_WIDTH.getValue(), Sizes.RyCON_GRID_HEIGHT.getValue());
+        btnToolboxReport.setLayoutData(gridData);
+
+        handleDropTarget(btnToolboxReport, ANALYZE);
     }
 
     private void createButtonSettingsTool(Composite composite) {
@@ -623,6 +623,9 @@ public class MainApplication extends Main {
                         case SPLIT:
                             new CodeSplitterWidget(paths).executeDropInjection();
                             break;
+                        default:
+                            logger.log(Level.SEVERE, "Dropped to an unsuported button");
+                            throw new UnsupportedOperationException("Dropped to an unsupported button");
                     }
                 }
             }

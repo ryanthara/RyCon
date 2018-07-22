@@ -15,9 +15,9 @@ class PreferenceHandlerTest {
         final String dirBase = preferenceHandler.getUserPreference(PreferenceKeys.DIR_BASE);
         assertEquals(dirBase, PreferenceHandler.checkUserPrefPathExist(dirBase));
 
-        assertTrue(System.getenv().get("HOME") == PreferenceHandler.checkUserPrefPathExist(null));
+        assertEquals(System.getenv().get("HOME"), PreferenceHandler.checkUserPrefPathExist(null));
         assertEquals(".", PreferenceHandler.checkUserPrefPathExist("."));
-        assertTrue(System.getenv().get("HOME") == PreferenceHandler.checkUserPrefPathExist("./?öT2-"));
+        assertEquals(System.getenv().get("HOME"), PreferenceHandler.checkUserPrefPathExist("./?öT2-"));
     }
 
     @Test

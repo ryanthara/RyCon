@@ -1,0 +1,37 @@
+                              System 1200 Logfile - Begin
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+--------------------------------------------
+Leica System 1200 COGO, Version 8.00 Logfile
+--------------------------------------------
+Store To Job		: RINGFUNDAMENT
+COGO Start		: 19.07.11, 11:25:02
+
+Arc Calculations - Arc Info
+---------------------------
+Start Point ID		:           16.05	E=       629486.884	N=       268733.294	H=          297.850
+Second Point ID		:          ------	E=            -----	N=            -----	H=            -----
+End Point ID		:           17.05	E=       629494.608	N=       268734.065	H=          297.850
+Radius			:          59.345
+
+Segmentation Info
+-----------------
+# of Segments		:  4	Seg.Length	 =            3.884
+# of Points		:  1	Method		 =    Anz. Segmente
+Segmentation Results
+--------------------
+Computed		:            R MH1	E=       629490.733	N=       268733.806	H=          297.850
+Segmentation Results
+--------------------
+Computed		:            R MH2	E=       629490.732	N=       268733.807	H=          297.851
+Segmentation Results
+--------------------
+Computed		:            R MH3	E=       629490.731	N=       268733.808	H=          297.852
+Segmentation Results
+--------------------
+Computed		:            R MH4	E=       629490.730	N=       268733.809	H=          297.853
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                              System 1200 Logfile - End

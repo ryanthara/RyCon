@@ -40,7 +40,8 @@ public class RyCONLauncher {
         Display display = new Display();
 
         // splash screen
-        SplashScreen splashScreen = new SplashScreen(display);
+        // TODO implement splash screen
+        //SplashScreen splashScreen = new SplashScreen(display);
 
         // initialization process
 

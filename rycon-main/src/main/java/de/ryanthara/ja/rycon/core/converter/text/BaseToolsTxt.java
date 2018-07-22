@@ -47,13 +47,14 @@ public class BaseToolsTxt {
      *
      * @return string s with defined length and possible added trailing zeroes
      */
-    public static String addTrailingZeroes(final String s, final int number) {
+    static String addTrailingZeroes(final String s, final int number) {
         String zeroes = "";
 
         int pos = s.length() - s.lastIndexOf(".");
 
+        StringBuilder builder = new StringBuilder();
         for (int i = pos - 1; i < number; i++) {
-            zeroes = zeroes + "0";
+            builder.append("0");
         }
 
         return s + zeroes;

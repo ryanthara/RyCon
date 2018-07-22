@@ -121,7 +121,7 @@ public final class PathCheck {
      * @throws IllegalArgumentException is thrown if file is null or empty string
      */
     public static boolean fileExists(final Path path) {
-        if (path == null) {
+        if ((path == null) || (path.getFileName().toString().equals(""))) {
             throw new IllegalArgumentException();
         }
 

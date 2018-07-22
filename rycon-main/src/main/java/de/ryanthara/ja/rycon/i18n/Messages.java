@@ -29,19 +29,13 @@ package de.ryanthara.ja.rycon.i18n;
  */
 public enum Messages implements ResourceKeys {
 
-    adminAndBigDataAndProjectGenerated,
     adminAndBigDataAndProjectsCreated,
-    adminAndBigDataGenerated,
     adminAndBigDatasCreated,
-    adminAndProjectGenerated,
     adminAndProjectsCreated,
     adminDirEqualityMessage,
-    adminFolderGenerated,
     adminFoldersCreated,
-    bigDataAndProjectGenerated,
     bigDataAndProjectsCreated,
     bigDataDirEqualityMessage,
-    bigDataFolderGenerated,
     bigDataFoldersCreated,
     cardReaderFilesCopySuccessful,
     conversionMessage,
@@ -50,7 +44,6 @@ public enum Messages implements ResourceKeys {
     levellingStatus,
     newConfigFileGenerated,
     projectDirEqualityMessage,
-    projectFolderGenerated,
     projectFoldersCreated,
     reportMessage,
     reportStatus,

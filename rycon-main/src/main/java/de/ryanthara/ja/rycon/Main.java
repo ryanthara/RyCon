@@ -66,10 +66,9 @@ public abstract class Main {
      * Member that is used to indicate that a text is in plural.
      */
     public static final boolean TEXT_PLURAL = false;
-    private final static Logger logger = Logger.getLogger(Main.class.getName());
+    private static final Logger logger = Logger.getLogger(Main.class.getName());
     private static final boolean GSI8 = false;
     private static final boolean GSI16 = true;
-
     /**
      * The reference to the global FileHandler for logging into a single file.
      */
@@ -99,7 +98,10 @@ public abstract class Main {
     /**
      * Construct a new {@code Main} object with all it's functionality.
      */
-    public Main() {
+    public Main() {}
+
+    public static void updateStatus(String s) {
+        System.out.println(s);
     }
 
     /**
@@ -365,6 +367,9 @@ public abstract class Main {
      * @param loggingLevel logging level to be set
      */
     // TODO implement cli log level handling
+    /*
+    https://docs.oracle.com/javase/10/core/java-logging-overview.htm
+     */
     private static void setLoggingLevel(Level loggingLevel) {
 
     }

@@ -20,7 +20,10 @@ package de.ryanthara.ja.rycon.core;
 import de.ryanthara.ja.rycon.core.logfile.leica.Identifier;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Instances of {@link LogfileClean} provides functions to clean a logfile in the
@@ -33,6 +36,8 @@ import java.util.List;
  * Therefore <tt>RyCON</tt> has this simple tool to delete this lines and logfile contents.
  */
 public final class LogfileClean {
+
+    private final static Logger logger = Logger.getLogger(LogfileClean.class.getName());
 
     private ArrayList<String> readStringLines;
 
@@ -47,7 +52,7 @@ public final class LogfileClean {
     }
 
     /**
-     * Tidy up the <tt>Leica Geosystems</tt> logfile.txt format with different kind of
+     * Clean the <tt>Leica Geosystems</tt> logfile.txt format with different kind of
      * approaches to identify regular structures like not needed lines or useless blocks
      * without any information for the user.
      * <p>
@@ -61,7 +66,7 @@ public final class LogfileClean {
      *
      * @return cleaned logfile as {@link ArrayList} with the lines as {@link String}
      */
-    public ArrayList<String> processTidyUp(boolean cleanBlocksByContent) {
+    public ArrayList<String> processClean(boolean cleanBlocksByContent) {
         /*
          * The main idea to clean up the logfile.txt based on a two step process.
          *
@@ -105,12 +110,20 @@ public final class LogfileClean {
                             case REFERENCE_LINE:
                                 temp = cleanReferenceLine(readStringLines.subList(start, end));
                                 break;
+                            case REFERENCE_PLANE:
+                                temp = cleanReferencePlane(readStringLines.subList(start, end));
+                                break;
                             case SETUP:
                                 temp = cleanSetup(readStringLines.subList(start, end));
                                 break;
                             case STAKEOUT:
                                 temp = cleanStakeOut(readStringLines.subList(start, end));
                                 break;
+                            case VOLUME_CALCULATIONS:
+                                temp = cleanVolumeCalculations(readStringLines.subList(start, end));
+                                break;
+                            default:
+                                logger.log(Level.SEVERE, "Found unknown logfile structure: " + currentBlock.getIdentifier());
                         }
 
                         // reset currentBlock due to begin-end delete
@@ -157,6 +170,21 @@ public final class LogfileClean {
         return result;
     }
 
+    /**
+     * Returns a full cleaned logfile that contains neither header, footer nor empty lines.
+     * <p>
+     * This function is mainly used in the {@link de.ryanthara.ja.rycon.core.logfile.LogfileAnalyzer}
+     * and uses the {@link #processClean(boolean) processClean} first.
+     *
+     * @return full cleaned logfile
+     */
+    public ArrayList<String> processCleanFull() {
+        ArrayList<String> list = processClean(true);
+        list.removeAll(Arrays.asList("", null));
+
+        return new ArrayList<>(list.subList(3, list.size() - 2));
+    }
+
     /*
      * Cleans the unnecessary lines from the logfile.txt file that was written
      * by the <tt>COGO</tt> program.
@@ -167,16 +195,16 @@ public final class LogfileClean {
         if (block != null) {
             result = new ArrayList<>();
 
-            final String[] identifiers = {"Computed", "Stakeout Diff"};
+            final String[] identifiers = {"Computed", "Base Point", "Inverse", "Offset Point", "Traverse", "Stakeout Diff"};
             boolean noCalculatedPoints = true;
 
             for (int i = 0; i < block.size(); i++) {
-                // skip first two and last 5 lines
-                if (i > 1 && i < block.size() - 5) {
+                // skip first two and last 3 lines
+                if (i > 1 && i < block.size() - 3) {
                     final String s = block.get(i);
 
                     // detect identifier -> block is not empty
-                    if (s.contains(identifiers[0]) || s.contains(identifiers[1])) {
+                    if (Arrays.stream(identifiers).parallel().anyMatch(s::contains)) {
                         noCalculatedPoints = false;
                     }
 
@@ -223,6 +251,23 @@ public final class LogfileClean {
                 return null;
             }
         }
+
+        return result;
+    }
+
+    /*
+     * Cleans the unnecessary lines from the logfile.txt file that was written
+     * by the <tt>REFERENCE PLANE</tt> program.
+     *
+     * The clean algorithm detects empty lines.
+     */
+    private ArrayList<String> cleanReferencePlane(List<String> strings) {
+        ArrayList<String> result = null;
+
+        System.out.println(strings.size());
+
+        // TODO add reference plane clean
+        result = (ArrayList<String>) strings;
 
         return result;
     }
@@ -295,6 +340,18 @@ public final class LogfileClean {
                 return null;
             }
         }
+
+        return result;
+    }
+
+    /*
+     * Cleans the unnecessary lines from the logfile.txt file that was written
+     * by the <tt>VOLUME CALCULATIONS</tt> program.
+     */
+    private ArrayList<String> cleanVolumeCalculations(List<String> strings) {
+        ArrayList<String> result = null;
+
+        // TODO add volume calculations clean
 
         return result;
     }

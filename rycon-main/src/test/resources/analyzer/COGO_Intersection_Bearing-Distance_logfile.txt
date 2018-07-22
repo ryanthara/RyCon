@@ -1,0 +1,45 @@
+                              System 1200 Logfile - Begin
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+--------------------------------------------
+Leica System 1200 COGO, Version 8.72 Logfile
+--------------------------------------------
+Store To Job		: 2222            
+COGO Start		: 19.07.18, 16:06:45
+
+Bearing - Distance Intersection
+-------------------------------
+Point ID 1		: E4              	E=          -10.156	N=           -9.000	H=           -----
+Direction		:         150.0000
+Point ID 2		: D6              	E=            7.844	N=          -16.500	H=            -----
+Distance		:           10.000
+Computed		: 10              	E=           -2.143	N=          -17.013	H=            -----
+
+Bearing - Distance Intersection
+-------------------------------
+Point ID 1		: E4              	E=          -10.156	N=           -9.000	H=           -----
+Direction		:         150.0000
+Point ID 2		: D6              	E=            7.844	N=          -16.500	H=            -----
+Distance		:           10.000
+Computed		: 10.1            	E=            7.331	N=          -26.487	H=            -----
+
+Bearing - Distance Intersection
+-------------------------------
+Point ID 1		: F1              	E=          -29.926	N=            0.000	H=           -----
+Direction		:         120.0000
+Point ID 2		: E4              	E=          -10.156	N=           -9.000	H=            -----
+Distance		:           10.000
+Computed		: 11              	E=           -0.178	N=           -9.666	H=            -----
+
+Bearing - Distance Intersection
+-------------------------------
+Point ID 1		: F1              	E=          -29.926	N=            0.000	H=           -----
+Direction		:         120.0000
+Point ID 2		: E4              	E=          -10.156	N=           -9.000	H=            -----
+Distance		:           10.000
+Computed		: 11.1            	E=          -18.620	N=           -3.674	H=            -----
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                              System 1200 Logfile - End

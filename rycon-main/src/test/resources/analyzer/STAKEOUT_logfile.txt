@@ -1,0 +1,30 @@
+                              System 1200 Logfile - Begin
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+------------------------------------------------
+Leica System 1200 Stakeout, Version 8.72 Logfile
+------------------------------------------------
+Instrument Type		: USS Enterprise
+Instrument Serial No.	: Cpt. Kirk
+
+Store To Job		: 20180626-01
+Stakeout Start		: 26.06.18, 10:26:07
+
+TPS Station		:             FS04	E=      2610184.057	N=      1267049.603	H=            1.612	hi=     0.000
+
+Point ID		: 9003STKE
+Design Point		:  E=      2610230.979	  N=      1267032.621	  H=            1.620
+Staked Point		:  E=      2610230.979	  N=      1267032.620	  H=            1.620	  hr/ha=    0.000
+Stakeout Diff		: dE=           -0.000	 dN=            0.001	 dH=            0.000
+
+Point ID		: 9004STKE
+Design Point		:  E=      2610219.501	  N=      1267035.272	  H=            2.182
+Staked Point		:  E=      2610219.499	  N=      1267035.272	  H=            2.181	  hr/ha=    0.000
+Stakeout Diff		: dE=            0.001	 dN=           -0.000	 dH=            0.001
+
+
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                              System 1200 Logfile - End

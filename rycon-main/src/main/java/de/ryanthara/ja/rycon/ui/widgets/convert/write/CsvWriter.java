@@ -104,7 +104,7 @@ public class CsvWriter implements Writer {
 
             case ZEISS_REC:
                 Zeiss2Csv zeiss2Csv = new Zeiss2Csv(readStringFile);
-                zeiss2Csv.convertZeiss2CSV(parameter.getSeparatorCSV());
+                writeFile = zeiss2Csv.convertZeiss2CSV(parameter.getSeparatorCSV());
                 break;
 
             case CADWORK:
