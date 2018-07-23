@@ -94,62 +94,71 @@ public class ExcelWriter implements Writer {
     @Override
     public boolean writeWorkbookFile() {
         boolean success = false;
+        String fileName = "";
         Workbook workbook = null;
+
+        if (path != null) {
+            Path p = path.getFileName();
+
+            if (p != null) {
+                fileName = p.toString();
+            }
+        }
 
         switch (SourceButton.fromIndex(parameter.getSourceNumber())) {
             case GSI8:
             case GSI16:
                 Gsi2Excel gsi2Excel = new Gsi2Excel(readStringFile);
-                if (gsi2Excel.convertGSI2Excel(isXLS, path.getFileName().toString(), parameter.isWriteCommentLine())) {
+                if (gsi2Excel.convertGSI2Excel(isXLS, fileName, parameter.isWriteCommentLine())) {
                     workbook = gsi2Excel.getWorkbook();
                 }
                 break;
 
             case TXT:
                 Txt2Excel txt2Excel = new Txt2Excel(readStringFile);
-                if (txt2Excel.convertTXT2Excel(isXLS, path.getFileName().toString())) {
+                if (txt2Excel.convertTXT2Excel(isXLS, fileName)) {
                     workbook = txt2Excel.getWorkbook();
                 }
                 break;
 
             case CSV:
                 Csv2Excel csv2Excel = new Csv2Excel(readCSVFile);
-                if (csv2Excel.convertCSV2Excel(isXLS, path.getFileName().toString())) {
+                if (csv2Excel.convertCSV2Excel(isXLS, fileName)) {
                     workbook = csv2Excel.getWorkbook();
                 }
                 break;
 
             case CAPLAN_K:
                 Caplan2Excel caplan2Excel = new Caplan2Excel(readStringFile);
-                if (caplan2Excel.convertCaplan2Excel(isXLS, path.getFileName().toString(), parameter.isWriteCommentLine())) {
+                if (caplan2Excel.convertCaplan2Excel(isXLS, fileName, parameter.isWriteCommentLine())) {
                     workbook = caplan2Excel.getWorkbook();
                 }
                 break;
 
             case ZEISS_REC:
                 Zeiss2Excel zeiss2Excel = new Zeiss2Excel(readStringFile);
-                if (zeiss2Excel.convertZeiss2Excel(isXLS, path.getFileName().toString(), parameter.isWriteCommentLine())) {
+                if (zeiss2Excel.convertZeiss2Excel(isXLS, fileName, parameter.isWriteCommentLine())) {
                     workbook = zeiss2Excel.getWorkbook();
                 }
                 break;
 
             case CADWORK:
                 Cadwork2Excel cadwork2Excel = new Cadwork2Excel(readStringFile);
-                if (cadwork2Excel.convertCadwork2Excel(isXLS, path.getFileName().toString(), parameter.isWriteCommentLine())) {
+                if (cadwork2Excel.convertCadwork2Excel(isXLS, fileName, parameter.isWriteCommentLine())) {
                     workbook = cadwork2Excel.getWorkbook();
                 }
                 break;
 
             case BASEL_STADT:
                 CsvBaselStadt2Excel csvBaselStadt2Excel = new CsvBaselStadt2Excel(readCSVFile);
-                if (csvBaselStadt2Excel.convertCSVBaselStadt2Excel(isXLS, path.getFileName().toString(), parameter.isWriteCommentLine())) {
+                if (csvBaselStadt2Excel.convertCSVBaselStadt2Excel(isXLS, fileName, parameter.isWriteCommentLine())) {
                     workbook = csvBaselStadt2Excel.getWorkbook();
                 }
                 break;
 
             case BASEL_LANDSCHAFT:
                 TxtBaselLandschaft2Excel txtBaselLandschaft2Excel = new TxtBaselLandschaft2Excel(readStringFile);
-                if (txtBaselLandschaft2Excel.convertTXTBaselLand2Excel(isXLS, path.getFileName().toString(), parameter.isWriteCommentLine())) {
+                if (txtBaselLandschaft2Excel.convertTXTBaselLand2Excel(isXLS, fileName, parameter.isWriteCommentLine())) {
                     workbook = txtBaselLandschaft2Excel.getWorkbook();
                 }
                 break;

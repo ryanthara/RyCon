@@ -366,8 +366,15 @@ public class TransferWidget extends AbstractWidget {
             showFileExistsWarning(target);
         } catch (IOException e) {
             if (source != null && target != null) {
-                logger.log(Level.SEVERE, "error while copying " + source.getFileName().toString() +
-                        " to " + target.getFileName().toString(), e);
+                Path sourceFileName = source.getFileName();
+                Path targetFileName = target.getFileName();
+
+                if ((sourceFileName != null) && (targetFileName != null)) {
+                    logger.log(Level.SEVERE, "error while copying " + sourceFileName.toString() +
+                            " to " + targetFileName.toString(), e);
+                } else {
+                    logger.log(Level.SEVERE, "Source or target path is null.");
+                }
             } else {
                 logger.log(Level.SEVERE, "error while copying files, null reference in source or target");
             }
@@ -397,40 +404,43 @@ public class TransferWidget extends AbstractWidget {
 
             for (String dataFileName : selectedDataFiles) {
                 for (Path source : allDatas) {
+                    if (source != null) {
+                        if (PathCheck.fileExists(source)) {
+                            if (source.endsWith(dataFileName)) {
+                                Path target;
+                                Path p = source.getFileName();
 
-                    if (PathCheck.fileExists(source)) {
-                        if (source.endsWith(dataFileName)) {
-                            Path target;
+                                if (p != null) {
+                                    // insert current date into logfile name
+                                    if (source.endsWith("logfile.txt")) {
+                                        final String fileName = p.toString();
+                                        final LocalDate localDate = LocalDate.now();
+                                        final String logFileName = fileName;
+                                        final String newFileName = logFileName.replaceAll("logfile.txt", localDate.toString() + "_logfile.txt");
 
-                            // insert current date into logfile name
-                            if (source.endsWith("logfile.txt")) {
-                                final LocalDate localDate = LocalDate.now();
-                                final String logFileName = source.getFileName().toString();
-                                final String newFileName = logFileName.replaceAll("logfile.txt", localDate.toString() + "_logfile.txt");
+                                        target = Paths.get(destinationPath + delimiter + newFileName);
+                                    } else {
+                                        target = Paths.get(destinationPath + delimiter + p.toString());
+                                    }
+                                    success = copyFiles(source, target, overwriteExisting);
 
-                                target = Paths.get(destinationPath + delimiter + newFileName);
+                                    if (success) {
+                                        Main.pref.setUserPreference(PreferenceKeys.LAST_COPIED_LOGFILE, target.toString());
+                                    }
 
-                            } else {
-                                target = Paths.get(destinationPath + delimiter + source.getFileName().toString());
-                            }
+                                    if (chkBoxCleanLogfile.getSelection() && success) {
+                                        final String editString = Main.pref.getUserPreference(PreferenceKeys.PARAM_EDIT_STRING);
 
-                            success = copyFiles(source, target, overwriteExisting);
+                                        LineReader lineReader = new LineReader(target);
 
-                            if (success) {
-                                Main.pref.setUserPreference(PreferenceKeys.LAST_COPIED_LOGFILE, target.toString());
-                            }
+                                        if (lineReader.readFile(false)) {
+                                            LogfileClean logfileClean = new LogfileClean(lineReader.getLines());
 
-                            if (chkBoxCleanLogfile.getSelection() && success) {
-                                final String editString = Main.pref.getUserPreference(PreferenceKeys.PARAM_EDIT_STRING);
+                                            ArrayList<String> writeFile = logfileClean.processClean(true);
 
-                                LineReader lineReader = new LineReader(target);
-
-                                if (lineReader.readFile(false)) {
-                                    LogfileClean logfileClean = new LogfileClean(lineReader.getLines());
-
-                                    ArrayList<String> writeFile = logfileClean.processClean(true);
-
-                                    WriteFile2Disk.writeFile2Disk(target, writeFile, editString, ".txt");
+                                            WriteFile2Disk.writeFile2Disk(target, writeFile, editString, ".txt");
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -462,24 +472,31 @@ public class TransferWidget extends AbstractWidget {
                 success = false;
 
                 for (Path source : allExports) {
-                    if (source.endsWith(exportedJobName)) {
-                        if (PathCheck.fileExists(source)) {
-                            final String dest = targetProjectPath.getText() + delimiter + Main.pref.getUserPreference(PreferenceKeys.DIR_PROJECT_MEASUREMENT_FILES);
-                            final Path target = Paths.get(dest + delimiter + source.getFileName().toString());
+                    if (source != null) {
+                        if (source.endsWith(exportedJobName)) {
+                            if (PathCheck.fileExists(source)) {
+                                Path p = source.getFileName();
 
-                            success = copyFiles(source, target, overwriteExisting);
+                                if (p != null) {
+                                    final String fileName = p.toString();
+                                    final String dest = targetProjectPath.getText() + delimiter + Main.pref.getUserPreference(PreferenceKeys.DIR_PROJECT_MEASUREMENT_FILES);
+                                    final Path target = Paths.get(dest + delimiter + fileName);
 
-                            if (chkBoxCleanMeasurementFile.getSelection() && success) {
-                                final String editString = Main.pref.getUserPreference(PreferenceKeys.PARAM_EDIT_STRING);
+                                    success = copyFiles(source, target, overwriteExisting);
 
-                                LineReader lineReader = new LineReader(target);
+                                    if (chkBoxCleanMeasurementFile.getSelection() && success) {
+                                        final String editString = Main.pref.getUserPreference(PreferenceKeys.PARAM_EDIT_STRING);
 
-                                if (lineReader.readFile(true)) {
-                                    GsiTidyUp gsiTidyUp = new GsiTidyUp(lineReader.getLines());
+                                        LineReader lineReader = new LineReader(target);
 
-                                    ArrayList<String> writeFile = gsiTidyUp.processTidyUp(false, false);
+                                        if (lineReader.readFile(true)) {
+                                            GsiTidyUp gsiTidyUp = new GsiTidyUp(lineReader.getLines());
 
-                                    WriteFile2Disk.writeFile2Disk(target, writeFile, editString, ".GSI");
+                                            ArrayList<String> writeFile = gsiTidyUp.processTidyUp(false, false);
+
+                                            WriteFile2Disk.writeFile2Disk(target, writeFile, editString, ".GSI");
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -512,12 +529,20 @@ public class TransferWidget extends AbstractWidget {
                 success = false;
 
                 for (Path source : allJobsFiles) {
-                    if (source.getFileName().toString().startsWith(jobName)) {
-                        if (PathCheck.fileExists(source)) {
-                            final String dest = targetProjectPath.getText() + delimiter + Main.pref.getUserPreference(PreferenceKeys.DIR_PROJECT_JOB_FILES);
-                            final Path target = Paths.get(dest + delimiter + source.getFileName().toString());
+                    if (source != null) {
+                        Path p = source.getFileName();
 
-                            success = copyFiles(source, target, overwriteExisting);
+                        if (p != null) {
+                            final String fileName = p.toString();
+
+                            if (fileName.startsWith(jobName)) {
+                                if (PathCheck.fileExists(source)) {
+                                    final String dest = targetProjectPath.getText() + delimiter + Main.pref.getUserPreference(PreferenceKeys.DIR_PROJECT_JOB_FILES);
+                                    final Path target = Paths.get(dest + delimiter + fileName);
+
+                                    success = copyFiles(source, target, overwriteExisting);
+                                }
+                            }
                         }
                     }
                 }
@@ -882,8 +907,15 @@ public class TransferWidget extends AbstractWidget {
 
             if (allDatas.size() > 0) {
                 for (Path jobFile : allDatas) {
-                    if (PathCheck.fileExists(jobFile)) {
-                        dataList.add(jobFile.getFileName().toString());
+                    if (jobFile != null) {
+                        if (PathCheck.fileExists(jobFile)) {
+                            Path p = jobFile.getFileName();
+
+                            if (p != null) {
+                                final String fileName = p.toString();
+                                dataList.add(fileName);
+                            }
+                        }
                     }
                 }
             } else {
@@ -921,8 +953,15 @@ public class TransferWidget extends AbstractWidget {
 
         if (allExports.size() > 0) {
             for (Path path : allExports) {
-                if (PathCheck.fileExists(path)) {
-                    exportList.add(path.getFileName().toString());
+                if (path != null) {
+                    if (PathCheck.fileExists(path)) {
+                        Path p = path.getFileName();
+
+                        if (p != null) {
+                            final String fileName = p.toString();
+                            exportList.add(fileName);
+                        }
+                    }
                 }
             }
         } else {
@@ -943,10 +982,16 @@ public class TransferWidget extends AbstractWidget {
 
         if (jobFileDirContent != null) {
             for (Path path : jobFileDirContent) {
-                if (PathCheck.fileExists(path)) {
-                    int length = path.getFileName().toString().length();
-                    allJobs.add(path.getFileName().toString().substring(0, length - 21));
-                    allJobsFiles.add(path);
+                if (path != null) {
+                    Path fileName = path.getFileName();
+
+                    if (fileName != null) {
+                        if (PathCheck.fileExists(path)) {
+                            int length = fileName.toString().length();
+                            allJobs.add(fileName.toString().substring(0, length - 21));
+                            allJobsFiles.add(path);
+                        }
+                    }
                 }
             }
 

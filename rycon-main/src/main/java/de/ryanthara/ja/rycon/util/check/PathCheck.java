@@ -113,6 +113,8 @@ public final class PathCheck {
 
     /**
      * Checks a given {@code Path URL} to be an existing and valid file.
+     * <p>
+     * From the perspective of RyCON empty strings are not valid files.
      *
      * @param path file URL as {@code Path}
      *
@@ -121,8 +123,16 @@ public final class PathCheck {
      * @throws IllegalArgumentException is thrown if file is null or empty string
      */
     public static boolean fileExists(final Path path) {
-        if ((path == null) || (path.getFileName().toString().equals(""))) {
+        if (path == null) {
             throw new IllegalArgumentException();
+        } else {
+            final Path fileName = path.getFileName();
+
+            if (fileName != null) {
+                if (fileName.toString().equals("")) {
+                    throw new IllegalArgumentException();
+                }
+            }
         }
 
         return Files.exists(path) && Files.isRegularFile(path);

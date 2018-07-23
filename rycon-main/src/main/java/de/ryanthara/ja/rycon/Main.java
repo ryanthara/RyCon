@@ -98,10 +98,7 @@ public abstract class Main {
     /**
      * Construct a new {@code Main} object with all it's functionality.
      */
-    public Main() {}
-
-    public static void updateStatus(String s) {
-        System.out.println(s);
+    public Main() {
     }
 
     /**
@@ -381,6 +378,10 @@ public abstract class Main {
      */
     public static void setSettingsWidgetIsOpen(boolean isOpen) {
         isSettingsWidgetOpenStatus = isOpen;
+    }
+
+    public static void updateStatus(String s) {
+        System.out.println(s);
     }
 
 }  // end of Main

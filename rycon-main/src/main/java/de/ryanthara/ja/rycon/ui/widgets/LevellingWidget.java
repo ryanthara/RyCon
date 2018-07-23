@@ -335,24 +335,26 @@ public class LevellingWidget extends AbstractWidget {
 
             if (lineReader.readFile(false)) {
                 ArrayList<String> readFile = lineReader.getLines();
+                Path path = file2read.getFileName();
 
-                String[] fileNameAndSuffix = file2read.getFileName().toString().split("\\.(?=[^.]+$)");
+                if (path != null) {
+                    ArrayList<String> writeFile;
+                    String[] fileNameAndSuffix = path.toString().split("\\.(?=[^.]+$)");
 
-                ArrayList<String> writeFile;
+                    if (fileNameAndSuffix[1].equalsIgnoreCase("GSI")) {
+                        GsiLevelling2Cad gsiLevelling2Cad = new GsiLevelling2Cad(readFile);
+                        writeFile = gsiLevelling2Cad.processLevelling2Cad(holdChangePoints);
+                    } else if (fileNameAndSuffix[1].equalsIgnoreCase("ASC")) {
+                        Nigra2Gsi nigra2Gsi = new Nigra2Gsi(readFile);
+                        writeFile = nigra2Gsi.convertNIGRA2GSI(Main.getGSI16());
+                    } else {
+                        System.err.println("File " + file2read.getFileName() + " is not supported (yet).");
+                        break;
+                    }
 
-                if (fileNameAndSuffix[1].equalsIgnoreCase("GSI")) {
-                    GsiLevelling2Cad gsiLevelling2Cad = new GsiLevelling2Cad(readFile);
-                    writeFile = gsiLevelling2Cad.processLevelling2Cad(holdChangePoints);
-                } else if (fileNameAndSuffix[1].equalsIgnoreCase("ASC")) {
-                    Nigra2Gsi nigra2Gsi = new Nigra2Gsi(readFile);
-                    writeFile = nigra2Gsi.convertNIGRA2GSI(Main.getGSI16());
-                } else {
-                    System.err.println("File " + file2read.getFileName() + " is not supported (yet).");
-                    break;
-                }
-
-                if (WriteFile2Disk.writeFile2Disk(file2read, writeFile, levelString, "GSI")) {
-                    counter = counter + 1;
+                    if (WriteFile2Disk.writeFile2Disk(file2read, writeFile, levelString, "GSI")) {
+                        counter = counter + 1;
+                    }
                 }
             } else {
                 logger.log(Level.SEVERE, "File " + file2read.getFileName() + " could not be read.");

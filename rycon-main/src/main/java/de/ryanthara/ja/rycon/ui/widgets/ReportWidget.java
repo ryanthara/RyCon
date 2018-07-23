@@ -267,29 +267,31 @@ public class ReportWidget extends AbstractWidget {
 
         LineReader lineReader;
 
-        for (Path path : files2read) {
-            if (path != null) {
-                lineReader = new LineReader(path);
+        for (Path file2read : files2read) {
+            if (file2read != null) {
+                lineReader = new LineReader(file2read);
 
                 if (lineReader.readFile(false)) {
                     ArrayList<String> readFile = lineReader.getLines();
                     ArrayList<String> cleanFile;
+                    Path path = file2read.getFileName();
 
-                    final String fileName = path.getFileName().toString();
+                    if (path != null) {
+                        final String fileName = path.toString();
 
-                    if (fileName.toUpperCase().endsWith("LOGFILE.TXT")) {
-                        LogfileClean logfileClean = new LogfileClean(readFile);
-                        cleanFile = logfileClean.processCleanFull();
+                        if (fileName.toUpperCase().endsWith("LOGFILE.TXT")) {
+                            LogfileClean logfileClean = new LogfileClean(readFile);
+                            cleanFile = logfileClean.processCleanFull();
 
-                        LogfileAnalyzer logfileAnalyzer = new LogfileAnalyzer(cleanFile);
+                            LogfileAnalyzer logfileAnalyzer = new LogfileAnalyzer(cleanFile);
 
-                        if (logfileAnalyzer.analyzeLeicaGeosystemsLogfile()) {
-                            System.out.println("Leica Geosystems logfile.txt analyzed.");
+                            if (logfileAnalyzer.analyzeLeicaGeosystemsLogfile()) {
+                                System.out.println("Leica Geosystems logfile.txt analyzed.");
 
-                            counter = counter + 1;
+                                counter = counter + 1;
+                            }
                         }
                     }
-
                 }
             }
         }

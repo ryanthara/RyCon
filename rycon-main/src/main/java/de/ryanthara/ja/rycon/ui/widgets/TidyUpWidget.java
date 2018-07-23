@@ -312,43 +312,47 @@ public class TidyUpWidget extends AbstractWidget {
         final String editString = Main.pref.getUserPreference(PreferenceKeys.PARAM_EDIT_STRING);
         final String ltopString = Main.pref.getUserPreference(PreferenceKeys.PARAM_LTOP_STRING);
 
-        for (Path path : files2read) {
-            lineReader = new LineReader(path);
+        for (Path file2read : files2read) {
+            lineReader = new LineReader(file2read);
 
             if (lineReader.readFile(false)) {
                 ArrayList<String> readFile = lineReader.getLines();
                 ArrayList<String> writeFile;
 
-                final String fileName = path.getFileName().toString();
+                Path path = file2read.getFileName();
 
-                if (fileName.toUpperCase().endsWith("GSI")) {
-                    GsiTidyUp gsiTidyUp = new GsiTidyUp(readFile);
-                    writeFile = gsiTidyUp.processTidyUp(holdStations, holdControlPoints);
+                if (path != null) {
+                    final String fileName = path.toString();
 
-                    if (WriteFile2Disk.writeFile2Disk(path, writeFile, editString, ".GSI")) {
-                        counter = counter + 1;
-                    }
-                } else if (fileName.toUpperCase().endsWith(".GSL")) {
-                    GsiLtopClean gsiLtopClean = new GsiLtopClean(readFile);
-                    writeFile = gsiLtopClean.processLTOPClean();
+                    if (fileName.toUpperCase().endsWith("GSI")) {
+                        GsiTidyUp gsiTidyUp = new GsiTidyUp(readFile);
+                        writeFile = gsiTidyUp.processTidyUp(holdStations, holdControlPoints);
 
-                    if (WriteFile2Disk.writeFile2Disk(path, writeFile, ltopString, ".GSI")) {
-                        counter = counter + 1;
-                    }
-                } else if (fileName.toUpperCase().endsWith("LOGFILE.TXT")) {
-                    LogfileClean logfileClean = new LogfileClean(readFile);
-                    if (chkBoxCleanBlocksByContent != null) {
-                        writeFile = logfileClean.processClean(chkBoxCleanBlocksByContent.getSelection());
-                    } else {
-                        writeFile = logfileClean.processClean(true);
-                    }
+                        if (WriteFile2Disk.writeFile2Disk(file2read, writeFile, editString, ".GSI")) {
+                            counter = counter + 1;
+                        }
+                    } else if (fileName.toUpperCase().endsWith(".GSL")) {
+                        GsiLtopClean gsiLtopClean = new GsiLtopClean(readFile);
+                        writeFile = gsiLtopClean.processLTOPClean();
 
-                    if (WriteFile2Disk.writeFile2Disk(path, writeFile, editString, ".txt")) {
-                        counter = counter + 1;
+                        if (WriteFile2Disk.writeFile2Disk(file2read, writeFile, ltopString, ".GSI")) {
+                            counter = counter + 1;
+                        }
+                    } else if (fileName.toUpperCase().endsWith("LOGFILE.TXT")) {
+                        LogfileClean logfileClean = new LogfileClean(readFile);
+                        if (chkBoxCleanBlocksByContent != null) {
+                            writeFile = logfileClean.processClean(chkBoxCleanBlocksByContent.getSelection());
+                        } else {
+                            writeFile = logfileClean.processClean(true);
+                        }
+
+                        if (WriteFile2Disk.writeFile2Disk(file2read, writeFile, editString, ".txt")) {
+                            counter = counter + 1;
+                        }
                     }
                 }
             } else {
-                System.err.println("File " + path.getFileName() + " could not be read.");
+                System.err.println("File " + file2read.getFileName() + " could not be read.");
             }
         }
 

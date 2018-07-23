@@ -70,28 +70,34 @@ public final class WriteFile2Disk {
      */
     public static boolean writeFile2Disk(final Path path, final ArrayList<String> writeFile,
                                          final String editString, final String fileNameExtension) {
-        boolean success;
+        boolean success = false;
 
         final Path outputFile = prepareOutputFileName(path, editString, fileNameExtension);
 
-        if (PathCheck.fileExists(outputFile)) {
-            final Shell shell = Display.getCurrent().getActiveShell();
+        if (outputFile != null) {
+            if (PathCheck.fileExists(outputFile)) {
+                final Shell shell = Display.getCurrent().getActiveShell();
 
-            final String outputFilename = outputFile.getFileName().toString();
+                Path p = outputFile.getFileName();
 
-            int returnValue = MessageBoxes.showMessageBox(shell, SWT.ICON_WARNING | SWT.YES | SWT.NO,
-                    ResourceBundleUtils.getLangString(LABELS, Labels.warningTextMsgBox),
-                    String.format(ResourceBundleUtils.getLangString(WARNINGS, Warnings.fileExistsOverwrite), outputFilename));
+                if (p != null) {
+                    final String outputFilename = p.toString();
 
-            if (returnValue == SWT.YES) {
-                LineWriter lineWriter = new LineWriter(outputFile);
+                    int returnValue = MessageBoxes.showMessageBox(shell, SWT.ICON_WARNING | SWT.YES | SWT.NO,
+                            ResourceBundleUtils.getLangString(LABELS, Labels.warningTextMsgBox),
+                            String.format(ResourceBundleUtils.getLangString(WARNINGS, Warnings.fileExistsOverwrite), outputFilename));
 
-                success = lineWriter.writeFile(writeFile);
+                    if (returnValue == SWT.YES) {
+                        LineWriter lineWriter = new LineWriter(outputFile);
+
+                        success = lineWriter.writeFile(writeFile);
+                    } else {
+                        success = false;
+                    }
+                }
             } else {
-                success = false;
+                success = new LineWriter(outputFile).writeFile(writeFile);
             }
-        } else {
-            success = new LineWriter(outputFile).writeFile(writeFile);
         }
 
         return success;

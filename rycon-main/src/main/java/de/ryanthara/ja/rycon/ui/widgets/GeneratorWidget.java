@@ -193,6 +193,73 @@ public final class GeneratorWidget extends AbstractWidget {
         tip.setLayoutData(new GridData(SWT.HORIZONTAL, SWT.TOP, true, false, 1, 1));
     }
 
+    private void createFolders(String projectNumbers) {
+        boolean areAdminFoldersCreated = false;
+        boolean areBigDataFoldersCreated = false;
+        boolean areProjectFoldersCreated = false;
+
+        final String[] numbers = projectNumbers.split(";");
+
+        // create all folders first
+        for (String number : numbers) {
+            if (!number.trim().equals("")) {
+                if (chkBoxCreateAdminFolder.getSelection()) {
+                    areAdminFoldersCreated = generateAdminFolder(number.trim());
+                    renameSpecialFiles(number);
+                }
+
+                if (chkBoxCreateBigDataFolder.getSelection()) {
+                    areBigDataFoldersCreated = generateBigDataFolder(number.trim());
+                }
+
+                if (chkBoxCreateProjectFolder.getSelection()) {
+                    areProjectFoldersCreated = generateProjectFolder(number.trim());
+                }
+            }
+        }
+
+        // show success message after folder creation
+        if (areAdminFoldersCreated || areBigDataFoldersCreated || areProjectFoldersCreated) {
+            String helper = "\n";
+
+            for (String number : numbers) {
+                if (!number.trim().equals("")) {
+                    helper = helper.concat(number.trim() + "\n");
+                }
+            }
+
+            String message;
+
+            if (areAdminFoldersCreated && areBigDataFoldersCreated && areProjectFoldersCreated) {
+                message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.adminAndBigDataAndProjectsCreated), helper);
+            } else if (areAdminFoldersCreated && areBigDataFoldersCreated) {
+                message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.adminAndBigDatasCreated), helper);
+            } else if (areAdminFoldersCreated && areProjectFoldersCreated) {
+                message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.adminAndProjectsCreated), helper);
+            } else if (areBigDataFoldersCreated && areProjectFoldersCreated) {
+                message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.bigDataAndProjectsCreated), helper);
+            } else if (areAdminFoldersCreated) {
+                message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.adminFoldersCreated), helper);
+            } else if (areBigDataFoldersCreated) {
+                message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.bigDataFoldersCreated), helper);
+            } else {
+                message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.projectFoldersCreated), helper);
+            }
+
+            MessageBoxes.showMessageBox(innerShell, SWT.ICON_INFORMATION,
+                    ResourceBundleUtils.getLangString(LABELS, Labels.informationTextMsgBox), message);
+
+            // open every created folder in the file viewer
+            if (chkBoxOpenFileManager.getSelection()) {
+                for (String number : numbers) {
+                    if (!number.trim().equals("")) {
+                        openFolder(number.trim(), areAdminFoldersCreated, areBigDataFoldersCreated, areProjectFoldersCreated);
+                    }
+                }
+            }
+        }
+    }
+
     private void createGroupInputField() {
         Group group = new Group(innerShell, SWT.NONE);
 
@@ -304,73 +371,6 @@ public final class GeneratorWidget extends AbstractWidget {
         gridData.grabExcessHorizontalSpace = true;
         gridData.horizontalAlignment = GridData.FILL;
         projectPath.setLayoutData(gridData);
-    }
-
-    private void createFolders(String projectNumbers) {
-        boolean areAdminFoldersCreated = false;
-        boolean areBigDataFoldersCreated = false;
-        boolean areProjectFoldersCreated = false;
-
-        final String[] numbers = projectNumbers.split(";");
-
-        // create all folders first
-        for (String number : numbers) {
-            if (!number.trim().equals("")) {
-                if (chkBoxCreateAdminFolder.getSelection()) {
-                    areAdminFoldersCreated = generateAdminFolder(number.trim());
-                    renameSpecialFiles(number);
-                }
-
-                if (chkBoxCreateBigDataFolder.getSelection()) {
-                    areBigDataFoldersCreated = generateBigDataFolder(number.trim());
-                }
-
-                if (chkBoxCreateProjectFolder.getSelection()) {
-                    areProjectFoldersCreated = generateProjectFolder(number.trim());
-                }
-            }
-        }
-
-        // show success message after folder creation
-        if (areAdminFoldersCreated || areBigDataFoldersCreated || areProjectFoldersCreated) {
-            String helper = "\n";
-
-            for (String number : numbers) {
-                if (!number.trim().equals("")) {
-                    helper = helper.concat(number.trim() + "\n");
-                }
-            }
-
-            String message;
-
-            if (areAdminFoldersCreated && areBigDataFoldersCreated && areProjectFoldersCreated) {
-                message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.adminAndBigDataAndProjectsCreated), helper);
-            } else if (areAdminFoldersCreated && areBigDataFoldersCreated) {
-                message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.adminAndBigDatasCreated), helper);
-            } else if (areAdminFoldersCreated && areProjectFoldersCreated) {
-                message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.adminAndProjectsCreated), helper);
-            } else if (areBigDataFoldersCreated && areProjectFoldersCreated) {
-                message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.bigDataAndProjectsCreated), helper);
-            } else if (areAdminFoldersCreated) {
-                message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.adminFoldersCreated), helper);
-            } else if (areBigDataFoldersCreated) {
-                message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.bigDataFoldersCreated), helper);
-            } else {
-                message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.projectFoldersCreated), helper);
-            }
-
-            MessageBoxes.showMessageBox(innerShell, SWT.ICON_INFORMATION,
-                    ResourceBundleUtils.getLangString(LABELS, Labels.informationTextMsgBox), message);
-
-            // open every created folder in the file viewer
-            if (chkBoxOpenFileManager.getSelection()) {
-                for (String number : numbers) {
-                    if (!number.trim().equals("")) {
-                        openFolder(number.trim(), areAdminFoldersCreated, areBigDataFoldersCreated, areProjectFoldersCreated);
-                    }
-                }
-            }
-        }
     }
 
     private boolean generateAdminFolder(String number) {
@@ -512,15 +512,21 @@ public final class GeneratorWidget extends AbstractWidget {
 
             for (Path entry : stream) {
                 if (entry != null) {
-                    if (PathCheck.fileExists(entry) && entry.getFileName().toString().contains("nn_Arbeitsblatt.docx")) {
-                        String oldName = entry.getFileName().toString();
-                        String newName = number + oldName.substring(9, oldName.length());
+                    Path path = entry.getFileName();
 
-                        Path renamed = Paths.get(entry.getParent() + delimiter + newName);
+                    if (path != null) {
+                        final String fileName = path.toString();
 
-                        Files.move(entry, renamed);
+                        if (PathCheck.fileExists(entry) && fileName.contains("nn_Arbeitsblatt.docx")) {
+                            String oldName = path.toString();
+                            String newName = number + oldName.substring(9, oldName.length());
 
-                        logger.log(Level.INFO, "rename of file 'YYYY_01nn_Arbeitsblatt.docx' successful");
+                            Path renamed = Paths.get(entry.getParent() + delimiter + newName);
+
+                            Files.move(entry, renamed);
+
+                            logger.log(Level.INFO, "rename of file 'YYYY_01nn_Arbeitsblatt.docx' successful");
+                        }
                     }
                 }
             }
@@ -536,16 +542,22 @@ public final class GeneratorWidget extends AbstractWidget {
 
             for (Path entry : stream) {
                 if (entry != null) {
-                    if (PathCheck.fileExists(entry) && entry.getFileName().toString().contains("nn_Aufwandschätzung_")) {
-                        String oldName = entry.getFileName().toString();
-                        String newName = number + oldName.substring(9, oldName.length());
-                        newName = newName.replaceAll("_0n", "_01");
+                    Path path = entry.getFileName();
 
-                        Path renamed = Paths.get(entry.getParent() + delimiter + newName);
+                    if (path != null) {
+                        final String fileName = path.toString();
 
-                        Files.move(entry, renamed);
+                        if (PathCheck.fileExists(entry) && fileName.contains("nn_Aufwandschätzung_")) {
+                            String oldName = path.toString();
+                            String newName = number + oldName.substring(9, oldName.length());
+                            newName = newName.replaceAll("_0n", "_01");
 
-                        logger.log(Level.INFO, "rename of file 'YYYY_01nn_Aufwandschätzung_0n.xlsx' successful");
+                            Path renamed = Paths.get(entry.getParent() + delimiter + newName);
+
+                            Files.move(entry, renamed);
+
+                            logger.log(Level.INFO, "rename of file 'YYYY_01nn_Aufwandschätzung_0n.xlsx' successful");
+                        }
                     }
                 }
             }
