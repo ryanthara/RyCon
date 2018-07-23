@@ -18,7 +18,7 @@
 package de.ryanthara.ja.rycon.ui.widgets;
 
 import de.ryanthara.ja.rycon.Main;
-import de.ryanthara.ja.rycon.core.GsiTidyUp;
+import de.ryanthara.ja.rycon.core.GsiClearUp;
 import de.ryanthara.ja.rycon.core.LogfileClean;
 import de.ryanthara.ja.rycon.data.PreferenceKeys;
 import de.ryanthara.ja.rycon.i18n.*;
@@ -490,9 +490,9 @@ public class TransferWidget extends AbstractWidget {
                                         LineReader lineReader = new LineReader(target);
 
                                         if (lineReader.readFile(true)) {
-                                            GsiTidyUp gsiTidyUp = new GsiTidyUp(lineReader.getLines());
+                                            GsiClearUp gsiClearUp = new GsiClearUp(lineReader.getLines());
 
-                                            ArrayList<String> writeFile = gsiTidyUp.processTidyUp(false, false);
+                                            ArrayList<String> writeFile = gsiClearUp.processClearUp(false, false);
 
                                             WriteFile2Disk.writeFile2Disk(target, writeFile, editString, ".GSI");
                                         }

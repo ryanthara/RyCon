@@ -172,8 +172,8 @@ public class MainApplication extends Main {
     }
 
     private void actionBtn03() {
-        new TidyUpWidget(shell);
-        statusBar.setStatus(ResourceBundleUtils.getLangString(LABELS, Labels.tidyUpInitialized), OK);
+        new ClearUpWidget(shell);
+        statusBar.setStatus(ResourceBundleUtils.getLangString(LABELS, Labels.clearUpInitialized), OK);
     }
 
     private void actionBtn04() {
@@ -615,7 +615,7 @@ public class MainApplication extends Main {
 
                     switch (dnDButtons) {
                         case CLEAN:
-                            new TidyUpWidget(paths).executeDropInjection();
+                            new ClearUpWidget(paths).executeDropInjection();
                             break;
                         case LEVELLING:
                             new LevellingWidget(paths).executeDropInjection();

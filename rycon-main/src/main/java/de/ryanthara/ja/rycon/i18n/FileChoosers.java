@@ -33,6 +33,7 @@ public enum FileChoosers implements ResourceKeys {
     cardReaderText,
     converterSourceMessage,
     converterSourceText,
+    clearUpSourceText,
     dirAdminMessage,
     dirAdminText,
     dirAdminTemplateMessage,
@@ -65,6 +66,5 @@ public enum FileChoosers implements ResourceKeys {
     lastProjectPathText,
     levellingSourceText,
     splitterSourceText,
-    tidyUpSourceText
 
 } // end of FileChoosers

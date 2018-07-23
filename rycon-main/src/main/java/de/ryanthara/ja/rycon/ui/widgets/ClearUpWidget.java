@@ -19,8 +19,8 @@
 package de.ryanthara.ja.rycon.ui.widgets;
 
 import de.ryanthara.ja.rycon.Main;
+import de.ryanthara.ja.rycon.core.GsiClearUp;
 import de.ryanthara.ja.rycon.core.GsiLtopClean;
-import de.ryanthara.ja.rycon.core.GsiTidyUp;
 import de.ryanthara.ja.rycon.core.LogfileClean;
 import de.ryanthara.ja.rycon.data.PreferenceKeys;
 import de.ryanthara.ja.rycon.i18n.*;
@@ -51,16 +51,16 @@ import static de.ryanthara.ja.rycon.ui.custom.Status.OK;
 /**
  * Instances of this class implement a complete widgets and it's functionality.
  * <p>
- * With the TidyUpWidget of RyCON it is possible to clean up coordinate, measurement
+ * With the ClearUpWidget of RyCON it is possible to clear up coordinate, measurement
  * and <tt>Leica Geosystems</tt> logfile.txt files with a simple 'intelligence'.
  *
  * @author sebastian
  * @version 9
  * @since 1
  */
-public class TidyUpWidget extends AbstractWidget {
+public class ClearUpWidget extends AbstractWidget {
 
-    private final static Logger logger = Logger.getLogger(TidyUpWidget.class.getName());
+    private final static Logger logger = Logger.getLogger(ClearUpWidget.class.getName());
 
     private final String[] acceptableFileSuffixes = {"*.gsi", "*.gsl", "*.txt"};
     private Shell parent;
@@ -72,13 +72,13 @@ public class TidyUpWidget extends AbstractWidget {
     private Shell innerShell;
 
     /**
-     * Constructs the {@link TidyUpWidget} without parameters.
+     * Constructs the {@link ClearUpWidget}.
      * <p>
      * The user interface is initialized in a separate method, which is called from here.
      *
      * @param parent parent shell
      */
-    public TidyUpWidget(final Shell parent) {
+    public ClearUpWidget(final Shell parent) {
         this.parent = parent;
 
         files2read = new Path[0];
@@ -96,7 +96,7 @@ public class TidyUpWidget extends AbstractWidget {
      *
      * @param droppedFiles {@link Path} array from drop source
      */
-    public TidyUpWidget(Path... droppedFiles) {
+    public ClearUpWidget(Path... droppedFiles) {
         files2read = PathCheck.getValidFiles(droppedFiles, acceptableFileSuffixes);
         innerShell = null;
     }
@@ -173,7 +173,7 @@ public class TidyUpWidget extends AbstractWidget {
 
         innerShell = new Shell(parent, SWT.CLOSE | SWT.DIALOG_TRIM | SWT.MAX | SWT.TITLE | SWT.APPLICATION_MODAL);
         innerShell.addListener(SWT.Close, event -> actionBtnCancel());
-        innerShell.setText(ResourceBundleUtils.getLangString(LABELS, Labels.tidyUpText));
+        innerShell.setText(ResourceBundleUtils.getLangString(LABELS, Labels.clearUpText));
         innerShell.setSize(width, height);
 
         innerShell.setLayout(gridLayout);
@@ -219,7 +219,7 @@ public class TidyUpWidget extends AbstractWidget {
         Optional<Path[]> files = FileDialogs.showAdvancedFileDialog(
                 innerShell,
                 filterPath,
-                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.tidyUpSourceText),
+                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.clearUpSourceText),
                 acceptableFileSuffixes,
                 filterNames,
                 inputFieldsComposite.getSourceTextField(),
@@ -267,7 +267,7 @@ public class TidyUpWidget extends AbstractWidget {
         group.setLayoutData(gridData);
 
         Label tip = new Label(group, SWT.WRAP | SWT.BORDER | SWT.LEFT);
-        tip.setText(ResourceBundleUtils.getLangString(LABELS, Labels.tipTidyUpWidget));
+        tip.setText(ResourceBundleUtils.getLangString(LABELS, Labels.tipClearUpWidget));
         tip.setLayoutData(new GridData(SWT.HORIZONTAL, SWT.TOP, true, false, 1, 1));
     }
 
@@ -295,11 +295,11 @@ public class TidyUpWidget extends AbstractWidget {
 
         chkBoxHoldStations = new Button(group, SWT.CHECK);
         chkBoxHoldStations.setSelection(false);
-        chkBoxHoldStations.setText(ResourceBundleUtils.getLangString(CHECKBOXES, CheckBoxes.holdStationsTidyUp));
+        chkBoxHoldStations.setText(ResourceBundleUtils.getLangString(CHECKBOXES, CheckBoxes.holdStationsClearUp));
 
         chkBoxHoldControlPoints = new Button(group, SWT.CHECK);
         chkBoxHoldControlPoints.setSelection(false);
-        chkBoxHoldControlPoints.setText(ResourceBundleUtils.getLangString(CHECKBOXES, CheckBoxes.holdControlPointsTidyUp));
+        chkBoxHoldControlPoints.setText(ResourceBundleUtils.getLangString(CHECKBOXES, CheckBoxes.holdControlPointsClearUp));
 
         chkBoxCleanBlocksByContent = new Button(group, SWT.CHECK);
         chkBoxCleanBlocksByContent.setSelection(true);
@@ -325,8 +325,8 @@ public class TidyUpWidget extends AbstractWidget {
                     final String fileName = path.toString();
 
                     if (fileName.toUpperCase().endsWith("GSI")) {
-                        GsiTidyUp gsiTidyUp = new GsiTidyUp(readFile);
-                        writeFile = gsiTidyUp.processTidyUp(holdStations, holdControlPoints);
+                        GsiClearUp gsiClearUp = new GsiClearUp(readFile);
+                        writeFile = gsiClearUp.processClearUp(holdStations, holdControlPoints);
 
                         if (WriteFile2Disk.writeFile2Disk(file2read, writeFile, editString, ".GSI")) {
                             counter = counter + 1;
@@ -375,7 +375,7 @@ public class TidyUpWidget extends AbstractWidget {
         if (counter > 0) {
             String message;
 
-            final String helper = ResourceBundleUtils.getLangString(MESSAGES, Messages.tidyUpMessage);
+            final String helper = ResourceBundleUtils.getLangString(MESSAGES, Messages.clearUpMessage);
 
             if (counter == 1) {
                 message = String.format(StringUtils.singularPluralMessage(helper, Main.TEXT_SINGULAR), counter);
@@ -390,7 +390,7 @@ public class TidyUpWidget extends AbstractWidget {
             Main.countFileOps = counter;
             success = true;
         } else {
-            final String message = ResourceBundleUtils.getLangString(ERRORS, Errors.tidyUpFailed);
+            final String message = ResourceBundleUtils.getLangString(ERRORS, Errors.clearUpFailed);
 
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING,
                     ResourceBundleUtils.getLangString(LABELS, Labels.errorTextMsgBox), message);
@@ -416,7 +416,7 @@ public class TidyUpWidget extends AbstractWidget {
     private void updateStatus() {
         String status;
 
-        final String helper = ResourceBundleUtils.getLangString(MESSAGES, Messages.tidyUpStatus);
+        final String helper = ResourceBundleUtils.getLangString(MESSAGES, Messages.clearUpStatus);
 
         // use counter to display different text on the status bar
         if (Main.countFileOps == 1) {
@@ -428,4 +428,4 @@ public class TidyUpWidget extends AbstractWidget {
         Main.statusBar.setStatus(status, OK);
     }
 
-} // end of TidyUpWidget
+} // end of ClearUpWidget

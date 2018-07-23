@@ -214,10 +214,10 @@ public class SettingsWidget {
     private void createTabModules(PreferencesDialog dialog) {
         dialog.addCategory(ResourceBundleUtils.getLangString(PREFERENCES, Preferences.categoryModules));
 
-        dialog.addGroup(ResourceBundleUtils.getLangString(PREFERENCES, Preferences.modulesTabGroupTitleTidyUp));
+        dialog.addGroup(ResourceBundleUtils.getLangString(PREFERENCES, Preferences.modulesTabGroupTitleClearUp));
 
         dialog.addPreference(new PreferenceString(
-                ResourceBundleUtils.getLangString(PREFERENCES, Preferences.tidyUpIdentifierFreeStation),
+                ResourceBundleUtils.getLangString(PREFERENCES, Preferences.clearUpIdentifierFreeStation),
                 DefaultKeys.PARAM_FREE_STATION_STRING.getValue()) {
 
             @Override
@@ -232,7 +232,7 @@ public class SettingsWidget {
         });
 
         dialog.addPreference(new PreferenceString(
-                ResourceBundleUtils.getLangString(PREFERENCES, Preferences.tidyUpIdentifierKnownStation),
+                ResourceBundleUtils.getLangString(PREFERENCES, Preferences.clearUpIdentifierKnownStation),
                 DefaultKeys.PARAM_KNOWN_STATION_STRING.getValue()) {
 
             @Override
@@ -247,7 +247,7 @@ public class SettingsWidget {
         });
 
         dialog.addPreference(new PreferenceString(
-                ResourceBundleUtils.getLangString(PREFERENCES, Preferences.tidyUpIdentifierStakeOut),
+                ResourceBundleUtils.getLangString(PREFERENCES, Preferences.clearUpIdentifierStakeOut),
                 DefaultKeys.PARAM_CONTROL_POINT_STRING.getValue()) {
 
             @Override
@@ -262,7 +262,7 @@ public class SettingsWidget {
         });
 
         dialog.addPreference(new PreferenceString(
-                ResourceBundleUtils.getLangString(PREFERENCES, Preferences.tidyUpIdentifierLTOP),
+                ResourceBundleUtils.getLangString(PREFERENCES, Preferences.clearUpIdentifierLTOP),
                 DefaultKeys.PARAM_LTOP_STRING.getValue()) {
 
             @Override

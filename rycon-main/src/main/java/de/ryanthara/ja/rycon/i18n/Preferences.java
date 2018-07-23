@@ -90,12 +90,12 @@ public enum Preferences implements ResourceKeys {
     modulesTabTitle,
     modulesTabToolTip,
 
-    // tidy up group
-    modulesTabGroupTitleTidyUp,
-    tidyUpIdentifierFreeStation,
-    tidyUpIdentifierKnownStation,
-    tidyUpIdentifierLTOP,
-    tidyUpIdentifierStakeOut,
+    // clear up group
+    modulesTabGroupTitleClearUp,
+    clearUpIdentifierFreeStation,
+    clearUpIdentifierKnownStation,
+    clearUpIdentifierLTOP,
+    clearUpIdentifierStakeOut,
 
     // converter group
     modulesTabGroupTitleConverter,

@@ -27,17 +27,17 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
- * Instances of {@code GsiTidyUp} provides functions to clean up a
+ * Instances of {@code GsiClearUp} provides functions to clear up a
  * Leica Geosystems GSI formatted file with some smart functions.
  * <p>
- * With version 3 the tidy up function is completely rewritten and
+ * With version 3 the clear up function is completely rewritten and
  * fully operational.
  *
  * @author sebastian
  * @version 3
  * @since 12
  */
-public class GsiTidyUp {
+public class GsiClearUp {
 
     private ArrayList<String> readStringLines;
 
@@ -47,7 +47,7 @@ public class GsiTidyUp {
      *
      * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
      */
-    public GsiTidyUp(ArrayList<String> readStringLines) {
+    public GsiClearUp(ArrayList<String> readStringLines) {
         this.readStringLines = readStringLines;
     }
 
@@ -69,7 +69,7 @@ public class GsiTidyUp {
      *
      * @return tidied up measurement file
      */
-    public ArrayList<String> processTidyUp(boolean holdStations, boolean holdControlPoints) {
+    public ArrayList<String> processClearUp(boolean holdStations, boolean holdControlPoints) {
         ArrayList<String> result = new ArrayList<>();
 
         // remove one or more station line at the beginning when the checkbox hold stations is not set
@@ -230,4 +230,4 @@ public class GsiTidyUp {
 
     private enum lineType {CONTROL_POINT, MEASUREMENT, STATION, TARGET_POINT}
 
-} // end of GsiTidyUp
+} // end of GsiClearUp
