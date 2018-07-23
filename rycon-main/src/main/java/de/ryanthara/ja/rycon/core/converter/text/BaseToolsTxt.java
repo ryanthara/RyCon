@@ -48,8 +48,6 @@ public class BaseToolsTxt {
      * @return string s with defined length and possible added trailing zeroes
      */
     static String addTrailingZeroes(final String s, final int number) {
-        String zeroes = "";
-
         int pos = s.length() - s.lastIndexOf(".");
 
         StringBuilder builder = new StringBuilder();
@@ -57,7 +55,7 @@ public class BaseToolsTxt {
             builder.append("0");
         }
 
-        return s + zeroes;
+        return s + builder.toString();
     }
 
 } // end of BaseToolsTxt

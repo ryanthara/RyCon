@@ -17,7 +17,6 @@
  */
 package de.ryanthara.ja.rycon.nio.filter;
 
-import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Path;
 
@@ -31,19 +30,23 @@ import java.nio.file.Path;
 public class TxtFilter implements DirectoryStream.Filter<Path> {
 
     /**
-     * Decides if the given directory entry should be accepted or filtered.
+     * Decides if the given directory path should be accepted or filtered.
      *
-     * @param entry the directory entry to be tested
+     * @param path the directory path to be tested
      *
-     * @return {@code true} if the directory entry should be accepted
-     *
-     * @throws IOException If an I/O error occurs
+     * @return {@code true} if the directory path should be accepted
      */
     @Override
-    public boolean accept(Path entry) throws IOException {
-        final String fileName = entry.getFileName().toString();
+    public boolean accept(Path path) {
+        if (path != null) {
+            Path fileName = path.getFileName();
 
-        return fileName.toLowerCase().endsWith(".txt");
+            if (fileName != null) {
+                return fileName.toString().toLowerCase().endsWith(".txt");
+            }
+        }
+
+        return false;
     }
 
 } // end of TxtFilter
