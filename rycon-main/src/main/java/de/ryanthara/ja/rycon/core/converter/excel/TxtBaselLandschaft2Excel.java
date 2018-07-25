@@ -113,7 +113,7 @@ public class TxtBaselLandschaft2Excel {
                     cell.setCellValue(Double.parseDouble(lineSplit[2]));
                     cellStyle = workbook.createCellStyle();
                     cellStyle.setDataFormat(format.getFormat("#,##0.000"));
-                    cellStyle.setVerticalAlignment(CellStyle.ALIGN_RIGHT);
+                    cellStyle.setAlignment(HorizontalAlignment.RIGHT);
                     cell.setCellStyle(cellStyle);
                     cellNumber++;
 
@@ -121,7 +121,7 @@ public class TxtBaselLandschaft2Excel {
                     cell.setCellValue(Double.parseDouble(lineSplit[3]));
                     cellStyle = workbook.createCellStyle();
                     cellStyle.setDataFormat(format.getFormat("#,##0.000"));
-                    cellStyle.setVerticalAlignment(CellStyle.ALIGN_RIGHT);
+                    cellStyle.setAlignment(HorizontalAlignment.RIGHT);
                     cell.setCellStyle(cellStyle);
                     cellNumber++;
 
@@ -132,7 +132,7 @@ public class TxtBaselLandschaft2Excel {
                         cell.setCellValue(Double.parseDouble(lineSplit[4]));
                         cellStyle = workbook.createCellStyle();
                         cellStyle.setDataFormat(format.getFormat("#,##0.000"));
-                        cellStyle.setVerticalAlignment(CellStyle.ALIGN_RIGHT);
+                        cellStyle.setAlignment(HorizontalAlignment.RIGHT);
                         cell.setCellStyle(cellStyle);
                     }
 
@@ -156,7 +156,7 @@ public class TxtBaselLandschaft2Excel {
                     cell.setCellValue(Double.parseDouble(lineSplit[3]));
                     cellStyle = workbook.createCellStyle();
                     cellStyle.setDataFormat(format.getFormat("#,##0.000"));
-                    cellStyle.setVerticalAlignment(CellStyle.ALIGN_RIGHT);
+                    cellStyle.setAlignment(HorizontalAlignment.RIGHT);
                     cell.setCellStyle(cellStyle);
                     cellNumber++;
 
@@ -164,7 +164,7 @@ public class TxtBaselLandschaft2Excel {
                     cell.setCellValue(Double.parseDouble(lineSplit[4]));
                     cellStyle = workbook.createCellStyle();
                     cellStyle.setDataFormat(format.getFormat("#,##0.000"));
-                    cellStyle.setVerticalAlignment(CellStyle.ALIGN_RIGHT);
+                    cellStyle.setAlignment(HorizontalAlignment.RIGHT);
                     cell.setCellStyle(cellStyle);
                     cellNumber++;
 
@@ -175,7 +175,7 @@ public class TxtBaselLandschaft2Excel {
                         cell.setCellValue(Double.parseDouble(lineSplit[5]));
                         cellStyle = workbook.createCellStyle();
                         cellStyle.setDataFormat(format.getFormat("#,##0.000"));
-                        cellStyle.setVerticalAlignment(CellStyle.ALIGN_RIGHT);
+                        cellStyle.setAlignment(HorizontalAlignment.RIGHT);
                         cell.setCellStyle(cellStyle);
                     }
 

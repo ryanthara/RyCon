@@ -29,6 +29,9 @@
     </parent>
 
     <!-- dependencies for rycon module -->
+    <properties>
+            <poi.version>3.17</poi.version>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>com.bulenkov</groupId>
@@ -48,17 +51,17 @@
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
-            <version>3.14</version>
+            <version>${poi.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
-            <version>3.14</version>
+            <version>${poi.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml-schemas</artifactId>
-            <version>3.14</version>
+            <version>${poi.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.xmlbeans</groupId>

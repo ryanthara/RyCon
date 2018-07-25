@@ -172,7 +172,7 @@ public class Gsi2Excel {
                         cell.setCellValue(Double.parseDouble(block.toPrintFormatCSV()));
                         cellStyle = workbook.createCellStyle();
                         cellStyle.setDataFormat(format.getFormat("#,##0.0000"));
-                        cellStyle.setVerticalAlignment(CellStyle.ALIGN_RIGHT);
+                        cellStyle.setAlignment(HorizontalAlignment.RIGHT);
                         cell.setCellStyle(cellStyle);
                         break;
 
@@ -181,7 +181,7 @@ public class Gsi2Excel {
                         cell.setCellValue(Double.parseDouble(block.toPrintFormatCSV()));
                         cellStyle = workbook.createCellStyle();
                         cellStyle.setDataFormat(format.getFormat("#,##0.000"));
-                        cellStyle.setVerticalAlignment(CellStyle.ALIGN_RIGHT);
+                        cellStyle.setAlignment(HorizontalAlignment.RIGHT);
                         cell.setCellStyle(cellStyle);
                         break;
 

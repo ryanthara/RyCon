@@ -131,7 +131,7 @@ public class Caplan2Excel {
                         cell.setCellValue(Double.parseDouble(caplanBlock.getEasting()));
                         cellStyle = workbook.createCellStyle();
                         cellStyle.setDataFormat(format.getFormat("#,##0.0000"));
-                        cellStyle.setVerticalAlignment(CellStyle.ALIGN_RIGHT);
+                        cellStyle.setAlignment(HorizontalAlignment.RIGHT);
                         cell.setCellStyle(cellStyle);
                     } else {
                         cell.setCellValue("");
@@ -147,7 +147,7 @@ public class Caplan2Excel {
                         cell.setCellValue(Double.parseDouble(caplanBlock.getNorthing()));
                         cellStyle = workbook.createCellStyle();
                         cellStyle.setDataFormat(format.getFormat("#,##0.0000"));
-                        cellStyle.setVerticalAlignment(CellStyle.ALIGN_RIGHT);
+                        cellStyle.setAlignment(HorizontalAlignment.RIGHT);
                         cell.setCellStyle(cellStyle);
                     } else {
                         cell.setCellValue("");
@@ -163,7 +163,7 @@ public class Caplan2Excel {
                         cell.setCellValue(Double.parseDouble(caplanBlock.getHeight()));
                         cellStyle = workbook.createCellStyle();
                         cellStyle.setDataFormat(format.getFormat("#,##0.0000"));
-                        cellStyle.setVerticalAlignment(CellStyle.ALIGN_RIGHT);
+                        cellStyle.setAlignment(HorizontalAlignment.RIGHT);
                         cell.setCellStyle(cellStyle);
                     } else {
                         cell.setCellValue("");

@@ -116,7 +116,7 @@ public class CsvBaselStadt2Excel {
                             cell.setCellValue(Double.parseDouble(csvLine[i]));
                             cellStyle = workbook.createCellStyle();
                             cellStyle.setDataFormat(format.getFormat("#,##0.000"));
-                            cellStyle.setVerticalAlignment(CellStyle.ALIGN_RIGHT);
+                            cellStyle.setAlignment(HorizontalAlignment.RIGHT);
                             cell.setCellStyle(cellStyle);
                         }
                         break;
