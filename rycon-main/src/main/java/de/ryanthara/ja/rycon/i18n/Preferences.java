@@ -51,6 +51,7 @@ public enum Preferences implements ResourceKeys {
     fileCompletionSplitter,
     fileCompletionLevelling,
     equalPointsMinimumDistance,
+    userString,
 
     // path tab
     pathTabTitle,
@@ -81,6 +82,7 @@ public enum Preferences implements ResourceKeys {
     defaultZeissFormat,
 
     // converter tab
+    addTraillingZeroes,
     converterTabTitle,
     converterTabToolTip,
     converterTabGroupLTOP,
@@ -100,6 +102,6 @@ public enum Preferences implements ResourceKeys {
     // converter group
     modulesTabGroupTitleConverter,
     convertZeroCoordinates,
-    ltopUseZenithDistance, addTraillingZeroes,
+    ltopUseZenithDistance,
 
 } // end of Preferences

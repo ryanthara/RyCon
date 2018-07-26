@@ -69,6 +69,7 @@ public enum PreferenceKeys {
     PARAM_KNOWN_STATION_STRING("param_known_station_string"),
     PARAM_LTOP_STRING("param_ltop_string"),
     PARAM_LEVEL_STRING("param_level_string"),
+    PARAM_USER_STRING("param_user_string"),
     USER_LAST_USED_DIR("user_last_used_dir");
 
     private String key;

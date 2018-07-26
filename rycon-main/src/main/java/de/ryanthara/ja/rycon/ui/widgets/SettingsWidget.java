@@ -137,6 +137,19 @@ public class SettingsWidget {
 
         dialog.addGroup(ResourceBundleUtils.getLangString(PREFERENCES, Preferences.groupGeneralSettingsTitle));
 
+        dialog.addPreference(new PreferenceString(
+                ResourceBundleUtils.getLangString(PREFERENCES, Preferences.userString),
+                DefaultKeys.PARAM_USER_STRING.getValue()) {
+
+            public String getValue() {
+                return Main.pref.getUserPreference(PreferenceKeys.PARAM_USER_STRING);
+            }
+
+            public void setValue(Object obj) {
+                Main.pref.setUserPreference(PreferenceKeys.PARAM_USER_STRING, obj.toString());
+            }
+        });
+
         dialog.addPreference(new PreferenceBoolean(
                 ResourceBundleUtils.getLangString(PREFERENCES, Preferences.overwriteExistingFiles),
                 Boolean.valueOf(DefaultKeys.OVERWRITE_EXISTING.getValue())) {

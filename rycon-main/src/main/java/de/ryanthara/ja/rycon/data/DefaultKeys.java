@@ -75,6 +75,7 @@ public enum DefaultKeys {
     PARAM_KNOWN_STATION_STRING("ST"),
     PARAM_LEVEL_STRING("_LEVEL"),
     PARAM_LTOP_STRING("_LTOP"),
+    PARAM_USER_STRING("RyCON user"),
 
     OVERWRITE_EXISTING("false"),
 

@@ -315,6 +315,7 @@ public class PreferenceHandler implements PreferenceChangeListener {
      * </ul>
      * <h3>User settings</h3>
      * <ul>
+     * <li>'PARAM_USER_STRING' - 'RyCON user' </li>
      * <li>'USER_LAST_USED_DIR' - '.' </li>
      * </ul>
      * <h3>Paths for module 1 - project generation</h3>
@@ -380,6 +381,7 @@ public class PreferenceHandler implements PreferenceChangeListener {
         setUserPreference(PreferenceKeys.LAST_POS_SECONDARY_MONITOR, DefaultKeys.LAST_POS_SECONDARY_MONITOR.getValue());
 
         // user settings
+        setUserPreference(PreferenceKeys.PARAM_USER_STRING, DefaultKeys.PARAM_USER_STRING.getValue());
         setUserPreference(PreferenceKeys.USER_LAST_USED_DIR, System.getProperty("user.home"));
 
         // paths for module #1 - project generation
