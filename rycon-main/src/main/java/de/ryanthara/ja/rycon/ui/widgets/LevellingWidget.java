@@ -352,7 +352,7 @@ public class LevellingWidget extends AbstractWidget {
                         break;
                     }
 
-                    if (WriteFile2Disk.writeFile2Disk(file2read, writeFile, levelString, "GSI")) {
+                    if (WriteFile2Disk.writeFile2Disk(file2read, writeFile, levelString, ".GSI")) {
                         counter = counter + 1;
                     }
                 }

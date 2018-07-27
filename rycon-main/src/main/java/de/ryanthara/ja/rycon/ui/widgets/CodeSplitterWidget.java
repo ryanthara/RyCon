@@ -330,7 +330,7 @@ public class CodeSplitterWidget extends AbstractWidget {
         for (ArrayList<String> lines : writeFile) {
             final String codeString = Main.pref.getUserPreference(PreferenceKeys.PARAM_CODE_STRING) + "-" + codeIterator.next();
 
-            if (WriteFile2Disk.writeFile2Disk(file2read, lines, codeString, "GSI")) {
+            if (WriteFile2Disk.writeFile2Disk(file2read, lines, codeString, ".GSI")) {
                 counter = counter + 1;
             }
         }
@@ -350,7 +350,7 @@ public class CodeSplitterWidget extends AbstractWidget {
         for (ArrayList<String> lines : writeFile) {
             final String editString = Main.pref.getUserPreference(PreferenceKeys.PARAM_CODE_STRING) + "-" + codeIterator.next();
 
-            if (WriteFile2Disk.writeFile2Disk(file2read, lines, editString, "TXT")) {
+            if (WriteFile2Disk.writeFile2Disk(file2read, lines, editString, ".TXT")) {
                 counter = counter + 1;
             }
         }

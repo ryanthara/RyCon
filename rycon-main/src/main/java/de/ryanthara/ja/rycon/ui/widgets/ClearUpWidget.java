@@ -346,7 +346,7 @@ public class ClearUpWidget extends AbstractWidget {
                             writeFile = logfileClean.processClean(true);
                         }
 
-                        if (WriteFile2Disk.writeFile2Disk(file2read, writeFile, editString, ".txt")) {
+                        if (WriteFile2Disk.writeFile2Disk(file2read, writeFile, editString, ".TXT")) {
                             counter = counter + 1;
                         }
                     }

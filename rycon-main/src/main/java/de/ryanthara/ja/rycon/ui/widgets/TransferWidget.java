@@ -438,7 +438,7 @@ public class TransferWidget extends AbstractWidget {
 
                                             ArrayList<String> writeFile = logfileClean.processClean(true);
 
-                                            WriteFile2Disk.writeFile2Disk(target, writeFile, editString, ".txt");
+                                            WriteFile2Disk.writeFile2Disk(target, writeFile, editString, ".TXT");
                                         }
                                     }
                                 }
