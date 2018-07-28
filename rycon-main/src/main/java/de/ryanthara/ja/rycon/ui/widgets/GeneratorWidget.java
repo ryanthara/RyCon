@@ -28,13 +28,30 @@ import de.ryanthara.ja.rycon.ui.widgets.generate.WarnAndErrorType;
 import de.ryanthara.ja.rycon.util.FileUtils;
 import de.ryanthara.ja.rycon.util.OpenInFileManager;
 import de.ryanthara.ja.rycon.util.check.PathCheck;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xwpf.usermodel.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -47,15 +64,18 @@ import static de.ryanthara.ja.rycon.ui.custom.Status.WARNING;
  * which is used to generate folders and substructures by a given point number.
  * <p>
  * The needed folders will be created based upon a template folder. Afterwards
- * it is opened in the default file manager of the used operating system.
+ * it could be opened in the default file manager of the used operating system.
  * <p>
  * Therefore the user has to put the number or text into a text field and
  * take the choice which kind of folders {@code RyCON} has to generate.
  * It's possible to create two or more folders at the same time, when the
- * folder names are split by a comma sign (',').
+ * folder names are split by a semicolon sign (';').
  * <p>
  * For better user experience and as note for the user, the recent folders
  * are shown for administration, big data and project folder.
+ * <p>
+ * There are some special renaming functions for word and excel files which
+ * are used in my company.
  *
  * @author sebastian
  * @version 7
@@ -64,6 +84,8 @@ import static de.ryanthara.ja.rycon.ui.custom.Status.WARNING;
 public final class GeneratorWidget extends AbstractWidget {
 
     private final static Logger logger = Logger.getLogger(GeneratorWidget.class.getName());
+    private final int ADMIN_FOLDER = 1;
+    private final int PROJECT_FOLDER = 2;
     private final Shell parent;
     private Button chkBoxCreateAdminFolder;
     private Button chkBoxCreateBigDataFolder;
@@ -76,7 +98,7 @@ public final class GeneratorWidget extends AbstractWidget {
     private Label projectPath;
 
     /**
-     * Constructs a new instance with parameter.
+     * Constructs a new instance with a reference for the parent shell.
      * <p>
      * The user interface is initialized in a separate method, which is called from here.
      *
@@ -205,7 +227,7 @@ public final class GeneratorWidget extends AbstractWidget {
             if (!number.trim().equals("")) {
                 if (chkBoxCreateAdminFolder.getSelection()) {
                     areAdminFoldersCreated = generateAdminFolder(number.trim());
-                    renameSpecialFiles(number);
+                    renameSpecialFiles(number, ADMIN_FOLDER);
                 }
 
                 if (chkBoxCreateBigDataFolder.getSelection()) {
@@ -214,6 +236,7 @@ public final class GeneratorWidget extends AbstractWidget {
 
                 if (chkBoxCreateProjectFolder.getSelection()) {
                     areProjectFoldersCreated = generateProjectFolder(number.trim());
+                    renameSpecialFiles(number, PROJECT_FOLDER);
                 }
             }
         }
@@ -466,10 +489,20 @@ public final class GeneratorWidget extends AbstractWidget {
         return FileUtils.getRecentFolder(bigDataPath);
     }
 
+    private String getDate() {
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        return now.format(df);
+    }
+
     private String getProjectPathString() {
         Path projectPath = Paths.get(Main.pref.getUserPreference(PreferenceKeys.DIR_PROJECT));
 
         return FileUtils.getRecentFolder(projectPath);
+    }
+
+    private String getUserString() {
+        return Main.pref.getUserPreference(PreferenceKeys.PARAM_USER_STRING);
     }
 
     private void openFolder(String number, boolean isAdminFolderGenerated, boolean isBigDataFolderGenerated, boolean isProjectFolderGenerated) {
@@ -492,49 +525,10 @@ public final class GeneratorWidget extends AbstractWidget {
         }
     }
 
-    /**
-     * Renames some special files in the admin folder.
-     * <p>
-     * They are special for my company and may not work for you with a normal usage of {@code RyCON}.
-     *
-     * @param number number of the generated admin folder
+    /*
+     * rename 20YY_0nnn_Aufwandschätzung_0n.xlsx
      */
-    private void renameSpecialFiles(String number) {
-        final String delimiter = FileSystems.getDefault().getSeparator();
-
-        String dir = Main.pref.getUserPreference(PreferenceKeys.DIR_ADMIN) + delimiter + number;
-
-        // rename 2017_01nn_Arbeitsblatt.docx
-        Path organization = Paths.get(dir + delimiter + "01.Organisation");
-
-        try {
-            DirectoryStream<Path> stream = Files.newDirectoryStream(organization);
-
-            for (Path entry : stream) {
-                if (entry != null) {
-                    Path path = entry.getFileName();
-
-                    if (path != null) {
-                        final String fileName = path.toString();
-
-                        if (PathCheck.fileExists(entry) && fileName.contains("nn_Arbeitsblatt.docx")) {
-                            String oldName = path.toString();
-                            String newName = number + oldName.substring(9, oldName.length());
-
-                            Path renamed = Paths.get(entry.getParent() + delimiter + newName);
-
-                            Files.move(entry, renamed);
-
-                            logger.log(Level.INFO, "rename of file 'YYYY_01nn_Arbeitsblatt.docx' successful");
-                        }
-                    }
-                }
-            }
-        } catch (IOException e) {
-            logger.log(Level.WARNING, "can not reader directory '01.Organisation'");
-        }
-
-        // rename 2017_01nn_Aufwandschätzung_0n.xlsx
+    private void renameContractFiles(String number, String delimiter, String dir) {
         Path correspondence = Paths.get(dir + delimiter + "02.Vertrag");
 
         try {
@@ -549,12 +543,76 @@ public final class GeneratorWidget extends AbstractWidget {
 
                         if (PathCheck.fileExists(entry) && fileName.contains("nn_Aufwandschätzung_")) {
                             String oldName = path.toString();
-                            String newName = number + oldName.substring(9, oldName.length());
+                            String newName = number + oldName.substring(oldName.indexOf("nn_") + 2, oldName.length());
                             newName = newName.replaceAll("_0n", "_01");
 
                             Path renamed = Paths.get(entry.getParent() + delimiter + newName);
 
-                            Files.move(entry, renamed);
+                            // Change date and number in excel sheet
+                            if (PathCheck.fileExists(entry)) {
+                                //try {
+                                FileInputStream fileInputStream = new FileInputStream(new File(entry.toString()));
+
+                                XSSFWorkbook workbook = new XSSFWorkbook(fileInputStream);
+                                XSSFRow row;
+                                XSSFCell cell;
+                                XSSFSheet spreadsheet;
+
+                                // get the sheets
+                                for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
+                                    spreadsheet = workbook.getSheetAt(i);
+                                    Iterator<Row> rowIterator = spreadsheet.rowIterator();
+
+                                    while (rowIterator.hasNext()) {
+                                        row = (XSSFRow) rowIterator.next();
+                                        Iterator<Cell> cellIterator = row.cellIterator();
+
+                                        while (cellIterator.hasNext()) {
+                                            cell = (XSSFCell) cellIterator.next();
+
+                                            if (cell.getCellTypeEnum().equals(CellType.STRING)) {
+                                                switch (cell.getStringCellValue()) {
+                                                    case "Auftrag-Nr.":
+                                                        XSSFRow rowNumber = spreadsheet.getRow(row.getRowNum());
+                                                        XSSFCell cellNumber = rowNumber.getCell(cell.getColumnIndex() + 1);
+
+                                                        cellNumber.setCellValue(number);
+                                                        break;
+                                                    case "Bearbeiter/in":
+                                                        XSSFRow rowUserName = spreadsheet.getRow(row.getRowNum() + 1);
+                                                        XSSFCell cellUserName = rowUserName.getCell(cell.getColumnIndex());
+
+                                                        cellUserName.setCellValue(getUserString());
+                                                        break;
+                                                    case "Datum":
+                                                        XSSFRow rowDate = spreadsheet.getRow(row.getRowNum() + 1);
+                                                        XSSFCell cellBelow = rowDate.getCell(cell.getColumnIndex());
+
+                                                        cellBelow.setCellValue(getDate());
+                                                        break;
+                                                    default:
+
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                // close file input stream
+                                fileInputStream.close();
+
+                                // write new excel file
+                                FileOutputStream out = new FileOutputStream(renamed.toFile());
+                                workbook.write(out);
+                                out.close();
+
+                                // delete the old one
+                                if (PathCheck.fileExists(entry) && PathCheck.fileExists(renamed)) {
+                                    Files.delete(entry);
+                                }
+                            }
+
+                            // Files.move(entry, renamed);
 
                             logger.log(Level.INFO, "rename of file 'YYYY_01nn_Aufwandschätzung_0n.xlsx' successful");
                         }
@@ -563,8 +621,187 @@ public final class GeneratorWidget extends AbstractWidget {
             }
 
         } catch (IOException e) {
-            logger.log(Level.WARNING, "can not reader directory '02.Vertrag'");
+            logger.log(Level.WARNING, "can not read directory '02.Vertrag'");
         }
+    }
+
+    /*
+     * rename 20YY_0nnn_Arbeitsblatt.docx
+     */
+    private void renameOrganisationFiles(String number, String delimiter, int folderType, String dir) {
+        Path organization = Paths.get(dir + delimiter + "01.Organisation");
+
+        try {
+            DirectoryStream<Path> stream = Files.newDirectoryStream(organization);
+
+            for (Path entry : stream) {
+                if (entry != null) {
+                    Path path = entry.getFileName();
+
+                    if (path != null) {
+                        final String fileName = path.toString();
+
+                        if (PathCheck.fileExists(entry) && fileName.contains("nn_Arbeitsblatt.docx")) {
+                            String oldName = path.toString();
+                            String newName = number + oldName.substring(oldName.indexOf("nn_") + 2, oldName.length());
+
+                            Path renamed = Paths.get(entry.getParent() + delimiter + newName);
+
+                            // Files.move(entry, renamed);
+
+                            // Change date and number in word file
+                            if (PathCheck.fileExists(entry)) {
+                                // TODO implement word file manipulation
+
+                                FileInputStream fileInputStream = new FileInputStream(new File(entry.toString()));
+
+                                XWPFDocument document = new XWPFDocument(fileInputStream);
+
+                                List<XWPFTable> tables = document.getTables();
+                                XWPFTable projectTable = tables.get(1);
+                                XWPFTableRow firstRow = projectTable.getRow(0);
+                                XWPFTableCell rightCell = firstRow.getCell(1);
+                                List<XWPFParagraph> paragraphs = rightCell.getParagraphs();
+
+                                Map<String, String> replacements = new HashMap<>();
+
+                                // prepare the replacement strings
+                                for (XWPFParagraph paragraph : paragraphs) {
+                                    String[] split = paragraph.getParagraphText().split("\t");
+
+                                    if (split.length > 1) {
+                                        switch (split[0]) {
+                                            case "Offerte Nr.:":
+                                                if (folderType == ADMIN_FOLDER) {
+                                                    replacements.put(split[1], number);
+                                                }
+                                                break;
+                                            case "Auftrag Nr.:":
+                                                if (folderType == PROJECT_FOLDER) {
+                                                    replacements.put(split[1], number);
+                                                }
+                                                break;
+                                            case "Visum:":
+                                                replacements.put(split[1], getUserString());
+                                                break;
+                                            case "Datum:":
+                                                replacements.put(split[1], getDate());
+                                                break;
+                                            default:
+                                        }
+                                    }
+                                }
+
+                                replaceInParagraphs(replacements, rightCell.getParagraphs());
+
+                                /*
+                                 * XWPFParagraph paragraph = (XWPFParagraph)element;
+                                 *
+                                 * if(paragraph.getStyleID()!=null){
+                                 *      XWPFStyles styles= output.createStyles();
+                                 *      XWPFStyles stylesDoc2= source.getStyles();
+                                 *      styles.addStyle(stylesDoc2.getStyle(paragraph.getStyleID()));
+                                 * }
+                                 *
+                                 * XWPFParagraph x = output.createParagraph();
+                                 * x.setStyle(((XWPFParagraph) element).getStyle());
+                                 * XWPFRun runX = x.createRun();
+                                 * runX.setText(((XWPFParagraph) element).getText());
+                                 */
+
+                                // close file input stream
+                                fileInputStream.close();
+
+                                // write new word file
+                                FileOutputStream out = new FileOutputStream(renamed.toFile());
+                                document.write(out);
+                                out.close();
+
+                                // delete the old one
+                                if (PathCheck.fileExists(entry) && PathCheck.fileExists(renamed)) {
+                                    Files.delete(entry);
+                                }
+                            }
+
+                            logger.log(Level.INFO, "rename of file 'YYYY_01nn_Arbeitsblatt.docx' successful");
+                        }
+                    }
+                }
+            }
+        } catch (IOException e) {
+            logger.log(Level.WARNING, "can not read directory '01.Organisation'");
+        }
+    }
+
+    /**
+     * Renames some special files in the admin folder.
+     * <p>
+     * They are special for my company and may not work for you with a normal usage of {@code RyCON}.
+     *
+     * @param number     number of the generated admin folder
+     * @param folderType differ between admin or project folder
+     */
+    private void renameSpecialFiles(String number, int folderType) {
+        final String delimiter = FileSystems.getDefault().getSeparator();
+        String dir = ".";
+
+        switch (folderType) {
+            case ADMIN_FOLDER:
+                dir = Main.pref.getUserPreference(PreferenceKeys.DIR_ADMIN) + delimiter + number;
+                // renameOrganisationFiles(number, delimiter, folderType, dir);
+                // renameContractFiles(number, delimiter, dir);
+                break;
+            case PROJECT_FOLDER:
+                dir = Main.pref.getUserPreference(PreferenceKeys.DIR_PROJECT) + delimiter + number;
+                break;
+            default:
+                break;
+        }
+
+        renameOrganisationFiles(number, delimiter, folderType, dir);
+        renameContractFiles(number, delimiter, dir);
+    }
+
+    private long replaceInParagraphs(Map<String, String> replacements, List<XWPFParagraph> xwpfParagraphs) {
+        long count = 0;
+        for (XWPFParagraph paragraph : xwpfParagraphs) {
+            List<XWPFRun> runs = paragraph.getRuns();
+            for (Map.Entry<String, String> replPair : replacements.entrySet()) {
+                String find = replPair.getKey();
+                String repl = replPair.getValue();
+                TextSegement found = paragraph.searchText(find, new PositionInParagraph());
+                if (found != null) {
+                    count++;
+                    if (found.getBeginRun() == found.getEndRun()) {
+                        // whole search string is in one Run
+                        XWPFRun run = runs.get(found.getBeginRun());
+                        String runText = run.getText(run.getTextPosition());
+                        String replaced = runText.replace(find, repl);
+                        run.setText(replaced, 0);
+                    } else {
+                        // The search string spans over more than one Run
+                        // Put the Strings together
+                        StringBuilder b = new StringBuilder();
+                        for (int runPos = found.getBeginRun(); runPos <= found.getEndRun(); runPos++) {
+                            XWPFRun run = runs.get(runPos);
+                            b.append(run.getText(run.getTextPosition()));
+                        }
+                        String connectedRuns = b.toString();
+                        String replaced = connectedRuns.replace(find, repl);
+
+                        // The first Run receives the replaced String of all connected Runs
+                        XWPFRun partOne = runs.get(found.getBeginRun());
+                        partOne.setText(replaced, 0);
+                        // Removing the text in the other Runs.
+                        for (int runPos = found.getBeginRun() + 1; runPos <= found.getEndRun(); runPos++) {
+                            XWPFRun partNext = runs.get(runPos);
+                            partNext.setText("", 0);
+                        }
+                    }
+                }
+            }
+        }
+        return count;
     }
 
     private void updateRecentFoldersTextFields() {
