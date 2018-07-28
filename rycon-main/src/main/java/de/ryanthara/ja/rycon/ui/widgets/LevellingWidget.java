@@ -228,8 +228,8 @@ public class LevellingWidget extends AbstractWidget {
      */
     private void actionBtnSource() {
         String[] filterNames = new String[]{
-                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameGSI),
-                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameNIGRA)
+                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameGsi),
+                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameNigra)
         };
 
         String filterPath = Main.pref.getUserPreference(PreferenceKeys.DIR_PROJECT);

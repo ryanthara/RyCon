@@ -18,8 +18,9 @@
 package de.ryanthara.ja.rycon.ui.widgets;
 
 import de.ryanthara.ja.rycon.Main;
-import de.ryanthara.ja.rycon.core.GsiCodeSplit;
-import de.ryanthara.ja.rycon.core.TextCodeSplit;
+import de.ryanthara.ja.rycon.core.splitter.GsiCodeSplit;
+import de.ryanthara.ja.rycon.core.splitter.NodeDatCodeSplit;
+import de.ryanthara.ja.rycon.core.splitter.TextCodeSplit;
 import de.ryanthara.ja.rycon.data.PreferenceKeys;
 import de.ryanthara.ja.rycon.i18n.*;
 import de.ryanthara.ja.rycon.nio.LineReader;
@@ -65,7 +66,7 @@ public class CodeSplitterWidget extends AbstractWidget {
 
     private final static Logger logger = Logger.getLogger(CodeSplitterWidget.class.getName());
 
-    private final String[] acceptableFileSuffixes = new String[]{"*.gsi", "*.txt"};
+    private final String[] acceptableFileSuffixes = new String[]{"*.gsi", "*.txt", "*.dat"};
     private Shell parent;
     private Button chkBoxInsertCodeColumn, chkBoxWriteCodeZero;
     private Path[] files2read;
@@ -216,8 +217,9 @@ public class CodeSplitterWidget extends AbstractWidget {
      */
     private void actionBtnSource() {
         String[] filterNames = new String[]{
-                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameGSI),
-                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameTXT)
+                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameGsi),
+                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameTxtCode),
+                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameCadwork),
         };
 
         String filterPath = Main.pref.getUserPreference(PreferenceKeys.DIR_PROJECT);
@@ -326,11 +328,29 @@ public class CodeSplitterWidget extends AbstractWidget {
 
         Iterator<Integer> codeIterator = gsiCodeSplit.getFoundCodes().iterator();
 
-        // writer file by file with one code
+        // write file by file with one code
         for (ArrayList<String> lines : writeFile) {
             final String codeString = Main.pref.getUserPreference(PreferenceKeys.PARAM_CODE_STRING) + "-" + codeIterator.next();
 
             if (WriteFile2Disk.writeFile2Disk(file2read, lines, codeString, ".GSI")) {
+                counter = counter + 1;
+            }
+        }
+
+        return counter;
+    }
+
+    private int executeSplitNodeDat(int counter, Path file2read, ArrayList<String> readFile) {
+        NodeDatCodeSplit nodeDatCodeSplit = new NodeDatCodeSplit(readFile);
+        ArrayList<ArrayList<String>> writeFile = nodeDatCodeSplit.processCodeSplit();
+
+        Iterator<Integer> codeIterator = nodeDatCodeSplit.getFoundCodes().iterator();
+
+        // write file by file with one code
+        for (ArrayList<String> lines : writeFile) {
+            final String codeString = Main.pref.getUserPreference(PreferenceKeys.PARAM_CODE_STRING) + "-" + codeIterator.next();
+
+            if (WriteFile2Disk.writeFile2Disk(file2read, lines, codeString, ".DAT")) {
                 counter = counter + 1;
             }
         }
@@ -346,7 +366,7 @@ public class CodeSplitterWidget extends AbstractWidget {
 
         Iterator<Integer> codeIterator = textCodeSplit.getFoundCodes().iterator();
 
-        // writer file by file with one code
+        // write file by file with one code
         for (ArrayList<String> lines : writeFile) {
             final String editString = Main.pref.getUserPreference(PreferenceKeys.PARAM_CODE_STRING) + "-" + codeIterator.next();
 
@@ -371,20 +391,22 @@ public class CodeSplitterWidget extends AbstractWidget {
 
                     // processFileOperations by differ between txt oder gsi files
 
-                    // processFileOperations and differ between 'normal' GSI files and LTOP 'GSL' files
                     // TODO remove path matcher
+                    PathMatcher matcherDAT = FileSystems.getDefault().getPathMatcher("regex:(?iu:.+\\.dat)");
                     PathMatcher matcherGSI = FileSystems.getDefault().getPathMatcher("regex:(?iu:.+\\.GSI)");
                     PathMatcher matcherTXT = FileSystems.getDefault().getPathMatcher("regex:(?iu:.+\\.TXT)");
 
-                    if (matcherGSI.matches(path)) {
+                    if (matcherDAT.matches(path)) {
+                        counter = executeSplitNodeDat(counter, path, readFile);
+                    } else if (matcherGSI.matches(path)) {
                         counter = executeSplitGsi(insertCodeColumn, writeFileWithCodeZero, counter, path, readFile);
                     } else if (matcherTXT.matches(path)) {
                         counter = executeSplitTxt(insertCodeColumn, writeFileWithCodeZero, counter, path, readFile);
                     } else {
-                        System.err.println("File format of " + path.getFileName() + " are not supported.");
+                        logger.log(Level.SEVERE, "File format of " + path.getFileName() + " are not supported.");
                     }
                 } else {
-                    System.err.println("File " + path.getFileName() + " could not be read.");
+                    logger.log(Level.SEVERE, "File " + path.getFileName() + " could not be read.");
                 }
             }
         }
@@ -409,9 +431,9 @@ public class CodeSplitterWidget extends AbstractWidget {
             final String helper = ResourceBundleUtils.getLangString(MESSAGES, Messages.splitFilesMessage);
 
             if (counter == 1) {
-                message = String.format(StringUtils.singularPluralMessage(helper, Main.TEXT_SINGULAR), counter);
+                message = String.format(StringUtils.singularPluralMessage(helper, Main.TEXT_SINGULAR), files2read.length, counter);
             } else {
-                message = String.format(StringUtils.singularPluralMessage(helper, Main.TEXT_PLURAL), counter);
+                message = String.format(StringUtils.singularPluralMessage(helper, Main.TEXT_PLURAL), files2read.length, counter);
             }
 
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_INFORMATION,

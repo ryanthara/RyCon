@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License along with
  * this package. If not, see <http://www.gnu.org/licenses/>.
  */
-package de.ryanthara.ja.rycon.core;
+package de.ryanthara.ja.rycon.core.splitter;
 
 import de.ryanthara.ja.rycon.core.converter.gsi.BaseToolsGsi;
 import de.ryanthara.ja.rycon.core.elements.GsiBlock;
@@ -42,7 +42,7 @@ public class GsiCodeSplit {
     private TreeSet<Integer> foundCodes;
 
     /**
-     * Constructs a new instance of this class given a reader line based text file in Leica GSI format.
+     * Constructs a new instance of this class given a read line based text file in Leica GSI format.
      *
      * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
      */

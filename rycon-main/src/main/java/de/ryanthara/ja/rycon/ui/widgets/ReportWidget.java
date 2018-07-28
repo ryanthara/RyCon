@@ -184,7 +184,7 @@ public class ReportWidget extends AbstractWidget {
 
     private void actionBtnLogfilePath() {
         String[] filterNames = new String[]{
-                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameLogfileTXT)
+                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameLogfileTxt)
         };
 
         String filterPath = Main.pref.getUserPreference(PreferenceKeys.LAST_COPIED_LOGFILE);

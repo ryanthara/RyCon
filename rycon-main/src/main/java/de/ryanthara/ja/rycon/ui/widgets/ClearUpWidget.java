@@ -198,9 +198,9 @@ public class ClearUpWidget extends AbstractWidget {
      */
     private void actionBtnSource() {
         String[] filterNames = new String[]{
-                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameGSI),
-                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameLTOP),
-                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameLogfileTXT)
+                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameGsi),
+                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameLtop),
+                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameLogfileTxt)
         };
 
         String filterPath = Main.pref.getUserPreference(PreferenceKeys.DIR_PROJECT);

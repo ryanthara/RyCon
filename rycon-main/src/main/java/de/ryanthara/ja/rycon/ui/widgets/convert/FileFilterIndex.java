@@ -34,14 +34,14 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.FILECHOOSERS;
  */
 public enum FileFilterIndex {
 
-    CSV("*.csv", ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameCSV)),
+    CSV("*.csv", ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameCsv)),
     DAT("*.dat", ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameCadwork)),
-    GSI("*.gsi", ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameGSI)),
+    GSI("*.gsi", ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameGsi)),
     K("*.K", ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameK)),
-    MEP("*.MEP", ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameMEP)),
-    PTS("*.PTS", ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNamePTS)),
+    MEP("*.MEP", ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameMep)),
+    PTS("*.PTS", ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNamePts)),
     REC("*.REC", ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameZeiss)),
-    TXT("*.txt", ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameTXT));
+    TXT("*.txt", ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameTxt));
 
     private final String extension;
     private final String filterName;

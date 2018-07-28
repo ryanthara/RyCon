@@ -39,7 +39,7 @@ public enum ResourceBundles {
     MESSAGES("de/ryanthara/ja/rycon/ui/Messages"),
     PREFERENCES("de/ryanthara/ja/rycon/ui/Preferences"),
     WARNINGS("de/ryanthara/ja/rycon/ui/Warnings"),
-    WORDINDICES("de/ryanthara/ja/rycon/ui/LeicaGSIWordIndices");
+    WORDINDICES("de/ryanthara/ja/rycon/core/converter/LeicaGSIWordIndices");
 
     private String bundleName;
 

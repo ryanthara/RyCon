@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License along with
  * this package. If not, see <http://www.gnu.org/licenses/>.
  */
-package de.ryanthara.ja.rycon.core;
+package de.ryanthara.ja.rycon.core.splitter;
 
 import de.ryanthara.ja.rycon.core.elements.RyBlock;
 import de.ryanthara.ja.rycon.util.SortHelper;
@@ -41,7 +41,7 @@ public class TextCodeSplit {
     private TreeSet<Integer> foundCodes;
 
     /**
-     * Constructs a new instance of this class given a reader line based text file with a specified format.
+     * Constructs a new instance of this class given a read line based text file with a specified format.
      *
      * @param arrayList {@code ArrayList<String>} with lines in text format
      */
@@ -153,11 +153,8 @@ public class TextCodeSplit {
 
         // insert lines without code for writing
         if (writeLinesWithoutCode && (linesWithOutCode.size() > 0)) {
-            ArrayList<String> lineStorage = new ArrayList<>();
 
-            for (String textBlock : linesWithOutCode) {
-                lineStorage.add(textBlock);
-            }
+            ArrayList<String> lineStorage = new ArrayList<>(linesWithOutCode);
 
             foundCodes.add(987789);
             result.add(lineStorage);
