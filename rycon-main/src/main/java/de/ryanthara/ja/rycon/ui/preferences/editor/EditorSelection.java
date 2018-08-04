@@ -34,7 +34,7 @@ public class EditorSelection extends Editor<String> {
      */
     public EditorSelection(PreferencesDialog dialog, String[] elements, String defaultValue) {
         super(dialog, null, defaultValue);
-        this.elements = elements;
+        this.elements = elements.clone();
     }
 
     /**
