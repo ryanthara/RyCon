@@ -69,7 +69,7 @@ public class GsiLevelling2Cad {
             - identify a station line (one token)
             - identify point line with height (four tokens)
             - identify change points and maybe ignore them (point number is '0')
-            - grab the relevant information and prepare the writer output
+            - grab the relevant information and prepare the writable output
          */
 
         for (String line : readStringLines) {
@@ -77,7 +77,7 @@ public class GsiLevelling2Cad {
 
             if (size == 24) {
                 isGSI16 = true;
-                line = line.substring(1, line.length());
+                line = line.substring(1);
             }
 
             // split reader line into separate Strings
@@ -98,7 +98,7 @@ public class GsiLevelling2Cad {
                     newLine = size == 24 ? "*" + lineSplit.get(0) : lineSplit.get(0);
 
                     // detect change points (number = 0) with regex
-                    if (!(newLine.substring(8, newLine.length()).matches("[0]+") & ignoreChangePoints)) {
+                    if (!(newLine.substring(8).matches("[0]+") & ignoreChangePoints)) {
                         /*
                         x and y in 1/10 mm with the same value -> diagonal line later on...
                         for every new levelling line the y coordinate is raised with 10

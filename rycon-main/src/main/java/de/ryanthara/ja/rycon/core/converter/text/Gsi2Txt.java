@@ -103,7 +103,7 @@ public class Gsi2Txt {
                 for (GsiBlock block : blocksInLine) {
                     // check the WI and fill in an empty block of spaces if WI doesn't match to 'column'
                     if (wordIndex == block.getWordIndex()) {
-                        intern = block.toPrintFormatTXT();
+                        intern = block.toPrintFormatTxt();
                         break; // important!!!
                     } else {
                         String emptyBlock;

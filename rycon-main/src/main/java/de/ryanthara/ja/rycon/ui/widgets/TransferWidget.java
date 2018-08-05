@@ -22,6 +22,7 @@ import de.ryanthara.ja.rycon.core.GsiClearUp;
 import de.ryanthara.ja.rycon.core.LogfileClean;
 import de.ryanthara.ja.rycon.data.PreferenceKeys;
 import de.ryanthara.ja.rycon.i18n.*;
+import de.ryanthara.ja.rycon.nio.FileNameExtension;
 import de.ryanthara.ja.rycon.nio.LineReader;
 import de.ryanthara.ja.rycon.nio.WriteFile2Disk;
 import de.ryanthara.ja.rycon.nio.filter.FilesFilter;
@@ -438,7 +439,7 @@ public class TransferWidget extends AbstractWidget {
 
                                             ArrayList<String> writeFile = logfileClean.processClean(true);
 
-                                            WriteFile2Disk.writeFile2Disk(target, writeFile, editString, ".TXT");
+                                            WriteFile2Disk.writeFile2Disk(target, writeFile, editString, FileNameExtension.TXT.getExtension());
                                         }
                                     }
                                 }
@@ -494,7 +495,7 @@ public class TransferWidget extends AbstractWidget {
 
                                             ArrayList<String> writeFile = gsiClearUp.processClearUp(false, false);
 
-                                            WriteFile2Disk.writeFile2Disk(target, writeFile, editString, ".GSI");
+                                            WriteFile2Disk.writeFile2Disk(target, writeFile, editString, FileNameExtension.LEICA_GSI.getExtension());
                                         }
                                     }
                                 }

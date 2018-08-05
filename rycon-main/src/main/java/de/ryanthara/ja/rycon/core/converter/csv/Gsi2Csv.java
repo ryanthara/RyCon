@@ -94,7 +94,7 @@ public class Gsi2Csv {
                 for (GsiBlock block : blocksInLine) {
                     // check the WI and fill in an empty block of spaces if WI doesn't match to 'column'
                     if (wordIndex == block.getWordIndex()) {
-                        intern = block.toPrintFormatCSV();
+                        intern = block.toPrintFormatCsv();
                         break; // important if else statement will be added!!!
                     }
                 }

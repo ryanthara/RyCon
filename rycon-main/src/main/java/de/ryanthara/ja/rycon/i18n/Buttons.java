@@ -64,6 +64,11 @@ public enum Buttons implements ResourceKeys {
     okToolTip,
     printText,
     printToolTip,
+    radioBtnLevelAsc,
+    radioBtnLevelCsv,
+    radioBtnLevelGsi8,
+    radioBtnLevelGsi16,
+    radioBtnLevelTxt,
     settingsText,
     settingsToolTip,
     splitterText,
@@ -71,5 +76,6 @@ public enum Buttons implements ResourceKeys {
     transformationText,
     transformationToolTip,
     txtCsvSpecialFormat,
+
 
 } // end of Buttons

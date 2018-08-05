@@ -84,8 +84,7 @@ public class ReferenceLineStructure extends LeicaLogfileBaseStructure {
 
         super.analyzeHeader(lines);
 
-        Iterator<String> iterator = lines.iterator();
-        while (iterator.hasNext()) {
+        for (Iterator<String> iterator = lines.iterator(); iterator.hasNext(); ) {
             String line = iterator.next();
 
             if (line.startsWith(Elements.TPS_STATION.identifier)) {

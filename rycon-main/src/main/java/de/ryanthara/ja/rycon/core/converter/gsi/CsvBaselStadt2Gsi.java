@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class CsvBaselStadt2Gsi {
 
-    private List<String[]> readCSVLines = null;
+    private List<String[]> readCSVLines;
 
     /**
      * Constructs a new instance of this class with a parameter for the reader line based CSV files from the
@@ -42,10 +42,8 @@ public class CsvBaselStadt2Gsi {
         readCSVLines.remove(0);
 
         for (String[] stringField : readCSVLines) {
-            String line;
-
             // point number is in column 1
-            line = stringField[0].replaceAll("\\s+", "").trim();
+            String line = stringField[0].replaceAll("\\s+", "").trim();
             line = line.concat(" ");
 
             // easting (Y) is in column 3

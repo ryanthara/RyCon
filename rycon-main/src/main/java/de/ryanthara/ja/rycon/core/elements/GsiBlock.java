@@ -19,10 +19,10 @@ package de.ryanthara.ja.rycon.core.elements;
 
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 import de.ryanthara.ja.rycon.i18n.WordIndices;
+import de.ryanthara.ja.rycon.ui.util.StringHelper;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Arrays;
 
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.WORDINDICES;
 
@@ -59,7 +59,7 @@ public class GsiBlock {
         this.wordIndex = Integer.parseInt(blockAsString.substring(0, 2));
         this.information = blockAsString.substring(2, 6);
         this.sign = blockAsString.substring(6, 7);
-        this.dataGSI = blockAsString.substring(7, blockAsString.length());
+        this.dataGSI = blockAsString.substring(7);
     }
 
     /**
@@ -80,7 +80,7 @@ public class GsiBlock {
             this.wordIndex = wordIndex;
             this.information = String.format("%04d", lineNumber);
             this.sign = "+";
-            this.dataGSI = fillWithZeros(length, dataGSI);
+            this.dataGSI = StringHelper.fillWithZeros(length, dataGSI);
         }
     }
 
@@ -105,11 +105,11 @@ public class GsiBlock {
 
         if (wordIndex == 71) {                                  // code
             this.information = "..46";
-        } else if ((wordIndex > 80) & (wordIndex < 90)) {       // coordinates
+        } else if ((wordIndex > 80) && (wordIndex < 90)) {      // coordinates
             this.information = "..46";
 
             try {
-                Double d = Double.parseDouble(dataGSI);
+                double d = Double.parseDouble(dataGSI);
                 if (d == 0d) {
                     dataGSI = "0";
                 } else {
@@ -129,7 +129,7 @@ public class GsiBlock {
             this.information = "..4.";
         }
 
-        this.dataGSI = fillWithZeros(length, dataGSI);
+        this.dataGSI = StringHelper.fillWithZeros(length, dataGSI);
     }
 
     /**
@@ -149,17 +149,8 @@ public class GsiBlock {
         this.information = information;
         this.sign = sign;
 
-        char[] leadingZeros;
-
-        // fill the GSI data up to 8 or 16 signs with leading zeros
-        if (isGSI16) {
-            leadingZeros = new char[16 - dataGSI.length()];
-        } else {
-            leadingZeros = new char[8 - dataGSI.length()];
-        }
-        Arrays.fill(leadingZeros, '0');
-
-        this.dataGSI = new String(leadingZeros) + dataGSI.substring(0, dataGSI.length());
+        int length = isGSI16 ? 16 : 8;
+        this.dataGSI = StringHelper.fillWithZeros(length, dataGSI);
     }
 
     /**
@@ -190,21 +181,31 @@ public class GsiBlock {
     }
 
     /**
+     * Returns a GsiBlock in asc format without separation sign. No additional invisible spaces are created.
+     *
+     * @return formatted {@code String} for ascii output
+     */
+    public String toPrintFormatAsc() {
+
+        return this.toPrintFormatTxt().trim();
+    }
+
+    /**
      * Returns a GsiBlock in csv format without separation sign. No additional invisible spaces are created.
      *
-     * @return formatted {@code String} for CSV output
+     * @return formatted {@code String} for csv output
      */
-    public String toPrintFormatCSV() {
-        return this.toPrintFormatTXT().trim();
+    public String toPrintFormatCsv() {
+        return this.toPrintFormatTxt().trim();
     }
 
     /**
      * Returns a GsiBlock in a printable format filled up with invisible spaces to a defined length (e.g. 16 characters).
      *
-     * @return formatted {@code String} for column based TXT output
+     * @return formatted {@code String} for column based txt output
      */
     // TODO: 29.10.16 checks the right length for print string length (16, 17, sign)
-    public String toPrintFormatTXT() {
+    public String toPrintFormatTxt() {
         String s = this.dataGSI;
         int length = s.length();
 
@@ -222,7 +223,7 @@ public class GsiBlock {
                     stringBuilder = new StringBuilder(s);
                     s = stringBuilder.insert(length - 5, ".").toString();
                     s = trimLeadingZeros(s);
-                    s = fillWithSpaces(length + 1, s);
+                    s = StringHelper.fillWithSpaces(length + 1, s);
                 }
                 break;
             case 26:        // offset
@@ -245,18 +246,18 @@ public class GsiBlock {
                 }
 
                 s = insertMinusSign(s);
-                s = fillWithSpaces(length + 2, s);
+                s = StringHelper.fillWithSpaces(length + 2, s);
                 break;
             case 41:        // code
                 s = trimLeadingZeros(s);
-                s = fillWithSpaces(length, s);
+                s = StringHelper.fillWithSpaces(length, s);
                 break;
             case 58:        // addition constant in 1/10 mm
                 stringBuilder = new StringBuilder(s);
                 s = stringBuilder.insert(length - 4, ".").toString();
 
                 s = this.sign + trimLeadingZeros(s);
-                s = fillWithSpaces(length, s);
+                s = StringHelper.fillWithSpaces(length, s);
                 break;
             case 71:        // comment 1, mostly used for code
             case 72:        // attribute 1
@@ -288,11 +289,11 @@ public class GsiBlock {
                 s = insertMinusSign(s);
 
                 // add two spaces, one for the sign and one for the decimal dot
-                s = fillWithSpaces(length + 2, s);
+                s = StringHelper.fillWithSpaces(length + 2, s);
                 break;
             default:
                 s = ResourceBundleUtils.getLangString(WORDINDICES, WordIndices.WI9999);
-                System.err.println("GsiBlock.toPrintFormatTXT() : block contains the wrong word index " + dataGSI);
+                System.err.println("GsiBlock.toPrintFormatTxt() : block contains the wrong word index " + dataGSI);
         }
 
         return s;
@@ -331,22 +332,13 @@ public class GsiBlock {
             if (dataGSI.length() == 8) {
                 result = wordIndex + information + sign + dataGSI;
             } else {
-                result = wordIndex + information + sign + dataGSI.substring(dataGSI.length() - 8, dataGSI.length());
+                result = wordIndex + information + sign + dataGSI.substring(dataGSI.length() - 8);
             }
         }
 
         return result;
     }
 
-    private String fillWithSpaces(int length, String input) {
-        String format = "%" + length + "." + length + "s";
-        return String.format(format, input);
-    }
-
-    private String fillWithZeros(int length, String input) {
-        String format = "%" + length + "s";
-        return String.format(format, input).replace(' ', '0');
-    }
 
     private String insertMinusSign(String s) {
         if (this.sign.equals("-")) {
@@ -357,16 +349,16 @@ public class GsiBlock {
     }
 
     private String preparePrintString(String s) {
-        return fillWithSpaces(s.length(), trimLeadingZeros(s));
+        return StringHelper.fillWithSpaces(s.length(), trimLeadingZeros(s));
     }
 
     private String removeSign(String dataGSI) {
         if (dataGSI.startsWith("+")) {
             sign = "+";
-            return dataGSI.substring(1, dataGSI.length());
+            return dataGSI.substring(1);
         } else if (dataGSI.startsWith("-")) {
             sign = "-";
-            return dataGSI.substring(1, dataGSI.length());
+            return dataGSI.substring(1);
         } else {
             sign = "+";
             return dataGSI;

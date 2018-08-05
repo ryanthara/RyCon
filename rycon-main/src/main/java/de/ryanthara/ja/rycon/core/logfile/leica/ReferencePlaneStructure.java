@@ -42,7 +42,7 @@ public class ReferencePlaneStructure extends LeicaLogfileBaseStructure {
      */
     public ReferencePlaneStructure(ArrayList<String> lines) {
         this.lines = lines;
-        this.lines.removeAll(Arrays.asList(null,""));
+        this.lines.removeAll(Arrays.asList(null, ""));
     }
 
     /**
@@ -59,9 +59,7 @@ public class ReferencePlaneStructure extends LeicaLogfileBaseStructure {
 
         super.analyzeHeader(lines);
 
-        Iterator<String> iterator = lines.iterator();
-        while (iterator.hasNext()) {
-
+        for (Iterator<String> iterator = lines.iterator(); iterator.hasNext(); ) {
             String line = iterator.next();
 
             System.out.println(": " + line);

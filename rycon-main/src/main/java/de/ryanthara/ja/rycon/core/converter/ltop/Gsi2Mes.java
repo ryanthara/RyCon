@@ -104,8 +104,8 @@ public class Gsi2Mes {
                     KA<--PUNKT-><TY>        <--WETTER--><-MF-><GR><-IH-><F-BUCH><-VERANTW.+DATUM->      <ZENT>
                     */
 
-                    stationNumber = String.format("%-10s", blocksAsLine.get(0).toPrintFormatCSV());
-                    instrumentHeight = String.format("%6s", blocksAsLine.get(4).toPrintFormatCSV());
+                    stationNumber = String.format("%-10s", blocksAsLine.get(0).toPrintFormatCsv());
+                    instrumentHeight = String.format("%6s", blocksAsLine.get(4).toPrintFormatCsv());
 
                     String stationLine = "ST".concat(stationNumber).concat("                                  ").concat(instrumentHeight);
 
@@ -151,10 +151,10 @@ public class Gsi2Mes {
                     KA<--PUNKT-><TY>        <-MESSWERT-><-MF-><GR><-IH-><-SH->  <ZENT>
 
                     */
-                    number = String.format("%-10s", blocksAsLine.get(0).toPrintFormatCSV());
-                    hzAngle = String.format("%12s", NumberFormatter.fillDecimalPlace(blocksAsLine.get(1).toPrintFormatCSV(), 5));
+                    number = String.format("%-10s", blocksAsLine.get(0).toPrintFormatCsv());
+                    hzAngle = String.format("%12s", NumberFormatter.fillDecimalPlace(blocksAsLine.get(1).toPrintFormatCsv(), 5));
 
-                    verticalAngle = blocksAsLine.get(2).toPrintFormatCSV();
+                    verticalAngle = blocksAsLine.get(2).toPrintFormatCsv();
 
                     Double d = Double.parseDouble(verticalAngle);
 
@@ -165,7 +165,7 @@ public class Gsi2Mes {
                         verticalAngle = String.format("%12s", NumberFormatter.fillDecimalPlace(Double.toString(heightAngle), 5));
                     }
 
-                    slopeDistance = String.format("%12s", NumberFormatter.fillDecimalPlace(blocksAsLine.get(3).toPrintFormatCSV(), 5));
+                    slopeDistance = String.format("%12s", NumberFormatter.fillDecimalPlace(blocksAsLine.get(3).toPrintFormatCsv(), 5));
 
                     // differ target foil and prism
                     if (blocksAsLine.get(4).toString().trim().endsWith("344")) {
@@ -174,7 +174,7 @@ public class Gsi2Mes {
                         ppmAndPrismConstant = "4";
                     }
 
-                    targetHeight = String.format("%6s", NumberFormatter.fillDecimalPlace(blocksAsLine.get(5).toPrintFormatCSV(), 3));
+                    targetHeight = String.format("%6s", NumberFormatter.fillDecimalPlace(blocksAsLine.get(5).toPrintFormatCsv(), 3));
 
                     /*
                     KA<--PUNKT-><TY>        <-MESSWERT-><-MF-><GR><-IH-><-SH->  <ZENT>

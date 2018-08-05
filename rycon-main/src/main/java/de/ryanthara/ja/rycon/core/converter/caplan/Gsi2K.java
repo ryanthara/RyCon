@@ -78,7 +78,7 @@ public class Gsi2K {
                 int valencyIndicator = 0;
 
                 for (GsiBlock block : blocksInLine) {
-                    String printFormatCSV = block.toPrintFormatCSV();
+                    String printFormatCSV = block.toPrintFormatCsv();
 
                     switch (block.getWordIndex()) {
                         case 11:        // point number (no '*', ',' and ';'), column 1 - 16

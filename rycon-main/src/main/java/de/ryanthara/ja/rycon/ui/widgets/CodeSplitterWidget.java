@@ -23,6 +23,7 @@ import de.ryanthara.ja.rycon.core.splitter.NodeDatCodeSplit;
 import de.ryanthara.ja.rycon.core.splitter.TextCodeSplit;
 import de.ryanthara.ja.rycon.data.PreferenceKeys;
 import de.ryanthara.ja.rycon.i18n.*;
+import de.ryanthara.ja.rycon.nio.FileNameExtension;
 import de.ryanthara.ja.rycon.nio.LineReader;
 import de.ryanthara.ja.rycon.nio.WriteFile2Disk;
 import de.ryanthara.ja.rycon.ui.Sizes;
@@ -155,9 +156,9 @@ public class CodeSplitterWidget extends AbstractWidget {
 
                 // use counter to display different text on the status bar
                 if (Main.countFileOps == 1) {
-                    status = String.format(StringUtils.singularPluralMessage(helper, Main.TEXT_SINGULAR), Main.countFileOps);
+                    status = String.format(StringUtils.singularPluralMessage(helper, Main.TEXT_SINGULAR), files2read.length, Main.countFileOps);
                 } else {
-                    status = String.format(StringUtils.singularPluralMessage(helper, Main.TEXT_PLURAL), Main.countFileOps);
+                    status = String.format(StringUtils.singularPluralMessage(helper, Main.TEXT_PLURAL), files2read.length, Main.countFileOps);
                 }
 
                 Main.statusBar.setStatus(status, Status.OK);
@@ -332,7 +333,7 @@ public class CodeSplitterWidget extends AbstractWidget {
         for (ArrayList<String> lines : writeFile) {
             final String codeString = Main.pref.getUserPreference(PreferenceKeys.PARAM_CODE_STRING) + "-" + codeIterator.next();
 
-            if (WriteFile2Disk.writeFile2Disk(file2read, lines, codeString, ".GSI")) {
+            if (WriteFile2Disk.writeFile2Disk(file2read, lines, codeString, FileNameExtension.LEICA_GSI.getExtension())) {
                 counter = counter + 1;
             }
         }
@@ -350,7 +351,7 @@ public class CodeSplitterWidget extends AbstractWidget {
         for (ArrayList<String> lines : writeFile) {
             final String codeString = Main.pref.getUserPreference(PreferenceKeys.PARAM_CODE_STRING) + "-" + codeIterator.next();
 
-            if (WriteFile2Disk.writeFile2Disk(file2read, lines, codeString, ".DAT")) {
+            if (WriteFile2Disk.writeFile2Disk(file2read, lines, codeString, FileNameExtension.DAT.getExtension())) {
                 counter = counter + 1;
             }
         }
@@ -370,7 +371,7 @@ public class CodeSplitterWidget extends AbstractWidget {
         for (ArrayList<String> lines : writeFile) {
             final String editString = Main.pref.getUserPreference(PreferenceKeys.PARAM_CODE_STRING) + "-" + codeIterator.next();
 
-            if (WriteFile2Disk.writeFile2Disk(file2read, lines, editString, ".TXT")) {
+            if (WriteFile2Disk.writeFile2Disk(file2read, lines, editString, FileNameExtension.TXT.getExtension())) {
                 counter = counter + 1;
             }
         }
@@ -389,10 +390,8 @@ public class CodeSplitterWidget extends AbstractWidget {
                 if (lineReader.readFile(false)) {
                     ArrayList<String> readFile = lineReader.getLines();
 
-                    // processFileOperations by differ between txt oder gsi files
-
-                    // TODO remove path matcher
-                    PathMatcher matcherDAT = FileSystems.getDefault().getPathMatcher("regex:(?iu:.+\\.dat)");
+                    // the glob pattern ("glob:*.dat) doesn't work here
+                    PathMatcher matcherDAT = FileSystems.getDefault().getPathMatcher("regex:(?iu:.+\\.DAT)");
                     PathMatcher matcherGSI = FileSystems.getDefault().getPathMatcher("regex:(?iu:.+\\.GSI)");
                     PathMatcher matcherTXT = FileSystems.getDefault().getPathMatcher("regex:(?iu:.+\\.TXT)");
 

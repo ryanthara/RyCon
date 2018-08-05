@@ -19,6 +19,7 @@ package de.ryanthara.ja.rycon.ui.widgets.convert.write;
 
 import de.ryanthara.ja.rycon.core.converter.toporail.FileType;
 import de.ryanthara.ja.rycon.core.converter.toporail.Gsi2Toporail;
+import de.ryanthara.ja.rycon.nio.FileNameExtension;
 import de.ryanthara.ja.rycon.nio.WriteFile2Disk;
 import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
 import de.ryanthara.ja.rycon.ui.widgets.convert.SourceButton;
@@ -64,10 +65,10 @@ public class ToporailWriter implements Writer {
 
         switch (fileTyp) {
             case MEP:
-                this.fileNameExtension = ".MEP";
+                this.fileNameExtension = FileNameExtension.MEP.getExtension();
                 break;
             case PTS:
-                this.fileNameExtension = ".TPS";
+                this.fileNameExtension = FileNameExtension.TPS.getExtension();
                 break;
         }
     }

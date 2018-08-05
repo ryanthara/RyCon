@@ -18,6 +18,7 @@
 package de.ryanthara.ja.rycon.ui.widgets.convert.write;
 
 import de.ryanthara.ja.rycon.core.converter.zeiss.*;
+import de.ryanthara.ja.rycon.nio.FileNameExtension;
 import de.ryanthara.ja.rycon.nio.WriteFile2Disk;
 import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
 import de.ryanthara.ja.rycon.ui.widgets.convert.SourceButton;
@@ -122,7 +123,7 @@ public class ZeissWriter implements Writer {
                 System.err.println("ZeissWriter.writeStringFile() : unknown file format " + SourceButton.fromIndex(parameter.getSourceNumber()));
         }
 
-        return WriteFile2Disk.writeFile2Disk(path, writeFile, "",".REC");
+        return WriteFile2Disk.writeFile2Disk(path, writeFile, "",FileNameExtension.REC.getExtension());
     }
 
     /**

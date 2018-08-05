@@ -24,6 +24,7 @@ import de.ryanthara.ja.rycon.core.GsiLtopClean;
 import de.ryanthara.ja.rycon.core.LogfileClean;
 import de.ryanthara.ja.rycon.data.PreferenceKeys;
 import de.ryanthara.ja.rycon.i18n.*;
+import de.ryanthara.ja.rycon.nio.FileNameExtension;
 import de.ryanthara.ja.rycon.nio.LineReader;
 import de.ryanthara.ja.rycon.nio.WriteFile2Disk;
 import de.ryanthara.ja.rycon.ui.Sizes;
@@ -328,14 +329,14 @@ public class ClearUpWidget extends AbstractWidget {
                         GsiClearUp gsiClearUp = new GsiClearUp(readFile);
                         writeFile = gsiClearUp.processClearUp(holdStations, holdControlPoints);
 
-                        if (WriteFile2Disk.writeFile2Disk(file2read, writeFile, editString, ".GSI")) {
+                        if (WriteFile2Disk.writeFile2Disk(file2read, writeFile, editString, FileNameExtension.LEICA_GSI.getExtension())) {
                             counter = counter + 1;
                         }
                     } else if (fileName.toUpperCase().endsWith(".GSL")) {
                         GsiLtopClean gsiLtopClean = new GsiLtopClean(readFile);
                         writeFile = gsiLtopClean.processLTOPClean();
 
-                        if (WriteFile2Disk.writeFile2Disk(file2read, writeFile, ltopString, ".GSI")) {
+                        if (WriteFile2Disk.writeFile2Disk(file2read, writeFile, ltopString, FileNameExtension.LEICA_GSI.getExtension())) {
                             counter = counter + 1;
                         }
                     } else if (fileName.toUpperCase().endsWith("LOGFILE.TXT")) {
@@ -346,7 +347,7 @@ public class ClearUpWidget extends AbstractWidget {
                             writeFile = logfileClean.processClean(true);
                         }
 
-                        if (WriteFile2Disk.writeFile2Disk(file2read, writeFile, editString, ".TXT")) {
+                        if (WriteFile2Disk.writeFile2Disk(file2read, writeFile, editString, FileNameExtension.TXT.getExtension())) {
                             counter = counter + 1;
                         }
                     }

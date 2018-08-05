@@ -73,12 +73,12 @@ public class ConverterWidget extends AbstractWidget {
 
     private final Logger logger = Logger.getLogger(ConverterWidget.class.getName());
     private Button chkBoxCadworkUseZeroHeights;
-    private Button chkBoxCSVSemiColonSeparator;
+    private Button chkBoxCsvSemicolonSeparator;
     private Button chkBoxKFormatUseSimpleFormat;
-    private Button chkBoxLTOPEliminateDuplicatePoints;
-    private Button chkBoxLTOPSortOutputFileByNumber;
+    private Button chkBoxLtopEliminateDuplicatePoints;
+    private Button chkBoxLtopSortOutputFileByNumber;
     private Button chkBoxSourceContainsCode;
-    private Button chkBoxTXTSpaceSeparator;
+    private Button chkBoxTxtSpaceSeparator;
     private Button chkBoxWriteCodeColumn;
     private Button chkBoxWriteCommentLine;
     private Button chkBoxWriteZeroHeights;
@@ -350,13 +350,13 @@ public class ConverterWidget extends AbstractWidget {
         chkBoxSourceContainsCode.setSelection(false);
         chkBoxSourceContainsCode.setText(ResourceBundleUtils.getLangString(CHECKBOXES, CheckBoxes.sourceContainsCodeChk));
 
-        chkBoxTXTSpaceSeparator = new Button(group, SWT.CHECK);
-        chkBoxTXTSpaceSeparator.setSelection(false);
-        chkBoxTXTSpaceSeparator.setText(ResourceBundleUtils.getLangString(CHECKBOXES, CheckBoxes.separatorTXTSpace));
+        chkBoxTxtSpaceSeparator = new Button(group, SWT.CHECK);
+        chkBoxTxtSpaceSeparator.setSelection(false);
+        chkBoxTxtSpaceSeparator.setText(ResourceBundleUtils.getLangString(CHECKBOXES, CheckBoxes.separatorTXTSpace));
 
-        chkBoxCSVSemiColonSeparator = new Button(group, SWT.CHECK);
-        chkBoxCSVSemiColonSeparator.setSelection(false);
-        chkBoxCSVSemiColonSeparator.setText(ResourceBundleUtils.getLangString(CHECKBOXES, CheckBoxes.separatorCSVSemiColon));
+        chkBoxCsvSemicolonSeparator = new Button(group, SWT.CHECK);
+        chkBoxCsvSemicolonSeparator.setSelection(false);
+        chkBoxCsvSemicolonSeparator.setText(ResourceBundleUtils.getLangString(CHECKBOXES, CheckBoxes.separatorCSVSemiColon));
 
         chkBoxCadworkUseZeroHeights = new Button(group, SWT.CHECK);
         chkBoxCadworkUseZeroHeights.setSelection(false);
@@ -366,13 +366,13 @@ public class ConverterWidget extends AbstractWidget {
         chkBoxKFormatUseSimpleFormat.setSelection(true);
         chkBoxKFormatUseSimpleFormat.setText(ResourceBundleUtils.getLangString(CHECKBOXES, CheckBoxes.useSimpleKFormatChk));
 
-        chkBoxLTOPEliminateDuplicatePoints = new Button(group, SWT.CHECK);
-        chkBoxLTOPEliminateDuplicatePoints.setSelection(true);
-        chkBoxLTOPEliminateDuplicatePoints.setText(ResourceBundleUtils.getLangString(CHECKBOXES, CheckBoxes.eliminateDuplicatePointsLTOP));
+        chkBoxLtopEliminateDuplicatePoints = new Button(group, SWT.CHECK);
+        chkBoxLtopEliminateDuplicatePoints.setSelection(true);
+        chkBoxLtopEliminateDuplicatePoints.setText(ResourceBundleUtils.getLangString(CHECKBOXES, CheckBoxes.eliminateDuplicatePointsLTOP));
 
-        chkBoxLTOPSortOutputFileByNumber = new Button(group, SWT.CHECK);
-        chkBoxLTOPSortOutputFileByNumber.setSelection(true);
-        chkBoxLTOPSortOutputFileByNumber.setText(ResourceBundleUtils.getLangString(CHECKBOXES, CheckBoxes.sortOutputFileByNumberLTOP));
+        chkBoxLtopSortOutputFileByNumber = new Button(group, SWT.CHECK);
+        chkBoxLtopSortOutputFileByNumber.setSelection(true);
+        chkBoxLtopSortOutputFileByNumber.setText(ResourceBundleUtils.getLangString(CHECKBOXES, CheckBoxes.sortOutputFileByNumberLTOP));
 
         chkBoxWriteCommentLine = new Button(group, SWT.CHECK);
         chkBoxWriteCommentLine.setSelection(false);
@@ -427,8 +427,6 @@ public class ConverterWidget extends AbstractWidget {
         button.setText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.txtCsvSpecialFormat));
         Text t = new Text(group, SWT.NONE);
         t.setLayoutData(gridData);
-
-
     }
 
     private void determineFilterIndex(FileDialog fileDialog) {
@@ -502,7 +500,7 @@ public class ConverterWidget extends AbstractWidget {
         readFileMap.put(0, new GsiReader(innerShell));
         readFileMap.put(1, new GsiReader(innerShell));
         readFileMap.put(2, new TxtReader(innerShell));
-        readFileMap.put(3, new CsvReader(innerShell, chkBoxCSVSemiColonSeparator.getSelection()));
+        readFileMap.put(3, new CsvReader(innerShell, chkBoxCsvSemicolonSeparator.getSelection()));
         readFileMap.put(4, new CaplanReader(innerShell));
         readFileMap.put(5, new ZeissReader(innerShell));
         readFileMap.put(6, new CadworkReader(innerShell));
@@ -546,15 +544,15 @@ public class ConverterWidget extends AbstractWidget {
         GSIFormat = sourceNumber == 0 ? Main.getGSI8() : Main.getGSI16();
 
         // prepares a parameter object for reducing parameter field size
-        String separatorCSV = chkBoxCSVSemiColonSeparator.getSelection() ? BaseToolsCsv.SEPARATOR_SEMICOLON : BaseToolsCsv.SEPARATOR_COMMA;
-        String separatorTXT = chkBoxTXTSpaceSeparator.getSelection() ? BaseToolsTxt.SEPARATOR_SPACE : BaseToolsTxt.SEPARATOR_TAB;
+        String separatorCSV = chkBoxCsvSemicolonSeparator.getSelection() ? BaseToolsCsv.SEPARATOR_SEMICOLON : BaseToolsCsv.SEPARATOR_COMMA;
+        String separatorTXT = chkBoxTxtSpaceSeparator.getSelection() ? BaseToolsTxt.SEPARATOR_SPACE : BaseToolsTxt.SEPARATOR_TAB;
         ZeissDialect dialect = ZeissDialect.valueOf(Main.pref.getUserPreference(PreferenceKeys.CONVERTER_SETTING_ZEISS_DIALECT));
 
         WriteParameter parameter = new WriteParameter(sourceNumber, GSIFormat,
                 chkBoxCadworkUseZeroHeights.getSelection(),
                 chkBoxKFormatUseSimpleFormat.getSelection(),
-                chkBoxLTOPEliminateDuplicatePoints.getSelection(),
-                chkBoxLTOPSortOutputFileByNumber.getSelection(),
+                chkBoxLtopEliminateDuplicatePoints.getSelection(),
+                chkBoxLtopSortOutputFileByNumber.getSelection(),
                 chkBoxSourceContainsCode.getSelection(),
                 chkBoxWriteCodeColumn.getSelection(),
                 chkBoxWriteCommentLine.getSelection(),

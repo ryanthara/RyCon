@@ -97,21 +97,21 @@ public class Gsi2Odf {
                         case 13:    // Instrument type
                         case 18:    // Time format 1: pos. 8-9 year, 10-11 sec, 12-14 msec
                         case 19:    // Time format 2 : pos, 8-9 month 10-11 day, 12-13 hour, 14-15 min
-                            cell.setStringValue(block.toPrintFormatCSV());
+                            cell.setStringValue(block.toPrintFormatCsv());
                             break;
 
                         // ANGLES
                         case 21:    // Horizontal Circle (Hz)
                         case 22:    // Vertical Angle (V)
                         case 25:    // Horizontal circle difference (Hz0-Hz)
-                            cell.setDoubleValue(Double.parseDouble(block.toPrintFormatCSV()));
+                            cell.setDoubleValue(Double.parseDouble(block.toPrintFormatCsv()));
                             break;
 
                         // DISTANCE
                         case 31:    // Slope Distance
                         case 32:    // Horizontal Distance
                         case 33:    // Height Difference
-                            cell.setDoubleValue(Double.parseDouble(block.toPrintFormatCSV()));
+                            cell.setDoubleValue(Double.parseDouble(block.toPrintFormatCsv()));
                             break;
 
                         // CODE BLOCK
@@ -124,7 +124,7 @@ public class Gsi2Odf {
                         case 47:    // Information 6
                         case 48:    // Information 7
                         case 49:    // Information 8
-                            cell.setStringValue(block.toPrintFormatCSV());
+                            cell.setStringValue(block.toPrintFormatCsv());
                             break;
 
                         // DISTANCE (additional information)
@@ -133,7 +133,7 @@ public class Gsi2Odf {
                         case 53:    // Deviation
                         case 58:    // Signal strength
                         case 59:    // Reflector constant (1/10 mm)ppm
-                            cell.setStringValue(block.toPrintFormatCSV());
+                            cell.setStringValue(block.toPrintFormatCsv());
                             break;
 
                         // POINT CODING
@@ -146,7 +146,7 @@ public class Gsi2Odf {
                         case 77:    // Attribute 6
                         case 78:    // Attribute 7
                         case 79:    // Attribute 8
-                            cell.setStringValue(block.toPrintFormatCSV());
+                            cell.setStringValue(block.toPrintFormatCsv());
                             break;
 
                         // COORDINATES
@@ -156,18 +156,18 @@ public class Gsi2Odf {
                         case 84:    // Station Easting (E0)
                         case 85:    // Station Northing (N0)
                         case 86:    // Station Elevation (H0)
-                            cell.setDoubleValue(Double.parseDouble(block.toPrintFormatCSV()));
+                            cell.setDoubleValue(Double.parseDouble(block.toPrintFormatCsv()));
                             cell.setFormatString("#,##0.0000");
                             break;
 
                         case 87:    // Reflector height (above ground)
                         case 88:    // Instrument height (above ground)
-                            cell.setDoubleValue(Double.parseDouble(block.toPrintFormatCSV()));
+                            cell.setDoubleValue(Double.parseDouble(block.toPrintFormatCsv()));
                             cell.setFormatString("#,##0.000");
                             break;
 
                         default:
-                            System.err.println("Gsi2Odf.convertGSI2ODS() : found unknown word index " + block.toPrintFormatCSV());
+                            System.err.println("Gsi2Odf.convertGSI2ODS() : found unknown word index " + block.toPrintFormatCsv());
                     }
                     colIndex = colIndex + 1;
                 }

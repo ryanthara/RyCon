@@ -115,7 +115,7 @@ public class GsiCodeSplit {
                         validCheckHelperValue += 6;
                         break;
                     default:
-                        logger.log(Level.SEVERE, "GsiCodeSplit.processCodeSplit() : found wrong word index " + block.toPrintFormatCSV());
+                        logger.log(Level.SEVERE, "GsiCodeSplit.processCodeSplit() : found wrong word index " + block.toPrintFormatCsv());
                 }
             }
 

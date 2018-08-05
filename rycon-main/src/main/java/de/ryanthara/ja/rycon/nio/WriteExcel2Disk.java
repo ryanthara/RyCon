@@ -63,18 +63,18 @@ public class WriteExcel2Disk {
                     String.format(ResourceBundleUtils.getLangString(WARNINGS, Warnings.fileExistsOverwrite), outputFileName));
 
             if (returnValue == SWT.YES) {
-                if (filenameExtension.equalsIgnoreCase(".xls")) {
+                if (filenameExtension.equalsIgnoreCase(FileNameExtension.XLS.getExtension())) {
                     writeSuccess = fileToolsExcel.writeXLS(outputFileName);
                 } else
-                    writeSuccess = filenameExtension.equalsIgnoreCase(".xlsx") && fileToolsExcel.writeXLSX(outputFileName);
+                    writeSuccess = filenameExtension.equalsIgnoreCase(FileNameExtension.XLSX.getExtension()) && fileToolsExcel.writeXLSX(outputFileName);
             } else {
                 writeSuccess = false;
             }
         } else {
-            if (filenameExtension.equalsIgnoreCase(".xls")) {
+            if (filenameExtension.equalsIgnoreCase(FileNameExtension.XLS.getExtension())) {
                 writeSuccess = fileToolsExcel.writeXLS(outputFileName);
             } else
-                writeSuccess = filenameExtension.equalsIgnoreCase(".xlsx") && fileToolsExcel.writeXLSX(outputFileName);
+                writeSuccess = filenameExtension.equalsIgnoreCase(FileNameExtension.XLSX.getExtension()) && fileToolsExcel.writeXLSX(outputFileName);
         }
 
         return writeSuccess;

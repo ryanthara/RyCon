@@ -34,9 +34,9 @@ public class Nigra2Gsi {
     private ArrayList<String> readStringLines;
 
     /**
-     * Constructs a new instance of this class with a parameter for the {@code ArrayList<String>}  from Nigra or NigraWin.
+     * Constructs a new instance of this class with a parameter for the read {@code ArrayList<String>} from Nigra or NigraWin.
      *
-     * @param readStringLines reader lines
+     * @param readStringLines read lines
      */
     public Nigra2Gsi(ArrayList<String> readStringLines) {
         this.readStringLines = readStringLines;
@@ -51,7 +51,7 @@ public class Nigra2Gsi {
      *
      * @since 5
      */
-    public ArrayList<String> convertNIGRA2GSI(boolean isGSI16) {
+    public ArrayList<String> convertNigra2Gsi(boolean isGSI16) {
         ArrayList<GsiBlock> blocks;
         ArrayList<ArrayList<GsiBlock>> blocksInLines = new ArrayList<>();
         StringTokenizer stringTokenizer;

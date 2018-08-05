@@ -166,43 +166,43 @@ public class Gsi2Toporail {
             for (GsiBlock block : blocksAsLine) {
                 switch (block.getWordIndex()) {
                     case 11: // point number
-                        pointNumber = block.toPrintFormatCSV();
+                        pointNumber = block.toPrintFormatCsv();
                         break;
                     case 18: // date YYYYMMDD
                         // extract year
                         // blocks.add(new GsiBlock(isGSI16, 18, year.substring(2, 4) + "000000"));
-                        date = block.toPrintFormatCSV();
+                        date = block.toPrintFormatCsv();
                         break;
                     case 19: // date YYYYMMDD
                         // extract month and day
-                        date = block.toPrintFormatCSV();
+                        date = block.toPrintFormatCsv();
 
                         // blocks.add(new GsiBlock(isGSI16, 17, day + month + year));
                         //blocks.add(new GsiBlock(isGSI16, 19, month + day + "0000"));
                         break;
                     case 21: // azimuth (gon)
-                        azimuth = block.toPrintFormatCSV();
+                        azimuth = block.toPrintFormatCsv();
                         break;
                     case 41: // numeric code
-                        numericCode = block.toPrintFormatCSV();
+                        numericCode = block.toPrintFormatCsv();
                         break;
                     case 71: // author
-                        author = block.toPrintFormatCSV();
+                        author = block.toPrintFormatCsv();
                         break;
                     case 72: // comment
-                        comment = block.toPrintFormatCSV();
+                        comment = block.toPrintFormatCsv();
                         break;
                     case 73: // overhauling (mm)
-                        overhauling = block.toPrintFormatCSV();
+                        overhauling = block.toPrintFormatCsv();
                         break;
                     case 81: // easting
-                        easting = block.toPrintFormatCSV();
+                        easting = block.toPrintFormatCsv();
                         break;
                     case 82: // northing
-                        northing = block.toPrintFormatCSV();
+                        northing = block.toPrintFormatCsv();
                         break;
                     case 83: // height
-                        height = block.toPrintFormatCSV();
+                        height = block.toPrintFormatCsv();
                         break;
                     default:
                         logger.log(Level.SEVERE, "Found one more word index: " + block.getWordIndex());
@@ -250,43 +250,43 @@ public class Gsi2Toporail {
             for (GsiBlock block : blocksAsLine) {
                 switch (block.getWordIndex()) {
                     case 11: // point number
-                        pointNumber = block.toPrintFormatCSV();
+                        pointNumber = block.toPrintFormatCsv();
                         break;
                     case 18: // date YYYYMMDD
                         // extract year
                         // blocks.add(new GsiBlock(isGSI16, 18, year.substring(2, 4) + "000000"));
-                        date = block.toPrintFormatCSV();
+                        date = block.toPrintFormatCsv();
                         break;
                     case 19: // date YYYYMMDD
                         // extract month and day
-                        date = block.toPrintFormatCSV();
+                        date = block.toPrintFormatCsv();
 
                         // blocks.add(new GsiBlock(isGSI16, 17, day + month + year));
                         //blocks.add(new GsiBlock(isGSI16, 19, month + day + "0000"));
                         break;
                     case 21: // azimuth (gon)
-                        azimuth = block.toPrintFormatCSV();
+                        azimuth = block.toPrintFormatCsv();
                         break;
                     case 41: // numeric code
-                        numericCode = block.toPrintFormatCSV();
+                        numericCode = block.toPrintFormatCsv();
                         break;
                     case 71: // author
-                        author = block.toPrintFormatCSV();
+                        author = block.toPrintFormatCsv();
                         break;
                     case 72: // comment
-                        comment = block.toPrintFormatCSV();
+                        comment = block.toPrintFormatCsv();
                         break;
                     case 73: // overhauling (mm)
-                        overhauling = block.toPrintFormatCSV();
+                        overhauling = block.toPrintFormatCsv();
                         break;
                     case 81: // easting
-                        easting = block.toPrintFormatCSV();
+                        easting = block.toPrintFormatCsv();
                         break;
                     case 82: // northing
-                        northing = block.toPrintFormatCSV();
+                        northing = block.toPrintFormatCsv();
                         break;
                     case 83: // height
-                        height = block.toPrintFormatCSV();
+                        height = block.toPrintFormatCsv();
                         break;
                     default:
                         logger.log(Level.SEVERE, "Found one more word index: " + block.getWordIndex());

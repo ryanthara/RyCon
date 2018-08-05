@@ -21,6 +21,7 @@ import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.core.converter.ltop.Gsi2Mes;
 import de.ryanthara.ja.rycon.core.converter.ltop.Zeiss2Ltop;
 import de.ryanthara.ja.rycon.data.PreferenceKeys;
+import de.ryanthara.ja.rycon.nio.FileNameExtension;
 import de.ryanthara.ja.rycon.nio.WriteFile2Disk;
 import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
 import de.ryanthara.ja.rycon.ui.widgets.convert.SourceButton;
@@ -100,7 +101,7 @@ public class LtopMesWriter implements Writer {
                 logger.log(Level.SEVERE, "LtopMesWriter.writeStringFile() : unknown file format " + SourceButton.fromIndex(parameter.getSourceNumber()));
         }
 
-        if (WriteFile2Disk.writeFile2Disk(path, writeFile, "", ".MES")) {
+        if (WriteFile2Disk.writeFile2Disk(path, writeFile, "", FileNameExtension.MES.getExtension())) {
             success = true;
         }
 

@@ -80,7 +80,7 @@ public class Gsi2Ltop {
 
             for (int i = 0; i < baseToolsGsi.getFoundAllWordIndices().size(); i++) {
                 for (GsiBlock block : blocksAsLine) {
-                    String s = block.toPrintFormatCSV();
+                    String s = block.toPrintFormatCsv();
 
                     switch (block.getWordIndex()) {
                         case 11:        // point number, column 1-10, aligned left
@@ -112,7 +112,7 @@ public class Gsi2Ltop {
                             break;
 
                         default:
-                            System.err.println("Gsi2Ltop.convertGSI2KOO() : line contains unused word index " + block.toPrintFormatCSV());
+                            System.err.println("Gsi2Ltop.convertGSI2KOO() : line contains unused word index " + block.toPrintFormatCsv());
                     }
                 }
             }

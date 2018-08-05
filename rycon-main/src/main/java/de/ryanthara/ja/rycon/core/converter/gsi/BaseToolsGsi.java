@@ -155,7 +155,7 @@ public class BaseToolsGsi {
             int size = BaseToolsGsi.getBlockSize(line);
 
             if (size == 24) {
-                line = line.substring(1, line.length());
+                line = line.substring(1);
             }
 
             // split reader line into separate Strings

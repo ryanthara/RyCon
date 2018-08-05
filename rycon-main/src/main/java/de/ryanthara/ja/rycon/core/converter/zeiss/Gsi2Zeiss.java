@@ -67,71 +67,71 @@ public class Gsi2Zeiss {
 
                 switch (wordIndex) {
                     case 11:
-                        number = block.toPrintFormatCSV();
+                        number = block.toPrintFormatCsv();
                         break;
 
                     case 21:
-                        horizontalAngle = block.toPrintFormatCSV();
+                        horizontalAngle = block.toPrintFormatCsv();
                         break;
 
                     case 22:
-                        verticalAngle = block.toPrintFormatCSV();
+                        verticalAngle = block.toPrintFormatCsv();
                         break;
 
                     case 31:
-                        slopeDistance = block.toPrintFormatCSV();
+                        slopeDistance = block.toPrintFormatCsv();
                         break;
 
                     case 32:
-                        slopeDistance = block.toPrintFormatCSV();
+                        slopeDistance = block.toPrintFormatCsv();
                         break;
 
                     case 41:
-                        code = block.toPrintFormatCSV();
+                        code = block.toPrintFormatCsv();
                         break;
 
                     case 81:
-                        easting = block.toPrintFormatCSV();
+                        easting = block.toPrintFormatCsv();
                         isTargetLine = true;
                         break;
 
                     case 82:
-                        northing = block.toPrintFormatCSV();
+                        northing = block.toPrintFormatCsv();
                         isTargetLine = true;
                         break;
 
                     case 83:
-                        height = block.toPrintFormatCSV();
+                        height = block.toPrintFormatCsv();
                         isTargetLine = true;
                         break;
 
                     case 84:
-                        easting = block.toPrintFormatCSV();
+                        easting = block.toPrintFormatCsv();
                         isStationLine = true;
                         break;
 
                     case 85:
-                        northing = block.toPrintFormatCSV();
+                        northing = block.toPrintFormatCsv();
                         isStationLine = true;
                         break;
 
                     case 86:
-                        height = block.toPrintFormatCSV();
+                        height = block.toPrintFormatCsv();
                         isStationLine = true;
                         break;
 
                     case 87:
-                        targetHeight = block.toPrintFormatCSV();
+                        targetHeight = block.toPrintFormatCsv();
                         isTargetLine = true;
                         break;
 
                     case 88:
-                        instrumentHeight = block.toPrintFormatCSV();
+                        instrumentHeight = block.toPrintFormatCsv();
                         isStationLine = true;
                         break;
 
                     default:
-                        System.err.println("Gsi2Zeiss.convertGSI2REC() : found unknown word index " + block.toPrintFormatCSV());
+                        System.err.println("Gsi2Zeiss.convertGSI2REC() : found unknown word index " + block.toPrintFormatCsv());
                 }
             }
 

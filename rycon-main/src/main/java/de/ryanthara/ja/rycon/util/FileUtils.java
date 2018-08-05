@@ -150,7 +150,7 @@ public class FileUtils {
      *
      * @return directory content as list
      */
-    public static ArrayList<Path> listFiles(String directory, Filter filter) {
+    public static ArrayList<Path> listFiles(String directory, Filter<Path> filter) {
         final Path dir = Paths.get(directory);
 
         ArrayList<Path> fileNames = new ArrayList<>();
@@ -228,11 +228,9 @@ public class FileUtils {
          *            of the directory to complete prematurely
          *
          * @return the visit result
-         *
-         * @throws IOException if an I/O error occurs
          */
         @Override
-        public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+        public FileVisitResult postVisitDirectory(Path dir, IOException exc) {
             // fix up modification time of directory when done
             if (exc == null && preserve) {
                 Path newDir = target.resolve(source.relativize(dir));
@@ -260,11 +258,9 @@ public class FileUtils {
          * @param attrs the directory's basic attributes
          *
          * @return the visit result
-         *
-         * @throws IOException if an I/O error occurs
          */
         @Override
-        public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+        public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
             // before visiting entries in a directory we copy the directory
             // (okay if directory already exists).
             CopyOption[] options = (preserve) ?
@@ -310,11 +306,9 @@ public class FileUtils {
          * @param exc  the I/O exception that prevented the file from being visited
          *
          * @return the visit result
-         *
-         * @throws IOException if an I/O error occurs
          */
         @Override
-        public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+        public FileVisitResult visitFileFailed(Path file, IOException exc) {
             if (exc instanceof FileSystemLoopException) {
                 logger.log(Level.SEVERE, "cycle detected: " + file, exc);
             } else {

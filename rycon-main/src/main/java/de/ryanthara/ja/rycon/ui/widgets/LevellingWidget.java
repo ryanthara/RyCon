@@ -18,14 +18,18 @@
 package de.ryanthara.ja.rycon.ui.widgets;
 
 import de.ryanthara.ja.rycon.Main;
-import de.ryanthara.ja.rycon.core.GsiLevelling2Cad;
-import de.ryanthara.ja.rycon.core.converter.gsi.Nigra2Gsi;
+import de.ryanthara.ja.rycon.core.converter.asc.*;
+import de.ryanthara.ja.rycon.core.converter.csv.Asc2Csv;
+import de.ryanthara.ja.rycon.core.converter.gsi.Asc2Gsi;
+import de.ryanthara.ja.rycon.core.converter.text.Asc2Txt;
 import de.ryanthara.ja.rycon.data.PreferenceKeys;
 import de.ryanthara.ja.rycon.i18n.*;
+import de.ryanthara.ja.rycon.nio.FileNameExtension;
 import de.ryanthara.ja.rycon.nio.LineReader;
 import de.ryanthara.ja.rycon.nio.WriteFile2Disk;
 import de.ryanthara.ja.rycon.ui.Sizes;
 import de.ryanthara.ja.rycon.ui.custom.*;
+import de.ryanthara.ja.rycon.ui.util.RadioHelper;
 import de.ryanthara.ja.rycon.ui.util.ShellPositioner;
 import de.ryanthara.ja.rycon.util.StringUtils;
 import de.ryanthara.ja.rycon.util.check.PathCheck;
@@ -33,11 +37,10 @@ import de.ryanthara.ja.rycon.util.check.TextCheck;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.*;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -74,12 +77,15 @@ public class LevellingWidget extends AbstractWidget {
 
     private final static Logger logger = Logger.getLogger(LevellingWidget.class.getName());
 
-    private final String[] acceptableFileSuffixes = new String[]{"*.gsi", "*.asc"};
-    private Button chkBoxHoldChangePoint;
+    private final String[] acceptableFileSuffixes = new String[]{"*.gsi", "*.lev", "*.asc", "*.asc", "*.hvz", "*.ber", "*.aus"};
+    private Button chkBoxCsvSemicolonSeparator;
+    private Button chkBoxIgnoreChangePoints;
+    private Button chkBoxTxtSpaceSeparator;
     private Path[] files2read;
     private InputFieldsComposite inputFieldsComposite;
     private Shell innerShell;
     private Shell parent;
+    private Group radio;
 
     /**
      * Constructs a new instance of this class without any parameters.
@@ -210,6 +216,7 @@ public class LevellingWidget extends AbstractWidget {
         innerShell.setLayoutData(gridData);
 
         createInputFieldComposite();
+        createOutputFormat(width);
         createOptions(width);
         createDescription(width);
 
@@ -228,8 +235,13 @@ public class LevellingWidget extends AbstractWidget {
      */
     private void actionBtnSource() {
         String[] filterNames = new String[]{
-                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameGsi),
-                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameNigra)
+                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameGsiLevel),
+                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameLeicaObservations),
+                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameLeicaProtocol),
+                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameNigraAltitudeRegisterAsc),
+                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameNigraAltitudeRegisterHvz),
+                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameNigraCalculations),
+                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameNivNetOutput),
         };
 
         String filterPath = Main.pref.getUserPreference(PreferenceKeys.DIR_PROJECT);
@@ -321,43 +333,162 @@ public class LevellingWidget extends AbstractWidget {
         group.setLayout(gridLayout);
         group.setLayoutData(gridData);
 
-        chkBoxHoldChangePoint = new Button(group, SWT.CHECK);
-        chkBoxHoldChangePoint.setSelection(true);
-        chkBoxHoldChangePoint.setText(ResourceBundleUtils.getLangString(CHECKBOXES, CheckBoxes.levellingIgnoreChangePoints));
+        chkBoxIgnoreChangePoints = new Button(group, SWT.CHECK);
+        chkBoxIgnoreChangePoints.setSelection(true);
+        chkBoxIgnoreChangePoints.setText(ResourceBundleUtils.getLangString(CHECKBOXES, CheckBoxes.levellingIgnoreChangePoints));
+
+        chkBoxCsvSemicolonSeparator = new Button(group, SWT.CHECK);
+        chkBoxCsvSemicolonSeparator.setSelection(false);
+        chkBoxCsvSemicolonSeparator.setText(ResourceBundleUtils.getLangString(CHECKBOXES, CheckBoxes.separatorCSVSemiColon));
+
+        chkBoxTxtSpaceSeparator = new Button(group, SWT.CHECK);
+        chkBoxTxtSpaceSeparator.setSelection(false);
+        chkBoxTxtSpaceSeparator.setText(ResourceBundleUtils.getLangString(CHECKBOXES, CheckBoxes.separatorTXTSpace));
     }
 
-    private int fileOperations(boolean holdChangePoints) {
+    private void createOutputFormat(int width) {
+        Group group = new Group(innerShell, SWT.NONE);
+        group.setText(ResourceBundleUtils.getLangString(LABELS, Labels.outputFormatText));
+
+        GridLayout gridLayout = new GridLayout(1, true);
+
+        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
+        gridData.widthHint = width - 24;
+
+        group.setLayout(gridLayout);
+        group.setLayoutData(gridData);
+
+        radio = new Group(group, SWT.NONE);
+        radio.setLayout(new RowLayout(SWT.HORIZONTAL));
+
+        Button radioBtnGsi8 = new Button(radio, SWT.RADIO);
+        radioBtnGsi8.setText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.radioBtnLevelGsi8));
+
+        Button radioBtnGsi16 = new Button(radio, SWT.RADIO);
+        radioBtnGsi16.setText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.radioBtnLevelGsi16));
+
+        Button radioBtnAsc = new Button(radio, SWT.RADIO);
+        radioBtnAsc.setText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.radioBtnLevelAsc));
+
+        Button radioBtnCsv = new Button(radio, SWT.RADIO);
+        radioBtnCsv.setText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.radioBtnLevelCsv));
+
+        Button radioBtnTxt = new Button(radio, SWT.RADIO);
+        radioBtnTxt.setText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.radioBtnLevelTxt));
+
+        radioBtnGsi16.setSelection(true);
+    }
+
+    private int fileOperations(boolean ignoreChangePoints) {
         int counter = 0;
         final String levelString = Main.pref.getUserPreference(PreferenceKeys.PARAM_LEVEL_STRING);
 
-        for (Path file2read : files2read) {
-            LineReader lineReader = new LineReader(file2read);
+        for (Path path : files2read) {
+            if (PathCheck.fileExists(path)) {
+                PathMatcher matcherLev = FileSystems.getDefault().getPathMatcher("regex:(?iu:.+\\.LEV)");
 
-            if (lineReader.readFile(false)) {
-                ArrayList<String> readFile = lineReader.getLines();
-                Path path = file2read.getFileName();
+                ArrayList<String> ascFile = null;
+                ArrayList<String> writeFile = null;
 
-                if (path != null) {
-                    ArrayList<String> writeFile;
-                    String[] fileNameAndSuffix = path.toString().split("\\.(?=[^.]+$)");
+                // read xml based Leica Geosystems observations
+                if (matcherLev.matches(path)) {
+                    LeicaObservations2Asc leicaObservations2Asc = new LeicaObservations2Asc(path, ignoreChangePoints);
+                    ascFile = leicaObservations2Asc.convert();
+                } else {
+                    // read line based text files in different formats
+                    LineReader lineReader = new LineReader(path);
 
-                    if (fileNameAndSuffix[1].equalsIgnoreCase("GSI")) {
-                        GsiLevelling2Cad gsiLevelling2Cad = new GsiLevelling2Cad(readFile);
-                        writeFile = gsiLevelling2Cad.processLevelling2Cad(holdChangePoints);
-                    } else if (fileNameAndSuffix[1].equalsIgnoreCase("ASC")) {
-                        Nigra2Gsi nigra2Gsi = new Nigra2Gsi(readFile);
-                        writeFile = nigra2Gsi.convertNIGRA2GSI(Main.getGSI16());
-                    } else {
-                        System.err.println("File " + file2read.getFileName() + " is not supported (yet).");
-                        break;
+                    if (lineReader.readFile(false)) {
+                        ArrayList<String> readFile = lineReader.getLines();
+
+                        // the glob pattern ("glob:*.dat) doesn't work here
+                        PathMatcher matcherAsc = FileSystems.getDefault().getPathMatcher("regex:(?iu:.+\\.ASC)");
+                        PathMatcher matcherAus = FileSystems.getDefault().getPathMatcher("regex:(?iu:.+\\.AUS)");
+                        PathMatcher matcherBer = FileSystems.getDefault().getPathMatcher("regex:(?iu:.+\\.BER)");
+                        PathMatcher matcherGsi = FileSystems.getDefault().getPathMatcher("regex:(?iu:.+\\.GSI)");
+                        PathMatcher matcherHvz = FileSystems.getDefault().getPathMatcher("regex:(?iu:.+\\.HVZ)");
+
+                        /*
+                         * Read different file formats and writes ASC format with the full number of digits
+                         * as default to save the precision of the levelling.
+                         */
+                        if (matcherAsc.matches(path)) {
+                            // differ between Leica Geosystems AG levelling protocol and Nigra/NigraWin altitude register file
+                            if (readFile.get(1).contains("Leica Geosystems AG --- ")) {
+                                LeicaProtocol2Asc leicaProtocol2Asc = new LeicaProtocol2Asc(readFile, ignoreChangePoints);
+                                ascFile = leicaProtocol2Asc.convert();
+                            } else if (readFile.get(2).contains("NigraWin - Nivellement, ")) {
+                                // NigraWin/NivNET altitude register new version since version 4.0?
+                                NigraAltitudeRegisterAsc2Asc nigraWinAsc2Asc = new NigraAltitudeRegisterAsc2Asc(readFile);
+                                ascFile = nigraWinAsc2Asc.convert();
+                            }
+                        } else if (matcherAus.matches(path)) {
+                            NivNet2Aus nivNet2Aus = new NivNet2Aus(readFile);
+                            ascFile = nivNet2Aus.convert();
+                        } else if (matcherBer.matches(path)) {
+                            // NigraWin calculation file
+                            NigraCalculation2Asc nigraCalculation2Asc = new NigraCalculation2Asc(readFile);
+                            ascFile = nigraCalculation2Asc.convert();
+                        } else if (matcherGsi.matches(path)) {
+                            // Leica Geosystems GSI Levelling files
+                            Gsi2Asc gsi2Asc = new Gsi2Asc(readFile, ignoreChangePoints);
+                            ascFile = gsi2Asc.convert();
+                        } else if (matcherHvz.matches(path)) {
+                            // NigraWin/NivNET altitude register old version until version 3.x?
+                            NigraAltitudeRegisterHvz2Asc nigraWinHvz2Asc = new NigraAltitudeRegisterHvz2Asc(readFile);
+                            ascFile = nigraWinHvz2Asc.convert();
+                        } else {
+                            logger.log(Level.SEVERE, "File " + path.getFileName() + " is not supported (yet).");
+                            break;
+                        }
+                    }
+                }
+
+                // convert the ASC lines to the chosen output format
+                String fileNameExtension = "";
+
+                if (ascFile != null) {
+                    switch (RadioHelper.getSelectedBtn(radio.getChildren())) {
+                        // GSI8
+                        case 0:
+                            Asc2Gsi asc2Gsi8 = new Asc2Gsi(ascFile, Main.getGSI8());
+                            writeFile = asc2Gsi8.convert();
+                            fileNameExtension = FileNameExtension.LEICA_GSI.getExtension();
+                            break;
+                        // GSI16
+                        case 1:
+                            Asc2Gsi asc2Gsi16 = new Asc2Gsi(ascFile, Main.getGSI16());
+                            writeFile = asc2Gsi16.convert();
+                            fileNameExtension = FileNameExtension.LEICA_GSI.getExtension();
+                            break;
+                        // ASC
+                        case 2:
+                            Asc2Asc asc2Asc = new Asc2Asc(ascFile);
+                            writeFile = asc2Asc.convert();
+                            fileNameExtension = FileNameExtension.ASC.getExtension();
+                            break;
+                        // CSV
+                        case 3:
+                            Asc2Csv asc2Csv = new Asc2Csv(ascFile, chkBoxCsvSemicolonSeparator.getSelection());
+                            writeFile = asc2Csv.convert();
+                            fileNameExtension = FileNameExtension.CSV.getExtension();
+                            break;
+                        // TXT
+                        case 4:
+                            Asc2Txt asc2Txt = new Asc2Txt(ascFile, chkBoxTxtSpaceSeparator.getSelection());
+                            writeFile = asc2Txt.convert();
+                            fileNameExtension = FileNameExtension.TXT.getExtension();
+                            break;
+                        default:
+                            break;
                     }
 
-                    if (WriteFile2Disk.writeFile2Disk(file2read, writeFile, levelString, ".GSI")) {
+                    if (WriteFile2Disk.writeFile2Disk(path, writeFile, levelString, fileNameExtension)) {
                         counter = counter + 1;
                     }
                 }
             } else {
-                logger.log(Level.SEVERE, "File " + file2read.getFileName() + " could not be read.");
+                logger.log(Level.SEVERE, "File " + path.getFileName() + " could not be read.");
             }
         }
 
@@ -375,7 +506,7 @@ public class LevellingWidget extends AbstractWidget {
     private boolean processFileOperations() {
         boolean success;
 
-        int counter = fileOperations(chkBoxHoldChangePoint.getSelection());
+        int counter = fileOperations(chkBoxIgnoreChangePoints.getSelection());
 
         if (counter > 0) {
             String message;

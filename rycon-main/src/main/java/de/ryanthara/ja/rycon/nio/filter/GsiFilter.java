@@ -17,6 +17,8 @@
  */
 package de.ryanthara.ja.rycon.nio.filter;
 
+import de.ryanthara.ja.rycon.nio.FileNameExtension;
+
 import java.nio.file.DirectoryStream;
 import java.nio.file.Path;
 
@@ -42,7 +44,7 @@ public class GsiFilter implements DirectoryStream.Filter<Path> {
             Path fileName = path.getFileName();
 
             if (fileName != null) {
-                return fileName.toString().toLowerCase().endsWith(".gsi");
+                return fileName.toString().toUpperCase().endsWith(FileNameExtension.LEICA_GSI.getExtension());
             }
         }
 

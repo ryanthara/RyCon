@@ -561,13 +561,11 @@ public final class GeneratorWidget extends AbstractWidget {
                                 // get the sheets
                                 for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
                                     spreadsheet = workbook.getSheetAt(i);
-                                    Iterator<Row> rowIterator = spreadsheet.rowIterator();
 
-                                    while (rowIterator.hasNext()) {
+                                    for (Iterator<Row> rowIterator = spreadsheet.rowIterator(); rowIterator.hasNext(); ) {
                                         row = (XSSFRow) rowIterator.next();
-                                        Iterator<Cell> cellIterator = row.cellIterator();
 
-                                        while (cellIterator.hasNext()) {
+                                        for (Iterator<Cell> cellIterator = row.cellIterator(); cellIterator.hasNext(); ) {
                                             cell = (XSSFCell) cellIterator.next();
 
                                             if (cell.getCellTypeEnum().equals(CellType.STRING)) {

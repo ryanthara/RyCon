@@ -51,7 +51,7 @@ public class WriteOdf2Disk {
      */
     public static boolean writeOds2Disk(Path path, SpreadsheetDocument spreadsheetDocument) {
         boolean writeSuccess;
-        final Path outputFileName = PathUtils.prepareOutputFileName(path, "", ".ods");
+        final Path outputFileName = PathUtils.prepareOutputFileName(path, "", FileNameExtension.ODS.getExtension());
         FileToolsOdf fileToolsOdf = new FileToolsOdf(spreadsheetDocument);
 
         if (Files.exists(outputFileName)) {

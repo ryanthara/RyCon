@@ -140,8 +140,7 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
 
         super.analyzeHeader(lines);
 
-        Iterator<String> iterator = lines.iterator();
-        while (iterator.hasNext()) {
+        for (Iterator<String> iterator = lines.iterator(); iterator.hasNext(); ) {
             String line = iterator.next();
 
             if (line.startsWith(Type.ARC_CALCULATIONS_ARC_INFO.identifier)) {

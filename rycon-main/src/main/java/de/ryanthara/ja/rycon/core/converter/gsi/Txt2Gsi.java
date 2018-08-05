@@ -56,13 +56,12 @@ public class Txt2Gsi {
      * @return converted {@code ArrayList<String>>} with lines
      */
     public ArrayList<String> convertTxt2Gsi(boolean isGSI16, boolean sourceContainsCodeColumn) {
-        ArrayList<GsiBlock> blocks;
         ArrayList<ArrayList<GsiBlock>> blocksInLines = new ArrayList<>();
 
         int lineCounter = 1;
 
         for (String line : readStringLines) {
-            blocks = new ArrayList<>();
+            ArrayList<GsiBlock> blocks = new ArrayList<>();
 
             String[] lineSplit = line.trim().split("\\s+");
             switch (lineSplit.length) {

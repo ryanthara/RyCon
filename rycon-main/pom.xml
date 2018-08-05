@@ -38,10 +38,11 @@
             <artifactId>iconloader</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.opencsv/opencsv -->
         <dependency>
             <groupId>com.opencsv</groupId>
             <artifactId>opencsv</artifactId>
-            <version>3.7</version>
+            <version>4.2</version>
         </dependency>
         <dependency>
             <groupId>dom4j</groupId>
@@ -66,11 +67,12 @@
         <dependency>
             <groupId>org.apache.xmlbeans</groupId>
             <artifactId>xmlbeans</artifactId>
-            <version>2.6.0</version>
+            <version>3.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.swt</groupId>
             <artifactId>org.eclipse.swt.cocoa.macosx.x86_64</artifactId>
+            <!--<version>3.107.0</version>-->
             <version>4.5.2</version>
             <scope>provided</scope>
         </dependency>
@@ -87,8 +89,9 @@
         <dependency>
             <groupId>xerces</groupId>
             <artifactId>xercesImpl</artifactId>
-            <version>2.11.0</version>
+            <version>2.12.0</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/xml-apis/xml-apis -->
         <dependency>
             <groupId>xml-apis</groupId>
             <artifactId>xml-apis</artifactId>

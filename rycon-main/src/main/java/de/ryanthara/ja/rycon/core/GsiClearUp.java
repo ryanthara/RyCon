@@ -75,8 +75,7 @@ public class GsiClearUp {
         // remove one or more station line at the beginning when the checkbox hold stations is not set
 
         if (!holdStations) {
-            Iterator<String> iterator = readStringLines.iterator();
-            while (iterator.hasNext()) {
+            for (Iterator<String> iterator = readStringLines.iterator(); iterator.hasNext(); ) {
                 if (checkIsStationLine(iterator.next())) {
                     iterator.remove();
                 } else {
@@ -87,11 +86,10 @@ public class GsiClearUp {
             // remove duplicate station lines in the file when the checkbox hold stations is not set
             boolean currentIsStationLine = false;
 
-            Iterator<String> iterator2 = readStringLines.iterator();
-            while (iterator2.hasNext()) {
-                if (checkIsStationLine(iterator2.next())) {
+            for (Iterator<String> iterator = readStringLines.iterator(); iterator.hasNext(); ) {
+                if (checkIsStationLine(iterator.next())) {
                     if (currentIsStationLine) {
-                        iterator2.remove();
+                        iterator.remove();
                     } else {
                         currentIsStationLine = true;
                     }

@@ -78,6 +78,7 @@ public enum Labels implements ResourceKeys {
     newConfigFileGenerated,
     recentFolderText,
     optionsText,
+    outputFormatText,
     pathSelectionText,
     pathSettingsText,
     preferencesDialogMessage,
