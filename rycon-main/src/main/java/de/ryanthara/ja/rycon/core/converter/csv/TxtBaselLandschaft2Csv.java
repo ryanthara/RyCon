@@ -17,6 +17,8 @@
  */
 package de.ryanthara.ja.rycon.core.converter.csv;
 
+import de.ryanthara.ja.rycon.core.converter.text.TxtBaselLandschaft2Txt;
+
 import java.util.ArrayList;
 
 /**
@@ -29,7 +31,7 @@ import java.util.ArrayList;
  */
 public class TxtBaselLandschaft2Csv {
 
-    private ArrayList<String> readStringLines;
+    private final ArrayList<String> readStringLines;
 
     /**
      * Class constructor for reader line based text files in different formats.
@@ -50,9 +52,9 @@ public class TxtBaselLandschaft2Csv {
      * @return converted {@code ArrayList<String>} with lines of CSV format
      */
     public ArrayList<String> convertTXTBaselLandschaft2CSV(String separator) {
-        ArrayList<String> result = new ArrayList<>();
+        TxtBaselLandschaft2Txt txtBaselLandschaft2Txt = new TxtBaselLandschaft2Txt(readStringLines);
 
-        return result;
+        return txtBaselLandschaft2Txt.convertTXTBaselLandschaft2TXT(separator, false);
     }
 
 } // end of TxtBaselLandschaft2Csv

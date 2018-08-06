@@ -23,7 +23,6 @@ import org.eclipse.swt.internal.Callback;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Listener;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
@@ -53,10 +52,10 @@ public class CocoaUIEnhancer {
     // private static final long kHideApplicationMenuItem = 6;
     private static final long kQuitMenuItem = 10;
 
-    static long sel_toolbarButtonClicked_;
-    static long sel_preferencesMenuItemSelected_;
-    static long sel_aboutMenuItemSelected_;
-    static Callback proc3Args;
+    private static long sel_toolbarButtonClicked_;
+    private static long sel_preferencesMenuItemSelected_;
+    private static long sel_aboutMenuItemSelected_;
+    private static Callback proc3Args;
 
     final private String appName;
 
@@ -270,8 +269,7 @@ public class CocoaUIEnhancer {
     }
 
     private long registerName(Class<?> osCls, String name)
-            throws IllegalArgumentException, SecurityException, IllegalAccessException,
-            InvocationTargetException, NoSuchMethodException {
+            throws IllegalArgumentException, SecurityException {
         Object object = invoke(osCls, "sel_registerName", new Object[]{name});
         return convertToLong(object);
     }

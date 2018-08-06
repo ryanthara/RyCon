@@ -54,14 +54,14 @@ import static de.ryanthara.ja.rycon.ui.custom.Status.OK;
 public class PreferencesDialog {
 
     private String category;
-    private String message;
-    private String title;
-    private List<String> categories = new ArrayList<>();
-    private Map<Preference<?>, Editor<?>> editors = new HashMap<>();
-    private Map<String, Image> images = new HashMap<>();
-    private Map<String, List<Preference<?>>> preferences = new HashMap<>();
+    private final String message;
+    private final String title;
+    private final List<String> categories = new ArrayList<>();
+    private final Map<Preference<?>, Editor<?>> editors = new HashMap<>();
+    private final Map<String, Image> images = new HashMap<>();
+    private final Map<String, List<Preference<?>>> preferences = new HashMap<>();
     private Button saveButton;
-    private Shell parentShell;
+    private final Shell parentShell;
     private Shell innerShell;
     private TabFolder folder;
 
@@ -84,7 +84,7 @@ public class PreferencesDialog {
      * @param message     message of the dialog
      * @param resizable   is resizable
      */
-    public PreferencesDialog(Shell parentShell, String title, String message, boolean resizable) {
+    private PreferencesDialog(Shell parentShell, String title, String message, boolean resizable) {
         this.title = title;
         this.message = message;
         this.parentShell = parentShell;

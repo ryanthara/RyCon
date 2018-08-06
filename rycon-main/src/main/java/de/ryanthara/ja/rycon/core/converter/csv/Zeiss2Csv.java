@@ -32,7 +32,7 @@ import java.util.ArrayList;
  */
 public class Zeiss2Csv {
 
-    private ArrayList<String> readStringLines;
+    private final ArrayList<String> readStringLines;
 
     /**
      * Class constructor for reader line based Zeiss REC files in different dialects.

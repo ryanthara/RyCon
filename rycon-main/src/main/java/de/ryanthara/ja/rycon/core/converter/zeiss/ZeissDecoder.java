@@ -35,7 +35,7 @@ public class ZeissDecoder {
     private int numOfBlocks;
     private String error = "";
     private String pointIdentification, pointNumber;
-    private ArrayList<ZeissBlock> zeissBlocks = new ArrayList<>();
+    private final ArrayList<ZeissBlock> zeissBlocks = new ArrayList<>();
     private ZeissBlock block1 = null;
     private ZeissBlock block3 = null;
     private ZeissBlock block2 = null;

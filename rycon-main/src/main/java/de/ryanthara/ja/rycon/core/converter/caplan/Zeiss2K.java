@@ -43,11 +43,11 @@ public class Zeiss2K {
     private String easting;
     private String northing;
     private String height;
-    private String freeSpace;
-    private String objectTyp;
+    private final String freeSpace;
+    private final String objectTyp;
     private String attr;
 
-    private ArrayList<String> readStringLines;
+    private final ArrayList<String> readStringLines;
 
     /**
      * Constructs a new instance of this class with a parameter for reader line base text files in the Zeiss REC format

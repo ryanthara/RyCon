@@ -34,7 +34,7 @@ import java.util.TreeSet;
  */
 public class Gsi2Txt {
 
-    private BaseToolsGsi baseToolsGsi;
+    private final BaseToolsGsi baseToolsGsi;
 
     /**
      * Class constructor for reader line based GSI files.

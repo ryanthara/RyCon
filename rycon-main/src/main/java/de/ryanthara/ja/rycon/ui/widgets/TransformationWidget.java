@@ -30,7 +30,7 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class TransformationWidget extends AbstractWidget {
 
-    private Shell parent;
+    private final Shell parent;
 
     /**
      * Constructs a new instance of this class without parameters.

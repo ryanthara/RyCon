@@ -33,7 +33,7 @@ import java.util.ArrayList;
  */
 public class Gsi2K {
 
-    private BaseToolsGsi baseToolsGsi;
+    private final BaseToolsGsi baseToolsGsi;
 
     /**
      * Constructs a new instance of this class with a parameter for reader line based text files in the Leica GSI format.

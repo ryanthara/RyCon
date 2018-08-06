@@ -37,7 +37,7 @@ import java.util.ArrayList;
  */
 public class Cadwork2Excel {
 
-    private ArrayList<String> readStringLines;
+    private final ArrayList<String> readStringLines;
     private Workbook workbook;
 
     /**
@@ -76,9 +76,7 @@ public class Cadwork2Excel {
         short cellNumber = 0;
 
         // remove not needed headlines
-        for (int i = 0; i < 3; i++) {
-            readStringLines.remove(0);
-        }
+        readStringLines.subList(0, 3).clear();
 
         if (writeCommentRow) {
             row = sheet.createRow(rowNumber);

@@ -1,6 +1,6 @@
 package de.ryanthara.ja.rycon.core.logfile.leica;
 
-import de.ryanthara.ja.rycon.core.LogfileClean;
+import de.ryanthara.ja.rycon.core.LogfileClearUp;
 import de.ryanthara.ja.rycon.core.elements.RyIntersection;
 import de.ryanthara.ja.rycon.core.elements.RyPoint;
 import de.ryanthara.ja.rycon.core.elements.RyTraverse;
@@ -515,8 +515,8 @@ class CogoStructureTest {
         */
 
         // use full cleaned logfile.txt
-        LogfileClean logfileClean = new LogfileClean(lines);
-        ArrayList<String> cleanLogfile = logfileClean.processCleanFull();
+        LogfileClearUp logfileClearUp = new LogfileClearUp(lines);
+        ArrayList<String> cleanLogfile = logfileClearUp.processCleanFull();
 
         /*
         for (String s : cleanLogfile) {

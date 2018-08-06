@@ -29,7 +29,7 @@ import java.util.ArrayList;
  */
 public class Txt2Csv {
 
-    private ArrayList<String> readStringLines;
+    private final ArrayList<String> readStringLines;
 
     /**
      * Class constructor for reader line based text files in different formats.

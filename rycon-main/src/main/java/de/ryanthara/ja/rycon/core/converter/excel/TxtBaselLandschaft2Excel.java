@@ -34,7 +34,7 @@ import java.util.ArrayList;
  */
 public class TxtBaselLandschaft2Excel {
 
-    private ArrayList<String> readStringLines;
+    private final ArrayList<String> readStringLines;
     private Workbook workbook;
 
     /**

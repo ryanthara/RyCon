@@ -60,7 +60,7 @@ public class RyStakedPoint {
      * @param designPoint        the design point
      * @param stakedPoint        the staked point
      * @param stakeoutDifference the difference between design and staked point
-     * @param designLineOffset
+     * @param designLineOffset   the design line offset
      */
     public RyStakedPoint(final String pointID, final RyPoint designPoint, final RyPoint stakedPoint, final RyPoint stakeoutDifference, final RyPoint designLineOffset) {
         this.pointID = pointID;

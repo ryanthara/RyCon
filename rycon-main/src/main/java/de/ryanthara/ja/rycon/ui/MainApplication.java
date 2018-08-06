@@ -830,7 +830,7 @@ public class MainApplication extends Main {
 
     private void test() {
         System.out.println("### TEST ###");
-        System.out.println("");
+        System.out.println();
 
         /*
         System.out.println(Main.pref.getUserPreference(PreferenceKeys.DIR_CARD_READER));
@@ -859,7 +859,7 @@ public class MainApplication extends Main {
             e.printStackTrace();
         }
 
-        System.out.println("");
+        System.out.println();
         System.out.println("### END OF TEST ###");
     }
 

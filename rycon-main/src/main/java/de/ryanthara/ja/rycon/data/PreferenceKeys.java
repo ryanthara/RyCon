@@ -72,7 +72,7 @@ public enum PreferenceKeys {
     PARAM_USER_STRING("param_user_string"),
     USER_LAST_USED_DIR("user_last_used_dir");
 
-    private String key;
+    private final String key;
 
     PreferenceKeys(String key) {
         this.key = key;

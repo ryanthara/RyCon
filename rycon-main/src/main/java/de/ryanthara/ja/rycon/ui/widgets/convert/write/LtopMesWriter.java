@@ -45,8 +45,8 @@ public class LtopMesWriter implements Writer {
     private final static Logger logger = Logger.getLogger(LtopMesWriter.class.getName());
 
     private final Path path;
-    private ArrayList<String> readStringFile;
-    private WriteParameter parameter;
+    private final ArrayList<String> readStringFile;
+    private final WriteParameter parameter;
 
     /**
      * Constructs the {@link LtopMesWriter} with a set of parameters.

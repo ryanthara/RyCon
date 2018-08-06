@@ -51,9 +51,7 @@ public class Cadwork2Zeiss {
         ArrayList<String> result = new ArrayList<>();
 
         // remove not needed headlines
-        for (int i = 0; i < 3; i++) {
-            readStringLines.remove(0);
-        }
+        readStringLines.subList(0, 3).clear();
 
         int lineNumber = 0;
 

@@ -39,7 +39,7 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.COLUMNS;
  */
 public class Caplan2Odf {
 
-    private ArrayList<String> readStringLines;
+    private final ArrayList<String> readStringLines;
     private SpreadsheetDocument spreadsheetDocument;
 
     /**

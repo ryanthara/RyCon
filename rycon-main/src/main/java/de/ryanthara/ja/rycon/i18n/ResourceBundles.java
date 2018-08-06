@@ -41,7 +41,7 @@ public enum ResourceBundles {
     WARNINGS("de/ryanthara/ja/rycon/ui/Warnings"),
     WORDINDICES("de/ryanthara/ja/rycon/core/converter/LeicaGSIWordIndices");
 
-    private String bundleName;
+    private final String bundleName;
 
     ResourceBundles(String bundleName) {
         this.bundleName = bundleName;

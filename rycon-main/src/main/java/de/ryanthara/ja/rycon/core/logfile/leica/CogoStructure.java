@@ -82,7 +82,7 @@ import java.util.Iterator;
  */
 public class CogoStructure extends LeicaLogfileBaseStructure {
 
-    protected final ArrayList<String> lines;
+    private final ArrayList<String> lines;
     private RyPoint arcCenter;
     private RyPoint startPoint;
     private RyPoint secondPoint;
@@ -95,8 +95,8 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
     private String segmentsLength;
     private String numberOfPoints;
     private String segmentationMethod;
-    private ArrayList<RyIntersection> intersections;
-    private ArrayList<RyPoint> computedPoints;
+    private final ArrayList<RyIntersection> intersections;
+    private final ArrayList<RyPoint> computedPoints;
     private String direction;
     private String distance;
     private String heightDifference;
@@ -110,7 +110,7 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
     private String scale;
     private String numberOfPointsNew;
     private String numberOfPointsSkipped;
-    private ArrayList<RyTraverse> traverses;
+    private final ArrayList<RyTraverse> traverses;
 
     /**
      * Constructs a new {@code CogoStructure} with a parameter for the lines of the structure.
@@ -134,7 +134,7 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
      */
     @Override
     public boolean analyze() {
-        boolean success = false;
+        boolean success;
         boolean isArc = false;
         boolean isLine = false;
 
@@ -502,7 +502,7 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
         return traverses;
     }
 
-    protected void analyzeArcCenter(Iterator<String> iterator) {
+    private void analyzeArcCenter(Iterator<String> iterator) {
         // skip separator line with multiple '-'
         iterator.next();
 
@@ -511,7 +511,7 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
         }
     }
 
-    protected void analyzeArcInformation(Iterator<String> iterator) {
+    private void analyzeArcInformation(Iterator<String> iterator) {
         // skip separator line with multiple '-'
         iterator.next();
 
@@ -523,7 +523,7 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
         }
     }
 
-    protected void analyzeArcOffset(Iterator<String> iterator) {
+    private void analyzeArcOffset(Iterator<String> iterator) {
         // skip separator line with multiple '-'
         iterator.next();
 
@@ -538,7 +538,7 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
         }
     }
 
-    protected void analyzeBearingBearingIntersection(Iterator<String> iterator) {
+    private void analyzeBearingBearingIntersection(Iterator<String> iterator) {
         // skip separator line with multiple '-'
         iterator.next();
 
@@ -553,7 +553,7 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
         }
     }
 
-    protected void analyzeBearingDistanceIntersection(Iterator<String> iterator) {
+    private void analyzeBearingDistanceIntersection(Iterator<String> iterator) {
         // skip separator line with multiple '-'
         iterator.next();
 
@@ -567,7 +567,7 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
         }
     }
 
-    protected void analyzeDistanceDistanceIntersection(Iterator<String> iterator) {
+    private void analyzeDistanceDistanceIntersection(Iterator<String> iterator) {
         // skip separator line with multiple '-'
         iterator.next();
 
@@ -582,7 +582,7 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
         }
     }
 
-    protected void analyzeFourPointIntersection(Iterator<String> iterator) {
+    private void analyzeFourPointIntersection(Iterator<String> iterator) {
         // skip separator line with multiple '-'
         iterator.next();
 
@@ -597,7 +597,7 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
         }
     }
 
-    protected void analyzeInverse(Iterator<String> iterator) {
+    private void analyzeInverse(Iterator<String> iterator) {
         // skip separator line with multiple '-'
         iterator.next();
 
@@ -632,7 +632,7 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
 
     }
 
-    protected void analyzeLineBasePoint(Iterator<String> iterator) {
+    private void analyzeLineBasePoint(Iterator<String> iterator) {
         // skip separator line with multiple '-'
         iterator.next();
 
@@ -645,7 +645,7 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
         }
     }
 
-    protected void analyzeLineCalculationsLineInformation(Iterator<String> iterator) {
+    private void analyzeLineCalculationsLineInformation(Iterator<String> iterator) {
         // skip separator line with multiple '-'
         iterator.next();
 
@@ -657,7 +657,7 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
         }
     }
 
-    protected void analyzeLineOffsetPoint(Iterator<String> iterator) {
+    private void analyzeLineOffsetPoint(Iterator<String> iterator) {
         // skip separator line with multiple '-'
         iterator.next();
 
@@ -671,7 +671,7 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
         }
     }
 
-    protected void analyzeSegmentationInfoArcAndLine(Iterator<String> iterator) {
+    private void analyzeSegmentationInfoArcAndLine(Iterator<String> iterator) {
         // skip separator line with multiple '-'
         iterator.next();
 
@@ -688,7 +688,7 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
         }
     }
 
-    protected void analyzeShiftRotateScale(Iterator<String> iterator) {
+    private void analyzeShiftRotateScale(Iterator<String> iterator) {
         // skip separator line with multiple '-'
         iterator.next();
 
@@ -723,7 +723,7 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
         }
     }
 
-    protected void analyzeTraverse(Iterator<String> iterator) {
+    private void analyzeTraverse(Iterator<String> iterator) {
         // skip separator line with multiple '-'
         iterator.next();
 
@@ -830,7 +830,7 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
 
         SHIFT_ROTATE_SCALE("Shift/Rotate/Scale");
 
-        protected final String identifier;
+        final String identifier;
 
         Elements(String identifier) {
             this.identifier = identifier;

@@ -114,8 +114,6 @@ public class CmdLineInterfaceParser {
      * The arguments are case sensitive, are only parsed and not checked for being valid or logical.
      *
      * @param args the arguments to be parsed
-     *
-     * @throws CmdLineInterfaceException if something goes wrong with the parsing
      */
     public void parseArguments(final String... args) throws CmdLineInterfaceException {
         if (args != null && args.length > 0) {
@@ -127,19 +125,20 @@ public class CmdLineInterfaceParser {
                 } else if (s.toLowerCase().contains("--locale=")) {
                     alphaLanguageCode = s.toLowerCase().substring(9, s.length());
                 } else if (s.toLowerCase().contains("--file=")) {
-                    inputFile = s.substring(7, s.length());
+                    inputFile = s.substring(7);
                 } else if (s.contains("--sourceBtnNumber=")) {
-                    sourceBtnNumber = Integer.parseInt(s.substring(18, s.length()));
+                    sourceBtnNumber = Integer.parseInt(s.substring(18));
                 } else if (s.contains("--targetBtnNumber=")) {
-                    targetBtnNumber = Integer.parseInt(s.substring(18, s.length()));
+                    targetBtnNumber = Integer.parseInt(s.substring(18));
                 } else {
-                    System.err.println("incorrect or illegal command line interface input:");
-                    System.err.println(s);
-
+                    // TODO correct log level and message text
                     logger.log(Level.FINEST, "incorrect or illegal command line interface input");
                     logger.log(Level.FINEST, s);
 
                     printUsageAdvice();
+
+                    // TODO is this really necessary?
+                    throw new CmdLineInterfaceException();
                 }
             }
         }

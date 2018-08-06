@@ -37,7 +37,7 @@ public class Zeiss2Gsi {
     private int ppmLine = -1, constantLine = -1;
     private String ppmAndAdditionConstant = "";
     private String format1 = "YYssmsms", format2 = "MMDDhhmm";
-    private ArrayList<String> readStringLines;
+    private final ArrayList<String> readStringLines;
 
     /**
      * Constructs a new instance of this class given an {@code ArrayList<String} that contains the reader lines

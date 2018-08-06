@@ -54,7 +54,7 @@ public class LeicaObservations2Asc extends Converter {
     private final static Logger logger = Logger.getLogger(LeicaObservations2Asc.class.getName());
 
     private final boolean ignoreChangePoints;
-    private Path path;
+    private final Path path;
 
     /**
      * Constructs a new instance of this class with a parameter

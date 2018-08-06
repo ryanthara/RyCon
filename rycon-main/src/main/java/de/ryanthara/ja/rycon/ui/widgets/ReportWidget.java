@@ -18,7 +18,7 @@
 package de.ryanthara.ja.rycon.ui.widgets;
 
 import de.ryanthara.ja.rycon.Main;
-import de.ryanthara.ja.rycon.core.LogfileClean;
+import de.ryanthara.ja.rycon.core.LogfileClearUp;
 import de.ryanthara.ja.rycon.core.logfile.LogfileAnalyzer;
 import de.ryanthara.ja.rycon.data.PreferenceKeys;
 import de.ryanthara.ja.rycon.i18n.*;
@@ -91,7 +91,7 @@ public class ReportWidget extends AbstractWidget {
      *
      * @param droppedFiles {@link Path} array from drop source
      */
-    public ReportWidget(Path... droppedFiles) {
+    private ReportWidget(Path... droppedFiles) {
         files2read = PathCheck.getValidFiles(droppedFiles, acceptableFileSuffixes);
         innerShell = null;
     }
@@ -280,8 +280,8 @@ public class ReportWidget extends AbstractWidget {
                         final String fileName = path.toString();
 
                         if (fileName.toUpperCase().endsWith("LOGFILE.TXT")) {
-                            LogfileClean logfileClean = new LogfileClean(readFile);
-                            cleanFile = logfileClean.processCleanFull();
+                            LogfileClearUp logfileClearUp = new LogfileClearUp(readFile);
+                            cleanFile = logfileClearUp.processCleanFull();
 
                             LogfileAnalyzer logfileAnalyzer = new LogfileAnalyzer(cleanFile);
 

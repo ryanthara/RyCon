@@ -38,8 +38,8 @@ import java.util.Iterator;
 public class ReferenceLineStructure extends LeicaLogfileBaseStructure {
 
     private final ArrayList<String> lines;
-    private ArrayList<RyMeasuredPoint> measuredPoints;
-    private ArrayList<RyStakedPoint> stakedPoints;
+    private final ArrayList<RyMeasuredPoint> measuredPoints;
+    private final ArrayList<RyStakedPoint> stakedPoints;
     private RyPoint tpsStation;
     private String referenceLineId;
     private RyPoint startPoint;

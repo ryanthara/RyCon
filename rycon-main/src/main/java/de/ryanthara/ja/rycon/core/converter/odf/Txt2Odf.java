@@ -34,7 +34,7 @@ import java.util.ArrayList;
  */
 public class Txt2Odf {
 
-    private ArrayList<String> readStringLines;
+    private final ArrayList<String> readStringLines;
     private SpreadsheetDocument spreadsheetDocument;
 
     /**

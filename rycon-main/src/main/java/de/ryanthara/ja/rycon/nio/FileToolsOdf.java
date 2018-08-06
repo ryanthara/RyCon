@@ -31,7 +31,7 @@ import java.util.logging.Logger;
  * @version 2
  * @since 9
  */
-public class FileToolsOdf {
+class FileToolsOdf {
 
     private final Logger logger = Logger.getLogger(FileToolsOdf.class.getName());
 

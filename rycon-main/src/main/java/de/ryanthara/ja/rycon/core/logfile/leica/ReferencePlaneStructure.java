@@ -53,7 +53,7 @@ public class ReferencePlaneStructure extends LeicaLogfileBaseStructure {
      */
     @Override
     public boolean analyze() {
-        boolean success = false;
+        boolean success;
 
         System.out.println("REFERENCE PLANE structure");
 

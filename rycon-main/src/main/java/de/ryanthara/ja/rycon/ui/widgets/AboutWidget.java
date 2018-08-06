@@ -69,7 +69,7 @@ public class AboutWidget {
         initUI();
     }
 
-    void initUI() {
+    private void initUI() {
         final int height = Sizes.RyCON_WIDGET_HEIGHT.getValue() - 205;
         final int width = Sizes.RyCON_WIDGET_WIDTH.getValue() - 205;
 

@@ -38,8 +38,8 @@ public class SetupStructure extends LeicaLogfileBaseStructure {
 
     private final ArrayList<String> lines;
     // Results
-    private ArrayList<RyObservation> observationsList;
-    private ArrayList<RyResidual> residualsList;
+    private final ArrayList<RyObservation> observationsList;
+    private final ArrayList<RyResidual> residualsList;
     private String orientationCorrection;
     private String scale;
     private String standardDeviationEasting;

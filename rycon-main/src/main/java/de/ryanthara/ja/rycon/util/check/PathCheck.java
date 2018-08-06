@@ -161,7 +161,7 @@ public final class PathCheck {
         for (Path path : paths) {
             if (Files.exists(path) && Files.isRegularFile(path) && Files.isReadable(path)) {
                 for (String anAcceptableFileSuffix : acceptableFileSuffix) {
-                    String reducedSuffix = anAcceptableFileSuffix.substring(2, anAcceptableFileSuffix.length());
+                    String reducedSuffix = anAcceptableFileSuffix.substring(2);
 
                     PathMatcher matcher = FileSystems.getDefault().getPathMatcher("regex:(?iu:.+\\." + reducedSuffix + ")");
 
@@ -172,7 +172,7 @@ public final class PathCheck {
             }
         }
 
-        return temp.toArray(new Path[temp.size()]);
+        return temp.toArray(new Path[0]);
     }
 
     /**

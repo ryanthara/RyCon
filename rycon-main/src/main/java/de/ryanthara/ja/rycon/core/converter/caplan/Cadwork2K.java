@@ -31,7 +31,7 @@ import java.util.ArrayList;
  */
 public class Cadwork2K {
 
-    private ArrayList<String> readStringLines;
+    private final ArrayList<String> readStringLines;
 
     /**
      * Constructs a new instance of this class with a parameter for reader line based text files from Cadwork CAD program
@@ -60,9 +60,7 @@ public class Cadwork2K {
         }
 
         // remove not needed headlines
-        for (int i = 0; i < 3; i++) {
-            readStringLines.remove(0);
-        }
+        readStringLines.subList(0, 3).clear();
 
         for (String line : readStringLines) {
             int valencyIndicator;

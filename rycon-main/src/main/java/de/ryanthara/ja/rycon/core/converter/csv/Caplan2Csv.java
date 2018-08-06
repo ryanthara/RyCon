@@ -31,7 +31,7 @@ import java.util.ArrayList;
  */
 public class Caplan2Csv {
 
-    public ArrayList<String> readStringLines;
+    private final ArrayList<String> readStringLines;
 
     /**
      * Constructs a new instance of this class with the reader Caplan K file {@link ArrayList} string as parameter.

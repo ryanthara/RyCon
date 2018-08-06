@@ -30,8 +30,8 @@ import java.util.ArrayList;
 public class StatusInformationEventSource {
 
     // Container for subscribed FireListeners.
-    ArrayList<StatusInformationListener> statusInformationListenerList = new ArrayList<>();
-    private StatusInformationEvent statusInformationEvent;
+    private final ArrayList<StatusInformationListener> statusInformationListenerList = new ArrayList<>();
+    private final StatusInformationEvent statusInformationEvent;
 
     // Add StatusInformationListener
     public void addStatusInformationListener(StatusInformationListener statusInformationListener) {

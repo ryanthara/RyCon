@@ -38,8 +38,8 @@ import java.util.ArrayList;
  */
 public class Asc2Txt extends Converter {
 
-    private boolean useWhiteSpaceSeparator;
-    private ArrayList<String> lines;
+    private final boolean useWhiteSpaceSeparator;
+    private final ArrayList<String> lines;
 
     /**
      * Constructs a new instance of this class with a parameter for the read {@code ArrayList<String>}

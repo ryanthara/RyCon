@@ -45,7 +45,7 @@ public enum SetupMethod {
     RESECTION_HELMERT("Resection Helmert"),
     RESECTION_LOCAL("Local Resection");
 
-    private String identifier;
+    private final String identifier;
 
     SetupMethod(String identifier) {
         this.identifier = identifier;

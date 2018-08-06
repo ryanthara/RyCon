@@ -42,10 +42,10 @@ public class OdfWriter implements Writer {
 
     private final static Logger logger = Logger.getLogger(OdfWriter.class.getName());
 
-    private Path path;
-    private ArrayList<String> readStringFile;
-    private List<String[]> readCSVFile;
-    private WriteParameter parameter;
+    private final Path path;
+    private final ArrayList<String> readStringFile;
+    private final List<String[]> readCSVFile;
+    private final WriteParameter parameter;
 
     /**
      * Constructs the {@link OdfWriter} with a set of parameters.

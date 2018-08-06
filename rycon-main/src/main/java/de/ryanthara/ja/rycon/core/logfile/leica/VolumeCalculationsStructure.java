@@ -54,7 +54,7 @@ public class VolumeCalculationsStructure extends LeicaLogfileBaseStructure {
      */
     @Override
     public boolean analyze() {
-        boolean success = false;
+        boolean success;
 
         System.out.println("VOLUME CALCULATIONS");
 

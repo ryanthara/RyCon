@@ -49,9 +49,9 @@ import java.util.regex.Pattern;
  */
 public class BaseToolsGsi {
 
-    private static TreeSet<Integer> foundAllWordIndices = new TreeSet<>();
-    private ArrayList<ArrayList<GsiBlock>> encodedBlocks;
-    private ArrayList<String> readStringLines;
+    private static final TreeSet<Integer> foundAllWordIndices = new TreeSet<>();
+    private final ArrayList<ArrayList<GsiBlock>> encodedBlocks;
+    private final ArrayList<String> readStringLines;
 
     /**
      * Constructs a new instance of this class with a parameter for

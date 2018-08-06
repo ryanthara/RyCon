@@ -102,12 +102,12 @@ public class BaseToolsZeiss {
     /**
      * Member which indicates a target height.
      */
-    static boolean TARGET_HEIGHT = false;
+    static final boolean TARGET_HEIGHT = false;
 
     /**
      * Member which indicates a instrument height.
      */
-    static boolean INSTRUMENT_HEIGHT = true;
+    static final boolean INSTRUMENT_HEIGHT = true;
 
     /**
      * Returns the integer array with the line positions of the elements in the chosen Zeiss RED dialect.

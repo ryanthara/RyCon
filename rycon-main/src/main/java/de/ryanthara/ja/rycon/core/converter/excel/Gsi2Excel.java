@@ -40,7 +40,7 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.WORDINDICES;
  */
 public class Gsi2Excel {
 
-    private BaseToolsGsi baseToolsGsi;
+    private final BaseToolsGsi baseToolsGsi;
     private Workbook workbook;
 
     /**

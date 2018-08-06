@@ -37,8 +37,8 @@ import java.util.TreeSet;
  */
 public class TextCodeSplit {
 
-    private ArrayList<String> readStringLines;
-    private TreeSet<Integer> foundCodes;
+    private final ArrayList<String> readStringLines;
+    private final TreeSet<Integer> foundCodes;
 
     /**
      * Constructs a new instance of this class given a read line based text file with a specified format.

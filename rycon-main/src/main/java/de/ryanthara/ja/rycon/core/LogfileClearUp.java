@@ -26,20 +26,20 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Instances of {@link LogfileClean} provides functions to clean a logfile in the
- * <tt>Leica Geosystems</tt> format which contains a simple structure.
+ * Instances of {@link LogfileClearUp} provides functions to clear up a logfile
+ * in the <tt>Leica Geosystems</tt> format which contains a simple structure.
  * <p>
  * Due to some reasons the 'standard' logfile.txt file from <tt>Leica Geosystems</tt>
  * total stations and gnss receivers writes some unnecessary and useless lines into
- * the logfile.txt. These lines need a lot of space and contains no real information.
+ * the logfile.txt. These lines need a lot of space and contains no useful information.
  * <p>
  * Therefore <tt>RyCON</tt> has this simple tool to delete this lines and logfile contents.
  */
-public final class LogfileClean {
+public final class LogfileClearUp {
 
-    private final static Logger logger = Logger.getLogger(LogfileClean.class.getName());
+    private final static Logger logger = Logger.getLogger(LogfileClearUp.class.getName());
 
-    private ArrayList<String> readStringLines;
+    private final ArrayList<String> readStringLines;
 
     /**
      * Constructs a new instance of this class given reader line based <tt>Leica Geosystems</tt>
@@ -47,7 +47,7 @@ public final class LogfileClean {
      *
      * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
      */
-    public LogfileClean(ArrayList<String> readStringLines) {
+    public LogfileClearUp(ArrayList<String> readStringLines) {
         this.readStringLines = readStringLines;
     }
 
@@ -130,8 +130,7 @@ public final class LogfileClean {
                         currentBlock = null;
                     }
                 } else {
-                    temp = new ArrayList<>();
-                    temp.addAll(readStringLines.subList(start, end));
+                    temp = new ArrayList<>(readStringLines.subList(start, end));
                 }
 
                 if (temp != null && temp.size() > 0) {
@@ -167,7 +166,7 @@ public final class LogfileClean {
             }
         }
 
-        return result;
+        return new ArrayList<>(result);
     }
 
     /**
@@ -217,7 +216,8 @@ public final class LogfileClean {
             }
         }
 
-        return result;
+        assert result != null;
+        return new ArrayList<>(result);
     }
 
     /*
@@ -252,7 +252,7 @@ public final class LogfileClean {
             }
         }
 
-        return result;
+        return new ArrayList<>(result != null ? result : null);
     }
 
     /*
@@ -262,14 +262,14 @@ public final class LogfileClean {
      * The clean algorithm detects empty lines.
      */
     private ArrayList<String> cleanReferencePlane(List<String> strings) {
-        ArrayList<String> result = null;
+        ArrayList<String> result;
 
         System.out.println(strings.size());
 
         // TODO add reference plane clean
         result = (ArrayList<String>) strings;
 
-        return result;
+        return new ArrayList<>(result);
     }
 
     /*
@@ -306,7 +306,7 @@ public final class LogfileClean {
             }
         }
 
-        return result;
+        return new ArrayList<>(result != null ? result : null);
     }
 
     /*
@@ -341,19 +341,19 @@ public final class LogfileClean {
             }
         }
 
-        return result;
+        return new ArrayList<>(result != null ? result : null);
     }
 
     /*
      * Cleans the unnecessary lines from the logfile.txt file that was written
      * by the <tt>VOLUME CALCULATIONS</tt> program.
      */
-    private ArrayList<String> cleanVolumeCalculations(List<String> strings) {
+    private ArrayList<String> cleanVolumeCalculations(List<String> block) {
         ArrayList<String> result = null;
 
         // TODO add volume calculations clean
 
-        return result;
+        return new ArrayList<>(result);
     }
 
-} // end of LogfileClean
+} // end of LogfileClearUp

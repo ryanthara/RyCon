@@ -53,7 +53,7 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.PREFERENCES;
 public class SettingsWidget {
 
     private final static Logger logger = Logger.getLogger(SettingsWidget.class.getName());
-    private Shell parent;
+    private final Shell parent;
 
     /**
      * Creates a new instance.

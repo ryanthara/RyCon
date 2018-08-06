@@ -30,7 +30,7 @@ import java.util.List;
  */
 public class Csv2Gsi {
 
-    private List<String[]> readCSVLines = null;
+    private final List<String[]> readCSVLines;
 
     /**
      * Constructs a new instance of this class with a parameter for the reader line based CSV files.

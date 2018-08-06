@@ -37,7 +37,7 @@ public class Toporail2Gsi {
 
     private final static Logger logger = Logger.getLogger(Toporail2Gsi.class.getName());
 
-    private ArrayList<String> readStringLines;
+    private final ArrayList<String> readStringLines;
 
     /**
      * Constructs a new instance of this class given an {@code ArrayList<String>} that contains

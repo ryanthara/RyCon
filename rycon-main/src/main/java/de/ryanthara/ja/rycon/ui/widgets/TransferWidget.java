@@ -19,7 +19,7 @@ package de.ryanthara.ja.rycon.ui.widgets;
 
 import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.core.GsiClearUp;
-import de.ryanthara.ja.rycon.core.LogfileClean;
+import de.ryanthara.ja.rycon.core.LogfileClearUp;
 import de.ryanthara.ja.rycon.data.PreferenceKeys;
 import de.ryanthara.ja.rycon.i18n.*;
 import de.ryanthara.ja.rycon.nio.FileNameExtension;
@@ -416,8 +416,7 @@ public class TransferWidget extends AbstractWidget {
                                     if (source.endsWith("logfile.txt")) {
                                         final String fileName = p.toString();
                                         final LocalDate localDate = LocalDate.now();
-                                        final String logFileName = fileName;
-                                        final String newFileName = logFileName.replaceAll("logfile.txt", localDate.toString() + "_logfile.txt");
+                                        final String newFileName = fileName.replaceAll("logfile.txt", localDate.toString() + "_logfile.txt");
 
                                         target = Paths.get(destinationPath + delimiter + newFileName);
                                     } else {
@@ -435,9 +434,9 @@ public class TransferWidget extends AbstractWidget {
                                         LineReader lineReader = new LineReader(target);
 
                                         if (lineReader.readFile(false)) {
-                                            LogfileClean logfileClean = new LogfileClean(lineReader.getLines());
+                                            LogfileClearUp logfileClearUp = new LogfileClearUp(lineReader.getLines());
 
-                                            ArrayList<String> writeFile = logfileClean.processClean(true);
+                                            ArrayList<String> writeFile = logfileClearUp.processClean(true);
 
                                             WriteFile2Disk.writeFile2Disk(target, writeFile, editString, FileNameExtension.TXT.getExtension());
                                         }
@@ -1037,7 +1036,7 @@ public class TransferWidget extends AbstractWidget {
 
         // get last used projects from text field and add to bounded tree set
         final String text = targetProjectPath.getText();
-        final String lastUsedProject = text.substring(text.lastIndexOf(delimiter) + 1, text.length());
+        final String lastUsedProject = text.substring(text.lastIndexOf(delimiter) + 1);
 
         lastUsedProjects.add(lastUsedProject);
 

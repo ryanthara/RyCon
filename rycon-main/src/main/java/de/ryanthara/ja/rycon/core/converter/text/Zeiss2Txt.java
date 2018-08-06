@@ -32,7 +32,7 @@ import java.util.ArrayList;
  */
 public class Zeiss2Txt {
 
-    private ArrayList<String> readStringLines;
+    private final ArrayList<String> readStringLines;
 
     /**
      * Constructs the {@link Zeiss2Txt} with a bunch of parameters.

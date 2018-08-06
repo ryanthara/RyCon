@@ -88,28 +88,6 @@ public abstract class LeicaLogfileBaseStructure {
     }
 
     /**
-     * Returns the computed point as {@link RyPoint}.
-     *
-     * @param line line that contains the computed point
-     *
-     * @return computed point
-     */
-    public RyPoint getComputed(final String line) {
-        return getPoint(line);
-    }
-
-    /**
-     * Returns the end point as {@link RyPoint}.
-     *
-     * @param line line that contains the end point
-     *
-     * @return end point
-     */
-    public RyPoint getEndPoint(final String line) {
-        return getPoint(line);
-    }
-
-    /**
      * Returns the found instrument type of the used instrument.
      *
      * @return instrument type
@@ -157,136 +135,6 @@ public abstract class LeicaLogfileBaseStructure {
     }
 
     /**
-     * Returns the design line offset as {@link RyPoint}.
-     *
-     * @param line line that contains the design line offset
-     *
-     * @return design line offset
-     */
-    protected RyPoint getDesignLineOffset(String line) {
-        return getPointDesignAndStakeoutDifferenceAndLineOffset(line);
-    }
-
-    /**
-     * Returns the design point as {@link RyPoint}.
-     *
-     * @param line line that contains the design point
-     *
-     * @return design point
-     */
-    protected RyPoint getDesignPoint(String line) {
-        return getPointDesignAndStakeoutDifferenceAndLineOffset(line);
-    }
-
-    /**
-     * Returns the from point of the traverse as {@link RyPoint}.
-     *
-     * @param line line that contains the from point
-     *
-     * @return
-     */
-    protected RyPoint getFromPoint(String line) {
-        return getComputed(line);
-    }
-
-    /**
-     * Returns the measured point from the reference line as {@link RyPoint}.
-     *
-     * @param line line that contains the measured point
-     *
-     * @return measured point
-     */
-    protected RyPoint getMeasuredPoint(String line) {
-        return getPointReflectorHeight(line);
-    }
-
-    /**
-     * Returns the deviation of a measured point from the reference line as {@link RyPoint}.
-     *
-     * @param line line that contains the deviation results
-     *
-     * @return deviation results
-     */
-    protected RyPoint getMeasuredPointDeviation(String line) {
-        return getPointDesignAndStakeoutDifferenceAndLineOffset(line);
-    }
-
-    /**
-     * Returns the second point of an arc as {@link RyPoint}.
-     *
-     * @param line line that contains the second point
-     *
-     * @return second point
-     */
-    protected RyPoint getSecondPoint(String line) {
-        return getPoint(line);
-    }
-
-    /**
-     * Returns the staked point as {@link RyPoint}.
-     *
-     * @param line line that contains the staked point
-     *
-     * @return staked point
-     */
-    protected RyPoint getStakedPoint(String line) {
-        return getPointReflectorHeight(line);
-    }
-
-    /**
-     * Returns the stakeout difference as {@link RyPoint}.
-     *
-     * @param line line that contains the stakeout difference
-     *
-     * @return stake out difference
-     */
-    protected RyPoint getStakeoutDifference(String line) {
-        return getPointDesignAndStakeoutDifferenceAndLineOffset(line);
-    }
-
-    /**
-     * Returns the start point as {@link RyPoint}.
-     *
-     * @param line line that contains the start point
-     *
-     * @return start point
-     */
-    protected RyPoint getStartPoint(final String line) {
-        return getPoint(line);
-    }
-
-    /**
-     * Returns the to point of the traverse as {@link RyPoint}.
-     *
-     * @param line line that contains the to point
-     *
-     * @return
-     */
-    protected RyPoint getToPoint(String line) {
-        return getComputed(line);
-    }
-
-    /**
-     * Returns the TPS Station from a given line as {@link RyPoint}.
-     *
-     * @param line line that contains the station information
-     *
-     * @return tps station point
-     */
-    protected RyPoint getTpsStation(String line) {
-        final String stationLine = line.split(":")[1].trim();
-        final String number = stationLine.substring(0, stationLine.indexOf("\t")).trim();
-
-        final String[] elements = stationLine.split("\\s+");
-        final String easting = elements[2].trim();
-        final String northing = elements[4].trim();
-        final String height = elements[6].trim();
-        final String instrumentHeight = elements[8].trim();
-
-        return new RyPoint(number, easting, northing, height, instrumentHeight);
-    }
-
-    /**
      * Analyzes the header which should have the same order for all structures, but does not.
      * <p>
      * Therefore this method has to be overwritten sometimes.
@@ -315,6 +163,158 @@ public abstract class LeicaLogfileBaseStructure {
         }
     }
 
+    /**
+     * Returns the computed point as {@link RyPoint}.
+     *
+     * @param line line that contains the computed point
+     *
+     * @return computed point
+     */
+    RyPoint getComputed(final String line) {
+        return getPoint(line);
+    }
+
+    /**
+     * Returns the design line offset as {@link RyPoint}.
+     *
+     * @param line line that contains the design line offset
+     *
+     * @return design line offset
+     */
+    RyPoint getDesignLineOffset(String line) {
+        return getPointDesignAndStakeoutDifferenceAndLineOffset(line);
+    }
+
+    /**
+     * Returns the design point as {@link RyPoint}.
+     *
+     * @param line line that contains the design point
+     *
+     * @return design point
+     */
+    RyPoint getDesignPoint(String line) {
+        return getPointDesignAndStakeoutDifferenceAndLineOffset(line);
+    }
+
+    /**
+     * Returns the end point as {@link RyPoint}.
+     *
+     * @param line line that contains the end point
+     *
+     * @return end point
+     */
+    RyPoint getEndPoint(final String line) {
+        return getPoint(line);
+    }
+
+    /**
+     * Returns the from point of the traverse as {@link RyPoint}.
+     *
+     * @param line line that contains the from point
+     *
+     * @return from point
+     */
+    RyPoint getFromPoint(String line) {
+        return getComputed(line);
+    }
+
+    /**
+     * Returns the measured point from the reference line as {@link RyPoint}.
+     *
+     * @param line line that contains the measured point
+     *
+     * @return measured point
+     */
+    RyPoint getMeasuredPoint(String line) {
+        return getPointReflectorHeight(line);
+    }
+
+    /**
+     * Returns the deviation of a measured point from the reference line as {@link RyPoint}.
+     *
+     * @param line line that contains the deviation results
+     *
+     * @return deviation results
+     */
+    RyPoint getMeasuredPointDeviation(String line) {
+        return getPointDesignAndStakeoutDifferenceAndLineOffset(line);
+    }
+
+    /**
+     * Returns the second point of an arc as {@link RyPoint}.
+     *
+     * @param line line that contains the second point
+     *
+     * @return second point
+     */
+    RyPoint getSecondPoint(String line) {
+        return getPoint(line);
+    }
+
+    /**
+     * Returns the staked point as {@link RyPoint}.
+     *
+     * @param line line that contains the staked point
+     *
+     * @return staked point
+     */
+    RyPoint getStakedPoint(String line) {
+        return getPointReflectorHeight(line);
+    }
+
+    /**
+     * Returns the stakeout difference as {@link RyPoint}.
+     *
+     * @param line line that contains the stakeout difference
+     *
+     * @return stake out difference
+     */
+    RyPoint getStakeoutDifference(String line) {
+        return getPointDesignAndStakeoutDifferenceAndLineOffset(line);
+    }
+
+    /**
+     * Returns the start point as {@link RyPoint}.
+     *
+     * @param line line that contains the start point
+     *
+     * @return start point
+     */
+    RyPoint getStartPoint(final String line) {
+        return getPoint(line);
+    }
+
+    /**
+     * Returns the to point of the traverse as {@link RyPoint}.
+     *
+     * @param line line that contains the to point
+     *
+     * @return the to point of the traverse
+     */
+    RyPoint getToPoint(String line) {
+        return getComputed(line);
+    }
+
+    /**
+     * Returns the TPS Station from a given line as {@link RyPoint}.
+     *
+     * @param line line that contains the station information
+     *
+     * @return tps station point
+     */
+    RyPoint getTpsStation(String line) {
+        final String stationLine = line.split(":")[1].trim();
+        final String number = stationLine.substring(0, stationLine.indexOf("\t")).trim();
+
+        final String[] elements = stationLine.split("\\s+");
+        final String easting = elements[2].trim();
+        final String northing = elements[4].trim();
+        final String height = elements[6].trim();
+        final String instrumentHeight = elements[8].trim();
+
+        return new RyPoint(number, easting, northing, height, instrumentHeight);
+    }
+
     /*
      * Due to some issues from the logfile.txt a simple split by ':' or space is not possible
      *
@@ -323,11 +323,11 @@ public abstract class LeicaLogfileBaseStructure {
      */
     private RyPoint getPoint(final String line) {
         // point elements between ':' and string length
-        final String pointLine = line.substring(line.indexOf(":") + 1, line.length()).trim();
+        final String pointLine = line.substring(line.indexOf(":") + 1).trim();
         final String separator = pointLine.contains("E:") ? ":" : "=";
 
         final String number = pointLine.substring(0, pointLine.indexOf("E" + separator)).trim();
-        final String coordinates = pointLine.substring(pointLine.indexOf("E" + separator), pointLine.length());
+        final String coordinates = pointLine.substring(pointLine.indexOf("E" + separator));
 
         final String[] elements = coordinates.split("\\s+");
         final String easting = elements[1].trim();

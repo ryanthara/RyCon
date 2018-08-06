@@ -37,14 +37,10 @@ public enum Preferences implements ResourceKeys {
 
     // configurations
     labelNo,
-    labelOk,
     labelYes,
     toolTipDefault,
     toolTipUndo,
 
-    // general tab
-    generalTabTitle,
-    generalTabToolTip,
     groupGeneralSettingsTitle,
     overwriteExistingFiles,
     fileCompletionConverter,
@@ -53,9 +49,6 @@ public enum Preferences implements ResourceKeys {
     equalPointsMinimumDistance,
     userString,
 
-    // path tab
-    pathTabTitle,
-    pathTabToolTip,
     pathGroupBase,
     pathBaseLabel,
 
@@ -74,23 +67,12 @@ public enum Preferences implements ResourceKeys {
     pathBtnText,
     pathBtnToolTip,
 
-    // file formats tab
-    formatsTabTitle,
-    formatsTabToolTip,
     groupFormatsTitle,
     addSpaceAtLineEnd,
     defaultZeissFormat,
 
     // converter tab
     addTraillingZeroes,
-    converterTabTitle,
-    converterTabToolTip,
-    converterTabGroupLTOP,
-    converterTabGroupZeiss,
-
-    // modules tab
-    modulesTabTitle,
-    modulesTabToolTip,
 
     // clear up group
     modulesTabGroupTitleClearUp,

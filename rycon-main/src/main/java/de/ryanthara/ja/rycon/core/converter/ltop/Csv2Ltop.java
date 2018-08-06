@@ -33,7 +33,7 @@ import java.util.List;
  */
 public class Csv2Ltop {
 
-    private List<String[]> readCSVLines = null;
+    private final List<String[]> readCSVLines;
 
     /**
      * Constructs a new instance of this class with a parameter for reader line based comma separated values (CSV) files.

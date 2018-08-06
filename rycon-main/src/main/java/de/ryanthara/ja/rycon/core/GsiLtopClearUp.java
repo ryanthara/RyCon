@@ -54,18 +54,18 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.WARNINGS;
  * @version 1
  * @since 12
  */
-public class GsiLtopClean {
+public class GsiLtopClearUp {
 
-    private final static Logger logger = Logger.getLogger(GsiLtopClean.class.getName());
+    private final static Logger logger = Logger.getLogger(GsiLtopClearUp.class.getName());
 
-    private ArrayList<String> readStringLines;
+    private final ArrayList<String> readStringLines;
 
     /**
      * Constructs a new instance of this class given a reader line based Leica GSI formatted file.
      *
      * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
      */
-    public GsiLtopClean(ArrayList<String> readStringLines) {
+    public GsiLtopClearUp(ArrayList<String> readStringLines) {
         this.readStringLines = readStringLines;
     }
 
@@ -110,7 +110,7 @@ public class GsiLtopClean {
             int size = BaseToolsGsi.getBlockSize(line);
 
             if (size == 24) {
-                line = line.substring(1, line.length());
+                line = line.substring(1);
             }
 
             int tokens = (line.length() + size - 1) / size;
@@ -163,4 +163,4 @@ public class GsiLtopClean {
         return result;
     }
 
-} // end of GsiLtopClean
+} // end of GsiLtopClearUp

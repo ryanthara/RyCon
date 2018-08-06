@@ -33,7 +33,7 @@ import java.util.List;
  */
 public class CsvBaselStadt2Ltop {
 
-    private List<String[]> readCSVLines = null;
+    private final List<String[]> readCSVLines;
 
     /**
      * Class constructor for reader line based CSV files from the geodata server Basel Stadt (Switzerland).

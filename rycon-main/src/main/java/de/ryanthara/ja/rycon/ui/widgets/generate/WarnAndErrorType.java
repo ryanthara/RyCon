@@ -35,7 +35,7 @@ public enum WarnAndErrorType {
     BIG_DATA(new BigDataCopyWarnAndErrorMessage()),
     PROJECT(new ProjectCopyWarnAndErrorMessages());
 
-    private CopyWarnAndErrorMessage errorMessage;
+    private final CopyWarnAndErrorMessage errorMessage;
 
     WarnAndErrorType(CopyWarnAndErrorMessage errorMessage) {
         this.errorMessage = errorMessage;

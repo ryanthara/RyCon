@@ -87,7 +87,7 @@ public class PathUtils {
      *
      * @return the name of the file without the path, or an empty string if none exists
      */
-    public static Path getName(Path filename) {
+    private static Path getName(Path filename) {
         if (filename == null) {
             return null;
         }

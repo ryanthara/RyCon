@@ -39,7 +39,7 @@ import java.util.ArrayList;
  */
 public class Zeiss2Excel {
 
-    private ArrayList<String> readStringLines;
+    private final ArrayList<String> readStringLines;
     private Workbook workbook = null;
 
     /**
@@ -77,7 +77,7 @@ public class Zeiss2Excel {
 //        DataFormat format = workbook.createDataFormat();
 
         short rowNumber = 0;
-        short cellNumber = 0;
+        short cellNumber;
         short countColumns = 0;
 
         // TODO implement comment row and multi line stored values

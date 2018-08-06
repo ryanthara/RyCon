@@ -48,7 +48,7 @@ public class BaselLandschaftTxtReader implements Reader {
     private final static Logger logger = Logger.getLogger(BaselLandschaftTxtReader.class.getName());
 
     private ArrayList<String> readStringFile;
-    private Shell innerShell;
+    private final Shell innerShell;
 
     /**
      * Constructs a new instance of this class given a reference to the inner shell of the calling object.

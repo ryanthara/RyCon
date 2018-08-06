@@ -33,7 +33,7 @@ public enum Sizes {
     RyCON_WIDGET_WIDTH(666),
     RyCON_WIDGET_HEIGHT(412);
 
-    private int value;
+    private final int value;
 
     /**
      * Constructs a new instance of {@code Sizes} according to the parameter.

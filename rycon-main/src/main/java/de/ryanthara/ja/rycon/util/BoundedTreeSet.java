@@ -72,7 +72,7 @@ public class BoundedTreeSet<E> extends TreeSet<E> {
         return maxSize;
     }
 
-    public void setMaxSize(int max) {
+    void setMaxSize(int max) {
         maxSize = max;
         adjust();
     }

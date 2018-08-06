@@ -31,7 +31,12 @@ import java.util.Objects;
 public class RyPoint {
 
     private double x, y, z;
-    private String number, easting, northing, height, printLine, instrumentOrReflectorHeight;
+    private final String number;
+    private String easting;
+    private String northing;
+    private String height;
+    private String printLine;
+    private String instrumentOrReflectorHeight;
 
     /**
      * Constructs a new instance of this class given a bunch of parameters.
@@ -167,7 +172,7 @@ public class RyPoint {
      *
      * @return the instrument or reflector height
      */
-    public String getInstrumentOrReflectorHeight() {
+    private String getInstrumentOrReflectorHeight() {
         return instrumentOrReflectorHeight;
     }
 
@@ -218,7 +223,7 @@ public class RyPoint {
      *
      * @return x coordinate
      */
-    public double getX() {
+    private double getX() {
         return x;
     }
 
@@ -227,7 +232,7 @@ public class RyPoint {
      *
      * @return y coordinate
      */
-    public double getY() {
+    private double getY() {
         return y;
     }
 
@@ -236,7 +241,7 @@ public class RyPoint {
      *
      * @return z coordinate
      */
-    public double getZ() {
+    private double getZ() {
         return z;
     }
 

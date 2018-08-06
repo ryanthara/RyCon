@@ -34,7 +34,7 @@ import java.util.ArrayList;
  */
 public class TxtBaselLandschaft2K {
 
-    private ArrayList<String> readStringLines;
+    private final ArrayList<String> readStringLines;
 
     /**
      * Constructs a new instance of this class with a parameter for reader line based text files from the

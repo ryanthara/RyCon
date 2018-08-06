@@ -53,7 +53,7 @@ public class BottomButtonBar extends Composite {
      */
     public static final boolean NO_OK_AND_EXIT_BUTTON = false;
     private final Object callingObject;
-    private boolean okAndExitButton;
+    private final boolean okAndExitButton;
 
     /**
      * Constructs a new instance of this class given a calling object, a parent composite and a style.

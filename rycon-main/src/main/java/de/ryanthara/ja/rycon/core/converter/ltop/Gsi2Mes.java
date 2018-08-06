@@ -35,7 +35,7 @@ import java.util.ArrayList;
  */
 public class Gsi2Mes {
 
-    private BaseToolsGsi baseToolsGsi;
+    private final BaseToolsGsi baseToolsGsi;
 
     /**
      * Class constructor for reader line based text files.
@@ -111,17 +111,11 @@ public class Gsi2Mes {
 
                     if (horizontalAngleGroup.size() != 0 && verticalAngleGroup.size() != 0 && slopeDistanceGroup.size() != 0) {
                         // writer the ArrayLists
-                        for (String elevationLine : horizontalAngleGroup) {
-                            result.add(elevationLine);
-                        }
+                        result.addAll(horizontalAngleGroup);
 
-                        for (String gridBearingLine : verticalAngleGroup) {
-                            result.add(gridBearingLine);
-                        }
+                        result.addAll(verticalAngleGroup);
 
-                        for (String slopeDistanceLine : slopeDistanceGroup) {
-                            result.add(slopeDistanceLine);
-                        }
+                        result.addAll(slopeDistanceGroup);
 
                         // empty the ArrayLists
                         horizontalAngleGroup = new ArrayList<>();
@@ -210,17 +204,11 @@ public class Gsi2Mes {
             }
         }
         // writer the ArrayLists for the last station
-        for (String elevationLine : horizontalAngleGroup) {
-            result.add(elevationLine);
-        }
+        result.addAll(horizontalAngleGroup);
 
-        for (String gridBearingLine : verticalAngleGroup) {
-            result.add(gridBearingLine);
-        }
+        result.addAll(verticalAngleGroup);
 
-        for (String slopeDistanceLine : slopeDistanceGroup) {
-            result.add(slopeDistanceLine);
-        }
+        result.addAll(slopeDistanceGroup);
 
         return result;
     }

@@ -31,7 +31,7 @@ import java.util.ArrayList;
  */
 public class TxtBaselLandschaft2Gsi {
 
-    private ArrayList<String> readStringLines;
+    private final ArrayList<String> readStringLines;
 
     /**
      * Constructs a new instance of this class given an {@code ArrayList<String} that contains the reader coordinate file

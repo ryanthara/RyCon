@@ -41,7 +41,7 @@ public enum FileNameExtension {
     XLS(".XLS"),
     XLSX(".XLSX");
 
-    private String extension;
+    private final String extension;
 
     FileNameExtension(String extension) {
         this.extension = extension;

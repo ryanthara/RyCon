@@ -28,7 +28,7 @@ import java.util.ArrayList;
  */
 public class Gsi2Zeiss {
 
-    private BaseToolsGsi baseToolsGsi;
+    private final BaseToolsGsi baseToolsGsi;
 
     /**
      * Constructs a new instance of this class given an {@code ArrayList<String>} with

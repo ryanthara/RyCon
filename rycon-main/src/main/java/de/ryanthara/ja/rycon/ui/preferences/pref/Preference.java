@@ -40,7 +40,7 @@ import de.ryanthara.ja.rycon.ui.preferences.validator.Validator;
  */
 public abstract class Preference<T> {
 
-    private String label;
+    private final String label;
     private PreferencesDialog dialog;
     private T defaultValue = null;
 
@@ -60,7 +60,7 @@ public abstract class Preference<T> {
      *
      * @param label text string of the preference
      */
-    public Preference(String label) {
+    protected Preference(String label) {
         this.label = label;
 
         if (label == null) {
@@ -73,7 +73,7 @@ public abstract class Preference<T> {
      *
      * @return default value
      */
-    public T getDefault() {
+    T getDefault() {
         return defaultValue;
     }
 

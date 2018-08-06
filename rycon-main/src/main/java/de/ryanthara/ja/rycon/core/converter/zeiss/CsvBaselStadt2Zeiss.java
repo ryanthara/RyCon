@@ -26,7 +26,7 @@ import java.util.List;
  */
 public class CsvBaselStadt2Zeiss {
 
-    private List<String[]> readCSVLines = null;
+    private final List<String[]> readCSVLines;
 
     /**
      * Constructs a new instance of this class given an {@link ArrayList} of strings with the reader line based CSV file

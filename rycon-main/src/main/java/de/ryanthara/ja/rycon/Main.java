@@ -98,7 +98,7 @@ public abstract class Main {
     /**
      * Construct a new {@code Main} object with all it's functionality.
      */
-    public Main() {
+    protected Main() {
     }
 
     /**

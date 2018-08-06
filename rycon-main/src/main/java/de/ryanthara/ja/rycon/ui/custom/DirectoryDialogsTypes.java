@@ -62,8 +62,8 @@ public enum DirectoryDialogsTypes {
             ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.dirProjectTemplateMessage),
             ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.dirProjectTemplateText));
 
-    private String message;
-    private String text;
+    private final String message;
+    private final String text;
 
     DirectoryDialogsTypes(String message, String text) {
         this.message = message;

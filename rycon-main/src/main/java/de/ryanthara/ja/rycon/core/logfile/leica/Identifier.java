@@ -47,7 +47,7 @@ public enum Identifier {
     STORE_TO_JOB("Store To Job"),
     APPLICATION_START("Start\t");
 
-    private String identifier;
+    private final String identifier;
 
     Identifier(String identifier) {
         this.identifier = identifier;

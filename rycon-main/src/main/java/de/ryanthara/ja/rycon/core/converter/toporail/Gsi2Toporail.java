@@ -38,7 +38,7 @@ public class Gsi2Toporail {
 
     private static final String variant = "B";
 
-    private BaseToolsGsi baseToolsGsi;
+    private final BaseToolsGsi baseToolsGsi;
 
     /**
      * Class constructor for reader line based GSI files.

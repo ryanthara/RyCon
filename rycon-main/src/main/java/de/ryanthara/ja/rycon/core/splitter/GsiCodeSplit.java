@@ -38,8 +38,8 @@ public class GsiCodeSplit {
 
     private final static Logger logger = Logger.getLogger(GsiCodeSplit.class.getName());
 
-    private ArrayList<String> readStringLines;
-    private TreeSet<Integer> foundCodes;
+    private final ArrayList<String> readStringLines;
+    private final TreeSet<Integer> foundCodes;
 
     /**
      * Constructs a new instance of this class given a read line based text file in Leica GSI format.

@@ -31,7 +31,7 @@ import java.util.StringTokenizer;
  */
 public class Nigra2Gsi {
 
-    private ArrayList<String> readStringLines;
+    private final ArrayList<String> readStringLines;
 
     /**
      * Constructs a new instance of this class with a parameter for the read {@code ArrayList<String>} from Nigra or NigraWin.

@@ -30,7 +30,7 @@ import java.util.ArrayList;
  */
 public class Cadwork2Gsi {
 
-    private ArrayList<String> readStringLines;
+    private final ArrayList<String> readStringLines;
 
     /**
      * Constructs a new instance of this class with a parameter for the  {@code ArrayList<String>} with the reader line based
@@ -58,9 +58,7 @@ public class Cadwork2Gsi {
         ArrayList<ArrayList<GsiBlock>> blocksInLines = new ArrayList<>();
 
         // remove not needed headlines
-        for (int i = 0; i < 3; i++) {
-            readStringLines.remove(0);
-        }
+        readStringLines.subList(0, 3).clear();
 
         int lineCounter = 1;
 

@@ -34,7 +34,7 @@ import java.util.ArrayList;
  */
 public class Cadwork2Odf {
 
-    private ArrayList<String> readStringLines;
+    private final ArrayList<String> readStringLines;
     private SpreadsheetDocument spreadsheetDocument;
 
     /**
@@ -73,9 +73,7 @@ public class Cadwork2Odf {
             Cell cell;
 
             // remove not needed headlines
-            for (int i = 0; i < 3; i++) {
-                readStringLines.remove(0);
-            }
+            readStringLines.subList(0, 3).clear();
 
             if (writeCommentRow) {
                 lineSplit = readStringLines.get(0).trim().split("\\s+", -1);

@@ -43,7 +43,7 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LABELS;
 public final class Version {
 
     private static final int buildYear = 2018;
-    private static final int buildMonth = 01;
+    private static final int buildMonth = 1;
     private static final int buildDay = 15;
     private static final short buildNumber = 27;
     private static final short majorRelease = 2;
@@ -77,7 +77,7 @@ public final class Version {
         LocalDate date = LocalDate.of(buildYear, buildMonth, buildDay);
         DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL).withLocale(Locale.getDefault());
 
-        return "Build #" + buildNumber + ResourceBundleUtils.getLangString(LABELS, Labels.buildString) + date.format(formatter);
+        return "Build #" + buildNumber + ResourceBundleUtils.getLangString(LABELS, Labels.buildString) + " " + date.format(formatter);
     }
 
     /**

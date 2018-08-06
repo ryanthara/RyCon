@@ -31,7 +31,7 @@ import java.util.ArrayList;
  */
 public class Cadwork2Ltop {
 
-    private ArrayList<String> readStringLines;
+    private final ArrayList<String> readStringLines;
 
     /**
      * Class constructor for reader line based text files from Cadwork CAD program in node.dat file format.
@@ -59,9 +59,7 @@ public class Cadwork2Ltop {
         String resultLine;
 
         // remove not needed headlines
-        for (int i = 0; i < 3; i++) {
-            readStringLines.remove(0);
-        }
+        readStringLines.subList(0, 3).clear();
 
         BaseToolsLtop.writeCommendLine(result, BaseToolsLtop.cartesianCoordsIdentifier);
 

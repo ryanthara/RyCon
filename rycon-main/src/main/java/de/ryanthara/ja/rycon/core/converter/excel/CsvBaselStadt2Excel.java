@@ -34,7 +34,7 @@ import java.util.List;
  */
 public class CsvBaselStadt2Excel {
 
-    private List<String[]> readCSVLines;
+    private final List<String[]> readCSVLines;
     private Workbook workbook = null;
 
     /**

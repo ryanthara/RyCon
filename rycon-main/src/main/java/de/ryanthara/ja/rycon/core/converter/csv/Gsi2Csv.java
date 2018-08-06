@@ -38,7 +38,7 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.WORDINDICES;
  */
 public class Gsi2Csv {
 
-    private BaseToolsGsi baseToolsGsi;
+    private final BaseToolsGsi baseToolsGsi;
 
     /**
      * Class constructor for reader line based text files in Leica GSI format (GSI8 or GSI16).

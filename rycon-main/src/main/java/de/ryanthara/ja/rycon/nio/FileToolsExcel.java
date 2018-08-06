@@ -30,7 +30,7 @@ import java.nio.file.Path;
  * @version 2
  * @since 9
  */
-public class FileToolsExcel {
+class FileToolsExcel {
 
     private final Workbook workbook;
 

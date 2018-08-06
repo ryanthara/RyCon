@@ -33,8 +33,8 @@ import java.util.List;
  */
 public class CsvBaselStadt2Txt {
 
-    private boolean writeZeroHeights;
-    private List<String[]> readCSVLines = null;
+    private final boolean writeZeroHeights;
+    private final List<String[]> readCSVLines;
 
     /**
      * Class constructor for reader line based CSV files from the geodata server Basel Stadt (Switzerland).

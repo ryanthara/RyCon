@@ -36,7 +36,7 @@ import java.util.ArrayList;
  */
 public class Gsi2Ltop {
 
-    private BaseToolsGsi baseToolsGsi;
+    private final BaseToolsGsi baseToolsGsi;
 
     /**
      * Class constructor for reader line based text files.

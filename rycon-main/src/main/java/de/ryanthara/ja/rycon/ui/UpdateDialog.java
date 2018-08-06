@@ -81,7 +81,7 @@ public class UpdateDialog extends Dialog {
     private static final int MAX_WIDTH = 640;
     private static final int MAX_HEIGHT = 480;
     private int returnCode = Integer.MIN_VALUE;
-    private Image image;
+    private final Image image;
     private Shell shell;
     private String message;
     private String whatsNewInfo;
@@ -181,11 +181,11 @@ public class UpdateDialog extends Dialog {
 
     private int convertHorizontalDLUsToPixels(int dlus) {
         GC gc = new GC(shell);
-        float charWidth = gc.getFontMetrics().getAverageCharWidth();
-        float width = charWidth * dlus + HORIZONTAL_DIALOG_UNIT_PER_CHAR / 2;
+        int charWidth = gc.getFontMetrics().getAverageCharWidth();
+        int width = charWidth * dlus + HORIZONTAL_DIALOG_UNIT_PER_CHAR / 2;
         gc.dispose();
 
-        return (int) (width / HORIZONTAL_DIALOG_UNIT_PER_CHAR);
+        return width / HORIZONTAL_DIALOG_UNIT_PER_CHAR;
     }
 
     private void createBrowser() {

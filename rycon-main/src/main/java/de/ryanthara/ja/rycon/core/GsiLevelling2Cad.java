@@ -35,7 +35,7 @@ import java.util.List;
  */
 public class GsiLevelling2Cad {
 
-    private ArrayList<String> readStringLines;
+    private final ArrayList<String> readStringLines;
 
     /**
      * Constructs a new instance of this class given a reader line based text file in the Leica GSI format.

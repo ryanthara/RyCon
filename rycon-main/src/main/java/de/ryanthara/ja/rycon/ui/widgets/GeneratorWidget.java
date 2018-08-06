@@ -543,7 +543,7 @@ public final class GeneratorWidget extends AbstractWidget {
 
                         if (PathCheck.fileExists(entry) && fileName.contains("nn_Aufwandschätzung_")) {
                             String oldName = path.toString();
-                            String newName = number + oldName.substring(oldName.indexOf("nn_") + 2, oldName.length());
+                            String newName = number + oldName.substring(oldName.indexOf("nn_") + 2);
                             newName = newName.replaceAll("_0n", "_01");
 
                             Path renamed = Paths.get(entry.getParent() + delimiter + newName);
@@ -641,7 +641,7 @@ public final class GeneratorWidget extends AbstractWidget {
 
                         if (PathCheck.fileExists(entry) && fileName.contains("nn_Arbeitsblatt.docx")) {
                             String oldName = path.toString();
-                            String newName = number + oldName.substring(oldName.indexOf("nn_") + 2, oldName.length());
+                            String newName = number + oldName.substring(oldName.indexOf("nn_") + 2);
 
                             Path renamed = Paths.get(entry.getParent() + delimiter + newName);
 
@@ -760,7 +760,7 @@ public final class GeneratorWidget extends AbstractWidget {
         renameContractFiles(number, delimiter, dir);
     }
 
-    private long replaceInParagraphs(Map<String, String> replacements, List<XWPFParagraph> xwpfParagraphs) {
+    private void replaceInParagraphs(Map<String, String> replacements, List<XWPFParagraph> xwpfParagraphs) {
         long count = 0;
         for (XWPFParagraph paragraph : xwpfParagraphs) {
             List<XWPFRun> runs = paragraph.getRuns();
@@ -799,7 +799,6 @@ public final class GeneratorWidget extends AbstractWidget {
                 }
             }
         }
-        return count;
     }
 
     private void updateRecentFoldersTextFields() {

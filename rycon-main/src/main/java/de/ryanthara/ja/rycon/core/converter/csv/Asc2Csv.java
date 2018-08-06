@@ -37,8 +37,8 @@ import java.util.ArrayList;
  */
 public class Asc2Csv extends Converter {
 
-    private boolean useSemicolonSeparator;
-    private ArrayList<String> lines;
+    private final boolean useSemicolonSeparator;
+    private final ArrayList<String> lines;
 
     /**
      * Constructs a new instance of this class with a parameter for the read {@code ArrayList<String>}

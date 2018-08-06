@@ -32,7 +32,7 @@ import java.util.List;
  */
 public class CsvBaselStadt2K {
 
-    private List<String[]> readCSVLines = null;
+    private final List<String[]> readCSVLines;
 
     /**
      * Constructs a new instance of this class with a parameter for reader line based comma separated values (CSV) files

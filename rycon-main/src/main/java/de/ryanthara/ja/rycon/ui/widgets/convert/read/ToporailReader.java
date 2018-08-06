@@ -52,8 +52,8 @@ public class ToporailReader implements Reader {
     private final static Logger logger = Logger.getLogger(ToporailReader.class.getName());
 
     private ArrayList<String> readStringFile;
-    private Shell innerShell;
-    private FileType fileType;
+    private final Shell innerShell;
+    private final FileType fileType;
 
     /**
      * Constructs a new instance of this class given a reference to the inner shell

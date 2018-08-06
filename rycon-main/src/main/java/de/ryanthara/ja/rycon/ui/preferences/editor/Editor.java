@@ -55,10 +55,10 @@ public abstract class Editor<T> {
     private Button buttonDefault = null;
     private Button buttonUndo = null;
 
-    private T defaultValue = null;
+    private final T defaultValue;
     private T initialValue = null;
-    private Validator<T> validator = null;
-    private PreferencesDialog dialog = null;
+    private final Validator<T> validator;
+    private final PreferencesDialog dialog;
 
     /**
      * Constructs a new instance of {@code Editor} according to the parameters.
@@ -67,7 +67,7 @@ public abstract class Editor<T> {
      * @param validator    validator for generic data typ T
      * @param defaultValue default value for generic data type T
      */
-    public Editor(PreferencesDialog dialog, Validator<T> validator, T defaultValue) {
+    Editor(PreferencesDialog dialog, Validator<T> validator, T defaultValue) {
         this.dialog = dialog;
         this.validator = validator;
         this.defaultValue = defaultValue;
@@ -119,6 +119,7 @@ public abstract class Editor<T> {
      *
      * @return true if is valid
      */
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean isValid() {
         return this.valid;
     }
@@ -279,7 +280,7 @@ public abstract class Editor<T> {
          *
          * @return size value
          */
-        public int getSize() {
+        int getSize() {
             return size;
         }
     } // end of Size

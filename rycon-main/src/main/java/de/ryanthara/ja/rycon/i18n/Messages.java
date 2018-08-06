@@ -52,8 +52,6 @@ public enum Messages implements ResourceKeys {
     ryCONUpdate,
     splitFilesMessage,
     splitFilesStatus,
-    settingsDefaultGenerated,
-    settingsGenerated,
     transferCopyMessage,
     transferMoveMessage,
     transferText,

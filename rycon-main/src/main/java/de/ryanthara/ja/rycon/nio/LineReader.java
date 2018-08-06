@@ -43,7 +43,7 @@ public final class LineReader {
     /**
      * Identifier for indicating that the file to read doesn't has comment lines inside.
      */
-    public final static String NO_COMMENT_LINE = "nCIgö5BQ";
+    private final static String NO_COMMENT_LINE = "nCIgö5BQ";
 
     private final static Logger logger = Logger.getLogger(LineReader.class.getName());
     private final Path path;

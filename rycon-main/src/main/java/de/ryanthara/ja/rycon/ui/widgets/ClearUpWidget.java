@@ -20,8 +20,8 @@ package de.ryanthara.ja.rycon.ui.widgets;
 
 import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.core.GsiClearUp;
-import de.ryanthara.ja.rycon.core.GsiLtopClean;
-import de.ryanthara.ja.rycon.core.LogfileClean;
+import de.ryanthara.ja.rycon.core.GsiLtopClearUp;
+import de.ryanthara.ja.rycon.core.LogfileClearUp;
 import de.ryanthara.ja.rycon.data.PreferenceKeys;
 import de.ryanthara.ja.rycon.i18n.*;
 import de.ryanthara.ja.rycon.nio.FileNameExtension;
@@ -333,18 +333,18 @@ public class ClearUpWidget extends AbstractWidget {
                             counter = counter + 1;
                         }
                     } else if (fileName.toUpperCase().endsWith(".GSL")) {
-                        GsiLtopClean gsiLtopClean = new GsiLtopClean(readFile);
-                        writeFile = gsiLtopClean.processLTOPClean();
+                        GsiLtopClearUp gsiLtopClearUp = new GsiLtopClearUp(readFile);
+                        writeFile = gsiLtopClearUp.processLTOPClean();
 
                         if (WriteFile2Disk.writeFile2Disk(file2read, writeFile, ltopString, FileNameExtension.LEICA_GSI.getExtension())) {
                             counter = counter + 1;
                         }
                     } else if (fileName.toUpperCase().endsWith("LOGFILE.TXT")) {
-                        LogfileClean logfileClean = new LogfileClean(readFile);
+                        LogfileClearUp logfileClearUp = new LogfileClearUp(readFile);
                         if (chkBoxCleanBlocksByContent != null) {
-                            writeFile = logfileClean.processClean(chkBoxCleanBlocksByContent.getSelection());
+                            writeFile = logfileClearUp.processClean(chkBoxCleanBlocksByContent.getSelection());
                         } else {
-                            writeFile = logfileClean.processClean(true);
+                            writeFile = logfileClearUp.processClean(true);
                         }
 
                         if (WriteFile2Disk.writeFile2Disk(file2read, writeFile, editString, FileNameExtension.TXT.getExtension())) {

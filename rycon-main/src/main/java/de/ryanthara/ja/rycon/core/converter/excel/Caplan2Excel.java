@@ -39,7 +39,7 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.COLUMNS;
  */
 public class Caplan2Excel {
 
-    private ArrayList<String> readStringLines;
+    private final ArrayList<String> readStringLines;
     private Workbook workbook;
 
     /**

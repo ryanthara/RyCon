@@ -27,7 +27,7 @@ import java.util.ArrayList;
  */
 public class Txt2Ltop {
 
-    private ArrayList<String> readStringLines;
+    private final ArrayList<String> readStringLines;
 
     /**
      * Class constructor for reader line based coordinate files in text format.

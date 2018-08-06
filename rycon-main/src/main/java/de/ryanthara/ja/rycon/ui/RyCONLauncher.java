@@ -35,7 +35,7 @@ public class RyCONLauncher {
     /**
      * Constructor which creates a display to show the splash screen.
      */
-    public RyCONLauncher() {
+    private RyCONLauncher() {
 
         Display display = new Display();
 

@@ -87,7 +87,7 @@ public enum DefaultKeys {
     JAVA_WEBSITE("https://java.com/");
 
     private final static Logger logger = Logger.getLogger(DefaultKeys.class.getName());
-    private String value;
+    private final String value;
 
     DefaultKeys(String value) {
         this.value = value;

@@ -34,7 +34,7 @@ import de.ryanthara.ja.rycon.ui.preferences.validator.Validator;
  */
 public abstract class PreferenceSelection extends Preference<String> {
 
-    private String[] elements;
+    private final String[] elements;
 
     /**
      * Constructs a new instance of {@code PreferenceSelection} according to the parameters.

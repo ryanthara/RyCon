@@ -1,6 +1,6 @@
 package de.ryanthara.ja.rycon.core.logfile.leica;
 
-import de.ryanthara.ja.rycon.core.LogfileClean;
+import de.ryanthara.ja.rycon.core.LogfileClearUp;
 import de.ryanthara.ja.rycon.core.elements.RyPoint;
 import de.ryanthara.ja.rycon.nio.LineReader;
 import org.junit.jupiter.api.BeforeEach;
@@ -177,8 +177,8 @@ class ReferenceLineStructureTest {
         ArrayList<String> lines = lineReader.getLines();
 
         // clean up logfile.txt
-        LogfileClean logfileClean = new LogfileClean(lines);
-        ArrayList<String> cleanLogfile = logfileClean.processClean(true);
+        LogfileClearUp logfileClearUp = new LogfileClearUp(lines);
+        ArrayList<String> cleanLogfile = logfileClearUp.processClean(true);
 
         // initialize SetupStructure
         ReferenceLineStructure referenceLineStructure = new ReferenceLineStructure(cleanLogfile);

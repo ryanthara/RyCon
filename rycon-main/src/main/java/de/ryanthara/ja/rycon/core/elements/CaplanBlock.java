@@ -45,8 +45,8 @@ import java.util.ArrayList;
 public class CaplanBlock {
 
     private final String line;
-    private ArrayList<String> attributes;
-    private boolean isConverted;
+    private final ArrayList<String> attributes;
+    private final boolean isConverted;
     private int valency = -1;
     private String number, easting, northing, height, code;
 
@@ -192,7 +192,7 @@ public class CaplanBlock {
 
                 // code and attributes, column 62...
                 if (line.length() >= 62) {
-                    String[] lineSplit = line.substring(61, line.length()).trim().split("\\|+");
+                    String[] lineSplit = line.substring(61).trim().split("\\|+");
 
                     // code is the same as object type, column 62...
                     code = lineSplit[0].trim();

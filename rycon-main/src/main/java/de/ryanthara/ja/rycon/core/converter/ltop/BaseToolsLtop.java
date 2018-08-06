@@ -89,21 +89,18 @@ class BaseToolsLtop {
         final double minDistance = d;
 
         // sort the tree set of RyPoints
-        TreeSet<RyPoint> set = new TreeSet<>(new Comparator<RyPoint>() {
-            @Override
-            //public int compare(ArrayList<RyPoint> p1, ArrayList<RyPoint> p2) {
-            public int compare(RyPoint pt1, RyPoint pt2) {
-                /*
-                Compare at the three distances x, y and z before calculating the slope distance because of reducing
-                calculation time and therefore increase the speed.
+        //public int compare(ArrayList<RyPoint> p1, ArrayList<RyPoint> p2) {
+        TreeSet<RyPoint> set = new TreeSet<>((pt1, pt2) -> {
+            /*
+            Compare at the three distances x, y and z before calculating the slope distance because of reducing
+            calculation time and therefore increase the speed.
 
-                Points are equal if they are in a slope distance of 'maxDistance' and have the same number!
-                 */
-                if ((pt1.getSlopeDistance(pt2) < minDistance) && (pt1.getNumber().equalsIgnoreCase(pt2.getNumber()))) {
-                    return 0;
-                } else {
-                    return 1;
-                }
+            Points are equal if they are in a slope distance of 'maxDistance' and have the same number!
+             */
+            if ((pt1.getSlopeDistance(pt2) < minDistance) && (pt1.getNumber().equalsIgnoreCase(pt2.getNumber()))) {
+                return 0;
+            } else {
+                return 1;
             }
         });
 
@@ -203,12 +200,7 @@ class BaseToolsLtop {
      * @return sorted ArrayList<String>
      */
     static ArrayList<String> sortResult(ArrayList<String> arrayList) {
-        Collections.sort(arrayList, new Comparator<String>() {
-            @Override
-            public int compare(String s1, String s2) {
-                return s1.compareToIgnoreCase(s2);
-            }
-        });
+        arrayList.sort((s1, s2) -> s1.compareToIgnoreCase(s2));
 
         return arrayList;
     }

@@ -26,11 +26,19 @@ import de.ryanthara.ja.rycon.core.converter.zeiss.ZeissDialect;
  */
 public class WriteParameter {
 
-    private boolean isGSI16, cadworkUseZeroHeights, kFormatUseSimpleFormat, ltopEliminateDuplicatePoints,
-            ltopSortOutputFileByNumber, sourceContainsCode, writeCodeColumn, writeCommentLine, writeZeroHeights;
-    private int sourceNumber;
-    private String separatorCSV, separatorTXT;
-    private ZeissDialect dialect;
+    private final boolean isGSI16;
+    private final boolean cadworkUseZeroHeights;
+    private final boolean kFormatUseSimpleFormat;
+    private final boolean ltopEliminateDuplicatePoints;
+    private final boolean ltopSortOutputFileByNumber;
+    private final boolean sourceContainsCode;
+    private final boolean writeCodeColumn;
+    private final boolean writeCommentLine;
+    private final boolean writeZeroHeights;
+    private final int sourceNumber;
+    private final String separatorCSV;
+    private final String separatorTXT;
+    private final ZeissDialect dialect;
 
     /**
      * Constructs a new instance of this class with a couple of parameters.

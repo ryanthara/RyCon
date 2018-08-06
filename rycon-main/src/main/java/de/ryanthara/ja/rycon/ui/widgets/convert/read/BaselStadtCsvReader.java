@@ -51,7 +51,7 @@ public class BaselStadtCsvReader implements Reader {
     private final static Logger logger = Logger.getLogger(BaselStadtCsvReader.class.getName());
 
     private List<String[]> readCSVFile;
-    private Shell innerShell;
+    private final Shell innerShell;
 
     /**
      * Constructs a new instance of this class given a reference to the inner shell of the calling object.

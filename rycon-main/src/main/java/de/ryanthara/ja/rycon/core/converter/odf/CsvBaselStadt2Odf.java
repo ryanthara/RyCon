@@ -35,7 +35,7 @@ import java.util.List;
  */
 public class CsvBaselStadt2Odf {
 
-    private List<String[]> readCSVLines;
+    private final List<String[]> readCSVLines;
     private SpreadsheetDocument spreadsheetDocument;
 
     /**

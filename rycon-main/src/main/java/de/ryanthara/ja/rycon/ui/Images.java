@@ -51,12 +51,9 @@ public enum Images {
     trayIcon64("/de/ryanthara/ja/rycon/ui/RyCON_TrayIcon64x64.png"),
 
     btnEditorDefault("/de/ryanthara/ja/rycon/ui/icons/default.png"),
-    btnEditorUndo("/de/ryanthara/ja/rycon/ui/icons/undo.png"),
+    btnEditorUndo("/de/ryanthara/ja/rycon/ui/icons/undo.png");
 
-    btnPreferencesDefault("/de/ryanthara/ja/rycon/ui/icons/default.png"),
-    btnPreferencesUndo("/de/ryanthara/ja/rycon/ui/icons/undo.png");
-
-    private String path;
+    private final String path;
 
     Images(String path) {
         this.path = path;

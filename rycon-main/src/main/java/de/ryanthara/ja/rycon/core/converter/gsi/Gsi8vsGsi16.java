@@ -28,7 +28,7 @@ import java.util.ArrayList;
  */
 public class Gsi8vsGsi16 {
 
-    private ArrayList<String> readStringLines;
+    private final ArrayList<String> readStringLines;
 
     /**
      * Constructs a new instance of this class with a parameter for the reader line based GSI formatted files.

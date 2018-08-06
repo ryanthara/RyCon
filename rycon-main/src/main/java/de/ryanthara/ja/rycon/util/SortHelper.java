@@ -21,7 +21,7 @@ import de.ryanthara.ja.rycon.core.elements.GsiBlock;
 import de.ryanthara.ja.rycon.core.elements.RyBlock;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * This class provides static functions to sort different {@link java.util.ArrayList} for RyCON's widgets.
@@ -40,15 +40,7 @@ public class SortHelper {
      * @param ryBlocks {@code ArrayList<RyBlock>} to be sorted by integer value
      */
     public static void sortByCode(ArrayList<RyBlock> ryBlocks) {
-        Collections.sort(ryBlocks, (o1, o2) -> {
-            if (o1.getNumber() > o2.getNumber()) {
-                return 1;
-            } else if (o1.getNumber() == o2.getNumber()) {
-                return 0;
-            } else {
-                return -1;
-            }
-        });
+        ryBlocks.sort(Comparator.comparingInt(RyBlock::getNumber));
     }
 
     /**
@@ -59,9 +51,11 @@ public class SortHelper {
      * @param gsiBlocks {@code ArrayList<GsiBlock>} to be sorted by word index (WI)
      */
     public static void sortByWordIndex(ArrayList<GsiBlock> gsiBlocks) {
-        Collections.sort(gsiBlocks, (o1, o2) -> {
+        gsiBlocks.sort((o1, o2) -> {
             if (o1.getWordIndex() > o2.getWordIndex()) {
                 return 1;
+            } else if (o1.equals(o2)) {
+                return 0;
             } else {
                 return -1;
             }

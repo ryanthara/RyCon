@@ -36,7 +36,7 @@ import java.util.ArrayList;
  */
 public class Zeiss2Odf {
 
-    private ArrayList<String> readStringLines;
+    private final ArrayList<String> readStringLines;
     private SpreadsheetDocument spreadsheetDocument;
 
     /**

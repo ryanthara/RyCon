@@ -87,7 +87,7 @@ public class ConverterWidget extends AbstractWidget {
     private Group groupTarget;
     private InputFieldsComposite inputFieldsComposite;
     private Shell innerShell;
-    private Shell parent;
+    private final Shell parent;
 
     /**
      * Constructs the {@link ConverterWidget} without any parameters.

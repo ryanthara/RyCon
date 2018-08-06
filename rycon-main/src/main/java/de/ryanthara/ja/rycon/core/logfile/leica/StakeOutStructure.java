@@ -36,7 +36,7 @@ import java.util.Arrays;
 public class StakeOutStructure extends LeicaLogfileBaseStructure {
 
     private final ArrayList<String> lines;
-    private ArrayList<RyStakedPoint> stakedPoints;
+    private final ArrayList<RyStakedPoint> stakedPoints;
     // Results
     private String pointId;
     private RyPoint tpsStation;

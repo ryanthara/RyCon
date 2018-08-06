@@ -40,7 +40,7 @@ import java.util.ArrayList;
 public class LeicaProtocol2Asc extends Converter {
 
     private final boolean ignoreChangePoints;
-    private ArrayList<String> readStringLines;
+    private final ArrayList<String> readStringLines;
 
     /**
      * Constructs a new instance of this class with a parameter for the read {@code ArrayList<String>}
