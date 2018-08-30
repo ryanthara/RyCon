@@ -47,6 +47,8 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
@@ -57,8 +59,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.TreeSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.*;
 import static de.ryanthara.ja.rycon.ui.custom.Status.OK;
@@ -67,12 +67,12 @@ import static de.ryanthara.ja.rycon.ui.custom.Status.OK;
  * A widget which is used to transfer measurement data from a card reader
  * to the file system.
  * <p>
- * The {@code TransferWidget} is a complete widget of RyCON which is used
+ * The {@code TransferWidget} is a complete widget of <tt>RyCON</tt> which is used
  * to transfer (copy or move) different files from a card reader or a mounted
  * card reader folder to the file system with a given project structure.
  * <p>
  * This first basic implementation uses the folder structure based on the
- * Leica Geosystems presetting. In a future version of RyCON this will be
+ * Leica Geosystems presetting. In a future version of <tt>RyCON</tt> this will be
  * changed to a more flexible solution with different card structures.
  * <p>
  * The user can choose jobs, export files and different content from the
@@ -85,7 +85,7 @@ import static de.ryanthara.ja.rycon.ui.custom.Status.OK;
  */
 public class TransferWidget extends AbstractWidget {
 
-    private final static Logger logger = Logger.getLogger(TransferWidget.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(TransferWidget.class.getName());
     private final Shell parent;
     private ArrayList<Path> allJobsFiles;
     private Button chkBoxCleanLogfile;
@@ -112,6 +112,7 @@ public class TransferWidget extends AbstractWidget {
      */
     public TransferWidget(final Shell parent) {
         this.parent = parent;
+
 
         initUI();
     }
@@ -219,7 +220,7 @@ public class TransferWidget extends AbstractWidget {
         createGroupChooseData(width);
         createGroupChooseTarget();
         createGroupOptions(width);
-        createGroupDescription(width);
+        createGroupAdvice(width);
 
         new BottomButtonBar(this, innerShell, BottomButtonBar.OK_AND_EXIT_BUTTON);
 
@@ -283,10 +284,9 @@ public class TransferWidget extends AbstractWidget {
     /**
      * Checks whether the card reader path exists and if a card is inserted.
      * <p>
-     * In this version of RyCON the card check is done against a Leica based card structure.
+     * In this version of <tt>RyCON</tt> the card check is done against a Leica based card structure.
      *
      * @param cardReaderPathString path of the card reader
-     *
      * @return true if card reader path exists and given structure is present
      */
     private boolean checkForAvailableLeicaCardStructure(String cardReaderPathString) {
@@ -371,13 +371,12 @@ public class TransferWidget extends AbstractWidget {
                 Path targetFileName = target.getFileName();
 
                 if ((sourceFileName != null) && (targetFileName != null)) {
-                    logger.log(Level.SEVERE, "error while copying " + sourceFileName.toString() +
-                            " to " + targetFileName.toString(), e);
+                    logger.error("Can not copy from '{}' to '{}'", sourceFileName.toString(), targetFileName.toString(), e.getCause());
                 } else {
-                    logger.log(Level.SEVERE, "Source or target path is null.");
+                    logger.error("Copy error caused by null reference in source or target file name.", e.getCause());
                 }
             } else {
-                logger.log(Level.SEVERE, "error while copying files, null reference in source or target");
+                logger.error("Copy error caused by null reference in source or target path.", e.getCause());
             }
         }
 
@@ -819,9 +818,9 @@ public class TransferWidget extends AbstractWidget {
         group.setTabList(tabulatorKeyOrder);
     }
 
-    private void createGroupDescription(int width) {
+    private void createGroupAdvice(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangString(LABELS, Labels.adviceText));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.text));
 
         GridLayout gridLayout = new GridLayout(1, true);
 
@@ -832,13 +831,20 @@ public class TransferWidget extends AbstractWidget {
         group.setLayoutData(gridData);
 
         Label tip = new Label(group, SWT.WRAP | SWT.BORDER | SWT.LEFT);
-        tip.setText(ResourceBundleUtils.getLangString(LABELS, Labels.tipTransferWidget));
+
+        String text =
+                ResourceBundleUtils.getLangString(ADVICE, Advice.transferWidget) + "\n" +
+                ResourceBundleUtils.getLangString(ADVICE, Advice.transferWidget2) + "\n\n" +
+                ResourceBundleUtils.getLangString(ADVICE, Advice.transferWidget3);
+
+        tip.setText(text);
+        // tip.setText(ResourceBundleUtils.getLangString(ADVICE, Advice.transferWidget));
         tip.setLayoutData(new GridData(SWT.HORIZONTAL, SWT.TOP, true, false, 1, 1));
     }
 
     private void createGroupOptions(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangString(LABELS, Labels.optionsText));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(OPTIONS, Options.general));
 
         GridLayout gridLayout = new GridLayout(1, true);
 
@@ -867,11 +873,11 @@ public class TransferWidget extends AbstractWidget {
         if (checkForAvailableLeicaCardStructure(storedCardReaderPath)) {
             readCardFolders(storedCardReaderPath);
 
-            logger.log(Level.INFO, "card reader path successful read");
+            logger.info("Card reader initialized and path successful read");
         } else {
             showCardReaderNotExitsWarning();
 
-            logger.log(Level.INFO, "could not read card reader path");
+            logger.warn("Could not read card reader path '{}'.", storedCardReaderPath);
         }
     }
 

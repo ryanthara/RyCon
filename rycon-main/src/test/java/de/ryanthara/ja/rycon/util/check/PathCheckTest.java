@@ -10,8 +10,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class   PathCheckTest {
 
-    private final static String currentString = ".";
-    private final static String emptyString = "";
+    private static final String currentString = ".";
+    private static final String emptyString = "";
     private final String nullString = null;
 
     private final Path currentPath = Paths.get(currentString);

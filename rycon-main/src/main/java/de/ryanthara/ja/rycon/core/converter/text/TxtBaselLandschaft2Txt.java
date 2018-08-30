@@ -17,6 +17,9 @@
  */
 package de.ryanthara.ja.rycon.core.converter.text;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 
 /**
@@ -28,6 +31,9 @@ import java.util.ArrayList;
  * @since 12
  */
 public class TxtBaselLandschaft2Txt {
+
+
+    private static final Logger logger = LoggerFactory.getLogger(TxtBaselLandschaft2Txt.class.getName());
 
     private final ArrayList<String> readStringLines;
 
@@ -110,7 +116,8 @@ public class TxtBaselLandschaft2Txt {
                     break;
 
                 default:
-                    System.err.println("Error in convertTXTBaselLandschaft2TXT: line length doesn't match 5 or 6 elements");
+                    logger.trace("Line contains less or more tokens ({}) than needed or allowed.", lineSplit.length);
+                    break;
             }
         }
         return result;

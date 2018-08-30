@@ -39,12 +39,12 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static de.ryanthara.ja.rycon.Main.countFileOps;
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.*;
@@ -53,7 +53,7 @@ import static de.ryanthara.ja.rycon.ui.custom.Status.OK;
 /**
  * Instances of this class implements a complete widget and it's functionality for processing levelling files.
  * <p>
- * The {@link LevellingWidget} of RyCON is used to convert levelling files or height lists (GSI or text format)
+ * The {@link LevellingWidget} of <tt>RyCON</tt> is used to convert levelling files or height lists (GSI or text format)
  * for CAD import. Each generated file contains only lines of one code. The code is added
  * to the file name of the written file.
  * <p>
@@ -63,11 +63,11 @@ import static de.ryanthara.ja.rycon.ui.custom.Status.OK;
  * <li>text files with code (format no, code, x, y, z)
  * </ul>
  * <p>
- * The LevellingWidget of RyCON is used to convert levelling or height files for cad import. Therefore a GSI based
+ * The LevellingWidget of <tt>RyCON</tt> is used to convert levelling or height files for cad import. Therefore a GSI based
  * levelling file is prepared to a coordinate file with no, x, y and measured height values. For the x- and y-values
  * are the count line numbers used.
  * <p>
- * On later versions of RyCON there will be support for more levelling formats.
+ * On later versions of <tt>RyCON</tt> there will be support for more levelling formats.
  *
  * @author sebastian
  * @version 8
@@ -75,7 +75,7 @@ import static de.ryanthara.ja.rycon.ui.custom.Status.OK;
  */
 public class LevellingWidget extends AbstractWidget {
 
-    private final static Logger logger = Logger.getLogger(LevellingWidget.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(LevellingWidget.class.getName());
 
     private final String[] acceptableFileSuffixes = new String[]{"*.gsi", "*.lev", "*.asc", "*.asc", "*.hvz", "*.ber", "*.aus"};
     private Button chkBoxCsvSemicolonSeparator;
@@ -96,8 +96,7 @@ public class LevellingWidget extends AbstractWidget {
      */
     public LevellingWidget(final Shell parent) {
         this.parent = parent;
-
-        files2read = new Path[0];
+        this.files2read = new Path[0];
 
         initUI();
         handleFileInjection();
@@ -218,7 +217,7 @@ public class LevellingWidget extends AbstractWidget {
         createInputFieldComposite();
         createOutputFormat(width);
         createOptions(width);
-        createDescription(width);
+        createAdvice(width);
 
         new BottomButtonBar(this, innerShell, BottomButtonBar.OK_AND_EXIT_BUTTON);
 
@@ -269,7 +268,7 @@ public class LevellingWidget extends AbstractWidget {
         if (files.isPresent()) {
             files2read = files.get();
         } else {
-            logger.log(Level.SEVERE, "can't get the reader files");
+            logger.warn("Can not get the source files to be read.");
         }
     }
 
@@ -294,9 +293,9 @@ public class LevellingWidget extends AbstractWidget {
                 filterPath);
     }
 
-    private void createDescription(int width) {
+    private void createAdvice(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangString(LABELS, Labels.adviceText));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.text));
 
         GridLayout gridLayout = new GridLayout(1, true);
 
@@ -307,7 +306,15 @@ public class LevellingWidget extends AbstractWidget {
         group.setLayoutData(gridData);
 
         Label tip = new Label(group, SWT.WRAP | SWT.BORDER | SWT.LEFT);
-        tip.setText(ResourceBundleUtils.getLangString(LABELS, Labels.tipLevellingWidget));
+
+        String text =
+                ResourceBundleUtils.getLangString(ADVICE, Advice.levellingWidget) + "\n" +
+                        ResourceBundleUtils.getLangString(ADVICE, Advice.levellingWidget2) + "\n\n" +
+                        ResourceBundleUtils.getLangString(ADVICE, Advice.levellingWidget3);
+
+        tip.setText(text);
+
+        // tip.setText(ResourceBundleUtils.getLangString(ADVICE, Advice.levellingWidget));
         tip.setLayoutData(new GridData(SWT.HORIZONTAL, SWT.TOP, true, false, 1, 1));
     }
 
@@ -323,7 +330,7 @@ public class LevellingWidget extends AbstractWidget {
 
     private void createOptions(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangString(LABELS, Labels.optionsText));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(OPTIONS, Options.general));
 
         GridLayout gridLayout = new GridLayout(1, true);
 
@@ -438,7 +445,7 @@ public class LevellingWidget extends AbstractWidget {
                             NigraAltitudeRegisterHvz2Asc nigraWinHvz2Asc = new NigraAltitudeRegisterHvz2Asc(readFile);
                             ascFile = nigraWinHvz2Asc.convert();
                         } else {
-                            logger.log(Level.SEVERE, "File " + path.getFileName() + " is not supported (yet).");
+                            logger.warn("File " + path.getFileName() + " is not supported (yet).");
                             break;
                         }
                     }
@@ -451,13 +458,13 @@ public class LevellingWidget extends AbstractWidget {
                     switch (RadioHelper.getSelectedBtn(radio.getChildren())) {
                         // GSI8
                         case 0:
-                            Asc2Gsi asc2Gsi8 = new Asc2Gsi(ascFile, Main.getGSI8());
+                            Asc2Gsi asc2Gsi8 = new Asc2Gsi(ascFile, Main.getGsi8());
                             writeFile = asc2Gsi8.convert();
                             fileNameExtension = FileNameExtension.LEICA_GSI.getExtension();
                             break;
                         // GSI16
                         case 1:
-                            Asc2Gsi asc2Gsi16 = new Asc2Gsi(ascFile, Main.getGSI16());
+                            Asc2Gsi asc2Gsi16 = new Asc2Gsi(ascFile, Main.getGsi16());
                             writeFile = asc2Gsi16.convert();
                             fileNameExtension = FileNameExtension.LEICA_GSI.getExtension();
                             break;
@@ -488,7 +495,7 @@ public class LevellingWidget extends AbstractWidget {
                     }
                 }
             } else {
-                logger.log(Level.SEVERE, "File " + path.getFileName() + " could not be read.");
+                logger.warn("File " + path.getFileName() + " could not be read.");
             }
         }
 

@@ -21,7 +21,7 @@ package de.ryanthara.ja.rycon.core.converter.odf;
  * FileToolsOdf implements basic operations on spreadsheet output operations for Open Document Format files.
  * <p>
  * Therefore a couple of methods and helpers are implemented to do the conversions and
- * operations on the given files. At the moment there is no internal RyCON format used.
+ * operations on the given files. At the moment there is no internal <tt>RyCON</tt> format used.
  * <p>
  *
  * @author sebastian

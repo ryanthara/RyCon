@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <entry key="attribute">attribute</entry>
+    <entry key="easting">easting</entry>
+    <entry key="height">height</entry>
+    <entry key="northing">northing</entry>
+    <entry key="object">object</entry>
+    <entry key="pointNumber">point number</entry>
+    <entry key="valency">valency</entry>
+</properties>

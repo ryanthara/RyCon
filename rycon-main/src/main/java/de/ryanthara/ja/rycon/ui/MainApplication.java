@@ -17,6 +17,8 @@
  */
 package de.ryanthara.ja.rycon.ui;
 
+import com.swisstopo.geodesy.reframe_lib.IReframe;
+import com.swisstopo.geodesy.reframe_lib.Reframe;
 import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.data.DefaultKeys;
 import de.ryanthara.ja.rycon.data.PreferenceHandler;
@@ -44,6 +46,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.io.IOException;
@@ -51,10 +55,6 @@ import java.net.URI;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.*;
@@ -65,7 +65,7 @@ import static de.ryanthara.ja.rycon.ui.custom.Status.WARNING;
 /**
  * Instances of this class are the main application of RyCON.
  * <p>
- * This class initializes the main window of RyCON and setup the
+ * This class initializes the main window of <tt>RyCON</tt> and setup the
  * background functionality which is done by the extension of the
  * {@code Main} class.
  *
@@ -76,7 +76,7 @@ import static de.ryanthara.ja.rycon.ui.custom.Status.WARNING;
  */
 public class MainApplication extends Main {
 
-    private final static Logger logger = Logger.getLogger(MainApplication.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(MainApplication.class.getName());
     private boolean firstStart;
     private int operations;
     private Display display;
@@ -90,36 +90,21 @@ public class MainApplication extends Main {
      * The user interface is initialized in a separate method, which is called from here.
      */
     public MainApplication() {
-        fileTransfer = null;
-        firstStart = true;
-        operations = Integer.MIN_VALUE;
+        this.fileTransfer = null;
+        this.firstStart = true;
+        this.operations = Integer.MIN_VALUE;
+
         initUI();
     }
 
     /*
-     * Sets the default logging level of {@code RyCON} to 'SEVERE'.
+     * Sets the default logging level of <tt>RyCON</tt> to 'SEVERE'.
      * <p>
      * Different logging levels can be set with the command line interface.
      * @see de.ryanthara.ja.rycon.cli.CmdLineInterfaceParser
      */
     private static void initLogging() {
-        // avoid console logging
-        LogManager.getLogManager().reset();
-
-        Main.loggingLevel = Level.SEVERE;
-
-        logger.setLevel(Main.loggingLevel);
-
-        try {
-            FileHandler fh = new FileHandler("RyCON_logfile%g.xml", 1024 * 1024, 10, true);
-
-            Main.fileHandler = fh;
-
-            logger.addHandler(fh);
-            logger.log(Level.INFO, "logging with level '" + Main.loggingLevel.getName() + "' for RyCON enabled successful");
-        } catch (IOException e) {
-            System.err.println("Can not access file 'RyCON_logfile[n].xml' " + e.getMessage());
-        }
+        // TODO implement init logging
     }
 
     /**
@@ -166,7 +151,7 @@ public class MainApplication extends Main {
                             ResourceBundleUtils.getLangString(WARNINGS, Warnings.noCardReaderExistsMessage));
                 }
             } catch (IOException e) {
-                logger.log(Level.SEVERE, "Card reader path doesn't contains subfolder for level 1");
+                logger.warn("Card reader path '{}' doesn't contains subfolder for level 1", cardReaderPath.toString());
             }
         }
     }
@@ -192,14 +177,13 @@ public class MainApplication extends Main {
     }
 
     private void actionBtn07() {
-        new ReportWidget(shell);
+        new AnalyzerWidget(shell);
         statusBar.setStatus(ResourceBundleUtils.getLangString(LABELS, Labels.reportInitialized), OK);
     }
 
     private void actionBtn08() {
-        MessageBoxes.showMessageBox(shell, SWT.ICON_WARNING, "Warning", "Not implemented yet.");
         new TransformationWidget(shell);
-        statusBar.setStatus("not implemented yet.", WARNING);
+        statusBar.setStatus(ResourceBundleUtils.getLangString(LABELS, Labels.transformationInitialized), OK);
     }
 
     private void actionBtn09() {
@@ -283,7 +267,8 @@ public class MainApplication extends Main {
                         break;
 
                     case 't':
-                        test();
+                        // test();
+                        testReframJar();
                         break;
 
                     case 'ü':   // about, german version
@@ -507,8 +492,6 @@ public class MainApplication extends Main {
 
         GridData gridData = new GridData(Sizes.RyCON_GRID_WIDTH.getValue(), Sizes.RyCON_GRID_HEIGHT.getValue());
         btnTransformation.setLayoutData(gridData);
-
-        btnTransformation.setEnabled(false);
     }
 
     private StatusBar createStatusBar(Shell shell) {
@@ -531,7 +514,7 @@ public class MainApplication extends Main {
         final Tray tray = display.getSystemTray();
 
         if (tray == null) {
-            logger.log(Level.SEVERE, "System tray functionality is not available on your system.");
+            logger.warn("System tray functionality is not available on your system {}.", System.getProperty("os.name"));
         } else {
             final TrayItem item = new TrayItem(tray, SWT.NONE);
             item.setImage(new ImageConverter().convertToImage(display, Images.trayIcon64.getPath()));
@@ -571,7 +554,7 @@ public class MainApplication extends Main {
     }
 
     /*
-     * Simple place holder for the grid.
+     * Simple place holder button for the grid. This is not used if all buttons are functional.
      */
     private void createWithoutFunction(Composite composite) {
         Button btnWithoutFunction = new Button(composite, SWT.PUSH);
@@ -624,7 +607,7 @@ public class MainApplication extends Main {
                             new CodeSplitterWidget(paths).executeDropInjection();
                             break;
                         default:
-                            logger.log(Level.SEVERE, "Dropped to an unsuported button");
+                            logger.warn("Dropped to an unsupported button {}.", dnDButtons);
                             throw new UnsupportedOperationException("Dropped to an unsupported button");
                     }
                 }
@@ -720,8 +703,6 @@ public class MainApplication extends Main {
 
         if (pref.isDefaultSettingsGenerated()) {
             statusBar.setStatus(ResourceBundleUtils.getLangString(MESSAGES, Messages.newConfigFileGenerated), WARNING);
-
-            logger.log(Level.INFO, "default settings generated");
         }
 
         shell.pack();
@@ -775,8 +756,7 @@ public class MainApplication extends Main {
                 Desktop.getDesktop().browse(uri.get());
             }
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "can not open the RyCON website " + uri.get().getPath()
-                    + " with the default browser.", e);
+            logger.warn("Can not open the RyCON website '{}' with the default browser.", uri.get().getPath(), e.getCause());
         }
     }
 
@@ -788,8 +768,7 @@ public class MainApplication extends Main {
                 Desktop.getDesktop().browse(uri.get());
             }
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "can not open the RyCON help website " + uri.get().getPath()
-                    + " with the default browser.", e);
+            logger.warn("Can not open the RyCON help website '{}' with the default browser.", uri.get().getPath(), e.getCause());
         }
     }
 
@@ -845,7 +824,7 @@ public class MainApplication extends Main {
         try {
             System.out.println("Stored keys: " + Main.pref.getKeys().length);
         } catch (BackingStoreException e) {
-            e.printStackTrace();
+            logger.error("Can not the length of the stored user preferences keys.", e.getCause());
         }
 
         try {
@@ -861,6 +840,27 @@ public class MainApplication extends Main {
 
         System.out.println();
         System.out.println("### END OF TEST ###");
+    }
+
+    private void testReframJar() {
+        // REFRAME object
+        Reframe reframeObj = new Reframe();
+
+        double[] inputCoordinates = new double[]{540000.0, 260000.0, 600.0};
+        System.out.println(String.valueOf(inputCoordinates[0]) + " / " + String.valueOf(inputCoordinates[1]) + " / " + String.valueOf(inputCoordinates[2]));
+        try {
+            double[] outputCoordinates = reframeObj.ComputeReframe(inputCoordinates, IReframe.PlanimetricFrame.LV03_Military, IReframe.PlanimetricFrame.LV95, IReframe.AltimetricFrame.LN02, IReframe.AltimetricFrame.Ellipsoid);
+            System.out.println(String.valueOf(outputCoordinates[0]) + " / " + String.valueOf(outputCoordinates[1]) + " / " + String.valueOf(outputCoordinates[2]));
+
+            outputCoordinates = reframeObj.ComputeGpsref(outputCoordinates, IReframe.ProjectionChange.LV95ToETRF93Geographic);
+            System.out.println(String.valueOf(outputCoordinates[0]) + " / " + String.valueOf(outputCoordinates[1]) + " / " + String.valueOf(outputCoordinates[2]));
+        } catch (IllegalArgumentException e) {
+            System.out.println("Outside grid");
+        } catch (NullPointerException e) {
+            System.out.println("Dataset file missing");
+        } catch (Exception e) {
+            System.out.println("Error 2");
+        }
     }
 
 } // end of MainApplication

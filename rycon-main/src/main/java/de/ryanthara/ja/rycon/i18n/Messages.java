@@ -18,7 +18,7 @@
 package de.ryanthara.ja.rycon.i18n;
 
 /**
- * The {@code Messages} enumeration holds all the texts for the messages of {@code RyCON}.
+ * The {@code Messages} enumeration holds all the texts for the messages of <tt>RyCON</tt>.
  * <p>
  * This enumeration is used for encapsulating the data. The interface {@link ResourceKeys}
  * is used to access different enumerations in the class {@link ResourceBundleUtils}.
@@ -55,5 +55,7 @@ public enum Messages implements ResourceKeys {
     transferCopyMessage,
     transferMoveMessage,
     transferText,
+    transformationMessage,
+    transformationStatus,
 
 } // end of Messages

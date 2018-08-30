@@ -79,7 +79,6 @@ public class BaseToolsGsi {
      * it's format (GSI8 = 16, GSI16 = 24).
      *
      * @param line GSI formatted line to check for block size
-     *
      * @return block size
      */
     public static int getBlockSize(String line) {
@@ -94,7 +93,6 @@ public class BaseToolsGsi {
      * Returns the point number for the line as string without encoding it into blocks.
      *
      * @param line Leica GSI formatted line
-     *
      * @return point number or empty string if line is empty string
      */
     public static String getPointNumber(final String line) {
@@ -115,7 +113,6 @@ public class BaseToolsGsi {
      * The one face target line contains three times the zero coordinate.
      *
      * @param line line to be checked for one face target line
-     *
      * @return true if line is a one face target line
      */
     public static boolean isTargetLine(String line) {
@@ -184,7 +181,6 @@ public class BaseToolsGsi {
      *
      * @param isGSI16          distinguish between GSI8 or GSI16 output format
      * @param encodedGSIBlocks ArrayList<ArrayList<GsiBlock>> of encoded GSIBlocks
-     *
      * @return transformed string line with GSI content
      */
     static ArrayList<String> lineTransformation(boolean isGSI16, ArrayList<ArrayList<GsiBlock>> encodedGSIBlocks) {
@@ -224,7 +220,6 @@ public class BaseToolsGsi {
      * an additional white space at the end of a line. This is done with this helper.
      *
      * @param stringToPrepare string to prepare with line ending
-     *
      * @return prepared string
      */
     public static String prepareLineEnding(String stringToPrepare) {
@@ -237,6 +232,29 @@ public class BaseToolsGsi {
         }
 
         return stringToPrepare;
+    }
+
+    /**
+     * Sorts an ArrayList<String> ascending by point number.
+     *
+     * @param arrayList unsorted ArrayList<String> of GSI lines
+     * @return sorted ArrayList<String>
+     */
+    static ArrayList<String> sortResult(ArrayList<String> arrayList) {
+        ArrayList<String> helper = new ArrayList<>(arrayList.size());
+        ArrayList<String> result = new ArrayList<>(arrayList.size());
+
+        for (String gsiLine : arrayList) {
+            helper.add(BaseToolsGsi.getPointNumber(gsiLine).concat("°;°").concat(gsiLine));
+        }
+
+        helper.sort(String::compareToIgnoreCase);
+
+        for (String helperLine : helper) {
+            result.add(helperLine.split("°;°")[1]);
+        }
+
+        return result;
     }
 
     /**
@@ -267,7 +285,6 @@ public class BaseToolsGsi {
      * Encodes a read GSI string line into an ArrayList of GSIBlocks.
      *
      * @param lines read string lines with GSI content
-     *
      * @return encoded ArrayList of GSIBlocks
      */
     private ArrayList<ArrayList<GsiBlock>> blockEncoder(ArrayList<String> lines) {

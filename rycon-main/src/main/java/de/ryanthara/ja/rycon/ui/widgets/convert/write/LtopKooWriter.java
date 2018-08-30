@@ -24,12 +24,12 @@ import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
 import de.ryanthara.ja.rycon.ui.widgets.convert.SourceButton;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.odftoolkit.simple.SpreadsheetDocument;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Instances of this class are used for writing LTOP KOO files from the {@link ConverterWidget} of <tt>RyCON</tt>.
@@ -40,7 +40,7 @@ import java.util.logging.Logger;
  */
 public class LtopKooWriter implements Writer {
 
-    private final static Logger logger = Logger.getLogger(LtopKooWriter.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(LtopKooWriter.class.getName());
 
     private final Path path;
     private final ArrayList<String> readStringFile;
@@ -65,7 +65,7 @@ public class LtopKooWriter implements Writer {
     /**
      * Returns true if the prepared {@link SpreadsheetDocument} for file writing was written to the file system.
      *
-     * @return writer success
+     * @return write success
      */
     @Override
     public boolean writeSpreadsheetDocument() {
@@ -86,56 +86,56 @@ public class LtopKooWriter implements Writer {
             case GSI8:
             case GSI16:
                 Gsi2Ltop gsi2Ltop = new Gsi2Ltop(readStringFile);
-                writeFile = gsi2Ltop.convertGSI2KOO(parameter.isLtopEliminateDuplicatePoints(),
-                        parameter.isLtopSortOutputFileByNumber());
+                writeFile = gsi2Ltop.convertGsi2Koo(parameter.isLtopEliminateDuplicatePoints(),
+                        parameter.isSortOutputFileByNumber());
                 break;
 
             case TXT:
                 Txt2Ltop txt2Ltop = new Txt2Ltop(readStringFile);
-                writeFile = txt2Ltop.convertTXT2KOO(parameter.isLtopEliminateDuplicatePoints(),
-                        parameter.isLtopSortOutputFileByNumber());
+                writeFile = txt2Ltop.convertTxt2Koo(parameter.isLtopEliminateDuplicatePoints(),
+                        parameter.isSortOutputFileByNumber());
                 break;
 
             case CSV:
                 Csv2Ltop csv2Ltop = new Csv2Ltop(readCSVFile);
-                writeFile = csv2Ltop.convertCSV2KOO(parameter.isLtopEliminateDuplicatePoints(),
-                        parameter.isLtopSortOutputFileByNumber());
+                writeFile = csv2Ltop.convertCsv2Koo(parameter.isLtopEliminateDuplicatePoints(),
+                        parameter.isSortOutputFileByNumber());
                 break;
 
             case CAPLAN_K:
                 Caplan2Ltop caplan2Ltop = new Caplan2Ltop(readStringFile);
-                writeFile = caplan2Ltop.convertK2KOO(parameter.isLtopEliminateDuplicatePoints(),
-                        parameter.isLtopSortOutputFileByNumber());
+                writeFile = caplan2Ltop.convertK2Koo(parameter.isLtopEliminateDuplicatePoints(),
+                        parameter.isSortOutputFileByNumber());
                 break;
 
             case ZEISS_REC:
                 Zeiss2Ltop zeiss2Ltop = new Zeiss2Ltop(readStringFile);
-                writeFile = zeiss2Ltop.convertZeiss2KOO(parameter.isLtopEliminateDuplicatePoints(),
-                        parameter.isLtopSortOutputFileByNumber());
+                writeFile = zeiss2Ltop.convertZeiss2Koo(parameter.isLtopEliminateDuplicatePoints(),
+                        parameter.isSortOutputFileByNumber());
                 break;
 
             case CADWORK:
                 Cadwork2Ltop cadwork2Ltop = new Cadwork2Ltop(readStringFile);
-                writeFile = cadwork2Ltop.convertCadwork2KOO(parameter.isCadworkUseZeroHeights(),
-                        parameter.isLtopEliminateDuplicatePoints(), parameter.isLtopSortOutputFileByNumber());
+                writeFile = cadwork2Ltop.convertCadwork2Koo(parameter.isCadworkUseZeroHeights(),
+                        parameter.isLtopEliminateDuplicatePoints(), parameter.isSortOutputFileByNumber());
                 break;
 
             case BASEL_STADT:
                 CsvBaselStadt2Ltop csvBaselStadt2Ltop = new CsvBaselStadt2Ltop(readCSVFile);
-                writeFile = csvBaselStadt2Ltop.convertCSVBaselStadt2KOO(parameter.isLtopEliminateDuplicatePoints(),
-                        parameter.isLtopSortOutputFileByNumber());
+                writeFile = csvBaselStadt2Ltop.convertCSVBaselStadt2Koo(parameter.isLtopEliminateDuplicatePoints(),
+                        parameter.isSortOutputFileByNumber());
                 break;
 
             case BASEL_LANDSCHAFT:
                 TxtBaselLandschaft2Ltop txtBaselLandschaft2Ltop = new TxtBaselLandschaft2Ltop(readStringFile);
-                writeFile = txtBaselLandschaft2Ltop.convertTXTBaselLandschaft2KOO(parameter.isLtopEliminateDuplicatePoints(),
-                        parameter.isLtopSortOutputFileByNumber());
+                writeFile = txtBaselLandschaft2Ltop.convertTxtBaselLandschaft2Koo(parameter.isLtopEliminateDuplicatePoints(),
+                        parameter.isSortOutputFileByNumber());
                 break;
 
             default:
                 writeFile = null;
 
-                logger.log(Level.SEVERE, "LtopKooWriter.writeStringFile() : unknown file format " + SourceButton.fromIndex(parameter.getSourceNumber()));
+                logger.warn("Can not write {} file format to LTOP KOO file.", SourceButton.fromIndex(parameter.getSourceNumber()));
         }
 
         if (WriteFile2Disk.writeFile2Disk(path, writeFile, "", FileNameExtension.KOO.getExtension())) {
@@ -148,7 +148,7 @@ public class LtopKooWriter implements Writer {
     /**
      * Returns true if the prepared {@link Workbook} for file writing was written to the file system.
      *
-     * @return writer success
+     * @return write success
      */
     @Override
     public boolean writeWorkbookFile() {

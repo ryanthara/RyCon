@@ -19,10 +19,10 @@ package de.ryanthara.ja.rycon.core.converter.caplan;
 
 import de.ryanthara.ja.rycon.core.converter.zeiss.ZeissDecoder;
 import de.ryanthara.ja.rycon.core.elements.ZeissBlock;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Instances of this class provides functions to convert measurement files from the Zeiss REC format
@@ -34,7 +34,7 @@ import java.util.logging.Logger;
  */
 public class Zeiss2K {
 
-    private final static Logger logger = Logger.getLogger(Zeiss2K.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(Zeiss2K.class.getName());
 
     private int valencyIndicator;
 
@@ -61,14 +61,15 @@ public class Zeiss2K {
         this.readStringLines = readStringLines;
 
         // prevent wrong output with empty strings of defined length from class
-        number = "";
-        valency = BaseToolsCaplanK.valency;
-        easting = BaseToolsCaplanK.easting;
-        northing = BaseToolsCaplanK.northing;
-        height = BaseToolsCaplanK.height;
-        freeSpace = BaseToolsCaplanK.freeSpace;
-        objectTyp = BaseToolsCaplanK.objectTyp;
-        attr = "";
+        this.number = "";
+        this.valency = BaseToolsCaplanK.valency;
+        this.easting = BaseToolsCaplanK.easting;
+        this.northing = BaseToolsCaplanK.northing;
+        this.height = BaseToolsCaplanK.height;
+        this.freeSpace = BaseToolsCaplanK.freeSpace;
+        this.objectTyp = BaseToolsCaplanK.objectTyp;
+        this.attr = "";
+
     }
 
     /**
@@ -249,7 +250,7 @@ public class Zeiss2K {
                 valencyIndicator += 4;
                 break;
             default:
-                logger.log(Level.SEVERE, "Found unknown identifier: " + zeissBlock.getTypeIdentifier().toString());
+                logger.trace("Found unknown identifier '{}'.", zeissBlock.getTypeIdentifier().toString());
         }
     }
 

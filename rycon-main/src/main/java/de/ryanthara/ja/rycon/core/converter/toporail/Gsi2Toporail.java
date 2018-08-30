@@ -19,10 +19,10 @@ package de.ryanthara.ja.rycon.core.converter.toporail;
 
 import de.ryanthara.ja.rycon.core.converter.gsi.BaseToolsGsi;
 import de.ryanthara.ja.rycon.core.elements.GsiBlock;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * This class provides functions to convert Leica GSI formatted files into
@@ -34,7 +34,7 @@ import java.util.logging.Logger;
  */
 public class Gsi2Toporail {
 
-    private final static Logger logger = Logger.getLogger(Gsi2Toporail.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(Gsi2Toporail.class.getName());
 
     private static final String variant = "B";
 
@@ -47,6 +47,7 @@ public class Gsi2Toporail {
      */
     public Gsi2Toporail(ArrayList<String> readStringLines) {
         baseToolsGsi = new BaseToolsGsi(readStringLines);
+
     }
 
     /**
@@ -205,7 +206,7 @@ public class Gsi2Toporail {
                         height = block.toPrintFormatCsv();
                         break;
                     default:
-                        logger.log(Level.SEVERE, "Found one more word index: " + block.getWordIndex());
+                        logger.trace("Found one more word index '{}'.", block.getWordIndex());
                 }
             }
 
@@ -289,7 +290,7 @@ public class Gsi2Toporail {
                         height = block.toPrintFormatCsv();
                         break;
                     default:
-                        logger.log(Level.SEVERE, "Found one more word index: " + block.getWordIndex());
+                        logger.trace("Found one more word index '{}'.", block.getWordIndex());
                 }
             }
 

@@ -48,7 +48,7 @@ public class Zeiss2Ltop {
      *
      * @return converted KOO file
      */
-    public ArrayList<String> convertZeiss2KOO(boolean eliminateDuplicates, boolean sortFileByNumber) {
+    public ArrayList<String> convertZeiss2Koo(boolean eliminateDuplicates, boolean sortFileByNumber) {
         ArrayList<String> result = new ArrayList<>();
 
 

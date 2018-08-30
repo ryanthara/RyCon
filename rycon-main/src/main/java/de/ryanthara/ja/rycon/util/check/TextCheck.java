@@ -18,15 +18,17 @@
 
 package de.ryanthara.ja.rycon.util.check;
 
-import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
 import de.ryanthara.ja.rycon.i18n.Errors;
 import de.ryanthara.ja.rycon.i18n.Labels;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 import de.ryanthara.ja.rycon.i18n.Warnings;
+import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -45,6 +47,8 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.*;
  * @since 12
  */
 public class TextCheck {
+
+    private static final Logger logger = LoggerFactory.getLogger(TextCheck.class.getName());
 
     /**
      * Checks the source and target {@link Text} fields for being valid files and returns the valid ones
@@ -115,14 +119,14 @@ public class TextCheck {
      * @return success of the check
      */
     public static boolean isDoubleValue(Text textField) {
-        boolean isDoubleValue;
+        boolean isDoubleValue = false;
 
         try {
             Double.valueOf(textField.getText());
             isDoubleValue = true;
-        } catch (NumberFormatException ex) {
-            System.err.println("Text field contains a value that can't be parsed into a double value!");
-            isDoubleValue = false;
+
+        } catch (NumberFormatException e) {
+            logger.error("Text field contains a value '{}' that can not be parsed into a double value.", textField.getText(), e.getCause());
         }
 
         return isDoubleValue;

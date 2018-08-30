@@ -52,7 +52,7 @@ public class Caplan2Ltop {
      *
      * @return converted KOO file
      */
-    public ArrayList<String> convertK2KOO(boolean eliminateDuplicates, boolean sortOutputFile) {
+    public ArrayList<String> convertK2Koo(boolean eliminateDuplicates, boolean sortOutputFile) {
         ArrayList<String> result = new ArrayList<>();
         ArrayList<RyPoint> ryPoints = new ArrayList<>();
         String number, pointType, toleranceCategory, easting, northing, height, geoid, eta, xi;

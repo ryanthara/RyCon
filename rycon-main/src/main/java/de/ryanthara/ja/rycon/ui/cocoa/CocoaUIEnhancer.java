@@ -22,6 +22,8 @@ import org.eclipse.swt.internal.C;
 import org.eclipse.swt.internal.Callback;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Listener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 
@@ -45,6 +47,8 @@ import java.lang.reflect.Method;
  */
 @SuppressWarnings("restriction")
 public class CocoaUIEnhancer {
+
+    private static final Logger logger = LoggerFactory.getLogger(CocoaUIEnhancer.class.getName());
 
     private static final long kAboutMenuItem = 0;
     private static final long kPreferencesMenuItem = 2;
@@ -93,6 +97,7 @@ public class CocoaUIEnhancer {
             Method method = clazz.getMethod(methodName, signature);
             return method.invoke(target, args);
         } catch (Exception e) {
+            logger.error("Throws illegal state exception.", e.getCause());
             throw new IllegalStateException(e);
         }
     }
@@ -126,6 +131,7 @@ public class CocoaUIEnhancer {
             // Initialize the menuItems.
             initialize(target);
         } catch (Exception e) {
+            logger.error("Throws illegal state exception.", e.getCause());
             throw new IllegalStateException(e);
         }
 
@@ -142,6 +148,7 @@ public class CocoaUIEnhancer {
         try {
             return Class.forName(classname);
         } catch (ClassNotFoundException e) {
+            logger.error("Throws illegal state exception.", e.getCause());
             throw new IllegalStateException(e);
         }
     }
@@ -158,9 +165,7 @@ public class CocoaUIEnhancer {
         return 0;
     }
 
-    private void initialize(Object callbackObject)
-            throws Exception {
-
+    private void initialize(Object callbackObject) throws Exception {
         Class<?> osCls = classForName("org.eclipse.swt.internal.cocoa.OS");
 
         // Register names in objective-c.
@@ -251,6 +256,7 @@ public class CocoaUIEnhancer {
             Method m = cls.getDeclaredMethod(methodName, paramTypes);
             return m.invoke(null, arguments);
         } catch (Exception e) {
+            logger.error("Throws illegal state exception.", e.getCause());
             throw new IllegalStateException(e);
         }
     }
@@ -264,12 +270,12 @@ public class CocoaUIEnhancer {
             Method m = obj.getClass().getDeclaredMethod(methodName, paramTypes);
             return m.invoke(obj, arguments);
         } catch (Exception e) {
+            logger.error("Throws illegal state exception.", e.getCause());
             throw new IllegalStateException(e);
         }
     }
 
-    private long registerName(Class<?> osCls, String name)
-            throws IllegalArgumentException, SecurityException {
+    private long registerName(Class<?> osCls, String name) throws IllegalArgumentException, SecurityException {
         Object object = invoke(osCls, "sel_registerName", new Object[]{name});
         return convertToLong(object);
     }

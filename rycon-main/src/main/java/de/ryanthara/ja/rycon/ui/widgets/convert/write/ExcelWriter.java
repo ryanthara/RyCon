@@ -23,12 +23,12 @@ import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
 import de.ryanthara.ja.rycon.ui.widgets.convert.SourceButton;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.odftoolkit.simple.SpreadsheetDocument;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Instances of this class are used for writing Microsoft Excel (XLS or XLSX) files
@@ -40,7 +40,7 @@ import java.util.logging.Logger;
  */
 public class ExcelWriter implements Writer {
 
-    private final static Logger logger = Logger.getLogger(ExcelWriter.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(ExcelWriter.class.getName());
 
     private final boolean isXLS;
     private final ArrayList<String> readStringFile;
@@ -69,7 +69,7 @@ public class ExcelWriter implements Writer {
     /**
      * Returns true if the prepared {@link SpreadsheetDocument} for file writing was written to the file system.
      *
-     * @return writer success
+     * @return write success
      */
     @Override
     public boolean writeSpreadsheetDocument() {
@@ -89,7 +89,7 @@ public class ExcelWriter implements Writer {
     /**
      * Returns true if the prepared {@link Workbook} for file writing was written to the file system.
      *
-     * @return writer success
+     * @return write success
      */
     @Override
     public boolean writeWorkbookFile() {
@@ -151,7 +151,7 @@ public class ExcelWriter implements Writer {
 
             case BASEL_STADT:
                 CsvBaselStadt2Excel csvBaselStadt2Excel = new CsvBaselStadt2Excel(readCSVFile);
-                if (csvBaselStadt2Excel.convertCSVBaselStadt2Excel(isXLS, fileName, parameter.isWriteCommentLine())) {
+                if (csvBaselStadt2Excel.convertCsvBaselStadt2Excel(isXLS, fileName, parameter.isWriteCommentLine())) {
                     workbook = csvBaselStadt2Excel.getWorkbook();
                 }
                 break;
@@ -166,8 +166,7 @@ public class ExcelWriter implements Writer {
             default:
                 workbook = null;
 
-                logger.log(Level.SEVERE, "ExcelWriter.writeStringFile() : unknown file format " + SourceButton.fromIndex(parameter.getSourceNumber()));
-
+                logger.warn("Can not write {} file format to Excel spreadsheet file.", SourceButton.fromIndex(parameter.getSourceNumber()));
         }
 
         String suffix = isXLS ? ".xls" : ".xlsx";

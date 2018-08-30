@@ -18,8 +18,11 @@
 package de.ryanthara.ja.rycon.core.converter.caplan;
 
 import de.ryanthara.ja.rycon.util.NumberFormatter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -30,6 +33,8 @@ import java.util.List;
  * @since 12
  */
 public class Csv2K {
+
+    private static final Logger logger = LoggerFactory.getLogger(Csv2K.class.getName());
 
     private final List<String[]> readCSVLines;
 
@@ -51,7 +56,7 @@ public class Csv2K {
      *
      * @return converted K file as {@code ArrayList<String>}
      */
-    public ArrayList<String> convertCSV2K(boolean useSimpleFormat, boolean writeCommentLine, boolean writeCodeColumn) {
+    public ArrayList<String> convertCsv2K(boolean useSimpleFormat, boolean writeCommentLine, boolean writeCodeColumn) {
         ArrayList<String> result = new ArrayList<>();
 
         if (writeCommentLine) {
@@ -94,7 +99,7 @@ public class Csv2K {
                     if (!stringField[4].equals("")) {
                         // height H, column 47-59
                         height = String.format("%13s", NumberFormatter.fillDecimalPlace(stringField[3], 5));
-                        Double d = Double.parseDouble(height);
+                        double d = Double.parseDouble(height);
                         if (d != 0d) {
                             valencyIndicator += 4;
                         }
@@ -119,7 +124,7 @@ public class Csv2K {
                     if (!stringField[4].equals("")) {
                         // height H, column 47-59
                         height = String.format("%13s", NumberFormatter.fillDecimalPlace(stringField[4], 5));
-                        Double d = Double.parseDouble(height);
+                        double d = Double.parseDouble(height);
                         if (d != 0d) {
                             valencyIndicator += 4;
                         }
@@ -127,7 +132,7 @@ public class Csv2K {
                     break;
 
                 default:
-                    System.err.println("Csv2K.convertCSV2K() : line contains less or more tokens " + stringField.length);
+                    logger.trace("Line contains less or more tokens ({}) than needed or allowed.\n{}", stringField.length, Arrays.toString(stringField));
                     break;
 
             }

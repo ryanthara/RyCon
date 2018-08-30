@@ -21,7 +21,10 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.WorkbookUtil;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -33,6 +36,8 @@ import java.util.List;
  * @since 12
  */
 public class CsvBaselStadt2Excel {
+
+    private static final Logger logger = LoggerFactory.getLogger(CsvBaselStadt2Excel.class.getName());
 
     private final List<String[]> readCSVLines;
     private Workbook workbook = null;
@@ -56,7 +61,7 @@ public class CsvBaselStadt2Excel {
      *
      * @return success conversion success
      */
-    public boolean convertCSVBaselStadt2Excel(boolean isXLS, String sheetName, boolean writeCommentRow) {
+    public boolean convertCsvBaselStadt2Excel(boolean isXLS, String sheetName, boolean writeCommentRow) {
         // general preparation of the workbook
         if (isXLS) {
             workbook = new HSSFWorkbook();
@@ -129,7 +134,8 @@ public class CsvBaselStadt2Excel {
                         break;
 
                     default:
-                        System.err.println("Error in convertCSVBaselStadt2Excel: unknown element found or to much columns");
+                        logger.trace("Line contains less or more tokens ({}) than needed or allowed.\n{}", csvLine.length, Arrays.toString(csvLine));
+                        break;
                 }
             }
         }

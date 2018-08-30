@@ -26,7 +26,7 @@ import java.util.Arrays;
 
 /**
  * The {@code SetupStructure} implements functions based on the COGO part of
- * the <tt>Leica Geosystems</tt> logfile.txt for {@code RyCON}.
+ * the <tt>Leica Geosystems</tt> logfile.txt for <tt>RyCON</tt>.
  * <p>
  * This is used for encapsulating the data and error minimization.
  *

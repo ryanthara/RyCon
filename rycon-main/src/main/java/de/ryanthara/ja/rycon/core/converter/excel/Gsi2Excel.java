@@ -25,6 +25,8 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.WorkbookUtil;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
@@ -39,6 +41,8 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.WORDINDICES;
  * @since 12
  */
 public class Gsi2Excel {
+
+    private static final Logger logger = LoggerFactory.getLogger(Gsi2Excel.class.getName());
 
     private final BaseToolsGsi baseToolsGsi;
     private Workbook workbook;
@@ -186,7 +190,8 @@ public class Gsi2Excel {
                         break;
 
                     default:
-                        System.err.println("Gsi2Excel.convertGSI2Excel() : line contains unknown word index " + block.toPrintFormatCsv());
+                        logger.trace("Line contains unknown word index ({}).", block.toPrintFormatCsv());
+                        break;
                 }
             }
         }

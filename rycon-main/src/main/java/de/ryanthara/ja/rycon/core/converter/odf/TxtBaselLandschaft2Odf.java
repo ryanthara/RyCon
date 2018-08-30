@@ -20,6 +20,8 @@ package de.ryanthara.ja.rycon.core.converter.odf;
 import org.odftoolkit.simple.SpreadsheetDocument;
 import org.odftoolkit.simple.table.Cell;
 import org.odftoolkit.simple.table.Table;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -33,6 +35,8 @@ import java.util.ArrayList;
  * @since 12
  */
 public class TxtBaselLandschaft2Odf {
+
+    private static final Logger logger = LoggerFactory.getLogger(TxtBaselLandschaft2Odf.class.getName());
 
     private final ArrayList<String> readStringLines;
     private SpreadsheetDocument spreadsheetDocument;
@@ -55,7 +59,7 @@ public class TxtBaselLandschaft2Odf {
      *
      * @return success conversion success
      */
-    public boolean convertTXTBaselLandschaft2ODS(Path sheetName, boolean writeCommentRow) {
+    public boolean convertTXTBaselLandschaft2Ods(Path sheetName, boolean writeCommentRow) {
         int rowIndex = 0;
         int colIndex = 0;
 
@@ -150,16 +154,18 @@ public class TxtBaselLandschaft2Odf {
                         break;
 
                     default:
-                        System.err.println("Error in convertTXTBaselLandschaft2ODS: line length doesn't match 5 or 6 elements");
+                        logger.trace("Line contains less or more tokens ({}) than needed or allowed.", lineSplit.length);
+                        break;
 
                 }
                 rowIndex = rowIndex + 1;
             }
 
         } catch (RuntimeException e) {
+            logger.error("Thrown runtime exception.", e.getCause());
             throw e;
         } catch (Exception e) {
-            System.err.println("ERROR: unable to create output file.");
+            logger.warn("Can not convert coordinate file from geodata server Basel Landschaft to open document spreadsheet file.", e.getCause());
         }
 
         return rowIndex > 1;

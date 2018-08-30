@@ -28,13 +28,13 @@ import java.util.Locale;
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LABELS;
 
 /**
- * The {@code Version} class holds static information about the current RyCON version
+ * The {@code Version} class holds static information about the current <tt>RyCON</tt> version
  * and it's development cycle.
  * <p>
  * With a couple of static methods a simple access to the values is realized.
  * <p>
- * Every new version change of RyCON has to be filled in here! This is necessary
- * because of the online check for a new version of RyCON.
+ * Every new version change of <tt>RyCON</tt> has to be filled in here! This is necessary
+ * because of the online check for a new version of <tt>RyCON</tt>.
  *
  * @author sebastian
  * @version 3
@@ -51,7 +51,7 @@ public final class Version {
     private static final short patchLevel = 1;
 
     /**
-     * Returns the build date of RyCON as string.
+     * Returns the build date of <tt>RyCON</tt> as string.
      *
      * @return the build date
      */
@@ -60,7 +60,7 @@ public final class Version {
     }
 
     /**
-     * Returns the current build number of RyCON as integer value.
+     * Returns the current build number of <tt>RyCON</tt> as integer value.
      *
      * @return the build number
      */
@@ -81,7 +81,7 @@ public final class Version {
     }
 
     /**
-     * Returns the current major release number of RyCON as short value.
+     * Returns the current major release number of <tt>RyCON</tt> as short value.
      *
      * @return the major release number
      */
@@ -90,7 +90,7 @@ public final class Version {
     }
 
     /**
-     * Returns the current minor release number of RyCON as short value.
+     * Returns the current minor release number of <tt>RyCON</tt> as short value.
      *
      * @return the minor release number
      */
@@ -99,7 +99,7 @@ public final class Version {
     }
 
     /**
-     * Returns the current patch level number of RyCON as short value.
+     * Returns the current patch level number of <tt>RyCON</tt> as short value.
      *
      * @return the patch level
      */
@@ -108,7 +108,7 @@ public final class Version {
     }
 
     /**
-     * Returns the current version of RyCON as string value (major.minor.patch_level).
+     * Returns the current version of <tt>RyCON</tt> as string value (major.minor.patch_level).
      *
      * @return the {@code major.minor.patch_level} as concatenated version string
      */

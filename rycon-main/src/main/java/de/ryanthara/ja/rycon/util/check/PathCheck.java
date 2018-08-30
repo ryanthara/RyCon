@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 /**
  * The {@code PathCheck} implements different kind of checks for {@link Path} objects.
  * <p>
- * RyCON now uses {@link Path} objects for better file handling and a better error detection
+ * <tt>RyCON</tt> now uses {@link Path} objects for better file handling and a better error detection
  * instead of <tt>java.io.File</tt> objects.
  *
  * @author sebastian
@@ -114,7 +114,7 @@ public final class PathCheck {
     /**
      * Checks a given {@code Path URL} to be an existing and valid file.
      * <p>
-     * From the perspective of RyCON empty strings are not valid files.
+     * From the perspective of <tt>RyCON</tt> empty strings are not valid files.
      *
      * @param path file URL as {@code Path}
      *

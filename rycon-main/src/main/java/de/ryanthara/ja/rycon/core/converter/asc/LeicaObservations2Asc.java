@@ -20,6 +20,8 @@ package de.ryanthara.ja.rycon.core.converter.asc;
 import de.ryanthara.ja.rycon.core.converter.Converter;
 import de.ryanthara.ja.rycon.util.DummyCoordinates;
 import org.eclipse.swt.graphics.Point;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -32,8 +34,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Instances of this class provides functions to convert different XML based Leica Geosystems
@@ -51,7 +51,7 @@ import java.util.logging.Logger;
  */
 public class LeicaObservations2Asc extends Converter {
 
-    private final static Logger logger = Logger.getLogger(LeicaObservations2Asc.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(LeicaObservations2Asc.class.getName());
 
     private final boolean ignoreChangePoints;
     private final Path path;
@@ -66,6 +66,7 @@ public class LeicaObservations2Asc extends Converter {
     public LeicaObservations2Asc(Path path, boolean ignoreChangePoints) {
         this.path = path;
         this.ignoreChangePoints = ignoreChangePoints;
+
     }
 
     /**
@@ -117,11 +118,11 @@ public class LeicaObservations2Asc extends Converter {
                 }
             }
         } catch (ParserConfigurationException e) {
-            logger.log(Level.SEVERE, "Can not establish a document builder for: " + path.toString() + "\n" + e.toString());
+            logger.error("Can not establish a document builder for '{}'.", path.toString(), e.getCause());
         } catch (SAXException e) {
-            logger.log(Level.SEVERE, "Can not parse the document: " + path.toString() + "\n" + e.toString());
+            logger.error("Can not parse the document '{}'.", path.toString(), e.getCause());
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Can not read the file: " + path.toString() + "\n" + e.toString());
+            logger.error("Can not read the file '{}'.", path.toString(), e.getCause());
         }
 
         return new ArrayList<>(result);

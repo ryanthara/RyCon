@@ -66,7 +66,7 @@ public final class WriteFile2Disk {
      * @param editString        the edit string which is inserted before the file name extension
      * @param fileNameExtension file file name extension
      *
-     * @return writer success
+     * @return write success
      */
     public static boolean writeFile2Disk(final Path path, final ArrayList<String> writeFile,
                                          final String editString, final String fileNameExtension) {

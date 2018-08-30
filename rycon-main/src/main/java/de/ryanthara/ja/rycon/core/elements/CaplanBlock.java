@@ -29,7 +29,7 @@ import java.util.ArrayList;
  * <p>
  * ----+----1----+----2----+----3----+----4----+----5----+----6----+----7----+----8
  * !-------------------------------------------------------------------------------
- * ! The following data was created by RyCON Build xxx on 2016-09-06.
+ * ! The following data was created by RyCON Build xxx on YYYY-MM-DD.
  * !-------------------------------------------------------------------------------
  * GB1            7  2612259.5681  1256789.1990    256.90815 |10
  * GB2            7  2612259.5681  1256789.1990    256.90815 |10
@@ -53,7 +53,7 @@ public class CaplanBlock {
     /**
      * Constructs a {@link CaplanBlock} from a given string line which is set as parameter.
      * <p>
-     * The transformation of the values is initialized from here.
+     * The core.core.transformation of the values is initialized from here.
      *
      * @param line Caplan K file string line
      */

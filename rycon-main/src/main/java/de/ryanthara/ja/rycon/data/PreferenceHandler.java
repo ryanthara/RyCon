@@ -21,11 +21,11 @@ package de.ryanthara.ja.rycon.data;
 import de.ryanthara.ja.rycon.i18n.Labels;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 import de.ryanthara.ja.rycon.i18n.ResourceBundles;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.PreferenceChangeEvent;
 import java.util.prefs.PreferenceChangeListener;
@@ -34,7 +34,7 @@ import java.util.prefs.Preferences;
 /**
  * Instances of this class provides functions for handling system and user settings for RyCON.
  * <p>
- * The less needed configuration settings of RyCON are stored with the mechanism of the
+ * The less needed configuration settings of <tt>RyCON</tt> are stored with the mechanism of the
  * JAVA PreferenceKeys API in the system and user area of your computer.
  * <p>
  * The settings are stored:
@@ -42,7 +42,7 @@ import java.util.prefs.Preferences;
  * - Under OS X in a location ~/Library/PreferenceKeys/de.ryanthara.ja.plist
  * - Under *nix in a location /etc/.java/.systemPrefs
  * <p>
- * Due to some experiences with Windows REGISTRY made during the development cycle of RyCON 2,
+ * Due to some experiences with Windows REGISTRY made during the development cycle of<tt>RyCON 2</tt>,
  * the preference keys are stored in lower case with an underscore (e.g. 'param_name').
  *
  * @author sebastian
@@ -50,7 +50,7 @@ import java.util.prefs.Preferences;
  * @since 1
  */
 public class PreferenceHandler implements PreferenceChangeListener {
-    private final static Logger logger = Logger.getLogger(PreferenceHandler.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(PreferenceHandler.class.getName());
     private final String currentNode = "/de/ryanthara/rycon2";
     private final String previousNode = "/de/ryanthara/rycon";
     private boolean isDefaultSettingsGenerated = false;
@@ -79,7 +79,7 @@ public class PreferenceHandler implements PreferenceChangeListener {
     /**
      * Checks a path which is stored in the user preferences of RyCON.
      * <p>
-     * If the path doesn't exists, RyCON tries to use the value of the base dir. If the base dir doesn't exist,
+     * If the path doesn't exists, <tt>RyCON</tt> tries to use the value of the base dir. If the base dir doesn't exist,
      * then the value of the "HOME" variable of the system will be returned.
      *
      * @param pathToBeChecked stored path which has to be checked
@@ -114,7 +114,7 @@ public class PreferenceHandler implements PreferenceChangeListener {
         try {
             prefs.removeNode();
         } catch (BackingStoreException e) {
-            e.printStackTrace();
+            logger.error("Can not remove old user preferences keys for RyCON version 2.", e.getCause());
         }
 
         System.out.println("NEW KEYS REMOVED");
@@ -146,7 +146,7 @@ public class PreferenceHandler implements PreferenceChangeListener {
                 key = getKeys()[position];
             }
         } catch (BackingStoreException e) {
-            e.printStackTrace();
+            logger.error("Can not get user preference key on position '{}'.", position, e.getCause());
         }
 
         return userPreferences.get(key, "");
@@ -168,7 +168,7 @@ public class PreferenceHandler implements PreferenceChangeListener {
             //System.out.println("Try to get UserPreference: " + preference.getKey());
             return userPreferences.get(preference.getKey(), "");
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            logger.error("Can not get user preference key '{}'.", preference.toString(), e.getCause());
             return "";
         }
     }
@@ -201,7 +201,7 @@ public class PreferenceHandler implements PreferenceChangeListener {
      */
     @Override
     public void preferenceChange(PreferenceChangeEvent evt) {
-        logger.log(Level.FINE, "called preferenceChange");
+        logger.info("preferenceChange called");
     }
 
     /**
@@ -236,7 +236,7 @@ public class PreferenceHandler implements PreferenceChangeListener {
         try {
             return Preferences.userRoot().nodeExists(previousNode);
         } catch (BackingStoreException e) {
-            logger.log(Level.SEVERE, "Can't store user node for RyCON back to user root");
+            logger.error("Check for version 1 preferences failed. Node '{}' in user root does not exist", previousNode);
         }
 
         return false;
@@ -246,7 +246,7 @@ public class PreferenceHandler implements PreferenceChangeListener {
         try {
             return Preferences.userRoot().nodeExists(currentNode);
         } catch (BackingStoreException e) {
-            logger.log(Level.SEVERE, "Can't store user node for RyCON 2 back to user root");
+            logger.error("Check for version 2 preferences failed. Node '{}' in user root does not exist", currentNode);
         }
 
         return false;
@@ -277,7 +277,7 @@ public class PreferenceHandler implements PreferenceChangeListener {
             // create default settings
             createDefaultPreferences();
 
-            // transfer known values to the RyCON 2 preferences
+            // transfer known values to the RyCON preferences
             for (int i = 0; i < oldKeys.length; i++) {
                 // check whether the old key exists in the new version
                 if (PreferenceKeys.contains(oldKeys[i])) {
@@ -286,14 +286,14 @@ public class PreferenceHandler implements PreferenceChangeListener {
                 }
             }
 
-            logger.log(Level.INFO, "settings successful transferred from version 1 to version 2");
+            logger.info("Transfer user settings from version 1 to version 2 successful.");
         } catch (BackingStoreException e) {
-            logger.log(Level.SEVERE, "Can't read version 1 settings. " + e.getMessage());
+            logger.error("Check for version 1 preferences failed. Node '{}' in user root does not exist", previousNode);
         }
     }
 
     /**
-     * Fills in the default values for RyCON into user preference.
+     * Fills in the default values for <tt>RyCON</tt> into user preference.
      * <p>
      * Default settings are generated for the following parameters (parameter name - value):
      * <p>
@@ -424,7 +424,7 @@ public class PreferenceHandler implements PreferenceChangeListener {
         // a couple of parameters for better work flow between modules
         setUserPreference(PreferenceKeys.LAST_COPIED_LOGFILE, DefaultKeys.LAST_COPIED_LOGFILE.getValue());
 
-        logger.log(Level.INFO, "default settings generated");
+        logger.info("Default settings created.");
 
         isDefaultSettingsGenerated = true;
     }
@@ -449,26 +449,28 @@ public class PreferenceHandler implements PreferenceChangeListener {
 
                 // delete the old preference keys and their values
                 removeUserPreference(oldKeys);
+                logger.trace("Old preference keys removed.");
 
                 createDefaultPreferences();
+                logger.trace("Default preferences created.");
 
                 // transfer values from old keys to the new ones
                 for (int i = 0; i < oldKeys.length; i++) {
                     setUserPreference(PreferenceKeys.valueOf(oldKeys[i].toUpperCase()), oldValues[i]);
+                    logger.trace("User preference '{}' successful transferred.", PreferenceKeys.valueOf(oldKeys[i]));
                 }
 
-                logger.log(Level.FINE, "Not needed preference keys deleted.");
-                logger.log(Level.INFO, "settings successful transferred");
+                logger.info("Old preference keys transferred successful");
             }
         } catch (BackingStoreException e) {
-            logger.log(Level.SEVERE, "Can't write settings back. " + e.getMessage());
+            logger.error("Can not load user preferences.", e.getCause());
         }
     }
 
     private void registerPreferenceChangeListener() {
         // add listener to the node and not to an instance of it!
         Preferences.userRoot().node(currentNode).addPreferenceChangeListener(this);
-        logger.log(Level.FINE, "preference change listener added");
+        logger.info("Preference listener '{}' added.", this.toString());
     }
 
     /**

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <entry key="altimetric_CHGeo98">Vorbereitete orthometrische Höhen (auf Geoid “CHGeo98”)</entry>
+    <entry key="altimetric_Ellipsoid">Ellipsoidische Höhen auf Bessel 1841 (CH1903/CH1903+) oder GRS80 (ETRS89)</entry>
+    <entry key="altimetric_LHN95">Nationales Höhen Netz LHN95 (orthometrische Höhen auf Geoid “CHGeo2004”)</entry>
+    <entry key="altimetric_LN02">Nationales Höhen Netz LN02 (nivellierte Höhen)</entry>
+    <entry key="planimetric_LV03_Civil">Schweizer Landeskoordinaten LV03C-G (CH1903)</entry>
+    <entry key="planimetric_LV03_Military">Schweizer (Militär-) Landeskoordinaten LV03 (CH1903)</entry>
+    <entry key="planimetric_LV95">Schweizer Landeskoordinaten LV95 (CH1903+)</entry>
+    <entry key="projection_ETRF93GeocentricToLV95">Geozentrische Koordinaten ETRF93 (ETRS89) [m] in Schweizer Landesskoordinaten LV95 (CH1903+) [m]</entry>
+    <entry key="projection_ETRF93GeographicToLV95">Geografische Koordinaten ETRF93 (ETRS89) [m] in Schweizer Landesskoordinaten LV95 (CH1903+) [m]</entry>
+    <entry key="projection_LV95ToETRF93Geocentric">Schweizer Landesskoordinaten LV95 (CH1903+) [m] in geozentrische Koordinaten ETRF93 (ETRS89) [m]</entry>
+    <entry key="projection_LV95ToETRF93Geographic">Schweizer Landesskoordinaten LV95 (CH1903+) [m] in geografische Koordinaten ETRF93 (ETRS89) [m]</entry>
+</properties>

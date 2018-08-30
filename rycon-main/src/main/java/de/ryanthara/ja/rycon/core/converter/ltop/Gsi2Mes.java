@@ -28,9 +28,13 @@ import java.util.ArrayList;
  * Leica GSI format (GSI8 and GSI16) into LTOP MES files.
  * <p>
  * With a little 'intelligence' it is possible to create the needed measurement file.
+ * <p>
+ * Version 2 brings an extended update. It is the first version which can convert manually
+ * measured one and two face measurements in both orders (1,2,1,2... or 1,1,...2,2) with
+ * error detection.
  *
  * @author sebastian
- * @version 1
+ * @version 2
  * @since 12
  */
 public class Gsi2Mes {
@@ -49,7 +53,7 @@ public class Gsi2Mes {
     /**
      * Converts a Leica GSI file with polar measurement elements into a LTOP MES file.
      * <p>
-     * RyCON can differ between GSI8 and GSI16 files automatically. The first version of this function can't
+     * <tt>RyCON</tt> can differ between GSI8 and GSI16 files automatically. The first version of this function can't
      * middle between first and second face. (2ALL measurements or first face measurements are needed).
      *
      * @param useZenithDistance true if zenith distance should be used instead of height angle for vertical angle
@@ -150,7 +154,7 @@ public class Gsi2Mes {
 
                     verticalAngle = blocksAsLine.get(2).toPrintFormatCsv();
 
-                    Double d = Double.parseDouble(verticalAngle);
+                    double d = Double.parseDouble(verticalAngle);
 
                     if (useZenithDistance) {
                         verticalAngle = String.format("%12s", NumberFormatter.fillDecimalPlace(Double.toString(d), 5));

@@ -18,14 +18,14 @@
 package de.ryanthara.ja.rycon.nio;
 
 import org.odftoolkit.simple.SpreadsheetDocument;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 /**
- * Instances of this class provides basic file operations to writer Open Document Format spreadsheet files.
+ * Instances of this class provides basic file operations to write Open Document Format spreadsheet files.
  *
  * @author sebastian
  * @version 2
@@ -33,7 +33,7 @@ import java.util.logging.Logger;
  */
 class FileToolsOdf {
 
-    private final Logger logger = Logger.getLogger(FileToolsOdf.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(FileToolsOdf.class.getName());
 
     private final SpreadsheetDocument spreadsheetDocument;
 
@@ -45,6 +45,7 @@ class FileToolsOdf {
      */
     FileToolsOdf(SpreadsheetDocument spreadsheetDocument) {
         this.spreadsheetDocument = spreadsheetDocument;
+
     }
 
     /**
@@ -54,13 +55,12 @@ class FileToolsOdf {
      *
      * @return file writing success
      */
-    boolean writeODS(Path fileName) {
+    boolean writeOds(Path fileName) {
         try {
             spreadsheetDocument.save(fileName.toFile());
             return true;
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "unable to save Open Document Spreadsheet file to disk.");
-            logger.log(Level.SEVERE, e.getMessage());
+            logger.error("Unable to save Open Document Spreadsheet file '{}' to disk.", fileName.toString(), e.getCause());
         }
 
         return false;

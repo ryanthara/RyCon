@@ -35,21 +35,21 @@ public interface Writer {
     /**
      * Returns true if the prepared {@link SpreadsheetDocument} for file writing was written to the file system.
      *
-     * @return writer success
+     * @return write success
      */
     boolean writeSpreadsheetDocument();
 
     /**
      * Returns true if the prepared {@link ArrayList} for file writing was written to the file system.
      *
-     * @return writer success
+     * @return write success
      */
     boolean writeStringFile();
 
     /**
      * Returns true if the prepared {@link Workbook} for file writing was written to the file system.
      *
-     * @return writer success
+     * @return write success
      */
     boolean writeWorkbookFile();
 

@@ -17,11 +17,13 @@
  */
 package de.ryanthara.ja.rycon.core.elements;
 
+import de.ryanthara.ja.rycon.ui.widgets.AnalyzerWidget;
+
 /**
  * The {@code RyStakedPoint} class represents a container for storing geodetic stake out points.
  * <p>
  * These staked points are used in the analyzer for Leica Geosystems logfile.txt files in the
- * {@link de.ryanthara.ja.rycon.ui.widgets.ReportWidget} of {@code RyCON}.
+ * {@link AnalyzerWidget} of <tt>RyCON</tt>.
  * <p>
  * This class based on an equal idea to the {@link RyPoint} structure.
  *

@@ -23,11 +23,13 @@ import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 import org.odftoolkit.simple.SpreadsheetDocument;
 import org.odftoolkit.simple.table.Cell;
 import org.odftoolkit.simple.table.Table;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.COLUMNS;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.COLUMN_NAMES;
 
 /**
  * Instances of this class provides functions to convert a Caplan K formatted coordinate file
@@ -38,6 +40,8 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.COLUMNS;
  * @since 12
  */
 public class Caplan2Odf {
+
+    private static final Logger logger = LoggerFactory.getLogger(Caplan2Odf.class.getName());
 
     private final ArrayList<String> readStringLines;
     private SpreadsheetDocument spreadsheetDocument;
@@ -59,7 +63,7 @@ public class Caplan2Odf {
      *
      * @return success conversion success
      */
-    public boolean convertCaplan2ODS(Path sheetName, boolean writeCommentRow) {
+    public boolean convertCaplan2Ods(Path sheetName, boolean writeCommentRow) {
         int rowIndex = 0;
         int colIndex = 0;
 
@@ -75,27 +79,27 @@ public class Caplan2Odf {
 
             if (writeCommentRow) {
                 cell = table.getCellByPosition(colIndex, rowIndex);
-                cell.setStringValue(ResourceBundleUtils.getLangString(COLUMNS, Columns.pointNumber));
+                cell.setStringValue(ResourceBundleUtils.getLangString(COLUMN_NAMES, Columns.pointNumber));
                 colIndex = colIndex + 1;
 
                 cell = table.getCellByPosition(colIndex, rowIndex);
-                cell.setStringValue(ResourceBundleUtils.getLangString(COLUMNS, Columns.easting));
+                cell.setStringValue(ResourceBundleUtils.getLangString(COLUMN_NAMES, Columns.easting));
                 colIndex = colIndex + 1;
 
                 cell = table.getCellByPosition(colIndex, rowIndex);
-                cell.setStringValue(ResourceBundleUtils.getLangString(COLUMNS, Columns.northing));
+                cell.setStringValue(ResourceBundleUtils.getLangString(COLUMN_NAMES, Columns.northing));
                 colIndex = colIndex + 1;
 
                 cell = table.getCellByPosition(colIndex, rowIndex);
-                cell.setStringValue(ResourceBundleUtils.getLangString(COLUMNS, Columns.height));
+                cell.setStringValue(ResourceBundleUtils.getLangString(COLUMN_NAMES, Columns.height));
                 colIndex = colIndex + 1;
 
                 cell = table.getCellByPosition(colIndex, rowIndex);
-                cell.setStringValue(ResourceBundleUtils.getLangString(COLUMNS, Columns.object));
+                cell.setStringValue(ResourceBundleUtils.getLangString(COLUMN_NAMES, Columns.object));
                 colIndex = colIndex + 1;
 
                 cell = table.getCellByPosition(colIndex, rowIndex);
-                cell.setStringValue(ResourceBundleUtils.getLangString(COLUMNS, Columns.attribute));
+                cell.setStringValue(ResourceBundleUtils.getLangString(COLUMN_NAMES, Columns.attribute));
 
                 rowIndex = rowIndex + 1;
             }
@@ -171,9 +175,10 @@ public class Caplan2Odf {
             }
 
         } catch (RuntimeException e) {
+            logger.error("Thrown runtime exception.", e.getCause());
             throw e;
         } catch (Exception e) {
-            System.err.println("ERROR: unable to create output file.");
+            logger.warn("Can not convert Caplan K file to open document spreadsheet file.", e.getCause());
         }
 
         return rowIndex > 1;

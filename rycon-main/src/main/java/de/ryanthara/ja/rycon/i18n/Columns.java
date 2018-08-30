@@ -18,7 +18,7 @@
 package de.ryanthara.ja.rycon.i18n;
 
 /**
- * The {@code Columns} enumeration holds texts that are used in different export formats of {@code RyCON}.
+ * The {@code Columns} enumeration holds texts that are used in different export formats of <tt>RyCON</tt>.
  * <p>
  * This enumeration is used for encapsulating the data. The interface {@link ResourceKeys}
  * is used to access different enumerations in the class {@link ResourceBundleUtils}.

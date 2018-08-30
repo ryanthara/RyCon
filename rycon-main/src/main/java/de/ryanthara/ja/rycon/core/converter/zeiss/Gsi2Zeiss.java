@@ -19,6 +19,8 @@ package de.ryanthara.ja.rycon.core.converter.zeiss;
 
 import de.ryanthara.ja.rycon.core.converter.gsi.BaseToolsGsi;
 import de.ryanthara.ja.rycon.core.elements.GsiBlock;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
@@ -27,6 +29,8 @@ import java.util.ArrayList;
  * into Zeiss REC files with it's dialects (R4, R5, REC500 and M5).
  */
 public class Gsi2Zeiss {
+
+    private static final Logger logger = LoggerFactory.getLogger(Gsi2Zeiss.class.getName());
 
     private final BaseToolsGsi baseToolsGsi;
 
@@ -131,7 +135,8 @@ public class Gsi2Zeiss {
                         break;
 
                     default:
-                        System.err.println("Gsi2Zeiss.convertGSI2REC() : found unknown word index " + block.toPrintFormatCsv());
+                        logger.trace("Line contains unknown word index ({}).", block.toPrintFormatCsv());
+                        break;
                 }
             }
 

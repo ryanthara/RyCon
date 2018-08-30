@@ -47,7 +47,7 @@ public class WriteOdf2Disk {
      * @param path                path object
      * @param spreadsheetDocument prepared {@link SpreadsheetDocument} for writing
      *
-     * @return writer success
+     * @return write success
      */
     public static boolean writeOds2Disk(Path path, SpreadsheetDocument spreadsheetDocument) {
         boolean writeSuccess;
@@ -61,9 +61,9 @@ public class WriteOdf2Disk {
                     ResourceBundleUtils.getLangString(LABELS, Labels.warningTextMsgBox),
                     String.format(ResourceBundleUtils.getLangString(WARNINGS, Warnings.fileExistsOverwrite), outputFileName));
 
-            writeSuccess = returnValue == SWT.YES && fileToolsOdf.writeODS(outputFileName);
+            writeSuccess = returnValue == SWT.YES && fileToolsOdf.writeOds(outputFileName);
         } else {
-            writeSuccess = fileToolsOdf.writeODS(outputFileName);
+            writeSuccess = fileToolsOdf.writeOds(outputFileName);
         }
 
         return writeSuccess;

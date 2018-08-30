@@ -19,13 +19,13 @@
 package de.ryanthara.ja.rycon.nio;
 
 import de.ryanthara.ja.rycon.util.check.PathCheck;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Instances of this class implement functions to read a text based file line by line
@@ -43,9 +43,9 @@ public final class LineReader {
     /**
      * Identifier for indicating that the file to read doesn't has comment lines inside.
      */
-    private final static String NO_COMMENT_LINE = "nCIgö5BQ";
+    private static final String NO_COMMENT_LINE = "nCIgö5BQ";
 
-    private final static Logger logger = Logger.getLogger(LineReader.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(LineReader.class.getName());
     private final Path path;
     private int countReadLines = -1;
     private int countStoredLines = -1;
@@ -163,10 +163,10 @@ public final class LineReader {
                     }
 
                 } catch (IOException e) {
-                    logger.log(Level.SEVERE, "File '" + path.getFileName() + "' could not be locked.");
+                    logger.warn("File '{}' could not be locked.", path.getFileName(), e.getCause());
                 }
             } catch (FileNotFoundException e) {
-                logger.log(Level.SEVERE, "File '" + path.getFileName() + "' could not be read.");
+                    logger.error("File '{}' could not be found.", path.getFileName(), e.getCause());
             } finally {
                 // reset variables back to initialization values
                 countReadLines = -1;
@@ -177,7 +177,7 @@ public final class LineReader {
                         fileInputStream.close();
                     }
                 } catch (IOException e) {
-                    logger.log(Level.SEVERE, "File input stream couldn't be closed.");
+                    logger.error("File input stream could not be closed.", e.getCause());
                 }
             }
 

@@ -18,6 +18,8 @@
 package de.ryanthara.ja.rycon.core.converter.gsi;
 
 import de.ryanthara.ja.rycon.core.elements.GsiBlock;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
@@ -30,6 +32,8 @@ import java.util.ArrayList;
  * @since 12
  */
 public class TxtBaselLandschaft2Gsi {
+
+    private static final Logger logger = LoggerFactory.getLogger(TxtBaselLandschaft2Gsi.class.getName());
 
     private final ArrayList<String> readStringLines;
 
@@ -106,7 +110,8 @@ public class TxtBaselLandschaft2Gsi {
                     break;
 
                 default:
-                    System.err.println("TxtBaselLandschaft2Gsi.convertTXTBaselLandschaft2GSI() : line contains less or more tokens " + line);
+                    logger.trace("Line contains less or more tokens ({}) than needed or allowed.", lineSplit.length);
+                    break;
             }
 
             // check for at least one or more added elements to prevent writing empty lines

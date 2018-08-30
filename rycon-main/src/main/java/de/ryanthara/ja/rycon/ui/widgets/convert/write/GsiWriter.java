@@ -25,12 +25,12 @@ import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
 import de.ryanthara.ja.rycon.ui.widgets.convert.SourceButton;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.odftoolkit.simple.SpreadsheetDocument;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Instances of this class are used for writing Leica GSI files from the {@link ConverterWidget} of <tt>RyCON</tt>.
@@ -41,7 +41,7 @@ import java.util.logging.Logger;
  */
 public class GsiWriter implements Writer {
 
-    private final static Logger logger = Logger.getLogger(GsiWriter.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(GsiWriter.class.getName());
 
     private final Path path;
     private final boolean isGSI16;
@@ -69,7 +69,7 @@ public class GsiWriter implements Writer {
     /**
      * Returns true if the prepared {@link SpreadsheetDocument} for file writing was written to the file system.
      *
-     * @return writer success
+     * @return write success
      */
     @Override
     public boolean writeSpreadsheetDocument() {
@@ -90,7 +90,7 @@ public class GsiWriter implements Writer {
             case GSI8:
             case GSI16:
                 Gsi8vsGsi16 gsi8VsGsi16 = new Gsi8vsGsi16(readStringFile);
-                writeFile = gsi8VsGsi16.convertGSI8vsGSI16(isGSI16);
+                writeFile = gsi8VsGsi16.convertGSI8vsGSI16(isGSI16, parameter.isSortOutputFileByNumber());
                 break;
 
             case TXT:
@@ -141,8 +141,7 @@ public class GsiWriter implements Writer {
             default:
                 writeFile = null;
 
-                logger.log(Level.SEVERE, "GsiWriter.writeStringFile() : unknown file format " + SourceButton.fromIndex(parameter.getSourceNumber()));
-
+                logger.warn("Can not write {} file format to Leica Geosystems GSI file.", SourceButton.fromIndex(parameter.getSourceNumber()));
         }
 
         if (WriteFile2Disk.writeFile2Disk(path, writeFile, "", FileNameExtension.LEICA_GSI.getExtension())) {
@@ -155,7 +154,7 @@ public class GsiWriter implements Writer {
     /**
      * Returns true if the prepared {@link Workbook} for file writing was written to the file system.
      *
-     * @return writer success
+     * @return write success
      */
     @Override
     public boolean writeWorkbookFile() {

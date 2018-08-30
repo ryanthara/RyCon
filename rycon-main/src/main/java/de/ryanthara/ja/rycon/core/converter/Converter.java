@@ -20,7 +20,7 @@ package de.ryanthara.ja.rycon.core.converter;
 import java.util.ArrayList;
 
 /**
- * This describes the minimum function of a converter for the levelling to cad widget of {@code RyCON}.
+ * This describes the minimum function of a converter for the levelling to cad widget of <tt>RyCON</tt>.
  *
  * @author sebastian
  * @version 1

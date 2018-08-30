@@ -17,25 +17,26 @@
  */
 package de.ryanthara.ja.rycon.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.awt.*;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * The {@code OpenInFileManager} is used to open files and folders in the default file manager
  * of the used operating system.
  * <p>
- * This is used for example after the generation of new project folders with the generation tool of {@code RyCON}.
+ * This is used for example after the generation of new project folders with the generation tool of <tt>RyCON</tt>.
  *
  * @author sebastian
  * @version 1
  * @since 2
  */
 public class OpenInFileManager {
-    private final static Logger logger = Logger.getLogger(OpenInFileManager.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(OpenInFileManager.class.getName());
 
     /**
      * Opens a folder with the default file manager of the used operating system.
@@ -43,6 +44,7 @@ public class OpenInFileManager {
      * @param path path to open
      */
     public static void openFolder(String path) {
+
         Desktop desktop = Desktop.getDesktop();
 
         Path pathToBeOpen = Paths.get(path);
@@ -50,7 +52,7 @@ public class OpenInFileManager {
         try {
             desktop.open(pathToBeOpen.toFile());
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "File " + path + " not found to open folder in file manager. \n" + e.getMessage());
+            logger.error("File '{}' not found to open a folder in the file manager.", path, e.getCause());
         }
     }
 

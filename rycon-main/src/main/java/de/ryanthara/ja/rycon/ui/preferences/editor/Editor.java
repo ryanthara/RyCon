@@ -18,17 +18,19 @@
 
 package de.ryanthara.ja.rycon.ui.preferences.editor;
 
+import de.ryanthara.ja.rycon.i18n.Preferences;
+import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 import de.ryanthara.ja.rycon.ui.preferences.PreferencesDialog;
 import de.ryanthara.ja.rycon.ui.preferences.util.Resources;
 import de.ryanthara.ja.rycon.ui.preferences.validator.Validator;
-import de.ryanthara.ja.rycon.i18n.Preferences;
-import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.PREFERENCES;
 
@@ -50,15 +52,14 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.PREFERENCES;
  */
 public abstract class Editor<T> {
 
-    private boolean valid = true;
-
-    private Button buttonDefault = null;
-    private Button buttonUndo = null;
-
+    private static final Logger logger = LoggerFactory.getLogger(Editor.class.getName());
     private final T defaultValue;
-    private T initialValue = null;
     private final Validator<T> validator;
     private final PreferencesDialog dialog;
+    private boolean valid = true;
+    private Button buttonDefault = null;
+    private Button buttonUndo = null;
+    private T initialValue = null;
 
     /**
      * Constructs a new instance of {@code Editor} according to the parameters.
@@ -206,6 +207,7 @@ public abstract class Editor<T> {
 
             return t != null && (validator == null || validator.isValid(t));
         } catch (Exception e) {
+            logger.error("Can not parse string '{}'.", e.getCause());
             return false;
         }
     }
@@ -230,8 +232,9 @@ public abstract class Editor<T> {
         try {
             buttonDefault.setEnabled(defaultValue != null && !getValue().equals(defaultValue));
         } catch (ArrayIndexOutOfBoundsException e) {
-            // do nothing for combo which is used in EditorSelection
+            logger.trace("Do nothing for combo which is used in EditorSelection.");
         } catch (NumberFormatException e) {
+            logger.trace("Number format exception during update.", e.getCause());
             buttonDefault.setEnabled(false);
         }
     }

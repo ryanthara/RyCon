@@ -19,7 +19,7 @@ package de.ryanthara.ja.rycon.i18n;
 
 /**
  * The {@code WordIndices} enumeration holds all the word indices for
- * the used Leica GSI format word indices of {@code RyCON}.
+ * the used Leica GSI format word indices of <tt>RyCON</tt>.
  * <p>
  * This enumeration is used for encapsulating the data. The interface {@link ResourceKeys}
  * is used to access different enumerations in the class {@link ResourceBundleUtils}.

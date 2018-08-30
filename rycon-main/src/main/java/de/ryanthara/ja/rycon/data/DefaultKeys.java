@@ -17,14 +17,15 @@
  */
 package de.ryanthara.ja.rycon.data;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
- * The {@code DefaultKeys} enumeration holds all the default values for {@code RyCON}.
+ * The {@code DefaultKeys} enumeration holds all the default values for <tt>RyCON</tt>.
  * <p>
  * This enumeration is used for encapsulating the data and error minimization.
  *
@@ -86,7 +87,7 @@ public enum DefaultKeys {
 
     JAVA_WEBSITE("https://java.com/");
 
-    private final static Logger logger = Logger.getLogger(DefaultKeys.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(DefaultKeys.class.getName());
     private final String value;
 
     DefaultKeys(String value) {
@@ -102,7 +103,7 @@ public enum DefaultKeys {
         try {
             return Optional.of(new URI(value));
         } catch (URISyntaxException e) {
-            logger.log(Level.SEVERE, "wrong value to create URI: " + value, e);
+            logger.error("Wrong value '{}' to create URI.", value, e.getCause());
         }
 
         return Optional.empty();

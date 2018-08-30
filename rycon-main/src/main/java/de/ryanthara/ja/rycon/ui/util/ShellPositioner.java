@@ -24,9 +24,8 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * ShellPositioner implements a simple functionality to center RyCONs widgets.
@@ -45,10 +44,10 @@ import java.util.logging.Logger;
  */
 public class ShellPositioner {
 
-    private final static Logger logger = Logger.getLogger(ShellPositioner.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(ShellPositioner.class.getName());
 
     /**
-     * Calculate the centered shell location and return it als <code>Point</code> object.
+     * Calculate the centered shell location and return it as {@link Point} object.
      * <p>
      * The centered shell location depends on the screen size and the shell size. To calculate
      * these parameters are reader from the display and shell objects from the calling widgets.
@@ -64,6 +63,28 @@ public class ShellPositioner {
         Rectangle rect = parent.getBounds();
 
         int x = bounds.x + (bounds.width - rect.width) / 2;
+        int y = bounds.y + (bounds.height - rect.height) / 2;
+
+        return new Point(x, y);
+    }
+
+    /**
+     * Calculate the vertical centered shell location and return it as {@link Point} object.
+     * <p>
+     * The centered shell location depends on the screen size and the shell size. To calculate
+     * these parameters are reader from the display and shell objects from the calling widgets.
+     * The coordinates of the centered shell location represents the upper left corner of the widgets.
+     *
+     * @param parent the parent shell
+     *
+     * @return centered shell position on the primary monitor
+     */
+    public static Point centerShellOnPrimaryMonitorVertically(Shell parent) {
+        Monitor primary = parent.getDisplay().getPrimaryMonitor();
+        Rectangle bounds = primary.getBounds();
+        Rectangle rect = parent.getBounds();
+
+        int x = rect.x;
         int y = bounds.y + (bounds.height - rect.height) / 2;
 
         return new Point(x, y);
@@ -92,7 +113,7 @@ public class ShellPositioner {
                     return new Point(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]));
                 }
             } catch (NumberFormatException e) {
-                logger.log(Level.SEVERE, "Can't parse stored user preference value for positioning. " + e);
+                logger.warn("Can not parse stored user preference key value '{}' to number for positioning the window on the display. ", lastUsedDisplay, e.getCause());
             }
         }
 

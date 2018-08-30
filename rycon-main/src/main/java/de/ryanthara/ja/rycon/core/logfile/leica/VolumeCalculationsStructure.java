@@ -24,7 +24,7 @@ import java.util.Iterator;
 /**
  * The {@code VolumeCalculationsStructure} implements functions based on
  * the VOLUME CALCULATIONS part of the <tt>Leica Geosystems</tt> logfile.txt
- * for {@code RyCON}.
+ * for <tt>RyCON</tt>.
  * <p>
  * This is used for encapsulating the data and error minimization.
  *

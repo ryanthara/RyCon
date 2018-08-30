@@ -17,15 +17,17 @@
  */
 package de.ryanthara.ja.rycon.cli;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.security.InvalidParameterException;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
- * Instances of this class provides command line interface functions to {@code RyCON}.
+ * Instances of this class provides command line interface functions to <tt>RyCON</tt>.
  * <p>
  * {@code RyCON's} options can be set with a few command line arguments. The following arguments
- * will be supported in the current version of {@code RyCON}.
+ * will be supported in the current version of <tt>RyCON</tt>.
  * <code>
  * --help                      displays a help message on the terminal
  * --debug=[level]             enable debug mode - level could be 'SEVERE WARNING INFO CONFIG FINE FINER FINEST'
@@ -35,10 +37,10 @@ import java.util.logging.Logger;
  * --targetBtnNumber=[number]  selects the target button by a given number
  * </code>
  * <p>
- * The language of {@code RyCON} is set by ISO 639 alpha-2 or alpha-3 language code values.
+ * The language of <tt>RyCON</tt> is set by ISO 639 alpha-2 or alpha-3 language code values.
  * For example use 'en' for english or 'de' for german language.
  * <p>
- * Due to some reasons in the development cycle of {@code RyCON}, the function to parse one file name into
+ * Due to some reasons in the development cycle of <tt>RyCON</tt>, the function to parse one file name into
  * the source text field, and the possibility to select radio buttons was implemented. This functionality
  * is available for the {@link de.ryanthara.ja.rycon.ui.widgets.ConverterWidget}.
  *
@@ -48,7 +50,7 @@ import java.util.logging.Logger;
  */
 public class CmdLineInterfaceParser {
 
-    private final static Logger logger = Logger.getLogger(CmdLineInterfaceParser.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(CmdLineInterfaceParser.class.getName());
     private int sourceBtnNumber, targetBtnNumber;
     private String alphaLanguageCode, inputFile;
     private Level loggingLevel;
@@ -57,10 +59,11 @@ public class CmdLineInterfaceParser {
      * Constructs a new instance of this class.
      */
     public CmdLineInterfaceParser() {
-        sourceBtnNumber = -1;
-        targetBtnNumber = -1;
-        alphaLanguageCode = null;
-        inputFile = null;
+        this.sourceBtnNumber = -1;
+        this.targetBtnNumber = -1;
+        this.alphaLanguageCode = null;
+        this.inputFile = null;
+
     }
 
     /**
@@ -114,26 +117,26 @@ public class CmdLineInterfaceParser {
      * The arguments are case sensitive, are only parsed and not checked for being valid or logical.
      *
      * @param args the arguments to be parsed
+     *
+     * @throws CmdLineInterfaceException if incorrect or wrong cli argument is used
      */
     public void parseArguments(final String... args) throws CmdLineInterfaceException {
         if (args != null && args.length > 0) {
-            for (String s : args) {
-                if (s.toLowerCase().equals("--help")) {
+            for (String argument : args) {
+                if (argument.toLowerCase().equals("--help")) {
                     printHelp();
-                } else if (s.toLowerCase().contains("--debug=")) {
-                    loggingLevel = parsedLoggingLevel(s.toUpperCase().substring(8, s.length()));
-                } else if (s.toLowerCase().contains("--locale=")) {
-                    alphaLanguageCode = s.toLowerCase().substring(9, s.length());
-                } else if (s.toLowerCase().contains("--file=")) {
-                    inputFile = s.substring(7);
-                } else if (s.contains("--sourceBtnNumber=")) {
-                    sourceBtnNumber = Integer.parseInt(s.substring(18));
-                } else if (s.contains("--targetBtnNumber=")) {
-                    targetBtnNumber = Integer.parseInt(s.substring(18));
+                } else if (argument.toLowerCase().contains("--debug=")) {
+                    loggingLevel = parsedLoggingLevel(argument.toUpperCase().substring(8, argument.length()));
+                } else if (argument.toLowerCase().contains("--locale=")) {
+                    alphaLanguageCode = argument.toLowerCase().substring(9, argument.length());
+                } else if (argument.toLowerCase().contains("--file=")) {
+                    inputFile = argument.substring(7);
+                } else if (argument.contains("--sourceBtnNumber=")) {
+                    sourceBtnNumber = Integer.parseInt(argument.substring(18));
+                } else if (argument.contains("--targetBtnNumber=")) {
+                    targetBtnNumber = Integer.parseInt(argument.substring(18));
                 } else {
-                    // TODO correct log level and message text
-                    logger.log(Level.FINEST, "incorrect or illegal command line interface input");
-                    logger.log(Level.FINEST, s);
+                    logger.warn("Incorrect or wrong command line interface argument '{}' used.", argument);
 
                     printUsageAdvice();
 
@@ -143,17 +146,17 @@ public class CmdLineInterfaceParser {
             }
         }
 
-        logger.log(Level.INFO, "command line arguments parsed successful");
+        logger.info("Command line arguments parsed successful.");
     }
 
-    private Level parsedLoggingLevel(String s) {
+    private Level parsedLoggingLevel(String cli) {
         Level level = Level.SEVERE;
 
         try {
-            level = Level.parse(s);
+            level = Level.parse(cli);
             logger.info("Used logging level: " + level.getName());
         } catch (InvalidParameterException e) {
-            logger.log(Level.SEVERE, "Can not parse logging level '" + s + "' from the command line interface", e);
+            logger.error("Can not parse the logging level '{}' from the command line interface.", cli, e.getCause());
         }
 
         return level;

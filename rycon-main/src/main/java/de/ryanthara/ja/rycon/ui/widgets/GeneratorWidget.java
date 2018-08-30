@@ -40,6 +40,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -52,8 +54,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.*;
 import static de.ryanthara.ja.rycon.ui.custom.Status.OK;
@@ -61,13 +61,13 @@ import static de.ryanthara.ja.rycon.ui.custom.Status.WARNING;
 
 /**
  * The {@code GeneratorWidget} class represents a complete widget of RyCON,
- * which is used to generate folders and substructures by a given point number.
+ * which is used to generate folders and substructures by a given project number.
  * <p>
  * The needed folders will be created based upon a template folder. Afterwards
  * it could be opened in the default file manager of the used operating system.
  * <p>
  * Therefore the user has to put the number or text into a text field and
- * take the choice which kind of folders {@code RyCON} has to generate.
+ * take the choice which kind of folders <tt>RyCON</tt> has to generate.
  * It's possible to create two or more folders at the same time, when the
  * folder names are split by a semicolon sign (';').
  * <p>
@@ -83,7 +83,7 @@ import static de.ryanthara.ja.rycon.ui.custom.Status.WARNING;
  */
 public final class GeneratorWidget extends AbstractWidget {
 
-    private final static Logger logger = Logger.getLogger(GeneratorWidget.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(GeneratorWidget.class.getName());
     private final int ADMIN_FOLDER = 1;
     private final int PROJECT_FOLDER = 2;
     private final Shell parent;
@@ -165,7 +165,7 @@ public final class GeneratorWidget extends AbstractWidget {
         createGroupInputField();
         createGroupRecentFiles(width);
         createGroupOptions(width);
-        createDescription(width);
+        createAdvice(width);
 
         new BottomButtonBar(this, innerShell, BottomButtonBar.OK_AND_EXIT_BUTTON);
 
@@ -184,13 +184,11 @@ public final class GeneratorWidget extends AbstractWidget {
 
         try {
             FileUtils.copy(copySourcePath, copyTargetPath);
-
-            logger.log(Level.INFO, "file copy successful from " + copySourcePath + " to " + copyTargetPath);
-
             success = true;
+
+            logger.info("File copy successful from '{}' to '{}'", copySourcePath, copyTargetPath);
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "error when copying file", e);
-            logger.log(Level.SEVERE, e.getMessage());
+            logger.error("Error when copying file '{}'.", copySourcePath.toString(), e.getCause());
 
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR, ResourceBundleUtils.getLangString(LABELS, Labels.errorTextMsgBox),
                     type.getErrorMessage().getErrorMessage(number));
@@ -199,9 +197,9 @@ public final class GeneratorWidget extends AbstractWidget {
         return success;
     }
 
-    private void createDescription(int width) {
+    private void createAdvice(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangString(LABELS, Labels.adviceText));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.text));
 
         GridLayout gridLayout = new GridLayout(1, true);
         group.setLayout(gridLayout);
@@ -211,7 +209,14 @@ public final class GeneratorWidget extends AbstractWidget {
         group.setLayoutData(gridData);
 
         Label tip = new Label(group, SWT.WRAP | SWT.BORDER | SWT.LEFT);
-        tip.setText(ResourceBundleUtils.getLangString(LABELS, Labels.tipGeneratorWidget));
+        String text =
+                ResourceBundleUtils.getLangString(ADVICE, Advice.generatorWidget) + "\n\n" +
+                ResourceBundleUtils.getLangString(ADVICE, Advice.generatorWidget2) + "\n\n" +
+                ResourceBundleUtils.getLangString(ADVICE, Advice.generatorWidget3);
+
+        tip.setText(text);
+
+        // tip.setText(ResourceBundleUtils.getLangString(ADVICE, Advice.generatorWidget));
         tip.setLayoutData(new GridData(SWT.HORIZONTAL, SWT.TOP, true, false, 1, 1));
     }
 
@@ -323,7 +328,7 @@ public final class GeneratorWidget extends AbstractWidget {
 
     private void createGroupOptions(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangString(LABELS, Labels.optionsText));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(OPTIONS, Options.general));
 
         GridLayout gridLayout = new GridLayout(1, true);
 
@@ -612,14 +617,14 @@ public final class GeneratorWidget extends AbstractWidget {
 
                             // Files.move(entry, renamed);
 
-                            logger.log(Level.INFO, "rename of file 'YYYY_01nn_Aufwandschätzung_0n.xlsx' successful");
+                            logger.info("Rename of file 'YYYY_01nn_Aufwandschätzung_0n.xlsx' successful");
                         }
                     }
                 }
             }
 
         } catch (IOException e) {
-            logger.log(Level.WARNING, "can not read directory '02.Vertrag'");
+            logger.warn("Can not read directory '02.Vertrag'", e.getCause());
         }
     }
 
@@ -649,8 +654,6 @@ public final class GeneratorWidget extends AbstractWidget {
 
                             // Change date and number in word file
                             if (PathCheck.fileExists(entry)) {
-                                // TODO implement word file manipulation
-
                                 FileInputStream fileInputStream = new FileInputStream(new File(entry.toString()));
 
                                 XWPFDocument document = new XWPFDocument(fileInputStream);
@@ -721,20 +724,20 @@ public final class GeneratorWidget extends AbstractWidget {
                                 }
                             }
 
-                            logger.log(Level.INFO, "rename of file 'YYYY_01nn_Arbeitsblatt.docx' successful");
+                            logger.info("Rename of file 'YYYY_01nn_Arbeitsblatt.docx' successful");
                         }
                     }
                 }
             }
         } catch (IOException e) {
-            logger.log(Level.WARNING, "can not read directory '01.Organisation'");
+            logger.warn("Can not read directory '01.Organisation'", e.getCause());
         }
     }
 
     /**
      * Renames some special files in the admin folder.
      * <p>
-     * They are special for my company and may not work for you with a normal usage of {@code RyCON}.
+     * They are special for my company and may not work for you with a normal usage of <tt>RyCON</tt>.
      *
      * @param number     number of the generated admin folder
      * @param folderType differ between admin or project folder
@@ -761,7 +764,7 @@ public final class GeneratorWidget extends AbstractWidget {
     }
 
     private void replaceInParagraphs(Map<String, String> replacements, List<XWPFParagraph> xwpfParagraphs) {
-        long count = 0;
+        // long count = 0;
         for (XWPFParagraph paragraph : xwpfParagraphs) {
             List<XWPFRun> runs = paragraph.getRuns();
             for (Map.Entry<String, String> replPair : replacements.entrySet()) {
@@ -769,7 +772,7 @@ public final class GeneratorWidget extends AbstractWidget {
                 String repl = replPair.getValue();
                 TextSegement found = paragraph.searchText(find, new PositionInParagraph());
                 if (found != null) {
-                    count++;
+                    // count++;
                     if (found.getBeginRun() == found.getEndRun()) {
                         // whole search string is in one Run
                         XWPFRun run = runs.get(found.getBeginRun());

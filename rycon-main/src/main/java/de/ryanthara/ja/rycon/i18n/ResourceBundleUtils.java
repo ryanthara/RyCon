@@ -17,11 +17,15 @@
  */
 package de.ryanthara.ja.rycon.i18n;
 
+import de.ryanthara.ja.rycon.data.XMLResourceBundleControl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 /**
- * The {@code ResourceBundleUtils} prepares all the texts for {@code RyCON}.
+ * The {@code ResourceBundleUtils} prepares all the texts for <tt>RyCON</tt>.
  *
  * @author sebastian
  * @version 1
@@ -29,23 +33,41 @@ import java.util.ResourceBundle;
  */
 public final class ResourceBundleUtils {
 
+    private static final Logger logger = LoggerFactory.getLogger(ResourceBundleUtils.class.getName());
+
     private static final String INDICATOR_MISSING_RESOURCE = "?";
     private static final String INDICATOR_MISSING_KEY = "??";
 
     public static String getLangString(final ResourceBundles bundleName, final ResourceKeys key) {
-
         ResourceBundle resourceBundle = ResourceBundle.getBundle(bundleName.getBundleName());
 
         if (resourceBundle != null) {
             try {
                 return resourceBundle.getString(key.toString());
-            } catch (final MissingResourceException e) {
+            } catch (MissingResourceException e) {
+                logger.error("String '{}' is not in the resource bundle '{}'.", key.toString(), bundleName.getBundleName(), e.getCause());
                 return INDICATOR_MISSING_KEY + key;
             }
         }
 
         return INDICATOR_MISSING_RESOURCE + key;
+    }
 
+    public static String getLangStringFromXml(final ResourceBundles bundleName, final ResourceKeys key) {
+        ResourceBundle resourceBundle = ResourceBundle.getBundle(bundleName.getBundleName(), new XMLResourceBundleControl());
+
+        if (resourceBundle != null) {
+            try {
+                return resourceBundle.getString(key.toString());
+            } catch (final MissingResourceException e) {
+                logger.error("Missing key '{}", key.toString(), e.getCause());
+                return INDICATOR_MISSING_KEY + key;
+            }
+        }
+
+        logger.warn("Missing resource '{}", key.toString());
+
+        return INDICATOR_MISSING_RESOURCE + key;
     }
 
 } // end of ResourceBundleUtils

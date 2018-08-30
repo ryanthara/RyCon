@@ -18,7 +18,7 @@
 package de.ryanthara.ja.rycon.ui;
 
 /**
- * The {@code Images} enumeration holds the paths to all used icons or images of {@code RyCON}.
+ * The {@code Images} enumeration holds the paths to all used icons or images of <tt>RyCON</tt>.
  * <p>
  * This enumeration is used for encapsulating the data.
  *

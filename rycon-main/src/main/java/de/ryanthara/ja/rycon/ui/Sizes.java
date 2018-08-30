@@ -18,7 +18,7 @@
 package de.ryanthara.ja.rycon.ui;
 
 /**
- * The {@code Sizes} enumeration holds all the default size values for the ui of {@code RyCON}.
+ * The {@code Sizes} enumeration holds all the default size values for the ui of <tt>RyCON</tt>.
  * <p>
  * This enumeration is used for encapsulating the data.
  *

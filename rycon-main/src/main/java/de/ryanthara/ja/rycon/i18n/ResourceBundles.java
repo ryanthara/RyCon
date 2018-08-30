@@ -19,7 +19,7 @@ package de.ryanthara.ja.rycon.i18n;
 
 /**
  * The {@code ResourceBundles} enumeration holds the paths to all resource bundles
- * for {@code RyCON}.
+ * for <tt>RyCON</tt>.
  * <p>
  * This enumeration is used for encapsulating the data. The access to the different
  * resource bundles is done in the class {@link ResourceBundleUtils}.
@@ -30,14 +30,18 @@ package de.ryanthara.ja.rycon.i18n;
  */
 public enum ResourceBundles {
 
+    ADVICE("de/ryanthara/ja/rycon/ui/Advice"),
     BUTTONS("de/ryanthara/ja/rycon/ui/Buttons"),
-    COLUMNS("de/ryanthara/ja/rycon/ui/Columns"),
+    COLUMN_NAMES("de/ryanthara/ja/rycon/core/converter/ColumnNames"),
     CHECKBOXES("de/ryanthara/ja/rycon/ui/CheckBoxes"),
+    DISTINCT_TYPES("de/ryanthara/ja/rycon/core/transformation/DistinctTypes"),
     ERRORS("de/ryanthara/ja/rycon/ui/Errors"),
     FILECHOOSERS("de/ryanthara/ja/rycon/ui/FileChoosers"),
     LABELS("de/ryanthara/ja/rycon/ui/Labels"),
     MESSAGES("de/ryanthara/ja/rycon/ui/Messages"),
+    OPTIONS("de/ryanthara/ja/rycon/ui/Options"),
     PREFERENCES("de/ryanthara/ja/rycon/ui/Preferences"),
+    TOOL_TIPS("de/ryanthara/ja/rycon/ui/toolTips"),
     WARNINGS("de/ryanthara/ja/rycon/ui/Warnings"),
     WORDINDICES("de/ryanthara/ja/rycon/core/converter/LeicaGSIWordIndices");
 

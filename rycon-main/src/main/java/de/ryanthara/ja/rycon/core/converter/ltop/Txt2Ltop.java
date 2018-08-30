@@ -19,6 +19,8 @@ package de.ryanthara.ja.rycon.core.converter.ltop;
 
 import de.ryanthara.ja.rycon.core.elements.RyPoint;
 import de.ryanthara.ja.rycon.util.NumberFormatter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
@@ -26,6 +28,8 @@ import java.util.ArrayList;
  * This class provides functions to convert text formatted coordinate files into LTOP KOO files.
  */
 public class Txt2Ltop {
+
+    private static final Logger logger = LoggerFactory.getLogger(Txt2Ltop.class.getName());
 
     private final ArrayList<String> readStringLines;
 
@@ -46,7 +50,7 @@ public class Txt2Ltop {
      *
      * @return converted KOO file
      */
-    public ArrayList<String> convertTXT2KOO(boolean eliminateDuplicates, boolean sortOutputFile) {
+    public ArrayList<String> convertTxt2Koo(boolean eliminateDuplicates, boolean sortOutputFile) {
         ArrayList<String> result = new ArrayList<>();
         ArrayList<RyPoint> ryPoints = new ArrayList<>();
         String number, pointType, toleranceCategory, easting, northing, height, geoid, eta, xi;
@@ -86,7 +90,8 @@ public class Txt2Ltop {
                         break;
 
                     default:
-                        System.err.println("Txt2Ltop.convertTXT2KOO() : line contains less or more tokens " + line);
+                        logger.trace("Line contains less or more tokens ({}) than needed or allowed.", lineSplit.length);
+                        break;
                 }
 
                 // pick up the relevant elements from the blocks from every line

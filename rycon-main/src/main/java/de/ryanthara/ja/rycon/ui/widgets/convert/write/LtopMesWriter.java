@@ -27,11 +27,11 @@ import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
 import de.ryanthara.ja.rycon.ui.widgets.convert.SourceButton;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.odftoolkit.simple.SpreadsheetDocument;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Instances of this class are used for writing LTOP MES files from the {@link ConverterWidget} of <tt>RyCON</tt>.
@@ -42,7 +42,7 @@ import java.util.logging.Logger;
  */
 public class LtopMesWriter implements Writer {
 
-    private final static Logger logger = Logger.getLogger(LtopMesWriter.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(LtopMesWriter.class.getName());
 
     private final Path path;
     private final ArrayList<String> readStringFile;
@@ -64,7 +64,7 @@ public class LtopMesWriter implements Writer {
     /**
      * Returns true if the prepared {@link SpreadsheetDocument} for file writing was written to the file system.
      *
-     * @return writer success
+     * @return write success
      */
     @Override
     public boolean writeSpreadsheetDocument() {
@@ -98,7 +98,7 @@ public class LtopMesWriter implements Writer {
             default:
                 writeFile = null;
 
-                logger.log(Level.SEVERE, "LtopMesWriter.writeStringFile() : unknown file format " + SourceButton.fromIndex(parameter.getSourceNumber()));
+                logger.warn("Can not write {} file format to LTOP MES file.", SourceButton.fromIndex(parameter.getSourceNumber()));
         }
 
         if (WriteFile2Disk.writeFile2Disk(path, writeFile, "", FileNameExtension.MES.getExtension())) {
@@ -111,7 +111,7 @@ public class LtopMesWriter implements Writer {
     /**
      * Returns true if the prepared {@link Workbook} for file writing was written to the file system.
      *
-     * @return writer success
+     * @return write success
      */
     @Override
     public boolean writeWorkbookFile() {

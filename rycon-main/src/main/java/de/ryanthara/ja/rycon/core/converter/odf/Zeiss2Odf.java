@@ -22,6 +22,8 @@ import de.ryanthara.ja.rycon.core.elements.ZeissBlock;
 import org.odftoolkit.simple.SpreadsheetDocument;
 import org.odftoolkit.simple.table.Cell;
 import org.odftoolkit.simple.table.Table;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -35,6 +37,8 @@ import java.util.ArrayList;
  * @since 12
  */
 public class Zeiss2Odf {
+
+    private static final Logger logger = LoggerFactory.getLogger(Zeiss2Odf.class.getName());
 
     private final ArrayList<String> readStringLines;
     private SpreadsheetDocument spreadsheetDocument;
@@ -59,7 +63,7 @@ public class Zeiss2Odf {
      *
      * @return success conversion success
      */
-    public boolean convertZeiss2ODS(Path sheetName) {
+    public boolean convertZeiss2Ods(Path sheetName) {
         int rowIndex = 0;
         int colIndex;
 
@@ -89,8 +93,11 @@ public class Zeiss2Odf {
 
                 rowIndex = rowIndex + 1;
             }
+        } catch (RuntimeException e) {
+            logger.error("Thrown runtime exception.", e.getCause());
+            throw e;
         } catch (Exception e) {
-            System.err.println("ERROR: unable to create output file " + sheetName.toString() + ".");
+            logger.warn("Can not convert Zeiss REC file to open document spreadsheet file.", e.getCause());
         }
 
         return rowIndex > 1;

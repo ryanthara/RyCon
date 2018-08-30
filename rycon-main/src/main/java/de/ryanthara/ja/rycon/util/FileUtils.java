@@ -17,6 +17,9 @@
  */
 package de.ryanthara.ja.rycon.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.DirectoryStream.Filter;
@@ -26,8 +29,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static java.nio.file.FileVisitResult.CONTINUE;
 import static java.nio.file.FileVisitResult.SKIP_SUBTREE;
@@ -39,7 +40,7 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
  * {@code FileUtils} implements static access to basic file nio-operations for copying, etc.
  * <p>
  * Because of the fact that there are a lot of users who has not the current java version
- * running, RyCON still not uses any functions of java version 8 in versions lower than 2.
+ * running, <tt>RyCON</tt> still not uses any functions of java version 8 in versions lower than 2.
  *
  * @author sebastian
  * @version 4
@@ -47,13 +48,13 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
  */
 public class FileUtils {
 
-    private final static Logger logger = Logger.getLogger(FileUtils.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(FileUtils.class.getName());
 
     /**
      * Copies a file or directory and it's subdirectories recursively from source to target location.
      * <p>
      * Alternatively the Apache Commons IO functions can be used for the same task. But at the moment
-     * {@code RyCON} uses as less external libraries as necessary.
+     * <tt>RyCON</tt> uses as less external libraries as necessary.
      * <p>
      * This code is inspired from the <a href='http://docs.oracle.com/javase/tutorial/essential/io/examples/Copy.java'>Java Tutorial</a>.
      *
@@ -76,7 +77,7 @@ public class FileUtils {
      * With this overloaded method it is possible to overwrite files or directories.
      * <p>
      * Alternatively the Apache Commons IO functions can be used for the same task. But at the moment
-     * {@code RyCON} uses as less external libraries as necessary.
+     * <tt>RyCON</tt> uses as less external libraries as necessary.
      * <p>
      * This code is inspired from the <a href='http://docs.oracle.com/javase/tutorial/essential/io/examples/Copy.java'>Java Tutorial</a>.
      *
@@ -136,7 +137,7 @@ public class FileUtils {
                 return lastFilePath.get().getName(lastFilePath.get().getNameCount() - 1).toString();
             }
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Can't get the recent file in directory " + dir.toString());
+            logger.error("Can not get the recent file in directory '{}'.", dir.toString(), e.getCause());
         }
 
         return "";
@@ -159,8 +160,8 @@ public class FileUtils {
             for (Path path : directoryStream) {
                 fileNames.add(path);
             }
-        } catch (IOException ex) {
-            logger.log(Level.WARNING, "Can not reader directory: " + directory);
+        } catch (IOException e) {
+            logger.error("Can not read directory '{}'.", directory, e.getCause());
         }
 
         return fileNames;
@@ -172,7 +173,7 @@ public class FileUtils {
      * With this overloaded method it is possible to overwrite files.
      * <p>
      * Alternatively the Apache Commons IO functions can be used for the same task. But at the moment
-     * {@code RyCON} uses as less external libraries as necessary.
+     * <tt>RyCON</tt> uses as less external libraries as necessary.
      * <p>
      * This code is inspired from the <a href='http://docs.oracle.com/javase/tutorial/essential/io/examples/Copy.java'>Java Tutorial</a>.
      *
@@ -238,7 +239,7 @@ public class FileUtils {
                     FileTime time = Files.getLastModifiedTime(dir);
                     Files.setLastModifiedTime(newDir, time);
                 } catch (IOException e) {
-                    logger.log(Level.SEVERE, "unable to copy all attributes to: " + newDir, e);
+                    logger.error("Unable to copy all attributes to '{}'.", newDir, e.getCause());
                 }
             }
 
@@ -273,7 +274,7 @@ public class FileUtils {
             } catch (FileAlreadyExistsException e) {
                 // ignore
             } catch (IOException e) {
-                logger.log(Level.SEVERE, "unable to create: " + newDir, e);
+                logger.error("Unable to create directory '{}'.", newDir, e.getCause());
                 return SKIP_SUBTREE;
             }
 
@@ -303,21 +304,20 @@ public class FileUtils {
          * that could not be opened, and other reasons.
          *
          * @param file a reference to the file
-         * @param exc  the I/O exception that prevented the file from being visited
+         * @param e    the I/O exception that prevented the file from being visited
          *
          * @return the visit result
          */
         @Override
-        public FileVisitResult visitFileFailed(Path file, IOException exc) {
-            if (exc instanceof FileSystemLoopException) {
-                logger.log(Level.SEVERE, "cycle detected: " + file, exc);
+        public FileVisitResult visitFileFailed(Path file, IOException e) {
+            if (e instanceof FileSystemLoopException) {
+                logger.warn("Cycle detected '{}'.", file, e.getCause());
             } else {
-                logger.log(Level.SEVERE, "Unable to copy: " + file, exc);
+                logger.warn("Unable to copy '{}'.", file, e.getCause());
             }
 
             return CONTINUE;
         }
-
     } // end of TreeCopier (inner class)
 
 } // end of FileUtils

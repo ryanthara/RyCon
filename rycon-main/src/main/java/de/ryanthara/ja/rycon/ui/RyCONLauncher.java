@@ -21,7 +21,7 @@ package de.ryanthara.ja.rycon.ui;
 import org.eclipse.swt.widgets.Display;
 
 /**
- * RyCONLauncher controls the launch process of RyCON and initialize the Display, a SplashScreen and
+ * RyCONLauncher controls the launch process of <tt>RyCON</tt> and initialize the Display, a SplashScreen and
  * all of it's services before the main window is shown.
  * <p>
  * This functionality isn't still active.

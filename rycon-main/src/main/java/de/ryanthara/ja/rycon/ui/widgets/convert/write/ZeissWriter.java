@@ -24,6 +24,8 @@ import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
 import de.ryanthara.ja.rycon.ui.widgets.convert.SourceButton;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.odftoolkit.simple.SpreadsheetDocument;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -38,6 +40,8 @@ import java.util.List;
  * @since 12
  */
 public class ZeissWriter implements Writer {
+
+    private static final Logger logger = LoggerFactory.getLogger(ZeissWriter.class.getName());
 
     private final Path path;
     private final ArrayList<String> readStringFile;
@@ -62,7 +66,7 @@ public class ZeissWriter implements Writer {
     /**
      * Returns true if the prepared {@link SpreadsheetDocument} for file writing was written to the file system.
      *
-     * @return writer success
+     * @return write success
      */
     @Override
     public boolean writeSpreadsheetDocument() {
@@ -92,7 +96,7 @@ public class ZeissWriter implements Writer {
 
             case CSV:
                 Csv2Zeiss csv2Zeiss = new Csv2Zeiss(readCSVFile);
-                writeFile = csv2Zeiss.convertCSV2REC(parameter.getDialect());
+                writeFile = csv2Zeiss.convertCsv2Rec(parameter.getDialect());
                 break;
 
             case CAPLAN_K:
@@ -120,7 +124,8 @@ public class ZeissWriter implements Writer {
 
             default:
                 writeFile = null;
-                System.err.println("ZeissWriter.writeStringFile() : unknown file format " + SourceButton.fromIndex(parameter.getSourceNumber()));
+
+                logger.warn("Can not write {} file format to Zeiss REC file.", SourceButton.fromIndex(parameter.getSourceNumber()));
         }
 
         return WriteFile2Disk.writeFile2Disk(path, writeFile, "",FileNameExtension.REC.getExtension());
@@ -129,7 +134,7 @@ public class ZeissWriter implements Writer {
     /**
      * Returns true if the prepared {@link Workbook} for file writing was written to the file system.
      *
-     * @return writer success
+     * @return write success
      */
     @Override
     public boolean writeWorkbookFile() {

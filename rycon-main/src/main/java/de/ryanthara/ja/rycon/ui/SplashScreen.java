@@ -29,9 +29,11 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * {@code SplashScreen} displays a splash screen while RyCON is starting.
+ * {@code SplashScreen} displays a splash screen while <tt>RyCON</tt> is starting.
  * <p>
  * This is necessary because of a bug in Cocoa from Apple when
  * starting a SWT-jar which needs -XstartOnFirstThread option!
@@ -47,8 +49,9 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class SplashScreen {
 
-    private int splashPos = 0;
+    private static final Logger logger = LoggerFactory.getLogger(SplashScreen.class.getName());
     private static final int SPLASH_MAX = 100;
+    private int splashPos = 0;
 
     /**
      * Constructor with most of the functionality.
@@ -103,7 +106,7 @@ public class SplashScreen {
                 try {
                     Thread.sleep(20);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    logger.error("Thread interrupted.", e.getCause());
                 }
                 progressBar.setSelection(splashPos);
             }

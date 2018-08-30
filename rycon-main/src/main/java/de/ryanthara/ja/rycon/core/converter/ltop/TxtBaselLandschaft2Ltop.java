@@ -19,6 +19,8 @@ package de.ryanthara.ja.rycon.core.converter.ltop;
 
 import de.ryanthara.ja.rycon.core.elements.RyPoint;
 import de.ryanthara.ja.rycon.util.NumberFormatter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
@@ -31,6 +33,8 @@ import java.util.ArrayList;
  * @since 12
  */
 public class TxtBaselLandschaft2Ltop {
+
+    private static final Logger logger = LoggerFactory.getLogger(TxtBaselLandschaft2Ltop.class.getName());
 
     private final ArrayList<String> readStringLines;
 
@@ -51,7 +55,7 @@ public class TxtBaselLandschaft2Ltop {
      *
      * @return converted KOO file
      */
-    public ArrayList<String> convertTXTBaselLandschaft2KOO(boolean eliminateDuplicates, boolean sortOutputFile) {
+    public ArrayList<String> convertTxtBaselLandschaft2Koo(boolean eliminateDuplicates, boolean sortOutputFile) {
         ArrayList<String> result = new ArrayList<>();
         ArrayList<RyPoint> ryPoints = new ArrayList<>();
 
@@ -99,7 +103,8 @@ public class TxtBaselLandschaft2Ltop {
                         break;
 
                     default:
-                        System.err.println("TxtBaselLandschaft2Ltop.convertTXTBaselLandschaft2KOO() : line contains less or more tokens " + line);
+                        logger.trace("Line contains less or more tokens ({}) than needed or allowed.", lineSplit.length);
+                        break;
                 }
 
                 // pick up the relevant elements from the blocks from every line

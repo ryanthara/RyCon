@@ -52,7 +52,7 @@ public class CsvBaselStadt2Ltop {
      *
      * @return converted KOO file
      */
-    public ArrayList<String> convertCSVBaselStadt2KOO(boolean eliminateDuplicates, boolean sortOutputFile) {
+    public ArrayList<String> convertCSVBaselStadt2Koo(boolean eliminateDuplicates, boolean sortOutputFile) {
         ArrayList<String> result = new ArrayList<>();
         ArrayList<RyPoint> ryPoints = new ArrayList<>();
         String number, pointType, toleranceCategory, easting, northing, height, geoid, eta, xi;

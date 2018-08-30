@@ -24,7 +24,7 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.FILECHOOSERS;
 
 /**
  * The {@code DirectoryDialogsTypes} enumeration holds the directory dialog text
- * and message strings for {@code RyCON}.
+ * and message strings for <tt>RyCON</tt>.
  * <p>
  * This enumeration is used for encapsulating the data.
  *

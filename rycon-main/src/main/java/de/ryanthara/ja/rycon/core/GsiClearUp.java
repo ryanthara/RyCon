@@ -64,7 +64,7 @@ public class GsiClearUp {
      * <li>target point measurements are cleared up</li>
      * <li>control point measurements are cleared up</li>
      * </ul>
-     * The simple 'intelligence' of RyCON tries to handle special structures and indifferent
+     * The simple 'intelligence' of <tt>RyCON</tt> tries to handle special structures and indifferent
      * line sequences which can be identified by the order or a special naming, like 'STKE'
      * for example, what is the set identification for the control points.
      * <p>

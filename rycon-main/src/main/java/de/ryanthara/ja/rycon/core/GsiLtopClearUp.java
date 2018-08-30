@@ -19,17 +19,17 @@ package de.ryanthara.ja.rycon.core;
 
 import de.ryanthara.ja.rycon.core.converter.gsi.BaseToolsGsi;
 import de.ryanthara.ja.rycon.data.DefaultKeys;
-import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
 import de.ryanthara.ja.rycon.i18n.Labels;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 import de.ryanthara.ja.rycon.i18n.Warnings;
+import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LABELS;
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.WARNINGS;
@@ -51,12 +51,12 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.WARNINGS;
  * </ul>
  *
  * @author sebastian
- * @version 1
+ * @version 2
  * @since 12
  */
 public class GsiLtopClearUp {
 
-    private final static Logger logger = Logger.getLogger(GsiLtopClearUp.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(GsiLtopClearUp.class.getName());
 
     private final ArrayList<String> readStringLines;
 
@@ -67,6 +67,7 @@ public class GsiLtopClearUp {
      */
     public GsiLtopClearUp(ArrayList<String> readStringLines) {
         this.readStringLines = readStringLines;
+
     }
 
     /**
@@ -86,6 +87,10 @@ public class GsiLtopClearUp {
      * </ul>
      * <p>
      * Free Station lines are identified by the defined free station parameter.
+     * <p>
+     * The extended version of this function works with a 'LTOP+' format mask,
+     * which writes an additional block at the end. This block is used to identify
+     * one and two face measurements and has the WI 79.
      *
      * @return clean up LTOP MES file
      */
@@ -114,6 +119,12 @@ public class GsiLtopClearUp {
             }
 
             int tokens = (line.length() + size - 1) / size;
+
+            // Ignore 2 face detection gsi block from LTOP+ format mask which is at the end of the line
+            if (line.contains("79..16+")) {
+                // TODO find out the right WI
+                tokens = tokens - 1;
+            }
 
             switch (tokens) {
                 case 5:         // station line
@@ -154,7 +165,7 @@ public class GsiLtopClearUp {
                     break;
 
                 default:
-                    logger.log(Level.FINE, "line contains less or more tokens than expected. " + line);
+                    logger.trace("Line '{}' contains less or more tokens than expected. ", line);
             }
 
             previousLine = line;

@@ -18,12 +18,12 @@
 package de.ryanthara.ja.rycon.core;
 
 import de.ryanthara.ja.rycon.core.logfile.leica.Identifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Instances of {@link LogfileClearUp} provides functions to clear up a logfile
@@ -37,7 +37,7 @@ import java.util.logging.Logger;
  */
 public final class LogfileClearUp {
 
-    private final static Logger logger = Logger.getLogger(LogfileClearUp.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(LogfileClearUp.class.getName());
 
     private final ArrayList<String> readStringLines;
 
@@ -52,19 +52,18 @@ public final class LogfileClearUp {
     }
 
     /**
-     * Clean the <tt>Leica Geosystems</tt> logfile.txt format with different kind of
+     * Cleans the <tt>Leica Geosystems</tt> logfile.txt format with different kind of
      * approaches to identify regular structures like not needed lines or useless blocks
      * without any information for the user.
      * <p>
      * Empty blocks has no lines between the start and end line and deleted automatically.
      * <p>
      * Useless blocks are for example stake out logs without saved points, or free station
-     * lines without set station.
+     * lines without a set station. There are much more ones.
      *
      * @param cleanBlocksByContent Ignore the 'intelligence' to identify useless blocks by content.
      *                             Only open and instantly closed blocks are removed.
-     *
-     * @return cleaned logfile as {@link ArrayList} with the lines as {@link String}
+     * @return clear up logfile as {@link ArrayList} with the lines as {@link String}
      */
     public ArrayList<String> processClean(boolean cleanBlocksByContent) {
         /*
@@ -91,7 +90,7 @@ public final class LogfileClearUp {
             if (currentLine.contains(blockBegin)) {
                 start = i;
 
-                // insert first two lines of the logfile and two empty lines to get a correct logfile start
+                // Insert first two lines of the logfile and two empty lines to get a correct logfile start
                 if (i == 0 && currentLine.contains(blockBegin)) {
                     result.add(readStringLines.get(i));
                     result.add(readStringLines.get(i + 1));
@@ -123,10 +122,10 @@ public final class LogfileClearUp {
                                 temp = cleanVolumeCalculations(readStringLines.subList(start, end));
                                 break;
                             default:
-                                logger.log(Level.SEVERE, "Found unknown logfile structure: " + currentBlock.getIdentifier());
+                                logger.trace("Found unknown logfile structure '{}'.", currentBlock.getIdentifier());
                         }
 
-                        // reset currentBlock due to begin-end delete
+                        // Reset currentBlock due to begin-end delete
                         currentBlock = null;
                     }
                 } else {
@@ -140,7 +139,7 @@ public final class LogfileClearUp {
                 start = 0;
             }
 
-            // detect block type
+            // Detect block type
             if (i == start + 5) {
                 if (currentLine.contains(Identifier.COGO.getIdentifier())) {
                     currentBlock = Identifier.COGO;
@@ -159,7 +158,7 @@ public final class LogfileClearUp {
                 }
             }
 
-            // insert last two lines of the logfile to get a correct logfile ending
+            // Insert last two lines of the logfile to get a correct logfile ending
             if (i == readStringLines.size() - 1 && currentLine.contains(blockEnd)) {
                 result.add(readStringLines.get(i - 1));
                 result.add(readStringLines.get(i));
@@ -198,8 +197,8 @@ public final class LogfileClearUp {
             boolean noCalculatedPoints = true;
 
             for (int i = 0; i < block.size(); i++) {
-                // skip first two and last 3 lines
-                if (i > 1 && i < block.size() - 3) {
+                // skip first two and last 4 lines
+                if (i > 1 && i < block.size() - 4) {
                     final String s = block.get(i);
 
                     // detect identifier -> block is not empty
@@ -252,7 +251,7 @@ public final class LogfileClearUp {
             }
         }
 
-        return new ArrayList<>(result != null ? result : null);
+        return new ArrayList<>(result);
     }
 
     /*
@@ -306,7 +305,7 @@ public final class LogfileClearUp {
             }
         }
 
-        return new ArrayList<>(result != null ? result : null);
+        return new ArrayList<>(result);
     }
 
     /*
@@ -341,7 +340,7 @@ public final class LogfileClearUp {
             }
         }
 
-        return new ArrayList<>(result != null ? result : null);
+        return new ArrayList<>(result);
     }
 
     /*

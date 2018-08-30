@@ -30,7 +30,7 @@ public class WriteParameter {
     private final boolean cadworkUseZeroHeights;
     private final boolean kFormatUseSimpleFormat;
     private final boolean ltopEliminateDuplicatePoints;
-    private final boolean ltopSortOutputFileByNumber;
+    private final boolean sortOutputFileByNumber;
     private final boolean sourceContainsCode;
     private final boolean writeCodeColumn;
     private final boolean writeCommentLine;
@@ -48,7 +48,7 @@ public class WriteParameter {
      * @param cadworkUseZeroHeights        use zero heights from cadwork
      * @param kFormatUseSimpleFormat       use simple K format
      * @param ltopEliminateDuplicatePoints eliminate duplicate points
-     * @param ltopSortOutputFileByNumber   sort output file by number option
+     * @param sortOutputFileByNumber       sort output file by number option
      * @param sourceContainsCode           true if source file contains code column
      * @param writeCodeColumn              writer code column to the output file
      * @param writeCommentLine             writer comment line to the output file
@@ -62,7 +62,7 @@ public class WriteParameter {
                           boolean cadworkUseZeroHeights,
                           boolean kFormatUseSimpleFormat,
                           boolean ltopEliminateDuplicatePoints,
-                          boolean ltopSortOutputFileByNumber,
+                          boolean sortOutputFileByNumber,
                           boolean sourceContainsCode,
                           boolean writeCodeColumn,
                           boolean writeCommentLine,
@@ -75,7 +75,7 @@ public class WriteParameter {
         this.cadworkUseZeroHeights = cadworkUseZeroHeights;
         this.kFormatUseSimpleFormat = kFormatUseSimpleFormat;
         this.ltopEliminateDuplicatePoints = ltopEliminateDuplicatePoints;
-        this.ltopSortOutputFileByNumber = ltopSortOutputFileByNumber;
+        this.sortOutputFileByNumber = sortOutputFileByNumber;
         this.sourceContainsCode = sourceContainsCode;
         this.writeCodeColumn = writeCodeColumn;
         this.writeCommentLine = writeCommentLine;
@@ -185,12 +185,12 @@ public class WriteParameter {
     }
 
     /**
-     * Returns sort LTOP KOO files by point number.
+     * Returns sort output files ascending by point number.
      *
-     * @return LTOP sort KOO file by number
+     * @return ascending sort output file by number
      */
-    boolean isLtopSortOutputFileByNumber() {
-        return ltopSortOutputFileByNumber;
+    boolean isSortOutputFileByNumber() {
+        return sortOutputFileByNumber;
     }
 
     /**

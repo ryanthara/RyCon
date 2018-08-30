@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <entry key="converter_CadworkSource">Source files: options for cadwork node.dat files</entry>
+    <entry key="converter_CaplanKTarget">Target files: options für Caplan K files</entry>
+    <entry key="converter_CsvSource">Source files: options for comma separated values files</entry>
+    <entry key="converter_CsvTarget">Target files: options for comma separated values files</entry>
+    <entry key="converter_GsiTarget">Source files: options for Leica Geosystems GSI files</entry>
+    <entry key="converter_LtopTarget">Target files: options for LTOP KOO and MES files</entry>
+    <entry key="converter_TxtSource">Source files: options for text files</entry>
+    <entry key="converter_TxtTarget">Target files: options for text files</entry>
+    <entry key="general">General options</entry>
+</properties>

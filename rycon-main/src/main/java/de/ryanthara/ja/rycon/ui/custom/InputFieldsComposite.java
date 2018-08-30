@@ -18,11 +18,11 @@
 
 package de.ryanthara.ja.rycon.ui.custom;
 
-import de.ryanthara.ja.rycon.util.check.TextCheck;
 import de.ryanthara.ja.rycon.i18n.Buttons;
 import de.ryanthara.ja.rycon.i18n.Labels;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 import de.ryanthara.ja.rycon.ui.Sizes;
+import de.ryanthara.ja.rycon.util.check.TextCheck;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -30,6 +30,8 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -48,6 +50,8 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LABELS;
  * @since 4
  */
 public class InputFieldsComposite extends Composite {
+
+    private static final Logger logger = LoggerFactory.getLogger(InputFieldsComposite.class.getName());
 
     private final Object callingObject;
     private Text targetTextField;
@@ -226,10 +230,10 @@ public class InputFieldsComposite extends Composite {
             try {
                 method.invoke(callingObject);
             } catch (IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
+                logger.error("Illegal access or invocation target for calling an action button.", e.getCause());
             }
         } catch (NoSuchMethodException e) {
-            e.printStackTrace();
+            logger.error("No such method for calling an action button.", e.getCause());
         }
     }
 

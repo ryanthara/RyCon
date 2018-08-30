@@ -18,9 +18,9 @@
 
 package de.ryanthara.ja.rycon.ui.custom;
 
+import de.ryanthara.ja.rycon.ui.Images;
 import de.ryanthara.ja.rycon.ui.events.StatusInformationEvent;
 import de.ryanthara.ja.rycon.ui.events.StatusInformationListener;
-import de.ryanthara.ja.rycon.ui.Images;
 import de.ryanthara.ja.rycon.ui.image.ImageConverter;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
@@ -30,6 +30,8 @@ import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Vector;
 
@@ -48,12 +50,14 @@ import java.util.Vector;
  */
 public class StatusBar extends Composite implements StatusInformationListener {
 
+    private static final Logger logger = LoggerFactory.getLogger(StatusBar.class.getName());
+
     private Image iconError;
     private Image iconOK;
     private Image iconWarning;
     private Label icon;
     private Label message;
-    private Vector statusInformationListeners;
+    private Vector<StatusInformationListener> statusInformationListeners;
 
     /**
      * Constructs a new instance of this class given it's parent composite and the style.
@@ -117,7 +121,8 @@ public class StatusBar extends Composite implements StatusInformationListener {
 
             default:
                 icon.setImage(iconOK);
-                System.err.println("StatusBar.setStatus() : default icon was set!");
+                logger.info("Set default icon to the status bar.");
+                break;
         }
 
         // force a Layout to recalculate the sizes of and reposition children
@@ -159,7 +164,7 @@ public class StatusBar extends Composite implements StatusInformationListener {
         data.right = new FormAttachment(100, 0);
         icon.setLayoutData(data);
 
-        statusInformationListeners = new Vector();
+        statusInformationListeners = new Vector<>();
 
         addStatusInformationListener(e -> message.setText(e.getStatusText()));
 

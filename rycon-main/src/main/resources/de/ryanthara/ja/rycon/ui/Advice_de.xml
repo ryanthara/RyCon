@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <entry key="analyzerWidget">Mit Hilfe des Analysewerkzeugs kann eine Log-Datei im Leica Geosystems logfile.txt-Format schnell und einfach analysiert werden.</entry>
+    <entry key="clearUpWidget">Mit Hilfe von RyCON können Messdaten im Leica Geosystems GSI-Format und Leica Geosystems Logfile.txt-Dateien automatisiert bereinigt werden.</entry>
+    <entry key="clearUpWidget2">Das Programm erkennt bekannte Standpunkte, Freie Stationen und deren Anschlussziele und fügt diese nicht in die Ausgabedatei ein. Zusätzlich können auch die Messungen der Orientierungskontrollen entfernt werden.</entry>
+    <entry key="clearUpWidget3">RyCON überschreibt keine original Messdateien, sondern legt die Resultate in einer neu erstellten Datei ab. Der Dateiname lautet nach Vorgabe: "Dateiname_EDIT.GSI". Dies kann in den Einstellungen geändert werden.</entry>
+    <entry key="converterWidget">Mit Hilfe von RyCON können Koordinaten und Messdaten zwischen verschiedenen Formaten konvertiert werden.</entry>
+    <entry key="converterWidget2">RyCON unterstützt verschiedenen Formate und lässt sich bei Bedarf um weitere Formate ergänzen.</entry>
+    <entry key="converterWidget3">RyCON überschreibt keine originalen Dateien, sondern legt die Resultate in einer neu erstellten Datei ab. Der Dateiname lautet: "Dateiname_CONV.ENDUNG".</entry>
+    <entry key="generatorWidget">Mit Hilfe von RyCON kann für die eingegebene Projektnummer ein neuer Ordner aus einer bestehenden Ordnerstruktur erzeugt werden.</entry>
+    <entry key="generatorWidget2">Mehrere Ordner werden gleichzeitig erzeugt, wenn die Projektnummern mit einem Semikolon getrennt sind. Bestehende Ordner können weder verändert, noch überschrieben oder gar gelöscht werden.</entry>
+    <entry key="generatorWidget3">Vorgaben für Pfade und Vorlagen-Ordner können in den Einstellungen von RyCON vorgenommen werden.</entry>
+    <entry key="levellingWidget">Mit Hilfe von RyCON können Nivellement-Resultate (Beobachtungen, Höhen und Ausgleichungsergebnisse) verschiedener Instrumente und Programme für den CAD-Import aufbereitet werden.
+    </entry>
+    <entry key="levellingWidget2">Das Programm übernimmt vorhandene Lagekoordinaten oder fügt Pseudowerte ein. Die X- und Y-Werte werden je Zeile um einen Betrag von einem Meter erhöht.</entry>
+    <entry key="levellingWidget3">RyCON überschreibt keine originalen Messdateien, sondern legt die Resultate in einer neu erstellten Datei ab.</entry>
+    <entry key="pasteCoordinates">Die aus der Zwischenablage eingefügten Koordinaten werden automatisch erkannt, transformiert und in die Zwischenablage zurück kopiert.
+
+        Als Trennzeichen können Leerzeichen, Tabulatoren, Kommas oder Semikolons benutzt werden.
+    </entry>
+    <entry key="splitterWidget">Mit Hilfe von RyCON können Mess- und Koordinatendateien unterschiedlicher Formate automatisch nach Code getrennt werden.</entry>
+    <entry key="splitterWidget2">Das Programm erkennt Mess- und Koordinatenzeilen mit Code und erstellt für jeden aufgetretenen Code eine separate Datei. Diese enthält nur die Zeilen des jeweiligen Codes.
+    </entry>
+    <entry key="splitterWidget3">RyCON überschreibt keine Originaldaten oder Dateien, sondern legt die Resultate in neuen Dateien ab. Der Dateiname lautet: "Dateiname_CODE-X.ENDUNG".</entry>
+    <entry key="text">Hinweis</entry>
+    <entry key="transferWidget">Mit Hilfe von RyCON können Messdaten von der Speicherkarte automatisch in Verzeichnisse auf dem Server kopiert oder verschoben werden.
+    </entry>
+    <entry key="transferWidget2">Das Programm erkennt die gemessenen Jobs, die dazugehörigen Export-Dateien, sowie die angelegten "Log-Files" und kopiert diese in die konfigurierten Unterordner eines ausgewählten Projektes.</entry>
+    <entry key="transferWidget3">RyCON kann keine Dateien im Zielverzeichnis überschreiben. Das Verschieben der Daten von der Speicherkarte geschieht auf eigenes Risiko.</entry>
+    <entry key="transformationWidget">Mit Hilfe von RyCON und der verwendeten swisstopo REFRAME.jar (Version 3.2) können Bezugsrahmenwechsel zwischen den Bezugsrahmen LV03 und LV95 berechnet werden.</entry>
+    <entry key="transformationWidget2"></entry>
+    <entry key="transformationWidget3"></entry>
+</properties>

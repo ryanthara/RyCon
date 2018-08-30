@@ -18,7 +18,7 @@
 package de.ryanthara.ja.rycon.i18n;
 
 /**
- * The {@code Labels} enumeration holds all the label texts for {@code RyCON}.
+ * The {@code Labels} enumeration holds all the label texts for <tt>RyCON</tt>.
  * <p>
  * This enumeration is used for encapsulating the data. The interface {@link ResourceKeys}
  * is used to access different enumerations in the class {@link ResourceBundleUtils}.
@@ -45,6 +45,7 @@ public enum Labels implements ResourceKeys {
     commentLineLTOP,
     converterInitialized,
     converterText,
+    copyAndPasteText,
     dataGroupText,
     errorTextMsgBox,
     exitInitialized,
@@ -62,7 +63,6 @@ public enum Labels implements ResourceKeys {
     levellingText,
     logfilePath,
     recentFolderText,
-    optionsText,
     outputFormatText,
     pathSelectionText,
     preferencesDialogMessage,
@@ -84,16 +84,15 @@ public enum Labels implements ResourceKeys {
     targetFormatText,
     targetProject,
     targetText,
-    tipClearUpWidget,
-    tipConverterWidget,
-    tipGeneratorWidget,
-    tipLevellingWidget,
-    tipSplitterWidget,
-    tipTransferWidget,
     transferInitialized,
     transferText,
+    transformationInitialized,
+    transformationText,
     txtCsvGroup,
     warningTextMsgBox,
     websiteItemTrayMenu,
+    projectionChooserSource,
+    referenceFrameChooserSource,
+    referenceFrameChooserTarget,
 
 } // end of Labels

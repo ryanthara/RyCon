@@ -89,7 +89,7 @@ public class RadioHelper {
     @SuppressWarnings("MethodCanBeVariableArityMethod")
     public static void toggleBtn(Control[] master, Control[] slave) {
         int selectedMaster = -1;
-        int selectedSlave;
+        int selectedSlave = -2;
 
         // find out which radio button is selected in the master group (the one which was clicked)
         for (int i = 0; i < master.length; i++) {

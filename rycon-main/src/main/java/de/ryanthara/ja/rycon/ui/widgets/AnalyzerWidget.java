@@ -37,13 +37,13 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.*;
 import static de.ryanthara.ja.rycon.ui.custom.Status.OK;
@@ -58,9 +58,9 @@ import static de.ryanthara.ja.rycon.ui.custom.Status.OK;
  * @version 1
  * @since 12
  */
-public class ReportWidget extends AbstractWidget {
+public class AnalyzerWidget extends AbstractWidget {
 
-    private final static Logger logger = Logger.getLogger(ReportWidget.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(AnalyzerWidget.class.getName());
 
     private final String[] acceptableFileSuffixes = {"*.txt"};
     private Shell parent;
@@ -73,11 +73,11 @@ public class ReportWidget extends AbstractWidget {
      *
      * @param parent parent shell
      */
-    public ReportWidget(final Shell parent) {
+    public AnalyzerWidget(final Shell parent) {
         this.parent = parent;
+        this.files2read = new Path[0];
+        this.innerShell = null;
 
-        files2read = new Path[0];
-        innerShell = null;
 
         initUI();
         handleFileInjection();
@@ -91,9 +91,33 @@ public class ReportWidget extends AbstractWidget {
      *
      * @param droppedFiles {@link Path} array from drop source
      */
-    private ReportWidget(Path... droppedFiles) {
+    private AnalyzerWidget(Path... droppedFiles) {
         files2read = PathCheck.getValidFiles(droppedFiles, acceptableFileSuffixes);
         innerShell = null;
+    }
+
+    private void createAdvice(int width) {
+        Group group = new Group(innerShell, SWT.NONE);
+        group.setText(ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.text));
+
+        GridLayout gridLayout = new GridLayout(1, true);
+
+        GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
+        gridData.widthHint = width - 24;
+
+        group.setLayout(gridLayout);
+        group.setLayoutData(gridData);
+
+        Label tip = new Label(group, SWT.WRAP | SWT.BORDER | SWT.LEFT);
+
+        String text =
+                ResourceBundleUtils.getLangString(ADVICE, Advice.analyzerWidget) + "\n" +
+                        ResourceBundleUtils.getLangString(ADVICE, Advice.analyzerWidget2) + "\n" +
+                        ResourceBundleUtils.getLangString(ADVICE, Advice.analyzerWidget3);
+
+        tip.setText(text);
+        // tip.setText(ResourceBundleUtils.getLangString(ADVICE, Advice.analyzerWidget));
+        tip.setLayoutData(new GridData(SWT.HORIZONTAL, SWT.TOP, true, false, 1, 1));
     }
 
     /**
@@ -171,6 +195,7 @@ public class ReportWidget extends AbstractWidget {
         innerShell.setLayoutData(gridData);
 
         createInputFieldComposite();
+        createAdvice(width);
 
         new BottomButtonBar(this, innerShell, BottomButtonBar.OK_AND_EXIT_BUTTON);
 
@@ -207,7 +232,7 @@ public class ReportWidget extends AbstractWidget {
         if (files.isPresent()) {
             files2read = files.get();
         } else {
-            logger.log(Level.SEVERE, "can not get the 'logfile.txt' files");
+            logger.warn("Can not get the 'logfile.txt' files to be read.");
         }
     }
 
@@ -378,4 +403,4 @@ public class ReportWidget extends AbstractWidget {
         Main.statusBar.setStatus(status, OK);
     }
 
-} // end of ReportWidget
+} // end of AnalyzerWidget

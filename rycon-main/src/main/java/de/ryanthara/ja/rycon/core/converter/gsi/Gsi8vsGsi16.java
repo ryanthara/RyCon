@@ -40,15 +40,17 @@ public class Gsi8vsGsi16 {
     }
 
     /**
-     * Converts a GSI8 formatted file into a GSI16 formatted file and vise versa.
+     * Converts a GSI8 formatted file into a GSI16 formatted file and vice versa.
      *
-     * @param isGSI16 output file is GSI16 formatted
-     *
+     * @param isGSI16                output file is GSI16 formatted
+     * @param sortOutputFileByNumber ascending sort for output file
      * @return converted GSI file
      */
-    public ArrayList<String> convertGSI8vsGSI16(boolean isGSI16) {
+    public ArrayList<String> convertGSI8vsGSI16(boolean isGSI16, boolean sortOutputFileByNumber) {
         BaseToolsGsi baseToolsGsi = new BaseToolsGsi(readStringLines);
-        return BaseToolsGsi.lineTransformation(isGSI16, baseToolsGsi.getEncodedLinesOfGSIBlocks());
+        ArrayList<String> result = BaseToolsGsi.lineTransformation(isGSI16, baseToolsGsi.getEncodedLinesOfGSIBlocks());
+
+        return sortOutputFileByNumber ? BaseToolsGsi.sortResult(result) : result;
     }
 
 } // end of Gsi8vsGsi16

@@ -21,6 +21,7 @@ import de.ryanthara.ja.rycon.cli.CmdLineInterfaceException;
 import de.ryanthara.ja.rycon.cli.CmdLineInterfaceParser;
 import de.ryanthara.ja.rycon.data.DefaultKeys;
 import de.ryanthara.ja.rycon.data.PreferenceHandler;
+import de.ryanthara.ja.rycon.data.Version;
 import de.ryanthara.ja.rycon.i18n.Errors;
 import de.ryanthara.ja.rycon.i18n.Labels;
 import de.ryanthara.ja.rycon.i18n.Messages;
@@ -32,6 +33,8 @@ import de.ryanthara.ja.rycon.util.Updater;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.io.IOException;
@@ -39,16 +42,13 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Optional;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.*;
 
 /**
- * {@code Main} implements values, constants and objects for the complete RyCON application as an abstract class.
+ * {@code Main} implements values, constants and objects for the complete <tt>RyCON</tt> application as an abstract class.
  * <p>
- * This class was implemented after version 1 of RyCON to get easier access to different things.
+ * This class was implemented after version 1 of <tt>RyCON</tt> to get easier access to different things.
  * The main idea to do this step was influenced by the code base of JOSM, which is the most popular
  * java written editor for OpenStreetMap data.
  *
@@ -66,17 +66,9 @@ public abstract class Main {
      * Member that is used to indicate that a text is in plural.
      */
     public static final boolean TEXT_PLURAL = false;
-    private static final Logger logger = Logger.getLogger(Main.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(Main.class.getName());
     private static final boolean GSI8 = false;
     private static final boolean GSI16 = true;
-    /**
-     * The reference to the global FileHandler for logging into a single file.
-     */
-    public static FileHandler fileHandler;
-    /**
-     * The reference to the logging level for {@code RyCON}.
-     */
-    public static Level loggingLevel;
     /**
      * Contains a value for application wide count of processed file operations.
      */
@@ -104,7 +96,7 @@ public abstract class Main {
     /**
      * Checks the command line interface and it's given arguments.
      * <p>
-     * RyCON accept a couple of simple command line interface (cli) arguments. At the moment there are
+     * <tt>RyCON</tt> accept a couple of simple command line interface (cli) arguments. At the moment there are
      * the following parameters implemented and can be used as described.
      * <p>
      * --help               shows the help and the valid cli arguments
@@ -121,12 +113,15 @@ public abstract class Main {
         try {
             parser.parseArguments(args);
         } catch (CmdLineInterfaceException e) {
-            logger.log(Level.SEVERE, "can not parse command line interface arguments: " + Arrays.toString(args), e);
+            logger.error("Can not parse command line interface arguments '{}'.", Arrays.toString(args), e.getCause());
+
+            // TODO implement better cli parsing error solution
             System.exit(1);
         }
 
+        // TODO implement set logging level via cli
         if (parser.getLoggingLevel() != null) {
-            setLoggingLevel(parser.getLoggingLevel());
+            // setLoggingLevel(parser.getLoggingLevel());
         }
 
         if (parser.getParsedLanguageCode() != null) {
@@ -144,13 +139,15 @@ public abstract class Main {
         if (parser.getTargetBtnNumber() > -1) {
             cliTargetBtnNumber = parser.getTargetBtnNumber();
         }
+
+        logger.trace("CLI argument checked");
     }
 
     /**
      * Checks the current JAVA version.
      * <p>
-     * During the startup of RyCON the version of the installed JRE is checked.
-     * RyCON can be started only if a minimum version of a JRE is installed on
+     * During the startup of <tt>RyCON</tt> the version of the installed JRE is checked.
+     * <tt>RyCON</tt> can be started only if a minimum version of a JRE is installed on
      * the system. This is due to swt dependencies and java dependencies.
      * <p>
      * At minimum a JRE version of 1.7 is necessary and must be installed on the
@@ -183,13 +180,12 @@ public abstract class Main {
                             Desktop.getDesktop().browse(uri.get());
                         }
                     } catch (IOException e) {
-                        logger.log(Level.SEVERE, "can not open the java website " + uri.get().getPath()
-                                + " with the default browser.", e);
+                        logger.warn("Can not open the java website '{}' with the default browser.", uri.get().getPath(), e.getCause());
                     }
                 }
 
-                logger.log(Level.INFO, "Version of installed JRE " + version + " is to low.");
-                logger.log(Level.INFO, "Please install a current JRE from http://java.com/");
+                logger.info("Installed JRE version {} is to low.", version);
+                logger.info("Please install a current JRE from https://java.com/");
 
                 display.dispose();
                 System.exit(0);
@@ -198,9 +194,9 @@ public abstract class Main {
     }
 
     /**
-     * Performs an online check for a new RyCON version.
+     * Performs an online check for a new <tt>RyCON</tt> version.
      * <p>
-     * If a newer version of RyCON is available an info dialog is shown to the user
+     * If a newer version of <tt>RyCON</tt> is available an info dialog is shown to the user
      * and an update is offered. This update has to be installed manually.
      * <p>
      * At the moment it is not planned to force an automatic update via Java Webstart functions or special routines.
@@ -214,7 +210,7 @@ public abstract class Main {
         try {
             updateSuccessful = updater.checkForUpdate();
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "can not check current RyCON version", e);
+            logger.warn("Can not check the current RyCON version '{}'", Version.getVersion(), e.getCause());
         }
 
         if (updateSuccessful) {
@@ -239,11 +235,11 @@ public abstract class Main {
                         display.dispose();
                         System.exit(0);
                     } catch (IOException e) {
-                        logger.log(Level.SEVERE, "can not open the RyCON website with the default browser", e);
+                        logger.warn("Can not open the RyCON website '{}' with the default browser.", DefaultKeys.RyCON_WEBSITE.getValue(), e.getCause());
                     }
                 } else if (returnCode == UpdateDialog.CLOSE_AND_CONTINUE) {
-                    logger.log(Level.INFO, "An old version of RyCON is used.");
-                    logger.log(Level.INFO, "Please update from " + DefaultKeys.RyCON_WEBSITE.getValue());
+                    logger.info("An old version of RyCON ({}) is used.", Version.getVersion());
+                    logger.info("Please update RyCON from '{}'.", DefaultKeys.RyCON_WEBSITE.getValue());
                 }
 
                 display.dispose();
@@ -285,7 +281,7 @@ public abstract class Main {
      *
      * @since 3
      */
-    public static boolean getGSI16() {
+    public static boolean getGsi16() {
         return GSI16;
     }
 
@@ -296,7 +292,7 @@ public abstract class Main {
      *
      * @since 3
      */
-    public static boolean getGSI8() {
+    public static boolean getGsi8() {
         return GSI8;
     }
 
@@ -343,32 +339,6 @@ public abstract class Main {
      */
     private static void setLocaleTo(String languageCode) {
         Locale.setDefault(new Locale(languageCode, languageCode.toUpperCase()));
-    }
-
-    /**
-     * Sets the logging level from a parsed command line input value.
-     * <p>
-     * Valid values are:
-     * <ul>
-     * <li>SEVERE</li>
-     * <li>WARNING</li>
-     * <li>INFO</li>
-     * <li>CONFIG</li>
-     * <li>FINE</li>
-     * <li>FINER</li>
-     * <li>FINEST</li>
-     * </ul>
-     * <p>
-     * The default logging level is 'SEVERE'.
-     *
-     * @param loggingLevel logging level to be set
-     */
-    // TODO implement cli log level handling
-    /*
-    https://docs.oracle.com/javase/10/core/java-logging-overview.htm
-     */
-    private static void setLoggingLevel(Level loggingLevel) {
-
     }
 
     /**

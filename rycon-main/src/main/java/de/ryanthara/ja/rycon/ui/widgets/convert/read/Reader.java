@@ -35,7 +35,7 @@ public interface Reader {
     /**
      * Returns the reader CSV lines as {@link List}.
      * * <p>
-     * This method is used vise versa with method {@link #getReadStringLines()}. The one which is not used,
+     * This method is used vice versa with the method {@link #getReadStringLines()}. The one which is not used,
      * returns null for indication.
      *
      * @return reader CSV lines
@@ -45,7 +45,7 @@ public interface Reader {
     /**
      * Returns the reader string lines as {@link ArrayList}.
      * <p>
-     * This method is used vise versa with method {@link #getReadCSVFile()}. The one which is not used,
+     * This method is used vice versa with the method {@link #getReadCSVFile()}. The one which is not used,
      * returns null for indication.
      *
      * @return reader string lines
@@ -53,11 +53,11 @@ public interface Reader {
     ArrayList<String> getReadStringLines();
 
     /**
-     * Reads the ... file from ... given as parameter and returns the reader file success.
+     * Reads the ... file from ... given as parameter and returns the read file success.
      *
      * @param file2Read {@link Path} reference to file
      *
-     * @return reader file success
+     * @return read file success
      */
     boolean readFile(Path file2Read);
 

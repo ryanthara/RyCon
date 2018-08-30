@@ -21,6 +21,8 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.WorkbookUtil;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
@@ -33,6 +35,8 @@ import java.util.ArrayList;
  * @since 12
  */
 public class TxtBaselLandschaft2Excel {
+
+    private static final Logger logger = LoggerFactory.getLogger(TxtBaselLandschaft2Excel.class.getName());
 
     private final ArrayList<String> readStringLines;
     private Workbook workbook;
@@ -183,7 +187,8 @@ public class TxtBaselLandschaft2Excel {
                     break;
 
                 default:
-                    System.err.println("TxtBaselLandschaft2Excel.convertTXTBaselLand2Excel() : line contains less or more tokens " + line);
+                    logger.trace("Line contains less or more tokens ({}) than needed or allowed.", lineSplit.length);
+                    break;
             }
         }
 

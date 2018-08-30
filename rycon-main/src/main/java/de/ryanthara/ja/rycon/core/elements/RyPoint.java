@@ -17,6 +17,8 @@
  */
 package de.ryanthara.ja.rycon.core.elements;
 
+import de.ryanthara.ja.rycon.ui.widgets.AnalyzerWidget;
+
 import java.util.Objects;
 
 /**
@@ -58,7 +60,7 @@ public class RyPoint {
     /**
      * Constructs a new point with number, eating, northing and height as strings.
      * <p>
-     * This is used for data encapsulation in the {@link de.ryanthara.ja.rycon.ui.widgets.ReportWidget}.
+     * This is used for data encapsulation in the {@link AnalyzerWidget}.
      *
      * @param number   the point number
      * @param easting  the easting coordinate
@@ -75,7 +77,7 @@ public class RyPoint {
     /**
      * Constructs a new point with number, eating, northing and height as strings.
      * <p>
-     * This is used for data encapsulation in the {@link de.ryanthara.ja.rycon.ui.widgets.ReportWidget}.
+     * This is used for data encapsulation in the {@link AnalyzerWidget}.
      *
      * @param number                      the point number
      * @param easting                     the easting coordinate

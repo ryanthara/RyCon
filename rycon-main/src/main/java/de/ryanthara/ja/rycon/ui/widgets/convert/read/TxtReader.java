@@ -25,12 +25,12 @@ import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
 import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.ERRORS;
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LABELS;
@@ -44,7 +44,7 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LABELS;
  */
 public class TxtReader implements Reader {
 
-    private final static Logger logger = Logger.getLogger(TxtReader.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(TxtReader.class.getName());
 
     private ArrayList<String> readStringFile;
     private final Shell innerShell;
@@ -61,7 +61,7 @@ public class TxtReader implements Reader {
     /**
      * Returns the reader CSV lines as {@link List}.
      * * <p>
-     * This method is used vise versa with method {@link #getReadStringLines()}. The one which is not used,
+     * This method is used vice versa with the method {@link #getReadStringLines()}. The one which is not used,
      * returns null for indication.
      *
      * @return reader CSV lines
@@ -75,7 +75,7 @@ public class TxtReader implements Reader {
     /**
      * Returns the reader string lines as {@link ArrayList}.
      * <p>
-     * This method is used vise versa with method {@link #getReadCSVFile()}. The one which is not used,
+     * This method is used vice versa with the method {@link #getReadCSVFile()}. The one which is not used,
      * returns null for indication.
      *
      * @return reader string lines
@@ -86,11 +86,11 @@ public class TxtReader implements Reader {
     }
 
     /**
-     * Reads the text file given as parameter and returns the reader file success.
+     * Reads the text file given as parameter and returns the read file success.
      *
-     * @param file2Read reader file reference
+     * @param file2Read read file reference
      *
-     * @return reader file success
+     * @return read file success
      */
     @Override
     public boolean readFile(Path file2Read) {
@@ -103,12 +103,11 @@ public class TxtReader implements Reader {
                 success = true;
             }
         } else {
-            logger.log(Level.SEVERE, "File " + file2Read.getFileName() + " could not be read.");
+            logger.warn("Text file {} could not be read.", file2Read.toString());
 
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR,
                     ResourceBundleUtils.getLangString(LABELS, Labels.errorTextMsgBox),
-                    ResourceBundleUtils.getLangString(ERRORS, Errors.readerTXTFailed));
-
+                    ResourceBundleUtils.getLangString(ERRORS, Errors.readerTxtFailed));
         }
 
         return success;

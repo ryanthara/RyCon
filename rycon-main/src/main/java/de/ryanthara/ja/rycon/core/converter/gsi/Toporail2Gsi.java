@@ -20,10 +20,10 @@ package de.ryanthara.ja.rycon.core.converter.gsi;
 import de.ryanthara.ja.rycon.core.converter.toporail.FileType;
 import de.ryanthara.ja.rycon.core.elements.GsiBlock;
 import de.ryanthara.ja.rycon.util.SortHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Instances of this class provides functions to convert Toporail measurement
@@ -35,7 +35,7 @@ import java.util.logging.Logger;
  */
 public class Toporail2Gsi {
 
-    private final static Logger logger = Logger.getLogger(Toporail2Gsi.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(Toporail2Gsi.class.getName());
 
     private final ArrayList<String> readStringLines;
 
@@ -47,6 +47,7 @@ public class Toporail2Gsi {
      */
     public Toporail2Gsi(ArrayList<String> readStringLines) {
         this.readStringLines = readStringLines;
+
     }
 
     /**
@@ -95,7 +96,7 @@ public class Toporail2Gsi {
                         blocks = transformStationLine(tokens, isGSI16, lineCounter);
                         break;
                     default:
-                        logger.log(Level.SEVERE, "Found unsuported token: " + tokens[0]);
+                        logger.trace("Found unsupported token '{}'.", tokens[0]);
                 }
 
                 if (blocks.size() > 0) {
@@ -169,7 +170,7 @@ public class Toporail2Gsi {
                             blocks.add(new GsiBlock(isGSI16, 21, tokens[9]));
                             break;
                         default:
-                            logger.log(Level.SEVERE, "Found one more token: " + j);
+                            logger.trace("Found one more token '{}'.", j);
                     }
                 }
 
@@ -223,7 +224,7 @@ public class Toporail2Gsi {
                     blocks.add(new GsiBlock(isGSI16, 72, tokens[7]));
                     break;
                 default:
-                    logger.log(Level.SEVERE, "Found one more token: " + j);
+                    logger.trace("Found one more token '{}'.", j);
             }
         }
 
@@ -263,7 +264,7 @@ public class Toporail2Gsi {
                     blocks.add(new GsiBlock(isGSI16, 72, tokens[7]));
                     break;
                 default:
-                    logger.log(Level.SEVERE, "Found one more token: " + j);
+                    logger.trace("Found one more token '{}'.", j);
             }
         }
 
@@ -315,7 +316,7 @@ public class Toporail2Gsi {
                     blocks.add(new GsiBlock(isGSI16, 74, tokens[11]));
                     break;
                 default:
-                    logger.log(Level.SEVERE, "Found one more token: " + j);
+                    logger.trace("Found one more token '{}'.", j);
             }
         }
 
@@ -356,7 +357,7 @@ public class Toporail2Gsi {
                     blocks.add(new GsiBlock(isGSI16, 74, tokens[7]));
                     break;
                 default:
-                    logger.log(Level.SEVERE, "Found one more token: " + j);
+                    logger.trace("Found one more token '{}'.", j);
             }
         }
 

@@ -41,6 +41,7 @@ import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
  */
 public enum TargetButton {
 
+    // this is the button order in the group
     GSI8("GSI8"),
     GSI16("GSI16"),
     TXT("TXT"),

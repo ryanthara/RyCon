@@ -53,7 +53,7 @@ public class NodeDatCodeSplit {
      * Splits a 'node.dat' text file from cadwork into separate files by code.
      * <p>
      * A separate file is generated for every existing code. Lines without code will get the pseudo code '987789'.
-     * RyCON need a text file format that is no, code, x, y, z and divided by blank or tab.
+     * <tt>RyCON</tt> need a text file format that is no, code, x, y, z and divided by blank or tab.
      * <p>
      * A 'node.dat' file is a node list export file from cadwork cad program with the following structure.
      * Usually the units are in metre. A code is always set, a name only if the knots are named.

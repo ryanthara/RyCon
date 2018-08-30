@@ -18,7 +18,7 @@
 package de.ryanthara.ja.rycon.i18n;
 
 /**
- * The {@code CheckBoxes} enumeration holds all the texts for the checkboxes of {@code RyCON}.
+ * The {@code CheckBoxes} enumeration holds all the texts for the checkboxes of <tt>RyCON</tt>.
  * <p>
  * This enumeration is used for encapsulating the data. The interface {@link ResourceKeys}
  * is used to access different enumerations in the class {@link ResourceBundleUtils}.
@@ -44,8 +44,9 @@ public enum CheckBoxes implements ResourceKeys {
     openFileManager,
     separatorCSVSemiColon,
     separatorTXTSpace,
-    sortOutputFileByNumberLTOP,
-    sourceContainsCodeChk,
+    sortOutputFileByNumber,
+    sourceContainsCodeCsvChk,
+    sourceContainsCodeTxtChk,
     useSimpleKFormatChk,
     useZeroHeightsCadwork,
     writeCodeColumn,

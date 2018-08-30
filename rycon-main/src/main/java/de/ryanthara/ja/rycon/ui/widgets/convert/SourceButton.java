@@ -43,6 +43,7 @@ import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
  */
 public enum SourceButton {
 
+    // this is the button order in the group
     GSI8("GSI8"),
     GSI16("GSI16"),
     TXT("TXT"),
@@ -50,8 +51,8 @@ public enum SourceButton {
     CAPLAN_K("CAPLAN (.K)"),
     ZEISS_REC("Zeiss (.REC)"),
     CADWORK("cadwork (node.dat)"),
-    BASEL_STADT("Basel Stadt (.CSV)"),
-    BASEL_LANDSCHAFT("Basel Landschaft (.TXT)"),
+    BASEL_STADT("Geodaten Basel Stadt"),
+    BASEL_LANDSCHAFT("Geodaten Basel Landschaft"),
     TOPORAIL_MEP("Toporail (.MEP)"),
     TOPORAIL_PTS("Toporail (.PTS)");
 

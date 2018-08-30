@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <entry key="altimetric_CHGeo98">Preliminary orthometric heights (on geoid “CHGeo98”)</entry>
+    <entry key="altimetric_Ellipsoid">Ellipsoidal heights on Bessel 1841 (CH1903/CH1903+) or GRS80 (ETRS89)</entry>
+    <entry key="altimetric_LHN95">National height network LHN95 (orthometric heights on geoid “CHGeo2004”)</entry>
+    <entry key="altimetric_LN02">National levelling network LN02 (levelled heights)</entry>
+    <entry key="planimetric_LV03_Civil">Swiss civil coordinates LV03C-G (CH1903)</entry>
+    <entry key="planimetric_LV03_Military">Swiss plane (military) coordinates LV03 (CH1903)</entry>
+    <entry key="planimetric_LV95">Swiss plane coordinates LV95 (CH1903+)</entry>
+    <entry key="projection_ETRF93GeocentricToLV95">Geocentric coordinates ETRF93 (ETRS89) [m] into Swiss plane coordinates LV95 (CH1903+) [m]</entry>
+    <entry key="projection_ETRF93GeographicToLV95">Geographic coordinates ETRF93 (ETRS89) [m] into Swiss plane coordinates LV95 (CH1903+) [m]</entry>
+    <entry key="projection_LV95ToETRF93Geocentric">Swiss plane coordinates LV95 (CH1903+) [m] into geocentric coordinates ETRF93 (ETRS89) [m]</entry>
+    <entry key="projection_LV95ToETRF93Geographic">Swiss plane coordinates LV95 (CH1903+) [m] into geographic coordinates ETRF93 (ETRS89) [m]</entry>
+</properties>

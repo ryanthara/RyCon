@@ -37,23 +37,23 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.*;
 import static de.ryanthara.ja.rycon.ui.custom.Status.OK;
 
 /**
- * Instances of this class implement a complete widgets and it's functionality.
+ * Instances of this class implements a complete widget and it's functionality.
  * <p>
- * With the ClearUpWidget of RyCON it is possible to clear up coordinate, measurement
- * and <tt>Leica Geosystems</tt> logfile.txt files with a simple 'intelligence'.
+ * With the ClearUpWidget of <tt>RyCON</tt> it is possible to clear up coordinate, measurement
+ * and Leica Geosystems logfile.txt files with a simple 'intelligence'.
  *
  * @author sebastian
  * @version 9
@@ -61,7 +61,7 @@ import static de.ryanthara.ja.rycon.ui.custom.Status.OK;
  */
 public class ClearUpWidget extends AbstractWidget {
 
-    private final static Logger logger = Logger.getLogger(ClearUpWidget.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(ClearUpWidget.class.getName());
 
     private final String[] acceptableFileSuffixes = {"*.gsi", "*.gsl", "*.txt"};
     private Shell parent;
@@ -81,9 +81,8 @@ public class ClearUpWidget extends AbstractWidget {
      */
     public ClearUpWidget(final Shell parent) {
         this.parent = parent;
-
-        files2read = new Path[0];
-        innerShell = null;
+        this.files2read = new Path[0];
+        this.innerShell = null;
 
         initUI();
         handleFileInjection();
@@ -182,7 +181,7 @@ public class ClearUpWidget extends AbstractWidget {
 
         createInputFieldsComposite();
         createOptions(width);
-        createDescription(width);
+        createAdvice(width);
 
         new BottomButtonBar(this, innerShell, BottomButtonBar.OK_AND_EXIT_BUTTON);
 
@@ -229,7 +228,7 @@ public class ClearUpWidget extends AbstractWidget {
         if (files.isPresent()) {
             files2read = files.get();
         } else {
-            logger.log(Level.SEVERE, "can not get the reader files");
+            logger.warn("Can not get the source files to be read.");
         }
     }
 
@@ -255,9 +254,9 @@ public class ClearUpWidget extends AbstractWidget {
 
     }
 
-    private void createDescription(int width) {
+    private void createAdvice(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangString(LABELS, Labels.adviceText));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.text));
 
         GridLayout gridLayout = new GridLayout(1, true);
 
@@ -268,7 +267,15 @@ public class ClearUpWidget extends AbstractWidget {
         group.setLayoutData(gridData);
 
         Label tip = new Label(group, SWT.WRAP | SWT.BORDER | SWT.LEFT);
-        tip.setText(ResourceBundleUtils.getLangString(LABELS, Labels.tipClearUpWidget));
+
+        String text =
+                ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.clearUpWidget) + "\n\n" +
+                        ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.clearUpWidget2) + "\n\n" +
+                        ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.clearUpWidget3);
+
+        tip.setText(text);
+
+        // tip.setText(ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.clearUpWidget));
         tip.setLayoutData(new GridData(SWT.HORIZONTAL, SWT.TOP, true, false, 1, 1));
     }
 
@@ -284,7 +291,7 @@ public class ClearUpWidget extends AbstractWidget {
 
     private void createOptions(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangString(LABELS, Labels.optionsText));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(OPTIONS, Options.general));
 
         GridLayout gridLayout = new GridLayout(1, true);
 
@@ -341,6 +348,7 @@ public class ClearUpWidget extends AbstractWidget {
                         }
                     } else if (fileName.toUpperCase().endsWith("LOGFILE.TXT")) {
                         LogfileClearUp logfileClearUp = new LogfileClearUp(readFile);
+
                         if (chkBoxCleanBlocksByContent != null) {
                             writeFile = logfileClearUp.processClean(chkBoxCleanBlocksByContent.getSelection());
                         } else {
@@ -353,7 +361,7 @@ public class ClearUpWidget extends AbstractWidget {
                     }
                 }
             } else {
-                System.err.println("File " + file2read.getFileName() + " could not be read.");
+                logger.trace("Can not read file '{}' for clear up.", file2read.getFileName().toString());
             }
         }
 

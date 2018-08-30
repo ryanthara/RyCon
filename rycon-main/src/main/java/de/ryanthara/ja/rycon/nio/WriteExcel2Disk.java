@@ -48,7 +48,7 @@ public class WriteExcel2Disk {
      * @param workbook          prepared {@link Workbook} for writing
      * @param filenameExtension filename extension
      *
-     * @return writer success
+     * @return write success
      */
     public static boolean writeExcel2Disk(Path path, Workbook workbook, String filenameExtension) {
         boolean writeSuccess;
@@ -64,17 +64,17 @@ public class WriteExcel2Disk {
 
             if (returnValue == SWT.YES) {
                 if (filenameExtension.equalsIgnoreCase(FileNameExtension.XLS.getExtension())) {
-                    writeSuccess = fileToolsExcel.writeXLS(outputFileName);
+                    writeSuccess = fileToolsExcel.writeXls(outputFileName);
                 } else
-                    writeSuccess = filenameExtension.equalsIgnoreCase(FileNameExtension.XLSX.getExtension()) && fileToolsExcel.writeXLSX(outputFileName);
+                    writeSuccess = filenameExtension.equalsIgnoreCase(FileNameExtension.XLSX.getExtension()) && fileToolsExcel.writeXlsx(outputFileName);
             } else {
                 writeSuccess = false;
             }
         } else {
             if (filenameExtension.equalsIgnoreCase(FileNameExtension.XLS.getExtension())) {
-                writeSuccess = fileToolsExcel.writeXLS(outputFileName);
+                writeSuccess = fileToolsExcel.writeXls(outputFileName);
             } else
-                writeSuccess = filenameExtension.equalsIgnoreCase(FileNameExtension.XLSX.getExtension()) && fileToolsExcel.writeXLSX(outputFileName);
+                writeSuccess = filenameExtension.equalsIgnoreCase(FileNameExtension.XLSX.getExtension()) && fileToolsExcel.writeXlsx(outputFileName);
         }
 
         return writeSuccess;

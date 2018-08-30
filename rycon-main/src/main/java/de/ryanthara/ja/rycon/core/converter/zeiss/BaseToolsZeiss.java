@@ -18,6 +18,8 @@
 package de.ryanthara.ja.rycon.core.converter.zeiss;
 
 import de.ryanthara.ja.rycon.util.NumberFormatter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class implements several basic operations for conversion to or from Zeiss REC files.
@@ -29,7 +31,7 @@ import de.ryanthara.ja.rycon.util.NumberFormatter;
  * <p>
  * ----+----1----+----2----+----3----+----4----+----5----+----6----+----7----+----8----+----9----+---10----+---11----+----12
  * !-------------------------------------------------------------------------------
- * ! Folgende Daten wurden von RyCON Build xxx am 03.02.2016 erzeugt.
+ * ! Folgende Daten wurden von RyCON Build xxx am TT.MM.JJJJ erzeugt.
  * !-------------------------------------------------------------------------------
  * For M5|Adr     1|TI  Berechn. Punkt             |                      |                      |                      |
  * For M5|Adr     2|PI1 2154H                      |th 1.600          m   |                      |                      |
@@ -43,6 +45,8 @@ import de.ryanthara.ja.rycon.util.NumberFormatter;
  * @since 12
  */
 public class BaseToolsZeiss {
+
+    private static final Logger logger = LoggerFactory.getLogger(BaseToolsZeiss.class.getName());
 
     // positions are 'java' corrected with the value of '-1' because of array position start at '0'
     private static final int[] M5_LINE_POSITIONS = {
@@ -127,7 +131,7 @@ public class BaseToolsZeiss {
             case M5:
                 return M5_LINE_POSITIONS;
             default:
-                System.err.println("BaseToolsZeiss.getLinePositions() : Unknown / wrong dialect used.");
+                logger.trace("Unknown or wrong ZeissDialect '{}' used.", dialect.toString());
                 return new int[]{};
         }
     }

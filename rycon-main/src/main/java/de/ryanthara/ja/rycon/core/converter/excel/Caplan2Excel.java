@@ -27,7 +27,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.util.ArrayList;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.COLUMNS;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.COLUMN_NAMES;
 
 /**
  * Instances of this class provides functions to convert a Caplan K formatted coordinate file
@@ -85,27 +85,27 @@ public class Caplan2Excel {
             rowNumber++;
 
             cell = row.createCell(cellNumber);
-            cell.setCellValue(ResourceBundleUtils.getLangString(COLUMNS, Columns.pointNumber));
+            cell.setCellValue(ResourceBundleUtils.getLangString(COLUMN_NAMES, Columns.pointNumber));
             cellNumber++;
 
             cell = row.createCell(cellNumber);
-            cell.setCellValue(ResourceBundleUtils.getLangString(COLUMNS, Columns.easting));
+            cell.setCellValue(ResourceBundleUtils.getLangString(COLUMN_NAMES, Columns.easting));
             cellNumber++;
 
             cell = row.createCell(cellNumber);
-            cell.setCellValue(ResourceBundleUtils.getLangString(COLUMNS, Columns.northing));
+            cell.setCellValue(ResourceBundleUtils.getLangString(COLUMN_NAMES, Columns.northing));
             cellNumber++;
 
             cell = row.createCell(cellNumber);
-            cell.setCellValue(ResourceBundleUtils.getLangString(COLUMNS, Columns.height));
+            cell.setCellValue(ResourceBundleUtils.getLangString(COLUMN_NAMES, Columns.height));
             cellNumber++;
 
             cell = row.createCell(cellNumber);
-            cell.setCellValue(ResourceBundleUtils.getLangString(COLUMNS, Columns.object));
+            cell.setCellValue(ResourceBundleUtils.getLangString(COLUMN_NAMES, Columns.object));
             cellNumber++;
 
             cell = row.createCell(cellNumber);
-            cell.setCellValue(ResourceBundleUtils.getLangString(COLUMNS, Columns.attribute));
+            cell.setCellValue(ResourceBundleUtils.getLangString(COLUMN_NAMES, Columns.attribute));
         }
 
         for (String line : readStringLines) {

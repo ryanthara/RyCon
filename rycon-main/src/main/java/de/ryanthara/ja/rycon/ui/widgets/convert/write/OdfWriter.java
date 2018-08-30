@@ -23,12 +23,12 @@ import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
 import de.ryanthara.ja.rycon.ui.widgets.convert.SourceButton;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.odftoolkit.simple.SpreadsheetDocument;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Instances of this class are used for writing OpenDocument spreadsheet files
@@ -40,7 +40,7 @@ import java.util.logging.Logger;
  */
 public class OdfWriter implements Writer {
 
-    private final static Logger logger = Logger.getLogger(OdfWriter.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(OdfWriter.class.getName());
 
     private final Path path;
     private final ArrayList<String> readStringFile;
@@ -65,7 +65,7 @@ public class OdfWriter implements Writer {
     /**
      * Returns true if the prepared {@link SpreadsheetDocument} for file writing was written to the file system.
      *
-     * @return writer success
+     * @return write success
      */
     @Override
     public boolean writeSpreadsheetDocument() {
@@ -76,56 +76,56 @@ public class OdfWriter implements Writer {
             case GSI8:
             case GSI16:
                 Gsi2Odf gsi2Odf = new Gsi2Odf(readStringFile);
-                if (gsi2Odf.convertGSI2ODS(path.getFileName(), parameter.isWriteCommentLine())) {
+                if (gsi2Odf.convertGSI2Ods(path.getFileName(), parameter.isWriteCommentLine())) {
                     spreadsheetDocument = gsi2Odf.getSpreadsheetDocument();
                 }
                 break;
 
             case TXT:
                 Txt2Odf txt2Odf = new Txt2Odf(readStringFile);
-                if (txt2Odf.convertTXT2ODS(path.getFileName())) {
+                if (txt2Odf.convertTXT2Ods(path.getFileName())) {
                     spreadsheetDocument = txt2Odf.getSpreadsheetDocument();
                 }
                 break;
 
             case CSV:
                 Csv2Odf csv2Odf = new Csv2Odf(readCSVFile);
-                if (csv2Odf.convertCSV2ODS(path.getFileName())) {
+                if (csv2Odf.convertCSV2Ods(path.getFileName())) {
                     spreadsheetDocument = csv2Odf.getSpreadsheetDocument();
                 }
                 break;
 
             case CAPLAN_K:
                 Caplan2Odf caplan2Odf = new Caplan2Odf(readStringFile);
-                if (caplan2Odf.convertCaplan2ODS(path.getFileName(), parameter.isWriteCommentLine())) {
+                if (caplan2Odf.convertCaplan2Ods(path.getFileName(), parameter.isWriteCommentLine())) {
                     spreadsheetDocument = caplan2Odf.getSpreadsheetDocument();
                 }
                 break;
 
             case ZEISS_REC:
                 Zeiss2Odf zeiss2Odf = new Zeiss2Odf(readStringFile);
-                if (zeiss2Odf.convertZeiss2ODS(path.getFileName())) {
+                if (zeiss2Odf.convertZeiss2Ods(path.getFileName())) {
                     spreadsheetDocument = zeiss2Odf.getSpreadsheetDocument();
                 }
                 break;
 
             case CADWORK:
                 Cadwork2Odf cadwork2Odf = new Cadwork2Odf(readStringFile);
-                if (cadwork2Odf.convertCadwork2ODS(path.getFileName(), parameter.isWriteCommentLine())) {
+                if (cadwork2Odf.convertCadwork2Ods(path.getFileName(), parameter.isWriteCommentLine())) {
                     spreadsheetDocument = cadwork2Odf.getSpreadsheetDocument();
                 }
                 break;
 
             case BASEL_STADT:
                 CsvBaselStadt2Odf csvBaselStadt2Odf = new CsvBaselStadt2Odf(readCSVFile);
-                if (csvBaselStadt2Odf.convertCSVBaselStadt2ODS(path.getFileName(), parameter.isWriteCommentLine())) {
+                if (csvBaselStadt2Odf.convertCsvBaselStadt2Ods(path.getFileName(), parameter.isWriteCommentLine())) {
                     spreadsheetDocument = csvBaselStadt2Odf.getSpreadsheetDocument();
                 }
                 break;
 
             case BASEL_LANDSCHAFT:
                 TxtBaselLandschaft2Odf txtBaselLandschaft2Odf = new TxtBaselLandschaft2Odf(readStringFile);
-                if (txtBaselLandschaft2Odf.convertTXTBaselLandschaft2ODS(path.getFileName(), parameter.isWriteCommentLine())) {
+                if (txtBaselLandschaft2Odf.convertTXTBaselLandschaft2Ods(path.getFileName(), parameter.isWriteCommentLine())) {
                     spreadsheetDocument = txtBaselLandschaft2Odf.getSpreadsheetDocument();
                 }
                 break;
@@ -133,7 +133,7 @@ public class OdfWriter implements Writer {
             default:
                 spreadsheetDocument = null;
 
-                logger.log(Level.SEVERE, "OdfWriter.writeStringFile() : unknown file format " + SourceButton.fromIndex(parameter.getSourceNumber()));
+                logger.warn("Can not write {} file format to Open Document spreadsheet file.", SourceButton.fromIndex(parameter.getSourceNumber()));
         }
 
         if (WriteOdf2Disk.writeOds2Disk(path, spreadsheetDocument)) {
@@ -146,7 +146,7 @@ public class OdfWriter implements Writer {
     /**
      * Returns true if the prepared {@link ArrayList} for file writing was written to the file system.
      *
-     * @return writer success
+     * @return write success
      */
     @Override
     public boolean writeStringFile() {
@@ -156,7 +156,7 @@ public class OdfWriter implements Writer {
     /**
      * Returns true if the prepared {@link Workbook} for file writing was written to the file system.
      *
-     * @return writer success
+     * @return write success
      */
     @Override
     public boolean writeWorkbookFile() {

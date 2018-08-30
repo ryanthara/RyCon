@@ -24,6 +24,8 @@ import de.ryanthara.ja.rycon.i18n.WordIndices;
 import org.odftoolkit.simple.SpreadsheetDocument;
 import org.odftoolkit.simple.table.Cell;
 import org.odftoolkit.simple.table.Table;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -40,6 +42,7 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.WORDINDICES;
  */
 public class Gsi2Odf {
 
+    private static final Logger logger = LoggerFactory.getLogger(Gsi2Odf.class.getName());
     private final BaseToolsGsi baseToolsGsi;
     private SpreadsheetDocument spreadsheetDocument;
 
@@ -60,7 +63,7 @@ public class Gsi2Odf {
      *
      * @return success conversion success
      */
-    public boolean convertGSI2ODS(Path sheetName, boolean writeCommentRow) {
+    public boolean convertGSI2Ods(Path sheetName, boolean writeCommentRow) {
         int rowIndex = 0;
         int colIndex = 0;
 
@@ -167,16 +170,18 @@ public class Gsi2Odf {
                             break;
 
                         default:
-                            System.err.println("Gsi2Odf.convertGSI2ODS() : found unknown word index " + block.toPrintFormatCsv());
+                            logger.trace("Line contains unknown word index ({}).", block.toPrintFormatCsv());
+                            break;
                     }
                     colIndex = colIndex + 1;
                 }
                 rowIndex = rowIndex + 1;
             }
         } catch (RuntimeException e) {
+            logger.error("Thrown runtime exception.", e.getCause());
             throw e;
         } catch (Exception e) {
-            System.err.println("ERROR: unable to create output file.");
+            logger.warn("Can not convert Leica Geosystems gsi file to open document spreadsheet file.", e.getCause());
         }
 
         // check number of written lines

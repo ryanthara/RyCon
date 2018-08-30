@@ -19,7 +19,7 @@ package de.ryanthara.ja.rycon.core.logfile.leica;
 
 /**
  * The {@code Identifier} enumeration holds all of the identification strings for
- * the <tt>Leica Geosystems</tt> logfile.txt for {@code RyCON}.
+ * the <tt>Leica Geosystems</tt> logfile.txt for <tt>RyCON</tt>.
  * <p>
  * The identifiers are used to find the structure block (e.g. SETUP or STAKE OUT).
  * <p>

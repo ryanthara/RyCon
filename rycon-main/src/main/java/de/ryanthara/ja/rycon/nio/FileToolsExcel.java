@@ -18,9 +18,10 @@
 package de.ryanthara.ja.rycon.nio;
 
 import org.apache.poi.ss.usermodel.Workbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.nio.file.Path;
 
 /**
@@ -32,6 +33,8 @@ import java.nio.file.Path;
  */
 class FileToolsExcel {
 
+    private static final Logger logger = LoggerFactory.getLogger(FileToolsExcel.class.getName());
+
     private final Workbook workbook;
 
     /**
@@ -40,7 +43,7 @@ class FileToolsExcel {
      *
      * @param workbook {@link Workbook} object
      */
-    public FileToolsExcel(Workbook workbook) {
+    FileToolsExcel(Workbook workbook) {
         this.workbook = workbook;
     }
 
@@ -51,15 +54,14 @@ class FileToolsExcel {
      *
      * @return success writer success
      */
-    public boolean writeXLS(Path writeFile) {
+    boolean writeXls(Path writeFile) {
         try (FileOutputStream fileOut = new FileOutputStream(writeFile.toFile())) {
             workbook.write(fileOut);
 
             fileOut.close();
             return true;
-        } catch (IOException e) {
-            System.err.println("Error while writing XLS file to disk.");
-            e.printStackTrace();
+        } catch (Exception e) {
+            logger.error("Unable to save Microsoft Excel XLS Spreadsheet file '{}' to disk.", writeFile.toString(), e.getCause());
         }
 
         return false;
@@ -72,7 +74,7 @@ class FileToolsExcel {
      *
      * @return success writer success
      */
-    public boolean writeXLSX(Path writeFile) {
+    boolean writeXlsx(Path writeFile) {
         boolean writeSuccess = false;
 
         try (FileOutputStream fileOut = new FileOutputStream(writeFile.toFile())) {
@@ -80,9 +82,8 @@ class FileToolsExcel {
 
             fileOut.close();
             writeSuccess = true;
-        } catch (IOException e) {
-            System.err.println("Error while writing XLSX file to disk.");
-            e.printStackTrace();
+        } catch (Exception e) {
+            logger.error("Unable to save Microsoft Excel XLSX Spreadsheet file '{}' to disk.", writeFile.toString(), e.getCause());
         }
 
         return writeSuccess;

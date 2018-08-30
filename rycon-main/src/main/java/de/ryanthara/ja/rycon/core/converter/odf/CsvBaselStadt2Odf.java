@@ -20,6 +20,8 @@ package de.ryanthara.ja.rycon.core.converter.odf;
 import org.odftoolkit.simple.SpreadsheetDocument;
 import org.odftoolkit.simple.table.Cell;
 import org.odftoolkit.simple.table.Table;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -34,6 +36,8 @@ import java.util.List;
  * @since 12
  */
 public class CsvBaselStadt2Odf {
+
+    private static final Logger logger = LoggerFactory.getLogger(CsvBaselStadt2Odf.class.getName());
 
     private final List<String[]> readCSVLines;
     private SpreadsheetDocument spreadsheetDocument;
@@ -55,7 +59,7 @@ public class CsvBaselStadt2Odf {
      *
      * @return success conversion success
      */
-    public boolean convertCSVBaselStadt2ODS(Path sheetName, boolean writeCommentRow) {
+    public boolean convertCsvBaselStadt2Ods(Path sheetName, boolean writeCommentRow) {
         int colIndex = 0;
         int rowIndex = 0;
 
@@ -116,16 +120,18 @@ public class CsvBaselStadt2Odf {
                             break;
 
                         default:
-                            System.err.println("CsvBaselStadt2Odf.convertCSVBaselStadt2ODS() : line contains less or more tokens " + Arrays.toString(csvLine));
+                            logger.trace("Line contains less or more tokens ({}) than needed or allowed.\n{}", csvLine.length, Arrays.toString(csvLine));
+                            break;
                     }
                     colIndex = colIndex + 1;
                 }
                 rowIndex = rowIndex + 1;
             }
         } catch (RuntimeException e) {
+            logger.error("Thrown runtime exception.", e.getCause());
             throw e;
         } catch (Exception e) {
-            System.err.println("ERROR: unable to create output file.");
+            logger.warn("Can not convert coordinate file from geodata server Basel Stadt to open document spreadsheet file.", e.getCause());
         }
 
         return rowIndex > 1;

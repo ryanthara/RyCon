@@ -20,6 +20,8 @@ package de.ryanthara.ja.rycon.core.elements;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 import de.ryanthara.ja.rycon.i18n.WordIndices;
 import de.ryanthara.ja.rycon.ui.util.StringHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -40,6 +42,8 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.WORDINDICES;
  * @since 8
  */
 public class GsiBlock {
+
+    private static final Logger logger = LoggerFactory.getLogger(GsiBlock.class.getName());
 
     private boolean isGSI16;
     private int wordIndex;
@@ -121,8 +125,7 @@ public class GsiBlock {
                     dataGSI = bigDecimal.toString();
                 }
             } catch (NumberFormatException e) {
-                System.err.println("Error while parsing String to double in GsiBlock:GsiBlock()");
-                e.printStackTrace();
+                logger.error("Can not convert GSI data block '{}' to double.", dataGSI, e.getCause());
             }
         } else {
             // not used other values
@@ -293,7 +296,8 @@ public class GsiBlock {
                 break;
             default:
                 s = ResourceBundleUtils.getLangString(WORDINDICES, WordIndices.WI9999);
-                System.err.println("GsiBlock.toPrintFormatTxt() : block contains the wrong word index " + dataGSI);
+                logger.trace("Line contains unknown word index ({}).", dataGSI);
+                break;
         }
 
         return s;

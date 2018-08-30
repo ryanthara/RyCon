@@ -65,7 +65,7 @@ public class TextCodeSplit {
      * Splits a code based text file into separate files by code.
      * <p>
      * A separate file is generated for every existing code. Lines without code will get the pseudo code '987789'.
-     * RyCON need a text file format that is no, code, x, y, z and divided by blank or tab.
+     * <tt>RyCON</tt> need a text file format that is no, code, x, y, z and divided by blank or tab.
      *
      * @param insertCodeBlock       if code block is insert into the result string
      * @param writeLinesWithoutCode if lines without code should be written to a separate file

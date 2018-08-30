@@ -17,6 +17,9 @@
  */
 package de.ryanthara.ja.rycon.core.converter.zeiss;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 
 /**
@@ -24,6 +27,8 @@ import java.util.ArrayList;
  * it's dialects (R4, R5, REC500 and M5).
  */
 public class Txt2Zeiss {
+
+    private static final Logger logger = LoggerFactory.getLogger(Txt2Zeiss.class.getName());
 
     private final ArrayList<String> readStringLines;
 
@@ -85,7 +90,8 @@ public class Txt2Zeiss {
                     break;
 
                 default:
-                    System.err.println("Txt2Zeiss.convertTXT2REC() : line contains less or more tokens " + line);
+                    logger.trace("Line contains less or more tokens ({}) than needed or allowed.", lineSplit.length);
+                    break;
             }
 
             result.add(BaseToolsZeiss.prepareLineOfCoordinates(dialect, number, code, easting, northing, height, lineNumber));

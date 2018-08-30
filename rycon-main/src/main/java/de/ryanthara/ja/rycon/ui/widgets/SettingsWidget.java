@@ -27,20 +27,20 @@ import de.ryanthara.ja.rycon.ui.custom.DirectoryDialogsTypes;
 import de.ryanthara.ja.rycon.ui.preferences.PreferencesDialog;
 import de.ryanthara.ja.rycon.ui.preferences.pref.*;
 import org.eclipse.swt.widgets.Shell;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static de.ryanthara.ja.rycon.core.converter.zeiss.ZeissDialect.*;
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LABELS;
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.PREFERENCES;
 
 /**
- * The {@code SettingsWidget} is the dialog to change all the preferences of {@code RyCON}.
+ * The {@code SettingsWidget} is the dialog to change all the preferences of <tt>RyCON</tt>.
  * <p>
- * With version 2 of {@code RyCON} the need for more pref of the modules is fulfilled with this dialog.
+ * With version 2 of <tt>RyCON</tt> the need for more pref of the modules is fulfilled with this dialog.
  * It uses a tabbed structure for different modules and try to provide a clear view on the changeable pref.
  * <p>
  * The idea to this are inspired by preference dialogs of different applications, like Eclipse, IntelliJ IDEA,
@@ -52,7 +52,8 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.PREFERENCES;
  */
 public class SettingsWidget {
 
-    private final static Logger logger = Logger.getLogger(SettingsWidget.class.getName());
+
+    private static final Logger logger = LoggerFactory.getLogger(SettingsWidget.class.getName());
     private final Shell parent;
 
     /**
@@ -129,7 +130,7 @@ public class SettingsWidget {
             }
         });
 
-        logger.log(Level.INFO, "tab formats created.");
+        logger.info("Tab 'formats' created.");
     }
 
     private void createTabGeneral(PreferencesDialog dialog) {
@@ -221,7 +222,7 @@ public class SettingsWidget {
             }
         });
 
-        logger.log(Level.INFO, "tab general created.");
+        logger.info("Tab 'general' created.");
     }
 
     private void createTabModules(PreferencesDialog dialog) {
@@ -321,7 +322,7 @@ public class SettingsWidget {
             }
         });
 
-        logger.log(Level.INFO, "tab modules created.");
+        logger.info("Tab 'modules' created.");
     }
 
     private void createTabPaths(PreferencesDialog dialog) {
@@ -447,7 +448,7 @@ public class SettingsWidget {
             }
         });
 
-        logger.log(Level.INFO, "tab paths created.");
+        logger.info("Tab 'paths' created.");
     }
 
 } // end of SettingsWidget

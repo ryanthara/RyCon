@@ -20,6 +20,8 @@ package de.ryanthara.ja.rycon.core.converter.gsi;
 import de.ryanthara.ja.rycon.core.converter.zeiss.ZeissDecoder;
 import de.ryanthara.ja.rycon.core.elements.GsiBlock;
 import de.ryanthara.ja.rycon.core.elements.ZeissBlock;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
@@ -32,6 +34,8 @@ import java.util.ArrayList;
  * @since 12
  */
 public class Zeiss2Gsi {
+
+    private static final Logger logger = LoggerFactory.getLogger(Zeiss2Gsi.class.getName());
 
     private int dateLine = -1, timeLine = -1;
     private int ppmLine = -1, constantLine = -1;
@@ -369,7 +373,8 @@ public class Zeiss2Gsi {
                 break;
 
             default:
-                System.err.println("Zeiss2Gsi.convertZeiss2GSI() : line contains less or more tokens " + zeissBlock.getTypeIdentifier());
+                logger.trace("Line contains less or more tokens ({}) than needed or allowed.", zeissBlock.getTypeIdentifier());
+                break;
         }
     }
 

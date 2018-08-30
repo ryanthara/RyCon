@@ -23,7 +23,7 @@ import java.util.ArrayList;
 
 /**
  * The {@code LeicaLogfileBaseStructure} implements basic functions for all logfile
- * structure elements in the <tt>Leica Geosystems</tt> logfile.txt for {@code RyCON}.
+ * structure elements in the <tt>Leica Geosystems</tt> logfile.txt for <tt>RyCON</tt>.
  * <p>
  * This is used for encapsulating the data and error minimization.
  *

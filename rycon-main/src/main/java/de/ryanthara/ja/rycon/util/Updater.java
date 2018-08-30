@@ -20,6 +20,8 @@ package de.ryanthara.ja.rycon.util;
 
 import de.ryanthara.ja.rycon.data.DefaultKeys;
 import de.ryanthara.ja.rycon.data.Version;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -35,22 +37,13 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 /**
- * Updater holds all the update functionality for RyCON.
+ * Class {@code Updater} handles all of the update functionality for RyCON.
  * <p>
- * This class checks the RyCON website (URL 'https://code.ryanthara.de/RyCON') for a new RyCON version.
- * <h3>Changes:</h3>
- * <ul>
- * <li>5: patch level support implemented </li>
- * <li>4: ssl check implemented </li>
- * <li>3: clean up and improvements </li>
- * <li>2: basic improvements </li>
- * <li>1: basic implementation </li>
- * </ul>
+ * Therefore it checks the <tt>RyCON</tt> website (URL 'https://code.ryanthara.de/RyCON')
+ * for a new <tt>RyCON</tt> version.
  *
  * @author sebastian
  * @version 5
@@ -58,12 +51,17 @@ import java.util.regex.Pattern;
  */
 public class Updater {
 
-    private final static Logger logger = Logger.getLogger(Updater.class.getName());
-
+    private static final Logger logger = LoggerFactory.getLogger(Updater.class.getName());
     private boolean updateAvailable = false;
 
     /**
-     * Perform the check of the RyCON update website.
+     * Default constructor which init the logging handler.
+     */
+    public Updater() {
+    }
+
+    /**
+     * Performs the check of the <tt>RyCON</tt> update website.
      * <p>
      * Due to JAVA's SSL implementations and it's constrained to store the key in the public keychain,
      * this is a 'hack' to bypass the ssl check easily. This should be done better in a future version.
@@ -97,8 +95,7 @@ public class Updater {
             sc.init(null, trustAllCerts, new java.security.SecureRandom());
             HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
         } catch (Exception e) {
-            System.err.println("Can't activate the trust manager for the ssl connection to www.ryanthara.de");
-            e.printStackTrace();
+            logger.warn("Can not activate the trust manager for the ssl connection to www.ryanthara.de", e.getCause());
         }
 
         try {
@@ -135,9 +132,9 @@ public class Updater {
 
                         update = programDate.compareTo(releaseDate);
                     } catch (ParseException e) {
-                        System.err.println("Date String can't be parsed.");
-                        e.printStackTrace();
+                        logger.error("Can not parse the date string '{}'.", buildDate);
                     }
+
                     scanner.close();
 
                     if (majorRelease > Version.getMajorRelease()) {
@@ -155,19 +152,19 @@ public class Updater {
                     success = true;
                 }
             } else if (huc.getResponseCode() == 404) { // document not found on server
-                logger.log(Level.SEVERE, "what's new document not found on server. Error 404");
+                logger.warn("Can not found the 'what's new document on server. Error 404");
             }
         } catch (MalformedURLException e) {
-            logger.log(Level.SEVERE, "checkForUpdate() failed: wrong URL format");
+            logger.warn("Update failed because of a wrong URL format.");
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "checkForUpdate() failed: IOException caused from no internet connection");
+            logger.warn("IOException caused from no active internet connection.");
         }
 
         return success;
     }
 
     /**
-     * Pick the latest news from a text file on the RyCON website and return the content as {code String}.
+     * Picks the latest news from a text file on the <tt>RyCON</tt> website and return the content as {@code String}.
      *
      * @return latest news from the update site
      */
@@ -175,6 +172,7 @@ public class Updater {
         StringBuilder builder = new StringBuilder();
 
         try {
+            // TODO add ssl connection here
             URL whatsNewURL = new URL(DefaultKeys.RyCON_WHATS_NEW_URL.getValue());
             BufferedReader in = new BufferedReader(new InputStreamReader(whatsNewURL.openStream(), StandardCharsets.UTF_8));
 
@@ -185,14 +183,14 @@ public class Updater {
 
             in.close();
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "getWhatsNew() failed : IOException");
+            logger.warn("Can not get the 'what's new document.", e.getCause());
         }
 
         return builder.toString();
     }
 
     /**
-     * Return true if an update is available.
+     * Returns true if an update is available.
      * <p>
      * The check for an update is done in {@code checkForUpdate()}.
      *

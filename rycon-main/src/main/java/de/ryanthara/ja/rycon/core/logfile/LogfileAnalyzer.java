@@ -18,10 +18,10 @@
 package de.ryanthara.ja.rycon.core.logfile;
 
 import de.ryanthara.ja.rycon.core.logfile.leica.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * The {@code LogfileAnalyzer} implements all the general functions to analyze
@@ -35,7 +35,7 @@ import java.util.logging.Logger;
  */
 public class LogfileAnalyzer {
 
-    private final static Logger logger = Logger.getLogger(LogfileAnalyzer.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(LogfileAnalyzer.class.getName());
 
     private final ArrayList<String> logfile;
 
@@ -46,6 +46,7 @@ public class LogfileAnalyzer {
      */
     public LogfileAnalyzer(ArrayList<String> logfile) {
         this.logfile = logfile;
+
     }
 
     /**
@@ -163,7 +164,7 @@ public class LogfileAnalyzer {
                 ReferencePlaneStructure referencePlane = new ReferencePlaneStructure(lines);
                 referencePlane.analyze();
             default:
-                logger.log(Level.SEVERE, "Found one more token: " + current.getIdentifier());
+                logger.warn("Found one more token '{}'.", current.getIdentifier());
         }
     }
 

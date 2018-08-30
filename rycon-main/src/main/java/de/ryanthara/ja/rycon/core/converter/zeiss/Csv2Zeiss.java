@@ -17,6 +17,9 @@
  */
 package de.ryanthara.ja.rycon.core.converter.zeiss;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -26,6 +29,8 @@ import java.util.List;
  * into Zeiss REC files with it's dialects (R4, R5, REC500 and M5).
  */
 public class Csv2Zeiss {
+
+    private static final Logger logger = LoggerFactory.getLogger(Csv2Zeiss.class.getName());
 
     private final List<String[]> readCSVLines;
 
@@ -45,7 +50,7 @@ public class Csv2Zeiss {
      *
      * @return string lines of the target file
      */
-    public ArrayList<String> convertCSV2REC(ZeissDialect dialect) {
+    public ArrayList<String> convertCsv2Rec(ZeissDialect dialect) {
         ArrayList<String> result = new ArrayList<>();
 
         int lineNumber = 0;
@@ -80,7 +85,7 @@ public class Csv2Zeiss {
                     break;
 
                 default:
-                    System.err.println("Csv2Zeiss.convertCSV2REC() : line contains less or more tokens " + Arrays.toString(stringField));
+                    logger.trace("Line contains less or more tokens ({}) than needed or allowed.\n{}", stringField.length, Arrays.toString(stringField));
             }
 
             result.add(BaseToolsZeiss.prepareLineOfCoordinates(dialect, number, code, easting, northing, height, lineNumber));

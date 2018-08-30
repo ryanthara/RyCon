@@ -17,14 +17,15 @@
  */
 package de.ryanthara.ja.rycon.nio;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Instances of this class provide functions to writer an {@code ArrayList<String>} line by line into a file.
@@ -40,7 +41,7 @@ import java.util.logging.Logger;
  */
 final class LineWriter {
 
-    private final static Logger logger = Logger.getLogger(LineWriter.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(LineWriter.class.getName());
 
     private final Path fileName;
     private int writtenLines = -1;
@@ -50,7 +51,7 @@ final class LineWriter {
      *
      * @param fileName filename as {@code Path}
      */
-    public LineWriter(final Path fileName) {
+    LineWriter(final Path fileName) {
         this.fileName = fileName;
     }
 
@@ -94,8 +95,7 @@ final class LineWriter {
 
                 return true;
             } catch (IOException e) {
-                logger.log(Level.SEVERE, "IOException occurred while file writing line " + writtenLines + ". ");
-                logger.log(Level.SEVERE, e.getMessage());
+                logger.error("IOException occurred while writing file '{}' in line '{}'.", fileName, writtenLines, e.getCause());
             }
         }
 

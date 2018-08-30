@@ -21,11 +21,11 @@ import de.ryanthara.ja.rycon.core.converter.gsi.BaseToolsGsi;
 import de.ryanthara.ja.rycon.core.elements.GsiBlock;
 import de.ryanthara.ja.rycon.core.elements.RyBlock;
 import de.ryanthara.ja.rycon.util.SortHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.TreeSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Instances of this class provides functions to split a Leica GSI file by code into separate files.
@@ -36,7 +36,7 @@ import java.util.logging.Logger;
  */
 public class GsiCodeSplit {
 
-    private final static Logger logger = Logger.getLogger(GsiCodeSplit.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(GsiCodeSplit.class.getName());
 
     private final ArrayList<String> readStringLines;
     private final TreeSet<Integer> foundCodes;
@@ -48,7 +48,8 @@ public class GsiCodeSplit {
      */
     public GsiCodeSplit(ArrayList<String> readStringLines) {
         this.readStringLines = readStringLines;
-        foundCodes = new TreeSet<>();
+        this.foundCodes = new TreeSet<>();
+
     }
 
     /**
@@ -65,7 +66,7 @@ public class GsiCodeSplit {
     /**
      * Splits a code based Leica GSI file into separate files by code.
      * <p>
-     * RyCON needs a valid GSI format file with code blocks (WI 71). The block order is equal.
+     * <tt>RyCON</tt> needs a valid GSI format file with code blocks (WI 71). The block order is equal.
      * A separate file is generated for every existing code. Lines without code will get the pseudo code '987789'.
      *
      * @param insertCodeBlock       if code block is insert into the result string
@@ -115,7 +116,7 @@ public class GsiCodeSplit {
                         validCheckHelperValue += 6;
                         break;
                     default:
-                        logger.log(Level.SEVERE, "GsiCodeSplit.processCodeSplit() : found wrong word index " + block.toPrintFormatCsv());
+                        logger.trace("Found wrong word index '{}'.", block.toPrintFormatCsv());
                 }
             }
 

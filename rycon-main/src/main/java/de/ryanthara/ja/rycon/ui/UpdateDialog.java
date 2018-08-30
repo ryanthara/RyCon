@@ -40,23 +40,23 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.widgets.Label;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.StringTokenizer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.BUTTONS;
 
 /**
  * {@code UpdateDialog} implements an update dialog for RyCON.
  * <p>
- * If there is a new version of RyCON available this dialog will show a message and
+ * If there is a new version of <tt>RyCON</tt> available this dialog will show a message and
  * a short 'what's new' section. The user can open the default browser of the system
- * and will be redirected to the RyCON update website.
+ * and will be redirected to the <tt>RyCON</tt> update website.
  * <p>
  * The code is inspired by the original MessageDialog code from SWT.
  *
@@ -66,6 +66,8 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.BUTTONS;
  */
 public class UpdateDialog extends Dialog {
 
+    private static final Logger logger = LoggerFactory.getLogger(UpdateDialog.class.getName());
+
     /**
      * Member for indicating which button was hit.
      */
@@ -74,14 +76,13 @@ public class UpdateDialog extends Dialog {
      * Member for indicating which button was hit.
      */
     public static final int CLOSE_AND_OPEN_BROWSER = 101;
-    private final static Logger logger = Logger.getLogger(UpdateDialog.class.getName());
     private static final int SPACING = 20;
     private static final int BUTTON_WIDTH = 61;
     private static final int HORIZONTAL_DIALOG_UNIT_PER_CHAR = 4;
     private static final int MAX_WIDTH = 640;
     private static final int MAX_HEIGHT = 480;
-    private int returnCode = Integer.MIN_VALUE;
     private final Image image;
+    private int returnCode = Integer.MIN_VALUE;
     private Shell shell;
     private String message;
     private String whatsNewInfo;
@@ -194,7 +195,7 @@ public class UpdateDialog extends Dialog {
         try {
             browser = new Browser(shell, SWT.NONE);
         } catch (SWTError e) {
-            logger.log(Level.SEVERE, "can not open the default browser", e);
+            logger.warn("Can not open the default browser of the system.", e.getCause());
 
             Display.getCurrent().dispose();
 
@@ -342,11 +343,9 @@ public class UpdateDialog extends Dialog {
         try {
             Desktop.getDesktop().browse(new URI(uri));
         } catch (IOException e) {
-            e.printStackTrace();
-            System.err.println("Could not open the connection in the default browser.");
+            logger.error("Could not open the connection '{}' in the default browser.", uri, e.getCause());
         } catch (URISyntaxException e) {
-            e.printStackTrace();
-            System.err.println("Could not open URI in the default browser.");
+            logger.error("URI '{}' has the wrong syntax.", uri, e.getCause());
         }
     }
 

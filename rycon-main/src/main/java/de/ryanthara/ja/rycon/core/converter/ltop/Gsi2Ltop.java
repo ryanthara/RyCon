@@ -21,6 +21,8 @@ import de.ryanthara.ja.rycon.core.converter.gsi.BaseToolsGsi;
 import de.ryanthara.ja.rycon.core.elements.GsiBlock;
 import de.ryanthara.ja.rycon.core.elements.RyPoint;
 import de.ryanthara.ja.rycon.util.NumberFormatter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
@@ -35,6 +37,7 @@ import java.util.ArrayList;
  * @since 12
  */
 public class Gsi2Ltop {
+    private static final Logger logger = LoggerFactory.getLogger(Gsi2Ltop.class.getName());
 
     private final BaseToolsGsi baseToolsGsi;
 
@@ -50,14 +53,14 @@ public class Gsi2Ltop {
     /**
      * Converts a Leica GSI coordinate file into a KOO file for LTOP.
      * <p>
-     * In this RyCON version only the WIs 81 till 86 are supported.
+     * In this <tt>RyCON</tt> version only the WIs 81 till 86 are supported.
      *
      * @param eliminateDuplicates eliminate duplicate coordinates within 3cm radius
      * @param sortOutputFile      sort an output file by point number
      *
      * @return converted KOO file
      */
-    public ArrayList<String> convertGSI2KOO(boolean eliminateDuplicates, boolean sortOutputFile) {
+    public ArrayList<String> convertGsi2Koo(boolean eliminateDuplicates, boolean sortOutputFile) {
         ArrayList<String> result = new ArrayList<>();
         ArrayList<RyPoint> ryPoints = new ArrayList<>();
 
@@ -112,7 +115,8 @@ public class Gsi2Ltop {
                             break;
 
                         default:
-                            System.err.println("Gsi2Ltop.convertGSI2KOO() : line contains unused word index " + block.toPrintFormatCsv());
+                            logger.trace("Line contains unknown word index ({}).", block.toPrintFormatCsv());
+                            break;
                     }
                 }
             }

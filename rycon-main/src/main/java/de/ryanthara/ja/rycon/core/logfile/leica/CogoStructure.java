@@ -27,7 +27,7 @@ import java.util.Iterator;
 
 /**
  * The {@code CogoStructure} implements functions based on the COGO (COordinate GeOmetry)
- * part of the <tt>Leica Geosystems</tt> logfile.txt for {@code RyCON}.
+ * part of the <tt>Leica Geosystems</tt> logfile.txt for <tt>RyCON</tt>.
  * <p>
  * The COGO calculation methods are:
  * <ul>
@@ -368,7 +368,7 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
     }
 
     /**
-     * Returns the number of new points for shift/rotate/scale transformation.
+     * Returns the number of new points for shift/rotate/scale core.core.transformation.
      *
      * @return the number of new points
      */
@@ -377,7 +377,7 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
     }
 
     /**
-     * Returns the number of skipped points for shift/rotate/scale transformation.
+     * Returns the number of skipped points for shift/rotate/scale core.core.transformation.
      *
      * @return the number of skipped points
      */
@@ -431,7 +431,7 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
     }
 
     /**
-     * Returns the calculated rotation of the shift/rotate/scale transformation.
+     * Returns the calculated rotation of the shift/rotate/scale core.core.transformation.
      *
      * @return the rotation
      */
@@ -440,7 +440,7 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
     }
 
     /**
-     * Returns the calculated scale of the shift/rotate/scale transformation.
+     * Returns the calculated scale of the shift/rotate/scale core.core.transformation.
      *
      * @return the rotation
      */
@@ -476,7 +476,7 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
     }
 
     /**
-     * Returns the shift result of a shift/rotate/scale transformation.
+     * Returns the shift result of a shift/rotate/scale core.core.transformation.
      *
      * @return the shift
      */

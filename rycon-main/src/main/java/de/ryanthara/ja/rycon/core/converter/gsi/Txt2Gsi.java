@@ -18,6 +18,8 @@
 package de.ryanthara.ja.rycon.core.converter.gsi;
 
 import de.ryanthara.ja.rycon.core.elements.GsiBlock;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
@@ -30,6 +32,8 @@ import java.util.ArrayList;
  * @since 12
  */
 public class Txt2Gsi {
+
+    private static final Logger logger = LoggerFactory.getLogger(Txt2Gsi.class.getName());
 
     private final ArrayList<String> readStringLines;
 
@@ -46,7 +50,7 @@ public class Txt2Gsi {
     /**
      * Converts a text file (space or tabulator separated) into a GSI formatted file.
      * <p>
-     * RyCON uses space or tab as separation sign and not a fixed column position.
+     * <tt>RyCON</tt> uses space or tab as separation sign and not a fixed column position.
      * <p>
      * The GSI format decision is done by a parameter in the constructor.
      *
@@ -104,7 +108,8 @@ public class Txt2Gsi {
                     break;
 
                 default:
-                    System.err.println("Txt2Gsi.convertTxt2Gsi() : line contains less or more tokens " + line);
+                    logger.trace("Line contains less or more tokens ({}) than needed or allowed.", lineSplit.length);
+                    break;
             }
 
             // check for at least one or more added elements to prevent writing empty lines
@@ -113,6 +118,8 @@ public class Txt2Gsi {
                 blocksInLines.add(blocks);
             }
         }
+
+        // return sortOutputFile ? BaseToolsLtop.sortResult(result) : result;
 
         return BaseToolsGsi.lineTransformation(isGSI16, blocksInLines);
     }

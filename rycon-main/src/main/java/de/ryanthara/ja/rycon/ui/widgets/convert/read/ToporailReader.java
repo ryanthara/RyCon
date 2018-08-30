@@ -26,12 +26,12 @@ import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
 import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.ERRORS;
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LABELS;
@@ -49,7 +49,7 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LABELS;
  */
 public class ToporailReader implements Reader {
 
-    private final static Logger logger = Logger.getLogger(ToporailReader.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(ToporailReader.class.getName());
 
     private ArrayList<String> readStringFile;
     private final Shell innerShell;
@@ -65,12 +65,13 @@ public class ToporailReader implements Reader {
     public ToporailReader(Shell innerShell, FileType fileType) {
         this.innerShell = innerShell;
         this.fileType = fileType;
+
     }
 
     /**
      * Returns the reader CSV lines as {@link List}.
      * * <p>
-     * This method is used vise versa with method {@link #getReadStringLines()}. The one which is not used,
+     * This method is used vice versa with the method {@link #getReadStringLines()}. The one which is not used,
      * returns null for indication.
      *
      * @return reader CSV lines
@@ -84,7 +85,7 @@ public class ToporailReader implements Reader {
     /**
      * Returns the reader string lines as {@link ArrayList}.
      * <p>
-     * This method is used vise versa with method {@link #getReadCSVFile()}. The one which is not used,
+     * This method is used vice versa with the method {@link #getReadCSVFile()}. The one which is not used,
      * returns null for indication.
      *
      * @return reader string lines
@@ -95,11 +96,11 @@ public class ToporailReader implements Reader {
     }
 
     /**
-     * Reads the cadwork node.dat file given as parameter and returns the reader file success.
+     * Reads the cadwork node.dat file given as parameter and returns the read file success.
      *
-     * @param file2Read reader file reference
+     * @param file2Read read file reference
      *
-     * @return reader file success
+     * @return read file success
      */
     @Override
     public boolean readFile(Path file2Read) {
@@ -112,8 +113,6 @@ public class ToporailReader implements Reader {
                 success = true;
             }
         } else {
-            logger.log(Level.SEVERE, "File " + file2Read.getFileName() + " could not be read.");
-
             String errorMessage;
 
             if (fileType == FileType.MEP) {
@@ -122,9 +121,10 @@ public class ToporailReader implements Reader {
                 errorMessage = ResourceBundleUtils.getLangString(ERRORS, Errors.toporailPtsReadingFailed);
             }
 
+            logger.warn("File '{}' could not be read.", file2Read.getFileName());
+
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR,
                     ResourceBundleUtils.getLangString(LABELS, Labels.errorTextMsgBox), errorMessage);
-
         }
 
         return success;

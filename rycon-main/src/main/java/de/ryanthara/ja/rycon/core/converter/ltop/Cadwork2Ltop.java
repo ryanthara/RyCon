@@ -52,7 +52,7 @@ public class Cadwork2Ltop {
      *
      * @return converted KOO file
      */
-    public ArrayList<String> convertCadwork2KOO(boolean useZeroHeights, boolean eliminateDuplicates, boolean sortOutputFile) {
+    public ArrayList<String> convertCadwork2Koo(boolean useZeroHeights, boolean eliminateDuplicates, boolean sortOutputFile) {
         ArrayList<String> result = new ArrayList<>();
         ArrayList<RyPoint> ryPoints = new ArrayList<>();
         String number, pointType, toleranceCategory, easting, northing, height, geoid, eta, xi;

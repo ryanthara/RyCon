@@ -36,20 +36,20 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.*;
 
 /**
  * Instances of this class implements a complete widget and it's functionality to split coordinate files by code.
  * <p>
- * The {@link CodeSplitterWidget} of RyCON is used to split measurement files (GSI or text format)
+ * The {@link CodeSplitterWidget} of <tt>RyCON</tt> is used to split measurement files (GSI or text format)
  * by code into several files. Each generated file contains only lines of one code. The code is added
  * to the file name of the written file.
  * <p>
@@ -65,7 +65,7 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.*;
  */
 public class CodeSplitterWidget extends AbstractWidget {
 
-    private final static Logger logger = Logger.getLogger(CodeSplitterWidget.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(CodeSplitterWidget.class.getName());
 
     private final String[] acceptableFileSuffixes = new String[]{"*.gsi", "*.txt", "*.dat"};
     private Shell parent;
@@ -83,8 +83,7 @@ public class CodeSplitterWidget extends AbstractWidget {
      */
     public CodeSplitterWidget(final Shell parent) {
         this.parent = parent;
-
-        files2read = new Path[0];
+        this.files2read = new Path[0];
 
         initUI();
         handleFileInjection();
@@ -201,7 +200,7 @@ public class CodeSplitterWidget extends AbstractWidget {
 
         createInputFieldsComposite();
         createOptions(width);
-        createDescription(width);
+        createAdvice(width);
 
         new BottomButtonBar(this, innerShell, BottomButtonBar.OK_AND_EXIT_BUTTON);
 
@@ -248,7 +247,7 @@ public class CodeSplitterWidget extends AbstractWidget {
         if (files.isPresent()) {
             files2read = files.get();
         } else {
-            logger.log(Level.SEVERE, "can not get the reader files");
+            logger.warn("Can not get the source files to be read.");
         }
     }
 
@@ -273,9 +272,9 @@ public class CodeSplitterWidget extends AbstractWidget {
                 filterPath);
     }
 
-    private void createDescription(int width) {
+    private void createAdvice(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangString(LABELS, Labels.adviceText));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.text));
 
         GridLayout gridLayout = new GridLayout(1, true);
 
@@ -286,8 +285,16 @@ public class CodeSplitterWidget extends AbstractWidget {
         group.setLayoutData(gridData);
 
         Label tip = new Label(group, SWT.WRAP | SWT.BORDER | SWT.LEFT);
+
+        String text =
+                ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.splitterWidget) + "\n\n" +
+                        ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.splitterWidget2) + "\n" +
+                        ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.splitterWidget3);
+
+        tip.setText(text);
+
+        // tip.setText(ResourceBundleUtils.getLangString(ADVICE, Advice.splitterWidget));
         tip.setLayoutData(new GridData(SWT.HORIZONTAL, SWT.TOP, true, false, 1, 1));
-        tip.setText(ResourceBundleUtils.getLangString(LABELS, Labels.tipSplitterWidget));
     }
 
     private void createInputFieldsComposite() {
@@ -302,7 +309,7 @@ public class CodeSplitterWidget extends AbstractWidget {
 
     private void createOptions(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangString(LABELS, Labels.optionsText));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(OPTIONS, Options.general));
 
         GridLayout gridLayout = new GridLayout(1, true);
 
@@ -402,10 +409,10 @@ public class CodeSplitterWidget extends AbstractWidget {
                     } else if (matcherTXT.matches(path)) {
                         counter = executeSplitTxt(insertCodeColumn, writeFileWithCodeZero, counter, path, readFile);
                     } else {
-                        logger.log(Level.SEVERE, "File format of " + path.getFileName() + " are not supported.");
+                        logger.warn("File format of '{}' are not supported (yet).", path.getFileName());
                     }
                 } else {
-                    logger.log(Level.SEVERE, "File " + path.getFileName() + " could not be read.");
+                    logger.warn("File {} could not be read.", path.toString());
                 }
             }
         }

@@ -27,7 +27,7 @@ import java.util.Iterator;
 
 /**
  * The {@code ReferenceLineStructure} implements functions based on the REFERENCE LINE part of
- * the <tt>Leica Geosystems</tt> logfile.txt for {@code RyCON}.
+ * the <tt>Leica Geosystems</tt> logfile.txt for <tt>RyCON</tt>.
  * <p>
  * This is used for encapsulating the data and error minimization.
  *

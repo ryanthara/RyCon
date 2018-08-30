@@ -27,6 +27,8 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -47,11 +49,7 @@ public class BottomButtonBar extends Composite {
      * Member that indicates to use the button "OK and Exit".
      */
     public static final boolean OK_AND_EXIT_BUTTON = true;
-
-    /**
-     * Member that indicates not to use the button "OK and Exit".
-     */
-    public static final boolean NO_OK_AND_EXIT_BUTTON = false;
+    private static final Logger logger = LoggerFactory.getLogger(BottomButtonBar.class.getName());
     private final Object callingObject;
     private final boolean okAndExitButton;
 
@@ -86,8 +84,10 @@ public class BottomButtonBar extends Composite {
         return super.computeSize(wHint, hHint, changed);
     }
 
+    /*
+     * Throws an SWTException if the receiver can not be accessed by the caller.
+     */
     private void createContents() {
-        /* Throws an SWTException if the receiver can not be accessed by the caller. */
         checkWidget();
 
         this.setLayout(new FillLayout());
@@ -137,10 +137,10 @@ public class BottomButtonBar extends Composite {
             try {
                 method.invoke(callingObject);
             } catch (IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
+                logger.error("Illegal access or invocation target for calling an action button.", e.getCause());
             }
         } catch (NoSuchMethodException e) {
-            e.printStackTrace();
+            logger.error("No such method for calling an action button.", e.getCause());
         }
     }
 

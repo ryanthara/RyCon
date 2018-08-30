@@ -18,7 +18,7 @@
 package de.ryanthara.ja.rycon.data;
 
 /**
- * The {@code PreferenceKeys} enumeration holds all of the preference keys for {@code RyCON}.
+ * The {@code PreferenceKeys} enumeration holds all of the preference keys for <tt>RyCON</tt>.
  * <p>
  * The default values for the keys are stored in the enum {@link DefaultKeys}.
  * <p>

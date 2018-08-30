@@ -20,6 +20,8 @@ package de.ryanthara.ja.rycon.core.converter.caplan;
 import de.ryanthara.ja.rycon.core.converter.gsi.BaseToolsGsi;
 import de.ryanthara.ja.rycon.core.elements.GsiBlock;
 import de.ryanthara.ja.rycon.util.NumberFormatter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
@@ -32,6 +34,7 @@ import java.util.ArrayList;
  * @since 12
  */
 public class Gsi2K {
+    private static final Logger logger = LoggerFactory.getLogger(Gsi2K.class.getName());
 
     private final BaseToolsGsi baseToolsGsi;
 
@@ -132,7 +135,8 @@ public class Gsi2K {
                             break;
 
                         default:
-                            System.err.println("Gsi2K.convertGSI2K() : line contains unknown word index " + printFormatCSV);
+                            logger.trace("Line contains unknown word index ({}).", block.toPrintFormatCsv());
+                            break;
                     }
 
                     if (valencyIndicator > 0) {
