@@ -18,7 +18,7 @@
 package de.ryanthara.ja.rycon.i18n;
 
 /**
- * The {@code Options} enumeration holds all the option label strings of <tt>RyCON</tt>.
+ * The {@code LangStrings} enumeration holds all the other language strings for <tt>RyCON</tt>.
  * <p>
  * This enumeration is used for encapsulating the data. The interface {@link ResourceKeys}
  * is used to access different enumerations in the class {@link ResourceBundleUtils}.
@@ -27,16 +27,14 @@ package de.ryanthara.ja.rycon.i18n;
  * @version 1
  * @since 2.0
  */
-public enum  Options implements ResourceKeys {
+public enum LangStrings implements ResourceKeys {
 
-    converter_CadworkSource,
-    converter_CaplanKTarget,
-    converter_CsvSource,
-    converter_CsvTarget,
-    converter_GsiTarget,
-    converter_LtopTarget,
-    converter_TxtSource,
-    converter_TxtTarget,
-    general,
+    application_Initialized,
+    application_Name,
+    application_Title,
+    buildString,
+    commentLine_CaplanK,
+    commentLine_Ltop,
+    update_Text,
 
-} // end of Options
+} // end of LangStrings

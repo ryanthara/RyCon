@@ -173,7 +173,7 @@ public class ClearUpWidget extends AbstractWidget {
 
         innerShell = new Shell(parent, SWT.CLOSE | SWT.DIALOG_TRIM | SWT.MAX | SWT.TITLE | SWT.APPLICATION_MODAL);
         innerShell.addListener(SWT.Close, event -> actionBtnCancel());
-        innerShell.setText(ResourceBundleUtils.getLangString(LABELS, Labels.clearUpText));
+        innerShell.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.clearUp_Shell));
         innerShell.setSize(width, height);
 
         innerShell.setLayout(gridLayout);
@@ -256,7 +256,7 @@ public class ClearUpWidget extends AbstractWidget {
 
     private void createAdvice(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.text));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.advice));
 
         GridLayout gridLayout = new GridLayout(1, true);
 
@@ -291,7 +291,7 @@ public class ClearUpWidget extends AbstractWidget {
 
     private void createOptions(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangStringFromXml(OPTIONS, Options.general));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.generalOptions));
 
         GridLayout gridLayout = new GridLayout(1, true);
 
@@ -341,7 +341,7 @@ public class ClearUpWidget extends AbstractWidget {
                         }
                     } else if (fileName.toUpperCase().endsWith(".GSL")) {
                         GsiLtopClearUp gsiLtopClearUp = new GsiLtopClearUp(readFile);
-                        writeFile = gsiLtopClearUp.processLTOPClean();
+                        writeFile = gsiLtopClearUp.processLtopClean();
 
                         if (WriteFile2Disk.writeFile2Disk(file2read, writeFile, ltopString, FileNameExtension.LEICA_GSI.getExtension())) {
                             counter = counter + 1;
@@ -393,7 +393,7 @@ public class ClearUpWidget extends AbstractWidget {
             }
 
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_INFORMATION,
-                    ResourceBundleUtils.getLangString(LABELS, Labels.successTextMsgBox), message);
+                    ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.msgBox_Success), message);
 
             // set the counter for status bar information
             Main.countFileOps = counter;
@@ -402,7 +402,7 @@ public class ClearUpWidget extends AbstractWidget {
             final String message = ResourceBundleUtils.getLangString(ERRORS, Errors.clearUpFailed);
 
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING,
-                    ResourceBundleUtils.getLangString(LABELS, Labels.errorTextMsgBox), message);
+                    ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.msgBox_Error), message);
 
             success = false;
         }

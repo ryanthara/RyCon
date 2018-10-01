@@ -52,15 +52,15 @@ import static de.ryanthara.ja.rycon.ui.custom.Status.OK;
  * Instances of this class provides functions to analyze log files to show an overview sheet
  * with the results of a stake out or reference line measurement.
  * <p>
- * Log files are structured and in a chronological order.
+ * Leica Geosystems logfile.txt log files are structured and in a chronological order.
  *
  * @author sebastian
  * @version 1
  * @since 12
  */
-public class AnalyzerWidget extends AbstractWidget {
+public class ReportWidget extends AbstractWidget {
 
-    private static final Logger logger = LoggerFactory.getLogger(AnalyzerWidget.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(ReportWidget.class.getName());
 
     private final String[] acceptableFileSuffixes = {"*.txt"};
     private Shell parent;
@@ -73,11 +73,10 @@ public class AnalyzerWidget extends AbstractWidget {
      *
      * @param parent parent shell
      */
-    public AnalyzerWidget(final Shell parent) {
+    public ReportWidget(final Shell parent) {
         this.parent = parent;
         this.files2read = new Path[0];
         this.innerShell = null;
-
 
         initUI();
         handleFileInjection();
@@ -91,14 +90,14 @@ public class AnalyzerWidget extends AbstractWidget {
      *
      * @param droppedFiles {@link Path} array from drop source
      */
-    private AnalyzerWidget(Path... droppedFiles) {
+    private ReportWidget(Path... droppedFiles) {
         files2read = PathCheck.getValidFiles(droppedFiles, acceptableFileSuffixes);
         innerShell = null;
     }
 
     private void createAdvice(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.text));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.advice));
 
         GridLayout gridLayout = new GridLayout(1, true);
 
@@ -111,12 +110,12 @@ public class AnalyzerWidget extends AbstractWidget {
         Label tip = new Label(group, SWT.WRAP | SWT.BORDER | SWT.LEFT);
 
         String text =
-                ResourceBundleUtils.getLangString(ADVICE, Advice.analyzerWidget) + "\n" +
-                        ResourceBundleUtils.getLangString(ADVICE, Advice.analyzerWidget2) + "\n" +
-                        ResourceBundleUtils.getLangString(ADVICE, Advice.analyzerWidget3);
+                ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.analyzerWidget) + "\n" +
+                        ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.analyzerWidget2) + "\n" +
+                        ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.analyzerWidget3);
 
         tip.setText(text);
-        // tip.setText(ResourceBundleUtils.getLangString(ADVICE, Advice.analyzerWidget));
+        // tip.setText(ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.analyzerWidget));
         tip.setLayoutData(new GridData(SWT.HORIZONTAL, SWT.TOP, true, false, 1, 1));
     }
 
@@ -188,7 +187,7 @@ public class AnalyzerWidget extends AbstractWidget {
 
         innerShell = new Shell(parent, SWT.CLOSE | SWT.DIALOG_TRIM | SWT.MAX | SWT.TITLE | SWT.APPLICATION_MODAL);
         innerShell.addListener(SWT.Close, event -> actionBtnCancel());
-        innerShell.setText(ResourceBundleUtils.getLangString(LABELS, Labels.reportText));
+        innerShell.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.report_Shell));
         innerShell.setSize(width, height);
 
         innerShell.setLayout(gridLayout);
@@ -238,6 +237,7 @@ public class AnalyzerWidget extends AbstractWidget {
 
     private void createInputFieldComposite() {
         Group group = new Group(innerShell, SWT.NONE);
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.report_LogfilePath));
 
         GridLayout gridLayout = new GridLayout();
         gridLayout.marginHeight = 5;
@@ -251,7 +251,7 @@ public class AnalyzerWidget extends AbstractWidget {
         group.setLayoutData(gridData);
 
         Label logfilePathLabel = new Label(group, SWT.NONE);
-        logfilePathLabel.setText(ResourceBundleUtils.getLangString(LABELS, Labels.logfilePath));
+        logfilePathLabel.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.report_LogfilePathLabel));
 
         Path logfile = Paths.get(Main.pref.getUserPreference(PreferenceKeys.LAST_COPIED_LOGFILE));
 
@@ -359,7 +359,7 @@ public class AnalyzerWidget extends AbstractWidget {
             }
 
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_INFORMATION,
-                    ResourceBundleUtils.getLangString(LABELS, Labels.successTextMsgBox), message);
+                    ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.msgBox_Success), message);
 
             // set the counter for status bar information
             Main.countFileOps = counter;
@@ -368,7 +368,7 @@ public class AnalyzerWidget extends AbstractWidget {
             final String message = ResourceBundleUtils.getLangString(ERRORS, Errors.reportFailed);
 
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING,
-                    ResourceBundleUtils.getLangString(LABELS, Labels.errorTextMsgBox), message);
+                    ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.msgBox_Error), message);
 
             success = false;
         }
@@ -403,4 +403,4 @@ public class AnalyzerWidget extends AbstractWidget {
         Main.statusBar.setStatus(status, OK);
     }
 
-} // end of AnalyzerWidget
+} // end of ReportWidget

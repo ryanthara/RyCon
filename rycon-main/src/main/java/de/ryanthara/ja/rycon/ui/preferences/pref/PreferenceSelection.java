@@ -42,7 +42,7 @@ public abstract class PreferenceSelection extends Preference<String> {
      * @param label    text string of the preference
      * @param elements elements for the combo of the preference
      */
-    protected PreferenceSelection(String label, String[] elements) {
+    protected PreferenceSelection(String label, String... elements) {
         super(label);
         this.elements = elements;
 

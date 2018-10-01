@@ -18,8 +18,8 @@
 package de.ryanthara.ja.rycon.ui.widgets.convert.read;
 
 import de.ryanthara.ja.rycon.i18n.Errors;
-import de.ryanthara.ja.rycon.i18n.Labels;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
+import de.ryanthara.ja.rycon.i18n.Texts;
 import de.ryanthara.ja.rycon.nio.LineReader;
 import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
 import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.ERRORS;
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LABELS;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.TEXTS;
 
 /**
  * Instances of this class are used for reading Cadwork node.dat files from the {@link ConverterWidget}
@@ -46,9 +46,8 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LABELS;
 public class CadworkReader implements Reader {
 
     private static final Logger logger = LoggerFactory.getLogger(CadworkReader.class.getName());
-
-    private ArrayList<String> readStringFile;
     private final Shell innerShell;
+    private ArrayList<String> readStringFile;
 
     /**
      * Constructs a new instance of this class given a reference to the inner shell of the calling object.
@@ -57,7 +56,6 @@ public class CadworkReader implements Reader {
      */
     public CadworkReader(Shell innerShell) {
         this.innerShell = innerShell;
-
     }
 
     /**
@@ -70,14 +68,14 @@ public class CadworkReader implements Reader {
      */
     @Override
     // TODO correct return null
-    public List<String[]> getReadCSVFile() {
+    public List<String[]> getReadCsvFile() {
         return null;
     }
 
     /**
      * Returns the reader string lines as {@link ArrayList}.
      * <p>
-     * This method is used vice versa with the method {@link #getReadCSVFile()}. The one which is not used,
+     * This method is used vice versa with the method {@link #getReadCsvFile()}. The one which is not used,
      * returns null for indication.
      *
      * @return reader string lines
@@ -91,7 +89,6 @@ public class CadworkReader implements Reader {
      * Reads the cadwork node.dat file given as parameter and returns the read file success.
      *
      * @param file2Read read file reference
-     *
      * @return read file success
      */
     @Override
@@ -108,7 +105,7 @@ public class CadworkReader implements Reader {
             logger.warn("Cadwork node.dat file {} could not be read.", file2Read.toString());
 
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR,
-                    ResourceBundleUtils.getLangString(LABELS, Labels.errorTextMsgBox),
+                    ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.msgBox_Error),
                     ResourceBundleUtils.getLangString(ERRORS, Errors.cadworkReadingFailed));
 
         }

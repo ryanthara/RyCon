@@ -36,9 +36,9 @@ import java.util.*;
  * @version 1
  * @since 1
  */
-public class XMLResourceBundle extends ResourceBundle {
+class XMLResourceBundle extends ResourceBundle {
 
-    private Properties properties;
+    private final Properties properties;
 
     /**
      * Constructor which accepts a reference to the {@link InputStream} of the XML file.

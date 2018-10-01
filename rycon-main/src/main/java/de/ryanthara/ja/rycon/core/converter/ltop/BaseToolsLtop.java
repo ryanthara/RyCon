@@ -21,7 +21,7 @@ import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.core.elements.RyPoint;
 import de.ryanthara.ja.rycon.data.PreferenceKeys;
 import de.ryanthara.ja.rycon.data.Version;
-import de.ryanthara.ja.rycon.i18n.Labels;
+import de.ryanthara.ja.rycon.i18n.LangStrings;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.TreeSet;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LABELS;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LANG_STRINGS;
 
 /**
  * BaseToolsLtop implements basic operations on text based measurement and coordinate files for LTOP.
@@ -231,7 +231,7 @@ class BaseToolsLtop {
         DateFormat df;
         df = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.MEDIUM);
 
-        result.add(String.format(firstLineIdentifier + " " + ResourceBundleUtils.getLangString(LABELS, Labels.commentLineLTOP), Version.getVersion(), df.format(d)));
+        result.add(String.format(firstLineIdentifier + " " + ResourceBundleUtils.getLangStringFromXml(LANG_STRINGS, LangStrings.commentLine_Ltop), Version.getVersion(), df.format(d)));
     }
 
 }  // end of BaseToolsLtop

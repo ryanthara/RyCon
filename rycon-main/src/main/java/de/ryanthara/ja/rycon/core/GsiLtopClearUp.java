@@ -19,8 +19,8 @@ package de.ryanthara.ja.rycon.core;
 
 import de.ryanthara.ja.rycon.core.converter.gsi.BaseToolsGsi;
 import de.ryanthara.ja.rycon.data.DefaultKeys;
-import de.ryanthara.ja.rycon.i18n.Labels;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
+import de.ryanthara.ja.rycon.i18n.Texts;
 import de.ryanthara.ja.rycon.i18n.Warnings;
 import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
 import org.eclipse.swt.SWT;
@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LABELS;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.TEXTS;
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.WARNINGS;
 
 /**
@@ -94,7 +94,7 @@ public class GsiLtopClearUp {
      *
      * @return clean up LTOP MES file
      */
-    public ArrayList<String> processLTOPClean() {
+    public ArrayList<String> processLtopClean() {
 
         final String paramFreeStationString = DefaultKeys.PARAM_FREE_STATION_STRING.getValue();
         final String paramControlPointString = DefaultKeys.PARAM_CONTROL_POINT_STRING.getValue();
@@ -121,8 +121,7 @@ public class GsiLtopClearUp {
             int tokens = (line.length() + size - 1) / size;
 
             // Ignore 2 face detection gsi block from LTOP+ format mask which is at the end of the line
-            if (line.contains("79..16+")) {
-                // TODO find out the right WI
+            if (line.contains("79..00+")) {
                 tokens = tokens - 1;
             }
 
@@ -153,7 +152,7 @@ public class GsiLtopClearUp {
                         final Shell shell = Display.getCurrent().getActiveShell();
 
                         MessageBoxes.showMessageBox(shell, SWT.ICON_WARNING,
-                                ResourceBundleUtils.getLangString(LABELS, Labels.warningTextMsgBox),
+                                ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.msgBox_Warning),
                                 String.format(ResourceBundleUtils.getLangString(WARNINGS, Warnings.noControlPointsLTOP), currentStation));
 
                         range = range + 1;

@@ -17,8 +17,8 @@
  */
 package de.ryanthara.ja.rycon.nio;
 
-import de.ryanthara.ja.rycon.i18n.Labels;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
+import de.ryanthara.ja.rycon.i18n.Texts;
 import de.ryanthara.ja.rycon.i18n.Warnings;
 import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
 import de.ryanthara.ja.rycon.util.check.PathCheck;
@@ -27,11 +27,11 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LABELS;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.TEXTS;
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.WARNINGS;
+import static de.ryanthara.ja.rycon.nio.PathUtils.prepareOutputFileName;
 
 /**
  * This class implements static file writing functions for line based output files.
@@ -44,16 +44,6 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.WARNINGS;
  * @since 12
  */
 public final class WriteFile2Disk {
-
-    private static Path prepareOutputFileName(final Path path, final String editString, final String fileNameExtension) {
-        final String fileNameWithoutExtension = PathUtils.removeExtension(path).toString();
-
-        if (editString.equals("")) {
-            return Paths.get(fileNameWithoutExtension + fileNameExtension);
-        } else {
-            return Paths.get(fileNameWithoutExtension + editString + fileNameExtension);
-        }
-    }
 
     /**
      * Writes a line based string file from an {@link ArrayList} to the file system and returns the writer success.
@@ -84,7 +74,7 @@ public final class WriteFile2Disk {
                     final String outputFilename = p.toString();
 
                     int returnValue = MessageBoxes.showMessageBox(shell, SWT.ICON_WARNING | SWT.YES | SWT.NO,
-                            ResourceBundleUtils.getLangString(LABELS, Labels.warningTextMsgBox),
+                            ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.msgBox_Warning),
                             String.format(ResourceBundleUtils.getLangString(WARNINGS, Warnings.fileExistsOverwrite), outputFilename));
 
                     if (returnValue == SWT.YES) {

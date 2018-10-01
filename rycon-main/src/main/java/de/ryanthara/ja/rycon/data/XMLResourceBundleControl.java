@@ -57,7 +57,6 @@ public class XMLResourceBundleControl extends ResourceBundle.Control {
      * Returns the list of strings.
      *
      * @param baseName base name string
-     *
      * @return list of strings
      */
     @Override
@@ -73,16 +72,13 @@ public class XMLResourceBundleControl extends ResourceBundle.Control {
      * @param format   format string
      * @param loader   reference to the {@link ClassLoader}
      * @param reload   force reloading
-     *
      * @return loaded {@link ResourceBundle}
-     *
-     * @throws IllegalAccessException IllegalAccessException
-     * @throws InstantiationException InstantiationException
-     * @throws IOException            IOException
+     * @throws IllegalArgumentException IllegalArgumentException
+     * @throws IOException              IOException
      */
     @Override
     public ResourceBundle newBundle(String baseName, Locale locale, String format, ClassLoader loader, boolean reload)
-            throws IllegalAccessException, InstantiationException, IOException {
+            throws IOException {
 
         if ((baseName == null) || (locale == null) || (format == null) || (loader == null)) {
             logger.error("baseName, locale, format and loader cannot be null");

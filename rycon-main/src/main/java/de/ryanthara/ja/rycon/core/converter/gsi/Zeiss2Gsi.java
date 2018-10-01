@@ -436,7 +436,7 @@ public class Zeiss2Gsi {
 
             // reset helper value
             dateLine = -1;
-        } else if (timeLine > dateLine) {
+        } else {
             // writer block for time string
             blocks.add(new GsiBlock(isGSI16, 19, format1));
 

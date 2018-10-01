@@ -64,6 +64,7 @@ public class Zeiss2Ltop {
      */
     public ArrayList<String> convertZeiss2MES(boolean useZenithDistance) {
         ArrayList<String> result = new ArrayList<>();
+
         return result;
     }
 

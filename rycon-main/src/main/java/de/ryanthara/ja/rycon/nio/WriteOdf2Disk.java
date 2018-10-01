@@ -17,8 +17,8 @@
  */
 package de.ryanthara.ja.rycon.nio;
 
-import de.ryanthara.ja.rycon.i18n.Labels;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
+import de.ryanthara.ja.rycon.i18n.Texts;
 import de.ryanthara.ja.rycon.i18n.Warnings;
 import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
 import org.eclipse.swt.SWT;
@@ -29,7 +29,7 @@ import org.odftoolkit.simple.SpreadsheetDocument;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LABELS;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.TEXTS;
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.WARNINGS;
 
 /**
@@ -58,7 +58,7 @@ public class WriteOdf2Disk {
             final Shell shell = Display.getCurrent().getActiveShell();
 
             int returnValue = MessageBoxes.showMessageBox(shell, SWT.ICON_WARNING | SWT.YES | SWT.NO,
-                    ResourceBundleUtils.getLangString(LABELS, Labels.warningTextMsgBox),
+                    ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.msgBox_Warning),
                     String.format(ResourceBundleUtils.getLangString(WARNINGS, Warnings.fileExistsOverwrite), outputFileName));
 
             writeSuccess = returnValue == SWT.YES && fileToolsOdf.writeOds(outputFileName);

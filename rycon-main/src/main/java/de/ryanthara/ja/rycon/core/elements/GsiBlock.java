@@ -147,7 +147,7 @@ public class GsiBlock {
      * @param sign        sign (+ or -)(pos 7)
      * @param dataGSI     GSI8 data (pos 8-15) or GSI16 data (pos8-23)
      */
-    public GsiBlock(boolean isGSI16, int wordIndex, String information, String sign, String dataGSI) {
+    private GsiBlock(boolean isGSI16, int wordIndex, String information, String sign, String dataGSI) {
         this.wordIndex = wordIndex;
         this.information = information;
         this.sign = sign;

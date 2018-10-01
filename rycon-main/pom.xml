@@ -91,11 +91,16 @@
             <artifactId>xmlbeans</artifactId>
             <version>3.0.0</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.eclipse.platform/org.eclipse.swt.cocoa.macosx.x86_64
+        <dependency>
+            <groupId>org.eclipse.platform</groupId>
+            <artifactId>org.eclipse.swt.cocoa.macosx.x86_64</artifactId>
+            <version>3.108.0</version>
+        </dependency>-->
         <dependency>
             <groupId>org.eclipse.swt</groupId>
             <artifactId>org.eclipse.swt.cocoa.macosx.x86_64</artifactId>
-            <!--<version>3.107.0</version>-->
-            <version>4.5.2</version>
+            <version>4.6.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

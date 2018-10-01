@@ -19,8 +19,8 @@ package de.ryanthara.ja.rycon.ui.custom;
 
 import de.ryanthara.ja.rycon.data.PreferenceHandler;
 import de.ryanthara.ja.rycon.i18n.Errors;
-import de.ryanthara.ja.rycon.i18n.Labels;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
+import de.ryanthara.ja.rycon.i18n.Texts;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Shell;
@@ -30,7 +30,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.ERRORS;
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LABELS;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.TEXTS;
 
 /**
  * This class implements a simple static access to swt {@link DirectoryDialog} and it's functionality for RyCON.
@@ -46,7 +46,7 @@ public class DirectoryDialogs {
             textField.setText(pathAsString);
         } else {
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING,
-                    ResourceBundleUtils.getLangString(LABELS, Labels.warningTextMsgBox),
+                    ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.msgBox_Warning),
                     ResourceBundleUtils.getLangString(ERRORS, Errors.directoryNotFound));
         }
     }

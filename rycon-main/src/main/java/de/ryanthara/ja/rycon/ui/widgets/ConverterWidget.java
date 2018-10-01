@@ -179,7 +179,7 @@ public class ConverterWidget extends AbstractWidget {
 
         innerShell = new Shell(parent, SWT.CLOSE | SWT.DIALOG_TRIM | SWT.MAX | SWT.TITLE | SWT.APPLICATION_MODAL);
         innerShell.addListener(SWT.Close, event -> actionBtnCancel());
-        innerShell.setText(ResourceBundleUtils.getLangString(LABELS, Labels.converterText));
+        innerShell.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.converter_Shell));
         innerShell.setSize(width, height);
 
         innerShell.setLayout(gridLayout);
@@ -286,7 +286,7 @@ public class ConverterWidget extends AbstractWidget {
 
     private void createAdvice(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.text));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.advice));
 
         GridLayout gridLayout = new GridLayout(1, true);
 
@@ -322,14 +322,14 @@ public class ConverterWidget extends AbstractWidget {
         compositeSourceTarget.setLayoutData(gridData);
 
         groupSource = new Group(compositeSourceTarget, SWT.NONE);
-        groupSource.setText(ResourceBundleUtils.getLangString(LABELS, Labels.sourceFormatText));
+        groupSource.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.converter_GroupSourceFormat));
         groupSource.setLayout(new GridLayout(2, false));
 
         gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
         groupSource.setLayoutData(gridData);
 
         groupTarget = new Group(compositeSourceTarget, SWT.NONE);
-        groupTarget.setText(ResourceBundleUtils.getLangString(LABELS, Labels.targetFormatText));
+        groupTarget.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.converter_GroupTargetFormat));
         groupTarget.setLayout(new GridLayout(2, false));
 
         gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
@@ -354,7 +354,7 @@ public class ConverterWidget extends AbstractWidget {
 
     private void createOptionsGeneral(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangStringFromXml(OPTIONS, Options.general));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.generalOptions));
 
         GridLayout gridLayout = new GridLayout(1, true);
 
@@ -380,7 +380,7 @@ public class ConverterWidget extends AbstractWidget {
     }
 
     private void createOptionsOptionalCadworkSource() {
-        groupOptionsSource.setText(ResourceBundleUtils.getLangStringFromXml(OPTIONS, Options.converter_CadworkSource));
+        groupOptionsSource.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.converter_CadworkSource));
 
         chkBoxCadworkUseZeroHeights = new Button(groupOptionsSource, SWT.CHECK);
         chkBoxCadworkUseZeroHeights.setSelection(false);
@@ -390,7 +390,7 @@ public class ConverterWidget extends AbstractWidget {
     }
 
     private void createOptionsOptionalCaplanKTarget() {
-        groupOptionsTarget.setText(ResourceBundleUtils.getLangStringFromXml(OPTIONS, Options.converter_CaplanKTarget));
+        groupOptionsTarget.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.converter_CaplanKTarget));
 
         chkBoxKFormatUseSimpleCaplanKFormat = new Button(groupOptionsTarget, SWT.CHECK);
         chkBoxKFormatUseSimpleCaplanKFormat.setSelection(true);
@@ -404,7 +404,7 @@ public class ConverterWidget extends AbstractWidget {
     }
 
     private void createOptionsOptionalCsvSource() {
-        groupOptionsSource.setText(ResourceBundleUtils.getLangStringFromXml(OPTIONS, Options.converter_CsvSource));
+        groupOptionsSource.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.converter_CsvSource));
 
         chkBoxSourceContainsCode = new Button(groupOptionsSource, SWT.CHECK);
         chkBoxSourceContainsCode.setSelection(false);
@@ -418,7 +418,7 @@ public class ConverterWidget extends AbstractWidget {
     }
 
     private void createOptionsOptionalCsvTarget() {
-        groupOptionsTarget.setText(ResourceBundleUtils.getLangStringFromXml(OPTIONS, Options.converter_CsvTarget));
+        groupOptionsTarget.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.converter_CsvTarget));
 
         chkBoxCsvSemicolonSeparatorTarget = new Button(groupOptionsTarget, SWT.CHECK);
         chkBoxCsvSemicolonSeparatorTarget.setSelection(false);
@@ -428,7 +428,7 @@ public class ConverterWidget extends AbstractWidget {
     }
 
     private void createOptionsOptionalLtop() {
-        groupOptionsTarget.setText(ResourceBundleUtils.getLangStringFromXml(OPTIONS, Options.converter_LtopTarget));
+        groupOptionsTarget.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.converter_LtopTarget));
 
         chkBoxLtopEliminateDuplicatePoints = new Button(groupOptionsTarget, SWT.CHECK);
         chkBoxLtopEliminateDuplicatePoints.setSelection(true);
@@ -466,7 +466,7 @@ public class ConverterWidget extends AbstractWidget {
     }
 
     private void createOptionsOptionalTxtSource() {
-        groupOptionsSource.setText(ResourceBundleUtils.getLangStringFromXml(OPTIONS, Options.converter_TxtSource));
+        groupOptionsSource.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.converter_TxtSource));
 
         chkBoxSourceContainsCode = new Button(groupOptionsSource, SWT.CHECK);
         chkBoxSourceContainsCode.setSelection(false);
@@ -476,7 +476,7 @@ public class ConverterWidget extends AbstractWidget {
     }
 
     private void createOptionsOptionalTxtTarget() {
-        groupOptionsTarget.setText(ResourceBundleUtils.getLangStringFromXml(OPTIONS, Options.converter_TxtTarget));
+        groupOptionsTarget.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.converter_TxtTarget));
 
         chkBoxTxtSpaceSeparator = new Button(groupOptionsTarget, SWT.CHECK);
         chkBoxTxtSpaceSeparator.setSelection(false);
@@ -511,7 +511,7 @@ public class ConverterWidget extends AbstractWidget {
 
     private void createTxtCsv(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangString(LABELS, Labels.txtCsvGroup));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.converter_TxtCsv));
 
         GridLayout gridLayout = new GridLayout(2, false);
 
@@ -642,7 +642,7 @@ public class ConverterWidget extends AbstractWidget {
 
     private void createTxtCsv2(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangString(LABELS, Labels.txtCsvGroup));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.converter_TxtCsv));
 
         FillLayout fillLayout = new FillLayout(SWT.NONE);
         group.setLayout(fillLayout);
@@ -663,7 +663,7 @@ public class ConverterWidget extends AbstractWidget {
 
     private void createTxtCsvTable(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangString(LABELS, Labels.txtCsvGroup));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.converter_TxtCsv));
 
         GridLayout gridLayout = new GridLayout(2, false);
 
@@ -939,12 +939,12 @@ public class ConverterWidget extends AbstractWidget {
         updateInnerShell();
     }
 
-    private Map<Integer, Reader> prepareReadFileMaps() {
+    private Map<Integer, Reader> prepareReadFiles(ReadParameter readParameter) {
         Map<Integer, Reader> readFileMap = new HashMap<>();
         readFileMap.put(0, new GsiReader(innerShell));
         readFileMap.put(1, new GsiReader(innerShell));
         readFileMap.put(2, new TxtReader(innerShell));
-        readFileMap.put(3, new CsvReader(innerShell, chkBoxCsvSemicolonSeparatorSource.getSelection()));
+        readFileMap.put(3, new CsvReader(innerShell, readParameter));
         readFileMap.put(4, new CaplanReader(innerShell));
         readFileMap.put(5, new ZeissReader(innerShell));
         readFileMap.put(6, new CadworkReader(innerShell));
@@ -956,7 +956,7 @@ public class ConverterWidget extends AbstractWidget {
         return readFileMap;
     }
 
-    private Map<Integer, Writer> prepareWriteFile(Path readFile, ArrayList<String> readStringFile, List<String[]> readCSVFile, WriteParameter parameter) {
+    private Map<Integer, Writer> prepareWriteFiles(Path readFile, ArrayList<String> readStringFile, List<String[]> readCSVFile, WriteParameter parameter) {
         final Path writeFile = Paths.get(inputFieldsComposite.getTargetTextField().getText() + FileSystems.getDefault().getSeparator() + readFile.getFileName());
 
         Map<Integer, Writer> writeFileMap = new HashMap<>();
@@ -984,9 +984,10 @@ public class ConverterWidget extends AbstractWidget {
         int sourceNumber = RadioHelper.getSelectedBtn(groupSource.getChildren());
         int targetNumber = RadioHelper.getSelectedBtn(groupTarget.getChildren());
 
-        WriteParameter parameter = prepareWriteParameter();
+        ReadParameter readParameter = prepareReadParameter();
+        WriteParameter writeParameter = prepareWriteParameter();
 
-        Map<Integer, Reader> readFileMap = prepareReadFileMaps();
+        Map<Integer, Reader> readFileMap = prepareReadFiles(readParameter);
 
         for (Path file2read : files2read) {
             boolean readFileSuccess = false;
@@ -997,7 +998,7 @@ public class ConverterWidget extends AbstractWidget {
             // read files (new version)
             if (readFileMap.containsKey(sourceNumber)) {
                 if (readFileMap.get(sourceNumber).readFile(file2read)) {
-                    if ((readCSVFile = readFileMap.get(sourceNumber).getReadCSVFile()) != null) {
+                    if ((readCSVFile = readFileMap.get(sourceNumber).getReadCsvFile()) != null) {
                         readFileSuccess = true;
                     } else if ((readStringFile = readFileMap.get(sourceNumber).getReadStringLines()) != null) {
                         readFileSuccess = true;
@@ -1007,7 +1008,7 @@ public class ConverterWidget extends AbstractWidget {
 
             // write files (new version)
             if (readFileSuccess) {
-                Map<Integer, Writer> writeFileMap = prepareWriteFile(file2read, readStringFile, readCSVFile, parameter);
+                Map<Integer, Writer> writeFileMap = prepareWriteFiles(file2read, readStringFile, readCSVFile, writeParameter);
                 if (writeFileMap.containsKey(targetNumber)) {
                     if (writeFileMap.get(targetNumber).writeSpreadsheetDocument()) {
                         counter = counter + 1;
@@ -1032,7 +1033,7 @@ public class ConverterWidget extends AbstractWidget {
             }
 
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_INFORMATION,
-                    ResourceBundleUtils.getLangString(LABELS, Labels.successTextMsgBox), message);
+                    ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.msgBox_Success), message);
 
             // set the counter for status bar information
             Main.countFileOps = counter;
@@ -1040,13 +1041,43 @@ public class ConverterWidget extends AbstractWidget {
             success = true;
         } else {
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR,
-                    ResourceBundleUtils.getLangString(LABELS, Labels.errorTextMsgBox),
+                    ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.msgBox_Error),
                     ResourceBundleUtils.getLangString(ERRORS, Errors.conversionFailed));
 
             success = false;
         }
 
         return success;
+    }
+
+    private ReadParameter prepareReadParameter() {
+        boolean sourceContainsCode = false;
+        boolean useSemicolonSeparator = false;
+        boolean useCadworkZeroHeights = false;
+
+        if (chkBoxSourceContainsCode != null) {
+            if (!chkBoxSourceContainsCode.isDisposed()) {
+                sourceContainsCode = chkBoxSourceContainsCode.getSelection();
+            }
+        }
+
+        if (chkBoxCsvSemicolonSeparatorSource != null) {
+            if (!chkBoxCsvSemicolonSeparatorSource.isDisposed()) {
+                useSemicolonSeparator = chkBoxCsvSemicolonSeparatorSource.getSelection();
+            }
+        }
+
+        if (chkBoxCadworkUseZeroHeights != null) {
+            if (!chkBoxCadworkUseZeroHeights.isDisposed()) {
+                useCadworkZeroHeights = chkBoxCadworkUseZeroHeights.getSelection();
+            }
+        }
+
+        return new ReadParameter(
+                sourceContainsCode,
+                useSemicolonSeparator,
+                useCadworkZeroHeights
+        );
     }
 
     /*
@@ -1264,7 +1295,7 @@ public class ConverterWidget extends AbstractWidget {
     }
 
     private void createOptionsOptionalGsiTarget() {
-        groupOptionsTarget.setText(ResourceBundleUtils.getLangStringFromXml(OPTIONS, Options.converter_GsiTarget));
+        groupOptionsTarget.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.converter_GsiTarget));
 
         chkBoxSortOutputFileByNumber = new Button(groupOptionsTarget, SWT.CHECK);
         chkBoxSortOutputFileByNumber.setSelection(false);

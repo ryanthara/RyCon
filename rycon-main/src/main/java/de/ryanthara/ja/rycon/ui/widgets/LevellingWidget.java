@@ -208,7 +208,7 @@ public class LevellingWidget extends AbstractWidget {
 
         innerShell = new Shell(parent, SWT.CLOSE | SWT.DIALOG_TRIM | SWT.MAX | SWT.TITLE | SWT.APPLICATION_MODAL);
         innerShell.addListener(SWT.Close, event -> actionBtnCancel());
-        innerShell.setText(ResourceBundleUtils.getLangString(LABELS, Labels.levellingText));
+        innerShell.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.levelling_Shell));
         innerShell.setSize(width, height);
 
         innerShell.setLayout(gridLayout);
@@ -295,7 +295,7 @@ public class LevellingWidget extends AbstractWidget {
 
     private void createAdvice(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.text));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.advice));
 
         GridLayout gridLayout = new GridLayout(1, true);
 
@@ -308,13 +308,13 @@ public class LevellingWidget extends AbstractWidget {
         Label tip = new Label(group, SWT.WRAP | SWT.BORDER | SWT.LEFT);
 
         String text =
-                ResourceBundleUtils.getLangString(ADVICE, Advice.levellingWidget) + "\n" +
-                        ResourceBundleUtils.getLangString(ADVICE, Advice.levellingWidget2) + "\n\n" +
-                        ResourceBundleUtils.getLangString(ADVICE, Advice.levellingWidget3);
+                ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.levellingWidget) + "\n" +
+                        ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.levellingWidget2) + "\n\n" +
+                        ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.levellingWidget3);
 
         tip.setText(text);
 
-        // tip.setText(ResourceBundleUtils.getLangString(ADVICE, Advice.levellingWidget));
+        // tip.setText(ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.levellingWidget));
         tip.setLayoutData(new GridData(SWT.HORIZONTAL, SWT.TOP, true, false, 1, 1));
     }
 
@@ -330,7 +330,7 @@ public class LevellingWidget extends AbstractWidget {
 
     private void createOptions(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangStringFromXml(OPTIONS, Options.general));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.generalOptions));
 
         GridLayout gridLayout = new GridLayout(1, true);
 
@@ -355,7 +355,7 @@ public class LevellingWidget extends AbstractWidget {
 
     private void createOutputFormat(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangString(LABELS, Labels.outputFormatText));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.levelling_GroupOutputFormat));
 
         GridLayout gridLayout = new GridLayout(1, true);
 
@@ -527,14 +527,14 @@ public class LevellingWidget extends AbstractWidget {
             }
 
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_INFORMATION,
-                    ResourceBundleUtils.getLangString(LABELS, Labels.successTextMsgBox), message);
+                    ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.msgBox_Success), message);
 
             // set the counter for status bar information
             countFileOps = counter;
             success = true;
         } else {
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING,
-                    ResourceBundleUtils.getLangString(LABELS, Labels.errorTextMsgBox),
+                    ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.msgBox_Error),
                     ResourceBundleUtils.getLangString(ERRORS, Errors.levellingPreparationFailed));
 
             success = false;

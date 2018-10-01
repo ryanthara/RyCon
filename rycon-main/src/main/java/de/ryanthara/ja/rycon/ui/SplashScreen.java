@@ -47,7 +47,7 @@ import org.slf4j.LoggerFactory;
  * @version 2
  * @since 1
  */
-public class SplashScreen {
+class SplashScreen {
 
     private static final Logger logger = LoggerFactory.getLogger(SplashScreen.class.getName());
     private static final int SPLASH_MAX = 100;

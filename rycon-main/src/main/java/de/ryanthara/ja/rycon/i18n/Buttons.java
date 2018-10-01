@@ -58,6 +58,7 @@ public enum Buttons implements ResourceKeys {
     okAndOpenBrowserToolTip,
     okAndOpenText,
     okAndOpenToolTip,
+    preferencesDialog_OkButtonText,
     printText,
     printToolTip,
     radioBtnLevelAsc,

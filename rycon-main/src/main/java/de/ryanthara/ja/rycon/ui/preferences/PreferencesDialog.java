@@ -19,8 +19,7 @@
 package de.ryanthara.ja.rycon.ui.preferences;
 
 import de.ryanthara.ja.rycon.Main;
-import de.ryanthara.ja.rycon.i18n.Labels;
-import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
+import de.ryanthara.ja.rycon.i18n.*;
 import de.ryanthara.ja.rycon.ui.Sizes;
 import de.ryanthara.ja.rycon.ui.preferences.editor.Editor;
 import de.ryanthara.ja.rycon.ui.preferences.pref.Preference;
@@ -38,7 +37,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LABELS;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.*;
 import static de.ryanthara.ja.rycon.ui.custom.Status.OK;
 
 /**
@@ -189,8 +188,8 @@ public class PreferencesDialog {
         parent.setLayoutData(gridData);
 
         saveButton = new Button(parent, SWT.NONE);
-        saveButton.setText(ResourceBundleUtils.getLangString(LABELS, Labels.preferencesDialogOkButtonText));
-        saveButton.setToolTipText(ResourceBundleUtils.getLangString(LABELS, Labels.preferencesDialogOkButtonTooltip));
+        saveButton.setText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.preferencesDialog_OkButtonText));
+        saveButton.setToolTipText(ResourceBundleUtils.getLangStringFromXml(TOOL_TIPS, ToolTips.preferencesDialog_OkBtn));
         saveButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(final SelectionEvent e) {

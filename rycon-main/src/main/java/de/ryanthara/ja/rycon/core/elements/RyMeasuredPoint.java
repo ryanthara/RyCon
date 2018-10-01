@@ -17,14 +17,14 @@
  */
 package de.ryanthara.ja.rycon.core.elements;
 
-import de.ryanthara.ja.rycon.ui.widgets.AnalyzerWidget;
+import de.ryanthara.ja.rycon.ui.widgets.ReportWidget;
 
 /**
  * The {@code RyMeasuredPoint} class represents a container for storing geodetic point measurements
  * for the reference line structure.
  * <p>
  * These measurement points are used in the analyzer for Leica Geosystems logfile.txt files in the
- * {@link AnalyzerWidget} of <tt>RyCON</tt>.
+ * {@link ReportWidget} of <tt>RyCON</tt>.
  * <p>
  * This class based on an equal idea to the {@link RyPoint} structure.
  *

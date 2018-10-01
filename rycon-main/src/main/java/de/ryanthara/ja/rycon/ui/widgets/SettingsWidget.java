@@ -20,9 +20,9 @@ package de.ryanthara.ja.rycon.ui.widgets;
 import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.data.DefaultKeys;
 import de.ryanthara.ja.rycon.data.PreferenceKeys;
-import de.ryanthara.ja.rycon.i18n.Labels;
 import de.ryanthara.ja.rycon.i18n.Preferences;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
+import de.ryanthara.ja.rycon.i18n.Texts;
 import de.ryanthara.ja.rycon.ui.custom.DirectoryDialogsTypes;
 import de.ryanthara.ja.rycon.ui.preferences.PreferencesDialog;
 import de.ryanthara.ja.rycon.ui.preferences.pref.*;
@@ -34,8 +34,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static de.ryanthara.ja.rycon.core.converter.zeiss.ZeissDialect.*;
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LABELS;
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.PREFERENCES;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.TEXTS;
 
 /**
  * The {@code SettingsWidget} is the dialog to change all the preferences of <tt>RyCON</tt>.
@@ -70,8 +70,8 @@ public class SettingsWidget {
     private void createDialog() {
         PreferencesDialog dialog = new PreferencesDialog(
                 parent,
-                ResourceBundleUtils.getLangString(LABELS, Labels.preferencesDialogText),
-                ResourceBundleUtils.getLangString(LABELS, Labels.preferencesDialogMessage));
+                ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.preferencesDialog_Text),
+                ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.preferencesDialog_Message));
 
         createTabGeneral(dialog);
         createTabPaths(dialog);

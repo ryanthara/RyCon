@@ -23,7 +23,7 @@ import de.ryanthara.ja.rycon.data.DefaultKeys;
 import de.ryanthara.ja.rycon.data.PreferenceHandler;
 import de.ryanthara.ja.rycon.data.Version;
 import de.ryanthara.ja.rycon.i18n.Errors;
-import de.ryanthara.ja.rycon.i18n.Labels;
+import de.ryanthara.ja.rycon.i18n.LangStrings;
 import de.ryanthara.ja.rycon.i18n.Messages;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 import de.ryanthara.ja.rycon.ui.UpdateDialog;
@@ -219,7 +219,7 @@ public abstract class Main {
                 Shell shell = new Shell(display);
 
                 UpdateDialog updateDialog = new UpdateDialog(shell);
-                updateDialog.setText(ResourceBundleUtils.getLangString(LABELS, Labels.ryCONUpdateText));
+                updateDialog.setText(ResourceBundleUtils.getLangStringFromXml(LANG_STRINGS, LangStrings.update_Text));
                 updateDialog.setMessage(ResourceBundleUtils.getLangString(MESSAGES, Messages.ryCONUpdate));
                 updateDialog.setWhatsNewInfo(updater.getWhatsNew());
                 int returnCode = updateDialog.open();

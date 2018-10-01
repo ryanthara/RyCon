@@ -18,10 +18,7 @@
 
 package de.ryanthara.ja.rycon.util.check;
 
-import de.ryanthara.ja.rycon.i18n.Errors;
-import de.ryanthara.ja.rycon.i18n.Labels;
-import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
-import de.ryanthara.ja.rycon.i18n.Warnings;
+import de.ryanthara.ja.rycon.i18n.*;
 import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -68,7 +65,7 @@ public class TextCheck {
         if (isEmpty(source) || isEmpty(target)) {
 
             MessageBoxes.showMessageBox(shell, SWT.ICON_WARNING,
-                    ResourceBundleUtils.getLangString(LABELS, Labels.warningTextMsgBox),
+                    ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.msgBox_Warning),
                     ResourceBundleUtils.getLangString(WARNINGS, Warnings.emptyTextField));
 
             files2read = new Path[0];
@@ -83,7 +80,7 @@ public class TextCheck {
                     files2read[i] = Paths.get(s);
                 } else {
                     MessageBoxes.showMessageBox(shell, SWT.ICON_WARNING,
-                            ResourceBundleUtils.getLangString(LABELS, Labels.warningTextMsgBox),
+                            ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.msgBox_Warning),
                             ResourceBundleUtils.getLangString(ERRORS, Errors.fileExistsNot));
                 }
             }

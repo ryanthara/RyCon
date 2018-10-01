@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <entry key="application_Initialized">RyCON gestarted</entry>
+    <entry key="application_Name">RyCON</entry>
+    <entry key="application_Title">RyCON v2 - Ryantharas Konverter und mehr...</entry>
+    <entry key="buildString">, gebaut am</entry>
+    <entry key="commentLine_CaplanK">! Folgende Daten wurden von RyCON %s, am %s erzeugt.</entry>
+    <entry key="commentLine_Ltop">Folgende Daten wurden von RyCON %s am %s erzeugt.</entry>
+    <entry key="update_Text">Aktualisierung verfügbar</entry>
+</properties>

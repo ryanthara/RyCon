@@ -23,6 +23,10 @@ import de.ryanthara.ja.rycon.core.converter.zeiss.ZeissDialect;
  * Instances of this class holds parameter for the writing classes in
  * the package {@link de.ryanthara.ja.rycon.ui.widgets.convert.write}
  * and returns them with getter methods.
+ *
+ * @author sebastian
+ * @version 1
+ * @since 27
  */
 public class WriteParameter {
 

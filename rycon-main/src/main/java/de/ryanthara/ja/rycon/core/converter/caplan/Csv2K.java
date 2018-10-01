@@ -96,7 +96,7 @@ public class Csv2K {
 
                     // height (Z) is in column 5, but not always valued
                     height = "";
-                    if (!stringField[4].equals("")) {
+                    if (!stringField[3].equals("")) {
                         // height H, column 47-59
                         height = String.format("%13s", NumberFormatter.fillDecimalPlace(stringField[3], 5));
                         double d = Double.parseDouble(height);

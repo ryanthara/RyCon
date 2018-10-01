@@ -18,14 +18,14 @@
 package de.ryanthara.ja.rycon.core.converter.caplan;
 
 import de.ryanthara.ja.rycon.data.Version;
-import de.ryanthara.ja.rycon.i18n.Labels;
+import de.ryanthara.ja.rycon.i18n.LangStrings;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LABELS;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LANG_STRINGS;
 
 /**
  * This class provides basic and helper functions that are used for converting different
@@ -151,7 +151,7 @@ class BaseToolsCaplanK {
         DateFormat df;
         df = DateFormat.getDateTimeInstance(/* dateStyle */ DateFormat.LONG,
                                             /* timeStyle */ DateFormat.MEDIUM);
-        result.add(String.format(ResourceBundleUtils.getLangString(LABELS, Labels.commentLineCaplanK),
+        result.add(String.format(ResourceBundleUtils.getLangStringFromXml(LANG_STRINGS, LangStrings.commentLine_CaplanK),
                 Version.getVersion(), df.format(d)));
         result.add(commentLine2);
     }

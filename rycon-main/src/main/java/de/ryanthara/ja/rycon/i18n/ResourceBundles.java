@@ -38,10 +38,12 @@ public enum ResourceBundles {
     ERRORS("de/ryanthara/ja/rycon/ui/Errors"),
     FILECHOOSERS("de/ryanthara/ja/rycon/ui/FileChoosers"),
     LABELS("de/ryanthara/ja/rycon/ui/Labels"),
+    LANG_STRINGS("de/ryanthara/ja/rycon/LangStrings"),
     MESSAGES("de/ryanthara/ja/rycon/ui/Messages"),
     OPTIONS("de/ryanthara/ja/rycon/ui/Options"),
     PREFERENCES("de/ryanthara/ja/rycon/ui/Preferences"),
-    TOOL_TIPS("de/ryanthara/ja/rycon/ui/toolTips"),
+    TEXTS("de/ryanthara/ja/rycon/ui/Texts"),
+    TOOL_TIPS("de/ryanthara/ja/rycon/ui/ToolTips"),
     WARNINGS("de/ryanthara/ja/rycon/ui/Warnings"),
     WORDINDICES("de/ryanthara/ja/rycon/core/converter/LeicaGSIWordIndices");
 

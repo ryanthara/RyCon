@@ -40,12 +40,12 @@ public interface Reader {
      *
      * @return reader CSV lines
      */
-    List<String[]> getReadCSVFile();
+    List<String[]> getReadCsvFile();
 
     /**
      * Returns the reader string lines as {@link ArrayList}.
      * <p>
-     * This method is used vice versa with the method {@link #getReadCSVFile()}. The one which is not used,
+     * This method is used vice versa with the method {@link #getReadCsvFile()}. The one which is not used,
      * returns null for indication.
      *
      * @return reader string lines

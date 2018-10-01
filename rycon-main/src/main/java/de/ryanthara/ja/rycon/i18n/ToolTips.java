@@ -29,6 +29,7 @@ package de.ryanthara.ja.rycon.i18n;
  */
 public enum ToolTips implements ResourceKeys {
 
+    preferencesDialog_OkBtn,
     projection_change,
     transformation_altimetricFrameSource,
     transformation_altimetricFrameTarget,

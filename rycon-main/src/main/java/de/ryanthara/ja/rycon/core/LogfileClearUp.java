@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Instances of {@link LogfileClearUp} provides functions to clear up a logfile
@@ -251,7 +252,7 @@ public final class LogfileClearUp {
             }
         }
 
-        return new ArrayList<>(result);
+        return new ArrayList<>(Objects.requireNonNull(result));
     }
 
     /*
@@ -305,7 +306,7 @@ public final class LogfileClearUp {
             }
         }
 
-        return new ArrayList<>(result);
+        return new ArrayList<>(Objects.requireNonNull(result));
     }
 
     /*
@@ -340,7 +341,7 @@ public final class LogfileClearUp {
             }
         }
 
-        return new ArrayList<>(result);
+        return new ArrayList<>(Objects.requireNonNull(result));
     }
 
     /*
@@ -352,7 +353,7 @@ public final class LogfileClearUp {
 
         // TODO add volume calculations clean
 
-        return new ArrayList<>(result);
+        return new ArrayList<>(Objects.requireNonNull(result));
     }
 
 } // end of LogfileClearUp

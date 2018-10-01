@@ -18,8 +18,8 @@
 package de.ryanthara.ja.rycon.ui.widgets.convert.read;
 
 import de.ryanthara.ja.rycon.i18n.Errors;
-import de.ryanthara.ja.rycon.i18n.Labels;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
+import de.ryanthara.ja.rycon.i18n.Texts;
 import de.ryanthara.ja.rycon.nio.LineReader;
 import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
 import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.ERRORS;
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LABELS;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.TEXTS;
 
 /**
  * Instances of this class are used for reading Zeiss REC files from the {@link ConverterWidget} of <tt>RyCON</tt>.
@@ -67,14 +67,14 @@ public class ZeissReader implements Reader {
      */
     @Override
     // TODO correct return null
-    public List<String[]> getReadCSVFile() {
+    public List<String[]> getReadCsvFile() {
         return null;
     }
 
     /**
      * Returns the read string lines as {@link ArrayList}.
      * <p>
-     * This method is used vice versa with the method {@link #getReadCSVFile()}. The one which is not used,
+     * This method is used vice versa with the method {@link #getReadCsvFile()}. The one which is not used,
      * returns null for indication.
      *
      * @return reader string lines
@@ -105,7 +105,7 @@ public class ZeissReader implements Reader {
             logger.warn("Zeiss REC file {} could not be read.", file2Read.toString());
 
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR,
-                    ResourceBundleUtils.getLangString(LABELS, Labels.errorTextMsgBox),
+                    ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.msgBox_Error),
                     ResourceBundleUtils.getLangString(ERRORS, Errors.zeissReadingFailed));
         }
 

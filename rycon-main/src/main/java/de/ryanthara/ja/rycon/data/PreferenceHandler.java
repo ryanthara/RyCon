@@ -18,9 +18,8 @@
 
 package de.ryanthara.ja.rycon.data;
 
-import de.ryanthara.ja.rycon.i18n.Labels;
+import de.ryanthara.ja.rycon.i18n.LangStrings;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
-import de.ryanthara.ja.rycon.i18n.ResourceBundles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,6 +29,8 @@ import java.util.prefs.BackingStoreException;
 import java.util.prefs.PreferenceChangeEvent;
 import java.util.prefs.PreferenceChangeListener;
 import java.util.prefs.Preferences;
+
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LANG_STRINGS;
 
 /**
  * Instances of this class provides functions for handling system and user settings for RyCON.
@@ -368,7 +369,7 @@ public class PreferenceHandler implements PreferenceChangeListener {
         // general settings
         setUserPreference(PreferenceKeys.ADD_TRAILING_ZEROES, DefaultKeys.ADD_TRAILING_ZEROES.getValue());
         setUserPreference(PreferenceKeys.BUILD_VERSION, Version.getBuildNumber() + " : " + Version.getBuildDate());
-        setUserPreference(PreferenceKeys.GENERATOR, ResourceBundleUtils.getLangString(ResourceBundles.LABELS, Labels.applicationName));
+        setUserPreference(PreferenceKeys.GENERATOR, ResourceBundleUtils.getLangStringFromXml(LANG_STRINGS, LangStrings.application_Name));
         setUserPreference(PreferenceKeys.INFORMATION_STRING, DefaultKeys.RyCON_WEBSITE.getValue());
         setUserPreference(PreferenceKeys.OVERWRITE_EXISTING, DefaultKeys.OVERWRITE_EXISTING.getValue());
         setUserPreference(PreferenceKeys.PARAM_CODE_STRING, DefaultKeys.PARAM_CODE_STRING.getValue());

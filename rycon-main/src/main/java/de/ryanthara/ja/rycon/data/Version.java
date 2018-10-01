@@ -17,7 +17,7 @@
  */
 package de.ryanthara.ja.rycon.data;
 
-import de.ryanthara.ja.rycon.i18n.Labels;
+import de.ryanthara.ja.rycon.i18n.LangStrings;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 
 import java.time.LocalDate;
@@ -25,7 +25,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.Locale;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LABELS;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LANG_STRINGS;
 
 /**
  * The {@code Version} class holds static information about the current <tt>RyCON</tt> version
@@ -77,7 +77,7 @@ public final class Version {
         LocalDate date = LocalDate.of(buildYear, buildMonth, buildDay);
         DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL).withLocale(Locale.getDefault());
 
-        return "Build #" + buildNumber + ResourceBundleUtils.getLangString(LABELS, Labels.buildString) + " " + date.format(formatter);
+        return "Build #" + buildNumber + ResourceBundleUtils.getLangStringFromXml(LANG_STRINGS, LangStrings.buildString) + " " + date.format(formatter);
     }
 
     /**

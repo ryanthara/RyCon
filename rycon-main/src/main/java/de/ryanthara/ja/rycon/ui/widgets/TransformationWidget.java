@@ -168,7 +168,7 @@ public class TransformationWidget extends AbstractWidget {
 
         innerShell = new Shell(parent, SWT.CLOSE | SWT.DIALOG_TRIM | SWT.MAX | SWT.TITLE | SWT.APPLICATION_MODAL);
         innerShell.addListener(SWT.Close, event -> actionBtnCancel());
-        innerShell.setText(ResourceBundleUtils.getLangString(LABELS, Labels.transformationText));
+        innerShell.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.transfer_Shell));
         innerShell.setSize(width, height);
 
         innerShell.setLayout(gridLayout);
@@ -194,7 +194,7 @@ public class TransformationWidget extends AbstractWidget {
 
     private void createCopyAndPasteField(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangString(LABELS, Labels.copyAndPasteText));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.transformation_GroupCopyAndPaste));
 
         GridLayout gridLayout = new GridLayout(2, true);
 
@@ -206,10 +206,10 @@ public class TransformationWidget extends AbstractWidget {
 
         Text pasteField = new Text(group, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.NONE);
         Listener scrollBarListener = event -> {
-            Text t = (Text)event.widget;
+            Text t = (Text) event.widget;
             Rectangle r1 = t.getClientArea();
             Rectangle r2 = t.computeTrim(r1.x, r1.y, r1.width, r1.height);
-            Point p = t.computeSize(SWT.DEFAULT,  SWT.DEFAULT,  true);
+            Point p = t.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
             t.getHorizontalBar().setVisible(r2.width <= p.x);
             t.getVerticalBar().setVisible(r2.height <= p.y);
             if (event.type == SWT.Modify) {
@@ -229,7 +229,12 @@ public class TransformationWidget extends AbstractWidget {
         pasteField.setLayoutData(gridData);
 
         Label description = new Label(group, SWT.WRAP | SWT.NONE);
-        description.setText(ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.pasteCoordinates));
+        String helper =
+                ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.pasteCoordinates) + "\n" +
+                ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.pasteCoordinates2);
+
+        description.setText(helper);
+        // description.setText(ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.pasteCoordinates));
 
         gridData = new GridData(GridData.FILL, GridData.FILL, true, true);
         description.setLayoutData(gridData);
@@ -237,7 +242,7 @@ public class TransformationWidget extends AbstractWidget {
 
     private void createAdvice(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.text));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.advice));
 
         GridLayout gridLayout = new GridLayout(1, true);
 
@@ -250,13 +255,13 @@ public class TransformationWidget extends AbstractWidget {
         Label tip = new Label(group, SWT.WRAP | SWT.BORDER | SWT.LEFT);
 
         String text =
-                ResourceBundleUtils.getLangString(ADVICE, Advice.transformationWidget) + "\n" +
-                        ResourceBundleUtils.getLangString(ADVICE, Advice.transformationWidget2) + "\n\n" +
-                        ResourceBundleUtils.getLangString(ADVICE, Advice.transformationWidget3);
+                ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.transformationWidget) + "\n" +
+                        ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.transformationWidget2) + "\n\n" +
+                        ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.transformationWidget3);
 
         tip.setText(text);
 
-        // tip.setText(ResourceBundleUtils.getLangString(ADVICE, Advice.transformationWidget));
+        // tip.setText(ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.transformationWidget));
         tip.setLayoutData(new GridData(SWT.HORIZONTAL, SWT.TOP, true, false, 1, 1));
     }
 
@@ -272,7 +277,7 @@ public class TransformationWidget extends AbstractWidget {
 
     private void createOptions(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangStringFromXml(OPTIONS, Options.general));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.generalOptions));
 
         GridLayout gridLayout = new GridLayout(1, true);
 
@@ -293,7 +298,7 @@ public class TransformationWidget extends AbstractWidget {
 
     private void createProjectionChooser(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangString(LABELS, Labels.projectionChooserSource));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.transformation_GroupProjection));
 
         GridLayout gridLayout = new GridLayout(2, false);
 
@@ -334,7 +339,7 @@ public class TransformationWidget extends AbstractWidget {
 
     private void createReferenceFrameChooserSource(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangString(LABELS, Labels.referenceFrameChooserSource));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.transformation_GroupReferenceFrameSource));
 
         GridLayout gridLayout = new GridLayout(2, false);
 
@@ -376,7 +381,7 @@ public class TransformationWidget extends AbstractWidget {
 
     private void createReferenceFrameChooserTarget(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangString(LABELS, Labels.referenceFrameChooserTarget));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.transformation_GroupReferenceFrameTarget));
 
         GridLayout gridLayout = new GridLayout(2, false);
 
@@ -474,7 +479,7 @@ public class TransformationWidget extends AbstractWidget {
             }
 
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_INFORMATION,
-                    ResourceBundleUtils.getLangString(LABELS, Labels.successTextMsgBox), message);
+                    ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.msgBox_Success), message);
 
             // set the counter for status bar information
             Main.countFileOps = counter;
@@ -482,7 +487,7 @@ public class TransformationWidget extends AbstractWidget {
             return true;
         } else {
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING,
-                    ResourceBundleUtils.getLangString(LABELS, Labels.errorTextMsgBox),
+                    ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.msgBox_Error),
                     ResourceBundleUtils.getLangString(ERRORS, Errors.transformationFailed));
 
             return false;

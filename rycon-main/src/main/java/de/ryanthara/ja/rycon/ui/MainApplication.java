@@ -17,8 +17,6 @@
  */
 package de.ryanthara.ja.rycon.ui;
 
-import com.swisstopo.geodesy.reframe_lib.IReframe;
-import com.swisstopo.geodesy.reframe_lib.Reframe;
 import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.data.DefaultKeys;
 import de.ryanthara.ja.rycon.data.PreferenceHandler;
@@ -97,23 +95,12 @@ public class MainApplication extends Main {
         initUI();
     }
 
-    /*
-     * Sets the default logging level of <tt>RyCON</tt> to 'SEVERE'.
-     * <p>
-     * Different logging levels can be set with the command line interface.
-     * @see de.ryanthara.ja.rycon.cli.CmdLineInterfaceParser
-     */
-    private static void initLogging() {
-        // TODO implement init logging
-    }
-
     /**
      * Main application startup.
      *
      * @param args command line arguments
      */
     public static void main(String... args) {
-        initLogging();
         checkCommandLineInterfaceArguments(args);
         checkJavaVersion();
         checkRyCONVersion();
@@ -134,7 +121,7 @@ public class MainApplication extends Main {
 
     private void actionBtn01() {
         new GeneratorWidget(shell);
-        statusBar.setStatus(ResourceBundleUtils.getLangString(LABELS, Labels.generatorInitialized), OK);
+        statusBar.setStatus(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.status_InitGenerator), OK);
     }
 
     private void actionBtn02() {
@@ -144,7 +131,7 @@ public class MainApplication extends Main {
             try {
                 if (PathCheck.directoryContainsSubfolder(cardReaderPath, 1)) {
                     new TransferWidget(shell);
-                    statusBar.setStatus(ResourceBundleUtils.getLangString(LABELS, Labels.transferInitialized), OK);
+                    statusBar.setStatus(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.status_InitTransfer), OK);
                 } else {
                     MessageBoxes.showMessageBox(shell, SWT.ICON_WARNING,
                             ResourceBundleUtils.getLangString(WARNINGS, Warnings.noCardReaderExistsText),
@@ -158,32 +145,32 @@ public class MainApplication extends Main {
 
     private void actionBtn03() {
         new ClearUpWidget(shell);
-        statusBar.setStatus(ResourceBundleUtils.getLangString(LABELS, Labels.clearUpInitialized), OK);
+        statusBar.setStatus(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.status_InitClearUp), OK);
     }
 
     private void actionBtn04() {
         new CodeSplitterWidget(shell);
-        statusBar.setStatus(ResourceBundleUtils.getLangString(LABELS, Labels.splitFilesInitialized), OK);
+        statusBar.setStatus(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.status_InitSplitter), OK);
     }
 
     private void actionBtn05() {
         new LevellingWidget(shell);
-        statusBar.setStatus(ResourceBundleUtils.getLangString(LABELS, Labels.levellingInitialized), OK);
+        statusBar.setStatus(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.status_InitLevelling), OK);
     }
 
     private void actionBtn06() {
         new ConverterWidget(shell);
-        statusBar.setStatus(ResourceBundleUtils.getLangString(LABELS, Labels.converterInitialized), OK);
+        statusBar.setStatus(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.status_InitConverter), OK);
     }
 
     private void actionBtn07() {
-        new AnalyzerWidget(shell);
-        statusBar.setStatus(ResourceBundleUtils.getLangString(LABELS, Labels.reportInitialized), OK);
+        new ReportWidget(shell);
+        statusBar.setStatus(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.status_InitReport), OK);
     }
 
     private void actionBtn08() {
         new TransformationWidget(shell);
-        statusBar.setStatus(ResourceBundleUtils.getLangString(LABELS, Labels.transformationInitialized), OK);
+        statusBar.setStatus(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.status_InitTransformation), OK);
     }
 
     private void actionBtn09() {
@@ -194,12 +181,12 @@ public class MainApplication extends Main {
 
     private void actionBtn11() {
         new AboutWidget(shell);
-        statusBar.setStatus(ResourceBundleUtils.getLangString(LABELS, Labels.aboutInitialized), OK);
+        statusBar.setStatus(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.status_InitAbout), OK);
     }
 
     private void actionBtnP() {
         new SettingsWidget(shell);
-        statusBar.setStatus(ResourceBundleUtils.getLangString(LABELS, Labels.settingsInitialized), OK);
+        statusBar.setStatus(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.status_InitSettings), OK);
     }
 
     private void addKeyBoardInputFilter(final Shell shell) {
@@ -267,8 +254,8 @@ public class MainApplication extends Main {
                         break;
 
                     case 't':
-                        // test();
-                        testReframJar();
+                        //test();
+                        set();
                         break;
 
                     case 'ü':   // about, german version
@@ -496,7 +483,7 @@ public class MainApplication extends Main {
 
     private StatusBar createStatusBar(Shell shell) {
         StatusBar statusBar = new StatusBar(shell);
-        statusBar.setStatus(ResourceBundleUtils.getLangString(LABELS, Labels.ryCONInitialized), OK);
+        statusBar.setStatus(ResourceBundleUtils.getLangStringFromXml(LANG_STRINGS, LangStrings.application_Initialized), OK);
 
         Main.statusBar = statusBar;
 
@@ -523,15 +510,15 @@ public class MainApplication extends Main {
             final Menu menu = new Menu(shell, SWT.POP_UP);
 
             MenuItem webItem = new MenuItem(menu, SWT.PUSH);
-            webItem.setText(ResourceBundleUtils.getLangString(LABELS, Labels.websiteItemTrayMenu));
+            webItem.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.trayMenu_WebsiteItem));
             webItem.addListener(SWT.Selection, event -> openRyCONWebsite());
 
             MenuItem helpItem = new MenuItem(menu, SWT.PUSH);
-            helpItem.setText(ResourceBundleUtils.getLangString(LABELS, Labels.helpItemTrayMenu));
+            helpItem.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.trayMenu_HelpItem));
             helpItem.addListener(SWT.Selection, event -> openRyCONWebsiteHelp());
 
             MenuItem settingsItem = new MenuItem(menu, SWT.PUSH);
-            settingsItem.setText(ResourceBundleUtils.getLangString(LABELS, Labels.settingsItemTrayMenu));
+            settingsItem.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.trayMenu_SettingsItem));
             settingsItem.addListener(SWT.Selection, event -> {
                 if (!Main.isSettingsWidgetOpen()) {
                     new SettingsWidget(shell);
@@ -541,12 +528,12 @@ public class MainApplication extends Main {
             new MenuItem(menu, SWT.SEPARATOR);
 
             MenuItem infoItem = new MenuItem(menu, SWT.PUSH);
-            infoItem.setText(ResourceBundleUtils.getLangString(LABELS, Labels.infoItemTrayMenu) + Version.getBuildNumber() + " (" + Version.getBuildDate() + ")");
+            infoItem.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.trayMenu_InfoItem) + Version.getBuildNumber() + " (" + Version.getBuildDate() + ")");
 
             new MenuItem(menu, SWT.SEPARATOR);
 
             MenuItem exitItem = new MenuItem(menu, SWT.PUSH);
-            exitItem.setText(ResourceBundleUtils.getLangString(LABELS, Labels.exitItemTrayMenu));
+            exitItem.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.trayMenu_ExitItem));
             exitItem.addListener(SWT.Selection, event -> actionBtn00());
 
             item.addListener(SWT.MenuDetect, event -> menu.setVisible(true));
@@ -627,7 +614,7 @@ public class MainApplication extends Main {
      * </ul>
      */
     private void initUI() {
-        final String appName = ResourceBundleUtils.getLangString(ResourceBundles.LABELS, Labels.applicationName);
+        final String appName = ResourceBundleUtils.getLangStringFromXml(LANG_STRINGS, LangStrings.application_Name);
 
         // TODO check this as a better solution to CocoaUIEnhancer class
 
@@ -666,7 +653,7 @@ public class MainApplication extends Main {
 
         // Dock icon for OS X and Windows task bar
         shell.setImage(new ImageConverter().convertToImage(display, Images.taskIcon.getPath()));
-        shell.setText(ResourceBundleUtils.getLangString(LABELS, Labels.applicationTitle));
+        shell.setText(ResourceBundleUtils.getLangStringFromXml(LANG_STRINGS, LangStrings.application_Title));
 
         FormLayout formLayout = new FormLayout();
         shell.setLayout(formLayout);
@@ -777,7 +764,7 @@ public class MainApplication extends Main {
     }
 
     private void quit() {
-        statusBar.setStatus(ResourceBundleUtils.getLangString(LABELS, Labels.exitInitialized), OK);
+        statusBar.setStatus(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.status_InitExit), OK);
         shell.getDisplay().dispose();
     }
 
@@ -805,6 +792,12 @@ public class MainApplication extends Main {
             }
 
         }
+    }
+
+    private void set() {
+        // Main.pref.setUserPreference(PreferenceKeys.PARAM_LTOP_STRING, "_LTOP");
+        // System.out.println("set");
+        // System.out.println(Main.pref.getUserPreference(PreferenceKeys.PARAM_LTOP_STRING));
     }
 
     private void test() {
@@ -840,27 +833,6 @@ public class MainApplication extends Main {
 
         System.out.println();
         System.out.println("### END OF TEST ###");
-    }
-
-    private void testReframJar() {
-        // REFRAME object
-        Reframe reframeObj = new Reframe();
-
-        double[] inputCoordinates = new double[]{540000.0, 260000.0, 600.0};
-        System.out.println(String.valueOf(inputCoordinates[0]) + " / " + String.valueOf(inputCoordinates[1]) + " / " + String.valueOf(inputCoordinates[2]));
-        try {
-            double[] outputCoordinates = reframeObj.ComputeReframe(inputCoordinates, IReframe.PlanimetricFrame.LV03_Military, IReframe.PlanimetricFrame.LV95, IReframe.AltimetricFrame.LN02, IReframe.AltimetricFrame.Ellipsoid);
-            System.out.println(String.valueOf(outputCoordinates[0]) + " / " + String.valueOf(outputCoordinates[1]) + " / " + String.valueOf(outputCoordinates[2]));
-
-            outputCoordinates = reframeObj.ComputeGpsref(outputCoordinates, IReframe.ProjectionChange.LV95ToETRF93Geographic);
-            System.out.println(String.valueOf(outputCoordinates[0]) + " / " + String.valueOf(outputCoordinates[1]) + " / " + String.valueOf(outputCoordinates[2]));
-        } catch (IllegalArgumentException e) {
-            System.out.println("Outside grid");
-        } catch (NullPointerException e) {
-            System.out.println("Dataset file missing");
-        } catch (Exception e) {
-            System.out.println("Error 2");
-        }
     }
 
 } // end of MainApplication

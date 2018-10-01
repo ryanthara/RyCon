@@ -122,7 +122,7 @@ public final class GeneratorWidget extends AbstractWidget {
 
         if (projectNumber.trim().equals("")) {
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING,
-                    ResourceBundleUtils.getLangString(LABELS, Labels.warningTextMsgBox),
+                    ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.msgBox_Warning),
                     ResourceBundleUtils.getLangString(WARNINGS, Warnings.emptyTextField));
 
             return false;
@@ -157,13 +157,13 @@ public final class GeneratorWidget extends AbstractWidget {
 
         innerShell = new Shell(parent, SWT.CLOSE | SWT.DIALOG_TRIM | SWT.MAX | SWT.TITLE | SWT.APPLICATION_MODAL);
         innerShell.addListener(SWT.Close, event -> actionBtnCancel());
-        innerShell.setText(ResourceBundleUtils.getLangString(LABELS, Labels.generatorText));
+        innerShell.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.generator_Shell));
         innerShell.setSize(width, height);
         innerShell.setLayout(gridLayout);
         innerShell.setLayoutData(gridData);
 
         createGroupInputField();
-        createGroupRecentFiles(width);
+        createGroupRecentFolders(width);
         createGroupOptions(width);
         createAdvice(width);
 
@@ -190,7 +190,8 @@ public final class GeneratorWidget extends AbstractWidget {
         } catch (IOException e) {
             logger.error("Error when copying file '{}'.", copySourcePath.toString(), e.getCause());
 
-            MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR, ResourceBundleUtils.getLangString(LABELS, Labels.errorTextMsgBox),
+            MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR,
+                    ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.msgBox_Error),
                     type.getErrorMessage().getErrorMessage(number));
         }
 
@@ -199,7 +200,7 @@ public final class GeneratorWidget extends AbstractWidget {
 
     private void createAdvice(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.text));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.advice));
 
         GridLayout gridLayout = new GridLayout(1, true);
         group.setLayout(gridLayout);
@@ -210,13 +211,13 @@ public final class GeneratorWidget extends AbstractWidget {
 
         Label tip = new Label(group, SWT.WRAP | SWT.BORDER | SWT.LEFT);
         String text =
-                ResourceBundleUtils.getLangString(ADVICE, Advice.generatorWidget) + "\n\n" +
-                ResourceBundleUtils.getLangString(ADVICE, Advice.generatorWidget2) + "\n\n" +
-                ResourceBundleUtils.getLangString(ADVICE, Advice.generatorWidget3);
+                ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.generatorWidget) + "\n\n" +
+                ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.generatorWidget2) + "\n\n" +
+                ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.generatorWidget3);
 
         tip.setText(text);
 
-        // tip.setText(ResourceBundleUtils.getLangString(ADVICE, Advice.generatorWidget));
+        // tip.setText(ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.generatorWidget));
         tip.setLayoutData(new GridData(SWT.HORIZONTAL, SWT.TOP, true, false, 1, 1));
     }
 
@@ -275,7 +276,7 @@ public final class GeneratorWidget extends AbstractWidget {
             }
 
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_INFORMATION,
-                    ResourceBundleUtils.getLangString(LABELS, Labels.informationTextMsgBox), message);
+                    ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.msgBox_Information), message);
 
             // open every created folder in the file viewer
             if (chkBoxOpenFileManager.getSelection()) {
@@ -303,7 +304,7 @@ public final class GeneratorWidget extends AbstractWidget {
         group.setLayoutData(gridData);
 
         Label projectNumberLabel = new Label(group, SWT.NONE);
-        projectNumberLabel.setText(ResourceBundleUtils.getLangString(LABELS, Labels.projectNumber));
+        projectNumberLabel.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.generator_ProjectNumber));
 
         inputNumber = new Text(group, SWT.SINGLE | SWT.BORDER);
 
@@ -328,7 +329,7 @@ public final class GeneratorWidget extends AbstractWidget {
 
     private void createGroupOptions(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangStringFromXml(OPTIONS, Options.general));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.generalOptions));
 
         GridLayout gridLayout = new GridLayout(1, true);
 
@@ -355,9 +356,9 @@ public final class GeneratorWidget extends AbstractWidget {
         chkBoxOpenFileManager.setText(ResourceBundleUtils.getLangString(CHECKBOXES, CheckBoxes.openFileManager));
     }
 
-    private void createGroupRecentFiles(int width) {
+    private void createGroupRecentFolders(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangString(LABELS, Labels.recentFolderText));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.generator_GroupRecentFolders));
 
         GridLayout gridLayout = new GridLayout(2, false);
 
@@ -368,7 +369,7 @@ public final class GeneratorWidget extends AbstractWidget {
         group.setLayoutData(gridData);
 
         Label adminDescription = new Label(group, SWT.NONE);
-        adminDescription.setText(ResourceBundleUtils.getLangString(LABELS, Labels.adminDescription));
+        adminDescription.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.generator_AdminDescription));
 
         adminPath = new Label(group, SWT.NONE);
         adminPath.setText(getAdminPathString());
@@ -379,7 +380,7 @@ public final class GeneratorWidget extends AbstractWidget {
         adminPath.setLayoutData(gridData);
 
         Label bigDataDescription = new Label(group, SWT.NONE);
-        bigDataDescription.setText(ResourceBundleUtils.getLangString(LABELS, Labels.bigDataDescription));
+        bigDataDescription.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.generator_BigDataDescription));
 
         bigDataPath = new Label(group, SWT.NONE);
         bigDataPath.setText(getBigDataPathString());
@@ -390,7 +391,7 @@ public final class GeneratorWidget extends AbstractWidget {
         bigDataPath.setLayoutData(gridData);
 
         Label projectDescription = new Label(group, SWT.NONE);
-        projectDescription.setText(ResourceBundleUtils.getLangString(LABELS, Labels.projectDescription));
+        projectDescription.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.generator_ProjectDescription));
 
         projectPath = new Label(group, SWT.NONE);
         projectPath.setText(getProjectPathString());
@@ -452,7 +453,7 @@ public final class GeneratorWidget extends AbstractWidget {
             Main.statusBar.setStatus("", WARNING);
 
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING,
-                    ResourceBundleUtils.getLangString(LABELS, Labels.warningTextMsgBox),
+                    ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.msgBox_Warning),
                     type.getErrorMessage().getWarnMessage(number));
         } else {
             success = copyFile(number, directoryTemplate, type, copyTargetPath);

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
+    <entry key="preferencesDialog_OkBtn">Save settings and close this dialog</entry>
     <entry key="projection_change">transformation of the reference frame and reference system</entry>
     <entry key="transformation_altimetricFrameSource">height system of the source system</entry>
     <entry key="transformation_altimetricFrameTarget">height system of the target system</entry>

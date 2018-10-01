@@ -19,8 +19,8 @@ package de.ryanthara.ja.rycon.ui.widgets.convert.read;
 
 import de.ryanthara.ja.rycon.core.converter.toporail.FileType;
 import de.ryanthara.ja.rycon.i18n.Errors;
-import de.ryanthara.ja.rycon.i18n.Labels;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
+import de.ryanthara.ja.rycon.i18n.Texts;
 import de.ryanthara.ja.rycon.nio.LineReader;
 import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
 import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.ERRORS;
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LABELS;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.TEXTS;
 
 /**
  * Instances of this class are used for reading Toporail MEP and PTS files from
@@ -78,14 +78,14 @@ public class ToporailReader implements Reader {
      */
     @Override
     // TODO correct return null
-    public List<String[]> getReadCSVFile() {
+    public List<String[]> getReadCsvFile() {
         return null;
     }
 
     /**
      * Returns the reader string lines as {@link ArrayList}.
      * <p>
-     * This method is used vice versa with the method {@link #getReadCSVFile()}. The one which is not used,
+     * This method is used vice versa with the method {@link #getReadCsvFile()}. The one which is not used,
      * returns null for indication.
      *
      * @return reader string lines
@@ -124,7 +124,7 @@ public class ToporailReader implements Reader {
             logger.warn("File '{}' could not be read.", file2Read.getFileName());
 
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR,
-                    ResourceBundleUtils.getLangString(LABELS, Labels.errorTextMsgBox), errorMessage);
+                    ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.msgBox_Error), errorMessage);
         }
 
         return success;

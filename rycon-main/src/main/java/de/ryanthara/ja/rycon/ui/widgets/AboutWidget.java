@@ -19,9 +19,9 @@ package de.ryanthara.ja.rycon.ui.widgets;
 
 import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.data.Version;
-import de.ryanthara.ja.rycon.i18n.Labels;
+import de.ryanthara.ja.rycon.i18n.LangStrings;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
-import de.ryanthara.ja.rycon.i18n.ResourceBundles;
+import de.ryanthara.ja.rycon.i18n.Texts;
 import de.ryanthara.ja.rycon.ui.Images;
 import de.ryanthara.ja.rycon.ui.Sizes;
 import de.ryanthara.ja.rycon.ui.image.ImageConverter;
@@ -35,7 +35,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LABELS;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LANG_STRINGS;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.TEXTS;
 import static de.ryanthara.ja.rycon.ui.custom.Status.OK;
 
 /**
@@ -77,7 +78,7 @@ public class AboutWidget {
 
         innerShell = new Shell(parent, SWT.CLOSE | SWT.SHELL_TRIM);
         innerShell.addListener(SWT.Close, event -> actionBtnEscape());
-        innerShell.setText(ResourceBundleUtils.getLangString(LABELS, Labels.aboutText));
+        innerShell.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.about));
         innerShell.setSize(width, height);
 
         GridData gridData = new GridData(SWT.CENTER, SWT.FILL, true, true);
@@ -87,7 +88,7 @@ public class AboutWidget {
         imageLabel.setLayoutData(gridData);
 
         // get app name and version for bold line
-        final String appName = ResourceBundleUtils.getLangString(ResourceBundles.LABELS, Labels.applicationName);
+        final String appName = ResourceBundleUtils.getLangStringFromXml(LANG_STRINGS, LangStrings.application_Name);
         final String version = Version.getVersion();
         final String ryconLabelText = appName + " " + version;
 

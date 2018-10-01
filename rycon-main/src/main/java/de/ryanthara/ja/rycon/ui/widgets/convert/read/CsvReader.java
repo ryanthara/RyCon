@@ -17,10 +17,13 @@
  */
 package de.ryanthara.ja.rycon.ui.widgets.convert.read;
 
+import com.opencsv.CSVParser;
+import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
 import de.ryanthara.ja.rycon.i18n.Errors;
-import de.ryanthara.ja.rycon.i18n.Labels;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
+import de.ryanthara.ja.rycon.i18n.Texts;
 import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
 import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
 import org.eclipse.swt.SWT;
@@ -36,14 +39,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.ERRORS;
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LABELS;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.TEXTS;
 
 /**
  * Instances of this class are used for reading 'comma separated values' (CSV) files from
  * the {@link ConverterWidget} of <tt>RyCON</tt>.
  *
  * @author sebastian
- * @version 1
+ * @version 2
  * @since 12
  */
 public class CsvReader implements Reader {
@@ -51,18 +54,18 @@ public class CsvReader implements Reader {
     private static final Logger logger = LoggerFactory.getLogger(CsvReader.class.getName());
 
     private final boolean useSemicolonAsSeparator;
-    private List<String[]> readCSVFile;
     private final Shell innerShell;
+    private List<String[]> readCSVFile;
 
     /**
      * Constructs a new instance of this class given a reference to the inner shell of the calling object.
      *
-     * @param innerShell              reference to the inner shell
-     * @param useSemicolonAsSeparator use semicolon as separator sign
+     * @param innerShell    reference to the inner shell
+     * @param readParameter grab the use semicolon as separator sign from the read parameter helper
      */
-    public CsvReader(Shell innerShell, boolean useSemicolonAsSeparator) {
+    public CsvReader(Shell innerShell, ReadParameter readParameter) {
         this.innerShell = innerShell;
-        this.useSemicolonAsSeparator = useSemicolonAsSeparator;
+        this.useSemicolonAsSeparator = readParameter.isUseSemicolonSeparator();
     }
 
     /**
@@ -74,14 +77,14 @@ public class CsvReader implements Reader {
      * @return reader CSV lines
      */
     @Override
-    public List<String[]> getReadCSVFile() {
+    public List<String[]> getReadCsvFile() {
         return readCSVFile;
     }
 
     /**
      * Returns the reader string lines as {@link ArrayList}.
      * <p>
-     * This method is used vice versa with the method {@link #getReadCSVFile()}. The one which is not used,
+     * This method is used vice versa with the method {@link #getReadCsvFile()}. The one which is not used,
      * returns null for indication.
      *
      * @return reader string lines
@@ -96,7 +99,6 @@ public class CsvReader implements Reader {
      * Reads the comma separated values (CSV) file given as parameter and returns the read file success.
      *
      * @param file2Read reader path reference
-     *
      * @return read file success
      */
     @Override
@@ -104,10 +106,21 @@ public class CsvReader implements Reader {
         boolean success = false;
         char separatorCSV = useSemicolonAsSeparator ? ';' : ',';
 
-        // use opencsv project for reading -> could this be done better?
         try {
-            // CSVReader reader = new CSVReader(new FileReader(file2Read.toFile()), separatorCSV);
-            CSVReader reader = new CSVReader(Files.newBufferedReader(file2Read, Charset.forName("ISO-8859-1")), separatorCSV);
+            /* This should be the preferred method of creating a Reader as there are so many possible values to be set it is
+             * impossible to have constructors for all of them and keep backwards compatibility with previous constructors.
+             */
+            final CSVParser parser =
+                    new CSVParserBuilder()
+                            .withSeparator(separatorCSV)
+                            .withIgnoreQuotations(true)
+                            .build();
+            final CSVReader reader =
+                    new CSVReaderBuilder(Files.newBufferedReader(file2Read, Charset.forName("ISO-8859-1")))
+                            .withSkipLines(0)
+                            .withCSVParser(parser)
+                            .build();
+
             readCSVFile = reader.readAll();
 
             success = true;
@@ -115,7 +128,7 @@ public class CsvReader implements Reader {
             logger.error("Comma separated values file '{}' could not be read.", file2Read.toString());
 
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR,
-                    ResourceBundleUtils.getLangString(LABELS, Labels.errorTextMsgBox),
+                    ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.msgBox_Error),
                     ResourceBundleUtils.getLangString(ERRORS, Errors.readerCsvFailed));
         }
 

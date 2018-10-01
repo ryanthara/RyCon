@@ -19,8 +19,8 @@
 package de.ryanthara.ja.rycon.ui.custom;
 
 import de.ryanthara.ja.rycon.i18n.Buttons;
-import de.ryanthara.ja.rycon.i18n.Labels;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
+import de.ryanthara.ja.rycon.i18n.Texts;
 import de.ryanthara.ja.rycon.ui.Sizes;
 import de.ryanthara.ja.rycon.util.check.TextCheck;
 import org.eclipse.swt.SWT;
@@ -39,7 +39,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static de.ryanthara.ja.rycon.i18n.ResourceBundles.BUTTONS;
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LABELS;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.TEXTS;
 
 /**
  * Instances of this class implements a custom composite with two labels, two text fields and two buttons for
@@ -125,7 +125,7 @@ public class InputFieldsComposite extends Composite {
         checkWidget();
 
         Group group = new Group(this, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangString(LABELS, Labels.pathSelectionText));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.pathSelection));
 
         GridLayout gridLayout = new GridLayout();
         gridLayout.numColumns = 3;
@@ -149,7 +149,7 @@ public class InputFieldsComposite extends Composite {
 
     private Button createSourceComposite(Group group) {
         final Label source = new Label(group, SWT.NONE);
-        source.setText(ResourceBundleUtils.getLangString(LABELS, Labels.source));
+        source.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.source));
 
         sourceTextField = new Text(group, SWT.BORDER);
         sourceTextField.addListener(SWT.Traverse, event -> {
@@ -192,7 +192,7 @@ public class InputFieldsComposite extends Composite {
 
     private Button createTargetComposite(Group group) {
         Label target = new Label(group, SWT.NONE);
-        target.setText(ResourceBundleUtils.getLangString(LABELS, Labels.targetText));
+        target.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.target));
         target.setLayoutData(new GridData());
 
         targetTextField = new Text(group, SWT.SINGLE | SWT.BORDER);
