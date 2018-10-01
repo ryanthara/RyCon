@@ -43,11 +43,6 @@
     <!-- used third party repositories -->
     <repositories>
         <!-- SWT -->
-        <!-- <repository>
-             <id>swt-repo</id>
-             <url>https://swt-repo.googlecode.com/svn/repo/</url>
-         </repository>-->
-        <!-- SWT -->
         <repository>
             <id>maven-eclipse-repo</id>
             <url>http://maven-eclipse.github.io/maven</url>
@@ -105,7 +100,6 @@
                 <version>3.0.0</version>
             </extension>
         </extensions>
-
         <!-- plugins used to build RyCON and all the things around -->
         <pluginManagement>
             <plugins>

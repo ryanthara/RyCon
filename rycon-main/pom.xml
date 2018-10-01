@@ -54,11 +54,11 @@
         </dependency>
         <!-- https://shop.swisstopo.admin.ch/de/products/geo_software/DLL_info -->
         <dependency>
-            <groupId>reframeLib</groupId>
+            <groupId>com.swisstopo.geodesy</groupId>
             <artifactId>reframeLib</artifactId>
             <scope>system</scope>
             <version>3.2</version>
-            <systemPath>${basedir}\src\lib\reframeLib.jar</systemPath>
+            <systemPath>${basedir}/src/lib/reframeLib.jar</systemPath>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.opencsv/opencsv -->
         <dependency>
