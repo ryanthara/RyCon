@@ -25,10 +25,10 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 
 /**
- * This class provides access to basic resources.
- * /**
- * {@code Resources} provides access to image resources for the {@link de.ryanthara.ja.rycon.ui.preferences.editor.Editor}
- * of RyCON.
+ * This class provides static access to image resources of <tt>RyCON</tt>'s preference editors.
+ * <p>
+ * Within the {@link de.ryanthara.ja.rycon.ui.preferences.editor.Editor} small images are used on
+ * top on the default and undo buttons.
  * <p>
  * The main idea of storing preferences with a MVC preference handler was implemented by Fabian Prasser.
  * See <a href="https://github.com/prasser/swtpreferences">prasser on github</a> for details.
@@ -46,7 +46,6 @@ public class Resources {
      * Loads an image. Adds a dispose listener that disposes the image when the display is disposed.
      *
      * @param resource image resource
-     *
      * @return loaded image
      */
     private static Image getImage(String resource) {
