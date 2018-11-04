@@ -31,4 +31,4 @@ public interface StatusInformationListener extends EventListener {
 
     void notification(StatusInformationEvent event);
 
-} // end of StatusInformationListener
+}

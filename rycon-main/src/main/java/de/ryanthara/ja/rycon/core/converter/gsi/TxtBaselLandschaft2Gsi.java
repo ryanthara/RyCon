@@ -22,10 +22,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Instances of this class provides functions to convert text formatted coordinate files from the geodata server
- * Basel Landschaft (Switzerland) into Leica GSI8 and GSI16 formatted files.
+ * A converter with functions to convert coordinate files from the geodata server
+ * Basel Landschaft (Switzerland) into Leica Geosystems GSI8 and GSI16 formatted files.
  *
  * @author sebastian
  * @version 1
@@ -35,18 +36,16 @@ public class TxtBaselLandschaft2Gsi {
 
     private static final Logger logger = LoggerFactory.getLogger(TxtBaselLandschaft2Gsi.class.getName());
 
-    private final ArrayList<String> readStringLines;
+    private final List<String> lines;
 
     /**
-     * Constructs a new instance of this class given an {@code ArrayList<String} that contains the reader coordinate file
+     * Creates a converter with a list for the read line based text files
      * from the geodata server Basel Landschaft (Switzerland).
-     * <p>
-     * The differentiation of the content is done by the called method.
      *
-     * @param readStringLines reader coordinate file
+     * @param lines list with coordinate lines
      */
-    public TxtBaselLandschaft2Gsi(ArrayList<String> readStringLines) {
-        this.readStringLines = readStringLines;
+    public TxtBaselLandschaft2Gsi(List<String> lines) {
+        this.lines = new ArrayList<>(lines);
     }
 
     /**
@@ -57,60 +56,59 @@ public class TxtBaselLandschaft2Gsi {
      *
      * @param isGSI16             distinguish between GSI8 or GSI16 output
      * @param useAnnotationColumn writer additional information as annotation column (WI 71)
-     *
-     * @return converted {@code ArrayList<String>} with lines of text format
+     * @return converted {@code List<String>} with lines of text format
      */
-    public ArrayList<String> convertTXTBaselLandschaft2GSI(boolean isGSI16, boolean useAnnotationColumn) {
-        ArrayList<GsiBlock> blocks;
-        ArrayList<ArrayList<GsiBlock>> blocksInLines = new ArrayList<>();
+    public List<String> convert(boolean isGSI16, boolean useAnnotationColumn) {
+        List<GsiBlock> blocks;
+        List<List<GsiBlock>> blocksInLines = new ArrayList<>();
 
         int lineCounter = 1;
 
         // remove comment line
-        readStringLines.remove(0);
+        lines.remove(0);
 
-        for (String line : readStringLines) {
+        for (String line : lines) {
             blocks = new ArrayList<>();
 
-            String[] lineSplit = line.trim().split("\\t", -1);
+            String[] values = line.trim().split("\\t", -1);
 
-            switch (lineSplit.length) {
+            switch (values.length) {
                 case 5:     // HFP file
-                    blocks.add(new GsiBlock(isGSI16, 11, lineCounter, lineSplit[1]));
+                    blocks.add(new GsiBlock(isGSI16, 11, lineCounter, values[1]));
 
                     if (useAnnotationColumn) {
-                        blocks.add(new GsiBlock(isGSI16, 71, lineSplit[0]));
+                        blocks.add(new GsiBlock(isGSI16, 71, values[0]));
                     }
 
-                    blocks.add(new GsiBlock(isGSI16, 81, lineSplit[2]));
-                    blocks.add(new GsiBlock(isGSI16, 82, lineSplit[3]));
-                    blocks.add(new GsiBlock(isGSI16, 83, lineSplit[4]));
+                    blocks.add(new GsiBlock(isGSI16, 81, values[2]));
+                    blocks.add(new GsiBlock(isGSI16, 82, values[3]));
+                    blocks.add(new GsiBlock(isGSI16, 83, values[4]));
                     break;
 
                 case 6:     // LFP file
-                    blocks.add(new GsiBlock(isGSI16, 11, lineCounter, lineSplit[1]));
+                    blocks.add(new GsiBlock(isGSI16, 11, lineCounter, values[1]));
 
                     if (useAnnotationColumn) {
-                        if (lineSplit[2].equals("NULL")) {
+                        if (values[2].equals("NULL")) {
                             blocks.add(new GsiBlock(isGSI16, 41, "-1"));
                         } else {
-                            blocks.add(new GsiBlock(isGSI16, 41, lineSplit[2]));
+                            blocks.add(new GsiBlock(isGSI16, 41, values[2]));
                         }
-                        blocks.add(new GsiBlock(isGSI16, 71, lineSplit[0]));
+                        blocks.add(new GsiBlock(isGSI16, 71, values[0]));
                     }
 
-                    blocks.add(new GsiBlock(isGSI16, 81, lineSplit[3]));
-                    blocks.add(new GsiBlock(isGSI16, 82, lineSplit[4]));
+                    blocks.add(new GsiBlock(isGSI16, 81, values[3]));
+                    blocks.add(new GsiBlock(isGSI16, 82, values[4]));
 
                     // prevent 'NULL' element in height
-                    if (!lineSplit[5].equals("NULL")) {
-                        blocks.add(new GsiBlock(isGSI16, 83, lineSplit[5]));
+                    if (!values[5].equals("NULL")) {
+                        blocks.add(new GsiBlock(isGSI16, 83, values[5]));
                     }
 
                     break;
 
                 default:
-                    logger.trace("Line contains less or more tokens ({}) than needed or allowed.", lineSplit.length);
+                    logger.trace("Line contains less or more tokens ({}) than needed or allowed.", values.length);
                     break;
             }
 
@@ -124,4 +122,4 @@ public class TxtBaselLandschaft2Gsi {
         return BaseToolsGsi.lineTransformation(isGSI16, blocksInLines);
     }
 
-} // end of TxtBaselLandschaft2Gsi
+}

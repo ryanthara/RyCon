@@ -19,8 +19,9 @@
 package de.ryanthara.ja.rycon.ui.preferences;
 
 import de.ryanthara.ja.rycon.Main;
-import de.ryanthara.ja.rycon.i18n.*;
-import de.ryanthara.ja.rycon.ui.Sizes;
+import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
+import de.ryanthara.ja.rycon.i18n.ToolTip;
+import de.ryanthara.ja.rycon.ui.Size;
 import de.ryanthara.ja.rycon.ui.preferences.editor.Editor;
 import de.ryanthara.ja.rycon.ui.preferences.pref.Preference;
 import de.ryanthara.ja.rycon.ui.util.ShellPositioner;
@@ -31,13 +32,12 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.*;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundle.BUTTON;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundle.TOOLTIP;
 import static de.ryanthara.ja.rycon.ui.custom.Status.OK;
 
 /**
@@ -52,15 +52,15 @@ import static de.ryanthara.ja.rycon.ui.custom.Status.OK;
  */
 public class PreferencesDialog {
 
-    private String category;
     private final String message;
     private final String title;
     private final List<String> categories = new ArrayList<>();
     private final Map<Preference<?>, Editor<?>> editors = new HashMap<>();
     private final Map<String, Image> images = new HashMap<>();
     private final Map<String, List<Preference<?>>> preferences = new HashMap<>();
-    private Button saveButton;
     private final Shell parentShell;
+    private String category;
+    private org.eclipse.swt.widgets.Button saveButton;
     private Shell innerShell;
     private TabFolder folder;
 
@@ -104,11 +104,10 @@ public class PreferencesDialog {
      * Adds a new {@link Group} to the tab.
      *
      * @param text group text
+     * @throws NullPointerException will be thrown if text is null
      */
     public void addGroup(String text) {
-        if (category == null) {
-            throw new IllegalStateException("Please create a categoryFormats first");
-        }
+        Objects.requireNonNull(text, "Please create a category_Formats first");
 
         this.preferences.get(category).add(new de.ryanthara.ja.rycon.ui.preferences.util.Group(text));
     }
@@ -117,11 +116,10 @@ public class PreferencesDialog {
      * Adds a new {@link Preference} to the tab.
      *
      * @param preference preference of the generic data type T
+     * @throws NullPointerException will be thrown if preference is null
      */
     public void addPreference(Preference<?> preference) {
-        if (category == null) {
-            throw new IllegalStateException("Please create a categoryFormats first");
-        }
+        Objects.requireNonNull(preference, "Please create a category_Formats first");
 
         this.preferences.get(category).add(preference);
 
@@ -163,11 +161,10 @@ public class PreferencesDialog {
      *
      * @param name  name of the tab
      * @param image image on the tab
+     * @throws NullPointerException will be thrown if name is null
      */
     private void addCategory(String name, Image image) {
-        if (name == null) {
-            throw new NullPointerException("name must not be null");
-        }
+        Objects.requireNonNull(name, "name must not be null");
 
         this.category = name;
         this.images.put(name, image);
@@ -180,19 +177,19 @@ public class PreferencesDialog {
      *
      * @param parent parent composite
      */
-    private void createButtonBar(final Composite parent) {
+    private void createButtonBar(Composite parent) {
         GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
         gridData.horizontalIndent = 0;
         gridData.verticalIndent = 0;
 
         parent.setLayoutData(gridData);
 
-        saveButton = new Button(parent, SWT.NONE);
-        saveButton.setText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.preferencesDialog_OkButtonText));
-        saveButton.setToolTipText(ResourceBundleUtils.getLangStringFromXml(TOOL_TIPS, ToolTips.preferencesDialog_OkBtn));
+        saveButton = new org.eclipse.swt.widgets.Button(parent, SWT.NONE);
+        saveButton.setText(ResourceBundleUtils.getLangString(BUTTON, de.ryanthara.ja.rycon.i18n.Button.preferencesDialog_OkButtonText));
+        saveButton.setToolTipText(ResourceBundleUtils.getLangStringFromXml(TOOLTIP, ToolTip.preferencesDialog_OkBtn));
         saveButton.addSelectionListener(new SelectionAdapter() {
             @Override
-            public void widgetSelected(final SelectionEvent e) {
+            public void widgetSelected(SelectionEvent e) {
                 // writer preferences only for changed settings
                 for (Entry<Preference<?>, Editor<?>> entry : editors.entrySet()) {
                     if (entry.getValue().hasChanged()) {
@@ -212,10 +209,9 @@ public class PreferencesDialog {
      *
      * @param folder      parent tab folder
      * @param preferences list of preferences to be set
-     *
      * @return built composite
      */
-    private Composite createCategory(final TabFolder folder, List<Preference<?>> preferences) {
+    private Composite createCategory(TabFolder folder, List<Preference<?>> preferences) {
         final Composite base = new Composite(folder, SWT.NONE);
         base.setLayout(new GridLayout(4, false));
 
@@ -223,7 +219,7 @@ public class PreferencesDialog {
 
         org.eclipse.swt.widgets.Group group = null;
 
-        for (final Preference<?> e : preferences) {
+        for (Preference<?> e : preferences) {
             if (e instanceof de.ryanthara.ja.rycon.ui.preferences.util.Group) {
                 group = new org.eclipse.swt.widgets.Group(base, SWT.SHADOW_ETCHED_IN);
                 group.setText(e.getLabel());
@@ -275,7 +271,7 @@ public class PreferencesDialog {
         return base;
     }
 
-    private void createTabs(final Composite parent) {
+    private void createTabs(Composite parent) {
         folder = new TabFolder(parent, SWT.NONE);
 
         GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
@@ -285,7 +281,7 @@ public class PreferencesDialog {
         folder.setLayoutData(gridData);
 
         // Build tabs
-        for (final String category : categories) {
+        for (String category : categories) {
             final TabItem tab = new TabItem(folder, SWT.NONE);
             tab.setText(category);
 
@@ -332,8 +328,8 @@ public class PreferencesDialog {
     }
 
     private void initUI(boolean resizable) {
-        final int height = Sizes.RyCON_WIDGET_HEIGHT.getValue();
-        final int width = Sizes.RyCON_WIDGET_WIDTH.getValue() + 205;
+        final int height = Size.RyCON_WIDGET_HEIGHT.getValue();
+        final int width = Size.RyCON_WIDGET_WIDTH.getValue() + 205;
 
         int shellStyle = SWT.APPLICATION_MODAL | SWT.CLOSE | SWT.DIALOG_TRIM | SWT.MAX | SWT.TITLE;
 
@@ -379,4 +375,4 @@ public class PreferencesDialog {
         innerShell.dispose();
     }
 
-} // end of PreferencesDialog
+}

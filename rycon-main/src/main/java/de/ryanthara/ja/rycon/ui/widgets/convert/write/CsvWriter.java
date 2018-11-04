@@ -22,8 +22,6 @@ import de.ryanthara.ja.rycon.nio.FileNameExtension;
 import de.ryanthara.ja.rycon.nio.WriteFile2Disk;
 import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
 import de.ryanthara.ja.rycon.ui.widgets.convert.SourceButton;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.odftoolkit.simple.SpreadsheetDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,95 +30,85 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Instances of this class are used for writing comma separated values (CSV) files
- * from the {@link ConverterWidget} of <tt>RyCON</tt>.
+ * A writer for writing comma separated values (CSV) files in the {@link ConverterWidget} of RyCON.
  *
  * @author sebastian
  * @version 2
  * @since 12
  */
-public class CsvWriter implements Writer {
+public class CsvWriter extends Writer {
 
     private static final Logger logger = LoggerFactory.getLogger(CsvWriter.class.getName());
 
     private final Path path;
-    private final ArrayList<String> readStringFile;
-    private final List<String[]> readCSVFile;
+    private final List<String> lines;
+    private final List<String[]> csv;
     private final WriteParameter parameter;
 
     /**
      * Constructs the {@link CsvWriter} with a set of parameters.
      *
-     * @param path           reader path object for writing
-     * @param readCSVFile    reader csv file
-     * @param readStringFile reader string file
-     * @param parameter      the writer parameter object
+     * @param path      file path to write into
+     * @param csv       read csv file
+     * @param lines     read string based file
+     * @param parameter the writer parameter object
      */
-    public CsvWriter(Path path, ArrayList<String> readStringFile, List<String[]> readCSVFile, WriteParameter parameter) {
+    public CsvWriter(Path path, List<String> lines, List<String[]> csv, WriteParameter parameter) {
         this.path = path;
-        this.readStringFile = readStringFile;
-        this.readCSVFile = readCSVFile;
+        this.lines = new ArrayList<>(lines);
+        this.csv = new ArrayList<>(csv);
         this.parameter = parameter;
     }
 
     /**
-     * Returns true if the prepared {@link SpreadsheetDocument} for file writing was written to the file system.
+     * Writes a comma separated values (CSV) file depends on the source file format.
      *
      * @return write success
      */
     @Override
-    public boolean writeSpreadsheetDocument() {
-        return false;
-    }
-
-    /**
-     * Returns the prepared {@link ArrayList} for file writing.
-     *
-     * @return array list for file writing
-     */
-    @Override
     public boolean writeStringFile() {
-        boolean success = false;
-        ArrayList<String> writeFile = null;
+        List<String> writeFile = null;
 
         switch (SourceButton.fromIndex(parameter.getSourceNumber())) {
             case GSI8:
+                // fall through for GSI8 format
             case GSI16:
-                Gsi2Csv gsi2Csv = new Gsi2Csv(readStringFile);
-                writeFile = gsi2Csv.convertGSI2CSV(parameter.getSeparatorCSV(), parameter.isWriteCommentLine());
+                Gsi2Csv gsi2Csv = new Gsi2Csv(lines);
+                writeFile = gsi2Csv.convert(parameter.getSeparatorCSV(), parameter.isWriteCommentLine());
                 break;
 
             case TXT:
-                Txt2Csv txt2Csv = new Txt2Csv(readStringFile);
-                writeFile = txt2Csv.convertTXT2CSV(parameter.getSeparatorCSV());
+                Txt2Csv txt2Csv = new Txt2Csv(lines);
+                writeFile = txt2Csv.convert(parameter.getSeparatorCSV());
                 break;
 
             case CSV:
+                // writing the same file format is not supported
                 break;
 
             case CAPLAN_K:
-                Caplan2Csv caplan2Csv = new Caplan2Csv(readStringFile);
-                writeFile = caplan2Csv.convertK2CSV(parameter.getSeparatorCSV(), parameter.isKFormatUseSimpleFormat(), parameter.isWriteCommentLine(), parameter.isWriteCodeColumn());
+                Caplan2Csv caplan2Csv = new Caplan2Csv(lines);
+                writeFile = caplan2Csv.convert(parameter.getSeparatorCSV(), parameter.isKFormatUseSimpleFormat(), parameter.isWriteCommentLine(), parameter.isWriteCodeColumn());
                 break;
 
             case ZEISS_REC:
-                Zeiss2Csv zeiss2Csv = new Zeiss2Csv(readStringFile);
-                writeFile = zeiss2Csv.convertZeiss2CSV(parameter.getSeparatorCSV());
+                Zeiss2Csv zeiss2Csv = new Zeiss2Csv(lines);
+                writeFile = zeiss2Csv.convert(parameter.getSeparatorCSV());
                 break;
 
             case CADWORK:
-                Cadwork2Csv cadwork2Csv = new Cadwork2Csv(readStringFile);
-                writeFile = cadwork2Csv.convertCadwork2CSV(parameter.getSeparatorCSV(), parameter.isWriteCommentLine(), parameter.isWriteCodeColumn(), parameter.isCadworkUseZeroHeights());
+                Cadwork2Csv cadwork2Csv = new Cadwork2Csv(lines);
+                writeFile = cadwork2Csv.convert(parameter.getSeparatorCSV(), parameter.isWriteCommentLine(), parameter.isWriteCodeColumn(), parameter.isCadworkUseZeroHeights());
                 break;
 
             case BASEL_STADT:
-                CsvBaselStadt2Csv csvBaselStadt2Csv = new CsvBaselStadt2Csv(readCSVFile);
-                writeFile = csvBaselStadt2Csv.convertCSVBaselStadt2CSV(parameter.getSeparatorCSV());
+                CsvBaselStadt2Csv csvBaselStadt2Csv = new CsvBaselStadt2Csv(csv);
+                writeFile = csvBaselStadt2Csv.convert(parameter.getSeparatorCSV());
                 break;
 
             case BASEL_LANDSCHAFT:
-                TxtBaselLandschaft2Csv txtBaselLandschaft2Csv = new TxtBaselLandschaft2Csv(readStringFile);
-                writeFile = txtBaselLandschaft2Csv.convertTXTBaselLandschaft2CSV(parameter.getSeparatorCSV());
+                TxtBaselLandschaft2Csv txtBaselLandschaft2Csv = new TxtBaselLandschaft2Csv(lines);
+                writeFile = txtBaselLandschaft2Csv.convert(parameter.getSeparatorCSV());
                 break;
 
             default:
@@ -129,21 +117,7 @@ public class CsvWriter implements Writer {
                 logger.warn("Can not write {} file format to csv file.", SourceButton.fromIndex(parameter.getSourceNumber()));
         }
 
-        if (WriteFile2Disk.writeFile2Disk(path, writeFile, "", FileNameExtension.CSV.getExtension())) {
-            success = true;
-        }
-
-        return success;
+        return WriteFile2Disk.writeFile2Disk(path, writeFile, "", FileNameExtension.CSV.getExtension());
     }
 
-    /**
-     * Returns true if the prepared {@link Workbook} for file writing was written to the file system.
-     *
-     * @return write success
-     */
-    @Override
-    public boolean writeWorkbookFile() {
-        return false;
-    }
-
-} // end of CsvWriter
+}

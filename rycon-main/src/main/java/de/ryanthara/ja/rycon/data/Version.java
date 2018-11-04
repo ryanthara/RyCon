@@ -17,7 +17,8 @@
  */
 package de.ryanthara.ja.rycon.data;
 
-import de.ryanthara.ja.rycon.i18n.LangStrings;
+import de.ryanthara.ja.rycon.core.converter.Separator;
+import de.ryanthara.ja.rycon.i18n.LangString;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 
 import java.time.LocalDate;
@@ -25,16 +26,16 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.Locale;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LANG_STRINGS;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundle.LANG_STRING;
 
 /**
- * The {@code Version} class holds static information about the current <tt>RyCON</tt> version
+ * The {@code Version} class holds static information about the current RyCON version
  * and it's development cycle.
  * <p>
  * With a couple of static methods a simple access to the values is realized.
  * <p>
- * Every new version change of <tt>RyCON</tt> has to be filled in here! This is necessary
- * because of the online check for a new version of <tt>RyCON</tt>.
+ * Every new version change of RyCON has to be filled in here! This is necessary
+ * because of the online check for a new version of RyCON.
  *
  * @author sebastian
  * @version 3
@@ -43,7 +44,7 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LANG_STRINGS;
 public final class Version {
 
     private static final int buildYear = 2018;
-    private static final int buildMonth = 1;
+    private static final int buildMonth = 10;
     private static final int buildDay = 15;
     private static final short buildNumber = 27;
     private static final short majorRelease = 2;
@@ -51,7 +52,7 @@ public final class Version {
     private static final short patchLevel = 1;
 
     /**
-     * Returns the build date of <tt>RyCON</tt> as string.
+     * Returns the build date of RyCON as string.
      *
      * @return the build date
      */
@@ -60,7 +61,7 @@ public final class Version {
     }
 
     /**
-     * Returns the current build number of <tt>RyCON</tt> as integer value.
+     * Returns the current build number of RyCON as integer value.
      *
      * @return the build number
      */
@@ -77,11 +78,11 @@ public final class Version {
         LocalDate date = LocalDate.of(buildYear, buildMonth, buildDay);
         DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL).withLocale(Locale.getDefault());
 
-        return "Build #" + buildNumber + ResourceBundleUtils.getLangStringFromXml(LANG_STRINGS, LangStrings.buildString) + " " + date.format(formatter);
+        return "Build #" + buildNumber + ResourceBundleUtils.getLangStringFromXml(LANG_STRING, LangString.buildString) + Separator.WHITESPACE.getSign() + date.format(formatter);
     }
 
     /**
-     * Returns the current major release number of <tt>RyCON</tt> as short value.
+     * Returns the current major release number of RyCON as short value.
      *
      * @return the major release number
      */
@@ -90,7 +91,7 @@ public final class Version {
     }
 
     /**
-     * Returns the current minor release number of <tt>RyCON</tt> as short value.
+     * Returns the current minor release number of RyCON as short value.
      *
      * @return the minor release number
      */
@@ -99,7 +100,7 @@ public final class Version {
     }
 
     /**
-     * Returns the current patch level number of <tt>RyCON</tt> as short value.
+     * Returns the current patch level number of RyCON as short value.
      *
      * @return the patch level
      */
@@ -108,7 +109,7 @@ public final class Version {
     }
 
     /**
-     * Returns the current version of <tt>RyCON</tt> as string value (major.minor.patch_level).
+     * Returns the current version of RyCON as string value (major.minor.patch_level).
      *
      * @return the {@code major.minor.patch_level} as concatenated version string
      */
@@ -116,4 +117,4 @@ public final class Version {
         return Short.toString(majorRelease) + "." + Short.toString(minorRelease) + "." + Short.toString(patchLevel);
     }
 
-} // end of Version
+}

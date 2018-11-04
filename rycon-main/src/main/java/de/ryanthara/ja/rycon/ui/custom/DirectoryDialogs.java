@@ -18,19 +18,18 @@
 package de.ryanthara.ja.rycon.ui.custom;
 
 import de.ryanthara.ja.rycon.data.PreferenceHandler;
-import de.ryanthara.ja.rycon.i18n.Errors;
+import de.ryanthara.ja.rycon.i18n.Error;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
-import de.ryanthara.ja.rycon.i18n.Texts;
+import de.ryanthara.ja.rycon.i18n.Text;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.ERRORS;
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.TEXTS;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundle.ERROR;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundle.TEXT;
 
 /**
  * This class implements a simple static access to swt {@link DirectoryDialog} and it's functionality for RyCON.
@@ -41,13 +40,13 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.TEXTS;
  */
 public class DirectoryDialogs {
 
-    private static void handlePath(Shell innerShell, Text textField, String pathAsString) {
+    private static void handlePath(Shell innerShell, org.eclipse.swt.widgets.Text textField, String pathAsString) {
         if (Files.exists(Paths.get(pathAsString))) {
             textField.setText(pathAsString);
         } else {
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING,
-                    ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.msgBox_Warning),
-                    ResourceBundleUtils.getLangString(ERRORS, Errors.directoryNotFound));
+                    ResourceBundleUtils.getLangStringFromXml(TEXT, Text.msgBox_Warning),
+                    ResourceBundleUtils.getLangString(ERROR, Error.directoryNotFound));
         }
     }
 
@@ -62,7 +61,7 @@ public class DirectoryDialogs {
      * @param message           message of the directory dialog
      * @param checkedFilterPath filter path of the directory dialog
      */
-    public static void showAdvancedDirectoryDialog(Shell innerShell, Text textField, String title, String message, String checkedFilterPath) {
+    public static void showAdvancedDirectoryDialog(Shell innerShell, org.eclipse.swt.widgets.Text textField, String title, String message, String checkedFilterPath) {
         DirectoryDialog directoryDialog = new DirectoryDialog(innerShell);
         directoryDialog.setText(title);
         directoryDialog.setMessage(message);
@@ -76,4 +75,4 @@ public class DirectoryDialogs {
         }
     }
 
-} // end of DirectoryDialogs
+}

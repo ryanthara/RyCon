@@ -17,46 +17,45 @@
  */
 package de.ryanthara.ja.rycon.core.converter.zeiss;
 
-import de.ryanthara.ja.rycon.core.converter.gsi.BaseToolsGsi;
+import de.ryanthara.ja.rycon.core.converter.gsi.GsiDecoder;
 import de.ryanthara.ja.rycon.core.elements.GsiBlock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Instances of this class provides functions to convert coordinate and measurement files from Leica GSI format
- * into Zeiss REC files with it's dialects (R4, R5, REC500 and M5).
+ * A converter with functions to convert Leica Geosystems GSI format (GSI8 and GSI16) coordinate
+ * and measurement files into Zeiss REC files with it's dialects (R4, R5, REC500 and M5).
  */
 public class Gsi2Zeiss {
 
     private static final Logger logger = LoggerFactory.getLogger(Gsi2Zeiss.class.getName());
 
-    private final BaseToolsGsi baseToolsGsi;
+    private final GsiDecoder gsiDecoder;
 
     /**
-     * Constructs a new instance of this class given an {@code ArrayList<String>} with
-     * the reader GSI lines as {@code String}.
-     * <p>
+     * Creates a converter with a list for the read line based
+     * Leica Geosystems GSI8 or GSI16 file.
      *
-     * @param readStringLines reader GSI lines
+     * @param lines list with Leica Geosystems GSI8 or GSI16 lines
      */
-    public Gsi2Zeiss(ArrayList<String> readStringLines) {
-        baseToolsGsi = new BaseToolsGsi(readStringLines);
+    public Gsi2Zeiss(List<String> lines) {
+        gsiDecoder = new GsiDecoder(lines);
     }
 
     /**
-     * Converts a Leica GSI formatted measurement or coordinate based file into a Zeiss REC formatted file.
+     * Converts a Leica Geosystems GSI formatted measurement or coordinate based file into a Zeiss REC formatted file.
      *
      * @param dialect dialect of the target file
-     *
      * @return string lines of the target file
      */
-    public ArrayList<String> convertGSI2REC(ZeissDialect dialect) {
-        ArrayList<String> result = new ArrayList<>();
+    public List<String> convert(ZeissDialect dialect) {
+        List<String> result = new ArrayList<>();
         int lineNumber = 0;
 
-        for (ArrayList<GsiBlock> blocksInLine : baseToolsGsi.getEncodedLinesOfGSIBlocks()) {
+        for (List<GsiBlock> blocksInLine : gsiDecoder.getDecodedLinesOfGsiBlocks()) {
             lineNumber = lineNumber + 1;
 
             boolean isStationLine = false;
@@ -178,7 +177,7 @@ public class Gsi2Zeiss {
             }
         }
 
-        return result;
+        return List.copyOf(result);
     }
 
-} // end of Gsi2Zeiss
+}

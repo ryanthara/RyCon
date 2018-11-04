@@ -22,10 +22,11 @@ import de.ryanthara.ja.rycon.core.elements.RyStakedPoint;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * The {@code StakeOutStructure} implements functions based on the COGO part of
- * the <tt>Leica Geosystems</tt> logfile.txt for <tt>RyCON</tt>.
+ * the Leica Geosystems logfile.txt for RyCON.
  * <p>
  * This is used for encapsulating the data and error minimization.
  *
@@ -35,9 +36,8 @@ import java.util.Arrays;
  */
 public class StakeOutStructure extends LeicaLogfileBaseStructure {
 
-    private final ArrayList<String> lines;
-    private final ArrayList<RyStakedPoint> stakedPoints;
-    // Results
+    private final List<String> lines;
+    private final List<RyStakedPoint> stakedPoints;
     private String pointId;
     private RyPoint tpsStation;
     private RyPoint designPoint;
@@ -49,15 +49,15 @@ public class StakeOutStructure extends LeicaLogfileBaseStructure {
      *
      * @param lines lines to be analyzed
      */
-    public StakeOutStructure(ArrayList<String> lines) {
-        this.lines = lines;
+    public StakeOutStructure(List<String> lines) {
+        this.lines = new ArrayList<>(lines);
         this.lines.removeAll(Arrays.asList(null, ""));
 
         stakedPoints = new ArrayList<>();
     }
 
     /**
-     * Analyzes the STAKE OUT structure of the <tt>Leica Geosystems</tt> logfile.txt and
+     * Analyzes the STAKE OUT structure of the Leica Geosystems logfile.txt and
      * fills the results into the return {@link ArrayList} of {@link RyStakedPoint} objects.
      *
      * @return analysis success
@@ -89,7 +89,7 @@ public class StakeOutStructure extends LeicaLogfileBaseStructure {
      *
      * @return design point
      */
-    public RyPoint getDesignPoint() {
+    RyPoint getDesignPoint() {
         return designPoint;
     }
 
@@ -98,17 +98,17 @@ public class StakeOutStructure extends LeicaLogfileBaseStructure {
      *
      * @return current point id
      */
-    public String getPointId() {
+    String getPointId() {
         return pointId;
     }
 
     /**
-     * Returns the staked points as {@link ArrayList} of {@link RyStakedPoint}.
+     * Returns the staked points as {@link List} of {@link RyStakedPoint}.
      *
      * @return the staked points
      */
-    public ArrayList<RyStakedPoint> getStakedPoints() {
-        return stakedPoints;
+    List<RyStakedPoint> getStakedPoints() {
+        return List.copyOf(stakedPoints);
     }
 
     /**
@@ -116,7 +116,7 @@ public class StakeOutStructure extends LeicaLogfileBaseStructure {
      *
      * @return the staked point
      */
-    public RyPoint getStakeoutDifference() {
+    RyPoint getStakeoutDifference() {
         return stakeoutDifference;
     }
 
@@ -125,7 +125,7 @@ public class StakeOutStructure extends LeicaLogfileBaseStructure {
      *
      * @return the tps station id
      */
-    public RyPoint getTpsStation() {
+    RyPoint getTpsStation() {
         return tpsStation;
     }
 
@@ -144,4 +144,4 @@ public class StakeOutStructure extends LeicaLogfileBaseStructure {
         }
     }
 
-} // end of StakeOutStructure
+}

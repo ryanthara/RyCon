@@ -20,10 +20,11 @@ package de.ryanthara.ja.rycon.core.converter.csv;
 import de.ryanthara.ja.rycon.core.converter.text.TxtBaselLandschaft2Txt;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * This class provides functions to convert coordinate files from the geodata server 'Basel Landschaft' (Switzerland)
- * into csv (comma separated values) files.
+ * A converter with functions to convert coordinate files from the geodata server
+ * Basel Landschaft (Switzerland) into comma separated values CSV files.
  *
  * @author sebastian
  * @version 1
@@ -31,15 +32,16 @@ import java.util.ArrayList;
  */
 public class TxtBaselLandschaft2Csv {
 
-    private final ArrayList<String> readStringLines;
+    private final List<String> lines;
 
     /**
-     * Class constructor for reader line based text files in different formats.
+     * Creates a converter with a list for the read line based text files
+     * from the geodata server Basel Landschaft (Switzerland).
      *
-     * @param readStringLines {@code ArrayList<String>} with lines in text format
+     * @param lines list with coordinate lines
      */
-    public TxtBaselLandschaft2Csv(ArrayList<String> readStringLines) {
-        this.readStringLines = readStringLines;
+    public TxtBaselLandschaft2Csv(List<String> lines) {
+        this.lines = new ArrayList<>(lines);
     }
 
     /**
@@ -48,13 +50,12 @@ public class TxtBaselLandschaft2Csv {
      * With a parameter it is possible to distinguish between comma or semicolon as separator.
      *
      * @param separator separator sign as {@code String}
-     *
-     * @return converted {@code ArrayList<String>} with lines of CSV format
+     * @return converted {@code List<String>} with lines of CSV format
      */
-    public ArrayList<String> convertTXTBaselLandschaft2CSV(String separator) {
-        TxtBaselLandschaft2Txt txtBaselLandschaft2Txt = new TxtBaselLandschaft2Txt(readStringLines);
+    public List<String> convert(String separator) {
+        TxtBaselLandschaft2Txt txtBaselLandschaft2Txt = new TxtBaselLandschaft2Txt(lines);
 
-        return txtBaselLandschaft2Txt.convertTXTBaselLandschaft2TXT(separator, false);
+        return txtBaselLandschaft2Txt.convert(separator, false);
     }
 
-} // end of TxtBaselLandschaft2Csv
+}

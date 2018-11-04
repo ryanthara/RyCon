@@ -43,7 +43,7 @@ public class EditorSelection extends Editor<String> {
      * @param parent parent composite
      */
     @Override
-    public void createControl(final Composite parent) {
+    public void createControl(Composite parent) {
         GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, false);
 
         combo = new Combo(parent, SWT.READ_ONLY);
@@ -51,7 +51,7 @@ public class EditorSelection extends Editor<String> {
         combo.setLayoutData(gridData);
         combo.addSelectionListener(new SelectionAdapter() {
             @Override
-            public void widgetSelected(final SelectionEvent arg0) {
+            public void widgetSelected(SelectionEvent arg0) {
                 if (combo.getSelectionIndex() >= 0) {
                     setValid(true);
                 } else {
@@ -93,7 +93,6 @@ public class EditorSelection extends Editor<String> {
      * Formats the value for for this editor.
      *
      * @param s value to be formatted
-     *
      * @return formatted value
      */
     @Override
@@ -105,7 +104,6 @@ public class EditorSelection extends Editor<String> {
      * Returns the not parsed string.
      *
      * @param s string to be parsed
-     *
      * @return not parsed string
      */
     @Override
@@ -117,10 +115,9 @@ public class EditorSelection extends Editor<String> {
      * Returns the index of the current selected combo.
      *
      * @param value string to be checked
-     *
      * @return index of selected combo
      */
-    private int indexOf(final String value) {
+    private int indexOf(String value) {
         for (int i = 0; i < elements.length; i++) {
             if (elements[i].equals(value)) {
                 return i;
@@ -130,4 +127,4 @@ public class EditorSelection extends Editor<String> {
         return -1;
     }
 
-} // end of EditorSelection
+}

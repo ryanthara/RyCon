@@ -22,10 +22,11 @@ import de.ryanthara.ja.rycon.core.elements.RyPoint;
 import de.ryanthara.ja.rycon.util.NumberFormatter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Instances of this class provides functions to convert a Caplan K formatted coordinate file
- * into a LTOP coordinate file.
+ * A converter with functions to convert coordinate coordinate
+ * files from Caplan K program into a LTOP coordinate file.
  *
  * @author sebastian
  * @version 1
@@ -33,15 +34,15 @@ import java.util.ArrayList;
  */
 public class Caplan2Ltop {
 
-    private final ArrayList<String> readStringLines;
+    private final List<String> lines;
 
     /**
-     * Constructs a new instance of this class with the reader Caplan K file {@link ArrayList} string as parameter.
+     * Creates a converter with a list for the read line based Caplan K file.
      *
-     * @param readStringLines {@code ArrayList<String>} with lines in Caplan K format
+     * @param lines list with Caplan K formatted lines
      */
-    public Caplan2Ltop(ArrayList<String> readStringLines) {
-        this.readStringLines = readStringLines;
+    public Caplan2Ltop(List<String> lines) {
+        this.lines = new ArrayList<>(lines);
     }
 
     /**
@@ -49,18 +50,17 @@ public class Caplan2Ltop {
      *
      * @param eliminateDuplicates eliminate duplicate coordinates within 3cm radius
      * @param sortOutputFile      sort an output file by point number
-     *
      * @return converted KOO file
      */
-    public ArrayList<String> convertK2Koo(boolean eliminateDuplicates, boolean sortOutputFile) {
-        ArrayList<String> result = new ArrayList<>();
-        ArrayList<RyPoint> ryPoints = new ArrayList<>();
+    public List<String> convert(boolean eliminateDuplicates, boolean sortOutputFile) {
+        List<String> result = new ArrayList<>();
+        List<RyPoint> ryPoints = new ArrayList<>();
         String number, pointType, toleranceCategory, easting, northing, height, geoid, eta, xi;
         String resultLine;
 
         BaseToolsLtop.writeCommendLine(result, BaseToolsLtop.cartesianCoordsIdentifier);
 
-        for (String line : readStringLines) {
+        for (String line : lines) {
             // skip empty lines directly after reading
             if (!line.trim().isEmpty()) {
                 // prevent wrong output with empty strings of defined length from class
@@ -81,15 +81,15 @@ public class Caplan2Ltop {
                 }
 
                 if (caplanBlock.getEasting() != null) {
-                    easting = String.format("%12s", NumberFormatter.fillDecimalPlace(caplanBlock.getEasting(), 4));
+                    easting = String.format("%12s", NumberFormatter.fillDecimalPlaces(caplanBlock.getEasting(), 4));
                 }
 
                 if (caplanBlock.getNorthing() != null) {
-                    northing = String.format("%12s", NumberFormatter.fillDecimalPlace(caplanBlock.getNorthing(), 4));
+                    northing = String.format("%12s", NumberFormatter.fillDecimalPlaces(caplanBlock.getNorthing(), 4));
                 }
 
                 if (caplanBlock.getHeight() != null) {
-                    height = String.format("%10s", NumberFormatter.fillDecimalPlace(caplanBlock.getHeight(), 4));
+                    height = String.format("%10s", NumberFormatter.fillDecimalPlaces(caplanBlock.getHeight(), 4));
                 }
 
                 // pick up the relevant elements from the blocks from every line
@@ -109,7 +109,7 @@ public class Caplan2Ltop {
 
         result = eliminateDuplicates ? BaseToolsLtop.eliminateDuplicatePoints(ryPoints) : result;
 
-        return sortOutputFile ? BaseToolsLtop.sortResult(result) : result;
+        return sortOutputFile ? BaseToolsLtop.sortResult(result) : new ArrayList<>(result);
     }
 
-} // end of Caplan2Ltop
+}

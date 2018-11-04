@@ -19,21 +19,25 @@ package de.ryanthara.ja.rycon.ui.widgets;
 
 import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.i18n.*;
+import de.ryanthara.ja.rycon.i18n.Error;
+import de.ryanthara.ja.rycon.i18n.Text;
+import de.ryanthara.ja.rycon.i18n.ToolTip;
 import de.ryanthara.ja.rycon.nio.LineReader;
-import de.ryanthara.ja.rycon.ui.Sizes;
+import de.ryanthara.ja.rycon.ui.Size;
 import de.ryanthara.ja.rycon.ui.custom.BottomButtonBar;
 import de.ryanthara.ja.rycon.ui.custom.InputFieldsComposite;
 import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
 import de.ryanthara.ja.rycon.ui.custom.Status;
 import de.ryanthara.ja.rycon.ui.util.ShellPositioner;
+import de.ryanthara.ja.rycon.ui.util.TextCheck;
 import de.ryanthara.ja.rycon.util.StringUtils;
-import de.ryanthara.ja.rycon.util.check.TextCheck;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,9 +46,8 @@ import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.*;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundle.*;
 
 /**
  * Instances of this class provides functions to transform coordinate files between different coordinate systems
@@ -59,21 +62,21 @@ public class TransformationWidget extends AbstractWidget {
     private static final Logger logger = LoggerFactory.getLogger(TransformationWidget.class.getName());
 
     private final String[] altimetricFrame = {
-            ResourceBundleUtils.getLangStringFromXml(DISTINCT_TYPES, DistinctTypes.altimetric_LN02),
-            ResourceBundleUtils.getLangStringFromXml(DISTINCT_TYPES, DistinctTypes.altimetric_LHN95),
-            ResourceBundleUtils.getLangStringFromXml(DISTINCT_TYPES, DistinctTypes.altimetric_Ellipsoid),
-            ResourceBundleUtils.getLangStringFromXml(DISTINCT_TYPES, DistinctTypes.altimetric_CHGeo98)
+            ResourceBundleUtils.getLangStringFromXml(DISTINCTTYPE, DistinctTyp.altimetric_LN02),
+            ResourceBundleUtils.getLangStringFromXml(DISTINCTTYPE, DistinctTyp.altimetric_LHN95),
+            ResourceBundleUtils.getLangStringFromXml(DISTINCTTYPE, DistinctTyp.altimetric_Ellipsoid),
+            ResourceBundleUtils.getLangStringFromXml(DISTINCTTYPE, DistinctTyp.altimetric_CHGeo98)
     };
     private final String[] planimetricFrame = {
-            ResourceBundleUtils.getLangStringFromXml(DISTINCT_TYPES, DistinctTypes.planimetric_LV03_Military),
-            ResourceBundleUtils.getLangStringFromXml(DISTINCT_TYPES, DistinctTypes.planimetric_LV95),
-            ResourceBundleUtils.getLangStringFromXml(DISTINCT_TYPES, DistinctTypes.planimetric_LV03_Civil)
+            ResourceBundleUtils.getLangStringFromXml(DISTINCTTYPE, DistinctTyp.planimetric_LV03_Military),
+            ResourceBundleUtils.getLangStringFromXml(DISTINCTTYPE, DistinctTyp.planimetric_LV95),
+            ResourceBundleUtils.getLangStringFromXml(DISTINCTTYPE, DistinctTyp.planimetric_LV03_Civil)
     };
     private final String[] projectionChange = {
-            ResourceBundleUtils.getLangStringFromXml(DISTINCT_TYPES, DistinctTypes.projection_ETRF93GeocentricToLV95),
-            ResourceBundleUtils.getLangStringFromXml(DISTINCT_TYPES, DistinctTypes.projection_ETRF93GeographicToLV95),
-            ResourceBundleUtils.getLangStringFromXml(DISTINCT_TYPES, DistinctTypes.projection_LV95ToETRF93Geocentric),
-            ResourceBundleUtils.getLangStringFromXml(DISTINCT_TYPES, DistinctTypes.projection_LV95ToETRF93Geographic)
+            ResourceBundleUtils.getLangStringFromXml(DISTINCTTYPE, DistinctTyp.projection_ETRF93GeocentricToLV95),
+            ResourceBundleUtils.getLangStringFromXml(DISTINCTTYPE, DistinctTyp.projection_ETRF93GeographicToLV95),
+            ResourceBundleUtils.getLangStringFromXml(DISTINCTTYPE, DistinctTyp.projection_LV95ToETRF93Geocentric),
+            ResourceBundleUtils.getLangStringFromXml(DISTINCTTYPE, DistinctTyp.projection_LV95ToETRF93Geographic)
     };
 
     private final Shell parent;
@@ -90,7 +93,7 @@ public class TransformationWidget extends AbstractWidget {
      *
      * @param parent parent shell
      */
-    public TransformationWidget(final Shell parent) {
+    public TransformationWidget(Shell parent) {
         this.parent = parent;
         this.files2read = new Path[0];
 
@@ -125,13 +128,13 @@ public class TransformationWidget extends AbstractWidget {
             if (processFileOperations()) {
                 String status;
 
-                final String helper = ResourceBundleUtils.getLangString(MESSAGES, Messages.transformationStatus);
+                final String helper = ResourceBundleUtils.getLangString(MESSAGE, Message.transformationStatus);
 
                 // use counter to display different text on the status bar
                 if (Main.countFileOps == 1) {
-                    status = String.format(StringUtils.singularPluralMessage(helper, Main.TEXT_SINGULAR), files2read.length, Main.countFileOps);
+                    status = String.format(StringUtils.getSingularMessage(helper), files2read.length, Main.countFileOps);
                 } else {
-                    status = String.format(StringUtils.singularPluralMessage(helper, Main.TEXT_PLURAL), files2read.length, Main.countFileOps);
+                    status = String.format(StringUtils.getPluralMessage(helper), files2read.length, Main.countFileOps);
                 }
 
                 Main.statusBar.setStatus(status, Status.OK);
@@ -155,8 +158,8 @@ public class TransformationWidget extends AbstractWidget {
 
     @Override
     void initUI() {
-        int height = Sizes.RyCON_WIDGET_HEIGHT.getValue();
-        int width = Sizes.RyCON_WIDGET_WIDTH.getValue();
+        int height = Size.RyCON_WIDGET_HEIGHT.getValue();
+        int width = Size.RyCON_WIDGET_WIDTH.getValue();
 
         GridLayout gridLayout = new GridLayout(1, true);
         gridLayout.marginHeight = 5;
@@ -168,7 +171,7 @@ public class TransformationWidget extends AbstractWidget {
 
         innerShell = new Shell(parent, SWT.CLOSE | SWT.DIALOG_TRIM | SWT.MAX | SWT.TITLE | SWT.APPLICATION_MODAL);
         innerShell.addListener(SWT.Close, event -> actionBtnCancel());
-        innerShell.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.transfer_Shell));
+        innerShell.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.transfer_Shell));
         innerShell.setSize(width, height);
 
         innerShell.setLayout(gridLayout);
@@ -194,7 +197,7 @@ public class TransformationWidget extends AbstractWidget {
 
     private void createCopyAndPasteField(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.transformation_GroupCopyAndPaste));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.transformation_GroupCopyAndPaste));
 
         GridLayout gridLayout = new GridLayout(2, true);
 
@@ -204,9 +207,9 @@ public class TransformationWidget extends AbstractWidget {
         group.setLayout(gridLayout);
         group.setLayoutData(gridData);
 
-        Text pasteField = new Text(group, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.NONE);
+        org.eclipse.swt.widgets.Text pasteField = new org.eclipse.swt.widgets.Text(group, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.NONE);
         Listener scrollBarListener = event -> {
-            Text t = (Text) event.widget;
+            org.eclipse.swt.widgets.Text t = (org.eclipse.swt.widgets.Text) event.widget;
             Rectangle r1 = t.getClientArea();
             Rectangle r2 = t.computeTrim(r1.x, r1.y, r1.width, r1.height);
             Point p = t.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
@@ -217,9 +220,9 @@ public class TransformationWidget extends AbstractWidget {
                 t.showSelection();
             }
         };
+
         pasteField.addListener(SWT.Resize, scrollBarListener);
         pasteField.addListener(SWT.Modify, scrollBarListener);
-
         pasteField.addModifyListener(e -> {
             System.out.println("modified: " + pasteField.getText());
         });
@@ -231,7 +234,7 @@ public class TransformationWidget extends AbstractWidget {
         Label description = new Label(group, SWT.WRAP | SWT.NONE);
         String helper =
                 ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.pasteCoordinates) + "\n" +
-                ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.pasteCoordinates2);
+                        ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.pasteCoordinates2);
 
         description.setText(helper);
         // description.setText(ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.pasteCoordinates));
@@ -242,7 +245,7 @@ public class TransformationWidget extends AbstractWidget {
 
     private void createAdvice(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.advice));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.advice));
 
         GridLayout gridLayout = new GridLayout(1, true);
 
@@ -277,7 +280,7 @@ public class TransformationWidget extends AbstractWidget {
 
     private void createOptions(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.generalOptions));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.generalOptions));
 
         GridLayout gridLayout = new GridLayout(1, true);
 
@@ -289,16 +292,16 @@ public class TransformationWidget extends AbstractWidget {
 
         chkBoxInsertCodeColumn = new Button(group, SWT.CHECK);
         chkBoxInsertCodeColumn.setSelection(false);
-        chkBoxInsertCodeColumn.setText(ResourceBundleUtils.getLangString(CHECKBOXES, CheckBoxes.insertCodeColumn));
+        chkBoxInsertCodeColumn.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBox.insertCodeColumn));
 
         chkBoxWriteCodeZero = new Button(group, SWT.CHECK);
         chkBoxWriteCodeZero.setSelection(false);
-        chkBoxWriteCodeZero.setText(ResourceBundleUtils.getLangString(CHECKBOXES, CheckBoxes.writeCodeZeroSplitter));
+        chkBoxWriteCodeZero.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBox.writeCodeZeroSplitter));
     }
 
     private void createProjectionChooser(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.transformation_GroupProjection));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.transformation_GroupProjection));
 
         GridLayout gridLayout = new GridLayout(2, false);
 
@@ -312,7 +315,7 @@ public class TransformationWidget extends AbstractWidget {
         refProjectionChangeSourceChooser.setEditable(false);
         refProjectionChangeSourceChooser.setItems(projectionChange);
         refProjectionChangeSourceChooser.select(0);
-        refProjectionChangeSourceChooser.setToolTipText(ResourceBundleUtils.getLangStringFromXml(TOOL_TIPS, ToolTips.projection_change));
+        refProjectionChangeSourceChooser.setToolTipText(ResourceBundleUtils.getLangStringFromXml(TOOLTIP, ToolTip.projection_change));
 
         gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
         gridData.horizontalSpan = 2;
@@ -339,7 +342,7 @@ public class TransformationWidget extends AbstractWidget {
 
     private void createReferenceFrameChooserSource(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.transformation_GroupReferenceFrameSource));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.transformation_GroupReferenceFrameSource));
 
         GridLayout gridLayout = new GridLayout(2, false);
 
@@ -353,13 +356,13 @@ public class TransformationWidget extends AbstractWidget {
         refFramePlanimetricSourceChooser.setEditable(false);
         refFramePlanimetricSourceChooser.setItems(planimetricFrame);
         refFramePlanimetricSourceChooser.select(0);
-        refFramePlanimetricSourceChooser.setToolTipText(ResourceBundleUtils.getLangStringFromXml(TOOL_TIPS, ToolTips.transformation_planimetricFrameSource));
+        refFramePlanimetricSourceChooser.setToolTipText(ResourceBundleUtils.getLangStringFromXml(TOOLTIP, ToolTip.transformation_planimetricFrameSource));
 
         CCombo refFrameAltimetricSourceChooser = new CCombo(group, SWT.NONE);
         refFrameAltimetricSourceChooser.setEditable(false);
         refFrameAltimetricSourceChooser.setItems(altimetricFrame);
         refFrameAltimetricSourceChooser.select(0);
-        refFrameAltimetricSourceChooser.setToolTipText(ResourceBundleUtils.getLangStringFromXml(TOOL_TIPS, ToolTips.transformation_altimetricFrameSource));
+        refFrameAltimetricSourceChooser.setToolTipText(ResourceBundleUtils.getLangStringFromXml(TOOLTIP, ToolTip.transformation_altimetricFrameSource));
 
         // input
         // planimetric frame
@@ -381,7 +384,7 @@ public class TransformationWidget extends AbstractWidget {
 
     private void createReferenceFrameChooserTarget(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.transformation_GroupReferenceFrameTarget));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.transformation_GroupReferenceFrameTarget));
 
         GridLayout gridLayout = new GridLayout(2, false);
 
@@ -428,7 +431,7 @@ public class TransformationWidget extends AbstractWidget {
                 LineReader lineReader = new LineReader(path);
 
                 if (lineReader.readFile(false)) {
-                    ArrayList<String> readFile = lineReader.getLines();
+                    java.util.List<String> readFile = lineReader.getLines();
 
                     // the glob pattern ("glob:*.dat) doesn't work here
                     PathMatcher matcherDAT = FileSystems.getDefault().getPathMatcher("regex:(?iu:.+\\.DAT)");
@@ -470,16 +473,16 @@ public class TransformationWidget extends AbstractWidget {
         if (counter > 0) {
             String message;
 
-            final String helper = ResourceBundleUtils.getLangString(MESSAGES, Messages.transformationMessage);
+            final String helper = ResourceBundleUtils.getLangString(MESSAGE, Message.transformationMessage);
 
             if (counter == 1) {
-                message = String.format(StringUtils.singularPluralMessage(helper, Main.TEXT_SINGULAR), files2read.length, counter);
+                message = String.format(StringUtils.getSingularMessage(helper), files2read.length, counter);
             } else {
-                message = String.format(StringUtils.singularPluralMessage(helper, Main.TEXT_PLURAL), files2read.length, counter);
+                message = String.format(StringUtils.getPluralMessage(helper), files2read.length, counter);
             }
 
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_INFORMATION,
-                    ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.msgBox_Success), message);
+                    ResourceBundleUtils.getLangStringFromXml(TEXT, Text.msgBox_Success), message);
 
             // set the counter for status bar information
             Main.countFileOps = counter;
@@ -487,11 +490,11 @@ public class TransformationWidget extends AbstractWidget {
             return true;
         } else {
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING,
-                    ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.msgBox_Error),
-                    ResourceBundleUtils.getLangString(ERRORS, Errors.transformationFailed));
+                    ResourceBundleUtils.getLangStringFromXml(TEXT, Text.msgBox_Error),
+                    ResourceBundleUtils.getLangString(ERROR, Error.transformationFailed));
 
             return false;
         }
     }
 
-} // end of TransformationWidget
+}

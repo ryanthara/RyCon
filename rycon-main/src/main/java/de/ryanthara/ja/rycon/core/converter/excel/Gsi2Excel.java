@@ -17,24 +17,24 @@
  */
 package de.ryanthara.ja.rycon.core.converter.excel;
 
-import de.ryanthara.ja.rycon.core.converter.gsi.BaseToolsGsi;
+import de.ryanthara.ja.rycon.core.converter.gsi.GsiDecoder;
 import de.ryanthara.ja.rycon.core.elements.GsiBlock;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
-import de.ryanthara.ja.rycon.i18n.WordIndices;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import de.ryanthara.ja.rycon.i18n.WordIndex;
+import de.ryanthara.ja.rycon.nio.FileFormat;
+import de.ryanthara.ja.rycon.util.StringUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.WorkbookUtil;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
+import java.util.List;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.WORDINDICES;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundle.WORDINDEX;
 
 /**
- * This class provides functions to convert measurement or coordinate files from the Leica GSI format
- * into Microsoft Excel (XLS and XLSX) files.
+ * A converter with functions to convert Leica Geosystems GSI format (GSI8 and GSI16)
+ * coordinate and measurement files into Microsoft Excel files in XLS or XLSX format.
  *
  * @author sebastian
  * @version 1
@@ -44,40 +44,34 @@ public class Gsi2Excel {
 
     private static final Logger logger = LoggerFactory.getLogger(Gsi2Excel.class.getName());
 
-    private final BaseToolsGsi baseToolsGsi;
+    private final GsiDecoder gsiDecoder;
     private Workbook workbook;
 
     /**
-     * Class constructor for reader line based text files in different formats.
+     * Creates a converter with a list for the read line based
+     * Leica Geosystems GSI8 or GSI16 file.
      *
-     * @param readStringLines {@code ArrayList<String>} with lines in text format
+     * @param lines list with Leica Geosystems GSI8 or GSI16 lines
      */
-    public Gsi2Excel(ArrayList<String> readStringLines) {
-        baseToolsGsi = new BaseToolsGsi(readStringLines);
+    public Gsi2Excel(List<String> lines) {
+        gsiDecoder = new GsiDecoder(lines);
     }
 
     /**
      * Converts a GSI file element by element into an Excel file.
      *
-     * @param isXLS           selector to distinguish between XLS and XLSX file extension
+     * @param fileFormat      distinguish between XLS and XLSX file format
      * @param sheetName       name of the sheet (file name from input file)
      * @param writeCommentRow writes a comment row to the output file
-     *
      * @return success conversion success
      */
-    public boolean convertGSI2Excel(boolean isXLS, String sheetName, boolean writeCommentRow) {
-        // general preparation of the workbook
-        if (isXLS) {
-            workbook = new HSSFWorkbook();
-        } else {
-            workbook = new XSSFWorkbook();
-        }
+    public boolean convert(FileFormat fileFormat, String sheetName, boolean writeCommentRow) {
+        workbook = BaseToolsExcel.prepareWorkbook(fileFormat);
 
         String safeName = WorkbookUtil.createSafeSheetName(sheetName);
         Sheet sheet = workbook.createSheet(safeName);
         Row row;
         Cell cell;
-        CellStyle cellStyle;
 
         DataFormat format = workbook.createDataFormat();
 
@@ -85,19 +79,11 @@ public class Gsi2Excel {
         short cellNumber = 0;
 
         if (writeCommentRow) {
-            row = sheet.createRow(rowNumber);
-            rowNumber++;
-
-            for (int wordIndex : baseToolsGsi.getFoundAllWordIndices()) {
-                cell = row.createCell(cellNumber);
-                cellNumber++;
-
-                cell.setCellValue(ResourceBundleUtils.getLangString(WORDINDICES, WordIndices.valueOf("WI" + wordIndex)));
-            }
+            rowNumber = prepareCommentRow(sheet, rowNumber, cellNumber);
         }
 
-        // fill gsi content into rows and cells
-        for (ArrayList<GsiBlock> blocksInLine : baseToolsGsi.getEncodedLinesOfGSIBlocks()) {
+        // Fill gsi content into rows and cells
+        for (List<GsiBlock> blocksInLine : gsiDecoder.getDecodedLinesOfGsiBlocks()) {
             row = sheet.createRow(rowNumber);
             rowNumber++;
 
@@ -121,14 +107,14 @@ public class Gsi2Excel {
                     case 21:    // Horizontal Circle (Hz)
                     case 22:    // Vertical Angle (V)
                     case 25:    // Horizontal circle difference (Hz0-Hz)
-                        cell.setCellValue(Double.parseDouble(block.toPrintFormatCsv()));
+                        cell.setCellValue(StringUtils.parseDoubleValue(block.toPrintFormatCsv()));
                         break;
 
                     // DISTANCE
                     case 31:    // Slope Distance
                     case 32:    // Horizontal Distance
                     case 33:    // Height Difference
-                        cell.setCellValue(Double.parseDouble(block.toPrintFormatCsv()));
+                        cell.setCellValue(StringUtils.parseDoubleValue(block.toPrintFormatCsv()));
                         break;
 
                     // CODE BLOCK
@@ -173,20 +159,14 @@ public class Gsi2Excel {
                     case 84:    // Station Easting (E0)
                     case 85:    // Station Northing (N0)
                     case 86:    // Station Elevation (H0)
-                        cell.setCellValue(Double.parseDouble(block.toPrintFormatCsv()));
-                        cellStyle = workbook.createCellStyle();
-                        cellStyle.setDataFormat(format.getFormat("#,##0.0000"));
-                        cellStyle.setAlignment(HorizontalAlignment.RIGHT);
-                        cell.setCellStyle(cellStyle);
+                        cell.setCellValue(StringUtils.parseDoubleValue(block.toPrintFormatCsv()));
+                        BaseToolsExcel.setCellStyle(workbook, cell, format, Format.DIGITS_4.getString());
                         break;
 
                     case 87:    // Reflector height (above ground)
                     case 88:    // Instrument height (above ground)
-                        cell.setCellValue(Double.parseDouble(block.toPrintFormatCsv()));
-                        cellStyle = workbook.createCellStyle();
-                        cellStyle.setDataFormat(format.getFormat("#,##0.000"));
-                        cellStyle.setAlignment(HorizontalAlignment.RIGHT);
-                        cell.setCellStyle(cellStyle);
+                        cell.setCellValue(StringUtils.parseDoubleValue(block.toPrintFormatCsv()));
+                        BaseToolsExcel.setCellStyle(workbook, cell, format, Format.DIGITS_3.getString());
                         break;
 
                     default:
@@ -196,13 +176,28 @@ public class Gsi2Excel {
             }
         }
 
-        // adjust column width to fit the content
-        for (int i = 0; i < baseToolsGsi.getEncodedLinesOfGSIBlocks().size(); i++) {
+        // Adjust column width to fit the content
+        for (int i = 0; i < gsiDecoder.getDecodedLinesOfGsiBlocks().size(); i++) {
             sheet.autoSizeColumn((short) i);
         }
 
-        // check number of written lines
+        // Check number of written lines
         return rowNumber > 1;
+    }
+
+    private short prepareCommentRow(Sheet sheet, short rowNumber, short cellNumber) {
+        Row row;
+        Cell cell;
+        row = sheet.createRow(rowNumber);
+        rowNumber++;
+
+        for (int wordIndex : gsiDecoder.getFoundWordIndices()) {
+            cell = row.createCell(cellNumber);
+            cellNumber++;
+
+            cell.setCellValue(ResourceBundleUtils.getLangString(WORDINDEX, WordIndex.valueOf("WI" + wordIndex)));
+        }
+        return rowNumber;
     }
 
     /**
@@ -214,4 +209,4 @@ public class Gsi2Excel {
         return this.workbook;
     }
 
-} // end of Gsi2Excel
+}

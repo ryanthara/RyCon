@@ -17,7 +17,7 @@
  */
 package de.ryanthara.ja.rycon.ui.preferences.pref;
 
-import de.ryanthara.ja.rycon.ui.custom.DirectoryDialogsTypes;
+import de.ryanthara.ja.rycon.ui.custom.DirectoryDialogsTyp;
 import de.ryanthara.ja.rycon.ui.preferences.editor.Editor;
 import de.ryanthara.ja.rycon.ui.preferences.editor.EditorPath;
 import de.ryanthara.ja.rycon.ui.preferences.validator.Validator;
@@ -37,7 +37,7 @@ import java.nio.file.Path;
  */
 public abstract class PreferencePath extends Preference<Path> {
 
-    private DirectoryDialogsTypes dialogType;
+    private DirectoryDialogsTyp dialogType;
 
     /**
      * Constructs a new instance of {@code PreferencePath} according to the parameter.
@@ -65,7 +65,7 @@ public abstract class PreferencePath extends Preference<Path> {
      * @param defaultPath default value for the preference
      * @param dialogType  used dialog type
      */
-    protected PreferencePath(String label, Path defaultPath, DirectoryDialogsTypes dialogType) {
+    protected PreferencePath(String label, Path defaultPath, DirectoryDialogsTyp dialogType) {
         super(label, defaultPath);
         this.dialogType = dialogType;
     }
@@ -90,4 +90,4 @@ public abstract class PreferencePath extends Preference<Path> {
         return new ValidatorPath();
     }
 
-} // end of PreferenceString
+}

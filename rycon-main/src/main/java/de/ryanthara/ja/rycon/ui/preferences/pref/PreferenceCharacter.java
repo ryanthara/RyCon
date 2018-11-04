@@ -74,4 +74,4 @@ public abstract class PreferenceCharacter extends Preference<String> {
         return new ValidatorCharacter();
     }
 
-} // end of PreferenceCharacter
+}

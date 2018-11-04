@@ -26,17 +26,25 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
- * The {@code OpenInFileManager} is used to open files and folders in the default file manager
- * of the used operating system.
+ * Opens files and folders in the default file manager of the used operating system.
+ *
  * <p>
- * This is used for example after the generation of new project folders with the generation tool of <tt>RyCON</tt>.
+ * This is used for example after the generation of new project folders with the
+ * {@link de.ryanthara.ja.rycon.ui.widgets.GeneratorWidget} of RyCON.
  *
  * @author sebastian
  * @version 1
  * @since 2
  */
-public class OpenInFileManager {
+public final class OpenInFileManager {
     private static final Logger logger = LoggerFactory.getLogger(OpenInFileManager.class.getName());
+
+    /**
+     * OpenInFileManager is non-instantiable.
+     */
+    private OpenInFileManager() {
+        throw new AssertionError();
+    }
 
     /**
      * Opens a folder with the default file manager of the used operating system.
@@ -44,7 +52,6 @@ public class OpenInFileManager {
      * @param path path to open
      */
     public static void openFolder(String path) {
-
         Desktop desktop = Desktop.getDesktop();
 
         Path pathToBeOpen = Paths.get(path);
@@ -56,4 +63,4 @@ public class OpenInFileManager {
         }
     }
 
-} // end of OpenInFileManager
+}

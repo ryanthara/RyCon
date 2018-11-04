@@ -35,7 +35,6 @@ public class TxtFilter implements DirectoryStream.Filter<Path> {
      * Decides if the given directory path should be accepted or filtered.
      *
      * @param path the directory path to be tested
-     *
      * @return {@code true} if the directory path should be accepted
      */
     @Override
@@ -51,4 +50,4 @@ public class TxtFilter implements DirectoryStream.Filter<Path> {
         return false;
     }
 
-} // end of TxtFilter
+}

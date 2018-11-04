@@ -20,10 +20,12 @@ package de.ryanthara.ja.rycon.core.converter.gsi;
 import de.ryanthara.ja.rycon.core.elements.GsiBlock;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 
 /**
- * Instances of this class provides functions to convert a Nigra height file into Leica GSI8 or GSI16 formatted files.
+ * A converter with functions to convert NigraWin/NivNET altitude
+ * register files into Leica Geosystems GSI8 or GSI16 formatted files.
  *
  * @author sebastian
  * @version 1
@@ -31,37 +33,37 @@ import java.util.StringTokenizer;
  */
 public class Nigra2Gsi {
 
-    private final ArrayList<String> readStringLines;
+    private final List<String> lines;
 
     /**
-     * Constructs a new instance of this class with a parameter for the read {@code ArrayList<String>} from Nigra or NigraWin.
+     * Creates a converter with a list for the read line based
+     * height register from Nigra or NigraWin
      *
-     * @param readStringLines read lines
+     * @param lines list with height register lines from Nigra or NigraWin
      */
-    public Nigra2Gsi(ArrayList<String> readStringLines) {
-        this.readStringLines = readStringLines;
+    public Nigra2Gsi(List<String> lines) {
+        this.lines = new ArrayList<>(lines);
     }
 
     /**
-     * Converts a NIGRA height listing (*.ASC) file into a Leica GSI file.
+     * Converts a NIGRA height register (*.ASC) file into a Leica Geosystems GSI file.
      *
      * @param isGSI16 true if GSI16 format is used
-     *
      * @return converted GSI format file
-     *
      * @since 5
      */
-    public ArrayList<String> convertNigra2Gsi(boolean isGSI16) {
-        ArrayList<GsiBlock> blocks;
-        ArrayList<ArrayList<GsiBlock>> blocksInLines = new ArrayList<>();
+    // TODO Use method
+    public List<String> convert(boolean isGSI16) {
+        List<GsiBlock> blocks;
+        List<List<GsiBlock>> blocksInLines = new ArrayList<>();
         StringTokenizer stringTokenizer;
 
         int lineCounter = 1;
 
         // skip the first 7 lines without any needed information
-        for (int i = 5; i < readStringLines.size(); i++) {
+        for (int i = 5; i < lines.size(); i++) {
             blocks = new ArrayList<>();
-            String line = readStringLines.get(i);
+            String line = lines.get(i);
             stringTokenizer = new StringTokenizer(line);
 
             if (stringTokenizer.countTokens() > 2) {
@@ -86,4 +88,4 @@ public class Nigra2Gsi {
         return BaseToolsGsi.lineTransformation(isGSI16, blocksInLines);
     }
 
-} // end of Nigra2Gsi
+}

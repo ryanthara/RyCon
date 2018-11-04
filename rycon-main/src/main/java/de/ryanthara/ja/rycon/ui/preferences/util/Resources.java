@@ -18,14 +18,13 @@
 
 package de.ryanthara.ja.rycon.ui.preferences.util;
 
-import de.ryanthara.ja.rycon.ui.Images;
+import de.ryanthara.ja.rycon.ui.Image;
 import de.ryanthara.ja.rycon.ui.image.ImageConverter;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 
 /**
- * This class provides static access to image resources of <tt>RyCON</tt>'s preference editors.
+ * This class provides static access to image resources of RyCON's preference editors.
  * <p>
  * Within the {@link de.ryanthara.ja.rycon.ui.preferences.editor.Editor} small images are used on
  * top on the default and undo buttons.
@@ -39,8 +38,8 @@ import org.eclipse.swt.widgets.Display;
  */
 public class Resources {
 
-    private static Image imageDefault = null;
-    private static Image imageUndo = null;
+    private static org.eclipse.swt.graphics.Image imageDefault = null;
+    private static org.eclipse.swt.graphics.Image imageUndo = null;
 
     /**
      * Loads an image. Adds a dispose listener that disposes the image when the display is disposed.
@@ -48,8 +47,8 @@ public class Resources {
      * @param resource image resource
      * @return loaded image
      */
-    private static Image getImage(String resource) {
-        final Image image = new ImageConverter().convertToImage(Display.getCurrent(), resource);
+    private static org.eclipse.swt.graphics.Image getImage(String resource) {
+        final org.eclipse.swt.graphics.Image image = new ImageConverter().convertToImage(Display.getCurrent(), resource);
 
         Display.getCurrent().addListener(SWT.Dispose, arg0 -> {
             if (image != null && !image.isDisposed()) {
@@ -65,9 +64,9 @@ public class Resources {
      *
      * @return image for the default button
      */
-    public static Image getImageDefault() {
+    public static org.eclipse.swt.graphics.Image getImageDefault() {
         if (imageDefault == null || imageDefault.isDisposed()) {
-            imageDefault = getImage(Images.btnEditorDefault.getPath());
+            imageDefault = getImage(Image.btnEditorDefault.getPath());
         }
 
         return imageDefault;
@@ -78,12 +77,12 @@ public class Resources {
      *
      * @return image for the undo button
      */
-    public static Image getImageUndo() {
+    public static org.eclipse.swt.graphics.Image getImageUndo() {
         if (imageUndo == null || imageUndo.isDisposed()) {
-            imageUndo = getImage(Images.btnEditorUndo.getPath());
+            imageUndo = getImage(Image.btnEditorUndo.getPath());
         }
 
         return imageUndo;
     }
 
-} // end of Resources
+}

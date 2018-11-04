@@ -20,10 +20,11 @@ package de.ryanthara.ja.rycon.core.logfile.leica;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * The {@code ReferencePlaneStructure} implements functions based on the REFERENCE PLANE part of
- * the <tt>Leica Geosystems</tt> logfile.txt for <tt>RyCON</tt>.
+ * the Leica Geosystems logfile.txt for RyCON.
  * <p>
  * This is used for encapsulating the data and error minimization.
  *
@@ -33,20 +34,20 @@ import java.util.Iterator;
  */
 public class ReferencePlaneStructure extends LeicaLogfileBaseStructure {
 
-    private final ArrayList<String> lines;
+    private final List<String> lines;
 
     /**
      * Constructs a new {@code ReferencePlaneStructure} with a parameter for the lines of the structure.
      *
      * @param lines lines to be analyzed
      */
-    public ReferencePlaneStructure(ArrayList<String> lines) {
-        this.lines = lines;
+    public ReferencePlaneStructure(List<String> lines) {
+        this.lines = new ArrayList<>(lines);
         this.lines.removeAll(Arrays.asList(null, ""));
     }
 
     /**
-     * Analyze the REFERENCE PLANE structure of the <tt>Leica Geosystems</tt> logfile.txt and
+     * Analyze the REFERENCE PLANE structure of the Leica Geosystems logfile.txt and
      * fills the results into the return arrays.
      *
      * @return analysis success
@@ -157,4 +158,4 @@ Dist/Height from Plane	:                 	dDist=        0.001	dH=           0.00
         }
     }
 
-} // end of ReferencePlaneStructure
+}

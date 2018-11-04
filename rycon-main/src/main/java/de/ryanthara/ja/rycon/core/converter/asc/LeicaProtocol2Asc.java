@@ -22,10 +22,12 @@ import de.ryanthara.ja.rycon.util.DummyCoordinates;
 import org.eclipse.swt.graphics.Point;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.IntStream;
 
 /**
- * Instances of this class provides functions to convert different Leica Geosystems
- * level protocol files into an ascii file.
+ * A converter with functions to convert Leica Geosystems protocol files into ASCII text files.
+ *
  * <p>
  * The line based ascii file contains one point (no x y z) in every line which coordinates
  * are separated by a single white space character.
@@ -40,17 +42,17 @@ import java.util.ArrayList;
 public class LeicaProtocol2Asc extends Converter {
 
     private final boolean ignoreChangePoints;
-    private final ArrayList<String> readStringLines;
+    private final List<String> lines;
 
     /**
-     * Constructs a new instance of this class with a parameter for the read {@code ArrayList<String>}
-     * from the Leica Geosystems protocol.
+     * Creates a converter with a list for the read line based
+     * Leica Geosystems protocol file.
      *
-     * @param readStringLines    read lines
+     * @param lines              list with read lines
      * @param ignoreChangePoints change points with number '0' has to be ignored
      */
-    public LeicaProtocol2Asc(ArrayList<String> readStringLines, boolean ignoreChangePoints) {
-        this.readStringLines = new ArrayList<>(readStringLines);
+    public LeicaProtocol2Asc(List<String> lines, boolean ignoreChangePoints) {
+        this.lines = new ArrayList<>(lines);
         this.ignoreChangePoints = ignoreChangePoints;
     }
 
@@ -61,14 +63,15 @@ public class LeicaProtocol2Asc extends Converter {
      * @return converted Nigra altitude register format file
      */
     @Override
-    public ArrayList<String> convert() {
-        ArrayList<String> reduced = new ArrayList<>();
-        ArrayList<String> result = new ArrayList<>();
+    public List<String> convert() {
+        List<String> reduced = new ArrayList<>();
+        List<String> result = new ArrayList<>();
 
         // collect relevant lines into a new ArrayList
         boolean isResult = false;
         boolean isStarted = false;
-        for (String line : readStringLines) {
+
+        for (String line : lines) {
             if (isResult) {
                 if (isStarted) {
                     // the pagination stops here
@@ -100,23 +103,20 @@ public class LeicaProtocol2Asc extends Converter {
             }
         }
 
-        ArrayList<Point> dummyCoordinates = DummyCoordinates.getList(reduced.size());
+        List<Point> dummyCoordinates = DummyCoordinates.getList(reduced.size());
 
-        for (int i = 0; i < reduced.size(); i++) {
+        IntStream.range(0, reduced.size()).forEach(i -> {
             String line = reduced.get(i);
             String[] split = line.trim().split("\t");
-
             String number = split[0];
             String height = split[1];
-
             Point p = dummyCoordinates.get(i);
             String x = Integer.toString(p.x) + ".000";
             String y = Integer.toString(p.y) + ".000";
-
             result.add(number.trim() + Converter.SEPARATOR + x + Converter.SEPARATOR + y + Converter.SEPARATOR + height.trim());
-        }
+        });
 
-        return new ArrayList<>(result);
+        return List.copyOf(result);
     }
 
-} // end of LeicaProtocol2Asc
+}

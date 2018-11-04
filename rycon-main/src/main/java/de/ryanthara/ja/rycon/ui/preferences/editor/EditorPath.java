@@ -18,14 +18,14 @@
 package de.ryanthara.ja.rycon.ui.preferences.editor;
 
 import de.ryanthara.ja.rycon.Main;
-import de.ryanthara.ja.rycon.util.check.TextCheck;
-import de.ryanthara.ja.rycon.data.PreferenceKeys;
-import de.ryanthara.ja.rycon.i18n.Preferences;
+import de.ryanthara.ja.rycon.data.PreferenceKey;
+import de.ryanthara.ja.rycon.i18n.Preference;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 import de.ryanthara.ja.rycon.ui.custom.DirectoryDialogs;
-import de.ryanthara.ja.rycon.ui.custom.DirectoryDialogsTypes;
+import de.ryanthara.ja.rycon.ui.custom.DirectoryDialogsTyp;
 import de.ryanthara.ja.rycon.ui.preferences.PreferencesDialog;
 import de.ryanthara.ja.rycon.ui.preferences.validator.Validator;
+import de.ryanthara.ja.rycon.ui.util.TextCheck;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.Text;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.PREFERENCES;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundle.PREFERENCE;
 
 /**
  * {@code EditorPath} is an editor for choosing valid paths.
@@ -54,7 +54,7 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.PREFERENCES;
  */
 public class EditorPath extends Editor<Path> {
 
-    private DirectoryDialogsTypes dialogType;
+    private DirectoryDialogsTyp dialogType;
     private Text text;
 
     /**
@@ -74,7 +74,7 @@ public class EditorPath extends Editor<Path> {
      * @param defaultPath default path for the editor
      * @param dialogType  dialog type
      */
-    public EditorPath(PreferencesDialog dialog, Path defaultPath, DirectoryDialogsTypes dialogType) {
+    public EditorPath(PreferencesDialog dialog, Path defaultPath, DirectoryDialogsTyp dialogType) {
         super(dialog, null, defaultPath);
         this.dialogType = dialogType;
     }
@@ -130,8 +130,8 @@ public class EditorPath extends Editor<Path> {
         gridData = new GridData(SWT.CENTER, SWT.CENTER, false, false);
 
         Button button = new Button(parent, SWT.PUSH);
-        button.setText(ResourceBundleUtils.getLangString(PREFERENCES, Preferences.pathBtnText));
-        button.setToolTipText(ResourceBundleUtils.getLangString(PREFERENCES, Preferences.pathBtnToolTip));
+        button.setText(ResourceBundleUtils.getLangString(PREFERENCE, Preference.path_Btn_Text));
+        button.setToolTipText(ResourceBundleUtils.getLangString(PREFERENCE, Preference.path_Btn_ToolTip));
         button.setLayoutData(gridData);
 
         button.addSelectionListener(new SelectionAdapter() {
@@ -173,11 +173,10 @@ public class EditorPath extends Editor<Path> {
      * Parses the string to {@code Paths}.
      *
      * @param s string to be parsed
-     *
      * @return parsed string
      */
     @Override
-    protected Path parse(final String s) {
+    protected Path parse(String s) {
         return Paths.get(s);
     }
 
@@ -185,7 +184,6 @@ public class EditorPath extends Editor<Path> {
      * Formats the value for for this editor.
      *
      * @param path value to be formatted
-     *
      * @return formatted value
      */
     @Override
@@ -194,7 +192,7 @@ public class EditorPath extends Editor<Path> {
     }
 
     private void openFileDialog() {
-        String filterPath = Main.pref.getUserPreference(PreferenceKeys.DIR_BASE);
+        String filterPath = Main.pref.getUserPreference(PreferenceKey.DIR_BASE);
 
         // Set the initial filter path according to anything selected or typed in
         if (!TextCheck.isEmpty(text)) {
@@ -207,4 +205,4 @@ public class EditorPath extends Editor<Path> {
                 dialogType.getText(), dialogType.getMessage(), filterPath);
     }
 
-} // end of EditorPath
+}

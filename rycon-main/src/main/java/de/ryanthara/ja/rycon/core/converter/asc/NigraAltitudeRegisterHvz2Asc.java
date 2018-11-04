@@ -20,10 +20,11 @@ package de.ryanthara.ja.rycon.core.converter.asc;
 import de.ryanthara.ja.rycon.core.converter.Converter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Instances of this class provides functions to convert a NigraWin/NivNET altitude register until version 3.x (*.HZV)
- * into an ascii file.
+ * A converter with functions to convert NigraWin/NivNET altitude register files into ASCII text files.
+ *
  * <p>
  * The line based ascii file contains one point (no x y z) in every line which coordinates
  * are separated by a single white space character.
@@ -40,16 +41,15 @@ import java.util.ArrayList;
  */
 public class NigraAltitudeRegisterHvz2Asc extends Converter {
 
-    private final ArrayList<String> readStringLines;
+    private final List<String> lines;
 
     /**
-     * Constructs a new instance of this class with a parameter for the read {@code ArrayList<String>}
-     * altitude register from Nigra/NigraWin.
+     * Creates a converter with a list for the read line based altitude register from Nigra/NigraWin.
      *
-     * @param readStringLines read lines
+     * @param lines list with the altitude register
      */
-    public NigraAltitudeRegisterHvz2Asc(ArrayList<String> readStringLines) {
-        this.readStringLines = new ArrayList<>(readStringLines);
+    public NigraAltitudeRegisterHvz2Asc(List<String> lines) {
+        this.lines = new ArrayList<>(lines);
     }
 
     /**
@@ -62,15 +62,14 @@ public class NigraAltitudeRegisterHvz2Asc extends Converter {
      * If they are not present, the algorithm fall back to pseudo coordinates for x and y.
      *
      * @return converted Nigra/NigraWin altitude register format file
-     *
      * @see NigraAltitudeRegisterAsc2Asc
      */
     @Override
-    public ArrayList<String> convert() {
+    public List<String> convert() {
         // still looks like that the format did not changed relevantly for this function
-        NigraAltitudeRegisterAsc2Asc nigraAltitudeRegisterAsc2Asc = new NigraAltitudeRegisterAsc2Asc(readStringLines);
+        NigraAltitudeRegisterAsc2Asc nigraAltitudeRegisterAsc2Asc = new NigraAltitudeRegisterAsc2Asc(lines);
 
         return nigraAltitudeRegisterAsc2Asc.convert();
     }
 
-} // end of NigraAltitudeRegisterHvz2Asc
+}

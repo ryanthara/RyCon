@@ -24,10 +24,11 @@ import de.ryanthara.ja.rycon.core.elements.RyTraverse;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * The {@code CogoStructure} implements functions based on the COGO (COordinate GeOmetry)
- * part of the <tt>Leica Geosystems</tt> logfile.txt for <tt>RyCON</tt>.
+ * part of the Leica Geosystems logfile.txt for RyCON.
  * <p>
  * The COGO calculation methods are:
  * <ul>
@@ -82,7 +83,10 @@ import java.util.Iterator;
  */
 public class CogoStructure extends LeicaLogfileBaseStructure {
 
-    private final ArrayList<String> lines;
+    private final List<String> lines;
+    private final List<RyIntersection> intersections;
+    private final List<RyPoint> computedPoints;
+    private final List<RyTraverse> traverses;
     private RyPoint arcCenter;
     private RyPoint startPoint;
     private RyPoint secondPoint;
@@ -95,8 +99,6 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
     private String segmentsLength;
     private String numberOfPoints;
     private String segmentationMethod;
-    private final ArrayList<RyIntersection> intersections;
-    private final ArrayList<RyPoint> computedPoints;
     private String direction;
     private String distance;
     private String heightDifference;
@@ -110,15 +112,14 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
     private String scale;
     private String numberOfPointsNew;
     private String numberOfPointsSkipped;
-    private final ArrayList<RyTraverse> traverses;
 
     /**
      * Constructs a new {@code CogoStructure} with a parameter for the lines of the structure.
      *
      * @param lines lines to be analyzed
      */
-    public CogoStructure(ArrayList<String> lines) {
-        this.lines = lines;
+    public CogoStructure(List<String> lines) {
+        this.lines = new ArrayList<>(lines);
         this.lines.removeAll(Arrays.asList(null, ""));
 
         computedPoints = new ArrayList<>();
@@ -127,7 +128,7 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
     }
 
     /**
-     * Analyzes the COGO structure of the <tt>Leica Geosystems</tt> logfile.txt and
+     * Analyzes the COGO structure of the Leica Geosystems logfile.txt and
      * fills the results into the return arrays.
      *
      * @return analysis success
@@ -158,32 +159,31 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
             }
 
             if (isArc) {
-                if (line.startsWith(Elements.ARC_CENTER.identifier)) {
+                if (line.startsWith(Element.ARC_CENTER.identifier)) {
                     analyzeArcCenter(iterator);
-                } else if (line.startsWith(Elements.OFFSET_POINT.identifier)) {
+                } else if (line.startsWith(Element.OFFSET_POINT.identifier)) {
                     analyzeArcOffset(iterator);
-                } else if (line.startsWith(Elements.SEGMENTATION_INFO.identifier)) {
+                } else if (line.startsWith(Element.SEGMENTATION_INFO.identifier)) {
                     analyzeSegmentationInfoArcAndLine(iterator);
                     line = iterator.next();
                 }
 
-                if (line.contains(Elements.SEGMENTATION_RESULTS.identifier)) {
+                if (line.contains(Element.SEGMENTATION_RESULTS.identifier)) {
                     analyzeSegmentationResultsArcAndLine(iterator);
                 }
             } else if (isLine) {
-                isArc = false;
                 isLine = false;
 
-                if (line.startsWith(Elements.BASE_POINT.identifier)) {
+                if (line.startsWith(Element.BASE_POINT.identifier)) {
                     analyzeLineBasePoint(iterator);
-                } else if (line.startsWith(Elements.OFFSET_POINT.identifier)) {
+                } else if (line.startsWith(Element.OFFSET_POINT.identifier)) {
                     analyzeLineOffsetPoint(iterator);
-                } else if (line.startsWith(Elements.SEGMENTATION_INFO.identifier)) {
+                } else if (line.startsWith(Element.SEGMENTATION_INFO.identifier)) {
                     analyzeSegmentationInfoArcAndLine(iterator);
                     line = iterator.next();
                 }
 
-                if (line.contains(Elements.SEGMENTATION_RESULTS.identifier)) {
+                if (line.contains(Element.SEGMENTATION_RESULTS.identifier)) {
                     analyzeSegmentationResultsArcAndLine(iterator);
                 }
             } else {
@@ -191,52 +191,52 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
                  * Do not push the iterator to the next line here. This because
                  * the structure does not have a header like the line information block.
                  */
-                if (line.startsWith(Elements.BEARING_BEARING_INTERSECTION.identifier)) {
+                if (line.startsWith(Element.BEARING_BEARING_INTERSECTION.identifier)) {
                     analyzeBearingBearingIntersection(iterator);
-                } else if (line.startsWith(Elements.BEARING_DISTANCE_INTERSECTION.identifier)) {
+                } else if (line.startsWith(Element.BEARING_DISTANCE_INTERSECTION.identifier)) {
                     analyzeBearingDistanceIntersection(iterator);
-                } else if (line.startsWith(Elements.DISTANCE_DISTANCE_INTERSECTION.identifier)) {
+                } else if (line.startsWith(Element.DISTANCE_DISTANCE_INTERSECTION.identifier)) {
                     analyzeDistanceDistanceIntersection(iterator);
-                } else if (line.startsWith(Elements.FOUR_POINT_INTERSECTION.identifier)) {
+                } else if (line.startsWith(Element.FOUR_POINT_INTERSECTION.identifier)) {
                     analyzeFourPointIntersection(iterator);
-                } else if (line.startsWith(Elements.INVERSE.identifier)) {
+                } else if (line.startsWith(Element.INVERSE.identifier)) {
                     analyzeInverse(iterator);
-                } else if (line.startsWith(Elements.SHIFT_ROTATE_SCALE.identifier)) {
+                } else if (line.startsWith(Element.SHIFT_ROTATE_SCALE.identifier)) {
                     analyzeShiftRotateScale(iterator);
-                } else if (line.startsWith(Elements.TRAVERSE.identifier)) {
+                } else if (line.startsWith(Element.TRAVERSE.identifier)) {
                     analyzeTraverse(iterator);
                 }
             }
 
             // TODO move this to the right position in if else after the missing log files are present
             /*
-            if (line.startsWith(Elements.INVERSE_POINT_LINE.identifier)) {
+            if (line.startsWith(Element.INVERSE_POINT_LINE.identifier)) {
                 System.out.println("BEFORE: " + line);
                 analyzeInversePoint2Line(iterator);
                 //line = iterator.next();
                 System.out.println("AFTER : " + line);
             }
-            if (line.startsWith(Elements.INVERSE_POINT_ARC.identifier)) {
+            if (line.startsWith(Element.INVERSE_POINT_ARC.identifier)) {
                 System.out.println("BEFORE: " + line);
                 analyzeInversePoint2Arc(iterator);
                 //line = iterator.next();
                 System.out.println("AFTER : " + line);
             }
 
-            if (line.startsWith(Elements.TRAVERSE_SINGLE.identifier)) {
+            if (line.startsWith(Element.TRAVERSE_SINGLE.identifier)) {
                 System.out.println("BEFORE: " + line);
                 analyzeTraverseSinglePoint(iterator);
                 //line = iterator.next();
                 System.out.println("AFTER : " + line);
             }
-            if (line.startsWith(Elements.TRAVERSE_MULTIPLE.identifier)) {
+            if (line.startsWith(Element.TRAVERSE_MULTIPLE.identifier)) {
                 System.out.println("BEFORE: " + line);
                 analyzeTraverseMultiplePoints(iterator);
                 //line = iterator.next();
                 System.out.println("AFTER : " + line);
             }
 
-            if (line.startsWith(Elements.TPS_OBSERVATION_TPS_OBSERVATION.identifier)) {
+            if (line.startsWith(Element.TPS_OBSERVATION_TPS_OBSERVATION.identifier)) {
                 System.out.println("BEFORE: " + line);
                 analyzeTpsObservationTpsObservation(iterator);
                 // line = iterator.next();
@@ -245,6 +245,8 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
             */
         }
 
+
+        // TODO correct return true to valid value
         success = true;
 
         return success;
@@ -255,7 +257,7 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
      *
      * @return arc center
      */
-    public RyPoint getArcCenter() {
+    RyPoint getArcCenter() {
         return arcCenter;
     }
 
@@ -278,12 +280,12 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
     }
 
     /**
-     * Returns the list of computed points as {@link ArrayList} of {@link RyPoint}s.
+     * Returns the list of computed points as {@link List} of {@link RyPoint}s.
      *
      * @return the computed points
      */
-    public ArrayList<RyPoint> getComputedPoints() {
-        return computedPoints;
+    List<RyPoint> getComputedPoints() {
+        return List.copyOf(computedPoints);
     }
 
     /**
@@ -291,7 +293,7 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
      *
      * @return the direction
      */
-    public String getDirection() {
+    String getDirection() {
         return direction;
     }
 
@@ -300,7 +302,7 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
      *
      * @return distance along the arc
      */
-    public String getDistAlongArc() {
+    String getDistAlongArc() {
         return distAlongArc;
     }
 
@@ -309,7 +311,7 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
      *
      * @return the distance along the line
      */
-    public String getDistAlongLine() {
+    String getDistAlongLine() {
         return distAlongLine;
     }
 
@@ -327,7 +329,7 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
      *
      * @return the endpoint
      */
-    public RyPoint getEndPoint() {
+    RyPoint getEndPoint() {
         return endPoint;
     }
 
@@ -336,7 +338,7 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
      *
      * @return the height difference
      */
-    public String getHeightDifference() {
+    String getHeightDifference() {
         return heightDifference;
     }
 
@@ -345,8 +347,8 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
      *
      * @return the  intersections
      */
-    public ArrayList<RyIntersection> getIntersections() {
-        return intersections;
+    List<RyIntersection> getIntersections() {
+        return List.copyOf(intersections);
     }
 
     /**
@@ -363,25 +365,25 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
      *
      * @return the number of points
      */
-    public String getNumberOfPoints() {
+    String getNumberOfPoints() {
         return numberOfPoints;
     }
 
     /**
-     * Returns the number of new points for shift/rotate/scale core.core.transformation.
+     * Returns the number of new points for shift/rotate/scale core.core.transformer.
      *
      * @return the number of new points
      */
-    public String getNumberOfPointsNew() {
+    String getNumberOfPointsNew() {
         return numberOfPointsNew;
     }
 
     /**
-     * Returns the number of skipped points for shift/rotate/scale core.core.transformation.
+     * Returns the number of skipped points for shift/rotate/scale core.core.transformer.
      *
      * @return the number of skipped points
      */
-    public String getNumberOfPointsSkipped() {
+    String getNumberOfPointsSkipped() {
         return numberOfPointsSkipped;
     }
 
@@ -390,7 +392,7 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
      *
      * @return the number of segments
      */
-    public String getNumberOfSegments() {
+    String getNumberOfSegments() {
         return numberOfSegments;
     }
 
@@ -399,7 +401,7 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
      *
      * @return the offset from arc
      */
-    public String getOffsetFromArc() {
+    String getOffsetFromArc() {
         return offsetFromArc;
     }
 
@@ -408,7 +410,7 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
      *
      * @return offset from the line
      */
-    public String getOffsetFromLine() {
+    String getOffsetFromLine() {
         return offsetFromLine;
     }
 
@@ -417,7 +419,7 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
      *
      * @return the offset point
      */
-    public RyPoint getOffsetPoint() {
+    RyPoint getOffsetPoint() {
         return offsetPoint;
     }
 
@@ -431,20 +433,20 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
     }
 
     /**
-     * Returns the calculated rotation of the shift/rotate/scale core.core.transformation.
+     * Returns the calculated rotation of the shift/rotate/scale core.core.transformer.
      *
      * @return the rotation
      */
-    public String getRotation() {
+    String getRotation() {
         return rotation;
     }
 
     /**
-     * Returns the calculated scale of the shift/rotate/scale core.core.transformation.
+     * Returns the calculated scale of the shift/rotate/scale core.core.transformer.
      *
      * @return the rotation
      */
-    public String getScale() {
+    String getScale() {
         return scale;
     }
 
@@ -462,7 +464,7 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
      *
      * @return the segmentation method
      */
-    public String getSegmentationMethod() {
+    String getSegmentationMethod() {
         return segmentationMethod;
     }
 
@@ -471,12 +473,12 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
      *
      * @return the segments length
      */
-    public String getSegmentsLength() {
+    String getSegmentsLength() {
         return segmentsLength;
     }
 
     /**
-     * Returns the shift result of a shift/rotate/scale core.core.transformation.
+     * Returns the shift result of a shift/rotate/scale core.core.transformer.
      *
      * @return the shift
      */
@@ -489,17 +491,17 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
      *
      * @return the start point
      */
-    public RyPoint getStartPoint() {
+    RyPoint getStartPoint() {
         return startPoint;
     }
 
     /**
-     * Returns the computed traverses as {@link ArrayList}.
+     * Returns the computed traverses as {@link List}.
      *
      * @return computed traverses
      */
-    public ArrayList<RyTraverse> getTraverses() {
-        return traverses;
+    List<RyTraverse> getTraverses() {
+        return List.copyOf(traverses);
     }
 
     private void analyzeArcCenter(Iterator<String> iterator) {
@@ -706,8 +708,8 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
             while (iterator.hasNext()) {
                 final String line = iterator.next();
 
-                if (line.startsWith(Elements.COMPUTED.identifier)) {
-                    getComputedPoints().add(super.getComputed(line));
+                if (line.startsWith(Element.COMPUTED.identifier)) {
+                    computedPoints.add(super.getComputed(line));
                 }
             }
         }
@@ -786,7 +788,7 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
     }
 
     // use original order for enum
-    protected enum Elements {
+    protected enum Element {
         // Line Calculations - Line Info
         START_POINT_ID("Start Point ID"),
         END_POINT_ID("End Point ID"),
@@ -832,9 +834,9 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
 
         final String identifier;
 
-        Elements(String identifier) {
+        Element(String identifier) {
             this.identifier = identifier;
         }
     }
 
-} // end of CogoStructure
+}

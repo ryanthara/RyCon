@@ -23,23 +23,24 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * This class provides functions to convert text formatted coordinate files into LTOP KOO files.
+ * A converter with functions to convert ASCII text coordinate files into LTOP KOO files.
  */
 public class Txt2Ltop {
 
     private static final Logger logger = LoggerFactory.getLogger(Txt2Ltop.class.getName());
 
-    private final ArrayList<String> readStringLines;
+    private final List<String> lines;
 
     /**
-     * Class constructor for reader line based coordinate files in text format.
+     * Creates a converter with a list for the read line based ASCII text file.
      *
-     * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
+     * @param lines list with ASCII text lines
      */
-    public Txt2Ltop(ArrayList<String> readStringLines) {
-        this.readStringLines = readStringLines;
+    public Txt2Ltop(List<String> lines) {
+        this.lines = new ArrayList<>(lines);
     }
 
     /**
@@ -47,18 +48,17 @@ public class Txt2Ltop {
      *
      * @param eliminateDuplicates eliminate duplicate coordinates within 3cm radius
      * @param sortOutputFile      sort an output file by point number
-     *
      * @return converted KOO file
      */
-    public ArrayList<String> convertTxt2Koo(boolean eliminateDuplicates, boolean sortOutputFile) {
-        ArrayList<String> result = new ArrayList<>();
-        ArrayList<RyPoint> ryPoints = new ArrayList<>();
+    public List<String> convert(boolean eliminateDuplicates, boolean sortOutputFile) {
+        List<String> result = new ArrayList<>();
+        List<RyPoint> ryPoints = new ArrayList<>();
         String number, pointType, toleranceCategory, easting, northing, height, geoid, eta, xi;
         String resultLine;
 
         BaseToolsLtop.writeCommendLine(result, BaseToolsLtop.cartesianCoordsIdentifier);
 
-        for (String line : readStringLines) {
+        for (String line : lines) {
             // skip empty lines directly after reading
             if (!line.trim().isEmpty()) {
                 // prevent wrong output with empty strings of defined length from class
@@ -72,25 +72,25 @@ public class Txt2Ltop {
                 eta = BaseToolsLtop.eta;
                 xi = BaseToolsLtop.xi;
 
-                String[] lineSplit = line.trim().split("\\s+");
+                String[] values = line.trim().split("\\s+");
 
-                switch (lineSplit.length) {
+                switch (values.length) {
                     case 4:     // nr x y z
-                        number = String.format("%10s", lineSplit[0].trim());
-                        easting = String.format("%12s", NumberFormatter.fillDecimalPlace(lineSplit[1], 4));
-                        northing = String.format("%12s", NumberFormatter.fillDecimalPlace(lineSplit[2], 4));
-                        height = String.format("%10s", NumberFormatter.fillDecimalPlace(lineSplit[3], 4));
+                        number = String.format("%10s", values[0].trim());
+                        easting = String.format("%12s", NumberFormatter.fillDecimalPlaces(values[1], 4));
+                        northing = String.format("%12s", NumberFormatter.fillDecimalPlaces(values[2], 4));
+                        height = String.format("%10s", NumberFormatter.fillDecimalPlaces(values[3], 4));
                         break;
 
                     case 5:     // nr code x y z
-                        number = String.format("%10s", lineSplit[0]);
-                        easting = String.format("%12s", NumberFormatter.fillDecimalPlace(lineSplit[2], 4));
-                        northing = String.format("%12s", NumberFormatter.fillDecimalPlace(lineSplit[3], 4));
-                        height = String.format("%10s", NumberFormatter.fillDecimalPlace(lineSplit[4], 4));
+                        number = String.format("%10s", values[0]);
+                        easting = String.format("%12s", NumberFormatter.fillDecimalPlaces(values[2], 4));
+                        northing = String.format("%12s", NumberFormatter.fillDecimalPlaces(values[3], 4));
+                        height = String.format("%10s", NumberFormatter.fillDecimalPlaces(values[4], 4));
                         break;
 
                     default:
-                        logger.trace("Line contains less or more tokens ({}) than needed or allowed.", lineSplit.length);
+                        logger.trace("Line contains less or more tokens ({}) than needed or allowed.", values.length);
                         break;
                 }
 
@@ -111,7 +111,7 @@ public class Txt2Ltop {
 
         result = eliminateDuplicates ? BaseToolsLtop.eliminateDuplicatePoints(ryPoints) : result;
 
-        return sortOutputFile ? BaseToolsLtop.sortResult(result) : result;
+        return sortOutputFile ? BaseToolsLtop.sortResult(result) : new ArrayList<>(result);
     }
 
-} // end of Txt2Ltop
+}

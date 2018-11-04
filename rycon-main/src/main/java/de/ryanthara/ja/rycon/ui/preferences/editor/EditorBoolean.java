@@ -18,9 +18,9 @@
 
 package de.ryanthara.ja.rycon.ui.preferences.editor;
 
-import de.ryanthara.ja.rycon.ui.preferences.PreferencesDialog;
-import de.ryanthara.ja.rycon.i18n.Preferences;
+import de.ryanthara.ja.rycon.i18n.Preference;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
+import de.ryanthara.ja.rycon.ui.preferences.PreferencesDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -28,7 +28,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.PREFERENCES;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundle.PREFERENCE;
 
 /**
  * {@code EditorBoolean} is an editor for boolean values.
@@ -60,11 +60,11 @@ public class EditorBoolean extends Editor<Boolean> {
      * @param parent parent composite
      */
     @Override
-    public void createControl(final Composite parent) {
+    public void createControl(Composite parent) {
         GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, false);
 
         checkbox = new Button(parent, SWT.CHECK);
-        checkbox.setText(ResourceBundleUtils.getLangString(PREFERENCES, Preferences.labelNo));
+        checkbox.setText(ResourceBundleUtils.getLangString(PREFERENCE, Preference.labelNo));
         checkbox.setSelection(false);
         checkbox.setLayoutData(gridData);
         checkbox.addSelectionListener(new SelectionAdapter() {
@@ -73,9 +73,9 @@ public class EditorBoolean extends Editor<Boolean> {
                 setValid(true);
                 update();
                 if (checkbox.getSelection()) {
-                    checkbox.setText(ResourceBundleUtils.getLangString(PREFERENCES, Preferences.labelYes));
+                    checkbox.setText(ResourceBundleUtils.getLangString(PREFERENCE, Preference.labelYes));
                 } else {
-                    checkbox.setText(ResourceBundleUtils.getLangString(PREFERENCES, Preferences.labelNo));
+                    checkbox.setText(ResourceBundleUtils.getLangString(PREFERENCE, Preference.labelNo));
                 }
             }
         });
@@ -106,8 +106,8 @@ public class EditorBoolean extends Editor<Boolean> {
         setInitialValue((Boolean) t);
         checkbox.setSelection((Boolean) t);
         checkbox.setText((Boolean) t ?
-                        ResourceBundleUtils.getLangString(PREFERENCES, Preferences.labelYes) :
-                        ResourceBundleUtils.getLangString(PREFERENCES, Preferences.labelNo));
+                ResourceBundleUtils.getLangString(PREFERENCE, Preference.labelYes) :
+                ResourceBundleUtils.getLangString(PREFERENCE, Preference.labelNo));
         super.update();
     }
 
@@ -115,7 +115,6 @@ public class EditorBoolean extends Editor<Boolean> {
      * Formats the value for for this editor.
      *
      * @param b value to be formatted
-     *
      * @return formatted value
      */
     @Override
@@ -127,12 +126,11 @@ public class EditorBoolean extends Editor<Boolean> {
      * Parses the string to {@code Boolean}.
      *
      * @param s string to be parsed
-     *
      * @return parsed string
      */
     @Override
-    Boolean parse(final String s) {
+    Boolean parse(String s) {
         return s.equals(Boolean.TRUE.toString());
     }
 
-} // end of EditorBoolean
+}

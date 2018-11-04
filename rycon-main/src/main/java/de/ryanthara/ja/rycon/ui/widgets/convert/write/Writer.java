@@ -21,36 +21,42 @@ import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.odftoolkit.simple.SpreadsheetDocument;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Interface for writing operations in the {@link ConverterWidget}.
  *
  * @author sebastian
- * @version 1
+ * @version 2
  * @since 12
  */
-public interface Writer {
+public abstract class Writer {
 
     /**
      * Returns true if the prepared {@link SpreadsheetDocument} for file writing was written to the file system.
      *
      * @return write success
      */
-    boolean writeSpreadsheetDocument();
+    public boolean writeSpreadsheetDocument() {
+        return false;
+    }
 
     /**
-     * Returns true if the prepared {@link ArrayList} for file writing was written to the file system.
+     * Returns true if the prepared {@link List} for file writing was written to the file system.
      *
      * @return write success
      */
-    boolean writeStringFile();
+    public boolean writeStringFile() {
+        return false;
+    }
 
     /**
      * Returns true if the prepared {@link Workbook} for file writing was written to the file system.
      *
      * @return write success
      */
-    boolean writeWorkbookFile();
+    public boolean writeWorkbookFile() {
+        return false;
+    }
 
-} // end of Writer
+}

@@ -17,27 +17,57 @@
  */
 package de.ryanthara.ja.rycon.core.converter.excel;
 
+import de.ryanthara.ja.rycon.nio.FileFormat;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 /**
- * This class provides static access to members to distinguish between XLS (true) and XLSX (false) output files.
+ * Provides basic and helper functions that are used for converting
+ * different file formats into Microsoft Excel XLS and XLSX files.
  *
  * @author sebastian
  * @version 1
  * @since 12
  */
-public class BaseToolsExcel {
+public final class BaseToolsExcel {
 
     /**
-     * Member which helps distinguish between XLS and XLSX file format.
-     * <p>
-     * The member isXLS holds 'true'
+     * BaseToolsExcel is non-instantiable.
      */
-    public static final boolean isXLS = true;
+    private BaseToolsExcel() {
+        throw new AssertionError();
+    }
 
     /**
-     * Member which helps distinguish between XLS and XLSX file format.
-     * <p>
-     * The member isXLSX holds 'false'
+     * Prepares the workbook with the defined file format.
+     *
+     * @param fileFormat use XLS or XLSX file format for the workbook
+     * @return prepared workbook
      */
-    public static final boolean isXLSX = false;
+    static Workbook prepareWorkbook(FileFormat fileFormat) {
+        if (fileFormat == FileFormat.XLS) {
+            return new HSSFWorkbook();
+        } else if (fileFormat == FileFormat.XLSX) {
+            return new XSSFWorkbook();
+        } else {
+            throw new IllegalArgumentException("Used wrong file format: " + fileFormat.toString());
+        }
+    }
 
-} // end of BaseToolsExcel
+    /**
+     * Sets the cell style.
+     *
+     * @param workbook     the used workbook
+     * @param cell         the current cell
+     * @param format       the current data format
+     * @param formatString the used format string (3 or 4 digits)
+     */
+    static void setCellStyle(Workbook workbook, Cell cell, DataFormat format, String formatString) {
+        CellStyle cellStyle = workbook.createCellStyle();
+        cellStyle.setDataFormat(format.getFormat(formatString));
+        cellStyle.setAlignment(HorizontalAlignment.RIGHT);
+        cell.setCellStyle(cellStyle);
+    }
+
+}

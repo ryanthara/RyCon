@@ -24,8 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class provides functions to convert a csv formatted coordinate file from the geodata server
- * Basel Stadt (Switzerland) into a KOO file for LTOP.
+ * A converter with functions to convert coordinate coordinate files from
+ * the geodata server Basel Stadt (Switzerland) into a KOO file for LTOP.
  *
  * @author sebastian
  * @version 1
@@ -33,15 +33,16 @@ import java.util.List;
  */
 public class CsvBaselStadt2Ltop {
 
-    private final List<String[]> readCSVLines;
+    private final List<String[]> lines;
 
     /**
-     * Class constructor for reader line based CSV files from the geodata server Basel Stadt (Switzerland).
+     * Creates a converter with a list for the read line based comma separated
+     * values (CSV) file from the geodata server Basel Stadt (Switzerland).
      *
-     * @param readCSVLines {@code List<String[]>} with lines as {@code String[]}
+     * @param lines list with lines as string array
      */
-    public CsvBaselStadt2Ltop(List<String[]> readCSVLines) {
-        this.readCSVLines = readCSVLines;
+    public CsvBaselStadt2Ltop(List<String[]> lines) {
+        this.lines = new ArrayList<>(lines);
     }
 
     /**
@@ -49,21 +50,20 @@ public class CsvBaselStadt2Ltop {
      *
      * @param eliminateDuplicates eliminate duplicate coordinates within 3cm radius
      * @param sortOutputFile      sort an output file by point number
-     *
      * @return converted KOO file
      */
-    public ArrayList<String> convertCSVBaselStadt2Koo(boolean eliminateDuplicates, boolean sortOutputFile) {
-        ArrayList<String> result = new ArrayList<>();
-        ArrayList<RyPoint> ryPoints = new ArrayList<>();
+    public List<String> convert(boolean eliminateDuplicates, boolean sortOutputFile) {
+        List<String> result = new ArrayList<>();
+        List<RyPoint> ryPoints = new ArrayList<>();
         String number, pointType, toleranceCategory, easting, northing, height, geoid, eta, xi;
         String resultLine;
 
         BaseToolsLtop.writeCommendLine(result, BaseToolsLtop.cartesianCoordsIdentifier);
 
         // remove comment line
-        readCSVLines.remove(0);
+        lines.remove(0);
 
-        for (String[] stringField : readCSVLines) {
+        for (String[] values : lines) {
             // prevent wrong output with empty strings of defined length from class
             pointType = BaseToolsLtop.pointType;
             toleranceCategory = BaseToolsLtop.toleranceCategory;
@@ -73,17 +73,17 @@ public class CsvBaselStadt2Ltop {
             xi = BaseToolsLtop.xi;
 
             // point number, column 1-10, aligned left
-            number = String.format("%-10s", stringField[0].replaceAll("\\s+", "").trim());
+            number = String.format("%-10s", values[0].replaceAll("\\s+", "").trim());
 
             // easting (Y) is in column 3
-            easting = String.format("%12s", NumberFormatter.fillDecimalPlace(stringField[2], 4));
+            easting = String.format("%12s", NumberFormatter.fillDecimalPlaces(values[2], 4));
 
             // northing (X) is in column 4
-            northing = String.format("%12s", NumberFormatter.fillDecimalPlace(stringField[3], 4));
+            northing = String.format("%12s", NumberFormatter.fillDecimalPlaces(values[3], 4));
 
             // height (Z) is in column 5, but not always valued
-            if (!stringField[4].equals("")) {
-                height = String.format("%10s", NumberFormatter.fillDecimalPlace(stringField[4], 4));
+            if (!values[4].equals("")) {
+                height = String.format("%10s", NumberFormatter.fillDecimalPlaces(values[4], 4));
             }
 
             // pick up the relevant elements from the blocks from every line
@@ -101,7 +101,7 @@ public class CsvBaselStadt2Ltop {
         }
         result = eliminateDuplicates ? BaseToolsLtop.eliminateDuplicatePoints(ryPoints) : result;
 
-        return sortOutputFile ? BaseToolsLtop.sortResult(result) : result;
+        return sortOutputFile ? BaseToolsLtop.sortResult(result) : new ArrayList<>(result);
     }
 
-} // end of CsvBaselStadt2Ltop
+}

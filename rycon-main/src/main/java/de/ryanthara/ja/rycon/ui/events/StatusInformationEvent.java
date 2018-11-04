@@ -61,4 +61,4 @@ public class StatusInformationEvent extends EventObject {
         return this.getClass().getName() + "status text = " + statusText + " on " + source;
     }
 
-} // end of StatusInformationEvent
+}

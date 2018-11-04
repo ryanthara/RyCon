@@ -35,7 +35,6 @@ public class FilesFilter implements DirectoryStream.Filter<Path> {
      * Decides if the given directory entry should be accepted or filtered.
      *
      * @param entry the directory entry to be tested
-     *
      * @return {@code true} if the directory entry should be accepted
      */
     @Override
@@ -43,4 +42,4 @@ public class FilesFilter implements DirectoryStream.Filter<Path> {
         return Files.isRegularFile(entry, LinkOption.NOFOLLOW_LINKS);
     }
 
-} // end of FilesFilter
+}

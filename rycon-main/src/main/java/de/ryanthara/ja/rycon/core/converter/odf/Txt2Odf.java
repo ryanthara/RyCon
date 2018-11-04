@@ -25,10 +25,11 @@ import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * This class provides functions to convert measurement or coordinate files from text format
- * into an Open Document Format spreadsheet file.
+ * A converter with functions to convert ASCII text coordinate
+ * files into an Open Document Format spreadsheet file.
  *
  * @author sebastian
  * @version 2
@@ -38,23 +39,22 @@ public class Txt2Odf {
 
     private static final Logger logger = LoggerFactory.getLogger(Txt2Odf.class.getName());
 
-    private final ArrayList<String> readStringLines;
+    private final List<String> lines;
     private SpreadsheetDocument spreadsheetDocument;
 
     /**
-     * Constructs a new instance of this class for reader line based text files as parameter.
+     * Creates a converter with a list for the read line based ASCII text file.
      *
-     * @param readStringLines {@code ArrayList<String>} with lines in text format
+     * @param lines list with ASCII text lines
      */
-    public Txt2Odf(ArrayList<String> readStringLines) {
-        this.readStringLines = readStringLines;
+    public Txt2Odf(List<String> lines) {
+        this.lines = new ArrayList<>(lines);
     }
 
     /**
      * Converts a TXT file element by element into an Open Document Format spreadsheet file.
      *
      * @param sheetName name of the sheet (file name from input file)
-     *
      * @return success conversion success
      */
     public boolean convertTXT2Ods(Path sheetName) {
@@ -71,14 +71,16 @@ public class Txt2Odf {
 
             Cell cell;
 
-            for (String line : readStringLines) {
-                String[] lineSplit = line.trim().split("\\s+");
+            for (String line : lines) {
+                String[] values = line.trim().split("\\s+");
                 colIndex = 0;
-                for (String element : lineSplit) {
+
+                for (String value : values) {
                     cell = table.getCellByPosition(colIndex, rowIndex);
-                    cell.setStringValue(element);
+                    cell.setStringValue(value);
                     colIndex = colIndex + 1;
                 }
+
                 rowIndex = rowIndex + 1;
             }
         } catch (RuntimeException e) {
@@ -100,4 +102,4 @@ public class Txt2Odf {
         return this.spreadsheetDocument;
     }
 
-} // end of Txt2Odf
+}

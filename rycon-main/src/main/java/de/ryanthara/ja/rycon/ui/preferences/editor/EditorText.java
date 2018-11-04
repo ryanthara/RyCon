@@ -54,7 +54,7 @@ public class EditorText extends Editor<String> {
      * @param parent parent composite
      */
     @Override
-    public void createControl(final Composite parent) {
+    public void createControl(Composite parent) {
         GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, false);
         gridData.heightHint = Size.minimalTextHeight.getSize();
         gridData.minimumWidth = Size.minimalTextWidth.getSize();
@@ -98,7 +98,6 @@ public class EditorText extends Editor<String> {
      * Formats the value for for this editor.
      *
      * @param s value to be formatted
-     *
      * @return formatted value
      */
     @Override
@@ -110,12 +109,11 @@ public class EditorText extends Editor<String> {
      * Returns the not parsed string.
      *
      * @param s string to be parsed
-     *
      * @return not parsed string
      */
     @Override
-    String parse(final String s) {
+    String parse(String s) {
         return s;
     }
 
-} // end of EditorText
+}

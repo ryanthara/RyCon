@@ -22,8 +22,6 @@ import de.ryanthara.ja.rycon.nio.FileNameExtension;
 import de.ryanthara.ja.rycon.nio.WriteFile2Disk;
 import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
 import de.ryanthara.ja.rycon.ui.widgets.convert.SourceButton;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.odftoolkit.simple.SpreadsheetDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,94 +30,85 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Instances of this class are used for writing Zeiss REC files and it's dialects (R4, R5, REC500 and M5)
- * from the {@link ConverterWidget} of <tt>RyCON</tt>.
+ * A writer for writing ZEISS REC files in the {@link ConverterWidget} of RyCON.
  *
  * @author sebastian
  * @version 2
  * @since 12
  */
-public class ZeissWriter implements Writer {
+public class ZeissWriter extends Writer {
 
     private static final Logger logger = LoggerFactory.getLogger(ZeissWriter.class.getName());
 
     private final Path path;
-    private final ArrayList<String> readStringFile;
-    private final List<String[]> readCSVFile;
+    private final List<String> lines;
+    private final List<String[]> csv;
     private final WriteParameter parameter;
 
     /**
      * Constructs the {@link ZeissWriter} with a set of parameters.
      *
-     * @param path           reader file object for writing
-     * @param readCSVFile    reader csv file
-     * @param readStringFile reader string file
-     * @param parameter      the writer parameter object
+     * @param path      file path to write into
+     * @param csv       read csv file
+     * @param lines     read string based file
+     * @param parameter the writer parameter object
      */
-    public ZeissWriter(Path path, ArrayList<String> readStringFile, List<String[]> readCSVFile, WriteParameter parameter) {
+    public ZeissWriter(Path path, List<String> lines, List<String[]> csv, WriteParameter parameter) {
         this.path = path;
-        this.readStringFile = readStringFile;
-        this.readCSVFile = readCSVFile;
+        this.lines = new ArrayList<>(lines);
+        this.csv = new ArrayList<>(csv);
         this.parameter = parameter;
     }
 
     /**
-     * Returns true if the prepared {@link SpreadsheetDocument} for file writing was written to the file system.
+     * Writes a Zeiss REC file and its dialects depends on the source file format.
      *
      * @return write success
      */
     @Override
-    public boolean writeSpreadsheetDocument() {
-        return false;
-    }
-
-    /**
-     * Returns the prepared {@link ArrayList} for file writing.
-     *
-     * @return array list for file writing
-     */
-    @Override
     public boolean writeStringFile() {
-        ArrayList<String> writeFile = null;
+        List<String> writeFile = null;
 
         switch (SourceButton.fromIndex(parameter.getSourceNumber())) {
             case GSI8:
+                // fall through for GSI8 format
             case GSI16:
-                Gsi2Zeiss gsi2Zeiss = new Gsi2Zeiss(readStringFile);
-                writeFile = gsi2Zeiss.convertGSI2REC(parameter.getDialect());
+                Gsi2Zeiss gsi2Zeiss = new Gsi2Zeiss(lines);
+                writeFile = gsi2Zeiss.convert(parameter.getDialect());
                 break;
 
             case TXT:
-                Txt2Zeiss txt2Zeiss = new Txt2Zeiss(readStringFile);
-                writeFile = txt2Zeiss.convertTXT2REC(parameter.getDialect());
+                Txt2Zeiss txt2Zeiss = new Txt2Zeiss(lines);
+                writeFile = txt2Zeiss.convert(parameter.getDialect());
                 break;
 
             case CSV:
-                Csv2Zeiss csv2Zeiss = new Csv2Zeiss(readCSVFile);
-                writeFile = csv2Zeiss.convertCsv2Rec(parameter.getDialect());
+                Csv2Zeiss csv2Zeiss = new Csv2Zeiss(csv);
+                writeFile = csv2Zeiss.convert(parameter.getDialect());
                 break;
 
             case CAPLAN_K:
-                Caplan2Zeiss caplan2Zeiss = new Caplan2Zeiss(readStringFile);
-                writeFile = caplan2Zeiss.convertK2REC(parameter.getDialect());
+                Caplan2Zeiss caplan2Zeiss = new Caplan2Zeiss(lines);
+                writeFile = caplan2Zeiss.convert(parameter.getDialect());
                 break;
 
             case ZEISS_REC:
+                // writing the same file format is not supported
                 break;
 
             case CADWORK:
-                Cadwork2Zeiss cadwork2Zeiss = new Cadwork2Zeiss(readStringFile);
-                writeFile = cadwork2Zeiss.convertCadwork2REC(parameter.getDialect());
+                Cadwork2Zeiss cadwork2Zeiss = new Cadwork2Zeiss(lines);
+                writeFile = cadwork2Zeiss.convert(parameter.getDialect());
                 break;
 
             case BASEL_STADT:
-                CsvBaselStadt2Zeiss csvBaselStadt2Zeiss = new CsvBaselStadt2Zeiss(readCSVFile);
-                writeFile = csvBaselStadt2Zeiss.convertCSVBaselStadt2REC(parameter.getDialect());
+                CsvBaselStadt2Zeiss csvBaselStadt2Zeiss = new CsvBaselStadt2Zeiss(csv);
+                writeFile = csvBaselStadt2Zeiss.convert(parameter.getDialect());
                 break;
 
             case BASEL_LANDSCHAFT:
-                TxtBaselLandschaft2Zeiss txtBaselLandschaft2Zeiss = new TxtBaselLandschaft2Zeiss(readStringFile);
-                writeFile = txtBaselLandschaft2Zeiss.convertTXTBaselLandschaft2REC(parameter.getDialect());
+                TxtBaselLandschaft2Zeiss txtBaselLandschaft2Zeiss = new TxtBaselLandschaft2Zeiss(lines);
+                writeFile = txtBaselLandschaft2Zeiss.convert(parameter.getDialect());
                 break;
 
             default:
@@ -128,17 +117,7 @@ public class ZeissWriter implements Writer {
                 logger.warn("Can not write {} file format to Zeiss REC file.", SourceButton.fromIndex(parameter.getSourceNumber()));
         }
 
-        return WriteFile2Disk.writeFile2Disk(path, writeFile, "",FileNameExtension.REC.getExtension());
+        return WriteFile2Disk.writeFile2Disk(path, writeFile, "", FileNameExtension.REC.getExtension());
     }
 
-    /**
-     * Returns true if the prepared {@link Workbook} for file writing was written to the file system.
-     *
-     * @return write success
-     */
-    @Override
-    public boolean writeWorkbookFile() {
-        return false;
-    }
-
-} // end of ZeissWriter
+}

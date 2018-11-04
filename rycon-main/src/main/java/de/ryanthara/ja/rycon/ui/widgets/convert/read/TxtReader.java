@@ -17,9 +17,9 @@
  */
 package de.ryanthara.ja.rycon.ui.widgets.convert.read;
 
-import de.ryanthara.ja.rycon.i18n.Errors;
+import de.ryanthara.ja.rycon.i18n.Error;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
-import de.ryanthara.ja.rycon.i18n.Texts;
+import de.ryanthara.ja.rycon.i18n.Text;
 import de.ryanthara.ja.rycon.nio.LineReader;
 import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
 import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
@@ -29,28 +29,27 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.ERRORS;
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.TEXTS;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundle.ERROR;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundle.TEXT;
 
 /**
- * Instances of this class are used for reading text files from the {@link ConverterWidget} of <tt>RyCON</tt>.
+ * A reader for reading ASCII text files in the {@link ConverterWidget} of RyCON.
  *
  * @author sebastian
  * @version 2
  * @since 12
  */
-public class TxtReader implements Reader {
+public class TxtReader extends Reader {
 
     private static final Logger logger = LoggerFactory.getLogger(TxtReader.class.getName());
 
-    private ArrayList<String> readStringFile;
     private final Shell innerShell;
+    private List<String> lines;
 
     /**
-     * Constructs a new instance of this class given a reference to the inner shell of the calling object.
+     * Constructs a new reader with a reference to the shell of the calling object.
      *
      * @param innerShell reference to the inner shell
      */
@@ -59,58 +58,38 @@ public class TxtReader implements Reader {
     }
 
     /**
-     * Returns the reader CSV lines as {@link List}.
-     * * <p>
-     * This method is used vice versa with the method {@link #getReadStringLines()}. The one which is not used,
-     * returns null for indication.
+     * Returns the read string lines as {@link List}.
      *
-     * @return reader CSV lines
+     * @return read string lines
      */
     @Override
-    // TODO correct return null
-    public List<String[]> getReadCsvFile() {
-        return null;
-    }
-
-    /**
-     * Returns the reader string lines as {@link ArrayList}.
-     * <p>
-     * This method is used vice versa with the method {@link #getReadCsvFile()}. The one which is not used,
-     * returns null for indication.
-     *
-     * @return reader string lines
-     */
-    @Override
-    public ArrayList<String> getReadStringLines() {
-        return readStringFile;
+    public List<String> getLines() {
+        return List.copyOf(lines);
     }
 
     /**
      * Reads the text file given as parameter and returns the read file success.
      *
      * @param file2Read read file reference
-     *
      * @return read file success
      */
     @Override
     public boolean readFile(Path file2Read) {
-        boolean success = false;
-
         LineReader lineReader = new LineReader(file2Read);
 
         if (lineReader.readFile(false)) {
-            if ((readStringFile = lineReader.getLines()) != null) {
-                success = true;
-            }
+            lines = lineReader.getLines();
+
+            return true;
         } else {
             logger.warn("Text file {} could not be read.", file2Read.toString());
 
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR,
-                    ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.msgBox_Error),
-                    ResourceBundleUtils.getLangString(ERRORS, Errors.readerTxtFailed));
-        }
+                    ResourceBundleUtils.getLangStringFromXml(TEXT, Text.msgBox_Error),
+                    ResourceBundleUtils.getLangString(ERROR, Error.readerTxtFailed));
 
-        return success;
+            return false;
+        }
     }
 
-} // end of TxtReader
+}

@@ -17,16 +17,18 @@
  */
 package de.ryanthara.ja.rycon.core.converter.caplan;
 
+import de.ryanthara.ja.rycon.core.converter.Separator;
 import de.ryanthara.ja.rycon.core.converter.zeiss.ZeissDecoder;
 import de.ryanthara.ja.rycon.core.elements.ZeissBlock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Instances of this class provides functions to convert measurement files from the Zeiss REC format
- * and it's dialects (R4, R5, REC500 and M5) into Caplan K files.
+ * A converter with functions to convert measurement files from the Zeiss
+ * REC format and it's dialects (R4, R5, REC500 and M5) into Caplan K files.
  *
  * @author sebastian
  * @version 1
@@ -35,30 +37,29 @@ import java.util.ArrayList;
 public class Zeiss2K {
 
     private static final Logger logger = LoggerFactory.getLogger(Zeiss2K.class.getName());
-
+    private final String freeSpace;
+    private final String objectTyp;
+    private final List<String> lines;
     private int valencyIndicator;
-
     private String number;
     private String valency;
     private String easting;
     private String northing;
     private String height;
-    private final String freeSpace;
-    private final String objectTyp;
     private String attr;
 
-    private final ArrayList<String> readStringLines;
-
     /**
-     * Constructs a new instance of this class with a parameter for reader line base text files in the Zeiss REC format
-     * and it's dialects.
-     * <p>
-     * The differentiation of the content is done by the called method and it's content analyze functionality.
+     * Creates a converter with a list for the read line based
+     * text files in the Zeiss REC format and it's dialects.
      *
-     * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
+     * <p>
+     * The differentiation of the content is done by the called
+     * method and it's content analyze functionality.
+     *
+     * @param lines list with Zeiss REC format lines
      */
-    public Zeiss2K(ArrayList<String> readStringLines) {
-        this.readStringLines = readStringLines;
+    public Zeiss2K(List<String> lines) {
+        this.lines = new ArrayList<>(lines);
 
         // prevent wrong output with empty strings of defined length from class
         this.number = "";
@@ -69,7 +70,6 @@ public class Zeiss2K {
         this.freeSpace = BaseToolsCaplanK.freeSpace;
         this.objectTyp = BaseToolsCaplanK.objectTyp;
         this.attr = "";
-
     }
 
     /**
@@ -77,11 +77,10 @@ public class Zeiss2K {
      *
      * @param useSimpleFormat  option to writer a reduced K file which is compatible to Z+F LaserControl
      * @param writeCommentLine writer comment line to output file
-     *
      * @return converted K file
      */
-    public ArrayList<String> convertZeiss2K(boolean useSimpleFormat, boolean writeCommentLine) {
-        ArrayList<String> result = new ArrayList<>();
+    public List<String> convert(boolean useSimpleFormat, boolean writeCommentLine) {
+        List<String> result = new ArrayList<>();
 
         String pointNumber = "";
         StringBuilder stringBuilder;
@@ -95,8 +94,7 @@ public class Zeiss2K {
             BaseToolsCaplanK.writeCommentLine(result);
         }
 
-        for (String line : readStringLines) {
-
+        for (String line : lines) {
             // skip empty lines
             if (line.trim().length() > 0) {
                 ZeissDecoder decoder = new ZeissDecoder();
@@ -124,14 +122,14 @@ public class Zeiss2K {
                         for at least one or more added elements to prevent writing empty lines
                          */
 
-                        // prepare the reader line results for the new point
+                        // prepare the read line results for the new point
                         pointNumber = decoder.getPointNumber();
 
                         writeLineCounter = writeLineCounter + 1;
 
-                        // process the new line information
+                        // run the new line information
                         if (valencyIndicator > 0) {
-                            valency = " ".concat(Integer.toString(valencyIndicator));
+                            valency = Separator.WHITESPACE.getSign().concat(Integer.toString(valencyIndicator));
 
                             stringBuilder = BaseToolsCaplanK.prepareCaplanLine(useSimpleFormat, number, valency,
                                     easting, northing, height, freeSpace, objectTyp);
@@ -152,13 +150,12 @@ public class Zeiss2K {
                     for (ZeissBlock zeissBlock : decoder.getZeissBlocks()) {
                         fillSimpleFormat(zeissBlock);
                     }
-
                 }
             }
 
             // flush last element if exists
             if (valencyIndicator > 0) {
-                valency = " ".concat(Integer.toString(valencyIndicator));
+                valency = Separator.WHITESPACE.getSign().concat(Integer.toString(valencyIndicator));
 
                 stringBuilder = BaseToolsCaplanK.prepareCaplanLine(useSimpleFormat, number, valency,
                         easting, northing, height, freeSpace, objectTyp);
@@ -167,12 +164,12 @@ public class Zeiss2K {
             }
         }
 
-        return result;
+        return List.copyOf(result);
     }
 
     /*
     This is used when the option 'useSimpleFormat' is valued to writer a reduced K file (no 7 y x z) which is
-    compatible to Z+F LaserControl registration process
+    compatible to Z+F LaserControl registration run
      */
     private void fillSimpleFormat(ZeissBlock zeissBlock) {
         switch (zeissBlock.getTypeIdentifier()) {
@@ -254,4 +251,4 @@ public class Zeiss2K {
         }
     }
 
-} // end of Zeiss2K
+}

@@ -39,7 +39,7 @@ public class ValidatorDouble implements Validator<Double> {
      * @param min minimum value
      * @param max maximum value
      */
-    public ValidatorDouble(final double min, final double max) {
+    public ValidatorDouble(double min, final double max) {
         this.min = min;
         this.max = max;
     }
@@ -48,12 +48,11 @@ public class ValidatorDouble implements Validator<Double> {
      * Checks if the given value is valid.
      *
      * @param d value to be checked
-     *
      * @return true if is valid
      */
     @Override
-    public boolean isValid(final Double d) {
+    public boolean isValid(Double d) {
         return (d >= min) && (d <= max);
     }
 
-} // end of ValidatorDouble
+}

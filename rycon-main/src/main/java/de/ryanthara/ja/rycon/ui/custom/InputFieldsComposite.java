@@ -18,11 +18,11 @@
 
 package de.ryanthara.ja.rycon.ui.custom;
 
-import de.ryanthara.ja.rycon.i18n.Buttons;
+import de.ryanthara.ja.rycon.i18n.Button;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
-import de.ryanthara.ja.rycon.i18n.Texts;
-import de.ryanthara.ja.rycon.ui.Sizes;
-import de.ryanthara.ja.rycon.util.check.TextCheck;
+import de.ryanthara.ja.rycon.i18n.Text;
+import de.ryanthara.ja.rycon.ui.Size;
+import de.ryanthara.ja.rycon.ui.util.TextCheck;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -38,8 +38,8 @@ import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.BUTTONS;
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.TEXTS;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundle.BUTTON;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundle.TEXT;
 
 /**
  * Instances of this class implements a custom composite with two labels, two text fields and two buttons for
@@ -54,8 +54,8 @@ public class InputFieldsComposite extends Composite {
     private static final Logger logger = LoggerFactory.getLogger(InputFieldsComposite.class.getName());
 
     private final Object callingObject;
-    private Text targetTextField;
-    private Text sourceTextField;
+    private org.eclipse.swt.widgets.Text targetTextField;
+    private org.eclipse.swt.widgets.Text sourceTextField;
 
     /**
      * Constructs a new instance of this class given a calling object, the parent composite and a style.
@@ -76,7 +76,6 @@ public class InputFieldsComposite extends Composite {
      * @param wHint   width
      * @param hHint   height
      * @param changed changed
-     *
      * @return result of super() call
      */
     @Override
@@ -89,7 +88,7 @@ public class InputFieldsComposite extends Composite {
      *
      * @return source text field
      */
-    public Text getSourceTextField() {
+    public org.eclipse.swt.widgets.Text getSourceTextField() {
         return sourceTextField;
     }
 
@@ -98,7 +97,7 @@ public class InputFieldsComposite extends Composite {
      *
      * @return target text field
      */
-    public Text getTargetTextField() {
+    public org.eclipse.swt.widgets.Text getTargetTextField() {
         return targetTextField;
     }
 
@@ -125,7 +124,7 @@ public class InputFieldsComposite extends Composite {
         checkWidget();
 
         Group group = new Group(this, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.pathSelection));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, de.ryanthara.ja.rycon.i18n.Text.pathSelection));
 
         GridLayout gridLayout = new GridLayout();
         gridLayout.numColumns = 3;
@@ -133,12 +132,12 @@ public class InputFieldsComposite extends Composite {
         group.setLayout(gridLayout);
 
         GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
-        gridData.widthHint = Sizes.RyCON_WIDGET_WIDTH.getValue() + 24;
+        gridData.widthHint = Size.RyCON_WIDGET_WIDTH.getValue() + 24;
         group.setLayoutData(gridData);
 
         // return the buttons is for tabulator key order
-        Button btnSource = createSourceComposite(group);
-        Button btnTarget = createTargetComposite(group);
+        org.eclipse.swt.widgets.Button btnSource = createSourceComposite(group);
+        org.eclipse.swt.widgets.Button btnTarget = createTargetComposite(group);
 
         Control[] tabulatorKeyOrder = new Control[]{
                 sourceTextField, btnSource, targetTextField, btnTarget
@@ -147,11 +146,11 @@ public class InputFieldsComposite extends Composite {
         group.setTabList(tabulatorKeyOrder);
     }
 
-    private Button createSourceComposite(Group group) {
+    private org.eclipse.swt.widgets.Button createSourceComposite(Group group) {
         final Label source = new Label(group, SWT.NONE);
-        source.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.source));
+        source.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.source));
 
-        sourceTextField = new Text(group, SWT.BORDER);
+        sourceTextField = new org.eclipse.swt.widgets.Text(group, SWT.BORDER);
         sourceTextField.addListener(SWT.Traverse, event -> {
             // prevent shortcuts for execute when the text fields are empty
             InputFieldsComposite.this.handleEvent(event, sourceTextField);
@@ -173,9 +172,9 @@ public class InputFieldsComposite extends Composite {
         gridData.grabExcessHorizontalSpace = true;
         sourceTextField.setLayoutData(gridData);
 
-        Button btnSource = new Button(group, SWT.NONE);
-        btnSource.setText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.chooseFilesText));
-        btnSource.setToolTipText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.chooseFilesToolTip));
+        org.eclipse.swt.widgets.Button btnSource = new org.eclipse.swt.widgets.Button(group, SWT.NONE);
+        btnSource.setText(ResourceBundleUtils.getLangString(BUTTON, de.ryanthara.ja.rycon.i18n.Button.chooseFilesText));
+        btnSource.setToolTipText(ResourceBundleUtils.getLangString(BUTTON, Button.chooseFilesToolTip));
         btnSource.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -190,12 +189,12 @@ public class InputFieldsComposite extends Composite {
         return btnSource;
     }
 
-    private Button createTargetComposite(Group group) {
+    private org.eclipse.swt.widgets.Button createTargetComposite(Group group) {
         Label target = new Label(group, SWT.NONE);
-        target.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.target));
+        target.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, de.ryanthara.ja.rycon.i18n.Text.target));
         target.setLayoutData(new GridData());
 
-        targetTextField = new Text(group, SWT.SINGLE | SWT.BORDER);
+        targetTextField = new org.eclipse.swt.widgets.Text(group, SWT.SINGLE | SWT.BORDER);
         targetTextField.addListener(SWT.Traverse, event -> {
             // prevent shortcuts for execute when the text fields are empty
             InputFieldsComposite.this.handleEvent(event, targetTextField);
@@ -206,8 +205,8 @@ public class InputFieldsComposite extends Composite {
         gridData.grabExcessHorizontalSpace = true;
         targetTextField.setLayoutData(gridData);
 
-        Button btnTarget = new Button(group, SWT.NONE);
-        btnTarget.setText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.choosePathText));
+        org.eclipse.swt.widgets.Button btnTarget = new org.eclipse.swt.widgets.Button(group, SWT.NONE);
+        btnTarget.setText(ResourceBundleUtils.getLangString(BUTTON, de.ryanthara.ja.rycon.i18n.Button.choosePathText));
         btnTarget.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -215,7 +214,7 @@ public class InputFieldsComposite extends Composite {
             }
         });
 
-        btnTarget.setToolTipText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.choosePathToolTip));
+        btnTarget.setToolTipText(ResourceBundleUtils.getLangString(BUTTON, Button.choosePathToolTip));
         btnTarget.setLayoutData(new GridData());
 
         return btnTarget;
@@ -237,7 +236,7 @@ public class InputFieldsComposite extends Composite {
         }
     }
 
-    private void handleEvent(Event event, Text text) {
+    private void handleEvent(Event event, org.eclipse.swt.widgets.Text text) {
         if (!(this.sourceTextField.getText().trim().equals("") || (targetTextField.getText().trim().equals("")))) {
             if (((event.stateMask & SWT.SHIFT) == SWT.SHIFT) && (event.detail == SWT.TRAVERSE_RETURN)) {
                 doButtonAction("actionBtnOk");
@@ -250,4 +249,4 @@ public class InputFieldsComposite extends Composite {
         }
     }
 
-} // end of InputFieldsComposite
+}

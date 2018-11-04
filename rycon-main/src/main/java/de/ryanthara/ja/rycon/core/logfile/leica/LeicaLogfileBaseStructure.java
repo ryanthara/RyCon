@@ -19,11 +19,11 @@ package de.ryanthara.ja.rycon.core.logfile.leica;
 
 import de.ryanthara.ja.rycon.core.elements.RyPoint;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The {@code LeicaLogfileBaseStructure} implements basic functions for all logfile
- * structure elements in the <tt>Leica Geosystems</tt> logfile.txt for <tt>RyCON</tt>.
+ * structure elements in the Leica Geosystems logfile.txt for RyCON.
  * <p>
  * This is used for encapsulating the data and error minimization.
  *
@@ -52,7 +52,6 @@ public abstract class LeicaLogfileBaseStructure {
      * Compares two structure elements for being equal.
      *
      * @param obj structure to compare to
-     *
      * @return true if two structures are equal
      */
     @Override
@@ -141,7 +140,7 @@ public abstract class LeicaLogfileBaseStructure {
      *
      * @param lines lines to be analyzed
      */
-    void analyzeHeader(ArrayList<String> lines) {
+    void analyzeHeader(List<String> lines) {
         for (String line : lines) {
             if (line.startsWith(Identifier.INSTRUMENT_TYPE.getIdentifier())) {
                 instrumentType = line.split(":")[1].trim();
@@ -167,10 +166,9 @@ public abstract class LeicaLogfileBaseStructure {
      * Returns the computed point as {@link RyPoint}.
      *
      * @param line line that contains the computed point
-     *
      * @return computed point
      */
-    RyPoint getComputed(final String line) {
+    RyPoint getComputed(String line) {
         return getPoint(line);
     }
 
@@ -178,7 +176,6 @@ public abstract class LeicaLogfileBaseStructure {
      * Returns the design line offset as {@link RyPoint}.
      *
      * @param line line that contains the design line offset
-     *
      * @return design line offset
      */
     RyPoint getDesignLineOffset(String line) {
@@ -189,7 +186,6 @@ public abstract class LeicaLogfileBaseStructure {
      * Returns the design point as {@link RyPoint}.
      *
      * @param line line that contains the design point
-     *
      * @return design point
      */
     RyPoint getDesignPoint(String line) {
@@ -200,10 +196,9 @@ public abstract class LeicaLogfileBaseStructure {
      * Returns the end point as {@link RyPoint}.
      *
      * @param line line that contains the end point
-     *
      * @return end point
      */
-    RyPoint getEndPoint(final String line) {
+    RyPoint getEndPoint(String line) {
         return getPoint(line);
     }
 
@@ -211,7 +206,6 @@ public abstract class LeicaLogfileBaseStructure {
      * Returns the from point of the traverse as {@link RyPoint}.
      *
      * @param line line that contains the from point
-     *
      * @return from point
      */
     RyPoint getFromPoint(String line) {
@@ -222,7 +216,6 @@ public abstract class LeicaLogfileBaseStructure {
      * Returns the measured point from the reference line as {@link RyPoint}.
      *
      * @param line line that contains the measured point
-     *
      * @return measured point
      */
     RyPoint getMeasuredPoint(String line) {
@@ -233,7 +226,6 @@ public abstract class LeicaLogfileBaseStructure {
      * Returns the deviation of a measured point from the reference line as {@link RyPoint}.
      *
      * @param line line that contains the deviation results
-     *
      * @return deviation results
      */
     RyPoint getMeasuredPointDeviation(String line) {
@@ -244,7 +236,6 @@ public abstract class LeicaLogfileBaseStructure {
      * Returns the second point of an arc as {@link RyPoint}.
      *
      * @param line line that contains the second point
-     *
      * @return second point
      */
     RyPoint getSecondPoint(String line) {
@@ -255,7 +246,6 @@ public abstract class LeicaLogfileBaseStructure {
      * Returns the staked point as {@link RyPoint}.
      *
      * @param line line that contains the staked point
-     *
      * @return staked point
      */
     RyPoint getStakedPoint(String line) {
@@ -266,7 +256,6 @@ public abstract class LeicaLogfileBaseStructure {
      * Returns the stakeout difference as {@link RyPoint}.
      *
      * @param line line that contains the stakeout difference
-     *
      * @return stake out difference
      */
     RyPoint getStakeoutDifference(String line) {
@@ -277,10 +266,9 @@ public abstract class LeicaLogfileBaseStructure {
      * Returns the start point as {@link RyPoint}.
      *
      * @param line line that contains the start point
-     *
      * @return start point
      */
-    RyPoint getStartPoint(final String line) {
+    RyPoint getStartPoint(String line) {
         return getPoint(line);
     }
 
@@ -288,7 +276,6 @@ public abstract class LeicaLogfileBaseStructure {
      * Returns the to point of the traverse as {@link RyPoint}.
      *
      * @param line line that contains the to point
-     *
      * @return the to point of the traverse
      */
     RyPoint getToPoint(String line) {
@@ -299,7 +286,6 @@ public abstract class LeicaLogfileBaseStructure {
      * Returns the TPS Station from a given line as {@link RyPoint}.
      *
      * @param line line that contains the station information
-     *
      * @return tps station point
      */
     RyPoint getTpsStation(String line) {
@@ -321,7 +307,7 @@ public abstract class LeicaLogfileBaseStructure {
      * old version: Computed		:              100	E:      613989.977 	N:      265313.169 	H:          264.836
      * new version: Computed		:              104	E=       617191.366	N=       264451.639	H=          280.901
      */
-    private RyPoint getPoint(final String line) {
+    private RyPoint getPoint(String line) {
         // point elements between ':' and string length
         final String pointLine = line.substring(line.indexOf(":") + 1).trim();
         final String separator = pointLine.contains("E:") ? ":" : "=";
@@ -344,7 +330,7 @@ public abstract class LeicaLogfileBaseStructure {
      * Used for:
      *
      * Design Point			:  E=       621679.285	  N=       259099.912	  H=          370.138
-     * Line/Offset			:	dL=           0.000	  dO=          -0.000	  dHO=         -3.547
+     * Line/Offset			: dL=           0.000	 dO=          -0.000	dHO=           -3.547
      * Stakeout Diff		: dE=           -0.000	 dN=            0.000	 dH=            0.001
      * Design Line/Offs.	: dL=            0.000	 dO=            1.750	dHO=            0.000
      */
@@ -363,7 +349,7 @@ public abstract class LeicaLogfileBaseStructure {
     /*
      * Used for:
      *
-     * Measured			:	E=       611723.917	  N=       269619.207	  H=          255.594	  hr/ha=    0.000
+     * Measured			:  E=       611723.917	  N=       269619.207	  H=          255.594	  hr/ha=    0.000
      * Staked Point		:  E=       621679.285	  N=       259099.912	  H=          370.137	  hr/ha=    0.000
      */
     private RyPoint getPointReflectorHeight(String line) {
@@ -379,4 +365,4 @@ public abstract class LeicaLogfileBaseStructure {
         return new RyPoint(number, easting, northing, height, reflectorHeight);
     }
 
-} // end of LeicaLogfileBaseStructure
+}

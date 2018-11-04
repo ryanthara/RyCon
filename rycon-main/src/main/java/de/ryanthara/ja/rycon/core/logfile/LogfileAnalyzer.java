@@ -22,51 +22,50 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The {@code LogfileAnalyzer} implements all the general functions to analyze
  * a logfile in different formats.
  * <p>
- * The first version of this tool supports <tt>Leica Geosystems</tt> logfile.txt files.
+ * The first version of this tool supports Leica Geosystems logfile.txt files.
  *
  * @author sebastian
  * @version 1
  * @since 2.0
  */
+// TODO clear up and make it working
 public class LogfileAnalyzer {
 
     private static final Logger logger = LoggerFactory.getLogger(LogfileAnalyzer.class.getName());
 
-    private final ArrayList<String> logfile;
+    private final List<String> logfile;
 
     /**
      * Constructs a new instance of this class with the log file to be analyzed as parameter.
      *
      * @param logfile log file to be analyzed
      */
-    public LogfileAnalyzer(ArrayList<String> logfile) {
+    public LogfileAnalyzer(List<String> logfile) {
         this.logfile = logfile;
-
     }
 
     /**
-     * Analyzes the <tt>Leica Geosystems</tt> logfile.txt file and returns the success as indicator.
+     * Analyzes the Leica Geosystems logfile.txt file and returns the success as indicator.
      *
      * @return true if analysis has finished
      */
     public boolean analyzeLeicaGeosystemsLogfile() {
         boolean success = false;
 
-        ArrayList<String> lines = new ArrayList<>();
+        List<String> lines = new ArrayList<>();
 
         String currentIdentifier = null;
 
         Identifier current = null;
 
-
         // clean code
         String date = "";
-
 
         for (String line : logfile) {
             // identify a new block
@@ -110,7 +109,7 @@ public class LogfileAnalyzer {
         return success;
     }
 
-    private void doAnalyze(ArrayList<String> lines, Identifier current) {
+    private void doAnalyze(List<String> lines, Identifier current) {
         switch (current) {
             case COGO:
                 System.out.println("FOUND CURRENT: COGO");
@@ -168,4 +167,4 @@ public class LogfileAnalyzer {
         }
     }
 
-} // end of LogfileAnalyzer
+}

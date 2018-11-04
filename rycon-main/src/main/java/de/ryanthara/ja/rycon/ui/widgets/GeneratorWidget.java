@@ -18,16 +18,17 @@
 package de.ryanthara.ja.rycon.ui.widgets;
 
 import de.ryanthara.ja.rycon.Main;
-import de.ryanthara.ja.rycon.data.PreferenceKeys;
+import de.ryanthara.ja.rycon.data.PreferenceKey;
 import de.ryanthara.ja.rycon.i18n.*;
-import de.ryanthara.ja.rycon.ui.Sizes;
+import de.ryanthara.ja.rycon.i18n.Error;
+import de.ryanthara.ja.rycon.nio.util.FileUtils;
+import de.ryanthara.ja.rycon.nio.util.check.PathCheck;
+import de.ryanthara.ja.rycon.ui.Size;
 import de.ryanthara.ja.rycon.ui.custom.BottomButtonBar;
 import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
 import de.ryanthara.ja.rycon.ui.util.ShellPositioner;
-import de.ryanthara.ja.rycon.ui.widgets.generate.WarnAndErrorType;
-import de.ryanthara.ja.rycon.util.FileUtils;
+import de.ryanthara.ja.rycon.ui.widgets.generate.error.WarnAndErrorType;
 import de.ryanthara.ja.rycon.util.OpenInFileManager;
-import de.ryanthara.ja.rycon.util.check.PathCheck;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
@@ -39,7 +40,10 @@ import org.apache.poi.xwpf.usermodel.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,7 +59,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.*;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundle.*;
 import static de.ryanthara.ja.rycon.ui.custom.Status.OK;
 import static de.ryanthara.ja.rycon.ui.custom.Status.WARNING;
 
@@ -67,7 +71,7 @@ import static de.ryanthara.ja.rycon.ui.custom.Status.WARNING;
  * it could be opened in the default file manager of the used operating system.
  * <p>
  * Therefore the user has to put the number or text into a text field and
- * take the choice which kind of folders <tt>RyCON</tt> has to generate.
+ * take the choice which kind of folders RyCON has to generate.
  * It's possible to create two or more folders at the same time, when the
  * folder names are split by a semicolon sign (';').
  * <p>
@@ -84,6 +88,7 @@ import static de.ryanthara.ja.rycon.ui.custom.Status.WARNING;
 public final class GeneratorWidget extends AbstractWidget {
 
     private static final Logger logger = LoggerFactory.getLogger(GeneratorWidget.class.getName());
+
     private final int ADMIN_FOLDER = 1;
     private final int PROJECT_FOLDER = 2;
     private final Shell parent;
@@ -91,7 +96,7 @@ public final class GeneratorWidget extends AbstractWidget {
     private Button chkBoxCreateBigDataFolder;
     private Button chkBoxCreateProjectFolder;
     private Button chkBoxOpenFileManager;
-    private Text inputNumber;
+    private org.eclipse.swt.widgets.Text inputNumber;
     private Shell innerShell;
     private Label adminPath;
     private Label bigDataPath;
@@ -104,7 +109,7 @@ public final class GeneratorWidget extends AbstractWidget {
      *
      * @param parent parent shell
      */
-    public GeneratorWidget(final Shell parent) {
+    public GeneratorWidget(Shell parent) {
         this.parent = parent;
 
         initUI();
@@ -122,8 +127,8 @@ public final class GeneratorWidget extends AbstractWidget {
 
         if (projectNumber.trim().equals("")) {
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING,
-                    ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.msgBox_Warning),
-                    ResourceBundleUtils.getLangString(WARNINGS, Warnings.emptyTextField));
+                    ResourceBundleUtils.getLangStringFromXml(TEXT, Text.msgBox_Warning),
+                    ResourceBundleUtils.getLangString(ResourceBundle.WARNING, Warning.emptyTextField));
 
             return false;
         } else {
@@ -144,8 +149,8 @@ public final class GeneratorWidget extends AbstractWidget {
     }
 
     void initUI() {
-        int height = Sizes.RyCON_WIDGET_HEIGHT.getValue();
-        int width = Sizes.RyCON_WIDGET_WIDTH.getValue();
+        int height = Size.RyCON_WIDGET_HEIGHT.getValue();
+        int width = Size.RyCON_WIDGET_WIDTH.getValue();
 
         GridLayout gridLayout = new GridLayout(1, true);
         gridLayout.marginHeight = 5;
@@ -157,7 +162,7 @@ public final class GeneratorWidget extends AbstractWidget {
 
         innerShell = new Shell(parent, SWT.CLOSE | SWT.DIALOG_TRIM | SWT.MAX | SWT.TITLE | SWT.APPLICATION_MODAL);
         innerShell.addListener(SWT.Close, event -> actionBtnCancel());
-        innerShell.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.generator_Shell));
+        innerShell.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.generator_Shell));
         innerShell.setSize(width, height);
         innerShell.setLayout(gridLayout);
         innerShell.setLayoutData(gridData);
@@ -191,7 +196,7 @@ public final class GeneratorWidget extends AbstractWidget {
             logger.error("Error when copying file '{}'.", copySourcePath.toString(), e.getCause());
 
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR,
-                    ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.msgBox_Error),
+                    ResourceBundleUtils.getLangStringFromXml(TEXT, Text.msgBox_Error),
                     type.getErrorMessage().getErrorMessage(number));
         }
 
@@ -200,7 +205,7 @@ public final class GeneratorWidget extends AbstractWidget {
 
     private void createAdvice(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.advice));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.advice));
 
         GridLayout gridLayout = new GridLayout(1, true);
         group.setLayout(gridLayout);
@@ -212,8 +217,8 @@ public final class GeneratorWidget extends AbstractWidget {
         Label tip = new Label(group, SWT.WRAP | SWT.BORDER | SWT.LEFT);
         String text =
                 ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.generatorWidget) + "\n\n" +
-                ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.generatorWidget2) + "\n\n" +
-                ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.generatorWidget3);
+                        ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.generatorWidget2) + "\n\n" +
+                        ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.generatorWidget3);
 
         tip.setText(text);
 
@@ -260,23 +265,23 @@ public final class GeneratorWidget extends AbstractWidget {
             String message;
 
             if (areAdminFoldersCreated && areBigDataFoldersCreated && areProjectFoldersCreated) {
-                message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.adminAndBigDataAndProjectsCreated), helper);
+                message = String.format(ResourceBundleUtils.getLangString(MESSAGE, Message.adminAndBigDataAndProjectsCreated), helper);
             } else if (areAdminFoldersCreated && areBigDataFoldersCreated) {
-                message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.adminAndBigDatasCreated), helper);
+                message = String.format(ResourceBundleUtils.getLangString(MESSAGE, Message.adminAndBigDatasCreated), helper);
             } else if (areAdminFoldersCreated && areProjectFoldersCreated) {
-                message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.adminAndProjectsCreated), helper);
+                message = String.format(ResourceBundleUtils.getLangString(MESSAGE, Message.adminAndProjectsCreated), helper);
             } else if (areBigDataFoldersCreated && areProjectFoldersCreated) {
-                message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.bigDataAndProjectsCreated), helper);
+                message = String.format(ResourceBundleUtils.getLangString(MESSAGE, Message.bigDataAndProjectsCreated), helper);
             } else if (areAdminFoldersCreated) {
-                message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.adminFoldersCreated), helper);
+                message = String.format(ResourceBundleUtils.getLangString(MESSAGE, Message.adminFoldersCreated), helper);
             } else if (areBigDataFoldersCreated) {
-                message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.bigDataFoldersCreated), helper);
+                message = String.format(ResourceBundleUtils.getLangString(MESSAGE, Message.bigDataFoldersCreated), helper);
             } else {
-                message = String.format(ResourceBundleUtils.getLangString(MESSAGES, Messages.projectFoldersCreated), helper);
+                message = String.format(ResourceBundleUtils.getLangString(MESSAGE, Message.projectFoldersCreated), helper);
             }
 
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_INFORMATION,
-                    ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.msgBox_Information), message);
+                    ResourceBundleUtils.getLangStringFromXml(TEXT, Text.msgBox_Information), message);
 
             // open every created folder in the file viewer
             if (chkBoxOpenFileManager.getSelection()) {
@@ -298,15 +303,15 @@ public final class GeneratorWidget extends AbstractWidget {
         gridLayout.numColumns = 3;
 
         GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
-        gridData.widthHint = Sizes.RyCON_WIDGET_WIDTH.getValue();
+        gridData.widthHint = Size.RyCON_WIDGET_WIDTH.getValue();
 
         group.setLayout(gridLayout);
         group.setLayoutData(gridData);
 
         Label projectNumberLabel = new Label(group, SWT.NONE);
-        projectNumberLabel.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.generator_ProjectNumber));
+        projectNumberLabel.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.generator_ProjectNumber));
 
-        inputNumber = new Text(group, SWT.SINGLE | SWT.BORDER);
+        inputNumber = new org.eclipse.swt.widgets.Text(group, SWT.SINGLE | SWT.BORDER);
 
         /*
          * platform independent key handling for ENTER to prevent action handling on empty text field
@@ -329,7 +334,7 @@ public final class GeneratorWidget extends AbstractWidget {
 
     private void createGroupOptions(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.generalOptions));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.generalOptions));
 
         GridLayout gridLayout = new GridLayout(1, true);
 
@@ -341,24 +346,24 @@ public final class GeneratorWidget extends AbstractWidget {
 
         chkBoxCreateAdminFolder = new Button(group, SWT.CHECK);
         chkBoxCreateAdminFolder.setSelection(true);
-        chkBoxCreateAdminFolder.setText(ResourceBundleUtils.getLangString(CHECKBOXES, CheckBoxes.createAdminFolder));
+        chkBoxCreateAdminFolder.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBox.createAdminFolder));
 
         chkBoxCreateBigDataFolder = new Button(group, SWT.CHECK);
         chkBoxCreateBigDataFolder.setSelection(false);
-        chkBoxCreateBigDataFolder.setText(ResourceBundleUtils.getLangString(CHECKBOXES, CheckBoxes.createBigDataFolder));
+        chkBoxCreateBigDataFolder.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBox.createBigDataFolder));
 
         chkBoxCreateProjectFolder = new Button(group, SWT.CHECK);
         chkBoxCreateProjectFolder.setSelection(false);
-        chkBoxCreateProjectFolder.setText(ResourceBundleUtils.getLangString(CHECKBOXES, CheckBoxes.createProjectFolder));
+        chkBoxCreateProjectFolder.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBox.createProjectFolder));
 
         chkBoxOpenFileManager = new Button(group, SWT.CHECK);
         chkBoxOpenFileManager.setSelection(true);
-        chkBoxOpenFileManager.setText(ResourceBundleUtils.getLangString(CHECKBOXES, CheckBoxes.openFileManager));
+        chkBoxOpenFileManager.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBox.openFileManager));
     }
 
     private void createGroupRecentFolders(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.generator_GroupRecentFolders));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.generator_GroupRecentFolders));
 
         GridLayout gridLayout = new GridLayout(2, false);
 
@@ -369,7 +374,7 @@ public final class GeneratorWidget extends AbstractWidget {
         group.setLayoutData(gridData);
 
         Label adminDescription = new Label(group, SWT.NONE);
-        adminDescription.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.generator_AdminDescription));
+        adminDescription.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.generator_AdminDescription));
 
         adminPath = new Label(group, SWT.NONE);
         adminPath.setText(getAdminPathString());
@@ -380,7 +385,7 @@ public final class GeneratorWidget extends AbstractWidget {
         adminPath.setLayoutData(gridData);
 
         Label bigDataDescription = new Label(group, SWT.NONE);
-        bigDataDescription.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.generator_BigDataDescription));
+        bigDataDescription.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.generator_BigDataDescription));
 
         bigDataPath = new Label(group, SWT.NONE);
         bigDataPath.setText(getBigDataPathString());
@@ -391,7 +396,7 @@ public final class GeneratorWidget extends AbstractWidget {
         bigDataPath.setLayoutData(gridData);
 
         Label projectDescription = new Label(group, SWT.NONE);
-        projectDescription.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.generator_ProjectDescription));
+        projectDescription.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.generator_ProjectDescription));
 
         projectPath = new Label(group, SWT.NONE);
         projectPath.setText(getProjectPathString());
@@ -403,8 +408,8 @@ public final class GeneratorWidget extends AbstractWidget {
     }
 
     private boolean generateAdminFolder(String number) {
-        final String dir = Main.pref.getUserPreference(PreferenceKeys.DIR_ADMIN);
-        final String dirTemplate = Main.pref.getUserPreference(PreferenceKeys.DIR_ADMIN_TEMPLATE);
+        final String dir = Main.pref.getUserPreference(PreferenceKey.DIR_ADMIN);
+        final String dirTemplate = Main.pref.getUserPreference(PreferenceKey.DIR_ADMIN_TEMPLATE);
 
         /*
          * Check admin dir and admin template dir for identity. They must not be equal,
@@ -412,10 +417,10 @@ public final class GeneratorWidget extends AbstractWidget {
          * nested files in there.
          */
         if (dir.equals(dirTemplate)) {
-            final String message = ResourceBundleUtils.getLangString(MESSAGES, Messages.adminDirEqualityMessage);
+            final String message = ResourceBundleUtils.getLangString(MESSAGE, Message.adminDirEqualityMessage);
 
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR,
-                    ResourceBundleUtils.getLangString(ERRORS, Errors.adminDirEquality), message);
+                    ResourceBundleUtils.getLangString(ERROR, Error.adminDirEquality), message);
 
             return false;
         } else {
@@ -424,8 +429,8 @@ public final class GeneratorWidget extends AbstractWidget {
     }
 
     private boolean generateBigDataFolder(String number) {
-        final String dir = Main.pref.getUserPreference(PreferenceKeys.DIR_BIG_DATA);
-        final String dirTemplate = Main.pref.getUserPreference(PreferenceKeys.DIR_BIG_DATA_TEMPLATE);
+        final String dir = Main.pref.getUserPreference(PreferenceKey.DIR_BIG_DATA);
+        final String dirTemplate = Main.pref.getUserPreference(PreferenceKey.DIR_BIG_DATA_TEMPLATE);
 
         /*
          * Check big data dir and big data template dir for identity. They must not be equal,
@@ -433,10 +438,10 @@ public final class GeneratorWidget extends AbstractWidget {
          * nested files in there.
          */
         if (dir.equals(dirTemplate)) {
-            final String message = ResourceBundleUtils.getLangString(MESSAGES, Messages.bigDataDirEqualityMessage);
+            final String message = ResourceBundleUtils.getLangString(MESSAGE, Message.bigDataDirEqualityMessage);
 
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR,
-                    ResourceBundleUtils.getLangString(ERRORS, Errors.bigDataDirEquality), message);
+                    ResourceBundleUtils.getLangString(ERROR, Error.bigDataDirEquality), message);
 
             return false;
         } else {
@@ -453,7 +458,7 @@ public final class GeneratorWidget extends AbstractWidget {
             Main.statusBar.setStatus("", WARNING);
 
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING,
-                    ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.msgBox_Warning),
+                    ResourceBundleUtils.getLangStringFromXml(TEXT, Text.msgBox_Warning),
                     type.getErrorMessage().getWarnMessage(number));
         } else {
             success = copyFile(number, directoryTemplate, type, copyTargetPath);
@@ -463,8 +468,8 @@ public final class GeneratorWidget extends AbstractWidget {
     }
 
     private boolean generateProjectFolder(String number) {
-        final String dir = Main.pref.getUserPreference(PreferenceKeys.DIR_PROJECT);
-        final String dirTemplate = Main.pref.getUserPreference(PreferenceKeys.DIR_PROJECT_TEMPLATE);
+        final String dir = Main.pref.getUserPreference(PreferenceKey.DIR_PROJECT);
+        final String dirTemplate = Main.pref.getUserPreference(PreferenceKey.DIR_PROJECT_TEMPLATE);
 
         /*
          * Check project dir and project template dir for identity. They must not be equal,
@@ -472,10 +477,10 @@ public final class GeneratorWidget extends AbstractWidget {
          * nested files in there.
          */
         if (dir.equals(dirTemplate)) {
-            final String message = ResourceBundleUtils.getLangString(MESSAGES, Messages.projectDirEqualityMessage);
+            final String message = ResourceBundleUtils.getLangString(MESSAGE, Message.projectDirEqualityMessage);
 
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR,
-                    ResourceBundleUtils.getLangString(ERRORS, Errors.projectDirEquality), message);
+                    ResourceBundleUtils.getLangString(ERROR, Error.projectDirEquality), message);
 
             return false;
         } else {
@@ -484,13 +489,13 @@ public final class GeneratorWidget extends AbstractWidget {
     }
 
     private String getAdminPathString() {
-        Path adminPath = Paths.get(Main.pref.getUserPreference(PreferenceKeys.DIR_ADMIN));
+        Path adminPath = Paths.get(Main.pref.getUserPreference(PreferenceKey.DIR_ADMIN));
 
         return FileUtils.getRecentFolder(adminPath);
     }
 
     private String getBigDataPathString() {
-        Path bigDataPath = Paths.get(Main.pref.getUserPreference(PreferenceKeys.DIR_BIG_DATA));
+        Path bigDataPath = Paths.get(Main.pref.getUserPreference(PreferenceKey.DIR_BIG_DATA));
 
         return FileUtils.getRecentFolder(bigDataPath);
     }
@@ -502,30 +507,30 @@ public final class GeneratorWidget extends AbstractWidget {
     }
 
     private String getProjectPathString() {
-        Path projectPath = Paths.get(Main.pref.getUserPreference(PreferenceKeys.DIR_PROJECT));
+        Path projectPath = Paths.get(Main.pref.getUserPreference(PreferenceKey.DIR_PROJECT));
 
         return FileUtils.getRecentFolder(projectPath);
     }
 
     private String getUserString() {
-        return Main.pref.getUserPreference(PreferenceKeys.PARAM_USER_STRING);
+        return Main.pref.getUserPreference(PreferenceKey.PARAM_USER_STRING);
     }
 
     private void openFolder(String number, boolean isAdminFolderGenerated, boolean isBigDataFolderGenerated, boolean isProjectFolderGenerated) {
         final String delimiter = FileSystems.getDefault().getSeparator();
 
         if (isAdminFolderGenerated) {
-            final String path = Main.pref.getUserPreference(PreferenceKeys.DIR_ADMIN) + delimiter + number;
+            final String path = Main.pref.getUserPreference(PreferenceKey.DIR_ADMIN) + delimiter + number;
 
             OpenInFileManager.openFolder(path);
         }
         if (isBigDataFolderGenerated) {
-            final String path = Main.pref.getUserPreference(PreferenceKeys.DIR_BIG_DATA) + delimiter + number;
+            final String path = Main.pref.getUserPreference(PreferenceKey.DIR_BIG_DATA) + delimiter + number;
 
             OpenInFileManager.openFolder(path);
         }
         if (isProjectFolderGenerated) {
-            final String path = Main.pref.getUserPreference(PreferenceKeys.DIR_PROJECT) + delimiter + number;
+            final String path = Main.pref.getUserPreference(PreferenceKey.DIR_PROJECT) + delimiter + number;
 
             OpenInFileManager.openFolder(path);
         }
@@ -738,7 +743,7 @@ public final class GeneratorWidget extends AbstractWidget {
     /**
      * Renames some special files in the admin folder.
      * <p>
-     * They are special for my company and may not work for you with a normal usage of <tt>RyCON</tt>.
+     * They are special for my company and may not work for you with a normal usage of RyCON.
      *
      * @param number     number of the generated admin folder
      * @param folderType differ between admin or project folder
@@ -749,12 +754,12 @@ public final class GeneratorWidget extends AbstractWidget {
 
         switch (folderType) {
             case ADMIN_FOLDER:
-                dir = Main.pref.getUserPreference(PreferenceKeys.DIR_ADMIN) + delimiter + number;
+                dir = Main.pref.getUserPreference(PreferenceKey.DIR_ADMIN) + delimiter + number;
                 // renameOrganisationFiles(number, delimiter, folderType, dir);
                 // renameContractFiles(number, delimiter, dir);
                 break;
             case PROJECT_FOLDER:
-                dir = Main.pref.getUserPreference(PreferenceKeys.DIR_PROJECT) + delimiter + number;
+                dir = Main.pref.getUserPreference(PreferenceKey.DIR_PROJECT) + delimiter + number;
                 break;
             default:
                 break;
@@ -811,4 +816,4 @@ public final class GeneratorWidget extends AbstractWidget {
         projectPath.setText(getProjectPathString());
     }
 
-}  // end of GeneratorWidget
+}

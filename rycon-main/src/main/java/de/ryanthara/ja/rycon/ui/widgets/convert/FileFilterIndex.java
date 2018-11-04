@@ -17,13 +17,14 @@
  */
 package de.ryanthara.ja.rycon.ui.widgets.convert;
 
-import de.ryanthara.ja.rycon.i18n.FileChoosers;
+import de.ryanthara.ja.rycon.i18n.FileChooser;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.FILECHOOSERS;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundle.FILECHOOSER;
 
 /**
  * This enumeration is used for file filter indices in the {@link ConverterWidget}.
@@ -34,14 +35,14 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.FILECHOOSERS;
  */
 public enum FileFilterIndex {
 
-    CSV("*.csv", ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameCsv)),
-    DAT("*.dat", ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameCadwork)),
-    GSI("*.gsi", ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameGsi)),
-    K("*.K", ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameK)),
-    MEP("*.MEP", ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameMep)),
-    PTS("*.PTS", ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNamePts)),
-    REC("*.REC", ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameZeiss)),
-    TXT("*.txt", ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameTxt));
+    CSV("*.csv", ResourceBundleUtils.getLangString(FILECHOOSER, FileChooser.filterNameCsv)),
+    DAT("*.dat", ResourceBundleUtils.getLangString(FILECHOOSER, FileChooser.filterNameCadwork)),
+    GSI("*.gsi", ResourceBundleUtils.getLangString(FILECHOOSER, FileChooser.filterNameGsi)),
+    K("*.K", ResourceBundleUtils.getLangString(FILECHOOSER, FileChooser.filterNameK)),
+    MEP("*.MEP", ResourceBundleUtils.getLangString(FILECHOOSER, FileChooser.filterNameMep)),
+    PTS("*.PTS", ResourceBundleUtils.getLangString(FILECHOOSER, FileChooser.filterNamePts)),
+    REC("*.REC", ResourceBundleUtils.getLangString(FILECHOOSER, FileChooser.filterNameZeiss)),
+    TXT("*.txt", ResourceBundleUtils.getLangString(FILECHOOSER, FileChooser.filterNameTxt));
 
     private final String extension;
     private final String filterName;
@@ -55,7 +56,6 @@ public enum FileFilterIndex {
      * Returns the {@link FileFilterIndex} from index parameter as static access from switch cases.
      *
      * @param index index to return
-     *
      * @return FileFilterIndex by index
      */
     public static FileFilterIndex fromIndex(int index) {
@@ -76,7 +76,7 @@ public enum FileFilterIndex {
      * @return file filter extensions
      */
     public String[] getExtensionsArray() {
-        ArrayList<String> list = new ArrayList<>();
+        List<String> list = new ArrayList<>();
 
         for (FileFilterIndex index : FileFilterIndex.values()) {
             list.add(index.getExtension());
@@ -91,7 +91,7 @@ public enum FileFilterIndex {
      * @return file filter names
      */
     public String[] getFilterNamesArray() {
-        ArrayList<String> list = new ArrayList<>();
+        List<String> list = new ArrayList<>();
 
         for (FileFilterIndex index : FileFilterIndex.values()) {
             list.add(index.getFilterName());
@@ -118,4 +118,4 @@ public enum FileFilterIndex {
         return filterName;
     }
 
-} // end of FileFilterIndex
+}

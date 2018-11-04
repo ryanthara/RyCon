@@ -21,9 +21,10 @@ import de.ryanthara.ja.rycon.core.converter.zeiss.ZeissDecoder;
 import de.ryanthara.ja.rycon.core.elements.ZeissBlock;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * This class provides functions to convert measurement files from Zeiss REC format
+ * A converter with functions to convert measurement and coordinate files from Zeiss REC format
  * and it's dialects (R4, R5, REC500 and M5) into comma separated values (CSV) files.
  *
  * @author sebastian
@@ -32,33 +33,34 @@ import java.util.ArrayList;
  */
 public class Zeiss2Csv {
 
-    private final ArrayList<String> readStringLines;
+    private final List<String> lines;
 
     /**
-     * Class constructor for reader line based Zeiss REC files in different dialects.
-     * <p>
-     * The differentiation of the content is done by the called method.
+     * Creates a converter with a list for the read line based
+     * text files in the Zeiss REC format and it's dialects.
      *
-     * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
+     * <p>
+     * The differentiation of the content is done by the called
+     * method and it's content analyze functionality.
+     *
+     * @param lines list with Zeiss REC format lines
      */
-    public Zeiss2Csv(ArrayList<String> readStringLines) {
-        this.readStringLines = readStringLines;
+    public Zeiss2Csv(List<String> lines) {
+        this.lines = new ArrayList<>(lines);
     }
 
     /**
      * Converts a Zeiss REC file (and it's dialects R4, R5, R500 and M5) into a K format file.
      *
-     * @param separator        used separator sign
-     *
-     * @return converted K file as {@code ArrayList<String>}
+     * @param separator used separator sign
+     * @return converted K file as {@code List<String>}
      */
-    public ArrayList<String> convertZeiss2CSV(String separator) {
-        ArrayList<String> result = new ArrayList<>();
+    public List<String> convert(String separator) {
+        List<String> result = new ArrayList<>();
 
         int readLineCounter = 0;
 
-        for (String line : readStringLines) {
-
+        for (String line : lines) {
             // skip empty lines
             if (line.trim().length() > 0) {
                 ZeissDecoder decoder = new ZeissDecoder();
@@ -71,8 +73,7 @@ public class Zeiss2Csv {
             }
         }
 
-        return result;
+        return List.copyOf(result);
     }
 
-
-} // end of Zeiss2Csv
+}

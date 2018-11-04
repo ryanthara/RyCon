@@ -67,7 +67,7 @@ public class EditorDouble extends Editor<Double> {
      * @param parent parent composite
      */
     @Override
-    public void createControl(final Composite parent) {
+    public void createControl(Composite parent) {
         // GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, false);
         GridData gridData = new GridData();
         gridData.horizontalAlignment = SWT.FILL;
@@ -130,7 +130,6 @@ public class EditorDouble extends Editor<Double> {
      * Formats the value for for this editor.
      *
      * @param d value to be formatted
-     *
      * @return formatted value
      */
     @Override
@@ -142,12 +141,11 @@ public class EditorDouble extends Editor<Double> {
      * Parses the string to {@code Double}.
      *
      * @param s string to be parsed
-     *
      * @return parsed string
      */
     @Override
-    Double parse(final String s) {
+    Double parse(String s) {
         return Double.valueOf(s);
     }
 
-} // end of EditorDouble
+}

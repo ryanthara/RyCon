@@ -20,10 +20,11 @@ package de.ryanthara.ja.rycon.core.converter.csv;
 import de.ryanthara.ja.rycon.core.elements.CaplanBlock;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Instances of this class provides functions to convert coordinate files from Caplan K format
- * into a comma separated values file (csv format).
+ * A converter with functions to convert Caplan K coordinate
+ * files into comma separated values (CSV) files.
  *
  * @author sebastian
  * @version 1
@@ -31,15 +32,15 @@ import java.util.ArrayList;
  */
 public class Caplan2Csv {
 
-    private final ArrayList<String> readStringLines;
+    private final List<String> lines;
 
     /**
-     * Constructs a new instance of this class with the reader Caplan K file {@link ArrayList} string as parameter.
+     * Creates a converter with a list for the read line based Caplan K file.
      *
-     * @param readStringLines {@code ArrayList<String>} with lines in Caplan K format
+     * @param lines list with Caplan K formatted lines
      */
-    public Caplan2Csv(ArrayList<String> readStringLines) {
-        this.readStringLines = readStringLines;
+    public Caplan2Csv(List<String> lines) {
+        this.lines = new ArrayList<>(lines);
     }
 
     /**
@@ -49,11 +50,10 @@ public class Caplan2Csv {
      * @param writeSimpleFormat option to writer a reduced K file which is compatible to Z+F LaserControl
      * @param writeCommentLine  option to writer a comment line into the K file with basic information
      * @param writeCodeColumn   option to writer a found code into the K file
-     *
-     * @return converted K file as {@code ArrayList<String>}
+     * @return converted K file as {@code List<String>}
      */
-    public ArrayList<String> convertK2CSV(String separator, boolean writeSimpleFormat, boolean writeCommentLine, boolean writeCodeColumn) {
-        ArrayList<String> result = new ArrayList<>();
+    public List<String> convert(String separator, boolean writeSimpleFormat, boolean writeCommentLine, boolean writeCodeColumn) {
+        List<String> result = new ArrayList<>();
 
         if (writeCommentLine) {
             String commentLine = "";
@@ -67,7 +67,7 @@ public class Caplan2Csv {
             result.add(commentLine);
         }
 
-        for (String line : readStringLines) {
+        for (String line : lines) {
             // skip empty lines directly after reading
             if (!line.trim().isEmpty()) {
                 String s = "";
@@ -109,8 +109,8 @@ public class Caplan2Csv {
             }
         }
 
-        return result;
+        return List.copyOf(result);
 
     }
 
-} // end of Caplan2Csv
+}

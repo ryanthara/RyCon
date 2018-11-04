@@ -17,19 +17,20 @@
  */
 package de.ryanthara.ja.rycon.core.converter.excel;
 
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import de.ryanthara.ja.rycon.nio.FileFormat;
+import de.ryanthara.ja.rycon.util.StringUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.WorkbookUtil;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 /**
- * This class provides functions to convert coordinate files from the geodata server 'Basel Stadt' (Switzerland)
- * into Microsoft Excel (XLS and XLSX) files.
+ * A converter with functions to convert coordinate coordinate files from the geodata
+ * server Basel Stadt (Switzerland) into Microsoft Excel files in XLS or XLSX format.
  *
  * @author sebastian
  * @version 1
@@ -39,41 +40,35 @@ public class CsvBaselStadt2Excel {
 
     private static final Logger logger = LoggerFactory.getLogger(CsvBaselStadt2Excel.class.getName());
 
-    private final List<String[]> readCSVLines;
+    private final List<String[]> lines;
     private Workbook workbook = null;
 
     /**
-     * Class constructor for reader line based CSV files from the geodata server Basel Stadt (Switzerland).
+     * Creates a converter with a list for the read line based comma separated
+     * values (CSV) file from the geodata server Basel Stadt (Switzerland).
      *
-     * @param readCSVLines {@code List<String[]>} with lines as {@code String[]}
+     * @param lines list with lines as string array
      */
-    public CsvBaselStadt2Excel(List<String[]> readCSVLines) {
-        this.readCSVLines = readCSVLines;
+    public CsvBaselStadt2Excel(List<String[]> lines) {
+        this.lines = new ArrayList<>(lines);
     }
 
     /**
      * Converts a comma separated coordinate file from the geodata server Basel Stadt (Switzerland)
      * into a Zeiss REC formatted file.
      *
-     * @param isXLS           selector to distinguish between XLS and XLSX file extension
+     * @param fileFormat      selector to distinguish between XLS and XLSX file extension
      * @param sheetName       name of the sheet (file name from input file)
      * @param writeCommentRow writer comment row
-     *
      * @return success conversion success
      */
-    public boolean convertCsvBaselStadt2Excel(boolean isXLS, String sheetName, boolean writeCommentRow) {
-        // general preparation of the workbook
-        if (isXLS) {
-            workbook = new HSSFWorkbook();
-        } else {
-            workbook = new XSSFWorkbook();
-        }
+    public boolean convert(FileFormat fileFormat, String sheetName, boolean writeCommentRow) {
+        workbook = BaseToolsExcel.prepareWorkbook(fileFormat);
 
         String safeName = WorkbookUtil.createSafeSheetName(sheetName);
         Sheet sheet = workbook.createSheet(safeName);
         Row row;
         Cell cell;
-        CellStyle cellStyle;
 
         DataFormat format = workbook.createDataFormat();
 
@@ -81,71 +76,84 @@ public class CsvBaselStadt2Excel {
         short cellNumber = 0;
 
         if (writeCommentRow) {
-            row = sheet.createRow(rowNumber);
-            rowNumber++;
-
-            String[] commentLine = readCSVLines.get(0);
-
-            for (String description : commentLine) {
-                cell = row.createCell(cellNumber);
-                cellNumber++;
-                cell.setCellValue(description);
-            }
+            rowNumber = prepareCommentRow(sheet, rowNumber, cellNumber);
         }
 
-        // remove furthermore the still not needed comment line
-        readCSVLines.remove(0);
+        removeHeadLine();
 
-        for (String[] csvLine : readCSVLines) {
+        for (String[] csvLine : lines) {
             row = sheet.createRow(rowNumber);
             rowNumber++;
 
             cellNumber = 0;
 
-            for (int i = 0; i < csvLine.length; i++) {
-                cell = row.createCell(cellNumber);
-                cellNumber++;
-
-                switch (i) {
-                    case 0:
-                    case 1:
-                        cell.setCellValue(csvLine[i]);
-                        break;
-                    case 2:
-                    case 3:
-                    case 4:
-                    case 5:
-                        if (csvLine[i].equalsIgnoreCase("")) {
-                            cell.setCellValue(csvLine[i]);
-                        } else {
-                            cell.setCellValue(Double.parseDouble(csvLine[i]));
-                            cellStyle = workbook.createCellStyle();
-                            cellStyle.setDataFormat(format.getFormat("#,##0.000"));
-                            cellStyle.setAlignment(HorizontalAlignment.RIGHT);
-                            cell.setCellStyle(cellStyle);
-                        }
-                        break;
-                    case 6:
-                    case 7:
-                    case 8:
-                    case 9:
-                    case 10:
-                        cell.setCellValue(csvLine[i]);
-                        break;
-
-                    default:
-                        logger.trace("Line contains less or more tokens ({}) than needed or allowed.\n{}", csvLine.length, Arrays.toString(csvLine));
-                        break;
-                }
-            }
+            prepareCell(row, format, cellNumber, csvLine);
         }
 
         // adjust column width to fit the content
-        for (int i = 0; i < readCSVLines.get(0).length; i++) {
+        for (int i = 0; i < lines.get(0).length; i++) {
             sheet.autoSizeColumn((short) i);
         }
 
         return rowNumber > 1;
+    }
+
+    private void prepareCell(Row row, DataFormat format, short cellNumber, String[] csvLine) {
+        Cell cell;
+
+        for (int i = 0; i < csvLine.length; i++) {
+            cell = row.createCell(cellNumber);
+            cellNumber++;
+
+            switch (i) {
+                case 0:
+                case 1:
+                    cell.setCellValue(csvLine[i]);
+                    break;
+                case 2:
+                case 3:
+                case 4:
+                case 5:
+                    if (csvLine[i].equalsIgnoreCase("")) {
+                        cell.setCellValue(csvLine[i]);
+                    } else {
+                        cell.setCellValue(StringUtils.parseDoubleValue(csvLine[i]));
+                        BaseToolsExcel.setCellStyle(workbook, cell, format, Format.DIGITS_3.getString());
+                    }
+                    break;
+                case 6:
+                case 7:
+                case 8:
+                case 9:
+                case 10:
+                    cell.setCellValue(csvLine[i]);
+                    break;
+
+                default:
+                    logger.trace("Line contains less or more tokens ({}) than needed or allowed.\n{}", csvLine.length, Arrays.toString(csvLine));
+                    break;
+            }
+        }
+    }
+
+    private short prepareCommentRow(Sheet sheet, short rowNumber, short cellNumber) {
+        Row row;
+        Cell cell;
+        row = sheet.createRow(rowNumber);
+        rowNumber++;
+
+        String[] commentLine = lines.get(0);
+
+        for (String description : commentLine) {
+            cell = row.createCell(cellNumber);
+            cellNumber++;
+            cell.setCellValue(description);
+        }
+        return rowNumber;
+    }
+
+    private void removeHeadLine() {
+        lines.remove(0);
     }
 
     /**
@@ -157,4 +165,4 @@ public class CsvBaselStadt2Excel {
         return this.workbook;
     }
 
-} // end of CsvBaselStadt2Excel
+}

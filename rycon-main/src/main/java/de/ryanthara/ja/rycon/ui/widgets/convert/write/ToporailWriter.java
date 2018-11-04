@@ -17,14 +17,12 @@
  */
 package de.ryanthara.ja.rycon.ui.widgets.convert.write;
 
-import de.ryanthara.ja.rycon.core.converter.toporail.FileType;
 import de.ryanthara.ja.rycon.core.converter.toporail.Gsi2Toporail;
+import de.ryanthara.ja.rycon.nio.FileFormat;
 import de.ryanthara.ja.rycon.nio.FileNameExtension;
 import de.ryanthara.ja.rycon.nio.WriteFile2Disk;
 import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
 import de.ryanthara.ja.rycon.ui.widgets.convert.SourceButton;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.odftoolkit.simple.SpreadsheetDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,37 +31,38 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Instances of this class are used for writing text files from the {@link ConverterWidget} of <tt>RyCON</tt>.
+ * A writer for writing Toporail MEP and PTS files in the {@link ConverterWidget} of RyCON.
  *
  * @author sebastian
  * @version 2
  * @since 12
  */
-public class ToporailWriter implements Writer {
+public class ToporailWriter extends Writer {
 
     private static final Logger logger = LoggerFactory.getLogger(ToporailWriter.class.getName());
+
     private final Path path;
-    private final ArrayList<String> readStringFile;
-    private final List<String[]> readCSVFile;
+    private final List<String> lines;
+    private final List<String[]> csv;
     private final WriteParameter parameter;
     private String fileNameExtension;
 
     /**
      * Constructs the {@link ToporailWriter} with a set of parameters.
      *
-     * @param path           reader file object for writing
-     * @param readCSVFile    reader csv file
-     * @param readStringFile reader string file
-     * @param parameter      the writer parameter object
-     * @param fileTyp        the file type
+     * @param path       file path to write into
+     * @param csv        read csv file
+     * @param lines      read string based file
+     * @param parameter  the writer parameter object
+     * @param fileFormat the file format
      */
-    public ToporailWriter(Path path, ArrayList<String> readStringFile, List<String[]> readCSVFile, WriteParameter parameter, FileType fileTyp) {
+    public ToporailWriter(Path path, List<String> lines, List<String[]> csv, WriteParameter parameter, FileFormat fileFormat) {
         this.path = path;
-        this.readStringFile = readStringFile;
-        this.readCSVFile = readCSVFile;
+        this.lines = new ArrayList<>(lines);
+        this.csv = new ArrayList<>(csv);
         this.parameter = parameter;
 
-        switch (fileTyp) {
+        switch (fileFormat) {
             case MEP:
                 this.fileNameExtension = FileNameExtension.MEP.getExtension();
                 break;
@@ -74,41 +73,21 @@ public class ToporailWriter implements Writer {
     }
 
     /**
-     * Returns true if the prepared {@link SpreadsheetDocument} for file writing was written to the file system.
+     * Writes a Toporail MEP or PTS file depends on the source file format.
      *
+     * @param fileFormat file typ of the output file (MEP or PTS)
      * @return write success
      */
-    @Override
-    public boolean writeSpreadsheetDocument() {
-        return false;
-    }
-
-    /**
-     * Returns true if the prepared {@link ArrayList} for file writing was written to the file system.
-     *
-     * @return write success
-     */
-    @Override
-    public boolean writeStringFile() {
-        return false;
-    }
-
-    /**
-     * Returns the prepared {@link ArrayList} for file writing.
-     *
-     * @param fileType file typ of the output file (MEP or PTS)
-     *
-     * @return array list for file writing
-     */
-    public boolean writeStringFile(FileType fileType) {
+    public boolean writeStringFile(FileFormat fileFormat) {
         boolean success = false;
-        ArrayList<String> writeFile = null;
+        java.util.List<String> writeFile = null;
 
         switch (SourceButton.fromIndex(parameter.getSourceNumber())) {
             case GSI8:
+                // fall through for GSI8 format
             case GSI16:
-                Gsi2Toporail gsi2Toporail = new Gsi2Toporail(readStringFile);
-                writeFile = gsi2Toporail.convertGsi2Toporail(fileType);
+                Gsi2Toporail gsi2Toporail = new Gsi2Toporail(lines);
+                writeFile = gsi2Toporail.convertGsi2Toporail(fileFormat);
                 break;
 
             case TXT:
@@ -145,14 +124,4 @@ public class ToporailWriter implements Writer {
         return success;
     }
 
-    /**
-     * Returns true if the prepared {@link Workbook} for file writing was written to the file system.
-     *
-     * @return write success
-     */
-    @Override
-    public boolean writeWorkbookFile() {
-        return false;
-    }
-
-} // end of ToporailWriter
+}

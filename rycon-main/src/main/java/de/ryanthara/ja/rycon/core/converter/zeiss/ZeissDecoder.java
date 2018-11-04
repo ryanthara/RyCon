@@ -18,12 +18,14 @@
 package de.ryanthara.ja.rycon.core.converter.zeiss;
 
 import de.ryanthara.ja.rycon.core.elements.ZeissBlock;
+import de.ryanthara.ja.rycon.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Instances of this class provides functions to decode a string line in Zeiss REC format and it's
- * dialects (R4, R5, REC500 and M5) into a bunch of elements.
+ * Decodes a string line in Zeiss REC format and it's dialects
+ * (R4, R5, REC500 and M5) into a bunch of elements.
  *
  * @author sebastian
  * @version 1
@@ -31,18 +33,18 @@ import java.util.ArrayList;
  */
 public class ZeissDecoder {
 
+    private final ArrayList<ZeissBlock> zeissBlocks = new ArrayList<>();
     private int lineNumber;
     private int numOfBlocks;
     private String error = "";
     private String pointIdentification, pointNumber;
-    private final ArrayList<ZeissBlock> zeissBlocks = new ArrayList<>();
     private ZeissBlock block1 = null;
     private ZeissBlock block3 = null;
     private ZeissBlock block2 = null;
     private ZeissDialect dialect;
 
     /**
-     * Constructs a new instance of this class without any parameters.
+     * Creates a converter which initializes the number of blocks to zero.
      */
     public ZeissDecoder() {
         numOfBlocks = 0;
@@ -90,7 +92,7 @@ public class ZeissDecoder {
             } else if (line.startsWith("For R5") || line.startsWith("For_R5")) {
                 final int[] R5 = BaseToolsZeiss.getLinePositions(dialect = ZeissDialect.R5);
 
-                lineNumber = Integer.parseInt(line.substring(R5[0], R5[1] + 1).trim());
+                lineNumber = StringUtils.parseIntegerValue(line.substring(R5[0], R5[1] + 1).trim());
 
                 ptIDA = R5[2];
                 ptIDB = R5[3];
@@ -117,7 +119,7 @@ public class ZeissDecoder {
             } else if (line.startsWith("For M5") || line.startsWith("For_M5")) {
                 final int[] M5 = BaseToolsZeiss.getLinePositions(dialect = ZeissDialect.M5);
 
-                lineNumber = Integer.parseInt(line.substring(M5[0], M5[1] + 1).trim());
+                lineNumber = StringUtils.parseIntegerValue(line.substring(M5[0], M5[1] + 1).trim());
 
                 ptIDA = M5[2];
                 ptIDB = M5[3];
@@ -186,7 +188,7 @@ public class ZeissDecoder {
         } else if (line.startsWith("   ") && line.trim().length() > 0) {
             final int[] REC500 = BaseToolsZeiss.getLinePositions(dialect = ZeissDialect.REC500);
 
-            lineNumber = Integer.parseInt(line.substring(REC500[0], REC500[1] + 1).trim());
+            lineNumber = StringUtils.parseIntegerValue(line.substring(REC500[0], REC500[1] + 1).trim());
             pointNumber = line.substring(REC500[2], REC500[3] + 1).trim();
             pointIdentification = line.substring(REC500[4], REC500[5] + 1).trim();
 
@@ -253,7 +255,7 @@ public class ZeissDecoder {
     }
 
     /**
-     * Returns the current dialect of the reader Zeiss REC formatted string line.
+     * Returns the current dialect of the read Zeiss REC formatted string line.
      *
      * @return current dialect
      */
@@ -271,7 +273,7 @@ public class ZeissDecoder {
     }
 
     /**
-     * Returns the current line number of the reader Zeiss REC formatted string line.
+     * Returns the current line number of the read Zeiss REC formatted string line.
      *
      * @return current line number
      */
@@ -312,8 +314,8 @@ public class ZeissDecoder {
      *
      * @return found {@link ZeissBlock}
      */
-    public ArrayList<ZeissBlock> getZeissBlocks() {
+    public List<ZeissBlock> getZeissBlocks() {
         return zeissBlocks;
     }
 
-} // end of ZeissDecoder
+}

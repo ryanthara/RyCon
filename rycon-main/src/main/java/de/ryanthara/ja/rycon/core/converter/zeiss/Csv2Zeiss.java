@@ -25,73 +25,72 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Instances of this class provides functions to convert coordinate files in CSV format (comma separated values)
- * into Zeiss REC files with it's dialects (R4, R5, REC500 and M5).
+ * A converter with functions to convert comma separated values (CSV) coordinate
+ * files into Zeiss REC files with it's dialects (R4, R5, REC500 and M5).
  */
 public class Csv2Zeiss {
 
     private static final Logger logger = LoggerFactory.getLogger(Csv2Zeiss.class.getName());
 
-    private final List<String[]> readCSVLines;
+    private final List<String[]> lines;
 
     /**
-     * Constructs a new instance of this class with a parameter for reader line based CSV files.
+     * Creates a converter with a list for the read line based comma separated values (CSV) files.
      *
-     * @param readCSVLines {@code List<String[]>} with lines as {@code String[]}
+     * @param lines list with lines of comma separated values (CSV)
      */
-    public Csv2Zeiss(List<String[]> readCSVLines) {
-        this.readCSVLines = readCSVLines;
+    public Csv2Zeiss(List<String[]> lines) {
+        this.lines = new ArrayList<>(lines);
     }
 
     /**
      * Converts a CSV file (nr;x;y;z or nr;code;x;y;z) into a Zeiss REC formatted file.
      *
      * @param dialect dialect of the target file
-     *
      * @return string lines of the target file
      */
-    public ArrayList<String> convertCsv2Rec(ZeissDialect dialect) {
-        ArrayList<String> result = new ArrayList<>();
+    public List<String> convert(ZeissDialect dialect) {
+        List<String> result = new ArrayList<>();
 
         int lineNumber = 0;
 
-        for (String[] stringField : readCSVLines) {
+        for (String[] values : lines) {
             String code = "";
             String easting = "";
             String northing = "";
             String height = "";
 
-            String number = stringField[0];
+            String number = values[0];
 
             lineNumber = lineNumber + 1;
 
-            switch (stringField.length) {
+            switch (values.length) {
                 case 3:     // contains nr x y
-                    easting = stringField[1];
-                    northing = stringField[2];
+                    easting = values[1];
+                    northing = values[2];
                     break;
 
                 case 4:     // contains nr x y z
-                    easting = stringField[1];
-                    northing = stringField[2];
-                    height = stringField[3];
+                    easting = values[1];
+                    northing = values[2];
+                    height = values[3];
                     break;
 
                 case 5:     // contains nr code x y z
-                    code = stringField[1];
-                    easting = stringField[2];
-                    northing = stringField[3];
-                    height = stringField[4];
+                    code = values[1];
+                    easting = values[2];
+                    northing = values[3];
+                    height = values[4];
                     break;
 
                 default:
-                    logger.trace("Line contains less or more tokens ({}) than needed or allowed.\n{}", stringField.length, Arrays.toString(stringField));
+                    logger.trace("Line contains less or more tokens ({}) than needed or allowed.\n{}", values.length, Arrays.toString(values));
             }
 
             result.add(BaseToolsZeiss.prepareLineOfCoordinates(dialect, number, code, easting, northing, height, lineNumber));
         }
 
-        return result;
+        return List.copyOf(result);
     }
 
-} // end of Csv2Zeiss
+}

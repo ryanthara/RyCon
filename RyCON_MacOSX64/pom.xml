@@ -121,7 +121,6 @@
         </profile>
     </profiles>
 
-    <!-- dependencies -->
     <dependencies>
         <!-- RyCON base from artifact rycon -->
         <dependency>
@@ -135,6 +134,14 @@
             <artifactId>org.eclipse.swt.cocoa.macosx.x86_64</artifactId>
             <version>4.6.1</version>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.eclipse.platform/org.eclipse.swt.cocoa.macosx.x86_64
+        <dependency>
+            <groupId>org.eclipse.platform</groupId>
+            <artifactId>org.eclipse.swt.cocoa.macosx.x86_64</artifactId>
+            <version>3.108.0</version>
+        </dependency> -->
+
     </dependencies>
 
 </project>

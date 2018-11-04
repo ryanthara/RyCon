@@ -17,17 +17,21 @@
  */
 package de.ryanthara.ja.rycon.core.converter.ltop;
 
-import de.ryanthara.ja.rycon.core.converter.gsi.BaseToolsGsi;
+import de.ryanthara.ja.rycon.core.converter.gsi.GsiDecoder;
 import de.ryanthara.ja.rycon.core.elements.GsiBlock;
 import de.ryanthara.ja.rycon.util.NumberFormatter;
+import de.ryanthara.ja.rycon.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Instances of this class provides functions to convert measurement files from the
- * Leica GSI format (GSI8 and GSI16) into LTOP MES files.
+ * A converter with functions to convert Leica Geosystems GSI format
+ * (GSI8 and GSI16) coordinate and measurement files into LTOP MES files.
+ *
  * <p>
  * With a little 'intelligence' it is possible to create the needed measurement file.
+ *
  * <p>
  * Version 2 brings an extended update. It is the first version which can convert manually
  * measured one and two face measurements in both orders (1,2,1,2... or 1,1,...2,2) with
@@ -39,32 +43,32 @@ import java.util.ArrayList;
  */
 public class Gsi2Mes {
 
-    private final BaseToolsGsi baseToolsGsi;
+    private final GsiDecoder gsiDecoder;
 
     /**
-     * Class constructor for reader line based text files.
+     * Creates a converter with a list for the read line based
+     * Leica Geosystems GSI8 or GSI16 file.
      *
-     * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
+     * @param lines list with Leica Geosystems GSI8 or GSI16 lines
      */
-    public Gsi2Mes(ArrayList<String> readStringLines) {
-        baseToolsGsi = new BaseToolsGsi(readStringLines);
+    public Gsi2Mes(List<String> lines) {
+        gsiDecoder = new GsiDecoder(lines);
     }
 
     /**
-     * Converts a Leica GSI file with polar measurement elements into a LTOP MES file.
+     * Converts a Leica Geosystems GSI file with polar measurement elements into a LTOP MES file.
      * <p>
-     * <tt>RyCON</tt> can differ between GSI8 and GSI16 files automatically. The first version of this function can't
+     * RyCON can differ between GSI8 and GSI16 files automatically. The first version of this function can't
      * middle between first and second face. (2ALL measurements or first face measurements are needed).
      *
      * @param useZenithDistance true if zenith distance should be used instead of height angle for vertical angle
-     *
      * @return converted MES file
      */
-    public ArrayList<String> convertGSI2MES(boolean useZenithDistance) {
-        ArrayList<String> result = new ArrayList<>();
-        ArrayList<String> horizontalAngleGroup = new ArrayList<>();
-        ArrayList<String> verticalAngleGroup = new ArrayList<>();
-        ArrayList<String> slopeDistanceGroup = new ArrayList<>();
+    public List<String> convert(boolean useZenithDistance) {
+        List<String> result = new ArrayList<>();
+        List<String> horizontalAngleGroup = new ArrayList<>();
+        List<String> verticalAngleGroup = new ArrayList<>();
+        List<String> slopeDistanceGroup = new ArrayList<>();
 
         String
                 stationNumber, instrumentHeight, number, hzAngle, verticalAngle,
@@ -72,7 +76,7 @@ public class Gsi2Mes {
 
         BaseToolsLtop.writeCommendLine(result, BaseToolsLtop.measurementLineIdentifier);
 
-        for (ArrayList<GsiBlock> blocksAsLine : baseToolsGsi.getEncodedLinesOfGSIBlocks()) {
+        for (List<GsiBlock> blocksInLine : gsiDecoder.getDecodedLinesOfGsiBlocks()) {
             /*
             110001+0000FS01 84..16+61720467 85..16+23483343 86..16+02593776 88..16+00000000
             110002+00009004 21.322+21956015 22.322+09463619 31..06+00253959 51..1.+0005+344 87..16+00000000
@@ -88,7 +92,7 @@ public class Gsi2Mes {
             DSBG15                      30.90180      5          0.000
             */
 
-            switch (blocksAsLine.size()) {
+            switch (blocksInLine.size()) {
                 case 5:     // line contains free station
                     /*
                     110001+0000FS01 84..16+61720467 85..16+23483343 86..16+02593776 88..16+00000000
@@ -108,8 +112,8 @@ public class Gsi2Mes {
                     KA<--PUNKT-><TY>        <--WETTER--><-MF-><GR><-IH-><F-BUCH><-VERANTW.+DATUM->      <ZENT>
                     */
 
-                    stationNumber = String.format("%-10s", blocksAsLine.get(0).toPrintFormatCsv());
-                    instrumentHeight = String.format("%6s", blocksAsLine.get(4).toPrintFormatCsv());
+                    stationNumber = String.format("%-10s", blocksInLine.get(0).toPrintFormatCsv());
+                    instrumentHeight = String.format("%6s", blocksInLine.get(4).toPrintFormatCsv());
 
                     String stationLine = "ST".concat(stationNumber).concat("                                  ").concat(instrumentHeight);
 
@@ -149,30 +153,30 @@ public class Gsi2Mes {
                     KA<--PUNKT-><TY>        <-MESSWERT-><-MF-><GR><-IH-><-SH->  <ZENT>
 
                     */
-                    number = String.format("%-10s", blocksAsLine.get(0).toPrintFormatCsv());
-                    hzAngle = String.format("%12s", NumberFormatter.fillDecimalPlace(blocksAsLine.get(1).toPrintFormatCsv(), 5));
+                    number = String.format("%-10s", blocksInLine.get(0).toPrintFormatCsv());
+                    hzAngle = String.format("%12s", NumberFormatter.fillDecimalPlaces(blocksInLine.get(1).toPrintFormatCsv(), 5));
 
-                    verticalAngle = blocksAsLine.get(2).toPrintFormatCsv();
+                    verticalAngle = blocksInLine.get(2).toPrintFormatCsv();
 
-                    double d = Double.parseDouble(verticalAngle);
+                    double vAngle = StringUtils.parseDoubleValue(verticalAngle);
 
                     if (useZenithDistance) {
-                        verticalAngle = String.format("%12s", NumberFormatter.fillDecimalPlace(Double.toString(d), 5));
+                        verticalAngle = String.format("%12s", NumberFormatter.fillDecimalPlaces(Double.toString(vAngle), 5));
                     } else {
-                        double heightAngle = 100d - d;
-                        verticalAngle = String.format("%12s", NumberFormatter.fillDecimalPlace(Double.toString(heightAngle), 5));
+                        double heightAngle = 100d - vAngle;
+                        verticalAngle = String.format("%12s", NumberFormatter.fillDecimalPlaces(Double.toString(heightAngle), 5));
                     }
 
-                    slopeDistance = String.format("%12s", NumberFormatter.fillDecimalPlace(blocksAsLine.get(3).toPrintFormatCsv(), 5));
+                    slopeDistance = String.format("%12s", NumberFormatter.fillDecimalPlaces(blocksInLine.get(3).toPrintFormatCsv(), 5));
 
                     // differ target foil and prism
-                    if (blocksAsLine.get(4).toString().trim().endsWith("344")) {
+                    if (blocksInLine.get(4).toString().trim().endsWith("344")) {
                         ppmAndPrismConstant = "5";
-                    } else if (blocksAsLine.get(4).toString().trim().endsWith("000")) {
+                    } else if (blocksInLine.get(4).toString().trim().endsWith("000")) {
                         ppmAndPrismConstant = "4";
                     }
 
-                    targetHeight = String.format("%6s", NumberFormatter.fillDecimalPlace(blocksAsLine.get(5).toPrintFormatCsv(), 3));
+                    targetHeight = String.format("%6s", NumberFormatter.fillDecimalPlaces(blocksInLine.get(5).toPrintFormatCsv(), 3));
 
                     /*
                     KA<--PUNKT-><TY>        <-MESSWERT-><-MF-><GR><-IH-><-SH->  <ZENT>
@@ -214,7 +218,7 @@ public class Gsi2Mes {
 
         result.addAll(slopeDistanceGroup);
 
-        return result;
+        return List.copyOf(result);
     }
 
-} // end of Gsi2Mes
+}

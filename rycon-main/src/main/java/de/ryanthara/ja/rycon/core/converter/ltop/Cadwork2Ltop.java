@@ -21,9 +21,11 @@ import de.ryanthara.ja.rycon.core.elements.RyPoint;
 import de.ryanthara.ja.rycon.util.NumberFormatter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * This class provides functions to convert coordinate files from Cadwork CAD program into KOO files for LTOP.
+ * A converter with functions to convert Cadwork CAD
+ * program coordinate files into KOO files for LTOP.
  *
  * @author sebastian
  * @version 1
@@ -31,15 +33,15 @@ import java.util.ArrayList;
  */
 public class Cadwork2Ltop {
 
-    private final ArrayList<String> readStringLines;
+    private final List<String> lines;
 
     /**
-     * Class constructor for reader line based text files from Cadwork CAD program in node.dat file format.
+     * Creates a converter with a list for the read line based text file from Cadwork CAD program.
      *
-     * @param readStringLines {@code ArrayList<String>} with reader lines from node.dat file
+     * @param lines list with read node.dat lines
      */
-    public Cadwork2Ltop(ArrayList<String> readStringLines) {
-        this.readStringLines = readStringLines;
+    public Cadwork2Ltop(List<String> lines) {
+        this.lines = new ArrayList<>(lines);
     }
 
     /**
@@ -49,21 +51,19 @@ public class Cadwork2Ltop {
      * @param useZeroHeights      use zero value for not given height values
      * @param eliminateDuplicates eliminate duplicate coordinates within 3cm radius
      * @param sortOutputFile      sort an output file by point number
-     *
      * @return converted KOO file
      */
-    public ArrayList<String> convertCadwork2Koo(boolean useZeroHeights, boolean eliminateDuplicates, boolean sortOutputFile) {
-        ArrayList<String> result = new ArrayList<>();
-        ArrayList<RyPoint> ryPoints = new ArrayList<>();
+    public List<String> convert(boolean useZeroHeights, boolean eliminateDuplicates, boolean sortOutputFile) {
+        List<String> result = new ArrayList<>();
+        List<RyPoint> ryPoints = new ArrayList<>();
         String number, pointType, toleranceCategory, easting, northing, height, geoid, eta, xi;
         String resultLine;
 
-        // remove not needed headlines
-        readStringLines.subList(0, 3).clear();
+        removeHeadLines();
 
         BaseToolsLtop.writeCommendLine(result, BaseToolsLtop.cartesianCoordsIdentifier);
 
-        for (String line : readStringLines) {
+        for (String line : lines) {
             // skip empty lines directly after reading
             if (!line.trim().isEmpty()) {
                 // prevent wrong output with empty strings of defined length from class
@@ -74,23 +74,23 @@ public class Cadwork2Ltop {
                 eta = BaseToolsLtop.eta;
                 xi = BaseToolsLtop.xi;
 
-                String[] lineSplit = line.trim().split("\\s+", -1);
+                String[] values = line.trim().split("\\s+", -1);
 
                 // point number, column 1-10, aligned left
-                number = String.format("%-10s", lineSplit[5]);
+                number = String.format("%-10s", values[5]);
 
                 // easting E, column 33-44
-                easting = String.format("%12s", NumberFormatter.fillDecimalPlace(lineSplit[1], 4));
+                easting = String.format("%12s", NumberFormatter.fillDecimalPlaces(values[1], 4));
 
                 // northing N, column 45-56
-                northing = String.format("%12s", NumberFormatter.fillDecimalPlace(lineSplit[2], 4));
+                northing = String.format("%12s", NumberFormatter.fillDecimalPlaces(values[2], 4));
 
                 // height H, column 61-70
                 if (useZeroHeights) {
-                    height = String.format("%10s", NumberFormatter.fillDecimalPlace(lineSplit[3], 4));
+                    height = String.format("%10s", NumberFormatter.fillDecimalPlaces(values[3], 4));
                 } else {
-                    if (!lineSplit[3].equals("0.000000")) {
-                        height = String.format("%10s", NumberFormatter.fillDecimalPlace(lineSplit[3], 4));
+                    if (!values[3].equals("0.000000")) {
+                        height = String.format("%10s", NumberFormatter.fillDecimalPlaces(values[3], 4));
                     }
                 }
 
@@ -110,7 +110,11 @@ public class Cadwork2Ltop {
 
         result = eliminateDuplicates ? BaseToolsLtop.eliminateDuplicatePoints(ryPoints) : result;
 
-        return sortOutputFile ? BaseToolsLtop.sortResult(result) : result;
+        return sortOutputFile ? BaseToolsLtop.sortResult(result) : new ArrayList<>(result);
     }
 
-} // end of Cadwork2Ltop
+    private void removeHeadLines() {
+        lines.subList(0, 3).clear();
+    }
+
+}

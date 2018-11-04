@@ -18,27 +18,30 @@
 package de.ryanthara.ja.rycon.ui.widgets;
 
 import de.ryanthara.ja.rycon.Main;
-import de.ryanthara.ja.rycon.core.GsiClearUp;
-import de.ryanthara.ja.rycon.core.LogfileClearUp;
-import de.ryanthara.ja.rycon.data.PreferenceKeys;
+import de.ryanthara.ja.rycon.core.clearup.GsiClearUp;
+import de.ryanthara.ja.rycon.core.clearup.LogfileClearUp;
+import de.ryanthara.ja.rycon.data.PreferenceKey;
 import de.ryanthara.ja.rycon.i18n.*;
+import de.ryanthara.ja.rycon.i18n.Button;
+import de.ryanthara.ja.rycon.i18n.Error;
+import de.ryanthara.ja.rycon.i18n.Text;
 import de.ryanthara.ja.rycon.nio.FileNameExtension;
 import de.ryanthara.ja.rycon.nio.LineReader;
 import de.ryanthara.ja.rycon.nio.WriteFile2Disk;
 import de.ryanthara.ja.rycon.nio.filter.FilesFilter;
 import de.ryanthara.ja.rycon.nio.filter.GsiFilter;
 import de.ryanthara.ja.rycon.nio.filter.TxtFilter;
-import de.ryanthara.ja.rycon.ui.Sizes;
+import de.ryanthara.ja.rycon.nio.util.FileUtils;
+import de.ryanthara.ja.rycon.nio.util.check.PathCheck;
+import de.ryanthara.ja.rycon.ui.Size;
 import de.ryanthara.ja.rycon.ui.custom.BottomButtonBar;
 import de.ryanthara.ja.rycon.ui.custom.DirectoryDialogs;
-import de.ryanthara.ja.rycon.ui.custom.DirectoryDialogsTypes;
+import de.ryanthara.ja.rycon.ui.custom.DirectoryDialogsTyp;
 import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
 import de.ryanthara.ja.rycon.ui.util.ShellPositioner;
+import de.ryanthara.ja.rycon.ui.util.TextCheck;
 import de.ryanthara.ja.rycon.util.BoundedTreeSet;
-import de.ryanthara.ja.rycon.util.FileUtils;
 import de.ryanthara.ja.rycon.util.StringUtils;
-import de.ryanthara.ja.rycon.util.check.PathCheck;
-import de.ryanthara.ja.rycon.util.check.TextCheck;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -60,19 +63,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.TreeSet;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.*;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundle.*;
 import static de.ryanthara.ja.rycon.ui.custom.Status.OK;
 
 /**
  * A widget which is used to transfer measurement data from a card reader
  * to the file system.
  * <p>
- * The {@code TransferWidget} is a complete widget of <tt>RyCON</tt> which is used
+ * The {@code TransferWidget} is a complete widget of RyCON which is used
  * to transfer (copy or move) different files from a card reader or a mounted
  * card reader folder to the file system with a given project structure.
  * <p>
  * This first basic implementation uses the folder structure based on the
- * Leica Geosystems presetting. In a future version of <tt>RyCON</tt> this will be
+ * Leica Geosystems presetting. In a future version of RyCON this will be
  * changed to a more flexible solution with different card structures.
  * <p>
  * The user can choose jobs, export files and different content from the
@@ -80,20 +83,21 @@ import static de.ryanthara.ja.rycon.ui.custom.Status.OK;
  * to choose a new project or one of the last used ones.
  *
  * @author sebastian
- * @version 8
+ * @version 9
  * @since 1
  */
 public class TransferWidget extends AbstractWidget {
 
     private static final Logger logger = LoggerFactory.getLogger(TransferWidget.class.getName());
+
     private final Shell parent;
     private ArrayList<Path> allJobsFiles;
-    private Button chkBoxCleanLogfile;
-    private Button chkBoxCleanMeasurementFile;
-    private Button chkBoxMoveOption;
+    private org.eclipse.swt.widgets.Button chkBoxCleanLogfile;
+    private org.eclipse.swt.widgets.Button chkBoxCleanMeasurementFile;
+    private org.eclipse.swt.widgets.Button chkBoxMoveOption;
     private Shell innerShell;
-    private Text cardReaderPath;
-    private Text targetProjectPath;
+    private org.eclipse.swt.widgets.Text cardReaderPath;
+    private org.eclipse.swt.widgets.Text targetProjectPath;
     private TreeSet<Path> allDatas;
     private TreeSet<Path> allExports;
     private List dataList;
@@ -110,7 +114,7 @@ public class TransferWidget extends AbstractWidget {
      *
      * @param parent parent shell
      */
-    public TransferWidget(final Shell parent) {
+    public TransferWidget(Shell parent) {
         this.parent = parent;
 
         initUI();
@@ -124,7 +128,7 @@ public class TransferWidget extends AbstractWidget {
     }
 
     boolean actionBtnOk() {
-        final String storedCardReaderPath = Main.pref.getUserPreference(PreferenceKeys.DIR_CARD_READER);
+        final String storedCardReaderPath = Main.pref.getUserPreference(PreferenceKey.DIR_CARD_READER);
 
         boolean success;
 
@@ -143,26 +147,26 @@ public class TransferWidget extends AbstractWidget {
 
                         checkCardReaderPathAndUpdateListsAndPreferences();
 
-                        Main.statusBar.setStatus(ResourceBundleUtils.getLangString(MESSAGES, Messages.cardReaderFilesCopySuccessful), OK);
+                        Main.statusBar.setStatus(ResourceBundleUtils.getLangString(MESSAGE, Message.cardReaderFilesCopySuccessful), OK);
                     }
 
                     String helper, message;
 
                     if (chkBoxMoveOption.getSelection()) {
-                        helper = ResourceBundleUtils.getLangString(MESSAGES, Messages.transferMoveMessage);
+                        helper = ResourceBundleUtils.getLangString(MESSAGE, Message.transferMoveMessage);
                     } else {
-                        helper = ResourceBundleUtils.getLangString(MESSAGES, Messages.transferCopyMessage);
+                        helper = ResourceBundleUtils.getLangString(MESSAGE, Message.transferCopyMessage);
                     }
 
                     if (countCopiedFiles == 1) {
-                        message = String.format(StringUtils.singularPluralMessage(helper, Main.TEXT_SINGULAR), countCopiedFiles);
+                        message = String.format(StringUtils.getSingularMessage(helper), countCopiedFiles);
                     } else {
-                        message = String.format(StringUtils.singularPluralMessage(helper, Main.TEXT_PLURAL), countCopiedFiles);
+                        message = String.format(StringUtils.getPluralMessage(helper), countCopiedFiles);
                     }
 
                     if (countCopiedFiles > 0) {
                         MessageBoxes.showMessageBox(parent, SWT.ICON_INFORMATION,
-                                ResourceBundleUtils.getLangString(MESSAGES, Messages.transferText), message);
+                                ResourceBundleUtils.getLangString(MESSAGE, Message.transferText), message);
                     }
 
                     return success;
@@ -171,11 +175,12 @@ public class TransferWidget extends AbstractWidget {
                 }
             } else {
                 MessageBoxes.showMessageBox(parent, SWT.ICON_INFORMATION,
-                        ResourceBundleUtils.getLangString(ERRORS, Errors.transferNoDataSelectedText),
-                        ResourceBundleUtils.getLangString(ERRORS, Errors.transferNoDataSelected));
+                        ResourceBundleUtils.getLangString(ERROR, Error.transferNoDataSelectedText),
+                        ResourceBundleUtils.getLangString(ERROR, Error.transferNoDataSelected));
             }
         } else {
             showCardReaderNotExitsWarning();
+            actionBtnCardReaderPath();
         }
 
         return false;
@@ -194,8 +199,8 @@ public class TransferWidget extends AbstractWidget {
     }
 
     void initUI() {
-        final int height = Sizes.RyCON_WIDGET_HEIGHT.getValue();
-        final int width = Sizes.RyCON_WIDGET_WIDTH.getValue() + 205;
+        final int height = Size.RyCON_WIDGET_HEIGHT.getValue();
+        final int width = Size.RyCON_WIDGET_WIDTH.getValue() + 205;
 
         GridLayout gridLayout = new GridLayout();
         gridLayout.numColumns = 1;
@@ -209,7 +214,7 @@ public class TransferWidget extends AbstractWidget {
 
         innerShell = new Shell(parent, SWT.CLOSE | SWT.DIALOG_TRIM | SWT.MAX | SWT.TITLE | SWT.APPLICATION_MODAL);
         innerShell.addListener(SWT.Close, event -> actionBtnCancel());
-        innerShell.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.transfer_Shell));
+        innerShell.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.transfer_Shell));
         innerShell.setSize(width, height);
 
         innerShell.setLayout(gridLayout);
@@ -234,7 +239,7 @@ public class TransferWidget extends AbstractWidget {
     }
 
     private void actionBtnCardReaderPath() {
-        String filterPath = Main.pref.getUserPreference(PreferenceKeys.DIR_CARD_READER);
+        String filterPath = Main.pref.getUserPreference(PreferenceKey.DIR_CARD_READER);
 
         // Set the initial filter path according to anything selected or typed in
         if (!TextCheck.isEmpty(cardReaderPath)) {
@@ -244,15 +249,15 @@ public class TransferWidget extends AbstractWidget {
         }
 
         DirectoryDialogs.showAdvancedDirectoryDialog(innerShell, cardReaderPath,
-                DirectoryDialogsTypes.DIR_CARD_READER.getText(),
-                DirectoryDialogsTypes.DIR_CARD_READER.getMessage(),
+                DirectoryDialogsTyp.DIR_CARD_READER.getText(),
+                DirectoryDialogsTyp.DIR_CARD_READER.getMessage(),
                 filterPath);
 
-        checkCardReaderPathAndUpdateListsAndPreferences();
+        // checkCardReaderPathAndUpdateListsAndPreferences();
     }
 
     private void actionBtnChooseProjectPath() {
-        String filterPath = Main.pref.getUserPreference(PreferenceKeys.DIR_PROJECT);
+        String filterPath = Main.pref.getUserPreference(PreferenceKey.DIR_PROJECT);
 
         // Set the initial filter path according to anything selected or typed in
         if (!TextCheck.isEmpty(targetProjectPath)) {
@@ -262,8 +267,8 @@ public class TransferWidget extends AbstractWidget {
         }
 
         DirectoryDialogs.showAdvancedDirectoryDialog(innerShell, targetProjectPath,
-                DirectoryDialogsTypes.DIR_PROJECT.getText(),
-                DirectoryDialogsTypes.DIR_PROJECT.getMessage(),
+                DirectoryDialogsTyp.DIR_PROJECT.getText(),
+                DirectoryDialogsTyp.DIR_PROJECT.getMessage(),
                 filterPath);
     }
 
@@ -271,10 +276,10 @@ public class TransferWidget extends AbstractWidget {
         final String delimiter = FileSystems.getDefault().getSeparator();
 
         if (!TextCheck.isEmpty(cardReaderPath) && !cardReaderPath.getText().endsWith(delimiter)) {
-            clearListsAndFields();
+            clearLists();
 
             if (TextCheck.isDirExists(cardReaderPath)) {
-                Main.pref.setUserPreference(PreferenceKeys.DIR_CARD_READER, cardReaderPath.getText());
+                Main.pref.setUserPreference(PreferenceKey.DIR_CARD_READER, cardReaderPath.getText());
                 readCardFolders(cardReaderPath.getText());
             }
         }
@@ -283,7 +288,7 @@ public class TransferWidget extends AbstractWidget {
     /**
      * Checks whether the card reader path exists and if a card is inserted.
      * <p>
-     * In this version of <tt>RyCON</tt> the card check is done against a Leica based card structure.
+     * In this version of RyCON the card check is done against a Leica based card structure.
      *
      * @param cardReaderPathString path of the card reader
      * @return true if card reader path exists and given structure is present
@@ -293,7 +298,7 @@ public class TransferWidget extends AbstractWidget {
 
         if (PathCheck.isValid(cardReaderPath)) {
             /*
-             * Check for special folder structure of a Leica Geosystems CF-/SD-Card
+             * Checks for the special folder structure of a Leica Geosystems CF-/SD-Card
              * ./Data - log files
              * ./DBX  - database files
              * ./GSI  - GSI files
@@ -315,7 +320,7 @@ public class TransferWidget extends AbstractWidget {
 
         // last used project list contains items and one of them is selected
         if ((lastUsedProjectsList.getItemCount() > 0) && (lastUsedProjectsList.getSelectionCount() > 0)) {
-            final String projectPath = Main.pref.getUserPreference(PreferenceKeys.DIR_PROJECT);
+            final String projectPath = Main.pref.getUserPreference(PreferenceKey.DIR_PROJECT);
             final String lastUsedProject = projectPath + delimiter + lastUsedProjectsList.getSelection()[0];
             targetProjectPath.setText(lastUsedProject);
 
@@ -327,7 +332,7 @@ public class TransferWidget extends AbstractWidget {
                     return true;
                 } else {
                     // checks if user entered only a valid project number without path
-                    final String dir = Main.pref.getUserPreference(PreferenceKeys.DIR_PROJECT) + delimiter + targetProjectPath.getText();
+                    final String dir = Main.pref.getUserPreference(PreferenceKey.DIR_PROJECT) + delimiter + targetProjectPath.getText();
 
                     if (PathCheck.directoryExists(dir)) {
                         targetProjectPath.setText(dir);
@@ -340,12 +345,9 @@ public class TransferWidget extends AbstractWidget {
         return false;
     }
 
-    private void clearListsAndFields() {
-        allDatas.clear();
+    private void clearLists() {
         dataList.removeAll();
-        allExports.clear();
         exportList.removeAll();
-        allJobsFiles.clear();
         jobList.removeAll();
     }
 
@@ -383,7 +385,7 @@ public class TransferWidget extends AbstractWidget {
     }
 
     private boolean copyMoveAction() {
-        final boolean overwriteExisting = Boolean.parseBoolean(Main.pref.getUserPreference(PreferenceKeys.OVERWRITE_EXISTING));
+        boolean overwriteExisting = StringUtils.parseBooleanValue(PreferenceKey.OVERWRITE_EXISTING);
 
         return copyMoveExportFiles(overwriteExisting) | copyMoveJobFiles(overwriteExisting) | copyMoveDataFiles(overwriteExisting);
     }
@@ -391,13 +393,13 @@ public class TransferWidget extends AbstractWidget {
     private boolean copyMoveDataFiles(boolean overwriteExisting) {
         final String delimiter = FileSystems.getDefault().getSeparator();
 
-        final String dir = Main.pref.getUserPreference(PreferenceKeys.DIR_CARD_READER) + delimiter +
-                Main.pref.getUserPreference(PreferenceKeys.DIR_CARD_READER_DATA_FILES);
+        final String dir = Main.pref.getUserPreference(PreferenceKey.DIR_CARD_READER) + delimiter +
+                Main.pref.getUserPreference(PreferenceKey.DIR_CARD_READER_DATA_FILES);
 
         final String[] selectedDataFiles = dataList.getSelection();
 
         if (PathCheck.directoryExists(dir)) {
-            String destinationPath = targetProjectPath.getText() + delimiter + Main.pref.getUserPreference(PreferenceKeys.DIR_PROJECT_LOG_FILES);
+            String destinationPath = targetProjectPath.getText() + delimiter + Main.pref.getUserPreference(PreferenceKey.DIR_PROJECT_LOG_FILES);
 
             boolean success = false;
 
@@ -423,18 +425,18 @@ public class TransferWidget extends AbstractWidget {
                                     success = copyFiles(source, target, overwriteExisting);
 
                                     if (success) {
-                                        Main.pref.setUserPreference(PreferenceKeys.LAST_COPIED_LOGFILE, target.toString());
+                                        Main.pref.setUserPreference(PreferenceKey.LAST_COPIED_LOGFILE, target.toString());
                                     }
 
                                     if (chkBoxCleanLogfile.getSelection() && success) {
-                                        final String editString = Main.pref.getUserPreference(PreferenceKeys.PARAM_EDIT_STRING);
+                                        final String editString = Main.pref.getUserPreference(PreferenceKey.PARAM_EDIT_STRING);
 
                                         LineReader lineReader = new LineReader(target);
 
                                         if (lineReader.readFile(false)) {
                                             LogfileClearUp logfileClearUp = new LogfileClearUp(lineReader.getLines());
 
-                                            ArrayList<String> writeFile = logfileClearUp.processClean(true);
+                                            java.util.List<String> writeFile = logfileClearUp.process(true);
 
                                             WriteFile2Disk.writeFile2Disk(target, writeFile, editString, FileNameExtension.TXT.getExtension());
                                         }
@@ -458,8 +460,8 @@ public class TransferWidget extends AbstractWidget {
     private boolean copyMoveExportFiles(boolean overwriteExisting) {
         final String delimiter = FileSystems.getDefault().getSeparator();
 
-        final String dir = Main.pref.getUserPreference(PreferenceKeys.DIR_CARD_READER) + delimiter +
-                Main.pref.getUserPreference(PreferenceKeys.DIR_CARD_READER_EXPORT_FILES);
+        final String dir = Main.pref.getUserPreference(PreferenceKey.DIR_CARD_READER) + delimiter +
+                Main.pref.getUserPreference(PreferenceKey.DIR_CARD_READER_EXPORT_FILES);
 
         final String[] selectedExports = exportList.getSelection();
 
@@ -477,20 +479,20 @@ public class TransferWidget extends AbstractWidget {
 
                                 if (p != null) {
                                     final String fileName = p.toString();
-                                    final String dest = targetProjectPath.getText() + delimiter + Main.pref.getUserPreference(PreferenceKeys.DIR_PROJECT_MEASUREMENT_FILES);
+                                    final String dest = targetProjectPath.getText() + delimiter + Main.pref.getUserPreference(PreferenceKey.DIR_PROJECT_MEASUREMENT_FILES);
                                     final Path target = Paths.get(dest + delimiter + fileName);
 
                                     success = copyFiles(source, target, overwriteExisting);
 
                                     if (chkBoxCleanMeasurementFile.getSelection() && success) {
-                                        final String editString = Main.pref.getUserPreference(PreferenceKeys.PARAM_EDIT_STRING);
+                                        final String editString = Main.pref.getUserPreference(PreferenceKey.PARAM_EDIT_STRING);
 
                                         LineReader lineReader = new LineReader(target);
 
                                         if (lineReader.readFile(true)) {
                                             GsiClearUp gsiClearUp = new GsiClearUp(lineReader.getLines());
 
-                                            ArrayList<String> writeFile = gsiClearUp.processClearUp(false, false);
+                                            java.util.List<String> writeFile = gsiClearUp.process(false, false);
 
                                             WriteFile2Disk.writeFile2Disk(target, writeFile, editString, FileNameExtension.LEICA_GSI.getExtension());
                                         }
@@ -515,8 +517,8 @@ public class TransferWidget extends AbstractWidget {
     private boolean copyMoveJobFiles(boolean overwriteExisting) {
         final String delimiter = FileSystems.getDefault().getSeparator();
 
-        final String dir = Main.pref.getUserPreference(PreferenceKeys.DIR_CARD_READER) + delimiter +
-                Main.pref.getUserPreference(PreferenceKeys.DIR_CARD_READER_JOB_FILES);
+        final String dir = Main.pref.getUserPreference(PreferenceKey.DIR_CARD_READER) + delimiter +
+                Main.pref.getUserPreference(PreferenceKey.DIR_CARD_READER_JOB_FILES);
 
         final String[] selectedJobs = jobList.getSelection();
 
@@ -535,7 +537,7 @@ public class TransferWidget extends AbstractWidget {
 
                             if (fileName.startsWith(jobName)) {
                                 if (PathCheck.fileExists(source)) {
-                                    final String dest = targetProjectPath.getText() + delimiter + Main.pref.getUserPreference(PreferenceKeys.DIR_PROJECT_JOB_FILES);
+                                    final String dest = targetProjectPath.getText() + delimiter + Main.pref.getUserPreference(PreferenceKey.DIR_PROJECT_JOB_FILES);
                                     final Path target = Paths.get(dest + delimiter + fileName);
 
                                     success = copyFiles(source, target, overwriteExisting);
@@ -555,7 +557,7 @@ public class TransferWidget extends AbstractWidget {
 
     private void createGroupCardReader() {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.transfer_CardReader));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.transfer_CardReader));
 
         GridLayout gridLayout = new GridLayout();
         gridLayout.marginHeight = 5;
@@ -563,17 +565,17 @@ public class TransferWidget extends AbstractWidget {
         gridLayout.numColumns = 3;
 
         GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
-        gridData.widthHint = Sizes.RyCON_WIDGET_WIDTH.getValue();
+        gridData.widthHint = Size.RyCON_WIDGET_WIDTH.getValue();
 
         group.setLayout(gridLayout);
         group.setLayoutData(gridData);
 
         Label cardReaderLabel = new Label(group, SWT.NONE);
-        cardReaderLabel.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.transfer_CardReaderPath));
+        cardReaderLabel.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.transfer_CardReaderPath));
 
-        Path cardReader = Paths.get(Main.pref.getUserPreference(PreferenceKeys.DIR_CARD_READER));
+        Path cardReader = Paths.get(Main.pref.getUserPreference(PreferenceKey.DIR_CARD_READER));
 
-        cardReaderPath = new Text(group, SWT.SINGLE | SWT.BORDER);
+        cardReaderPath = new org.eclipse.swt.widgets.Text(group, SWT.SINGLE | SWT.BORDER);
         cardReaderPath.setText(cardReader.toString());
 
         /*
@@ -602,9 +604,9 @@ public class TransferWidget extends AbstractWidget {
         gridData.horizontalAlignment = GridData.FILL;
         cardReaderPath.setLayoutData(gridData);
 
-        Button btnCardReaderPath = new Button(group, SWT.NONE);
-        btnCardReaderPath.setText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.choosePathText));
-        btnCardReaderPath.setToolTipText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.choosePathText));
+        org.eclipse.swt.widgets.Button btnCardReaderPath = new org.eclipse.swt.widgets.Button(group, SWT.NONE);
+        btnCardReaderPath.setText(ResourceBundleUtils.getLangString(BUTTON, Button.choosePathText));
+        btnCardReaderPath.setToolTipText(ResourceBundleUtils.getLangString(BUTTON, Button.choosePathText));
         btnCardReaderPath.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -627,7 +629,7 @@ public class TransferWidget extends AbstractWidget {
         final String delimiter = FileSystems.getDefault().getSeparator();
 
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.transfer_FolderAndProject));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.transfer_FolderAndProject));
 
         GridLayout gridLayout = new GridLayout(4, true);
 
@@ -642,7 +644,7 @@ public class TransferWidget extends AbstractWidget {
 
         // DBX folder
         Group jobGroup = new Group(group, SWT.NONE);
-        jobGroup.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.transfer_GroupDBX));
+        jobGroup.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.transfer_GroupDBX));
 
         gridLayout = new GridLayout(1, true);
         jobGroup.setLayout(gridLayout);
@@ -660,9 +662,9 @@ public class TransferWidget extends AbstractWidget {
 
         jobList.setLayoutData(gridData);
 
-        // export folder, here GSI folder
+        // Export folder, here GSI folder
         Group exportGroup = new Group(group, SWT.NONE);
-        exportGroup.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.transfer_GroupExport));
+        exportGroup.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.transfer_GroupExport));
 
         gridLayout = new GridLayout(1, true);
         exportGroup.setLayout(gridLayout);
@@ -680,9 +682,9 @@ public class TransferWidget extends AbstractWidget {
 
         exportList.setLayoutData(gridData);
 
-        // data folder
+        // Data folder
         Group dataGroup = new Group(group, SWT.NONE);
-        dataGroup.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.transfer_GroupData));
+        dataGroup.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.transfer_GroupData));
 
         gridLayout = new GridLayout(1, true);
         dataGroup.setLayout(gridLayout);
@@ -700,16 +702,16 @@ public class TransferWidget extends AbstractWidget {
 
         dataList.setLayoutData(gridData);
 
-        // last used projects
+        // Last used projects
         Group projectGroup = new Group(group, SWT.NONE);
-        projectGroup.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.transfer_LastUsedProjects));
+        projectGroup.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.transfer_LastUsedProjects));
 
         gridLayout = new GridLayout(1, true);
         projectGroup.setLayout(gridLayout);
 
         lastUsedProjectsList = new List(projectGroup, SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL);
         lastUsedProjectsList.addListener(SWT.Selection, event -> {
-            final String project = Main.pref.getUserPreference(PreferenceKeys.DIR_PROJECT)
+            final String project = Main.pref.getUserPreference(PreferenceKey.DIR_PROJECT)
                     + delimiter + lastUsedProjectsList.getSelection()[0];
 
             targetProjectPath.setText(project);
@@ -728,7 +730,7 @@ public class TransferWidget extends AbstractWidget {
         final String delimiter = FileSystems.getDefault().getSeparator();
 
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.transfer_TargetProject));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.transfer_TargetProject));
 
         GridLayout gridLayout = new GridLayout();
         gridLayout.marginHeight = 5;
@@ -736,17 +738,17 @@ public class TransferWidget extends AbstractWidget {
         gridLayout.numColumns = 3;
 
         GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
-        gridData.widthHint = Sizes.RyCON_WIDGET_WIDTH.getValue();
+        gridData.widthHint = Size.RyCON_WIDGET_WIDTH.getValue();
 
         group.setLayout(gridLayout);
         group.setLayoutData(gridData);
 
         Label targetProjectLabel = new Label(group, SWT.NONE);
-        targetProjectLabel.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.transfer_TargetProjectLabel));
+        targetProjectLabel.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.transfer_TargetProjectLabel));
 
-        targetProjectPath = new Text(group, SWT.SINGLE | SWT.BORDER);
+        targetProjectPath = new org.eclipse.swt.widgets.Text(group, SWT.SINGLE | SWT.BORDER);
 
-        final String baseInput = Main.pref.getUserPreference(PreferenceKeys.DIR_PROJECT) + delimiter;
+        final String baseInput = Main.pref.getUserPreference(PreferenceKey.DIR_PROJECT) + delimiter;
 
         if (lastUsedProjectsList.getItemCount() == 0) {
             targetProjectPath.setText(baseInput);
@@ -767,7 +769,7 @@ public class TransferWidget extends AbstractWidget {
 
             @Override
             public void mouseUp(MouseEvent mouseEvent) {
-                Text text = (Text) mouseEvent.widget;
+                org.eclipse.swt.widgets.Text text = (org.eclipse.swt.widgets.Text) mouseEvent.widget;
                 String s = text.getText();
 
                 // select a part of the text for project number input
@@ -798,9 +800,9 @@ public class TransferWidget extends AbstractWidget {
         gridData.horizontalAlignment = GridData.FILL;
         targetProjectPath.setLayoutData(gridData);
 
-        Button btnChooseProjectPath = new Button(group, SWT.NONE);
-        btnChooseProjectPath.setText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.choosePathText));
-        btnChooseProjectPath.setToolTipText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.choosePathText));
+        org.eclipse.swt.widgets.Button btnChooseProjectPath = new org.eclipse.swt.widgets.Button(group, SWT.NONE);
+        btnChooseProjectPath.setText(ResourceBundleUtils.getLangString(BUTTON, Button.choosePathText));
+        btnChooseProjectPath.setToolTipText(ResourceBundleUtils.getLangString(BUTTON, Button.choosePathText));
         btnChooseProjectPath.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -821,7 +823,7 @@ public class TransferWidget extends AbstractWidget {
 
     private void createGroupAdvice(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.advice));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.advice));
 
         GridLayout gridLayout = new GridLayout(1, true);
 
@@ -835,8 +837,8 @@ public class TransferWidget extends AbstractWidget {
 
         String text =
                 ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.transferWidget) + "\n" +
-                ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.transferWidget2) + "\n\n" +
-                ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.transferWidget3);
+                        ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.transferWidget2) + "\n\n" +
+                        ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.transferWidget3);
 
         tip.setText(text);
         // tip.setText(ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.transferWidget));
@@ -845,7 +847,7 @@ public class TransferWidget extends AbstractWidget {
 
     private void createGroupOptions(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.generalOptions));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.generalOptions));
 
         GridLayout gridLayout = new GridLayout(1, true);
 
@@ -855,21 +857,21 @@ public class TransferWidget extends AbstractWidget {
         group.setLayout(gridLayout);
         group.setLayoutData(gridData);
 
-        chkBoxMoveOption = new Button(group, SWT.CHECK);
+        chkBoxMoveOption = new org.eclipse.swt.widgets.Button(group, SWT.CHECK);
         chkBoxMoveOption.setSelection(false);
-        chkBoxMoveOption.setText(ResourceBundleUtils.getLangString(CHECKBOXES, CheckBoxes.moveTransferWidget));
+        chkBoxMoveOption.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBox.moveTransferWidget));
 
-        chkBoxCleanMeasurementFile = new Button(group, SWT.CHECK);
+        chkBoxCleanMeasurementFile = new org.eclipse.swt.widgets.Button(group, SWT.CHECK);
         chkBoxCleanMeasurementFile.setSelection(false);
-        chkBoxCleanMeasurementFile.setText(ResourceBundleUtils.getLangString(CHECKBOXES, CheckBoxes.cleanMeasurementFile));
+        chkBoxCleanMeasurementFile.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBox.cleanMeasurementFile));
 
-        chkBoxCleanLogfile = new Button(group, SWT.CHECK);
+        chkBoxCleanLogfile = new org.eclipse.swt.widgets.Button(group, SWT.CHECK);
         chkBoxCleanLogfile.setSelection(false);
-        chkBoxCleanLogfile.setText(ResourceBundleUtils.getLangString(CHECKBOXES, CheckBoxes.cleanLogfile));
+        chkBoxCleanLogfile.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBox.cleanLogfile));
     }
 
     private void initCardReading() {
-        final String storedCardReaderPath = Main.pref.getUserPreference(PreferenceKeys.DIR_CARD_READER);
+        final String storedCardReaderPath = Main.pref.getUserPreference(PreferenceKey.DIR_CARD_READER);
 
         if (checkForAvailableLeicaCardStructure(storedCardReaderPath)) {
             readCardFolders(storedCardReaderPath);
@@ -877,20 +879,21 @@ public class TransferWidget extends AbstractWidget {
             logger.info("Card reader initialized and path successful read");
         } else {
             showCardReaderNotExitsWarning();
+            actionBtnCardReaderPath();
 
-            logger.warn("Could not read card reader path '{}'.", storedCardReaderPath);
+            logger.warn("No valid card reader path '{}' entered in the text field.", storedCardReaderPath);
         }
     }
 
     private void loadProjectListFromPreferences() {
         lastUsedProjects = new BoundedTreeSet<>(10);
 
-        final String s = Main.pref.getUserPreference(PreferenceKeys.LAST_USED_PROJECTS);
-        final String t = s.substring(1, s.length() - 1);
+        final String storedLastUsedProjects = Main.pref.getUserPreference(PreferenceKey.LAST_USED_PROJECTS);
+        final String reducedLastUsedProjects = storedLastUsedProjects.substring(1, storedLastUsedProjects.length() - 1);
 
-        final String[] strings = t.split(", ");
+        final String[] projectNumbers = reducedLastUsedProjects.split(", ");
 
-        for (String projectNumber : strings) {
+        for (String projectNumber : projectNumbers) {
             if (!projectNumber.trim().equalsIgnoreCase("")) {
                 lastUsedProjectsList.add(projectNumber);
             }
@@ -899,9 +902,9 @@ public class TransferWidget extends AbstractWidget {
 
     private void readCardFolderData(String cardReaderPath) {
         final String dataFilesDir = cardReaderPath + FileSystems.getDefault().getSeparator() +
-                Main.pref.getUserPreference(PreferenceKeys.DIR_CARD_READER_DATA_FILES);
+                Main.pref.getUserPreference(PreferenceKey.DIR_CARD_READER_DATA_FILES);
 
-        final ArrayList<Path> dataFileDirContent = FileUtils.listFiles(dataFilesDir, new TxtFilter());
+        final java.util.List<Path> dataFileDirContent = FileUtils.listFiles(dataFilesDir, new TxtFilter());
 
         allDatas = new TreeSet<>();
 
@@ -934,9 +937,9 @@ public class TransferWidget extends AbstractWidget {
 
     private void readCardFolderExport(String cardReaderPath) {
         final String exportFilesDir = cardReaderPath + FileSystems.getDefault().getSeparator() +
-                Main.pref.getUserPreference(PreferenceKeys.DIR_CARD_READER_EXPORT_FILES);
+                Main.pref.getUserPreference(PreferenceKey.DIR_CARD_READER_EXPORT_FILES);
 
-        final ArrayList<Path> exportFileDirContentGSI = FileUtils.listFiles(exportFilesDir, new GsiFilter());
+        final java.util.List<Path> exportFileDirContentGSI = FileUtils.listFiles(exportFilesDir, new GsiFilter());
 
         allExports = new TreeSet<>();
 
@@ -948,7 +951,7 @@ public class TransferWidget extends AbstractWidget {
             }
         }
 
-        final ArrayList<Path> exportFileDirContentTXT = FileUtils.listFiles(exportFilesDir, new TxtFilter());
+        final java.util.List<Path> exportFileDirContentTXT = FileUtils.listFiles(exportFilesDir, new TxtFilter());
 
         if (exportFileDirContentTXT != null) {
             for (Path path : exportFileDirContentTXT) {
@@ -979,9 +982,9 @@ public class TransferWidget extends AbstractWidget {
 
     private void readCardFolderJob(String cardReaderPath) {
         final String jobFilesDir = cardReaderPath + FileSystems.getDefault().getSeparator() +
-                Main.pref.getUserPreference(PreferenceKeys.DIR_CARD_READER_JOB_FILES);
+                Main.pref.getUserPreference(PreferenceKey.DIR_CARD_READER_JOB_FILES);
 
-        final ArrayList<Path> jobFileDirContent = FileUtils.listFiles(jobFilesDir, new FilesFilter());
+        final java.util.List<Path> jobFileDirContent = FileUtils.listFiles(jobFilesDir, new FilesFilter());
 
         TreeSet<String> allJobs = new TreeSet<>();
 
@@ -1021,14 +1024,14 @@ public class TransferWidget extends AbstractWidget {
 
     private void showCardReaderNotExitsWarning() {
         MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR,
-                ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.msgBox_Error),
-                ResourceBundleUtils.getLangString(ERRORS, Errors.cardReaderPathNotExists));
+                ResourceBundleUtils.getLangStringFromXml(TEXT, Text.msgBox_Error),
+                ResourceBundleUtils.getLangString(ERROR, Error.cardReaderPathNotExists));
     }
 
     private void showFileExistsWarning(Path path) {
         MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING,
-                ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.msgBox_Warning),
-                String.format(ResourceBundleUtils.getLangString(WARNINGS, Warnings.fileExists), path.getFileName()));
+                ResourceBundleUtils.getLangStringFromXml(TEXT, Text.msgBox_Warning),
+                String.format(ResourceBundleUtils.getLangString(WARNING, Warning.fileExists), path.getFileName()));
     }
 
     /*
@@ -1036,6 +1039,7 @@ public class TransferWidget extends AbstractWidget {
      * the user pref with the key 'LAST_USED_PROJECTS'.
      */
     private void updateLastUsedProjectsListAndPreferences() {
+
         final String delimiter = FileSystems.getDefault().getSeparator();
 
         // get last used project elements from list
@@ -1057,7 +1061,7 @@ public class TransferWidget extends AbstractWidget {
         }
 
         // store last used projects to user preferences
-        Main.pref.setUserPreference(PreferenceKeys.LAST_USED_PROJECTS, Arrays.toString(lastUsedProjectsList.getItems()));
+        Main.pref.setUserPreference(PreferenceKey.LAST_USED_PROJECTS, Arrays.toString(lastUsedProjectsList.getItems()));
     }
 
-} // end of TransferWidget
+}

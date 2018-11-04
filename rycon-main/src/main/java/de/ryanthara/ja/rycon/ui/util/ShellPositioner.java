@@ -19,7 +19,7 @@
 package de.ryanthara.ja.rycon.ui.util;
 
 import de.ryanthara.ja.rycon.Main;
-import de.ryanthara.ja.rycon.data.PreferenceKeys;
+import de.ryanthara.ja.rycon.data.PreferenceKey;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Monitor;
@@ -42,19 +42,25 @@ import org.slf4j.LoggerFactory;
  * @version 3
  * @since 1
  */
-public class ShellPositioner {
+public final class ShellPositioner {
 
     private static final Logger logger = LoggerFactory.getLogger(ShellPositioner.class.getName());
+
+    /**
+     * ShellPositioner is non-instantiable.
+     */
+    private ShellPositioner() {
+        throw new AssertionError();
+    }
 
     /**
      * Calculate the centered shell location and return it as {@link Point} object.
      * <p>
      * The centered shell location depends on the screen size and the shell size. To calculate
-     * these parameters are reader from the display and shell objects from the calling widgets.
+     * these parameters are read from the display and shell objects from the calling widgets.
      * The coordinates of the centered shell location represents the upper left corner of the widgets.
      *
      * @param parent the parent shell
-     *
      * @return centered shell position on the primary monitor
      */
     public static Point centerShellOnPrimaryMonitor(Shell parent) {
@@ -72,11 +78,10 @@ public class ShellPositioner {
      * Calculate the vertical centered shell location and return it as {@link Point} object.
      * <p>
      * The centered shell location depends on the screen size and the shell size. To calculate
-     * these parameters are reader from the display and shell objects from the calling widgets.
+     * these parameters are read from the display and shell objects from the calling widgets.
      * The coordinates of the centered shell location represents the upper left corner of the widgets.
      *
      * @param parent the parent shell
-     *
      * @return centered shell position on the primary monitor
      */
     public static Point centerShellOnPrimaryMonitorVertically(Shell parent) {
@@ -90,10 +95,16 @@ public class ShellPositioner {
         return new Point(x, y);
     }
 
+    /**
+     * Posits the shell at a point.
+     *
+     * @param shell shell to be positioned
+     * @return centered shell
+     */
     public static Point positShell(Shell shell) {
         Monitor[] monitors = shell.getDisplay().getMonitors();
 
-        final String lastUsedDisplay = Main.pref.getUserPreference(PreferenceKeys.LAST_USED_DISPLAY);
+        final String lastUsedDisplay = Main.pref.getUserPreference(PreferenceKey.LAST_USED_DISPLAY);
 
         if (lastUsedDisplay == null || lastUsedDisplay.trim().equals("") || lastUsedDisplay.equals("-1")) {
             return centerShellOnPrimaryMonitor(shell);
@@ -103,9 +114,9 @@ public class ShellPositioner {
                     String s;
 
                     if (lastUsedDisplay.equals("0")) {
-                        s = Main.pref.getUserPreference(PreferenceKeys.LAST_POS_PRIMARY_MONITOR);
+                        s = Main.pref.getUserPreference(PreferenceKey.LAST_POS_PRIMARY_MONITOR);
                     } else {
-                        s = Main.pref.getUserPreference(PreferenceKeys.LAST_POS_SECONDARY_MONITOR);
+                        s = Main.pref.getUserPreference(PreferenceKey.LAST_POS_SECONDARY_MONITOR);
                     }
 
                     String[] coords = s.split(",");
@@ -120,4 +131,4 @@ public class ShellPositioner {
         return centerShellOnPrimaryMonitor(shell);
     }
 
-} // end of ShellPositioner
+}

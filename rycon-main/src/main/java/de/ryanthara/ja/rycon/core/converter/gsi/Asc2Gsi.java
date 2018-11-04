@@ -21,13 +21,16 @@ import de.ryanthara.ja.rycon.core.converter.Converter;
 import de.ryanthara.ja.rycon.core.elements.GsiBlock;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.IntStream;
 
 /**
- * Instances of this class provides functions to convert an ascii altitude register file
+ * A converter with functions to convert an ascii altitude register file
  * into a Leica Geosystems GSI file.
+ *
  * <p>
- * The line based ascii file contains one point (no x y z) in every line which coordinates
- * are separated by a special character sequence.
+ * The line based ascii file contains one point (no x y z) in every line
+ * which coordinates are separated by a special character sequence.
  *
  * @author sebastian
  * @version 1
@@ -35,38 +38,37 @@ import java.util.ArrayList;
  */
 public class Asc2Gsi extends Converter {
 
-    private final ArrayList<String> lines;
+    private final List<String> lines;
     private final boolean isGsi16;
 
     /**
-     * Constructs a new instance of this class with a parameter for the ascii altitude register
-     * as {@code ArrayList<String>}.
+     * Creates a converter with a list for the read line based ascii altitude
+     * register file and an option for the choice of GSI8/GSI16 output.
      *
      * @param lines   ascii altitude register lines
      * @param isGsi16 true if GSI16 format
      */
-    public Asc2Gsi(ArrayList<String> lines, boolean isGsi16) {
+    public Asc2Gsi(List<String> lines, boolean isGsi16) {
         this.lines = new ArrayList<>(lines);
         this.isGsi16 = isGsi16;
     }
 
     /**
      * Does the conversion from ascii (nr x y z) to Leica Geosystems GSI 8/16 and returns
-     * the result as {@code ArrayList<String>}.
+     * the result as {@code List<String>}.
      * <p>
      * The {@link Converter#SEPARATOR separator} sign.
      *
      * @return the converted lines
-     *
      * @see Converter
      */
     @Override
-    public ArrayList<String> convert() {
-        ArrayList<ArrayList<GsiBlock>> blocksInLines = new ArrayList<>(lines.size());
+    public List<String> convert() {
+        List<List<GsiBlock>> blocksInLines = new ArrayList<>(lines.size());
 
-        for (int i = 0; i < lines.size(); i++) {
-            ArrayList<GsiBlock> blocks = new ArrayList<>(4);
-
+        // check for at least one or more added elements to prevent writing empty lines
+        IntStream.range(0, lines.size()).forEach(i -> {
+            List<GsiBlock> blocks = new ArrayList<>(4);
             final String line = lines.get(i);
             final String[] split = line.split(Converter.SEPARATOR);
 
@@ -77,13 +79,12 @@ public class Asc2Gsi extends Converter {
                 blocks.add(new GsiBlock(isGsi16, 83, split[3]));
             }
 
-            // check for at least one or more added elements to prevent writing empty lines
             if (blocks.size() > 0) {
                 blocksInLines.add(blocks);
             }
-        }
+        });
 
-        return new ArrayList<>(BaseToolsGsi.lineTransformation(isGsi16, blocksInLines));
+        return List.copyOf(BaseToolsGsi.lineTransformation(isGsi16, blocksInLines));
     }
 
-} // end of Asc2Gsi
+}

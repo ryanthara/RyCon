@@ -17,19 +17,19 @@
  */
 package de.ryanthara.ja.rycon.core.converter.excel;
 
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import de.ryanthara.ja.rycon.nio.FileFormat;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.WorkbookUtil;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * This class provides functions to convert coordinate files from Cadwork CAD program into Microsoft Excel files
- * in XLS or XLSX format.
+ * A converter with functions to convert coordinate coordinate files from
+ * Cadwork CAD program into Microsoft Excel files in XLS or XLSX format.
  *
  * @author sebastian
  * @version 1
@@ -37,34 +37,28 @@ import java.util.ArrayList;
  */
 public class Cadwork2Excel {
 
-    private final ArrayList<String> readStringLines;
+    private final List<String> lines;
     private Workbook workbook;
 
     /**
-     * Class constructor for reader line based text files from Cadwork CAD program in node.dat file format.
+     * Creates a converter with a list for the read line based text file from Cadwork CAD program.
      *
-     * @param readStringLines {@code ArrayList<String>} with reader lines from node.dat file
+     * @param lines list with read node.dat lines
      */
-    public Cadwork2Excel(ArrayList<String> readStringLines) {
-        this.readStringLines = readStringLines;
+    public Cadwork2Excel(List<String> lines) {
+        this.lines = new ArrayList<>(lines);
     }
 
     /**
      * Converts a coordinate file from Cadwork (node.dat) into a Microsoft Excel file.
      *
-     * @param isXLS           selector to distinguish between XLS and XLSX file extension
+     * @param fileFormat      selector to distinguish between XLS and XLSX file extension
      * @param sheetName       name of the sheet (file name from input file)
      * @param writeCommentRow writes a comment row to the output file
-     *
      * @return success of the conversion
      */
-    public boolean convertCadwork2Excel(boolean isXLS, String sheetName, boolean writeCommentRow) {
-        // general preparation of the workbook
-        if (isXLS) {
-            workbook = new HSSFWorkbook();
-        } else {
-            workbook = new XSSFWorkbook();
-        }
+    public boolean convert(FileFormat fileFormat, String sheetName, boolean writeCommentRow) {
+        workbook = BaseToolsExcel.prepareWorkbook(fileFormat);
 
         String safeName = WorkbookUtil.createSafeSheetName(sheetName);
         String[] lineSplit;
@@ -75,26 +69,15 @@ public class Cadwork2Excel {
         short rowNumber = 0;
         short cellNumber = 0;
 
-        // remove not needed headlines
-        readStringLines.subList(0, 3).clear();
+        removeHeadLines();
 
         if (writeCommentRow) {
-            row = sheet.createRow(rowNumber);
-            rowNumber++;
-
-            lineSplit = readStringLines.get(0).trim().split("\\s+", -1);
-
-            for (String description : lineSplit) {
-                cell = row.createCell(cellNumber);
-                cellNumber++;
-                cell.setCellValue(description);
-            }
+            rowNumber = prepareCommentRow(sheet, rowNumber, cellNumber);
         }
 
-        // remove furthermore the still not needed comment line
-        readStringLines.remove(0);
+        removeCommentLine();
 
-        for (String line : readStringLines) {
+        for (String line : lines) {
             row = sheet.createRow(rowNumber);
             rowNumber++;
 
@@ -134,6 +117,31 @@ public class Cadwork2Excel {
         return rowNumber > 1;
     }
 
+    private short prepareCommentRow(Sheet sheet, short rowNumber, short cellNumber) {
+        Row row;
+        String[] lineSplit;
+        Cell cell;
+        row = sheet.createRow(rowNumber);
+        rowNumber++;
+
+        lineSplit = lines.get(0).trim().split("\\s+", -1);
+
+        for (String description : lineSplit) {
+            cell = row.createCell(cellNumber);
+            cellNumber++;
+            cell.setCellValue(description);
+        }
+        return rowNumber;
+    }
+
+    private void removeCommentLine() {
+        lines.remove(0);
+    }
+
+    private void removeHeadLines() {
+        lines.subList(0, 3).clear();
+    }
+
     /**
      * Returns the Workbook for writing it to a file.
      *
@@ -143,4 +151,4 @@ public class Cadwork2Excel {
         return this.workbook;
     }
 
-} // end of Cadwork2Excel
+}

@@ -18,10 +18,11 @@
 package de.ryanthara.ja.rycon.core.converter.csv;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * This class provides functions to convert a text formatted measurement or coordinate file
- * into a comma separated values file (csv format).
+ * A converter with functions to convert ASCII text coordinate
+ * files into comma separated values (CSV) files.
  *
  * @author sebastian
  * @version 1
@@ -29,15 +30,15 @@ import java.util.ArrayList;
  */
 public class Txt2Csv {
 
-    private final ArrayList<String> readStringLines;
+    private final List<String> lines;
 
     /**
-     * Class constructor for reader line based text files in different formats.
+     * Creates a converter with a list for the read line based ASCII text file.
      *
-     * @param readStringLines {@code ArrayList<String>} with lines in text format
+     * @param lines list with ASCII text lines
      */
-    public Txt2Csv(ArrayList<String> readStringLines) {
-        this.readStringLines = readStringLines;
+    public Txt2Csv(List<String> lines) {
+        this.lines = new ArrayList<>(lines);
     }
 
     /**
@@ -46,17 +47,17 @@ public class Txt2Csv {
      * Due to some reasons the text file could not use white space characters in point numbers or code blocks.
      *
      * @param separator separator sign to use for conversion
-     *
      * @return converted CSV file
      */
-    public ArrayList<String> convertTXT2CSV(String separator) {
-        ArrayList<String> result = new ArrayList<>();
+    public List<String> convert(String separator) {
+        List<String> result = new ArrayList<>();
 
-        for (String line : readStringLines) {
+        for (String line : lines) {
             line = line.trim();
             result.add(line.replaceAll("\\s+", separator));
         }
-        return result;
+
+        return List.copyOf(result);
     }
 
-} // end of Txt2Csv
+}

@@ -24,8 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Instances of this class provides functions to convert a comma separated values (CSV) formatted
- * coordinate file into a coordinate file for LTOP.
+ * A converter with functions to convert comma separated values (CSV)
+ * coordinate files into a coordinate file for LTOP.
  *
  * @author sebastian
  * @version 1
@@ -33,15 +33,15 @@ import java.util.List;
  */
 public class Csv2Ltop {
 
-    private final List<String[]> readCSVLines;
+    private final List<String[]> lines;
 
     /**
-     * Constructs a new instance of this class with a parameter for reader line based comma separated values (CSV) files.
+     * Creates a converter with a list for the read line based comma separated values (CSV) files.
      *
-     * @param readCSVLines {@code List<String[]>} with lines as {@code String[]}
+     * @param lines list with lines of comma separated values (CSV)
      */
-    public Csv2Ltop(List<String[]> readCSVLines) {
-        this.readCSVLines = readCSVLines;
+    public Csv2Ltop(List<String[]> lines) {
+        this.lines = new ArrayList<>(lines);
     }
 
     /**
@@ -49,18 +49,17 @@ public class Csv2Ltop {
      *
      * @param eliminateDuplicates eliminate duplicate coordinates within 3cm radius
      * @param sortOutputFile      sort an output file by point number
-     *
      * @return converted KOO file
      */
-    public ArrayList<String> convertCsv2Koo(boolean eliminateDuplicates, boolean sortOutputFile) {
-        ArrayList<String> result = new ArrayList<>();
-        ArrayList<RyPoint> ryPoints = new ArrayList<>();
+    public List<String> convert(boolean eliminateDuplicates, boolean sortOutputFile) {
+        List<String> result = new ArrayList<>();
+        List<RyPoint> ryPoints = new ArrayList<>();
         String number, pointType, toleranceCategory, easting, northing, height, geoid, eta, xi;
         String resultLine;
 
         BaseToolsLtop.writeCommendLine(result, BaseToolsLtop.cartesianCoordsIdentifier);
 
-        for (String[] stringField : readCSVLines) {
+        for (String[] stringField : lines) {
             // prevent wrong output with empty strings of defined length from class
             pointType = BaseToolsLtop.pointType;
             toleranceCategory = BaseToolsLtop.toleranceCategory;
@@ -73,14 +72,14 @@ public class Csv2Ltop {
             number = String.format("%-10s", stringField[0].replaceAll("\\s+", "").trim());
 
             // easting (Y) is in column 3
-            easting = String.format("%12s", NumberFormatter.fillDecimalPlace(stringField[1], 4));
+            easting = String.format("%12s", NumberFormatter.fillDecimalPlaces(stringField[1], 4));
 
             // northing (X) is in column 4
-            northing = String.format("%12s", NumberFormatter.fillDecimalPlace(stringField[2], 4));
+            northing = String.format("%12s", NumberFormatter.fillDecimalPlaces(stringField[2], 4));
 
             // height (Z) is in column 5, but not always valued
             if (!stringField[3].equals("")) {
-                height = String.format("%10s", NumberFormatter.fillDecimalPlace(stringField[3], 4));
+                height = String.format("%10s", NumberFormatter.fillDecimalPlaces(stringField[3], 4));
             }
 
             // pick up the relevant elements from the blocks from every line
@@ -99,7 +98,7 @@ public class Csv2Ltop {
 
         result = eliminateDuplicates ? BaseToolsLtop.eliminateDuplicatePoints(ryPoints) : result;
 
-        return sortOutputFile ? BaseToolsLtop.sortResult(result) : result;
+        return sortOutputFile ? BaseToolsLtop.sortResult(result) : new ArrayList<>(result);
     }
 
-} // end of Csv2Ltop
+}

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <entry key="analyzerWidget">With the help of the analyze tool a Leica Geosystems logfile.txt file can be analyzed quick and easy.</entry>
+    <entry key="analyzerWidget2">All relevant information are shown with one view.</entry>
+    <entry key="analyzerWidget3">You only have to choose one or more log files.</entry>
+    <entry key="clearUpWidget">With RyCON it is possible to clean up measurement files in Leica Geosystems GSI format and Leica Geosystems logfile.txt format automatically.</entry>
+    <entry key="clearUpWidget2">The program detects known points, free stations and target points and do not put them into the output file. Additionally it is possible to remove the orientation control measurements.</entry>
+    <entry key="clearUpWidget3">RyCON does not overwrite original files. Instead of this, the files are stored in an output file. It is named by default to 'filename_EDIT.GSI'. This setting can be changed in the preferences.</entry>
+    <entry key="converterWidget">With RyCON it is possible to convert coordinates and measurement files between different formats.
+    </entry>
+    <entry key="converterWidget2">RyCON supports different formats and can be supplemented later on with additional formats.</entry>
+    <entry key="converterWidget3">RyCON does not overwrite original files. Instead of this, the files are stored in an output file. It is named by 'filename_CONV.ENDING'.</entry>
+    <entry key="generatorWidget">With the help of RyCON a new folder can be created for the entered project number from an existing folder structure.</entry>
+    <entry key="generatorWidget2">Several folders are created at the same time if the names are separated by a semicolon, existing folders cannot be changed or deleted.</entry>
+    <entry key="generatorWidget3">Defaults for paths and template folders can be defined in the settings of RyCON.</entry>
+    <entry key="levellingWidget">With the help of RyCON levelling results (observations, heights and adjustment results) of different instruments and programs can be prepared for CAD import.
+    </entry>
+    <entry key="levellingWidget2">The program takes over existing position coordinates or inserts pseudo values. The X and Y values are increased by one metre per lines.</entry>
+    <entry key="levellingWidget3">RyCON does not overwrite any original measurement files, but stores the results in a newly created file.</entry>
+    <entry key="pasteCoordinates">The coordinates inserted from the clipboard are automatically recognized, transformed and copied back to the clipboard.</entry>
+    <entry key="pasteCoordinates2">Spaces, tabs, commas or semicolons can be used as separators.</entry>
+    <entry key="splitterWidget">With the help of RyCON, measurement and coordinate files of different formats can be automatically separated by code.
+    </entry>
+    <entry key="splitterWidget2">The program recognizes measurement and coordinate lines with code and creates a separate file for each code that has occurred. This contains only the lines of the respective code.</entry>
+    <entry key="splitterWidget3">RyCON does not overwrite original data or files, but stores the results in new files. The file name is: "Filename_CODE-X.ENDING".</entry>
+    <entry key="transferWidget">With RyCON it is possible to copy or move measurement data from a memory card automatically into a given folder structure.</entry>
+    <entry key="transferWidget2">The program analyze the memory card and found jobs, export files and log files. They will be copied to the suitable folders.</entry>
+    <entry key="transferWidget3">RyCON does not overwrite existing files. The movement of files is done on your own risk.</entry>
+    <entry key="transformationWidget">Using RyCON and the swisstopo REFRAME.jar (version 3.2), reference frame changes between the reference frames LV03 and LV95 can be calculated.</entry>
+    <entry key="transformationWidget2">You can use files or coordinate values from the clipboard.</entry>
+    <entry key="transformationWidget3">Currently this function is limited to the transformation of Swiss Grid coordinates.</entry>
+</properties>

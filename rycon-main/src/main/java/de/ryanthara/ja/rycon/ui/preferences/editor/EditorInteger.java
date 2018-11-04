@@ -67,7 +67,7 @@ public class EditorInteger extends Editor<Integer> {
      * @param parent parent composite
      */
     @Override
-    public void createControl(final Composite parent) {
+    public void createControl(Composite parent) {
         // GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, false);
         GridData gridData = new GridData();
         gridData.horizontalAlignment = SWT.FILL;
@@ -130,7 +130,6 @@ public class EditorInteger extends Editor<Integer> {
      * Formats the value for for this editor.
      *
      * @param i value to be formatted
-     *
      * @return formatted value
      */
     @Override
@@ -142,12 +141,11 @@ public class EditorInteger extends Editor<Integer> {
      * Parses the string to {@code Integer}.
      *
      * @param s string to be parsed
-     *
      * @return parsed string
      */
     @Override
-    Integer parse(final String s) {
+    Integer parse(String s) {
         return Integer.valueOf(s);
     }
 
-} // end of EditorInteger
+}

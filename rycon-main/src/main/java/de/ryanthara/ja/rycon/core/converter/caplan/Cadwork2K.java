@@ -17,13 +17,15 @@
  */
 package de.ryanthara.ja.rycon.core.converter.caplan;
 
+import de.ryanthara.ja.rycon.core.converter.Separator;
 import de.ryanthara.ja.rycon.util.NumberFormatter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Instances of this class provides functions to convert a coordinate file from Cadwork CAD program (node.dat)
- * into a Caplan K file.
+ * A converter with functions to convert Cadwork CAD
+ * program coordinate files into Caplan K files.
  *
  * @author sebastian
  * @version 1
@@ -31,16 +33,15 @@ import java.util.ArrayList;
  */
 public class Cadwork2K {
 
-    private final ArrayList<String> readStringLines;
+    private final List<String> lines;
 
     /**
-     * Constructs a new instance of this class with a parameter for reader line based text files from Cadwork CAD program
-     * in node.dat file format.
+     * Creates a converter with a list for the read line based text file from Cadwork CAD program.
      *
-     * @param readStringLines {@code ArrayList<String>} with reader lines from node.dat file
+     * @param lines list with read node.dat lines
      */
-    public Cadwork2K(ArrayList<String> readStringLines) {
-        this.readStringLines = readStringLines;
+    public Cadwork2K(List<String> lines) {
+        this.lines = new ArrayList<>(lines);
     }
 
     /**
@@ -49,51 +50,47 @@ public class Cadwork2K {
      * @param useSimpleFormat  option to writer a reduced K file which is compatible to Z+F LaserControl
      * @param writeCommentLine option to writer a comment line into the K file with basic information
      * @param writeCodeColumn  option to writer the code column into the K file
-     *
-     * @return converted Caplan K file as {@code ArrayList<String>}
+     * @return converted Caplan K file as {@code List<String>}
      */
-    public ArrayList<String> convertCadwork2K(boolean useSimpleFormat, boolean writeCommentLine, boolean writeCodeColumn) {
-        ArrayList<String> result = new ArrayList<>();
+    public List<String> convert(boolean useSimpleFormat, boolean writeCommentLine, boolean writeCodeColumn) {
+        List<String> result = new ArrayList<>();
 
         if (writeCommentLine) {
             BaseToolsCaplanK.writeCommentLine(result);
         }
 
-        // remove not needed headlines
-        readStringLines.subList(0, 3).clear();
+        removeHeadLines();
 
-        for (String line : readStringLines) {
+        for (String line : lines) {
             int valencyIndicator;
 
-            String[] lineSplit = line.trim().split("\\s+", -1);
+            String[] values = line.trim().split("\\s+", -1);
 
             String valency = BaseToolsCaplanK.valency;
             String freeSpace = BaseToolsCaplanK.freeSpace;
             String objectTyp = BaseToolsCaplanK.objectTyp;
 
             // point number (no '*', ',' and ';'), column 1 - 16
-            String number = BaseToolsCaplanK.cleanPointNumberString(lineSplit[5]);
+            String number = BaseToolsCaplanK.cleanPointNumberString(values[5]);
 
             // easting E, column 19-32
-            String easting = String.format("%14s", NumberFormatter.fillDecimalPlace(lineSplit[1], 4));
+            String easting = String.format("%14s", NumberFormatter.fillDecimalPlaces(values[1], 4));
 
             // northing N, column 33-46
-            String northing = String.format("%14s", NumberFormatter.fillDecimalPlace(lineSplit[2], 4));
+            String northing = String.format("%14s", NumberFormatter.fillDecimalPlaces(values[2], 4));
             valencyIndicator = 3;
 
             // height H, column 47-59
-            String height = String.format("%13s", NumberFormatter.fillDecimalPlace(lineSplit[3], 5));
-            if (Double.parseDouble(height) != 0d) {
-                valencyIndicator += 4;
-            }
+            String height = String.format("%13s", NumberFormatter.fillDecimalPlaces(values[3], 5));
+            valencyIndicator = BaseToolsCaplanK.getValencyIndicator(valencyIndicator, height);
 
             // code is the same as object type, column 62...
             if (writeCodeColumn) {
-                objectTyp = "|".concat(lineSplit[4]);
+                objectTyp = "|".concat(values[4]);
             }
 
             if (valencyIndicator > 0) {
-                valency = " ".concat(Integer.toString(valencyIndicator));
+                valency = Separator.WHITESPACE.getSign().concat(Integer.toString(valencyIndicator));
             }
 
             /*
@@ -104,7 +101,11 @@ public class Cadwork2K {
                     freeSpace, objectTyp).toString());
         }
 
-        return result;
+        return List.copyOf(result);
     }
 
-} // end of Cadwork2K
+    private void removeHeadLines() {
+        lines.subList(0, 3).clear();
+    }
+
+}

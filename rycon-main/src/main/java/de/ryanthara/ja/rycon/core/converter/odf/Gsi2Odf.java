@@ -17,10 +17,11 @@
  */
 package de.ryanthara.ja.rycon.core.converter.odf;
 
-import de.ryanthara.ja.rycon.core.converter.gsi.BaseToolsGsi;
+import de.ryanthara.ja.rycon.core.converter.gsi.GsiDecoder;
 import de.ryanthara.ja.rycon.core.elements.GsiBlock;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
-import de.ryanthara.ja.rycon.i18n.WordIndices;
+import de.ryanthara.ja.rycon.i18n.WordIndex;
+import de.ryanthara.ja.rycon.util.StringUtils;
 import org.odftoolkit.simple.SpreadsheetDocument;
 import org.odftoolkit.simple.table.Cell;
 import org.odftoolkit.simple.table.Table;
@@ -28,13 +29,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
+import java.util.List;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.WORDINDICES;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundle.WORDINDEX;
 
 /**
- * Instances of this class provides functions to convert measurement or coordinate files from Leica GSI format
- * (GSI8 and GSI16) into an Open Document Format spreadsheet file.
+ * A converter with functions to convert Leica Geosystems GSI format (GSI8 and GSI16)
+ * coordinate and measurement files into an Open Document Format spreadsheet file.
  *
  * @author sebastian
  * @version 1
@@ -43,27 +44,27 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.WORDINDICES;
 public class Gsi2Odf {
 
     private static final Logger logger = LoggerFactory.getLogger(Gsi2Odf.class.getName());
-    private final BaseToolsGsi baseToolsGsi;
+    private final GsiDecoder gsiDecoder;
     private SpreadsheetDocument spreadsheetDocument;
 
     /**
-     * Constructs a new instance of this class for reader Leica GSI files as parameter.
+     * Creates a converter with a list for the read line based
+     * Leica Geosystems GSI8 or GSI16 file.
      *
-     * @param readStringLines {@code ArrayList<String>} with lines in text format
+     * @param lines list with Leica Geosystems GSI8 or GSI16 lines
      */
-    public Gsi2Odf(ArrayList<String> readStringLines) {
-        baseToolsGsi = new BaseToolsGsi(readStringLines);
+    public Gsi2Odf(List<String> lines) {
+        gsiDecoder = new GsiDecoder(lines);
     }
 
     /**
-     * Converts a Leica GSI file element by element into an Open Document Format spreadsheet file.
+     * Converts a Leica Geosystems GSI file element by element into an Open Document Format spreadsheet file.
      *
      * @param sheetName       name of the sheet (file name from input file)
      * @param writeCommentRow writer comment row to the output file
-     *
      * @return success conversion success
      */
-    public boolean convertGSI2Ods(Path sheetName, boolean writeCommentRow) {
+    public boolean convert(Path sheetName, boolean writeCommentRow) {
         int rowIndex = 0;
         int colIndex = 0;
 
@@ -78,17 +79,11 @@ public class Gsi2Odf {
             Cell cell;
 
             if (writeCommentRow) {
-                for (int wordIndex : baseToolsGsi.getFoundAllWordIndices()) {
-                    cell = table.getCellByPosition(colIndex, 0);
-                    colIndex = colIndex + 1;
-
-                    cell.setStringValue(ResourceBundleUtils.getLangString(WORDINDICES, WordIndices.valueOf("WI" + wordIndex)));
-                }
-                rowIndex = rowIndex + 1;
+                rowIndex = prepareCommentRow(rowIndex, colIndex, table);
             }
 
             // fill gsi content into rows and cells
-            for (ArrayList<GsiBlock> blocksInLine : baseToolsGsi.getEncodedLinesOfGSIBlocks()) {
+            for (List<GsiBlock> blocksInLine : gsiDecoder.getDecodedLinesOfGsiBlocks()) {
                 colIndex = 0;
                 for (GsiBlock block : blocksInLine) {
                     cell = table.getCellByPosition(colIndex, rowIndex);
@@ -107,14 +102,14 @@ public class Gsi2Odf {
                         case 21:    // Horizontal Circle (Hz)
                         case 22:    // Vertical Angle (V)
                         case 25:    // Horizontal circle difference (Hz0-Hz)
-                            cell.setDoubleValue(Double.parseDouble(block.toPrintFormatCsv()));
+                            setCellValue(cell, block);
                             break;
 
                         // DISTANCE
                         case 31:    // Slope Distance
                         case 32:    // Horizontal Distance
                         case 33:    // Height Difference
-                            cell.setDoubleValue(Double.parseDouble(block.toPrintFormatCsv()));
+                            setCellValue(cell, block);
                             break;
 
                         // CODE BLOCK
@@ -159,13 +154,13 @@ public class Gsi2Odf {
                         case 84:    // Station Easting (E0)
                         case 85:    // Station Northing (N0)
                         case 86:    // Station Elevation (H0)
-                            cell.setDoubleValue(Double.parseDouble(block.toPrintFormatCsv()));
+                            setCellValue(cell, block);
                             cell.setFormatString("#,##0.0000");
                             break;
 
                         case 87:    // Reflector height (above ground)
                         case 88:    // Instrument height (above ground)
-                            cell.setDoubleValue(Double.parseDouble(block.toPrintFormatCsv()));
+                            setCellValue(cell, block);
                             cell.setFormatString("#,##0.000");
                             break;
 
@@ -188,6 +183,22 @@ public class Gsi2Odf {
         return rowIndex > 1;
     }
 
+    private int prepareCommentRow(int rowIndex, int colIndex, Table table) {
+        Cell cell;
+        for (int wordIndex : gsiDecoder.getFoundWordIndices()) {
+            cell = table.getCellByPosition(colIndex, 0);
+            colIndex = colIndex + 1;
+
+            cell.setStringValue(ResourceBundleUtils.getLangString(WORDINDEX, WordIndex.valueOf("WI" + wordIndex)));
+        }
+        rowIndex = rowIndex + 1;
+        return rowIndex;
+    }
+
+    private void setCellValue(Cell cell, GsiBlock block) {
+        cell.setDoubleValue(StringUtils.parseDoubleValue(block.toPrintFormatCsv()));
+    }
+
     /**
      * Returns the SpreadsheetDocument for writing it to a file.
      *
@@ -197,4 +208,4 @@ public class Gsi2Odf {
         return this.spreadsheetDocument;
     }
 
-} // end of Gsi2Odf
+}

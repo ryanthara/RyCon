@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <!-- coordinates -->
@@ -45,7 +44,7 @@
         <!-- SWT -->
         <repository>
             <id>maven-eclipse-repo</id>
-            <url>http://maven-eclipse.github.io/maven</url>
+            <url>https://maven-eclipse.github.io/maven</url>
         </repository>
         <repository>
             <id>local-repository</id>
@@ -65,7 +64,7 @@
         <pluginRepository>
             <id>akathist-repository</id>
             <name>Akathist Repository</name>
-            <url>http://www.9stmaryrd.com/maven</url>
+            <url>https://www.9stmaryrd.com/maven</url>
         </pluginRepository>
     </pluginRepositories>
 
@@ -97,7 +96,7 @@
             <extension>
                 <groupId>org.apache.maven.wagon</groupId>
                 <artifactId>wagon-file</artifactId>
-                <version>3.0.0</version>
+                <version>3.2.0</version>
             </extension>
         </extensions>
         <!-- plugins used to build RyCON and all the things around -->
@@ -113,7 +112,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.7.0</version>
+                    <version>3.8.0</version>
                     <configuration>
                         <!-- put your configurations here -->
                         <source>${targetJdk}</source>
@@ -125,7 +124,15 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.0.0-M1</version>
+                    <version>3.0.1</version>
+                    <executions>
+                        <execution>
+                            <id>attach-javadoc</id>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                     <configuration>
                         <doctitle>RyCON ${project.version} API</doctitle>
                         <windowtitle>RyCON ${project.version} API</windowtitle>
@@ -133,6 +140,7 @@
                         <header>RyCON API</header>
                         <bottom>Created by Sebastian Aust</bottom>
                         <detectLinks>true</detectLinks>
+                        <additionalOptions>-html5</additionalOptions>
                     </configuration>
                 </plugin>
 
@@ -140,7 +148,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.0.2</version>
+                    <version>3.1.0</version>
                     <configuration>
                         <!-- your example configuration here -->
                         <archive>
@@ -153,7 +161,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-resources-plugin</artifactId>
-                    <version>3.0.2</version>
+                    <version>3.1.0</version>
                     <configuration>
                         <encoding>UTF8</encoding>
                     </configuration>
@@ -164,14 +172,14 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-shade-plugin</artifactId>
-                    <version>3.1.0</version>
+                    <version>3.2.0</version>
                 </plugin>
                 <!-- a cross-platform tool for wrapping Java applications distributed as jars in
                 lightweight Windows native executables.  -->
                 <plugin>
                     <groupId>com.akathist.maven.plugins.launch4j</groupId>
                     <artifactId>launch4j-maven-plugin</artifactId>
-                    <version>1.7.21</version>
+                    <version>1.7.23</version>
                 </plugin>
                 <!-- give a build number -->
                 <plugin>
@@ -205,22 +213,14 @@
                             <phase>site</phase>
                             <configuration>
                                 <target name="copy and rename file">
-                                    <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_Linux_ppc/target/RyCON_Linux_ppc32.jar"
-                                          tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_Linux_ppc32.jar"/>
-                                    <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_Linux_ppc64/target/RyCON_Linux_ppc64.jar"
-                                          tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_Linux_ppc64.jar"/>
-                                    <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_Linux_x86/target/RyCON_Linux_x86.jar"
-                                          tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_Linux_x86.jar"/>
-                                    <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_Linux_x86-64/target/RyCON_Linux_x86-64.jar"
-                                          tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_Linux_x86-64.jar"/>
-                                    <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_MacOSX32/target/RyCON_MacOSX32.app-app.zip"
-                                          tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_MacOSX31.app-app.zip"/>
-                                    <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_MacOSX64/target/RyCON_MacOSX64.app-app.zip"
-                                          tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_MacOSX63.app-app.zip"/>
-                                    <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_Win32/target/RyCON_Windows32.exe"
-                                          tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_Windows32.exe"/>
-                                    <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_Win64/target/RyCON_Windows64.exe"
-                                          tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_Windows64.exe"/>
+                                    <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_Linux_ppc/target/RyCON_Linux_ppc32.jar" tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_Linux_ppc32.jar"/>
+                                    <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_Linux_ppc64/target/RyCON_Linux_ppc64.jar" tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_Linux_ppc64.jar"/>
+                                    <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_Linux_x86/target/RyCON_Linux_x86.jar" tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_Linux_x86.jar"/>
+                                    <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_Linux_x86-64/target/RyCON_Linux_x86-64.jar" tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_Linux_x86-64.jar"/>
+                                    <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_MacOSX32/target/RyCON_MacOSX32.app-app.zip" tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_MacOSX31.app-app.zip"/>
+                                    <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_MacOSX64/target/RyCON_MacOSX64.app-app.zip" tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_MacOSX63.app-app.zip"/>
+                                    <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_Win32/target/RyCON_Windows32.exe" tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_Windows32.exe"/>
+                                    <copy file="/Users/sebastian/Coder/github/RyCON/RyCON_Win64/target/RyCON_Windows64.exe" tofile="/Users/sebastian/Coder/deploy/RyCON_${project.version}_Windows64.exe"/>
                                 </target>
                             </configuration>
                             <goals>
@@ -235,18 +235,17 @@
 
     <!-- dependencies for third party repositories for all rycon modules -->
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>1.2.3</version>
-            <scope>test</scope>
-        </dependency>
         <!-- https://mvnrepository.com/artifact/org.codehaus.mojo/native2ascii-maven-plugin -->
         <dependency>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>native2ascii-maven-plugin</artifactId>
             <version>2.0.1</version>
+        </dependency>
+        <!-- https://shop.swisstopo.admin.ch/de/products/geo_software/DLL_info -->
+        <dependency>
+            <groupId>com.swisstopo.geodesy</groupId>
+            <artifactId>reframeLib</artifactId>
+            <version>3.2</version>
         </dependency>
     </dependencies>
 

@@ -18,15 +18,17 @@
 package de.ryanthara.ja.rycon.core.converter.asc;
 
 import de.ryanthara.ja.rycon.core.converter.Converter;
-import de.ryanthara.ja.rycon.core.converter.gsi.BaseToolsGsi;
+import de.ryanthara.ja.rycon.core.converter.gsi.GsiDecoder;
 import de.ryanthara.ja.rycon.core.elements.GsiBlock;
 import de.ryanthara.ja.rycon.util.DummyCoordinates;
 import org.eclipse.swt.graphics.Point;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Instances of this class provides functions to convert different Leica Geosystems level files into an ascii file.
+ * A converter with functions to convert Leica Geosystems GSI files into ASCII text files.
+ *
  * <p>
  * The line based ascii file contains one point (no x y z) in every line which coordinates
  * are separated by a single white space character.
@@ -41,17 +43,16 @@ import java.util.ArrayList;
 public class Gsi2Asc extends Converter {
 
     private final boolean ignoreChangePoints;
-    private final BaseToolsGsi baseToolsGsi;
+    private final GsiDecoder gsiDecoder;
 
     /**
-     * Constructs a new instance of this class with a parameter for the read {@code ArrayList<String>}
-     * from Nigra/NigraWin.
+     * Creates a converter with a list for the read Nigra/NigraWin file.
      *
-     * @param readStringLines    read lines
+     * @param lines              list with read lines
      * @param ignoreChangePoints change points with number '0' has to be ignored
      */
-    public Gsi2Asc(ArrayList<String> readStringLines, boolean ignoreChangePoints) {
-        baseToolsGsi = new BaseToolsGsi(readStringLines);
+    public Gsi2Asc(List<String> lines, boolean ignoreChangePoints) {
+        gsiDecoder = new GsiDecoder(lines);
         this.ignoreChangePoints = ignoreChangePoints;
     }
 
@@ -62,12 +63,12 @@ public class Gsi2Asc extends Converter {
      * @return converted gsi leveling format file
      */
     @Override
-    public ArrayList<String> convert() {
-        ArrayList<String> result = new ArrayList<>();
-        ArrayList<ArrayList<GsiBlock>> encodedLinesOfGSIBlocks = baseToolsGsi.getEncodedLinesOfGSIBlocks();
+    public List<String> convert() {
+        List<String> result = new ArrayList<>();
+        List<List<GsiBlock>> encodedLinesOfGsiBlocks = gsiDecoder.getDecodedLinesOfGsiBlocks();
 
         int countLevelLines = 0;
-        for (ArrayList<GsiBlock> blocksInLine : encodedLinesOfGSIBlocks) {
+        for (List<GsiBlock> blocksInLine : encodedLinesOfGsiBlocks) {
             if (blocksInLine.size() == 1) {
                 countLevelLines = countLevelLines + 1;
             }
@@ -75,19 +76,19 @@ public class Gsi2Asc extends Converter {
 
         // works only with the reduced ArrayList without change points for better dummy coordinate result
         if (ignoreChangePoints) {
-            ArrayList<ArrayList<GsiBlock>> reducedEncodedLinesOfGSIBlocks = new ArrayList<>();
+            List<List<GsiBlock>> reducedEncodedLinesOfGSIBlocks = new ArrayList<>();
 
-            for (ArrayList<GsiBlock> blocksInLine : encodedLinesOfGSIBlocks) {
+            for (List<GsiBlock> blocksInLine : encodedLinesOfGsiBlocks) {
                 if (!blocksInLine.get(0).toPrintFormatAsc().equals("0")) {
                     reducedEncodedLinesOfGSIBlocks.add(blocksInLine);
                 }
             }
 
-            encodedLinesOfGSIBlocks = new ArrayList<>(reducedEncodedLinesOfGSIBlocks);
+            encodedLinesOfGsiBlocks = new ArrayList<>(reducedEncodedLinesOfGSIBlocks);
         }
 
-        int size = (int) StrictMath.ceil((encodedLinesOfGSIBlocks.size() - countLevelLines) / 3d + 1);
-        ArrayList<Point> dummyCoordinates = DummyCoordinates.getList(size + 1);
+        int size = (int) StrictMath.ceil((encodedLinesOfGsiBlocks.size() - countLevelLines) / 3d + 1);
+        List<Point> dummyCoordinates = DummyCoordinates.getList(size + 1);
 
         /*
         Strategy:
@@ -98,7 +99,7 @@ public class Gsi2Asc extends Converter {
          */
 
         int counter = 0;
-        for (ArrayList<GsiBlock> blocksInLine : encodedLinesOfGSIBlocks) {
+        for (List<GsiBlock> blocksInLine : encodedLinesOfGsiBlocks) {
             String number = blocksInLine.get(0).toPrintFormatAsc();
             String height = null;
 
@@ -126,7 +127,8 @@ public class Gsi2Asc extends Converter {
                 counter = counter + 1;
             }
         }
-        return new ArrayList<>(result);
+
+        return List.copyOf(result);
     }
 
-} // end of Gsi2Asc
+}

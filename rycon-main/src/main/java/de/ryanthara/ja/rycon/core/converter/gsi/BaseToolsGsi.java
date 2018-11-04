@@ -17,54 +17,49 @@
  */
 package de.ryanthara.ja.rycon.core.converter.gsi;
 
-import de.ryanthara.ja.rycon.Main;
+import de.ryanthara.ja.rycon.core.converter.Converter;
+import de.ryanthara.ja.rycon.core.converter.Separator;
 import de.ryanthara.ja.rycon.core.elements.GsiBlock;
-import de.ryanthara.ja.rycon.data.PreferenceKeys;
-import de.ryanthara.ja.rycon.util.SortHelper;
+import de.ryanthara.ja.rycon.data.PreferenceKey;
+import de.ryanthara.ja.rycon.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Instances of <tt>BaseToolsGsi</tt> implements several basic operations
- * on Leica Geosystems GSI files.
+ * Provides basic and helper functions that are used for converting different
+ * file formats into Leica Geosystems GSI files.
+ *
  * <p>
  * The Leica Geo Serial Interface (GSI) is a general purpose, serial data
  * interface for bi-directional communication between TPS Total Stations,
  * Levelling instruments and computers.
+ *
  * <p>
  * The GSI interface is composed in a sequence of blocks, ending with a
  * terminator (CR or CR/LF). The later introduced enhanced GSI16 format
  * starts every line with a <code>*</code> sign.
+ *
  * <p>
  * Du to some issues or personal limitations sometimes a blank is added
- * to line endings. This is wrong, but <tt>RyCON</tt> can handle it.
+ * to line endings. This is wrong, but RyCON can handle it.
  *
  * @author sebastian
  * @version 3
  * @since 12
  */
-public class BaseToolsGsi {
-
-    private static final TreeSet<Integer> foundAllWordIndices = new TreeSet<>();
-    private final ArrayList<ArrayList<GsiBlock>> encodedBlocks;
-    private final ArrayList<String> readStringLines;
+public final class BaseToolsGsi {
 
     /**
-     * Constructs a new instance of this class with a parameter for
-     * the read line based Leica GSI8 or GSI16 file.
-     *
-     * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
+     * BaseToolsGsi is non-instantiable.
      */
-    public BaseToolsGsi(ArrayList<String> readStringLines) {
-        this.readStringLines = readStringLines;
-        this.encodedBlocks = blockEncoder(readStringLines);
+    private BaseToolsGsi() {
+        throw new AssertionError();
     }
 
-    private static String getBlockByWordIndex(final ArrayList<GsiBlock> blocks, final int wordIndex) {
+    private static String getBlockByWordIndex(List<GsiBlock> blocks, int wordIndex) {
         for (GsiBlock block : blocks) {
             if (block.getWordIndex() == wordIndex) {
                 return block.toString();
@@ -82,20 +77,16 @@ public class BaseToolsGsi {
      * @return block size
      */
     public static int getBlockSize(String line) {
-        if (line.startsWith("*")) {
-            return 24;
-        } else {
-            return 16;
-        }
+        return line.startsWith("*") ? 24 : 16;
     }
 
     /**
      * Returns the point number for the line as string without encoding it into blocks.
      *
-     * @param line Leica GSI formatted line
+     * @param line Leica Geosystems GSI formatted line
      * @return point number or empty string if line is empty string
      */
-    public static String getPointNumber(final String line) {
+    public static String getPointNumber(String line) {
         if (!line.equalsIgnoreCase("")) {
             if (line.startsWith("*")) {
                 return line.substring(8, 24);
@@ -108,7 +99,7 @@ public class BaseToolsGsi {
     }
 
     /**
-     * Checks a valid <tt>Leica Geosystems</tt> GSI formatted string line for being a one face target line.
+     * Checks a valid Leica Geosystems GSI formatted string line for being a one face target line.
      * <p>
      * The one face target line contains three times the zero coordinate.
      *
@@ -116,14 +107,17 @@ public class BaseToolsGsi {
      * @return true if line is a one face target line
      */
     public static boolean isTargetLine(String line) {
-        ArrayList<GsiBlock> blocks = lineEncoder(line);
+        GsiLineDecoder gsiLineDecoder = new GsiLineDecoder();
+        List<GsiBlock> blocks = gsiLineDecoder.decode(line);
 
         final String block11 = getBlockByWordIndex(blocks, 11);
         final String block81 = getBlockByWordIndex(blocks, 81);
         final String block82 = getBlockByWordIndex(blocks, 82);
         final String block83 = getBlockByWordIndex(blocks, 83);
 
-        final String decodedLine = block11 + " " + block81 + " " + block82 + " " + block83;
+        // TODO check the WI 84 till 86 and the result values if they are not present in combination with the 81 till 83
+
+        final String decodedLine = block11 + Separator.WHITESPACE.getSign() + block81 + Separator.WHITESPACE.getSign() + block82 + Separator.WHITESPACE.getSign() + block83;
 
         String pattern;
 
@@ -145,48 +139,18 @@ public class BaseToolsGsi {
         return founds == 3;
     }
 
-    private static ArrayList<GsiBlock> lineEncoder(String line) {
-        ArrayList<GsiBlock> blocks = new ArrayList<>();
-
-        if (!line.equalsIgnoreCase("")) {
-            int size = BaseToolsGsi.getBlockSize(line);
-
-            if (size == 24) {
-                line = line.substring(1);
-            }
-
-            // split reader line into separate Strings
-            List<String> lineSplit = new ArrayList<>((line.length() + size - 1) / size);
-            for (int i = 0; i < line.length(); i += size) {
-                lineSplit.add(line.substring(i, Math.min(line.length(), i + size)));
-            }
-
-            // used instead of 'deprecated' StringTokenizer here
-            for (String blockAsString : lineSplit) {
-                GsiBlock block = new GsiBlock(blockAsString);
-                blocks.add(block);
-                foundAllWordIndices.add(block.getWordIndex());
-            }
-
-            // sort every 'line' of GSI blocks by word index (WI)
-            SortHelper.sortByWordIndex(blocks);
-        }
-
-        return blocks;
-    }
-
     /**
      * Transforms a line of encoded {@code GsiBlock}s into a string line and fill it up into an
-     * {@code ArrayList<String>} for later file writing.
+     * {@code List<String>} for file writing.
      *
-     * @param isGSI16          distinguish between GSI8 or GSI16 output format
-     * @param encodedGSIBlocks ArrayList<ArrayList<GsiBlock>> of encoded GSIBlocks
+     * @param isGSI16  distinguish between GSI8 or GSI16 output format
+     * @param gsiLines List<List<GsiBlock>> of encoded GSIBlocks
      * @return transformed string line with GSI content
      */
-    static ArrayList<String> lineTransformation(boolean isGSI16, ArrayList<ArrayList<GsiBlock>> encodedGSIBlocks) {
-        ArrayList<String> result = new ArrayList<>();
+    static List<String> lineTransformation(boolean isGSI16, List<List<GsiBlock>> gsiLines) {
+        List<String> result = new ArrayList<>();
 
-        for (ArrayList<GsiBlock> blocksInLines : encodedGSIBlocks) {
+        for (List<GsiBlock> gsiLine : gsiLines) {
             String newLine = "";
 
             if (isGSI16) {
@@ -195,11 +159,11 @@ public class BaseToolsGsi {
 
             int counter = 0;
 
-            for (GsiBlock block : blocksInLines) {
+            for (GsiBlock block : gsiLine) {
                 newLine = newLine.concat(block.toString(isGSI16));
 
-                if (counter < blocksInLines.size()) {
-                    newLine = newLine.concat(" ");
+                if (counter < gsiLine.size()) {
+                    newLine = newLine.concat(Separator.WHITESPACE.getSign());
                 }
 
                 counter = counter + 1;
@@ -210,7 +174,7 @@ public class BaseToolsGsi {
             result.add(newLine);
         }
 
-        return result;
+        return List.copyOf(result);
     }
 
     /**
@@ -223,11 +187,9 @@ public class BaseToolsGsi {
      * @return prepared string
      */
     public static String prepareLineEnding(String stringToPrepare) {
-        boolean concatBlankAtLineEnding = Boolean.parseBoolean(Main.pref.getUserPreference(PreferenceKeys.GSI_SETTING_LINE_ENDING_WITH_BLANK));
-
-        if (concatBlankAtLineEnding) {
-            if (!stringToPrepare.endsWith(" ")) {
-                stringToPrepare = stringToPrepare.concat(" ");
+        if (StringUtils.parseBooleanValue(PreferenceKey.GSI_SETTING_LINE_ENDING_WITH_BLANK)) {
+            if (!stringToPrepare.endsWith(Separator.WHITESPACE.getSign())) {
+                stringToPrepare = stringToPrepare.concat(Separator.WHITESPACE.getSign());
             }
         }
 
@@ -235,66 +197,26 @@ public class BaseToolsGsi {
     }
 
     /**
-     * Sorts an ArrayList<String> ascending by point number.
+     * Sorts a List<String> ascending by point number.
      *
-     * @param arrayList unsorted ArrayList<String> of GSI lines
-     * @return sorted ArrayList<String>
+     * @param gsiLines unsorted List<String> of Leica Geosystems GSI lines
+     * @return sorted List<String>
      */
-    static ArrayList<String> sortResult(ArrayList<String> arrayList) {
-        ArrayList<String> helper = new ArrayList<>(arrayList.size());
-        ArrayList<String> result = new ArrayList<>(arrayList.size());
+    static List<String> sortResult(List<String> gsiLines) {
+        List<String> helper = new ArrayList<>(gsiLines.size());
+        List<String> result = new ArrayList<>(gsiLines.size());
 
-        for (String gsiLine : arrayList) {
-            helper.add(BaseToolsGsi.getPointNumber(gsiLine).concat("°;°").concat(gsiLine));
+        for (String gsiLine : gsiLines) {
+            helper.add(BaseToolsGsi.getPointNumber(gsiLine).concat(Converter.SEPARATOR).concat(gsiLine));
         }
 
         helper.sort(String::compareToIgnoreCase);
 
         for (String helperLine : helper) {
-            result.add(helperLine.split("°;°")[1]);
+            result.add(helperLine.split(Converter.SEPARATOR)[1]);
         }
 
-        return result;
+        return List.copyOf(result);
     }
 
-    /**
-     * Encodes a reader string line that contains gsi data into an encapsulated <code>ArrayList</code>
-     * of <code>GsiBlock</code>s.
-     *
-     * @return encoded GSIBlocks
-     */
-    public ArrayList<ArrayList<GsiBlock>> getEncodedLinesOfGSIBlocks() {
-        if (readStringLines != null && readStringLines.size() > 0) {
-            return encodedBlocks;
-        } else {
-            return new ArrayList<>();
-        }
-    }
-
-    /**
-     * Returns all found word indices (WI) from the complete Leica Geosystems GSI file
-     * as one {@code TreeSet<Integer>} without duplicates.
-     *
-     * @return all found word indices as {@code TreeSet<Integer>}
-     */
-    public TreeSet<Integer> getFoundAllWordIndices() {
-        return foundAllWordIndices;
-    }
-
-    /**
-     * Encodes a read GSI string line into an ArrayList of GSIBlocks.
-     *
-     * @param lines read string lines with GSI content
-     * @return encoded ArrayList of GSIBlocks
-     */
-    private ArrayList<ArrayList<GsiBlock>> blockEncoder(ArrayList<String> lines) {
-        ArrayList<ArrayList<GsiBlock>> blocksInLines = new ArrayList<>();
-
-        for (String line : lines) {
-            blocksInLines.add(lineEncoder(line));
-        }
-
-        return blocksInLines;
-    }
-
-} // end of BaseToolsGsi
+}

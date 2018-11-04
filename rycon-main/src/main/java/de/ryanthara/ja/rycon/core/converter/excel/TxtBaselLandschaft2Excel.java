@@ -17,18 +17,19 @@
  */
 package de.ryanthara.ja.rycon.core.converter.excel;
 
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import de.ryanthara.ja.rycon.nio.FileFormat;
+import de.ryanthara.ja.rycon.util.StringUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.WorkbookUtil;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * This class provides functions to convert coordinate files from the geodata server 'Basel Landschaft' (Switzerland)
- * into Microsoft Excel (XLS and XLSX) files.
+ * A converter with functions to convert coordinate files from the geodata server
+ * Basel Landschaft (Switzerland) into Microsoft Excel files in XLS or XLSX format.
  *
  * @author sebastian
  * @version 1
@@ -38,40 +39,34 @@ public class TxtBaselLandschaft2Excel {
 
     private static final Logger logger = LoggerFactory.getLogger(TxtBaselLandschaft2Excel.class.getName());
 
-    private final ArrayList<String> readStringLines;
+    private final List<String> lines;
     private Workbook workbook;
 
     /**
-     * Class constructor for reader line based text files in different formats.
+     * Creates a converter with a list for the read line based text files
+     * from the geodata server Basel Landschaft (Switzerland).
      *
-     * @param readStringLines {@code ArrayList<String>} with lines in text format
+     * @param lines list with coordinate lines
      */
-    public TxtBaselLandschaft2Excel(ArrayList<String> readStringLines) {
-        this.readStringLines = readStringLines;
+    public TxtBaselLandschaft2Excel(List<String> lines) {
+        this.lines = new ArrayList<>(lines);
     }
 
     /**
      * Converts a txt file from the geodata server Basel Landschaft (Switzerland) element by element into an Excel file.
      *
-     * @param isXLS           selector to distinguish between XLS and XLSX file extension
+     * @param fileFormat      selector to distinguish between XLS and XLSX file extension
      * @param sheetName       name of the sheet (file name from input file)
      * @param writeCommentRow writer comment row
-     *
      * @return success conversion success
      */
-    public boolean convertTXTBaselLand2Excel(boolean isXLS, String sheetName, boolean writeCommentRow) {
-        // general preparation of the workbook
-        if (isXLS) {
-            workbook = new HSSFWorkbook();
-        } else {
-            workbook = new XSSFWorkbook();
-        }
+    public boolean convert(FileFormat fileFormat, String sheetName, boolean writeCommentRow) {
+        workbook = BaseToolsExcel.prepareWorkbook(fileFormat);
 
         String safeName = WorkbookUtil.createSafeSheetName(sheetName);
         Sheet sheet = workbook.createSheet(safeName);
         Row row;
         Cell cell;
-        CellStyle cellStyle;
 
         DataFormat format = workbook.createDataFormat();
 
@@ -80,22 +75,12 @@ public class TxtBaselLandschaft2Excel {
         short countColumns = 0;
 
         if (writeCommentRow) {
-            row = sheet.createRow(rowNumber);
-            rowNumber++;
-
-            String[] lineSplit = readStringLines.get(0).trim().split("\\t", -1);
-
-            for (String description : lineSplit) {
-                cell = row.createCell(cellNumber);
-                cellNumber++;
-                cell.setCellValue(description);
-            }
+            rowNumber = prepareCommentRow(sheet, rowNumber, cellNumber);
         }
 
-        // remove furthermore the still not needed comment line
-        readStringLines.remove(0);
+        removeHeadLine();
 
-        for (String line : readStringLines) {
+        for (String line : lines) {
             row = sheet.createRow(rowNumber);
             rowNumber++;
 
@@ -114,30 +99,21 @@ public class TxtBaselLandschaft2Excel {
                     cellNumber++;
 
                     cell = row.createCell(cellNumber);      // X
-                    cell.setCellValue(Double.parseDouble(lineSplit[2]));
-                    cellStyle = workbook.createCellStyle();
-                    cellStyle.setDataFormat(format.getFormat("#,##0.000"));
-                    cellStyle.setAlignment(HorizontalAlignment.RIGHT);
-                    cell.setCellStyle(cellStyle);
+                    cell.setCellValue(StringUtils.parseDoubleValue(lineSplit[2]));
+                    BaseToolsExcel.setCellStyle(workbook, cell, format, Format.DIGITS_3.getString());
                     cellNumber++;
 
                     cell = row.createCell(cellNumber);      // Y
-                    cell.setCellValue(Double.parseDouble(lineSplit[3]));
-                    cellStyle = workbook.createCellStyle();
-                    cellStyle.setDataFormat(format.getFormat("#,##0.000"));
-                    cellStyle.setAlignment(HorizontalAlignment.RIGHT);
-                    cell.setCellStyle(cellStyle);
+                    cell.setCellValue(StringUtils.parseDoubleValue(lineSplit[3]));
+                    BaseToolsExcel.setCellStyle(workbook, cell, format, Format.DIGITS_3.getString());
                     cellNumber++;
 
                     cell = row.createCell(cellNumber);      // Z
                     if (lineSplit[4].equalsIgnoreCase("NULL")) {
                         cell.setCellValue("NULL");
                     } else {
-                        cell.setCellValue(Double.parseDouble(lineSplit[4]));
-                        cellStyle = workbook.createCellStyle();
-                        cellStyle.setDataFormat(format.getFormat("#,##0.000"));
-                        cellStyle.setAlignment(HorizontalAlignment.RIGHT);
-                        cell.setCellStyle(cellStyle);
+                        cell.setCellValue(StringUtils.parseDoubleValue(lineSplit[4]));
+                        BaseToolsExcel.setCellStyle(workbook, cell, format, Format.DIGITS_3.getString());
                     }
 
                     countColumns = 5;
@@ -157,30 +133,22 @@ public class TxtBaselLandschaft2Excel {
                     cellNumber++;
 
                     cell = row.createCell(cellNumber);      // X
-                    cell.setCellValue(Double.parseDouble(lineSplit[3]));
-                    cellStyle = workbook.createCellStyle();
-                    cellStyle.setDataFormat(format.getFormat("#,##0.000"));
-                    cellStyle.setAlignment(HorizontalAlignment.RIGHT);
-                    cell.setCellStyle(cellStyle);
+
+                    cell.setCellValue(StringUtils.parseDoubleValue(lineSplit[3]));
+                    BaseToolsExcel.setCellStyle(workbook, cell, format, Format.DIGITS_4.getString());
                     cellNumber++;
 
                     cell = row.createCell(cellNumber);      // Y
-                    cell.setCellValue(Double.parseDouble(lineSplit[4]));
-                    cellStyle = workbook.createCellStyle();
-                    cellStyle.setDataFormat(format.getFormat("#,##0.000"));
-                    cellStyle.setAlignment(HorizontalAlignment.RIGHT);
-                    cell.setCellStyle(cellStyle);
+                    cell.setCellValue(StringUtils.parseDoubleValue(lineSplit[4]));
+                    BaseToolsExcel.setCellStyle(workbook, cell, format, Format.DIGITS_4.getString());
                     cellNumber++;
 
                     cell = row.createCell(cellNumber);      // Z
                     if (lineSplit[5].equalsIgnoreCase("NULL")) {
                         cell.setCellValue("NULL");
                     } else {
-                        cell.setCellValue(Double.parseDouble(lineSplit[5]));
-                        cellStyle = workbook.createCellStyle();
-                        cellStyle.setDataFormat(format.getFormat("#,##0.000"));
-                        cellStyle.setAlignment(HorizontalAlignment.RIGHT);
-                        cell.setCellStyle(cellStyle);
+                        cell.setCellValue(StringUtils.parseDoubleValue(lineSplit[5]));
+                        BaseToolsExcel.setCellStyle(workbook, cell, format, Format.DIGITS_4.getString());
                     }
 
                     countColumns = 6;
@@ -200,6 +168,26 @@ public class TxtBaselLandschaft2Excel {
         return rowNumber > 1;
     }
 
+    private short prepareCommentRow(Sheet sheet, short rowNumber, short cellNumber) {
+        Row row;
+        Cell cell;
+        row = sheet.createRow(rowNumber);
+        rowNumber++;
+
+        String[] lineSplit = lines.get(0).trim().split("\\t", -1);
+
+        for (String description : lineSplit) {
+            cell = row.createCell(cellNumber);
+            cellNumber++;
+            cell.setCellValue(description);
+        }
+        return rowNumber;
+    }
+
+    private void removeHeadLine() {
+        lines.remove(0);
+    }
+
     /**
      * Returns the Workbook for writing it to a file.
      *
@@ -209,4 +197,4 @@ public class TxtBaselLandschaft2Excel {
         return this.workbook;
     }
 
-} // end of TxtBaselLandschaft2Excel
+}

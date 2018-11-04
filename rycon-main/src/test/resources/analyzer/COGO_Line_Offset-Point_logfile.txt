@@ -18,8 +18,8 @@ Azimuth			:          354.515
 Offset Point
 ------------
 Computed		:              100	E:         908.505 	N:        2722.189 	H:          287.692
-Dist along line		:            0.767
-Offset from line	:            0.000
+Dist along lines		:            0.767
+Offset from lines	:            0.000
 
 
 

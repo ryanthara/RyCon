@@ -19,8 +19,8 @@ Base Point
 ----------
 Offset Point ID		:              2.4	E=       612270.795	N=       268455.796	H=          262.757
 Computed		:              2.5	E=       612270.796	N=       268455.794	H=         255.970
-Dist along line 	:           -0.003
-Offset from line	:            0.002
+Dist along lines 	:           -0.003
+Offset from lines	:            0.002
 
 
 

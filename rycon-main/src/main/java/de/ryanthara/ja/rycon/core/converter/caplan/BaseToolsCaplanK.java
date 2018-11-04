@@ -17,25 +17,30 @@
  */
 package de.ryanthara.ja.rycon.core.converter.caplan;
 
+import de.ryanthara.ja.rycon.core.converter.Separator;
 import de.ryanthara.ja.rycon.data.Version;
-import de.ryanthara.ja.rycon.i18n.LangStrings;
+import de.ryanthara.ja.rycon.i18n.LangString;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
+import de.ryanthara.ja.rycon.util.StringUtils;
 
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LANG_STRINGS;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundle.LANG_STRING;
 
 /**
- * This class provides basic and helper functions that are used for converting different
+ * Provides basic and helper functions that are used for converting different
  * file formats into text based Caplan K formatted coordinate or measurement files.
+ *
  * <p>
  * The CAPLAN K file format is a line based and column orientated file format developed
  * by Cremer Programmentwicklung GmbH to store coordinates from different formats.
+ *
  * <p>
  * Example K file:
- * <p>
+ *
+ * <pre>
  * ----+----1----+----2----+----3----+----4----+----5----+----6----+----7----+----8
  * !-------------------------------------------------------------------------------
  * ! The following data was created by RyCON Build xxx on YYYY-MM-DD.
@@ -46,39 +51,36 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LANG_STRINGS;
  * 1062     7  2612259.5681  1256789.1990    256.90815 |10
  * TF 1067G 4  2612259.5681  1256789.1990    256.90815 |10
  * NG 2156U 3  2612259.5681  1256789.1990      0.00000 |10
+ * </pre>
  *
  * @author sebastian
  * @version 2
  * @since 12
  */
-class BaseToolsCaplanK {
+final class BaseToolsCaplanK {
 
-    // prevent wrong output with empty strings of defined length
     /**
      * Default string with defined length for the valency value.
      */
     public static final String valency = "  ";
-
     /**
      * Default string with defined length for the easting coordinate.
      */
     public static final String easting = "              ";
 
+    // prevent wrong output with empty strings of defined length
     /**
      * Default string with defined length for the northing coordinate.
      */
     public static final String northing = "              ";
-
     /**
      * Default string with defined length for the height coordinate.
      */
     public static final String height = "             ";
-
     /**
      * Default string with defined length for the free space sign.
      */
-    static final String freeSpace = " ";
-
+    static final String freeSpace = Separator.WHITESPACE.getSign();
     /**
      * Default string with defined length for the object type.
      */
@@ -110,7 +112,6 @@ class BaseToolsCaplanK {
      * @param height          height coordinate
      * @param freeSpace       free space delimiter
      * @param objectTyp       object typ
-     *
      * @return prepared output string
      */
     static StringBuilder prepareCaplanLine(boolean useSimpleFormat, String number, String valency, String easting,
@@ -135,11 +136,11 @@ class BaseToolsCaplanK {
     }
 
     /**
-     * Writes the comment line into a given {@code ArrayList<String>} object.
+     * Writes the comment line into a given {@code List<String>} object.
      *
      * @param result ArrayList<String> to writer in
      */
-    public static void writeCommentLine(ArrayList<String> result) {
+    public static void writeCommentLine(List<String> result) {
         String commentLine1 = "!---+----1----+----2----+----3----+----4----+----5----+----6----+----7----+----8";
         String commentLine2 = "!-------------------------------------------------------------------------------";
 
@@ -150,10 +151,25 @@ class BaseToolsCaplanK {
         Date d = new Date();
         DateFormat df;
         df = DateFormat.getDateTimeInstance(/* dateStyle */ DateFormat.LONG,
-                                            /* timeStyle */ DateFormat.MEDIUM);
-        result.add(String.format(ResourceBundleUtils.getLangStringFromXml(LANG_STRINGS, LangStrings.commentLine_CaplanK),
+                /* timeStyle */ DateFormat.MEDIUM);
+        result.add(String.format(ResourceBundleUtils.getLangStringFromXml(LANG_STRING, LangString.commentLine_CaplanK),
                 Version.getVersion(), df.format(d)));
         result.add(commentLine2);
     }
 
-} // end of BaseToolsCaplanK
+    /**
+     * Raises the valency indicator if the height is not zero.
+     *
+     * @param valencyIndicator the valency indicator
+     * @param height           height value as string
+     * @return raised valency indicator if height is not zero
+     */
+    static int getValencyIndicator(int valencyIndicator, String height) {
+        if (StringUtils.parseDoubleValue(height) != 0d) {
+            valencyIndicator += 4;
+        }
+
+        return valencyIndicator;
+    }
+
+}

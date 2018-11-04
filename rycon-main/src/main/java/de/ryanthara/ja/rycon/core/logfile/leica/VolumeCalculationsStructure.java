@@ -20,11 +20,12 @@ package de.ryanthara.ja.rycon.core.logfile.leica;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * The {@code VolumeCalculationsStructure} implements functions based on
- * the VOLUME CALCULATIONS part of the <tt>Leica Geosystems</tt> logfile.txt
- * for <tt>RyCON</tt>.
+ * the VOLUME CALCULATIONS part of the Leica Geosystems logfile.txt
+ * for RyCON.
  * <p>
  * This is used for encapsulating the data and error minimization.
  *
@@ -34,20 +35,20 @@ import java.util.Iterator;
  */
 public class VolumeCalculationsStructure extends LeicaLogfileBaseStructure {
 
-    private final ArrayList<String> lines;
+    private final List<String> lines;
 
     /**
      * Constructs a new {@code VolumeCalculationsStructure} with a parameter for the lines of the structure.
      *
      * @param lines lines to be analyzed
      */
-    public VolumeCalculationsStructure(ArrayList<String> lines) {
-        this.lines = lines;
+    VolumeCalculationsStructure(List<String> lines) {
+        this.lines = new ArrayList<>(lines);
         this.lines.removeAll(Arrays.asList(null, ""));
     }
 
     /**
-     * Analyze the VOLUME CALCULATIONS structure of the <tt>Leica Geosystems</tt> logfile.txt and
+     * Analyze the VOLUME CALCULATIONS structure of the Leica Geosystems logfile.txt and
      * fills the results into the return arrays.
      *
      * @return analysis success
@@ -165,7 +166,7 @@ Average Thickness (Volume/Area): 0.000
     }
 
     // use original order for enum
-    private enum Elements {
+    private enum Element {
         // Surface Triangulation Results
         SURFACE_NAME("Surface Name"),
         DATE("Date"),
@@ -195,9 +196,9 @@ Average Thickness (Volume/Area): 0.000
 
         private final String identifier;
 
-        Elements(String identifier) {
+        Element(String identifier) {
             this.identifier = identifier;
         }
     }
 
-} // end of VolumeCalculationsStructure
+}

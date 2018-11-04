@@ -22,15 +22,20 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Control;
 
 /**
- * This class implements different functionality for radio buttons in RyCON.
- * <p>
- * The access to the simple functions of this helper class is implemented with static access.
+ * Helper class containing different functionality for radio buttons.
  *
  * @author sebastian
  * @version 2
  * @since 2
  */
-public class RadioHelper {
+public final class RadioHelper {
+
+    /**
+     * RadioHelper is non-instantiable.
+     */
+    private RadioHelper() {
+        throw new AssertionError();
+    }
 
     /**
      * Returns the number of a selected radio button from a given control group.
@@ -45,8 +50,10 @@ public class RadioHelper {
 
         for (int i = 0; i < control.length; i++) {
             Control child = control[i];
+
             if (child instanceof Button) {
                 Button button = (Button) child;
+
                 if (button.getSelection()) {
                     number = i;
                 }
@@ -65,8 +72,10 @@ public class RadioHelper {
     public static void selectBtn(Control[] control, int number) {
         for (int i = 0; i < control.length; i++) {
             Control child = control[i];
+
             if (child instanceof Button) {
                 Button button = (Button) child;
+
                 if (number == i) {
                     button.setSelection(true);
                 } else {
@@ -76,4 +85,4 @@ public class RadioHelper {
         }
     }
 
-}  // end of RadioHelper
+}

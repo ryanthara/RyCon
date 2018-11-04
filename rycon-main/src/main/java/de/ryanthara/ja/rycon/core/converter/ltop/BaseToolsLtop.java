@@ -17,33 +17,41 @@
  */
 package de.ryanthara.ja.rycon.core.converter.ltop;
 
-import de.ryanthara.ja.rycon.Main;
+import de.ryanthara.ja.rycon.core.converter.Separator;
 import de.ryanthara.ja.rycon.core.elements.RyPoint;
-import de.ryanthara.ja.rycon.data.PreferenceKeys;
+import de.ryanthara.ja.rycon.data.PreferenceKey;
 import de.ryanthara.ja.rycon.data.Version;
-import de.ryanthara.ja.rycon.i18n.LangStrings;
+import de.ryanthara.ja.rycon.i18n.LangString;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import de.ryanthara.ja.rycon.util.StringUtils;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.TreeSet;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LANG_STRINGS;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundle.LANG_STRING;
 
 /**
- * BaseToolsLtop implements basic operations on text based measurement and coordinate files for LTOP.
+ * Provides basic and helper functions that are used for converting different
+ * file formats into text based measurement and coordinate files for LTOP.
+ *
  * <p>
- * Therefore a couple of methods and helpers are implemented to do the conversions and
- * operations on the given text files.
+ * The methods and helpers are used in other classes of the package
+ * {@link de.ryanthara.ja.rycon.core.converter.ltop} lets you
+ * <ul>
+ * <li>eliminate duplicate points,
+ * <li>sort results,
+ * <li>prepares the output strings,
+ * <li>and write comment lines.
+ * </ul>
  *
  * @author sebastian
  * @version 2
  * @since 8
  */
-class BaseToolsLtop {
+final class BaseToolsLtop {
 
     // prevent wrong output with empty strings of defined length for KOO and MES files
     static final String number = "          ";
@@ -58,14 +66,19 @@ class BaseToolsLtop {
     static final String cartesianCoordsIdentifier = "$$PK";
     //    private final String ellipsoidCoordsIdentifier = "$$EL";
     static final String measurementLineIdentifier = "$$ME";
-    private static final Logger logger = LoggerFactory.getLogger(BaseToolsLtop.class.getName());
     private static final String emptySpace4 = "    ";
-
     // prevent wrong output with empty strings of defined length for MES files
 //    static final String weather = "            ";
 //    static final String meanError = "      ";
     private static final String emptySpace6 = "      ";
     private static final String emptySpace8 = "        ";
+
+    /**
+     * BaseToolsLtop is non-instantiable.
+     */
+    private BaseToolsLtop() {
+        throw new AssertionError();
+    }
 
     /**
      * Eliminates duplicate points from an ArrayList<String>.
@@ -76,23 +89,16 @@ class BaseToolsLtop {
      * @param arrayList unsorted ArrayList<String>
      * @return sorted ArrayList<String>
      */
-    static ArrayList<String> eliminateDuplicatePoints(ArrayList<RyPoint> arrayList) {
-        ArrayList<String> result = new ArrayList<>();
+    // TODO precise and clear up this
+    static List<String> eliminateDuplicatePoints(List<RyPoint> arrayList) {
+        List<String> result = new ArrayList<>();
 
-        // set minDistance to default value and try to parse the settings value
-        double d = 0.03;
+        // Set minDistance to default value and try to parse the settings value
+        final double minDistance = StringUtils.parseDoubleValue(PreferenceKey.CONVERTER_SETTING_POINT_IDENTICAL_DISTANCE);
 
-        try {
-            d = Double.parseDouble(Main.pref.getUserPreference(PreferenceKeys.CONVERTER_SETTING_POINT_IDENTICAL_DISTANCE));
-        } catch (NumberFormatException e) {
-            logger.error("Can not convert maximum distance '{}' to double.", d, e.getCause());
-        }
-
-        final double minDistance = d;
-
-        // sort the tree set of RyPoints
-        //public int compare(ArrayList<RyPoint> p1, ArrayList<RyPoint> p2) {
-        TreeSet<RyPoint> set = new TreeSet<>((pt1, pt2) -> {
+        // Sort the tree set of RyPoints
+        // public int compare(ArrayList<RyPoint> p1, ArrayList<RyPoint> p2) {
+        TreeSet<RyPoint> ryPoints = new TreeSet<>((pt1, pt2) -> {
             /*
             Compare at the three distances x, y and z before calculating the slope distance because of reducing
             calculation time and therefore increase the speed.
@@ -106,17 +112,17 @@ class BaseToolsLtop {
             }
         });
 
-        // add the ArrayList anc check for duplicate points
-        set.addAll(arrayList);
+        // Add the ArrayList anc check for duplicate points
+        ryPoints.addAll(arrayList);
 
-        // bring back the points into an ArrayList<String>
-        for (RyPoint ryPoint : set) {
+        // Bring back the points into an ArrayList<String>
+        for (RyPoint ryPoint : ryPoints) {
             if (!ryPoint.getPrintLine().trim().equalsIgnoreCase("")) {
                 result.add(ryPoint.getPrintLine());
             }
         }
 
-        return result;
+        return List.copyOf(result);
     }
 
     /**
@@ -128,31 +134,19 @@ class BaseToolsLtop {
      * @param height     height value
      * @param resultLine result line as string
      */
-    static void fillRyPoints(ArrayList<RyPoint> ryPoints, String easting, String northing, String height, String resultLine) {
+    static void fillRyPoints(List<RyPoint> ryPoints, String easting, String northing, String height, String resultLine) {
         double x = Double.NaN, y = Double.NaN, z = Double.NaN;
 
-        try {
-            if (!easting.trim().equals("")) {
-                x = Double.parseDouble(easting);
-            }
-        } catch (NumberFormatException e) {
-            logger.error("Can not convert coordinate '{}' to double.", easting, e.getCause());
+        if (!easting.trim().equals("")) {
+            x = StringUtils.parseDoubleValue(easting);
         }
 
-        try {
-            if (!northing.trim().equals("")) {
-                y = Double.parseDouble(northing);
-            }
-        } catch (NumberFormatException e) {
-            logger.error("Can not convert coordinate '{}' to double.", northing, e.getCause());
+        if (!northing.trim().equals("")) {
+            y = StringUtils.parseDoubleValue(northing);
         }
 
-        try {
-            if (!height.trim().equals("")) {
-                z = Double.parseDouble(height);
-            }
-        } catch (NumberFormatException e) {
-            logger.error("Can not convert coordinate '{}' to double.", height, e.getCause());
+        if (!height.trim().equals("")) {
+            z = StringUtils.parseDoubleValue(height);
         }
 
         ryPoints.add(new RyPoint(number, x, y, z, resultLine));
@@ -163,7 +157,7 @@ class BaseToolsLtop {
      *
      * @param number            the point number
      * @param pointType         the point typ
-     * @param toleranceCategory the tolerance categoryFormats
+     * @param toleranceCategory the tolerance category_Formats
      * @param easting           the easting coordinate
      * @param northing          the northing coordinate
      * @param height            the height coordinate
@@ -176,8 +170,7 @@ class BaseToolsLtop {
                                       String easting, String northing, String height,
                                       String geoid, String eta, String xi) {
 
-        // check for null coordinate
-        if (Boolean.parseBoolean(Main.pref.getUserPreference(PreferenceKeys.CONVERTER_SETTING_ELIMINATE_ZERO_COORDINATE))) {
+        if (StringUtils.parseBooleanValue(PreferenceKey.CONVERTER_SETTING_ELIMINATE_ZERO_COORDINATE)) {
             String xyz = northing.trim().concat(easting.trim()).concat(height.trim());
             xyz = xyz.replace('.', '0');
 
@@ -208,10 +201,10 @@ class BaseToolsLtop {
      * @param arrayList unsorted ArrayList<String>
      * @return sorted ArrayList<String>
      */
-    static ArrayList<String> sortResult(ArrayList<String> arrayList) {
+    static List<String> sortResult(List<String> arrayList) {
         arrayList.sort(String::compareToIgnoreCase);
 
-        return arrayList;
+        return List.copyOf(arrayList);
     }
 
     /**
@@ -225,13 +218,13 @@ class BaseToolsLtop {
      * @param result              ArrayList<String> to writer in
      * @param firstLineIdentifier identifier for different file type ($$ME, $$PK or $$EL)
      */
-    static void writeCommendLine(ArrayList<String> result, String firstLineIdentifier) {
+    static void writeCommendLine(List<String> result, String firstLineIdentifier) {
         // insert RyCON version, date and time
         Date d = new Date();
         DateFormat df;
         df = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.MEDIUM);
 
-        result.add(String.format(firstLineIdentifier + " " + ResourceBundleUtils.getLangStringFromXml(LANG_STRINGS, LangStrings.commentLine_Ltop), Version.getVersion(), df.format(d)));
+        result.add(String.format(firstLineIdentifier + Separator.WHITESPACE.getSign() + ResourceBundleUtils.getLangStringFromXml(LANG_STRING, LangString.commentLine_Ltop), Version.getVersion(), df.format(d)));
     }
 
-}  // end of BaseToolsLtop
+}

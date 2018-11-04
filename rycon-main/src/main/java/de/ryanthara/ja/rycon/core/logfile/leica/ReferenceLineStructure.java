@@ -24,10 +24,11 @@ import de.ryanthara.ja.rycon.core.elements.RyStakedPoint;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * The {@code ReferenceLineStructure} implements functions based on the REFERENCE LINE part of
- * the <tt>Leica Geosystems</tt> logfile.txt for <tt>RyCON</tt>.
+ * the Leica Geosystems logfile.txt for RyCON.
  * <p>
  * This is used for encapsulating the data and error minimization.
  *
@@ -37,9 +38,9 @@ import java.util.Iterator;
  */
 public class ReferenceLineStructure extends LeicaLogfileBaseStructure {
 
-    private final ArrayList<String> lines;
-    private final ArrayList<RyMeasuredPoint> measuredPoints;
-    private final ArrayList<RyStakedPoint> stakedPoints;
+    private final List<String> lines;
+    private final List<RyMeasuredPoint> measuredPoints;
+    private final List<RyStakedPoint> stakedPoints;
     private RyPoint tpsStation;
     private String referenceLineId;
     private RyPoint startPoint;
@@ -64,8 +65,8 @@ public class ReferenceLineStructure extends LeicaLogfileBaseStructure {
      *
      * @param lines lines to be analyzed
      */
-    public ReferenceLineStructure(ArrayList<String> lines) {
-        this.lines = lines;
+    public ReferenceLineStructure(List<String> lines) {
+        this.lines = new ArrayList<>(lines);
         this.lines.removeAll(Arrays.asList(null, ""));
 
         this.measuredPoints = new ArrayList<>();
@@ -73,15 +74,13 @@ public class ReferenceLineStructure extends LeicaLogfileBaseStructure {
     }
 
     /**
-     * Analyzes the REFERENCE LINE structure of the <tt>Leica Geosystems</tt> logfile.txt and
+     * Analyzes the REFERENCE LINE structure of the Leica Geosystems logfile.txt and
      * fills the results into the return arrays.
      *
      * @return analysis success
      */
     @Override
     public boolean analyze() {
-        boolean success = false;
-
         super.analyzeHeader(lines);
 
         for (Iterator<String> iterator = lines.iterator(); iterator.hasNext(); ) {
@@ -168,7 +167,7 @@ public class ReferenceLineStructure extends LeicaLogfileBaseStructure {
      *
      * @return design line offsets
      */
-    public RyPoint getDesignLineOffsets() {
+    RyPoint getDesignLineOffsets() {
         return designLineOffsets;
     }
 
@@ -177,7 +176,7 @@ public class ReferenceLineStructure extends LeicaLogfileBaseStructure {
      *
      * @return design point
      */
-    public RyPoint getDesignPoint() {
+    RyPoint getDesignPoint() {
         return designPoint;
     }
 
@@ -186,7 +185,7 @@ public class ReferenceLineStructure extends LeicaLogfileBaseStructure {
      *
      * @return line endpoint
      */
-    public RyPoint getEndPoint() {
+    RyPoint getEndPoint() {
         return endPoint;
     }
 
@@ -195,7 +194,7 @@ public class ReferenceLineStructure extends LeicaLogfileBaseStructure {
      *
      * @return height offset
      */
-    public String getHeightOffset() {
+    String getHeightOffset() {
         return heightOffset;
     }
 
@@ -204,7 +203,7 @@ public class ReferenceLineStructure extends LeicaLogfileBaseStructure {
      *
      * @return deviation of measured point
      */
-    public RyPoint getMeasuredLineOffset() {
+    RyPoint getMeasuredLineOffset() {
         return measuredLineOffset;
     }
 
@@ -213,17 +212,17 @@ public class ReferenceLineStructure extends LeicaLogfileBaseStructure {
      *
      * @return measured point
      */
-    public RyPoint getMeasuredPoint() {
+    RyPoint getMeasuredPoint() {
         return measuredPoint;
     }
 
     /**
-     * Returns the measured points as {@link ArrayList} of {@link RyMeasuredPoint}.
+     * Returns the measured points as {@link List} of {@link RyMeasuredPoint}.
      *
      * @return the measured points
      */
-    public ArrayList<RyMeasuredPoint> getMeasuredPoints() {
-        return measuredPoints;
+    List<RyMeasuredPoint> getMeasuredPoints() {
+        return List.copyOf(measuredPoints);
     }
 
     /**
@@ -231,7 +230,7 @@ public class ReferenceLineStructure extends LeicaLogfileBaseStructure {
      *
      * @return offset
      */
-    public String getOffsetLine() {
+    String getOffsetLine() {
         return offsetLine;
     }
 
@@ -240,7 +239,7 @@ public class ReferenceLineStructure extends LeicaLogfileBaseStructure {
      *
      * @return point id
      */
-    public String getPointId() {
+    String getPointId() {
         return pointId;
     }
 
@@ -249,7 +248,7 @@ public class ReferenceLineStructure extends LeicaLogfileBaseStructure {
      *
      * @return angular grade of the reference line
      */
-    public String getReferenceLineGradeAngular() {
+    String getReferenceLineGradeAngular() {
         return referenceLineGradeAngular;
     }
 
@@ -258,7 +257,7 @@ public class ReferenceLineStructure extends LeicaLogfileBaseStructure {
      *
      * @return percentage grade of the reference line
      */
-    public String getReferenceLineGradePercent() {
+    String getReferenceLineGradePercent() {
         return referenceLineGradePercent;
     }
 
@@ -267,7 +266,7 @@ public class ReferenceLineStructure extends LeicaLogfileBaseStructure {
      *
      * @return reference line id
      */
-    public String getReferenceLineId() {
+    String getReferenceLineId() {
         return referenceLineId;
     }
 
@@ -276,7 +275,7 @@ public class ReferenceLineStructure extends LeicaLogfileBaseStructure {
      *
      * @return reference line length
      */
-    public String getReferenceLineLength() {
+    String getReferenceLineLength() {
         return referenceLineLength;
     }
 
@@ -285,7 +284,7 @@ public class ReferenceLineStructure extends LeicaLogfileBaseStructure {
      *
      * @return rotation
      */
-    public String getRotate() {
+    String getRotate() {
         return rotate;
     }
 
@@ -294,7 +293,7 @@ public class ReferenceLineStructure extends LeicaLogfileBaseStructure {
      *
      * @return height shift
      */
-    public String getShiftLine() {
+    String getShiftLine() {
         return shiftLine;
     }
 
@@ -303,17 +302,17 @@ public class ReferenceLineStructure extends LeicaLogfileBaseStructure {
      *
      * @return staked point
      */
-    public RyPoint getStakedPoint() {
+    RyPoint getStakedPoint() {
         return stakedPoint;
     }
 
     /**
-     * Returns the staked points as {@link ArrayList} of {@link RyStakedPoint}.
+     * Returns the staked points as {@link List} of {@link RyStakedPoint}.
      *
      * @return the staked points
      */
-    public ArrayList<RyStakedPoint> getStakedPoints() {
-        return stakedPoints;
+    List<RyStakedPoint> getStakedPoints() {
+        return List.copyOf(stakedPoints);
     }
 
     /**
@@ -321,7 +320,7 @@ public class ReferenceLineStructure extends LeicaLogfileBaseStructure {
      *
      * @return stakeout difference
      */
-    public RyPoint getStakeoutDifference() {
+    RyPoint getStakeoutDifference() {
         return stakeoutDifference;
     }
 
@@ -330,7 +329,7 @@ public class ReferenceLineStructure extends LeicaLogfileBaseStructure {
      *
      * @return start point
      */
-    public RyPoint getStartPoint() {
+    RyPoint getStartPoint() {
         return startPoint;
     }
 
@@ -339,7 +338,7 @@ public class ReferenceLineStructure extends LeicaLogfileBaseStructure {
      *
      * @return the tps station
      */
-    public RyPoint getTpsStation() {
+    RyPoint getTpsStation() {
         return tpsStation;
     }
 
@@ -382,4 +381,4 @@ public class ReferenceLineStructure extends LeicaLogfileBaseStructure {
         }
     }
 
-} // end of ReferenceLineStructure
+}

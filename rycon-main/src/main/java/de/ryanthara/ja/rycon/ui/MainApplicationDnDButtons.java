@@ -18,7 +18,7 @@
 package de.ryanthara.ja.rycon.ui;
 
 /**
- * This enumeration is used for the drag'n drop enabled widgets buttons of the {@link MainApplication}.
+ * Provides all the drag'n drop enabled widgets buttons of the {@link MainApplication}.
  *
  * @author sebastian
  * @version 1
@@ -28,4 +28,4 @@ public enum MainApplicationDnDButtons {
 
     ANALYZE, CLEAN, LEVELLING, SPLIT
 
-} // end of MainApplicationDnDButtons
+}

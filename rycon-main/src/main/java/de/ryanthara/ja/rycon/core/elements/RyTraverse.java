@@ -23,7 +23,7 @@ import de.ryanthara.ja.rycon.ui.widgets.ReportWidget;
  * The {@code  RyTraverse} class represents a container for storing geodetic traverse results.
  * <p>
  * These results are used in the analyzer for Leica Geosystems logfile.txt files in the
- * {@link ReportWidget} of <tt>RyCON</tt>.
+ * {@link ReportWidget} of RyCON.
  * <p>
  * This class based on an equal idea to the {@link RyPoint} structure.
  *
@@ -89,4 +89,4 @@ public class RyTraverse {
         return to;
     }
 
-} // end of RyTraverse
+}

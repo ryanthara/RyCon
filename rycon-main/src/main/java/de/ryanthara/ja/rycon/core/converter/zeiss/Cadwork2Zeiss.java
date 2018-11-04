@@ -18,10 +18,11 @@
 package de.ryanthara.ja.rycon.core.converter.zeiss;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Instances of this class provides functions to convert coordinate files from Cadwork CAD program into
- * Zeiss REC files with it's dialects (R4, R5, REC500 and M5).
+ * A converter with functions to convert coordinate coordinate files from Cadwork
+ * CAD program into Zeiss REC files with it's dialects (R4, R5, REC500 and M5).
  *
  * @author sebastian
  * @version 1
@@ -29,48 +30,50 @@ import java.util.ArrayList;
  */
 public class Cadwork2Zeiss {
 
-    private final ArrayList<String> readStringLines;
+    private final List<String> lines;
 
     /**
-     * Class constructor for reader line based text files from Cadwork CAD program in node.dat file format.
+     * Creates a converter with a list for the read line based text file from Cadwork CAD program.
      *
-     * @param readStringLines {@code ArrayList<String>} with reader lines from node.dat file
+     * @param lines list with read node.dat lines
      */
-    public Cadwork2Zeiss(ArrayList<String> readStringLines) {
-        this.readStringLines = readStringLines;
+    public Cadwork2Zeiss(List<String> lines) {
+        this.lines = new ArrayList<>(lines);
     }
 
     /**
      * Converts a coordinate file from Cadwork (node.dat) into a Zeiss REC formatted file.
      *
      * @param dialect dialect of the target file
-     *
      * @return string lines of the target file
      */
-    public ArrayList<String> convertCadwork2REC(ZeissDialect dialect) {
-        ArrayList<String> result = new ArrayList<>();
+    public List<String> convert(ZeissDialect dialect) {
+        List<String> result = new ArrayList<>();
 
-        // remove not needed headlines
-        readStringLines.subList(0, 3).clear();
+        removeHeadLines();
 
         int lineNumber = 0;
 
         String number, code, easting, northing, height;
 
-        for (String line : readStringLines) {
+        for (String line : lines) {
             lineNumber = lineNumber + 1;
-            String[] lineSplit = line.trim().split("\\s+", -1);
+            String[] values = line.trim().split("\\s+", -1);
 
-            number = lineSplit[5];
-            code = lineSplit[4];
-            easting = lineSplit[1].substring(0, lineSplit[1].lastIndexOf('.') + 4);
-            northing = lineSplit[2].substring(0, lineSplit[2].lastIndexOf('.') + 4);
-            height = lineSplit[3].substring(0, lineSplit[3].lastIndexOf('.') + 5);
+            number = values[5];
+            code = values[4];
+            easting = values[1].substring(0, values[1].lastIndexOf('.') + 4);
+            northing = values[2].substring(0, values[2].lastIndexOf('.') + 4);
+            height = values[3].substring(0, values[3].lastIndexOf('.') + 5);
 
             result.add(BaseToolsZeiss.prepareLineOfCoordinates(dialect, number, code, easting, northing, height, lineNumber));
         }
 
-        return result;
+        return List.copyOf(result);
     }
 
-} // end of Cadwork2Zeiss
+    private void removeHeadLines() {
+        lines.subList(0, 3).clear();
+    }
+
+}

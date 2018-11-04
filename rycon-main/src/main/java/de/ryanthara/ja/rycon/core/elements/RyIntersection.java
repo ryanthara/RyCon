@@ -23,7 +23,7 @@ import de.ryanthara.ja.rycon.ui.widgets.ReportWidget;
  * The {@code RyIntersection} class represents a container for storing geodetic intersections.
  * <p>
  * These intersections are used in the analyzer for Leica Geosystems logfile.txt files in the
- * {@link ReportWidget} of <tt>RyCON</tt>.
+ * {@link ReportWidget} of RyCON.
  * <p>
  * This class based on an equal idea to the {@link RyPoint} structure.
  *
@@ -180,4 +180,4 @@ public class RyIntersection {
         return start;
     }
 
-} // end of RyIntersection
+}

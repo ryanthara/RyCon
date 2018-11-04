@@ -19,20 +19,19 @@
 import de.ryanthara.ja.rycon.ui.MainApplication;
 
 /**
- * <tt>RyCON</tt> is the entry point of the program.
+ * A special approach to show the name RyCON to mac users.
+ *
  * <p>
- * This class is used to show the name 'RyCON' for Mac OS X users, because of there is
- * no Info.plist file used at the moment. This will be changed in a future version of RyCON.
+ * The not existing Info.plist file prevent java applications
+ * to show their names in the dock and menu bar of macOS X or Mac OS X.
+ *
  * <p>
- * For more information see the <a href="https://developer.apple.com/library/mac/documentation/Java/Conceptual/Java14Development/00-Intro/JavaDevelopment.html#//apple_ref/doc/uid/TP40001911-SW1">Apple documentation about java</a> on the web.
- * <p>
- * Because of the fact that there are a lot of users who has java version 7 running,
- * <tt>RyCON</tt> doesn't use any functions of java version 8. However, <tt>RyCON</tt> runs under java version 7 or higher.
+ * For more information see the <a href="https://developer.apple.com/library/mac/documentation/Java/Conceptual/Java14Development/00-Intro/JavaDevelopment.html#//apple_ref/doc/uid/TP40001911-SW1">Java Development Guide for Mac</a> on the web.
  *
  * @author sebastian
  * @version 1
  * @since 1
  */
 public class RyCON extends MainApplication {
-} // end of RyCON
-//public class RyCON extends RyCONLauncher {} // end of RyCON
+}
+//public class RyCON extends RyCONLauncher {}

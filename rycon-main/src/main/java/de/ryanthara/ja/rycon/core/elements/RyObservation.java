@@ -23,7 +23,7 @@ import de.ryanthara.ja.rycon.ui.widgets.ReportWidget;
  * The {@code RyObservation} class represents a container for storing geodetic observations.
  * <p>
  * These observations are used in the analyzer for Leica Geosystems logfile.txt files in the
- * {@link ReportWidget} of <tt>RyCON</tt>.
+ * {@link ReportWidget} of RyCON.
  * <p>
  * This class based on an equal idea to the {@link RyPoint} structure.
  *
@@ -113,4 +113,4 @@ public class RyObservation {
         return v;
     }
 
-} // end of RyObservation
+}

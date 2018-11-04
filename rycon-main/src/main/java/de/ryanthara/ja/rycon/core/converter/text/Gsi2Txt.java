@@ -17,16 +17,18 @@
  */
 package de.ryanthara.ja.rycon.core.converter.text;
 
-import de.ryanthara.ja.rycon.core.converter.gsi.BaseToolsGsi;
+import de.ryanthara.ja.rycon.core.converter.Separator;
+import de.ryanthara.ja.rycon.core.converter.gsi.GsiDecoder;
 import de.ryanthara.ja.rycon.core.elements.GsiBlock;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.TreeSet;
+import java.util.List;
+import java.util.Set;
 
 /**
- * This class provides functions to convert Leica GSI formatted files into
- * a text formatted measurement or coordinate file.
+ * A converter with functions to convert Leica Geosystems GSI format (GSI8 and GSI16)
+ * coordinate and measurement files into a text formatted measurement or coordinate file.
  *
  * @author sebastian
  * @version 1
@@ -34,35 +36,33 @@ import java.util.TreeSet;
  */
 public class Gsi2Txt {
 
-    private final BaseToolsGsi baseToolsGsi;
+    private final GsiDecoder gsiDecoder;
 
     /**
-     * Class constructor for reader line based GSI files.
+     * Creates a converter with a list for the read line based
+     * Leica Geosystems GSI8 or GSI16 file.
      *
-     * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
+     * @param lines list with Leica Geosystems GSI8 or GSI16 lines
      */
-    public Gsi2Txt(ArrayList<String> readStringLines) {
-        baseToolsGsi = new BaseToolsGsi(readStringLines);
+    public Gsi2Txt(List<String> lines) {
+        gsiDecoder = new GsiDecoder(lines);
     }
 
     /**
-     * Converts a GSI file into a space or tab delimited text file.
-     * <p>
-     * With parameter it is possible to set the separation char (space or tab).
+     * Converts a Leica Geosystems GSI8 or GSI16 file into a space or tab delimited text file.
      *
      * @param separator        separator sign as {@code String}
      * @param isGSI16          true if GSI16 format is used
      * @param writeCommentLine if comment line should be written
-     *
-     * @return converted {@code ArrayList<String>} with lines of text format
+     * @return converted {@code List<String>} with lines of text format
      */
-    public ArrayList<String> convertGSI2TXT(String separator, boolean isGSI16, boolean writeCommentLine) {
+    public List<String> convert(String separator, boolean isGSI16, boolean writeCommentLine) {
         String commentLine = "";
-        ArrayList<String> result = new ArrayList<>();
+        List<String> result = new ArrayList<>();
 
-        String sep = separator.equals(" ") ? "    " : separator;
+        String sep = separator.equals(Separator.WHITESPACE.getSign()) ? "    " : separator;
 
-        TreeSet<Integer> foundWordIndices = baseToolsGsi.getFoundAllWordIndices();
+        Set<Integer> foundWordIndices = gsiDecoder.getFoundWordIndices();
 
         if (writeCommentLine) {
             int length;
@@ -90,7 +90,7 @@ public class Gsi2Txt {
             result.add(0, commentLine);
         }
 
-        for (ArrayList<GsiBlock> blocksInLine : baseToolsGsi.getEncodedLinesOfGSIBlocks()) {
+        for (List<GsiBlock> blocksInLine : gsiDecoder.getDecodedLinesOfGsiBlocks()) {
             String newLine = "";
 
             Iterator<Integer> it = foundWordIndices.iterator();
@@ -126,7 +126,8 @@ public class Gsi2Txt {
             }
             result.add(newLine);
         }
-        return result;
+
+        return List.copyOf(result);
     }
 
-} // end of Gsi2Txt
+}

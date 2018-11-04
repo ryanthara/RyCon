@@ -18,7 +18,7 @@
 
 package de.ryanthara.ja.rycon.ui.preferences.editor;
 
-import de.ryanthara.ja.rycon.i18n.Preferences;
+import de.ryanthara.ja.rycon.i18n.Preference;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 import de.ryanthara.ja.rycon.ui.preferences.PreferencesDialog;
 import de.ryanthara.ja.rycon.ui.preferences.util.Resources;
@@ -32,7 +32,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.PREFERENCES;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundle.PREFERENCE;
 
 /**
  * {@code Editor<T>} is an abstract base class for different {@code EditorT<generic data typ></>} classes of RyCON.
@@ -45,7 +45,6 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.PREFERENCES;
  * See <a href="https://github.com/prasser/swtpreferences">prasser on github</a> for details.
  *
  * @param <T> The generic data type of the subclassed editor
- *
  * @author sebastian
  * @version 1
  * @since 25
@@ -148,7 +147,7 @@ public abstract class Editor<T> {
 
         buttonDefault = new Button(parent, SWT.PUSH);
         buttonDefault.setImage(Resources.getImageDefault());
-        buttonDefault.setToolTipText(ResourceBundleUtils.getLangString(PREFERENCES, Preferences.toolTipDefault));
+        buttonDefault.setToolTipText(ResourceBundleUtils.getLangString(PREFERENCE, Preference.toolTipDefault));
         buttonDefault.setLayoutData(gridData);
         buttonDefault.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -172,7 +171,7 @@ public abstract class Editor<T> {
 
         buttonUndo = new Button(parent, SWT.PUSH);
         buttonUndo.setImage(Resources.getImageUndo());
-        buttonUndo.setToolTipText(ResourceBundleUtils.getLangString(PREFERENCES, Preferences.toolTipUndo));
+        buttonUndo.setToolTipText(ResourceBundleUtils.getLangString(PREFERENCE, Preference.toolTipUndo));
         buttonUndo.setLayoutData(gridData);
         buttonUndo.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -186,7 +185,6 @@ public abstract class Editor<T> {
      * Formats the value of the generic data type.
      *
      * @param t generic data type value to be formatted
-     *
      * @return formatted value
      */
     abstract String format(T t);
@@ -198,7 +196,6 @@ public abstract class Editor<T> {
      * Therefore a general {@link Exception} and not a {@link NumberFormatException} is caught.
      *
      * @param s value to be accepted
-     *
      * @return true if value is accepted
      */
     boolean isAccepted(String s) {
@@ -216,7 +213,6 @@ public abstract class Editor<T> {
      * Parses the value from the control into the generic data type {@code T}.
      *
      * @param s string to be parsed
-     *
      * @return parsed string
      */
     abstract T parse(String s);
@@ -286,6 +282,6 @@ public abstract class Editor<T> {
         int getSize() {
             return size;
         }
-    } // end of Size
+    }
 
-} // end of Editor
+}

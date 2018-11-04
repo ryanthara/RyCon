@@ -21,21 +21,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Instances of this class provides functions to convert coordinate files from the geodata server Basel Stadt (Switzerland)
- * into Zeiss REC files with it's dialects (R4, R5, REC500 and M5).
+ * A converter with functions to convert coordinate coordinate files from the geodata server
+ * Basel Stadt (Switzerland) into Zeiss REC files with it's dialects (R4, R5, REC500 and M5).
  */
 public class CsvBaselStadt2Zeiss {
 
-    private final List<String[]> readCSVLines;
+    private final List<String[]> lines;
 
     /**
-     * Constructs a new instance of this class given an {@link ArrayList} of strings with the reader line based CSV file
-     * from the geodata server Basel Stadt (Switzerland).
+     * Creates a converter with a list for the read line based comma separated
+     * values (CSV) file from the geodata server Basel Stadt (Switzerland).
      *
-     * @param readCSVLines {@code List<String[]>} with lines as {@code String[]}
+     * @param lines list with lines as string array
      */
-    public CsvBaselStadt2Zeiss(List<String[]> readCSVLines) {
-        this.readCSVLines = readCSVLines;
+    public CsvBaselStadt2Zeiss(List<String[]> lines) {
+        this.lines = new ArrayList<>(lines);
     }
 
     /**
@@ -43,35 +43,33 @@ public class CsvBaselStadt2Zeiss {
      * into a Zeiss REC formatted file.
      *
      * @param dialect dialect of the target file
-     *
-     * @return converted Zeiss REC file as {@code ArrayList<String>}
+     * @return converted Zeiss REC file as {@code List<String>}
      */
-    public ArrayList<String> convertCSVBaselStadt2REC(ZeissDialect dialect) {
-        ArrayList<String> result = new ArrayList<>();
+    public List<String> convert(ZeissDialect dialect) {
+        List<String> result = new ArrayList<>();
 
         int lineNumber = 0;
         String number, code, easting, northing, height;
 
-        // remove comment line
-        readCSVLines.remove(0);
+        removeHeadLine();
 
-        for (String[] stringField : readCSVLines) {
+        for (String[] values : lines) {
             lineNumber = lineNumber + 1;
             // point number is in column 1
-            number = stringField[0].replaceAll("\\s+", "").trim();
+            number = values[0].replaceAll("\\s+", "").trim();
 
             // code is in column 2
-            code = stringField[1];
+            code = values[1];
 
             // easting (Y) is in column 3
-            easting = stringField[2];
+            easting = values[2];
 
             // northing (X) is in column 4
-            northing = stringField[3];
+            northing = values[3];
 
             // height (Z) is in column 5, but not always valued
-            if (!stringField[4].equals("")) {
-                height = stringField[4];
+            if (!values[4].equals("")) {
+                height = values[4];
             } else {
                 height = "";
             }
@@ -79,7 +77,11 @@ public class CsvBaselStadt2Zeiss {
             result.add(BaseToolsZeiss.prepareLineOfCoordinates(dialect, number, code, easting, northing, height, lineNumber));
         }
 
-        return result;
+        return List.copyOf(result);
     }
 
-} // end of CsvBaselStadt2Zeiss
+    private void removeHeadLine() {
+        lines.remove(0);
+    }
+
+}

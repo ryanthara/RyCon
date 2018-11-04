@@ -18,19 +18,22 @@
 package de.ryanthara.ja.rycon.ui.widgets;
 
 import de.ryanthara.ja.rycon.Main;
-import de.ryanthara.ja.rycon.core.LogfileClearUp;
+import de.ryanthara.ja.rycon.core.clearup.LogfileClearUp;
 import de.ryanthara.ja.rycon.core.logfile.LogfileAnalyzer;
-import de.ryanthara.ja.rycon.data.PreferenceKeys;
+import de.ryanthara.ja.rycon.data.PreferenceKey;
 import de.ryanthara.ja.rycon.i18n.*;
+import de.ryanthara.ja.rycon.i18n.Button;
+import de.ryanthara.ja.rycon.i18n.Error;
+import de.ryanthara.ja.rycon.i18n.Text;
 import de.ryanthara.ja.rycon.nio.LineReader;
-import de.ryanthara.ja.rycon.ui.Sizes;
+import de.ryanthara.ja.rycon.nio.util.check.PathCheck;
+import de.ryanthara.ja.rycon.ui.Size;
 import de.ryanthara.ja.rycon.ui.custom.BottomButtonBar;
 import de.ryanthara.ja.rycon.ui.custom.FileDialogs;
 import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
 import de.ryanthara.ja.rycon.ui.util.ShellPositioner;
+import de.ryanthara.ja.rycon.ui.util.TextCheck;
 import de.ryanthara.ja.rycon.util.StringUtils;
-import de.ryanthara.ja.rycon.util.check.PathCheck;
-import de.ryanthara.ja.rycon.util.check.TextCheck;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -42,10 +45,9 @@ import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Optional;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.*;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundle.*;
 import static de.ryanthara.ja.rycon.ui.custom.Status.OK;
 
 /**
@@ -66,14 +68,14 @@ public class ReportWidget extends AbstractWidget {
     private Shell parent;
     private Path[] files2read;
     private Shell innerShell;
-    private Text logfilePath;
+    private org.eclipse.swt.widgets.Text logfilePath;
 
     /**
      * Constructs a new instance of this class without parameters.
      *
      * @param parent parent shell
      */
-    public ReportWidget(final Shell parent) {
+    public ReportWidget(Shell parent) {
         this.parent = parent;
         this.files2read = new Path[0];
         this.innerShell = null;
@@ -97,7 +99,7 @@ public class ReportWidget extends AbstractWidget {
 
     private void createAdvice(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.advice));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.advice));
 
         GridLayout gridLayout = new GridLayout(1, true);
 
@@ -174,8 +176,8 @@ public class ReportWidget extends AbstractWidget {
 
     @Override
     void initUI() {
-        int height = Sizes.RyCON_WIDGET_HEIGHT.getValue();
-        int width = Sizes.RyCON_WIDGET_WIDTH.getValue();
+        int height = Size.RyCON_WIDGET_HEIGHT.getValue();
+        int width = Size.RyCON_WIDGET_WIDTH.getValue();
 
         GridLayout gridLayout = new GridLayout(1, true);
         gridLayout.marginHeight = 5;
@@ -187,7 +189,7 @@ public class ReportWidget extends AbstractWidget {
 
         innerShell = new Shell(parent, SWT.CLOSE | SWT.DIALOG_TRIM | SWT.MAX | SWT.TITLE | SWT.APPLICATION_MODAL);
         innerShell.addListener(SWT.Close, event -> actionBtnCancel());
-        innerShell.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.report_Shell));
+        innerShell.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.report_Shell));
         innerShell.setSize(width, height);
 
         innerShell.setLayout(gridLayout);
@@ -208,10 +210,10 @@ public class ReportWidget extends AbstractWidget {
 
     private void actionBtnLogfilePath() {
         String[] filterNames = new String[]{
-                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameLogfileTxt)
+                ResourceBundleUtils.getLangString(FILECHOOSER, FileChooser.filterNameLogfileTxt)
         };
 
-        String filterPath = Main.pref.getUserPreference(PreferenceKeys.LAST_COPIED_LOGFILE);
+        String filterPath = Main.pref.getUserPreference(PreferenceKey.LAST_COPIED_LOGFILE);
 
         // Set the initial filter path according to anything selected or typed in
         if (!TextCheck.isEmpty(logfilePath)) {
@@ -223,7 +225,7 @@ public class ReportWidget extends AbstractWidget {
         Optional<Path[]> files = FileDialogs.showAdvancedFileDialog(
                 innerShell,
                 filterPath,
-                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.fileLogfile),
+                ResourceBundleUtils.getLangString(FILECHOOSER, FileChooser.fileLogfile),
                 acceptableFileSuffixes,
                 filterNames,
                 logfilePath);
@@ -237,7 +239,7 @@ public class ReportWidget extends AbstractWidget {
 
     private void createInputFieldComposite() {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.report_LogfilePath));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.report_LogfilePath));
 
         GridLayout gridLayout = new GridLayout();
         gridLayout.marginHeight = 5;
@@ -245,17 +247,17 @@ public class ReportWidget extends AbstractWidget {
         gridLayout.numColumns = 3;
 
         GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, true);
-        gridData.widthHint = Sizes.RyCON_WIDGET_WIDTH.getValue();
+        gridData.widthHint = Size.RyCON_WIDGET_WIDTH.getValue();
 
         group.setLayout(gridLayout);
         group.setLayoutData(gridData);
 
         Label logfilePathLabel = new Label(group, SWT.NONE);
-        logfilePathLabel.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.report_LogfilePathLabel));
+        logfilePathLabel.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.report_LogfilePathLabel));
 
-        Path logfile = Paths.get(Main.pref.getUserPreference(PreferenceKeys.LAST_COPIED_LOGFILE));
+        Path logfile = Paths.get(Main.pref.getUserPreference(PreferenceKey.LAST_COPIED_LOGFILE));
 
-        logfilePath = new Text(group, SWT.SINGLE | SWT.BORDER);
+        logfilePath = new org.eclipse.swt.widgets.Text(group, SWT.SINGLE | SWT.BORDER);
         logfilePath.setText(logfile.toString());
         // prevent shortcuts for execute when the text fields are empty
         logfilePath.addListener(SWT.Traverse, this::handleEvent);
@@ -266,9 +268,9 @@ public class ReportWidget extends AbstractWidget {
         gridData.horizontalAlignment = GridData.FILL;
         logfilePath.setLayoutData(gridData);
 
-        Button btnLogfilePath = new Button(group, SWT.NONE);
-        btnLogfilePath.setText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.chooseLogfilePathText));
-        btnLogfilePath.setToolTipText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.chooseLogfilePathText));
+        org.eclipse.swt.widgets.Button btnLogfilePath = new org.eclipse.swt.widgets.Button(group, SWT.NONE);
+        btnLogfilePath.setText(ResourceBundleUtils.getLangString(BUTTON, Button.chooseLogfilePathText));
+        btnLogfilePath.setToolTipText(ResourceBundleUtils.getLangString(BUTTON, Button.chooseLogfilePathText));
         btnLogfilePath.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -297,8 +299,8 @@ public class ReportWidget extends AbstractWidget {
                 lineReader = new LineReader(file2read);
 
                 if (lineReader.readFile(false)) {
-                    ArrayList<String> readFile = lineReader.getLines();
-                    ArrayList<String> cleanFile;
+                    java.util.List<String> readFile = lineReader.getLines();
+                    java.util.List<String> cleanFile;
                     Path path = file2read.getFileName();
 
                     if (path != null) {
@@ -306,7 +308,7 @@ public class ReportWidget extends AbstractWidget {
 
                         if (fileName.toUpperCase().endsWith("LOGFILE.TXT")) {
                             LogfileClearUp logfileClearUp = new LogfileClearUp(readFile);
-                            cleanFile = logfileClearUp.processCleanFull();
+                            cleanFile = logfileClearUp.processFullClearUp();
 
                             LogfileAnalyzer logfileAnalyzer = new LogfileAnalyzer(cleanFile);
 
@@ -343,37 +345,33 @@ public class ReportWidget extends AbstractWidget {
     }
 
     private boolean processFileOperations() {
-        boolean success;
-
         final int counter = fileOperations();
 
         if (counter > 0) {
             String message;
 
-            final String helper = ResourceBundleUtils.getLangString(MESSAGES, Messages.reportMessage);
+            final String helper = ResourceBundleUtils.getLangString(MESSAGE, Message.reportMessage);
 
             if (counter == 1) {
-                message = String.format(StringUtils.singularPluralMessage(helper, Main.TEXT_SINGULAR), counter);
+                message = String.format(StringUtils.getSingularMessage(helper), counter);
             } else {
-                message = String.format(StringUtils.singularPluralMessage(helper, Main.TEXT_PLURAL), counter);
+                message = String.format(StringUtils.getPluralMessage(helper), counter);
             }
 
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_INFORMATION,
-                    ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.msgBox_Success), message);
+                    ResourceBundleUtils.getLangStringFromXml(TEXT, Text.msgBox_Success), message);
 
             // set the counter for status bar information
             Main.countFileOps = counter;
-            success = true;
+            return true;
         } else {
-            final String message = ResourceBundleUtils.getLangString(ERRORS, Errors.reportFailed);
+            final String message = ResourceBundleUtils.getLangString(ERROR, Error.reportFailed);
 
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING,
-                    ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.msgBox_Error), message);
+                    ResourceBundleUtils.getLangStringFromXml(TEXT, Text.msgBox_Error), message);
 
-            success = false;
+            return false;
         }
-
-        return success;
     }
 
     private boolean processFileOperationsDND() {
@@ -391,16 +389,16 @@ public class ReportWidget extends AbstractWidget {
     private void updateStatus() {
         String status;
 
-        final String helper = ResourceBundleUtils.getLangString(MESSAGES, Messages.reportStatus);
+        final String helper = ResourceBundleUtils.getLangString(MESSAGE, Message.reportStatus);
 
         // use counter to display different text on the status bar
         if (Main.countFileOps == 1) {
-            status = String.format(StringUtils.singularPluralMessage(helper, Main.TEXT_SINGULAR), Main.countFileOps);
+            status = String.format(StringUtils.getSingularMessage(helper), Main.countFileOps);
         } else {
-            status = String.format(StringUtils.singularPluralMessage(helper, Main.TEXT_PLURAL), Main.countFileOps);
+            status = String.format(StringUtils.getPluralMessage(helper), Main.countFileOps);
         }
 
         Main.statusBar.setStatus(status, OK);
     }
 
-} // end of ReportWidget
+}

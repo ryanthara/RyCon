@@ -24,10 +24,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Instances of this class provides functions to convert measurement and coordinate files from Zeiss REC format
- * and it's dialects (R4, R5, REC500 and M5) into Leica GSI8 or GSI16 formatted files.
+ * A converter with functions to convert measurement and coordinate files from Zeiss REC format
+ * and it's dialects (R4, R5, REC500 and M5) into Leica Geosystems GSI8 or GSI16 formatted files.
  *
  * @author sebastian
  * @version 1
@@ -36,27 +37,28 @@ import java.util.ArrayList;
 public class Zeiss2Gsi {
 
     private static final Logger logger = LoggerFactory.getLogger(Zeiss2Gsi.class.getName());
-
+    private final List<String> lines;
     private int dateLine = -1, timeLine = -1;
     private int ppmLine = -1, constantLine = -1;
     private String ppmAndAdditionConstant = "";
     private String format1 = "YYssmsms", format2 = "MMDDhhmm";
-    private final ArrayList<String> readStringLines;
 
     /**
-     * Constructs a new instance of this class given an {@code ArrayList<String} that contains the reader lines
-     * in the Zeiss REC format and it's dialects (R4, R5, REC500 and M5).
-     * <p>
-     * The differentiation of the content is done by the called method.
+     * Creates a converter with a list for the read line based
+     * text files in the Zeiss REC format and it's dialects.
      *
-     * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
+     * <p>
+     * The differentiation of the content is done by the called
+     * method and it's content analyze functionality.
+     *
+     * @param lines list with Zeiss REC format lines
      */
-    public Zeiss2Gsi(ArrayList<String> readStringLines) {
-        this.readStringLines = readStringLines;
+    public Zeiss2Gsi(List<String> lines) {
+        this.lines = new ArrayList<>(lines);
     }
 
     /**
-     * Converts a Zeiss REC file (R4, R5, M5 or REC500) into a Leica GSI formatted file.
+     * Converts a Zeiss REC file (R4, R5, M5 or REC500) into a Leica Geosystems GSI formatted file.
      * <p>
      * This method can differ between different Zeiss REC dialects because of the
      * different structure and line length.
@@ -65,18 +67,17 @@ public class Zeiss2Gsi {
      * with the same point number.
      *
      * @param isGSI16 distinguish between GSI8 or GSI16 output
-     *
-     * @return converted {@code ArrayList<String>} with lines of text format
+     * @return converted {@code List<String>} with lines of text format
      */
-    public ArrayList<String> convertZeiss2GSI(boolean isGSI16) {
-        ArrayList<GsiBlock> blocks = new ArrayList<>();
-        ArrayList<ArrayList<GsiBlock>> blocksInLines = new ArrayList<>();
+    public List<String> convert(boolean isGSI16) {
+        List<GsiBlock> blocks = new ArrayList<>();
+        List<List<GsiBlock>> blocksInLines = new ArrayList<>();
 
         String pointNumber = "";
 
         int readLineCounter = 0, writeLineCounter = 0;
 
-        for (String line : readStringLines) {
+        for (String line : lines) {
 
             // skip empty lines
             if (line.trim().length() > 0) {
@@ -110,12 +111,12 @@ public class Zeiss2Gsi {
                             blocks = new ArrayList<>();
                         }
 
-                        // prepare the reader line results for the new point
+                        // prepare the read line results for the new point
                         pointNumber = decoder.getPointNumber();
 
                         writeLineCounter = writeLineCounter + 1;
 
-                        // process the new line information
+                        // run the new line information
                         blocks.add(new GsiBlock(isGSI16, 11, readLineCounter, pointNumber));
                     }
 
@@ -136,7 +137,7 @@ public class Zeiss2Gsi {
         return BaseToolsGsi.lineTransformation(isGSI16, blocksInLines);
     }
 
-    private void fillValuesIntoBlocks(ZeissBlock zeissBlock, ArrayList<GsiBlock> blocks, boolean isGSI16, int readLineCounter) {
+    private void fillValuesIntoBlocks(ZeissBlock zeissBlock, List<GsiBlock> blocks, boolean isGSI16, int readLineCounter) {
         switch (zeissBlock.getTypeIdentifier()) {
             case ah:
                 // target height
@@ -407,7 +408,7 @@ public class Zeiss2Gsi {
     The point number and code number are stored in an combined string and has to be split here.
      */
     // TODO find out how the point and code number storing is organized
-    private void preparePointAndCodeNumber(ArrayList<GsiBlock> blocks, ZeissBlock zeissBlock, boolean isGSI16) {
+    private void preparePointAndCodeNumber(List<GsiBlock> blocks, ZeissBlock zeissBlock, boolean isGSI16) {
         String s = zeissBlock.getValue();
 
         String codeNumber = "", pointNumber = "";
@@ -417,10 +418,10 @@ public class Zeiss2Gsi {
     }
 
     /*
-    Writes values that are reader from more than one Zeiss REC line into one GSI block (e.g. date and time,
+    Writes values that are read from more than one Zeiss REC line into one GSI block (e.g. date and time,
     or ppm and prism constant)
      */
-    private void writeMultiLinedValues(ArrayList<GsiBlock> blocks, boolean isGSI16) {
+    private void writeMultiLinedValues(List<GsiBlock> blocks, boolean isGSI16) {
         // date and time
         if ((dateLine == timeLine) || (dateLine == timeLine + 1)) {
             // writer blocks for date and time strings
@@ -456,4 +457,4 @@ public class Zeiss2Gsi {
 
     }
 
-} // end of Zeiss2Gsi
+}

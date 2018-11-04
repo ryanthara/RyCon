@@ -52,7 +52,6 @@ class FileToolsOdf {
      * Writes the Open Document Format Spreadsheet file to the filesystem.
      *
      * @param fileName output filename
-     *
      * @return file writing success
      */
     boolean writeOds(Path fileName) {
@@ -66,4 +65,4 @@ class FileToolsOdf {
         return false;
     }
 
-} // end of FileToolsOdf
+}

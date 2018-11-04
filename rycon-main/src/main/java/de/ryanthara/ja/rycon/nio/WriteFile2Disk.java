@@ -18,20 +18,22 @@
 package de.ryanthara.ja.rycon.nio;
 
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
-import de.ryanthara.ja.rycon.i18n.Texts;
-import de.ryanthara.ja.rycon.i18n.Warnings;
+import de.ryanthara.ja.rycon.i18n.Text;
+import de.ryanthara.ja.rycon.i18n.Warning;
+import de.ryanthara.ja.rycon.nio.util.PathUtils;
+import de.ryanthara.ja.rycon.nio.util.check.PathCheck;
 import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
-import de.ryanthara.ja.rycon.util.check.PathCheck;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.List;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.TEXTS;
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.WARNINGS;
-import static de.ryanthara.ja.rycon.nio.PathUtils.prepareOutputFileName;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundle.TEXT;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundle.WARNING;
+import static de.ryanthara.ja.rycon.nio.util.PathUtils.prepareOutputFileName;
 
 /**
  * This class implements static file writing functions for line based output files.
@@ -55,13 +57,9 @@ public final class WriteFile2Disk {
      * @param writeFile         prepared string lines for writing
      * @param editString        the edit string which is inserted before the file name extension
      * @param fileNameExtension file file name extension
-     *
      * @return write success
      */
-    public static boolean writeFile2Disk(final Path path, final ArrayList<String> writeFile,
-                                         final String editString, final String fileNameExtension) {
-        boolean success = false;
-
+    public static boolean writeFile2Disk(Path path, List<String> writeFile, String editString, String fileNameExtension) {
         final Path outputFile = prepareOutputFileName(path, editString, fileNameExtension);
 
         if (outputFile != null) {
@@ -74,23 +72,21 @@ public final class WriteFile2Disk {
                     final String outputFilename = p.toString();
 
                     int returnValue = MessageBoxes.showMessageBox(shell, SWT.ICON_WARNING | SWT.YES | SWT.NO,
-                            ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.msgBox_Warning),
-                            String.format(ResourceBundleUtils.getLangString(WARNINGS, Warnings.fileExistsOverwrite), outputFilename));
+                            ResourceBundleUtils.getLangStringFromXml(TEXT, Text.msgBox_Warning),
+                            String.format(ResourceBundleUtils.getLangString(WARNING, Warning.fileExistsOverwrite), outputFilename));
 
                     if (returnValue == SWT.YES) {
-                        LineWriter lineWriter = new LineWriter(outputFile);
-
-                        success = lineWriter.writeFile(writeFile);
+                        return new LineWriter(outputFile).writeFile(writeFile);
                     } else {
-                        success = false;
+                        return false;
                     }
                 }
             } else {
-                success = new LineWriter(outputFile).writeFile(writeFile);
+                return new LineWriter(outputFile).writeFile(writeFile);
             }
         }
 
-        return success;
+        return false;
     }
 
-} // end of WriteFile2Disk
+}

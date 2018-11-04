@@ -17,9 +17,11 @@
  */
 package de.ryanthara.ja.rycon.core.converter.odf;
 
+import de.ryanthara.ja.rycon.core.converter.excel.Format;
 import de.ryanthara.ja.rycon.core.elements.CaplanBlock;
-import de.ryanthara.ja.rycon.i18n.Columns;
+import de.ryanthara.ja.rycon.i18n.Column;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
+import de.ryanthara.ja.rycon.util.StringUtils;
 import org.odftoolkit.simple.SpreadsheetDocument;
 import org.odftoolkit.simple.table.Cell;
 import org.odftoolkit.simple.table.Table;
@@ -28,12 +30,13 @@ import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.List;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.COLUMN_NAMES;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundle.COLUMN_NAME;
 
 /**
- * Instances of this class provides functions to convert a Caplan K formatted coordinate file
- * into an OpenDocument spreadsheet file.
+ * A converter with functions to convert coordinate coordinate files
+ * from Caplan K program into an OpenDocument spreadsheet file.
  *
  * @author sebastian
  * @version 2
@@ -43,16 +46,16 @@ public class Caplan2Odf {
 
     private static final Logger logger = LoggerFactory.getLogger(Caplan2Odf.class.getName());
 
-    private final ArrayList<String> readStringLines;
+    private final List<String> lines;
     private SpreadsheetDocument spreadsheetDocument;
 
     /**
-     * Constructs a new instance of this class with the reader Caplan K file {@link ArrayList} string as parameter.
+     * Creates a converter with a list for the read line based Caplan K file.
      *
-     * @param readStringLines {@code ArrayList<String>} with lines in Caplan K format
+     * @param lines list with Caplan K formatted lines
      */
-    public Caplan2Odf(ArrayList<String> readStringLines) {
-        this.readStringLines = readStringLines;
+    public Caplan2Odf(List<String> lines) {
+        this.lines = new ArrayList<>(lines);
     }
 
     /**
@@ -60,10 +63,9 @@ public class Caplan2Odf {
      *
      * @param sheetName       name of the sheet (file name from input file)
      * @param writeCommentRow writer comment row
-     *
      * @return success conversion success
      */
-    public boolean convertCaplan2Ods(Path sheetName, boolean writeCommentRow) {
+    public boolean convert(Path sheetName, boolean writeCommentRow) {
         int rowIndex = 0;
         int colIndex = 0;
 
@@ -78,33 +80,10 @@ public class Caplan2Odf {
             Cell cell;
 
             if (writeCommentRow) {
-                cell = table.getCellByPosition(colIndex, rowIndex);
-                cell.setStringValue(ResourceBundleUtils.getLangString(COLUMN_NAMES, Columns.pointNumber));
-                colIndex = colIndex + 1;
-
-                cell = table.getCellByPosition(colIndex, rowIndex);
-                cell.setStringValue(ResourceBundleUtils.getLangString(COLUMN_NAMES, Columns.easting));
-                colIndex = colIndex + 1;
-
-                cell = table.getCellByPosition(colIndex, rowIndex);
-                cell.setStringValue(ResourceBundleUtils.getLangString(COLUMN_NAMES, Columns.northing));
-                colIndex = colIndex + 1;
-
-                cell = table.getCellByPosition(colIndex, rowIndex);
-                cell.setStringValue(ResourceBundleUtils.getLangString(COLUMN_NAMES, Columns.height));
-                colIndex = colIndex + 1;
-
-                cell = table.getCellByPosition(colIndex, rowIndex);
-                cell.setStringValue(ResourceBundleUtils.getLangString(COLUMN_NAMES, Columns.object));
-                colIndex = colIndex + 1;
-
-                cell = table.getCellByPosition(colIndex, rowIndex);
-                cell.setStringValue(ResourceBundleUtils.getLangString(COLUMN_NAMES, Columns.attribute));
-
-                rowIndex = rowIndex + 1;
+                rowIndex = prepareCommentRow(rowIndex, colIndex, table);
             }
 
-            for (String line : readStringLines) {
+            for (String line : lines) {
                 // skip empty lines directly after reading
                 if (!line.trim().isEmpty()) {
                     colIndex = 0;
@@ -120,8 +99,8 @@ public class Caplan2Odf {
                     if (caplanBlock.getEasting() != null) {
                         if (!caplanBlock.getEasting().equals("")) {
                             cell = table.getCellByPosition(colIndex, rowIndex);
-                            cell.setDoubleValue(Double.parseDouble(caplanBlock.getEasting()));
-                            cell.setFormatString("#,##0.0000");
+                            cell.setDoubleValue(StringUtils.parseDoubleValue(caplanBlock.getEasting()));
+                            cell.setFormatString(Format.DIGITS_4.getString());
                         } else {
                             cell = table.getCellByPosition(colIndex, rowIndex);
                             cell.setStringValue("");
@@ -133,8 +112,8 @@ public class Caplan2Odf {
                     if (caplanBlock.getNorthing() != null) {
                         if (!caplanBlock.getNorthing().equals("")) {
                             cell = table.getCellByPosition(colIndex, rowIndex);
-                            cell.setDoubleValue(Double.parseDouble(caplanBlock.getNorthing()));
-                            cell.setFormatString("#,##0.0000");
+                            cell.setDoubleValue(StringUtils.parseDoubleValue(caplanBlock.getNorthing()));
+                            cell.setFormatString(Format.DIGITS_4.getString());
                         } else {
                             cell = table.getCellByPosition(colIndex, rowIndex);
                             cell.setStringValue("");
@@ -146,8 +125,8 @@ public class Caplan2Odf {
                     if (caplanBlock.getHeight() != null) {
                         if (!caplanBlock.getHeight().equals("")) {
                             cell = table.getCellByPosition(colIndex, rowIndex);
-                            cell.setDoubleValue(Double.parseDouble(caplanBlock.getHeight()));
-                            cell.setFormatString("#,##0.0000");
+                            cell.setDoubleValue(StringUtils.parseDoubleValue(caplanBlock.getHeight()));
+                            cell.setFormatString(Format.DIGITS_4.getString());
                         } else {
                             cell = table.getCellByPosition(colIndex, rowIndex);
                             cell.setStringValue("");
@@ -184,8 +163,37 @@ public class Caplan2Odf {
         return rowIndex > 1;
     }
 
+    private int prepareCommentRow(int rowIndex, int colIndex, Table table) {
+        Cell cell;
+        cell = table.getCellByPosition(colIndex, rowIndex);
+        cell.setStringValue(ResourceBundleUtils.getLangString(COLUMN_NAME, Column.pointNumber));
+        colIndex = colIndex + 1;
+
+        cell = table.getCellByPosition(colIndex, rowIndex);
+        cell.setStringValue(ResourceBundleUtils.getLangString(COLUMN_NAME, Column.easting));
+        colIndex = colIndex + 1;
+
+        cell = table.getCellByPosition(colIndex, rowIndex);
+        cell.setStringValue(ResourceBundleUtils.getLangString(COLUMN_NAME, Column.northing));
+        colIndex = colIndex + 1;
+
+        cell = table.getCellByPosition(colIndex, rowIndex);
+        cell.setStringValue(ResourceBundleUtils.getLangString(COLUMN_NAME, Column.height));
+        colIndex = colIndex + 1;
+
+        cell = table.getCellByPosition(colIndex, rowIndex);
+        cell.setStringValue(ResourceBundleUtils.getLangString(COLUMN_NAME, Column.object));
+        colIndex = colIndex + 1;
+
+        cell = table.getCellByPosition(colIndex, rowIndex);
+        cell.setStringValue(ResourceBundleUtils.getLangString(COLUMN_NAME, Column.attribute));
+
+        rowIndex = rowIndex + 1;
+        return rowIndex;
+    }
+
     /**
-     * Returns the SpreadsheetDocument for writing it to a file.
+     * Returns the {@link SpreadsheetDocument} for writing it to a file.
      *
      * @return SpreadsheetDocument
      */
@@ -193,4 +201,4 @@ public class Caplan2Odf {
         return this.spreadsheetDocument;
     }
 
-} // end of Caplan2Odf
+}

@@ -23,7 +23,7 @@ import de.ryanthara.ja.rycon.ui.widgets.ReportWidget;
  * The {@code RyStakedPoint} class represents a container for storing geodetic stake out points.
  * <p>
  * These staked points are used in the analyzer for Leica Geosystems logfile.txt files in the
- * {@link ReportWidget} of <tt>RyCON</tt>.
+ * {@link ReportWidget} of RyCON.
  * <p>
  * This class based on an equal idea to the {@link RyPoint} structure.
  *
@@ -47,7 +47,7 @@ public class RyStakedPoint {
      * @param stakedPoint        the staked point
      * @param stakeoutDifference the difference between design and staked point
      */
-    public RyStakedPoint(final String pointID, final RyPoint designPoint, final RyPoint stakedPoint, final RyPoint stakeoutDifference) {
+    public RyStakedPoint(String pointID, final RyPoint designPoint, final RyPoint stakedPoint, final RyPoint stakeoutDifference) {
         this.pointID = pointID;
         this.designPoint = designPoint;
         this.stakedPoint = stakedPoint;
@@ -64,7 +64,7 @@ public class RyStakedPoint {
      * @param stakeoutDifference the difference between design and staked point
      * @param designLineOffset   the design line offset
      */
-    public RyStakedPoint(final String pointID, final RyPoint designPoint, final RyPoint stakedPoint, final RyPoint stakeoutDifference, final RyPoint designLineOffset) {
+    public RyStakedPoint(String pointID, final RyPoint designPoint, final RyPoint stakedPoint, final RyPoint stakeoutDifference, final RyPoint designLineOffset) {
         this.pointID = pointID;
         this.designPoint = designPoint;
         this.stakedPoint = stakedPoint;
@@ -117,4 +117,4 @@ public class RyStakedPoint {
         return stakeoutDifference;
     }
 
-} // end of RyStakedPoint
+}

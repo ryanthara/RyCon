@@ -17,10 +17,10 @@
  */
 package de.ryanthara.ja.rycon.ui.widgets.convert.read;
 
-import de.ryanthara.ja.rycon.core.converter.toporail.FileType;
-import de.ryanthara.ja.rycon.i18n.Errors;
+import de.ryanthara.ja.rycon.i18n.Error;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
-import de.ryanthara.ja.rycon.i18n.Texts;
+import de.ryanthara.ja.rycon.i18n.Text;
+import de.ryanthara.ja.rycon.nio.FileFormat;
 import de.ryanthara.ja.rycon.nio.LineReader;
 import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
 import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
@@ -30,104 +30,82 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.ERRORS;
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.TEXTS;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundle.ERROR;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundle.TEXT;
 
 /**
- * Instances of this class are used for reading Toporail MEP and PTS files from
- * the {@link ConverterWidget} of <tt>RyCON</tt>.
+ * A reader for reading Toporail MEP and PTS files in the {@link ConverterWidget} of RyCON.
+ *
  * <p>
  * Du to some issues of the Toporail file formats a differentiation is made with
- * the fileType enumeration.
+ * the fileFormat enumeration.
  *
  * @author sebastian
  * @version 1
  * @since 25
  */
-public class ToporailReader implements Reader {
+public class ToporailReader extends Reader {
 
     private static final Logger logger = LoggerFactory.getLogger(ToporailReader.class.getName());
 
-    private ArrayList<String> readStringFile;
     private final Shell innerShell;
-    private final FileType fileType;
+    private final FileFormat fileFormat;
+    private List<String> lines;
 
     /**
-     * Constructs a new instance of this class given a reference to the inner shell
-     * of the calling object and the file type of the Toporail file.
+     * Constructs a new reader with a reference to the shell of
+     * the calling object and the file type of the Toporail file.
      *
      * @param innerShell reference to the inner shell
-     * @param fileType   file type of the Toporail file (MEP or PTS)
+     * @param fileFormat file type of the Toporail file (MEP or PTS)
      */
-    public ToporailReader(Shell innerShell, FileType fileType) {
+    public ToporailReader(Shell innerShell, FileFormat fileFormat) {
         this.innerShell = innerShell;
-        this.fileType = fileType;
-
+        this.fileFormat = fileFormat;
     }
 
     /**
-     * Returns the reader CSV lines as {@link List}.
-     * * <p>
-     * This method is used vice versa with the method {@link #getReadStringLines()}. The one which is not used,
-     * returns null for indication.
+     * Returns the read string lines as {@link List}.
      *
-     * @return reader CSV lines
+     * @return read string lines
      */
     @Override
-    // TODO correct return null
-    public List<String[]> getReadCsvFile() {
-        return null;
-    }
-
-    /**
-     * Returns the reader string lines as {@link ArrayList}.
-     * <p>
-     * This method is used vice versa with the method {@link #getReadCsvFile()}. The one which is not used,
-     * returns null for indication.
-     *
-     * @return reader string lines
-     */
-    @Override
-    public ArrayList<String> getReadStringLines() {
-        return readStringFile;
+    public List<String> getLines() {
+        return List.copyOf(lines);
     }
 
     /**
      * Reads the cadwork node.dat file given as parameter and returns the read file success.
      *
      * @param file2Read read file reference
-     *
      * @return read file success
      */
     @Override
     public boolean readFile(Path file2Read) {
-        boolean success = false;
-
         LineReader lineReader = new LineReader(file2Read);
 
         if (lineReader.readFile(true, ":")) {
-            if ((readStringFile = lineReader.getLines()) != null) {
-                success = true;
-            }
+            lines = lineReader.getLines();
+
+            return true;
         } else {
             String errorMessage;
 
-            if (fileType == FileType.MEP) {
-                errorMessage = ResourceBundleUtils.getLangString(ERRORS, Errors.toporailMepReadingFailed);
+            if (fileFormat == FileFormat.MEP) {
+                errorMessage = ResourceBundleUtils.getLangString(ERROR, Error.toporailMepReadingFailed);
             } else {
-                errorMessage = ResourceBundleUtils.getLangString(ERRORS, Errors.toporailPtsReadingFailed);
+                errorMessage = ResourceBundleUtils.getLangString(ERROR, Error.toporailPtsReadingFailed);
             }
 
             logger.warn("File '{}' could not be read.", file2Read.getFileName());
 
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR,
-                    ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.msgBox_Error), errorMessage);
-        }
+                    ResourceBundleUtils.getLangStringFromXml(TEXT, Text.msgBox_Error), errorMessage);
 
-        return success;
+            return false;
+        }
     }
 
-} // end of ToporailReader
+}

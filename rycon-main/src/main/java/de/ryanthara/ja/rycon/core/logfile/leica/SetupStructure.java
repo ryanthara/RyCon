@@ -23,10 +23,11 @@ import de.ryanthara.ja.rycon.core.elements.RyResidual;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * The {@code SetupStructure} implements functions based on the COGO part of
- * the <tt>Leica Geosystems</tt> logfile.txt for <tt>RyCON</tt>.
+ * the Leica Geosystems logfile.txt for RyCON.
  * <p>
  * This is used for encapsulating the data and error minimization.
  *
@@ -36,10 +37,9 @@ import java.util.Arrays;
  */
 public class SetupStructure extends LeicaLogfileBaseStructure {
 
-    private final ArrayList<String> lines;
-    // Results
-    private final ArrayList<RyObservation> observationsList;
-    private final ArrayList<RyResidual> residualsList;
+    private final List<String> lines;
+    private final List<RyObservation> observationsList;
+    private final List<RyResidual> residualsList;
     private String orientationCorrection;
     private String scale;
     private String standardDeviationEasting;
@@ -54,8 +54,8 @@ public class SetupStructure extends LeicaLogfileBaseStructure {
      *
      * @param lines lines to be analyzed
      */
-    public SetupStructure(ArrayList<String> lines) {
-        this.lines = lines;
+    public SetupStructure(List<String> lines) {
+        this.lines = new ArrayList<>(lines);
         this.lines.removeAll(Arrays.asList(null, ""));
 
         observationsList = new ArrayList<>();
@@ -63,15 +63,13 @@ public class SetupStructure extends LeicaLogfileBaseStructure {
     }
 
     /**
-     * Analyze the SETUP structure of the <tt>Leica Geosystems</tt> logfile.txt and
+     * Analyze the SETUP structure of the Leica Geosystems logfile.txt and
      * fills the results into the return arrays.
      *
      * @return analysis success
      */
     @Override
     public boolean analyze() {
-        boolean success = false;
-
         super.analyzeHeader(lines);
 
         SetupMethod setupMethod = null;
@@ -81,22 +79,7 @@ public class SetupStructure extends LeicaLogfileBaseStructure {
             // Setup Method "..."
             // ------------------
             if (line.startsWith(Method.SETUP_METHOD.identifier)) {
-                setupMethod = SetupMethod.fromIdentifier(line.split("\"")[1]);
-
-                switch (setupMethod) {
-                    case KNOWN_AZIMUTH:
-                        break;
-                    case KNOWN_BACKSIGHT_POINT:
-                        break;
-                    case ORIENTATION_AND_HEIGHT_TRANSFER:
-                        break;
-                    case RESECTION:
-                        break;
-                    case RESECTION_HELMERT:
-                        break;
-                    case RESECTION_LOCAL:
-                        break;
-                }
+                setupMethod = getSetupMethod(line);
             }
 
             // Observations
@@ -231,11 +214,28 @@ public class SetupStructure extends LeicaLogfileBaseStructure {
             }
         }
 
-        if (setupMethod != null) {
-            success = true;
-        }
+        return setupMethod != null;
+    }
 
-        return success;
+    private SetupMethod getSetupMethod(String line) {
+        SetupMethod setupMethod;
+        setupMethod = SetupMethod.fromIdentifier(line.split("\"")[1]);
+
+        switch (setupMethod) {
+            case KNOWN_AZIMUTH:
+                break;
+            case KNOWN_BACKSIGHT_POINT:
+                break;
+            case ORIENTATION_AND_HEIGHT_TRANSFER:
+                break;
+            case RESECTION:
+                break;
+            case RESECTION_HELMERT:
+                break;
+            case RESECTION_LOCAL:
+                break;
+        }
+        return setupMethod;
     }
 
     /**
@@ -243,17 +243,17 @@ public class SetupStructure extends LeicaLogfileBaseStructure {
      *
      * @return observation
      */
-    public RyObservation getObservation() {
+    RyObservation getObservation() {
         return observation;
     }
 
     /**
-     * Returns multiple observations as {@link ArrayList} of {@link RyObservation}.
+     * Returns multiple observations as {@link List} of {@link RyObservation}.
      *
      * @return multiple observations
      */
-    public ArrayList<RyObservation> getObservationsList() {
-        return observationsList;
+    List<RyObservation> getObservationsList() {
+        return List.copyOf(observationsList);
     }
 
     /**
@@ -261,17 +261,17 @@ public class SetupStructure extends LeicaLogfileBaseStructure {
      *
      * @return orientation correction
      */
-    public String getOrientationCorrection() {
+    String getOrientationCorrection() {
         return orientationCorrection;
     }
 
     /**
-     * Returns multiple residuals as {@link ArrayList} of {@link RyResidual}.
+     * Returns multiple residuals as {@link List} of {@link RyResidual}.
      *
      * @return multiple residuals
      */
-    public ArrayList<RyResidual> getResidualsList() {
-        return residualsList;
+    List<RyResidual> getResidualsList() {
+        return List.copyOf(residualsList);
     }
 
     /**
@@ -279,7 +279,7 @@ public class SetupStructure extends LeicaLogfileBaseStructure {
      *
      * @return calculated scale
      */
-    public String getScale() {
+    String getScale() {
         return scale;
     }
 
@@ -288,7 +288,7 @@ public class SetupStructure extends LeicaLogfileBaseStructure {
      *
      * @return standard deviation easting
      */
-    public String getStandardDeviationEasting() {
+    String getStandardDeviationEasting() {
         return standardDeviationEasting;
     }
 
@@ -297,7 +297,7 @@ public class SetupStructure extends LeicaLogfileBaseStructure {
      *
      * @return standard deviation height
      */
-    public String getStandardDeviationHeight() {
+    String getStandardDeviationHeight() {
         return standardDeviationHeight;
     }
 
@@ -306,7 +306,7 @@ public class SetupStructure extends LeicaLogfileBaseStructure {
      *
      * @return standard deviation northing
      */
-    public String getStandardDeviationNorthing() {
+    String getStandardDeviationNorthing() {
         return standardDeviationNorthing;
     }
 
@@ -315,7 +315,7 @@ public class SetupStructure extends LeicaLogfileBaseStructure {
      *
      * @return standard deviation orientation
      */
-    public String getStandardDeviationOrientation() {
+    String getStandardDeviationOrientation() {
         return standardDeviationOrientation;
     }
 
@@ -363,4 +363,4 @@ public class SetupStructure extends LeicaLogfileBaseStructure {
         }
     }
 
-} // end of SetupStructure
+}

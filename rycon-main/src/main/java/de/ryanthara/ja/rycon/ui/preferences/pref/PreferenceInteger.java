@@ -94,4 +94,4 @@ public abstract class PreferenceInteger extends Preference<Integer> {
         return validator;
     }
 
-} // end of ValidatorInteger
+}

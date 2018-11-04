@@ -18,13 +18,16 @@
 package de.ryanthara.ja.rycon.core.converter.asc;
 
 import de.ryanthara.ja.rycon.core.converter.Converter;
+import de.ryanthara.ja.rycon.core.converter.Separator;
 import de.ryanthara.ja.rycon.util.DummyCoordinates;
 import org.eclipse.swt.graphics.Point;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Instances of this class provides functions to convert a Nigra/NigraWin calculation file into an ascii file.
+ * A converter with functions to convert NigraWin/NivNET calculation files into ASCII text files.
+ *
  * <p>
  * The line based ascii file contains one point (no x y z) in every line which coordinates
  * are separated by a single white space character.
@@ -38,16 +41,15 @@ import java.util.ArrayList;
  */
 public class NigraCalculation2Asc extends Converter {
 
-    private final ArrayList<String> readStringLines;
+    private final List<String> lines;
 
     /**
-     * Constructs a new instance of this class with a parameter for the read {@code ArrayList<String>}
-     * calculation file from Nigra/NigraWin.
+     * Creates a converter with a list for the read line based calculations from Nigra/NigraWin.
      *
-     * @param readStringLines read lines
+     * @param lines list with the calculations
      */
-    public NigraCalculation2Asc(ArrayList<String> readStringLines) {
-        this.readStringLines = new ArrayList<>(readStringLines);
+    public NigraCalculation2Asc(List<String> lines) {
+        this.lines = new ArrayList<>(lines);
     }
 
     /**
@@ -56,13 +58,13 @@ public class NigraCalculation2Asc extends Converter {
      * @return converted Nigra/NigraWin calculation format file
      */
     @Override
-    public ArrayList<String> convert() {
-        ArrayList<String> reduced = new ArrayList<>();
-        ArrayList<String> result = new ArrayList<>();
+    public List<String> convert() {
+        List<String> reduced = new ArrayList<>();
+        List<String> result = new ArrayList<>();
 
         // collect relevant lines into a new ArrayList
         boolean isStarted = false;
-        for (String line : readStringLines) {
+        for (String line : lines) {
             // measurement content stops the line before
             if (line.startsWith("\f")) {
                 isStarted = false;
@@ -89,7 +91,7 @@ public class NigraCalculation2Asc extends Converter {
             }
         }
 
-        ArrayList<Point> dummyCoordinates = DummyCoordinates.getList(reduced.size());
+        List<Point> dummyCoordinates = DummyCoordinates.getList(reduced.size());
 
         int counter = 0;
         for (String line : reduced) {
@@ -105,7 +107,7 @@ public class NigraCalculation2Asc extends Converter {
 
                     for (int i = 3; i < split.length; i++) {
                         stringBuilder.append(split[i]);
-                        stringBuilder.append(" ");
+                        stringBuilder.append(Separator.WHITESPACE.getSign());
                     }
 
                     number = stringBuilder.toString().trim();
@@ -120,7 +122,7 @@ public class NigraCalculation2Asc extends Converter {
             }
         }
 
-        return new ArrayList<>(result);
+        return List.copyOf(result);
     }
 
-} // end of NigraCalculation2Asc
+}

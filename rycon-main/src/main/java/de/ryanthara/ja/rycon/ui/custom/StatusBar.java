@@ -18,11 +18,10 @@
 
 package de.ryanthara.ja.rycon.ui.custom;
 
-import de.ryanthara.ja.rycon.ui.Images;
+import de.ryanthara.ja.rycon.ui.Image;
 import de.ryanthara.ja.rycon.ui.events.StatusInformationEvent;
 import de.ryanthara.ja.rycon.ui.events.StatusInformationListener;
 import de.ryanthara.ja.rycon.ui.image.ImageConverter;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
@@ -52,9 +51,9 @@ public class StatusBar extends Composite implements StatusInformationListener {
 
     private static final Logger logger = LoggerFactory.getLogger(StatusBar.class.getName());
 
-    private Image iconError;
-    private Image iconOK;
-    private Image iconWarning;
+    private org.eclipse.swt.graphics.Image iconError;
+    private org.eclipse.swt.graphics.Image iconOK;
+    private org.eclipse.swt.graphics.Image iconWarning;
     private Label icon;
     private Label message;
     private Vector<StatusInformationListener> statusInformationListeners;
@@ -65,7 +64,6 @@ public class StatusBar extends Composite implements StatusInformationListener {
      * Initializes the Control and its Widgets.
      *
      * @param parent the parent composite
-     *
      * @since 1
      */
     @SuppressWarnings("unchecked")
@@ -82,7 +80,6 @@ public class StatusBar extends Composite implements StatusInformationListener {
      * @param wHint   width
      * @param hHint   height
      * @param changed changed
-     *
      * @return result of super() call
      */
     @Override
@@ -177,9 +174,9 @@ public class StatusBar extends Composite implements StatusInformationListener {
     }
 
     private void prepareIcons() {
-        iconError = new ImageConverter().convertToImage(Display.getCurrent(), Images.iconError.getPath());
-        iconOK = new ImageConverter().convertToImage(Display.getCurrent(), Images.iconOK.getPath());
-        iconWarning = new ImageConverter().convertToImage(Display.getCurrent(), Images.iconWarning.getPath());
+        iconError = new ImageConverter().convertToImage(Display.getCurrent(), Image.iconError.getPath());
+        iconOK = new ImageConverter().convertToImage(Display.getCurrent(), Image.iconOK.getPath());
+        iconWarning = new ImageConverter().convertToImage(Display.getCurrent(), Image.iconWarning.getPath());
     }
 
-} // end of StatusBar
+}

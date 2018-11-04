@@ -18,12 +18,13 @@
 package de.ryanthara.ja.rycon.ui.widgets;
 
 import de.ryanthara.ja.rycon.Main;
+import de.ryanthara.ja.rycon.core.converter.Separator;
 import de.ryanthara.ja.rycon.data.Version;
-import de.ryanthara.ja.rycon.i18n.LangStrings;
+import de.ryanthara.ja.rycon.i18n.LangString;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
-import de.ryanthara.ja.rycon.i18n.Texts;
-import de.ryanthara.ja.rycon.ui.Images;
-import de.ryanthara.ja.rycon.ui.Sizes;
+import de.ryanthara.ja.rycon.i18n.Text;
+import de.ryanthara.ja.rycon.ui.Image;
+import de.ryanthara.ja.rycon.ui.Size;
 import de.ryanthara.ja.rycon.ui.image.ImageConverter;
 import de.ryanthara.ja.rycon.ui.util.ShellPositioner;
 import org.eclipse.swt.SWT;
@@ -35,15 +36,15 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LANG_STRINGS;
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.TEXTS;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundle.LANG_STRING;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundle.TEXT;
 import static de.ryanthara.ja.rycon.ui.custom.Status.OK;
 
 /**
  * A widget which is used to show the about dialog to users.
  * <p>
- * The {@code AboutWidget} is a simple widget of <tt>RyCON</tt>
- * which is used to to show basic information about <tt>RyCON</tt>
+ * The {@code AboutWidget} is a simple widget of RyCON
+ * which is used to to show basic information about RyCON
  * to the user. Therefore a nice artwork and a basic information
  * structure is used.
  *
@@ -64,33 +65,33 @@ public class AboutWidget {
      *
      * @param parent parent shell
      */
-    public AboutWidget(final Shell parent) {
+    public AboutWidget(Shell parent) {
         this.parent = parent;
 
         initUI();
     }
 
     private void initUI() {
-        final int height = Sizes.RyCON_WIDGET_HEIGHT.getValue() - 205;
-        final int width = Sizes.RyCON_WIDGET_WIDTH.getValue() - 205;
+        final int height = Size.RyCON_WIDGET_HEIGHT.getValue() - 205;
+        final int width = Size.RyCON_WIDGET_WIDTH.getValue() - 205;
 
         GridLayout gridLayout = new GridLayout(1, true);
 
         innerShell = new Shell(parent, SWT.CLOSE | SWT.SHELL_TRIM);
         innerShell.addListener(SWT.Close, event -> actionBtnEscape());
-        innerShell.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.about));
+        innerShell.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.about));
         innerShell.setSize(width, height);
 
         GridData gridData = new GridData(SWT.CENTER, SWT.FILL, true, true);
 
         Label imageLabel = new Label(innerShell, SWT.CENTER);
-        imageLabel.setImage(new ImageConverter().convertToImage(Display.getCurrent(), Images.aboutIcon.getPath()));
+        imageLabel.setImage(new ImageConverter().convertToImage(Display.getCurrent(), Image.aboutIcon.getPath()));
         imageLabel.setLayoutData(gridData);
 
         // get app name and version for bold line
-        final String appName = ResourceBundleUtils.getLangStringFromXml(LANG_STRINGS, LangStrings.application_Name);
+        final String appName = ResourceBundleUtils.getLangStringFromXml(LANG_STRING, LangString.application_Name);
         final String version = Version.getVersion();
-        final String ryconLabelText = appName + " " + version;
+        final String ryconLabelText = appName + Separator.WHITESPACE.getSign() + version;
 
         Label ryconLabel = new Label(innerShell, SWT.NONE);
         ryconLabel.setText(ryconLabelText);
@@ -121,4 +122,4 @@ public class AboutWidget {
         font.dispose();
     }
 
-} // end of AboutWidget
+}

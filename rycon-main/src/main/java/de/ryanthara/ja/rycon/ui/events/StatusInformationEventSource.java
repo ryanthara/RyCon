@@ -33,6 +33,12 @@ public class StatusInformationEventSource {
     private final ArrayList<StatusInformationListener> statusInformationListenerList = new ArrayList<>();
     private final StatusInformationEvent statusInformationEvent;
 
+    // Initialization Block
+    {
+        // fireEvent = new FireEvent(this, "start fire", System.currentTimeMillis());
+        statusInformationEvent = new StatusInformationEvent(this, "UPDATE");
+    }
+
     // Add StatusInformationListener
     public void addStatusInformationListener(StatusInformationListener statusInformationListener) {
         statusInformationListenerList.add(statusInformationListener);
@@ -52,10 +58,4 @@ public class StatusInformationEventSource {
         }
     }
 
-    // Initialization Block
-    {
-        // fireEvent = new FireEvent(this, "start fire", System.currentTimeMillis());
-        statusInformationEvent = new StatusInformationEvent(this, "UPDATE");
-    }
-
-} // end of StatusInformationEventSource
+}

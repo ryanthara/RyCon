@@ -18,32 +18,37 @@
 
 package de.ryanthara.ja.rycon.data;
 
-import de.ryanthara.ja.rycon.i18n.LangStrings;
+import de.ryanthara.ja.rycon.i18n.LangString;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.PreferenceChangeEvent;
 import java.util.prefs.PreferenceChangeListener;
 import java.util.prefs.Preferences;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LANG_STRINGS;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundle.LANG_STRING;
 
 /**
  * Instances of this class provides functions for handling system and user settings for RyCON.
  * <p>
- * The less needed configuration settings of <tt>RyCON</tt> are stored with the mechanism of the
- * JAVA PreferenceKeys API in the system and user area of your computer.
+ * The less needed configuration settings of RyCON are stored with the mechanism of the
+ * JAVA PreferenceKey API in the system and user area of your computer.
  * <p>
  * The settings are stored:
- * - Under Windows in a location like 'HKEY_CURRENT_USER\USID\Software\JavaSoft\Prefs\de\ryanthara\rycon'
- * - Under OS X in a location ~/Library/PreferenceKeys/de.ryanthara.ja.plist
- * - Under *nix in a location /etc/.java/.systemPrefs
+ * <ul>
+ * <li>Under Windows in the windows registry under {@code HKEY_CURRENT_USER\USID\Software\JavaSoft\Prefs\de\ryanthara\rycon2}
+ * <li>Under OS X in your home folder under {@code ~/Library/PreferenceKey/de.ryanthara.rycon2.plist}
+ * <li>Under *nix in a location under {@code /etc/.java/.systemPrefs}
+ * </ul>
  * <p>
- * Due to some experiences with Windows REGISTRY made during the development cycle of<tt>RyCON 2</tt>,
+ * Due to some experiences with Windows REGISTRY made during the development cycle of RyCON 2,
  * the preference keys are stored in lower case with an underscore (e.g. 'param_name').
  *
  * @author sebastian
@@ -52,47 +57,36 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LANG_STRINGS;
  */
 public class PreferenceHandler implements PreferenceChangeListener {
     private static final Logger logger = LoggerFactory.getLogger(PreferenceHandler.class.getName());
+
     private final String currentNode = "/de/ryanthara/rycon2";
-    private final String previousNode = "/de/ryanthara/rycon";
     private boolean isDefaultSettingsGenerated = false;
     private Preferences userPreferences;
 
     /**
      * Constructs a new instance of this class and initializes the configuration handling.
+     * <p>
+     * First it will attempted to load the existing user preferences. If this fails, RyCON
+     * try to load default preferences with meaningfully assumptions.
      */
-    // TODO Remove printouts if is working on windows
     public PreferenceHandler() {
-        if (checkForVersion2Preferences()) {
-            System.out.println("V2 preferences");
-            loadUserPreferences();
-        } else if (checkForVersion1Preferences()) {
-            System.out.println("V1 preferences");
-            convertUserPreferencesBetweenVersions();
-            loadUserPreferences();
-        } else {
-            System.out.println("Default settings");
-            createDefaultPreferences();
-        }
-
-        registerPreferenceChangeListener();
+        init();
     }
 
     /**
      * Checks a path which is stored in the user preferences of RyCON.
      * <p>
-     * If the path doesn't exists, <tt>RyCON</tt> tries to use the value of the base dir. If the base dir doesn't exist,
+     * If the path doesn't exists, RyCON tries to use the value of the base dir. If the base dir doesn't exist,
      * then the value of the "HOME" variable of the system will be returned.
      *
      * @param pathToBeChecked stored path which has to be checked
-     *
      * @return checked path from user preference
      */
     public static String checkUserPrefPathExist(String pathToBeChecked) {
         if (pathToBeChecked != null) {
             if (Files.exists(Paths.get(pathToBeChecked))) {
                 return pathToBeChecked;
-            } else if (Files.exists(Paths.get(PreferenceKeys.DIR_BASE.name()))) {
-                return PreferenceKeys.DIR_BASE.name();
+            } else if (Files.exists(Paths.get(PreferenceKey.DIR_BASE.name()))) {
+                return PreferenceKey.DIR_BASE.name();
             }
         }
 
@@ -121,11 +115,23 @@ public class PreferenceHandler implements PreferenceChangeListener {
         System.out.println("NEW KEYS REMOVED");
     }
 
+    private void init() {
+        if (checkIfNodeExists()) {
+            loadUserPreferences();
+            clearUpPreferences();
+        } else {
+            if (!createDefaultPreferences()) {
+                logger.error("Can't create default preferences.");
+            }
+        }
+
+        registerPreferenceChangeListener();
+    }
+
     /**
      * Returns the keys of the user preference object.
      *
      * @return keys array
-     *
      * @throws BackingStoreException thrown exception
      */
     public String[] getKeys() throws BackingStoreException {
@@ -136,7 +142,6 @@ public class PreferenceHandler implements PreferenceChangeListener {
      * Returns a specified user preference by a given position in the node array.
      *
      * @param position array position
-     *
      * @return system preference as string
      */
     public String getUserPreference(int position) {
@@ -157,17 +162,15 @@ public class PreferenceHandler implements PreferenceChangeListener {
      * Returns a system preference by given name.
      *
      * @param preference reference to the preference to be reader
-     *
      * @return system preference as string
-     *
      * @since 3
      */
-    public String getUserPreference(PreferenceKeys preference) {
+    public String getUserPreference(PreferenceKey preference) {
         // TODO catch java.lang.IllegalArgumentException: No enum constant for missing preference keys
 
         try {
             //System.out.println("Try to get UserPreference: " + preference.getKey());
-            return userPreferences.get(preference.getKey(), "");
+            return userPreferences.get(preference.name().toLowerCase(), "");
         } catch (Exception e) {
             logger.error("Can not get user preference key '{}'.", preference.toString(), e.getCause());
             return "";
@@ -212,7 +215,7 @@ public class PreferenceHandler implements PreferenceChangeListener {
      *
      * @param key key of the user preference to be removed
      */
-    public void removeUserPreference(String key) {
+    private void removeUserPreference(String key) {
         userPreferences.remove(key);
     }
 
@@ -221,11 +224,10 @@ public class PreferenceHandler implements PreferenceChangeListener {
      *
      * @param preference the preference object to be set
      * @param value      value to be set
-     *
      * @since 3
      */
-    public void setUserPreference(final PreferenceKeys preference, final String value) {
-        userPreferences.put(preference.getKey(), value);
+    public void setUserPreference(PreferenceKey preference, final String value) {
+        userPreferences.put(preference.name().toLowerCase(), value);
     }
 
     @Override
@@ -233,256 +235,278 @@ public class PreferenceHandler implements PreferenceChangeListener {
         return userPreferences.toString();
     }
 
-    private boolean checkForVersion1Preferences() {
-        try {
-            return Preferences.userRoot().nodeExists(previousNode);
-        } catch (BackingStoreException e) {
-            logger.error("Check for version 1 preferences failed. Node '{}' in user root does not exist", previousNode);
-        }
-
-        return false;
-    }
-
-    private boolean checkForVersion2Preferences() {
+    private boolean checkIfNodeExists() {
         try {
             return Preferences.userRoot().nodeExists(currentNode);
         } catch (BackingStoreException e) {
-            logger.error("Check for version 2 preferences failed. Node '{}' in user root does not exist", currentNode);
+            logger.error("Check for RyCON preferences failed. Node '{}' doesn't exist in user root.", currentNode);
         }
 
         return false;
     }
 
-    // TODO find bug here
-    private void convertUserPreferencesBetweenVersions() {
-        // load user preferences from RyCON and store them temporary
-        Preferences userPrefsV1 = Preferences.userRoot().node(previousNode);
+    /**
+     * Controls the writing of default values into the user preferences.
+     * <p>
+     * It is <b>highly recommend</b> that the user will overwrite this settings to her or his
+     * preferred values after the first start of RyCON. To do this, hit the key 'p' on
+     * the keyboard or choose the 'settings' button on the main window.
+     */
+    private boolean createDefaultPreferences() {
+        userPreferences = Preferences.userRoot().node(currentNode);
 
-        // fetch old keys and values if they exists
-        try {
-            final String[] oldKeys = userPrefsV1.keys();
-            final String[] oldValues = new String[oldKeys.length];
+        createDefaultPreferencesForDisplay();
+        createDefaultPreferencesForFiles();
+        createDefaultPreferencesForGeneral();
+        createDefaultPreferencesForUser();
+        createDefaultPreferencesForWidgetClearUp();
+        createDefaultPreferencesForWidgetConverter();
+        createDefaultPreferencesForWidgetGenerator();
+        createDefaultPreferencesForWidgetTransfer();
 
-            userPreferences = Preferences.userRoot().node(previousNode);
+        // TODO remove Rapp dependency to a more general behaviour
+        setUserPreference(PreferenceKey.DIR_PROJECT_LOG_FILES, "08.Bearb_Rapp/Messdaten/LOG");
+        setUserPreference(PreferenceKey.DIR_PROJECT_MEASUREMENT_FILES, "08.Bearb_Rapp/Messdaten/GSI");
+        setUserPreference(PreferenceKey.DIR_PROJECT_JOB_FILES, "08.Bearb_Rapp/Messdaten/DBX");
 
-            for (int i = 0; i < oldKeys.length; i++) {
-                System.out.println(i + "\texistent old keys: " + oldKeys[i]);
-            }
+        logger.info("Default settings created.");
 
-            for (int i = 0; i < oldKeys.length; i++) {
-                oldValues[i] = getUserPreference(PreferenceKeys.valueOf(oldKeys[i]));
-            }
-
-            userPreferences = Preferences.userRoot().node(currentNode);
-
-            // create default settings
-            createDefaultPreferences();
-
-            // transfer known values to the RyCON preferences
-            for (int i = 0; i < oldKeys.length; i++) {
-                // check whether the old key exists in the new version
-                if (PreferenceKeys.contains(oldKeys[i])) {
-                    // transfer the old value to the new key
-                    setUserPreference(PreferenceKeys.valueOf(oldKeys[i]), oldValues[i]);
-                }
-            }
-
-            logger.info("Transfer user settings from version 1 to version 2 successful.");
-        } catch (BackingStoreException e) {
-            logger.error("Check for version 1 preferences failed. Node '{}' in user root does not exist", previousNode);
-        }
+        return isDefaultSettingsGenerated = true;
     }
 
     /**
-     * Fills in the default values for <tt>RyCON</tt> into user preference.
+     * Writes the default values for the {@link de.ryanthara.ja.rycon.ui.widgets.ConverterWidget}
+     * of RyCON into the user preferences of the uses operating system.
      * <p>
-     * Default settings are generated for the following parameters (parameter name - value):
-     * <p>
-     * <h3>General settings</h3>
-     * <ul>
-     * <li>'ADD_TRAILING_ZEROES' - true</li>
-     * <li>'BUILD_VERSION' - 'version : YYYY-MM-DD' </li>
-     * <li>'GENERATOR' - 'RyCON' </li>
-     * <li>'INFORMATION_STRING' - 'information string' </li>
-     * <li>'OVERWRITE_EXISTING' - 'false' </li>
-     * <li>'PARAM_CODE_STRING' - 'CODE' </li>
-     * <li>'PARAM_CONTROL_POINT_STRING' - 'STKE' </li>
-     * </ul>
-     * <h3>Display settings</h3>
-     * <ul>
-     * <li>'LAST_USED_DISPLAY' - '-1' </li>
-     * <li>'LAST_POS_PRIMARY_MONITOR' - '-9999,-9999' </li>
-     * <li>'LAST_POS_SECONDARY_MONITOR' - '-9998,-9998' </li>
-     * </ul>
-     * <h3>User settings</h3>
-     * <ul>
-     * <li>'PARAM_USER_STRING' - 'RyCON user' </li>
-     * <li>'USER_LAST_USED_DIR' - '.' </li>
-     * </ul>
-     * <h3>Paths for module 1 - project generation</h3>
-     * <ul>
-     * <li>'DIR_BASE' - '.' </li>
-     * <li>'DIR_ADMIN' - './admin' </li>
-     * <li>'DIR_ADMIN_TEMPLATE' - './admin/template-folder' </li>
-     * <li>'DIR_BIG_DATA' - './big_data' </li>
-     * <li>'DIR_BIG_DATA_TEMPLATE' - './big_data/template-folder' </li>
-     * <li>'DIR_PROJECT' - './project' </li>
-     * <li>'DIR_PROJECT_TEMPLATE' - './project/template-folder' </li>
-     * </ul>
-     * <h3>Parameters for module 2 - transfer widget</h3>
-     * <ul>
-     * <li>'LAST_USED_PROJECTS' - '[]' </li>
-     * <li>'DIR_CARD_READER_DATA_FILES' - 'Data' </li>
-     * <li>'DIR_CARD_READER_EXPORT_FILES' - 'GSI' </li>
-     * <li>'DIR_CARD_READER_JOB_FILES' - 'DBX' </li>
-     * </ul>
-     * <h3>Parameters for module 3 - tidy up widget</h3>
-     * <ul>
-     * <li>'PARAM_EDIT_STRING' - 'EDIT' </li>
-     * <li>'PARAM_FREE_STATION_STRING' - 'FS' </li>
-     * <li>'PARAM_LTOP_STRING' - 'LTOP' </li>
-     * <li>'PARAM_STAKE_OUT_STRING' - 'ST' </li>
-     * </ul>
-     * <h3>Parameters for module 5 - levelling widget</h3>
-     * <ul>
-     * <li>'PARAM_LEVEL_STRING, ' - 'LEVEL' </li>
-     * </ul>
-     * <h3>Parameters for module 6 - converter widget</h3>
+     * The following parameters (parameter name - value) are used:
      * <ul>
      * <li>'CONVERTER_SETTING_ELIMINATE_ZERO_COORDINATE' -  'true' </li>
      * <li>'CONVERTER_SETTING_LTOP_USE_ZENITH_DISTANCE' -  'false' </li>
      * <li>'CONVERTER_SETTING_POINT_IDENTICAL_DISTANCE' - '0.03' </li>
      * <li>'CONVERTER_SETTING_ZEISS_DIALECT' - 'M5' </li>
      * </ul>
-     * <h3>File format settings</h3>
-     * <ul>
-     * <li>'GSI_SETTING_LINE_ENDING_WITH_BLANK' -  'true' </li>
-     * </ul>
-     * <p>
-     * It is <b>highly recommend</b> that the user will overwrite this settings to his
-     * preferred value after the first start of RyCON. To do this, hit the key 'p' on
-     * the keyboard or choose the button 9 - settings.
      */
-    private void createDefaultPreferences() {
-        userPreferences = Preferences.userRoot().node(currentNode);
+    private void createDefaultPreferencesForWidgetConverter() {
+        setUserPreference(PreferenceKey.CONVERTER_SETTING_ELIMINATE_ZERO_COORDINATE, DefaultKey.CONVERTER_SETTING_ELIMINATE_ZERO_COORDINATE.getValue());
+        setUserPreference(PreferenceKey.CONVERTER_SETTING_LTOP_USE_ZENITH_DISTANCE, DefaultKey.CONVERTER_SETTING_LTOP_USE_ZENITH_DISTANCE.getValue());
+        setUserPreference(PreferenceKey.CONVERTER_SETTING_POINT_IDENTICAL_DISTANCE, DefaultKey.CONVERTER_SETTING_POINT_IDENTICAL_DISTANCE.getValue());
+        setUserPreference(PreferenceKey.CONVERTER_SETTING_ZEISS_DIALECT, DefaultKey.CONVERTER_SETTING_ZEISS_DIALECT.getValue());
+    }
 
-        // general settings
-        setUserPreference(PreferenceKeys.ADD_TRAILING_ZEROES, DefaultKeys.ADD_TRAILING_ZEROES.getValue());
-        setUserPreference(PreferenceKeys.BUILD_VERSION, Version.getBuildNumber() + " : " + Version.getBuildDate());
-        setUserPreference(PreferenceKeys.GENERATOR, ResourceBundleUtils.getLangStringFromXml(LANG_STRINGS, LangStrings.application_Name));
-        setUserPreference(PreferenceKeys.INFORMATION_STRING, DefaultKeys.RyCON_WEBSITE.getValue());
-        setUserPreference(PreferenceKeys.OVERWRITE_EXISTING, DefaultKeys.OVERWRITE_EXISTING.getValue());
-        setUserPreference(PreferenceKeys.PARAM_CODE_STRING, DefaultKeys.PARAM_CODE_STRING.getValue());
-        setUserPreference(PreferenceKeys.PARAM_LEVEL_STRING, DefaultKeys.PARAM_LEVEL_STRING.getValue());
-        setUserPreference(PreferenceKeys.PARAM_EDIT_STRING, DefaultKeys.PARAM_EDIT_STRING.getValue());
+    /**
+     * Writes the default values for the {@link de.ryanthara.ja.rycon.ui.widgets.ClearUpWidget}
+     * of RyCON into the user preferences of the uses operating system.
+     * <p>
+     * The following parameters (parameter name - value) are used:
+     * <ul>
+     * <li>'PARAM_CONTROL_POINT_STRING' - 'STKE'
+     * <li>'PARAM_FREE_STATION_STRING' - 'FS'
+     * <li>'PARAM_KNOWN_STATION_STRING' - 'ST'
+     * <li>'PARAM_LTOP_STRING' - 'LTOP'
+     * </ul>
+     */
+    private void createDefaultPreferencesForWidgetClearUp() {
+        setUserPreference(PreferenceKey.PARAM_CONTROL_POINT_STRING, DefaultKey.PARAM_CONTROL_POINT_STRING.getValue());
+        setUserPreference(PreferenceKey.PARAM_FREE_STATION_STRING, DefaultKey.PARAM_FREE_STATION_STRING.getValue());
+        setUserPreference(PreferenceKey.PARAM_KNOWN_STATION_STRING, DefaultKey.PARAM_KNOWN_STATION_STRING.getValue());
+        setUserPreference(PreferenceKey.PARAM_LTOP_STRING, DefaultKey.PARAM_LTOP_STRING.getValue());
+    }
 
-        // display settings
-        setUserPreference(PreferenceKeys.LAST_USED_DISPLAY, DefaultKeys.LAST_USED_DISPLAY.getValue());
-        setUserPreference(PreferenceKeys.LAST_POS_PRIMARY_MONITOR, DefaultKeys.LAST_POS_PRIMARY_MONITOR.getValue());
-        setUserPreference(PreferenceKeys.LAST_POS_SECONDARY_MONITOR, DefaultKeys.LAST_POS_SECONDARY_MONITOR.getValue());
-
-        // user settings
-        setUserPreference(PreferenceKeys.PARAM_USER_STRING, DefaultKeys.PARAM_USER_STRING.getValue());
-        setUserPreference(PreferenceKeys.USER_LAST_USED_DIR, System.getProperty("user.home"));
-
-        // paths for module #1 - project generation
-        setUserPreference(PreferenceKeys.DIR_BASE, DefaultKeys.DIR_BASE.getValue());
-        setUserPreference(PreferenceKeys.DIR_ADMIN, DefaultKeys.DIR_ADMIN.getValue());
-        setUserPreference(PreferenceKeys.DIR_ADMIN_TEMPLATE, DefaultKeys.DIR_ADMIN_TEMPLATE.getValue());
-        setUserPreference(PreferenceKeys.DIR_BIG_DATA, DefaultKeys.DIR_BIG_DATA.getValue());
-        setUserPreference(PreferenceKeys.DIR_BIG_DATA_TEMPLATE, DefaultKeys.DIR_BIG_DATA_TEMPLATE.getValue());
-        setUserPreference(PreferenceKeys.DIR_PROJECT, DefaultKeys.DIR_PROJECT.getValue());
-        setUserPreference(PreferenceKeys.DIR_PROJECT_TEMPLATE, DefaultKeys.DIR_PROJECT_TEMPLATE.getValue());
-
-        // parameters for module #2 transfer widgets
-        setUserPreference(PreferenceKeys.LAST_USED_PROJECTS, "[]");
-        setUserPreference(PreferenceKeys.DIR_CARD_READER, DefaultKeys.DIR_CARD_READER.getValue());
+    /**
+     * Writes the default values for the {@link de.ryanthara.ja.rycon.ui.widgets.TransferWidget}
+     * of RyCON into the user preferences of the uses operating system.
+     * <p>
+     * The following parameters (parameter name - value) are used:
+     * <ul>
+     * <li>'LAST_USED_PROJECTS' - '[]'
+     * <li>'DIR_CARD_READER' - '.'
+     * <li>'DIR_CARD_READER_DATA_FILES' - 'Data'
+     * <li>'DIR_CARD_READER_EXPORT_FILES' - 'GSI'
+     * <li>'DIR_CARD_READER_JOB_FILES' - 'DBX'
+     * </ul>
+     */
+    private void createDefaultPreferencesForWidgetTransfer() {
+        setUserPreference(PreferenceKey.LAST_USED_PROJECTS, "[]");
+        setUserPreference(PreferenceKey.DIR_CARD_READER, DefaultKey.DIR_CARD_READER.getValue());
         /* Leica Geosystems card structure */
-        setUserPreference(PreferenceKeys.DIR_CARD_READER_DATA_FILES, "Data");
-        setUserPreference(PreferenceKeys.DIR_CARD_READER_EXPORT_FILES, "Gsi");
-        setUserPreference(PreferenceKeys.DIR_CARD_READER_JOB_FILES, "DBX");
+        setUserPreference(PreferenceKey.DIR_CARD_READER_DATA_FILES, "Data");
+        setUserPreference(PreferenceKey.DIR_CARD_READER_EXPORT_FILES, "Gsi");
+        setUserPreference(PreferenceKey.DIR_CARD_READER_JOB_FILES, "DBX");
+    }
 
-        // TODO remove Rapp dependency to a more general behaviour
-        setUserPreference(PreferenceKeys.DIR_PROJECT_LOG_FILES, "08.Bearb_Rapp/Messdaten/LOG");
-        setUserPreference(PreferenceKeys.DIR_PROJECT_MEASUREMENT_FILES, "08.Bearb_Rapp/Messdaten/GSI");
-        setUserPreference(PreferenceKeys.DIR_PROJECT_JOB_FILES, "08.Bearb_Rapp/Messdaten/DBX");
+    /**
+     * Writes the default values for the {@link de.ryanthara.ja.rycon.ui.widgets.GeneratorWidget}
+     * of RyCON into the user preferences of the uses operating system.
+     * <p>
+     * The following parameters (parameter name - value) are used:
+     * <ul>
+     * <li>'DIR_BASE' - '.'
+     * <li>'DIR_ADMIN' - './admin'
+     * <li>'DIR_ADMIN_TEMPLATE' - './admin/template-folder'
+     * <li>'DIR_BIG_DATA' - './big_data'
+     * <li>'DIR_BIG_DATA_TEMPLATE' - './big_data/template-folder'
+     * <li>'DIR_PROJECT' - './project'
+     * <li>'DIR_PROJECT_TEMPLATE' - './project/template-folder'
+     * </ul>
+     */
+    private void createDefaultPreferencesForWidgetGenerator() {
+        setUserPreference(PreferenceKey.DIR_BASE, DefaultKey.DIR_BASE.getValue());
+        setUserPreference(PreferenceKey.DIR_ADMIN, DefaultKey.DIR_ADMIN.getValue());
+        setUserPreference(PreferenceKey.DIR_ADMIN_TEMPLATE, DefaultKey.DIR_ADMIN_TEMPLATE.getValue());
+        setUserPreference(PreferenceKey.DIR_BIG_DATA, DefaultKey.DIR_BIG_DATA.getValue());
+        setUserPreference(PreferenceKey.DIR_BIG_DATA_TEMPLATE, DefaultKey.DIR_BIG_DATA_TEMPLATE.getValue());
+        setUserPreference(PreferenceKey.DIR_PROJECT, DefaultKey.DIR_PROJECT.getValue());
+        setUserPreference(PreferenceKey.DIR_PROJECT_TEMPLATE, DefaultKey.DIR_PROJECT_TEMPLATE.getValue());
+    }
 
-        // parameters for module #3 - tidy up
-        setUserPreference(PreferenceKeys.PARAM_CONTROL_POINT_STRING, DefaultKeys.PARAM_CONTROL_POINT_STRING.getValue());
-        setUserPreference(PreferenceKeys.PARAM_FREE_STATION_STRING, DefaultKeys.PARAM_FREE_STATION_STRING.getValue());
-        setUserPreference(PreferenceKeys.PARAM_KNOWN_STATION_STRING, DefaultKeys.PARAM_KNOWN_STATION_STRING.getValue());
-        setUserPreference(PreferenceKeys.PARAM_LTOP_STRING, DefaultKeys.PARAM_LTOP_STRING.getValue());
+    /**
+     * Writes the default values for the user of RyCON
+     * into the user preferences of the uses operating system.
+     * <p>
+     * The following parameters (parameter name - value) are used:
+     * <p>
+     * <ul>
+     * <li>'PARAM_USER_STRING' - 'RyCON user'
+     * <li>'LAST_COPIED_LOGFILE' - '.'
+     * <li>'LAST_USED_DIRECTORY' - '.'
+     * </ul>
+     */
+    private void createDefaultPreferencesForUser() {
+        setUserPreference(PreferenceKey.PARAM_USER_STRING, DefaultKey.PARAM_USER_STRING.getValue());
+        setUserPreference(PreferenceKey.LAST_COPIED_LOGFILE, DefaultKey.LAST_COPIED_LOGFILE.getValue());
+        setUserPreference(PreferenceKey.LAST_USED_DIRECTORY, System.getProperty("user.home"));
+    }
 
-        // parameters for module #6 - converter
-        setUserPreference(PreferenceKeys.CONVERTER_SETTING_ELIMINATE_ZERO_COORDINATE, DefaultKeys.CONVERTER_SETTING_ELIMINATE_ZERO_COORDINATE.getValue());
-        setUserPreference(PreferenceKeys.CONVERTER_SETTING_LTOP_USE_ZENITH_DISTANCE, DefaultKeys.CONVERTER_SETTING_LTOP_USE_ZENITH_DISTANCE.getValue());
-        setUserPreference(PreferenceKeys.CONVERTER_SETTING_POINT_IDENTICAL_DISTANCE, DefaultKeys.CONVERTER_SETTING_POINT_IDENTICAL_DISTANCE.getValue());
-        setUserPreference(PreferenceKeys.CONVERTER_SETTING_ZEISS_DIALECT, DefaultKeys.CONVERTER_SETTING_ZEISS_DIALECT.getValue());
+    /**
+     * Writes the default values for the display settings of RyCON
+     * into the user preferences of the uses operating system.
+     * <p>
+     * The following parameters (parameter name - value) are used:
+     * <ul>
+     * <li>'LAST_USED_DISPLAY' - '-1'
+     * <li>'LAST_POS_PRIMARY_MONITOR' - '-9999,-9999'
+     * <li>'LAST_POS_SECONDARY_MONITOR' - '-9998,-9998'
+     * </ul>
+     */
+    private void createDefaultPreferencesForDisplay() {
+        setUserPreference(PreferenceKey.LAST_USED_DISPLAY, DefaultKey.LAST_USED_DISPLAY.getValue());
+        setUserPreference(PreferenceKey.LAST_POS_PRIMARY_MONITOR, DefaultKey.LAST_POS_PRIMARY_MONITOR.getValue());
+        setUserPreference(PreferenceKey.LAST_POS_SECONDARY_MONITOR, DefaultKey.LAST_POS_SECONDARY_MONITOR.getValue());
+    }
 
-        // GSI file format settings
-        setUserPreference(PreferenceKeys.GSI_SETTING_LINE_ENDING_WITH_BLANK, DefaultKeys.GSI_SETTING_LINE_ENDING_WITH_BLANK.getValue());
+    /**
+     * Writes the default values for files and file writing of RyCON
+     * into the user preferences of the uses operating system.
+     * <p>
+     * The following parameters (parameter name - value) are used:
+     * <ul>
+     * <li>'ADD_TRAILING_ZEROES' -  'true'
+     * <li>'GSI_SETTING_LINE_ENDING_WITH_BLANK' -  'true'
+     * </ul>
+     */
+    private void createDefaultPreferencesForFiles() {
+        setUserPreference(PreferenceKey.ADD_TRAILING_ZEROES, DefaultKey.ADD_TRAILING_ZEROES.getValue());
+        setUserPreference(PreferenceKey.GSI_SETTING_LINE_ENDING_WITH_BLANK, DefaultKey.GSI_SETTING_LINE_ENDING_WITH_BLANK.getValue());
+    }
 
-        // a couple of parameters for better work flow between modules
-        setUserPreference(PreferenceKeys.LAST_COPIED_LOGFILE, DefaultKeys.LAST_COPIED_LOGFILE.getValue());
-
-        logger.info("Default settings created.");
-
-        isDefaultSettingsGenerated = true;
+    /**
+     * Writes the default values for general purposes of RyCON
+     * into the user preferences of the uses operating system.
+     * <p>
+     * The following parameters (parameter name - value) are used:
+     * <ul>
+     * <li>'BUILD_VERSION' - 'version : YYYY-MM-DD'
+     * <li>'GENERATOR' - 'RyCON'
+     * <li>'OVERWRITE_EXISTING' - 'false'
+     * <li>'PARAM_CODE_STRING' - '_CODE'
+     * <li>'PARAM_LEVEL_STRING' - '_LEVEL'
+     * <li>'PARAM_EDIT_STRING' - '_EDIT'
+     * </ul>
+     */
+    private void createDefaultPreferencesForGeneral() {
+        setUserPreference(PreferenceKey.BUILD_VERSION, Version.getBuildNumber() + " : " + Version.getBuildDate());
+        setUserPreference(PreferenceKey.GENERATOR, ResourceBundleUtils.getLangStringFromXml(LANG_STRING, LangString.application_Name));
+        setUserPreference(PreferenceKey.OVERWRITE_EXISTING, DefaultKey.OVERWRITE_EXISTING.getValue());
+        setUserPreference(PreferenceKey.PARAM_CODE_STRING, DefaultKey.PARAM_CODE_STRING.getValue());
+        setUserPreference(PreferenceKey.PARAM_LEVEL_STRING, DefaultKey.PARAM_LEVEL_STRING.getValue());
+        setUserPreference(PreferenceKey.PARAM_EDIT_STRING, DefaultKey.PARAM_EDIT_STRING.getValue());
     }
 
     private void loadUserPreferences() {
         userPreferences = Preferences.userRoot().node(currentNode);
+    }
 
-        // Checks the stored node for valid keys and for length.
-        // This is used to handle updates for RyCON, hence the user can use existing preferences.
+    /*
+     * Clear up unused user preference entries and fills in the new ones
+     * after an update or a new RyCON version.
+     */
+    private void clearUpPreferences() {
         try {
-            final int countDefaultPreferenceKeys = DefaultKeys.values().length;
-            final int countStoredPreferenceKeys = getKeys().length;
+            final int numberOfDefaultPreferenceKeys = DefaultKey.getNumberOf();
+            final int numberOfStoredPreferenceKeys = getKeys().length;
 
-            if (countDefaultPreferenceKeys != countStoredPreferenceKeys) {
-                // fetch old keys and values
-                final String[] oldKeys = userPreferences.keys();
-                final String[] oldValues = new String[oldKeys.length];
-
-                for (int i = 0; i < oldKeys.length; i++) {
-                    oldValues[i] = getUserPreference(PreferenceKeys.valueOf(oldKeys[i].toUpperCase()));
+            if (numberOfDefaultPreferenceKeys == numberOfStoredPreferenceKeys) {
+                logger.info("Number of default preferences keys and stored preference keys are equal.");
+            } else {
+                if (numberOfDefaultPreferenceKeys > numberOfStoredPreferenceKeys) {
+                    // default keys are larger -> insert missing keys
+                    insertMissingKeys();
+                } else {
+                    // stored keys are larger -> remove unused keys
+                    removeUnusedKeys();
                 }
-
-                // delete the old preference keys and their values
-                removeUserPreference(oldKeys);
-                logger.trace("Old preference keys removed.");
-
-                createDefaultPreferences();
-                logger.trace("Default preferences created.");
-
-                // transfer values from old keys to the new ones
-                for (int i = 0; i < oldKeys.length; i++) {
-                    setUserPreference(PreferenceKeys.valueOf(oldKeys[i].toUpperCase()), oldValues[i]);
-                    logger.trace("User preference '{}' successful transferred.", PreferenceKeys.valueOf(oldKeys[i]));
-                }
-
-                logger.info("Old preference keys transferred successful");
             }
         } catch (BackingStoreException e) {
             logger.error("Can not load user preferences.", e.getCause());
         }
     }
 
+    private void removeUnusedKeys() {
+        List<String> defaultPreferenceKeyList = new ArrayList<>(DefaultKey.getNumberOf());
+
+        for (DefaultKey key : DefaultKey.values()) {
+            defaultPreferenceKeyList.add(key.name().toLowerCase());
+        }
+
+        try {
+            List<String> storedPreferenceKeyList = new ArrayList<>(Arrays.asList(getKeys()));
+            storedPreferenceKeyList.removeAll(defaultPreferenceKeyList);
+
+            for (String key : storedPreferenceKeyList) {
+                removeUserPreference(key);
+                logger.info("User preference '{}' removed successfully.", key.toUpperCase());
+            }
+        } catch (BackingStoreException e) {
+            logger.error("Can not load user preferences.", e.getCause());
+        }
+    }
+
+    private void insertMissingKeys() {
+        List<String> defaultPreferenceKeyList = new ArrayList<>(DefaultKey.getNumberOf());
+
+        for (DefaultKey key : DefaultKey.values()) {
+            defaultPreferenceKeyList.add(key.name().toLowerCase());
+        }
+
+        try {
+            List<String> storedPreferenceKeyList = new ArrayList<>(Arrays.asList(getKeys()));
+            defaultPreferenceKeyList.removeAll(storedPreferenceKeyList);
+
+            for (String key : defaultPreferenceKeyList) {
+                setUserPreference(PreferenceKey.valueOf(key.toUpperCase()), DefaultKey.valueOf(key.toUpperCase()).getValue());
+                logger.info("User preference '{}' added successfully.", key.toUpperCase());
+            }
+        } catch (BackingStoreException e) {
+            logger.error("Can not load user preferences.", e.getCause());
+        }
+    }
+
+    /*
+     * Add the listener to the node and not to an instance of it!
+     */
     private void registerPreferenceChangeListener() {
-        // add listener to the node and not to an instance of it!
         Preferences.userRoot().node(currentNode).addPreferenceChangeListener(this);
         logger.info("Preference listener '{}' added.", this.toString());
     }
 
-    /**
-     * Removes a set of user preferences by an array of given keys.
-     *
-     * @param keys key of the user preference to be removed
-     */
-    private void removeUserPreference(String... keys) {
-        for (String key : keys) {
-            userPreferences.remove(key);
-        }
-    }
-
-} // end of PreferenceKeys
+}

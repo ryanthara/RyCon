@@ -17,82 +17,71 @@
  */
 package de.ryanthara.ja.rycon.ui.widgets.convert.write;
 
-import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.core.converter.ltop.Gsi2Mes;
 import de.ryanthara.ja.rycon.core.converter.ltop.Zeiss2Ltop;
-import de.ryanthara.ja.rycon.data.PreferenceKeys;
+import de.ryanthara.ja.rycon.data.PreferenceKey;
 import de.ryanthara.ja.rycon.nio.FileNameExtension;
 import de.ryanthara.ja.rycon.nio.WriteFile2Disk;
 import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
 import de.ryanthara.ja.rycon.ui.widgets.convert.SourceButton;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.odftoolkit.simple.SpreadsheetDocument;
+import de.ryanthara.ja.rycon.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Instances of this class are used for writing LTOP MES files from the {@link ConverterWidget} of <tt>RyCON</tt>.
+ * A writer for writing LTOP MES files in the {@link ConverterWidget} of RyCON.
  *
  * @author sebastian
  * @version 2
  * @since 12
  */
-public class LtopMesWriter implements Writer {
+public class LtopMesWriter extends Writer {
 
     private static final Logger logger = LoggerFactory.getLogger(LtopMesWriter.class.getName());
 
     private final Path path;
-    private final ArrayList<String> readStringFile;
+    private final List<String> lines;
     private final WriteParameter parameter;
 
     /**
      * Constructs the {@link LtopMesWriter} with a set of parameters.
      *
-     * @param path           reader file object for writing
-     * @param readStringFile reader string file
-     * @param parameter      the writer parameter object
+     * @param path      file path to write into
+     * @param lines     read string based file
+     * @param parameter the writer parameter object
      */
-    public LtopMesWriter(Path path, ArrayList<String> readStringFile, WriteParameter parameter) {
+    public LtopMesWriter(Path path, List<String> lines, WriteParameter parameter) {
         this.path = path;
-        this.readStringFile = readStringFile;
+        this.lines = new ArrayList<>(lines);
         this.parameter = parameter;
     }
 
     /**
-     * Returns true if the prepared {@link SpreadsheetDocument} for file writing was written to the file system.
+     * Writes a LTOP MES file depends on the source file format.
      *
      * @return write success
      */
     @Override
-    public boolean writeSpreadsheetDocument() {
-        return false;
-    }
-
-    /**
-     * Returns the prepared {@link ArrayList} for file writing.
-     *
-     * @return array list for file writing
-     */
-    @Override
     public boolean writeStringFile() {
-        boolean success = false;
-        ArrayList<String> writeFile;
+        List<String> writeFile;
+
+        boolean useZenithDistance = StringUtils.parseBooleanValue(PreferenceKey.CONVERTER_SETTING_LTOP_USE_ZENITH_DISTANCE);
 
         switch (SourceButton.fromIndex(parameter.getSourceNumber())) {
             case GSI8:
+                // fall through for GSI8 format
             case GSI16:
-                Gsi2Mes gsi2Mes = new Gsi2Mes(readStringFile);
-                writeFile = gsi2Mes.convertGSI2MES(Boolean.parseBoolean(Main.pref.getUserPreference(
-                        PreferenceKeys.CONVERTER_SETTING_LTOP_USE_ZENITH_DISTANCE)));
+                Gsi2Mes gsi2Mes = new Gsi2Mes(lines);
+                writeFile = gsi2Mes.convert(useZenithDistance);
                 break;
 
             case ZEISS_REC:
-                Zeiss2Ltop zeiss2Ltop = new Zeiss2Ltop(readStringFile);
-                writeFile = zeiss2Ltop.convertZeiss2MES(Boolean.parseBoolean(Main.pref.getUserPreference(
-                        PreferenceKeys.CONVERTER_SETTING_LTOP_USE_ZENITH_DISTANCE)));
+                Zeiss2Ltop zeiss2Ltop = new Zeiss2Ltop(lines);
+                writeFile = zeiss2Ltop.convertZeiss2Mes(useZenithDistance);
                 break;
 
             default:
@@ -101,21 +90,7 @@ public class LtopMesWriter implements Writer {
                 logger.warn("Can not write {} file format to LTOP MES file.", SourceButton.fromIndex(parameter.getSourceNumber()));
         }
 
-        if (WriteFile2Disk.writeFile2Disk(path, writeFile, "", FileNameExtension.MES.getExtension())) {
-            success = true;
-        }
-
-        return success;
+        return WriteFile2Disk.writeFile2Disk(path, writeFile, "", FileNameExtension.MES.getExtension());
     }
 
-    /**
-     * Returns true if the prepared {@link Workbook} for file writing was written to the file system.
-     *
-     * @return write success
-     */
-    @Override
-    public boolean writeWorkbookFile() {
-        return false;
-    }
-
-} // end of LtopMesWriter
+}

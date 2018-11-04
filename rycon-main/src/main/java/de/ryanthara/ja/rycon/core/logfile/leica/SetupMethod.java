@@ -55,7 +55,6 @@ public enum SetupMethod {
      * Returns the current setup method from a given identifier string which is caught from the logfile.txt file.
      *
      * @param identifier identifier string from logfile.txt file
-     *
      * @return current SetupMethod
      */
     public static SetupMethod fromIdentifier(String identifier) {
@@ -89,4 +88,4 @@ public enum SetupMethod {
         return identifier;
     }
 
-} // end of SetupMethod
+}

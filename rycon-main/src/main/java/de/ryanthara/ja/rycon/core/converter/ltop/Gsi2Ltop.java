@@ -17,7 +17,7 @@
  */
 package de.ryanthara.ja.rycon.core.converter.ltop;
 
-import de.ryanthara.ja.rycon.core.converter.gsi.BaseToolsGsi;
+import de.ryanthara.ja.rycon.core.converter.gsi.GsiDecoder;
 import de.ryanthara.ja.rycon.core.elements.GsiBlock;
 import de.ryanthara.ja.rycon.core.elements.RyPoint;
 import de.ryanthara.ja.rycon.util.NumberFormatter;
@@ -25,10 +25,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Instances of this class provides functions to convert coordinate files from the
- * Leica GSI format (GSI8 and GSI16) into LTOP KOO files.
+ * A converter with functions to convert Leica Geosystems GSI format
+ * (GSI8 and GSI16) coordinate and measurement files into LTOP KOO files.
+ *
  * <p>
  * With a little 'intelligence' it is possible to create the needed coordinate file.
  *
@@ -39,37 +41,37 @@ import java.util.ArrayList;
 public class Gsi2Ltop {
     private static final Logger logger = LoggerFactory.getLogger(Gsi2Ltop.class.getName());
 
-    private final BaseToolsGsi baseToolsGsi;
+    private final GsiDecoder gsiDecoder;
 
     /**
-     * Class constructor for reader line based text files.
+     * Creates a converter with a list for the read line based
+     * Leica Geosystems GSI8 or GSI16 file.
      *
-     * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
+     * @param lines list with Leica Geosystems GSI8 or GSI16 lines
      */
-    public Gsi2Ltop(ArrayList<String> readStringLines) {
-        baseToolsGsi = new BaseToolsGsi(readStringLines);
+    public Gsi2Ltop(List<String> lines) {
+        gsiDecoder = new GsiDecoder(lines);
     }
 
     /**
-     * Converts a Leica GSI coordinate file into a KOO file for LTOP.
+     * Converts a Leica Geosystems GSI coordinate file into a KOO file for LTOP.
      * <p>
-     * In this <tt>RyCON</tt> version only the WIs 81 till 86 are supported.
+     * In this RyCON version only the WIs 81 till 86 are supported.
      *
      * @param eliminateDuplicates eliminate duplicate coordinates within 3cm radius
      * @param sortOutputFile      sort an output file by point number
-     *
      * @return converted KOO file
      */
-    public ArrayList<String> convertGsi2Koo(boolean eliminateDuplicates, boolean sortOutputFile) {
-        ArrayList<String> result = new ArrayList<>();
-        ArrayList<RyPoint> ryPoints = new ArrayList<>();
+    public List<String> convert(boolean eliminateDuplicates, boolean sortOutputFile) {
+        List<String> result = new ArrayList<>();
+        List<RyPoint> ryPoints = new ArrayList<>();
 
         String number, pointType, toleranceCategory, easting, northing, height, geoid, eta, xi;
         String resultLine;
 
         BaseToolsLtop.writeCommendLine(result, BaseToolsLtop.cartesianCoordsIdentifier);
 
-        for (ArrayList<GsiBlock> blocksAsLine : baseToolsGsi.getEncodedLinesOfGSIBlocks()) {
+        for (List<GsiBlock> blocksInLine : gsiDecoder.getDecodedLinesOfGsiBlocks()) {
             // prevent wrong output with empty strings of defined length from class
             number = BaseToolsLtop.number;
             pointType = BaseToolsLtop.pointType;
@@ -81,8 +83,8 @@ public class Gsi2Ltop {
             eta = BaseToolsLtop.eta;
             xi = BaseToolsLtop.xi;
 
-            for (int i = 0; i < baseToolsGsi.getFoundAllWordIndices().size(); i++) {
-                for (GsiBlock block : blocksAsLine) {
+            for (int i = 0; i < gsiDecoder.getDecodedLinesOfGsiBlocks().size(); i++) {
+                for (GsiBlock block : blocksInLine) {
                     String s = block.toPrintFormatCsv();
 
                     switch (block.getWordIndex()) {
@@ -91,27 +93,27 @@ public class Gsi2Ltop {
                             break;
 
                         case 81:        // easting E, column 33-44
-                            easting = String.format("%12s", NumberFormatter.fillDecimalPlace(s, 4));
+                            easting = String.format("%12s", NumberFormatter.fillDecimalPlaces(s, 4));
                             break;
 
                         case 82:        // northing N, column 45-56
-                            northing = String.format("%12s", NumberFormatter.fillDecimalPlace(s, 4));
+                            northing = String.format("%12s", NumberFormatter.fillDecimalPlaces(s, 4));
                             break;
 
                         case 83:        // height H, column 61-70
-                            height = String.format("%10s", NumberFormatter.fillDecimalPlace(s, 4));
+                            height = String.format("%10s", NumberFormatter.fillDecimalPlaces(s, 4));
                             break;
 
                         case 84:        // easting E0, column 33-44
-                            easting = String.format("%12s", NumberFormatter.fillDecimalPlace(s, 4));
+                            easting = String.format("%12s", NumberFormatter.fillDecimalPlaces(s, 4));
                             break;
 
                         case 85:        // northing N0, column 45-56
-                            northing = String.format("%12s", NumberFormatter.fillDecimalPlace(s, 4));
+                            northing = String.format("%12s", NumberFormatter.fillDecimalPlaces(s, 4));
                             break;
 
                         case 86:        // height H0, column 61-70
-                            height = String.format("%10s", NumberFormatter.fillDecimalPlace(s, 4));
+                            height = String.format("%10s", NumberFormatter.fillDecimalPlaces(s, 4));
                             break;
 
                         default:
@@ -137,7 +139,7 @@ public class Gsi2Ltop {
 
         result = eliminateDuplicates ? BaseToolsLtop.eliminateDuplicatePoints(ryPoints) : result;
 
-        return sortOutputFile ? BaseToolsLtop.sortResult(result) : result;
+        return sortOutputFile ? BaseToolsLtop.sortResult(result) : new ArrayList<>(result);
     }
 
-} // end of Gsi2Ltop
+}

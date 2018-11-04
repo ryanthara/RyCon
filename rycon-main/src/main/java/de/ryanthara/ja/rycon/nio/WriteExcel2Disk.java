@@ -18,8 +18,9 @@
 package de.ryanthara.ja.rycon.nio;
 
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
-import de.ryanthara.ja.rycon.i18n.Texts;
-import de.ryanthara.ja.rycon.i18n.Warnings;
+import de.ryanthara.ja.rycon.i18n.Text;
+import de.ryanthara.ja.rycon.i18n.Warning;
+import de.ryanthara.ja.rycon.nio.util.PathUtils;
 import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.eclipse.swt.SWT;
@@ -29,17 +30,24 @@ import org.eclipse.swt.widgets.Shell;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.TEXTS;
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.WARNINGS;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundle.TEXT;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundle.WARNING;
 
 /**
- * This class implements static file writing functions for line based files.
+ * Provides a function to write Microsoft Excel files to the file system.
  *
  * @author sebastian
  * @version 2
  * @since 12
  */
-public class WriteExcel2Disk {
+public final class WriteExcel2Disk {
+
+    /**
+     * WriteExcel2Disk is non-instantiable.
+     */
+    private WriteExcel2Disk() {
+        throw new AssertionError();
+    }
 
     /**
      * Writes a Microsoft Excel (.XLS or .XLSX) file from a {@link Workbook} to the file system and returns writer success.
@@ -47,11 +55,9 @@ public class WriteExcel2Disk {
      * @param path              path object
      * @param workbook          prepared {@link Workbook} for writing
      * @param filenameExtension filename extension
-     *
      * @return write success
      */
     public static boolean writeExcel2Disk(Path path, Workbook workbook, String filenameExtension) {
-        boolean writeSuccess;
         final Path outputFileName = PathUtils.prepareOutputFileName(path, "", filenameExtension);
         FileToolsExcel fileToolsExcel = new FileToolsExcel(workbook);
 
@@ -59,25 +65,23 @@ public class WriteExcel2Disk {
             final Shell shell = Display.getCurrent().getActiveShell();
 
             int returnValue = MessageBoxes.showMessageBox(shell, SWT.ICON_WARNING | SWT.YES | SWT.NO,
-                    ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.msgBox_Warning),
-                    String.format(ResourceBundleUtils.getLangString(WARNINGS, Warnings.fileExistsOverwrite), outputFileName));
+                    ResourceBundleUtils.getLangStringFromXml(TEXT, Text.msgBox_Warning),
+                    String.format(ResourceBundleUtils.getLangString(WARNING, Warning.fileExistsOverwrite), outputFileName));
 
             if (returnValue == SWT.YES) {
                 if (filenameExtension.equalsIgnoreCase(FileNameExtension.XLS.getExtension())) {
-                    writeSuccess = fileToolsExcel.writeXls(outputFileName);
+                    return fileToolsExcel.writeXls(outputFileName);
                 } else
-                    writeSuccess = filenameExtension.equalsIgnoreCase(FileNameExtension.XLSX.getExtension()) && fileToolsExcel.writeXlsx(outputFileName);
+                    return filenameExtension.equalsIgnoreCase(FileNameExtension.XLSX.getExtension()) && fileToolsExcel.writeXlsx(outputFileName);
             } else {
-                writeSuccess = false;
+                return false;
             }
         } else {
             if (filenameExtension.equalsIgnoreCase(FileNameExtension.XLS.getExtension())) {
-                writeSuccess = fileToolsExcel.writeXls(outputFileName);
+                return fileToolsExcel.writeXls(outputFileName);
             } else
-                writeSuccess = filenameExtension.equalsIgnoreCase(FileNameExtension.XLSX.getExtension()) && fileToolsExcel.writeXlsx(outputFileName);
+                return filenameExtension.equalsIgnoreCase(FileNameExtension.XLSX.getExtension()) && fileToolsExcel.writeXlsx(outputFileName);
         }
-
-        return writeSuccess;
     }
 
-} // end of WriteExcel2Disk
+}

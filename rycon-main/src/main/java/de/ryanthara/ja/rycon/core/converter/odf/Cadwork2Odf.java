@@ -25,10 +25,11 @@ import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Instances of this class provides functions to convert coordinate files from Cadwork CAD program into
- * an OpenDocument spreadsheet file.
+ * A converter with functions to convert Cadwork CAD program
+ * coordinate files into an OpenDocument spreadsheet file.
  *
  * @author sebastian
  * @version 2
@@ -38,17 +39,16 @@ public class Cadwork2Odf {
 
     private static final Logger logger = LoggerFactory.getLogger(Cadwork2Odf.class.getName());
 
-    private final ArrayList<String> readStringLines;
+    private final List<String> lines;
     private SpreadsheetDocument spreadsheetDocument;
 
     /**
-     * Constructs a new instance of this class for reader line based text files from Cadwork CAD program
-     * in node.dat file format.
+     * Creates a converter with a list for the read line based text file from Cadwork CAD program.
      *
-     * @param readStringLines {@code ArrayList<String>} with reader lines from node.dat file
+     * @param lines list with read node.dat lines
      */
-    public Cadwork2Odf(ArrayList<String> readStringLines) {
-        this.readStringLines = readStringLines;
+    public Cadwork2Odf(List<String> lines) {
+        this.lines = new ArrayList<>(lines);
     }
 
     /**
@@ -58,13 +58,11 @@ public class Cadwork2Odf {
      *
      * @param sheetName       name of the sheet (file name from input file)
      * @param writeCommentRow writer comment row
-     *
      * @return success conversion
      */
-    public boolean convertCadwork2Ods(Path sheetName, boolean writeCommentRow) {
+    public boolean convert(Path sheetName, boolean writeCommentRow) {
         int rowIndex = 0;
         int colIndex = 0;
-        String[] lineSplit;
 
         try {
             // prepare spreadsheet document
@@ -76,50 +74,41 @@ public class Cadwork2Odf {
 
             Cell cell;
 
-            // remove not needed headlines
-            readStringLines.subList(0, 3).clear();
+            removeHeadLines();
 
             if (writeCommentRow) {
-                lineSplit = readStringLines.get(0).trim().split("\\s+", -1);
-
-                for (String description : lineSplit) {
-                    cell = table.getCellByPosition(colIndex, rowIndex);
-                    cell.setStringValue(description);
-                    colIndex = colIndex + 1;
-                }
-                rowIndex = rowIndex + 1;
+                rowIndex = prepareCommentRow(rowIndex, colIndex, table);
             }
 
-            // remove furthermore the still not needed comment line
-            readStringLines.remove(0);
+            removeCommentLine();
 
-            for (String line : readStringLines) {
+            for (String line : lines) {
                 colIndex = 0;
 
-                lineSplit = line.trim().split("\\t", -1);
+                String[] cellValues = line.trim().split("\\t", -1);
 
                 cell = table.getCellByPosition(colIndex, rowIndex);      // No
-                cell.setStringValue(lineSplit[0]);
+                cell.setStringValue(cellValues[0]);
                 colIndex = colIndex + 1;
 
                 cell = table.getCellByPosition(colIndex, rowIndex);      // X
-                cell.setStringValue(lineSplit[1]);
+                cell.setStringValue(cellValues[1]);
                 colIndex = colIndex + 1;
 
                 cell = table.getCellByPosition(colIndex, rowIndex);      // Y
-                cell.setStringValue(lineSplit[2]);
+                cell.setStringValue(cellValues[2]);
                 colIndex = colIndex + 1;
 
                 cell = table.getCellByPosition(colIndex, rowIndex);      // Z
-                cell.setStringValue(lineSplit[3]);
+                cell.setStringValue(cellValues[3]);
                 colIndex = colIndex + 1;
 
                 cell = table.getCellByPosition(colIndex, rowIndex);      // Code
-                cell.setStringValue(lineSplit[4]);
+                cell.setStringValue(cellValues[4]);
                 colIndex = colIndex + 1;
 
                 cell = table.getCellByPosition(colIndex, rowIndex);      // Name
-                cell.setStringValue(lineSplit[5]);
+                cell.setStringValue(cellValues[5]);
                 rowIndex = rowIndex + 1;
             }
         } catch (RuntimeException e) {
@@ -132,6 +121,27 @@ public class Cadwork2Odf {
         return rowIndex > 1;
     }
 
+    private int prepareCommentRow(int rowIndex, int colIndex, Table table) {
+        Cell cell;
+        String[] descriptions = lines.get(0).trim().split("\\s+", -1);
+
+        for (String description : descriptions) {
+            cell = table.getCellByPosition(colIndex, rowIndex);
+            cell.setStringValue(description);
+            colIndex = colIndex + 1;
+        }
+        rowIndex = rowIndex + 1;
+        return rowIndex;
+    }
+
+    private void removeCommentLine() {
+        lines.remove(0);
+    }
+
+    private void removeHeadLines() {
+        lines.subList(0, 3).clear();
+    }
+
     /**
      * Returns the SpreadsheetDocument for writing it to a file.
      *
@@ -141,4 +151,4 @@ public class Cadwork2Odf {
         return this.spreadsheetDocument;
     }
 
-} // end of Cadwork2Odf
+}

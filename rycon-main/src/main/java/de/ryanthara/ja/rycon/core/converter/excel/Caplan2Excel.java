@@ -18,20 +18,21 @@
 package de.ryanthara.ja.rycon.core.converter.excel;
 
 import de.ryanthara.ja.rycon.core.elements.CaplanBlock;
-import de.ryanthara.ja.rycon.i18n.Columns;
+import de.ryanthara.ja.rycon.i18n.Column;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import de.ryanthara.ja.rycon.nio.FileFormat;
+import de.ryanthara.ja.rycon.util.StringUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.WorkbookUtil;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.COLUMN_NAMES;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundle.COLUMN_NAME;
 
 /**
- * Instances of this class provides functions to convert a Caplan K formatted coordinate file
- * into a Microsoft Excel file.
+ * A converter with functions to convert coordinate coordinate files from
+ * Caplan K program into Microsoft Excel files in XLS or XLSX format.
  *
  * @author sebastian
  * @version 1
@@ -39,40 +40,33 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.COLUMN_NAMES;
  */
 public class Caplan2Excel {
 
-    private final ArrayList<String> readStringLines;
+    private final List<String> lines;
     private Workbook workbook;
 
     /**
-     * Constructs a new instance of this class with the reader Caplan K file {@link ArrayList} string as parameter.
+     * Creates a converter with a list for the read line based Caplan K file.
      *
-     * @param readStringLines {@code ArrayList<String>} with lines in Caplan K format
+     * @param lines list with Caplan K formatted lines
      */
-    public Caplan2Excel(ArrayList<String> readStringLines) {
-        this.readStringLines = readStringLines;
+    public Caplan2Excel(List<String> lines) {
+        this.lines = new ArrayList<>(lines);
     }
 
     /**
      * Converts a Caplan K file element by element into a Microsoft Excel file.
      *
-     * @param isXLS           selector to distinguish between XLS and XLSX file extension
+     * @param fileFormat      distinguish between XLS and XLSX file format
      * @param sheetName       name of the sheet (file name from input file)
      * @param writeCommentRow writer comment row
-     *
      * @return success conversion success
      */
-    public boolean convertCaplan2Excel(boolean isXLS, String sheetName, boolean writeCommentRow) {
-        // general preparation of the workbook
-        if (isXLS) {
-            workbook = new HSSFWorkbook();
-        } else {
-            workbook = new XSSFWorkbook();
-        }
+    public boolean convert(FileFormat fileFormat, String sheetName, boolean writeCommentRow) {
+        workbook = BaseToolsExcel.prepareWorkbook(fileFormat);
 
         String safeName = WorkbookUtil.createSafeSheetName(sheetName);
         Sheet sheet = workbook.createSheet(safeName);
         Row row;
         Cell cell;
-        CellStyle cellStyle;
 
         DataFormat format = workbook.createDataFormat();
 
@@ -81,34 +75,10 @@ public class Caplan2Excel {
         short countColumns = 0;
 
         if (writeCommentRow) {
-            row = sheet.createRow(rowNumber);
-            rowNumber++;
-
-            cell = row.createCell(cellNumber);
-            cell.setCellValue(ResourceBundleUtils.getLangString(COLUMN_NAMES, Columns.pointNumber));
-            cellNumber++;
-
-            cell = row.createCell(cellNumber);
-            cell.setCellValue(ResourceBundleUtils.getLangString(COLUMN_NAMES, Columns.easting));
-            cellNumber++;
-
-            cell = row.createCell(cellNumber);
-            cell.setCellValue(ResourceBundleUtils.getLangString(COLUMN_NAMES, Columns.northing));
-            cellNumber++;
-
-            cell = row.createCell(cellNumber);
-            cell.setCellValue(ResourceBundleUtils.getLangString(COLUMN_NAMES, Columns.height));
-            cellNumber++;
-
-            cell = row.createCell(cellNumber);
-            cell.setCellValue(ResourceBundleUtils.getLangString(COLUMN_NAMES, Columns.object));
-            cellNumber++;
-
-            cell = row.createCell(cellNumber);
-            cell.setCellValue(ResourceBundleUtils.getLangString(COLUMN_NAMES, Columns.attribute));
+            rowNumber = prepareCommentRow(sheet, rowNumber, cellNumber);
         }
 
-        for (String line : readStringLines) {
+        for (String line : lines) {
             // skip empty lines directly after reading
             if (!line.trim().isEmpty()) {
                 row = sheet.createRow(rowNumber);
@@ -128,11 +98,8 @@ public class Caplan2Excel {
                     cell = row.createCell(cellNumber);
 
                     if (!caplanBlock.getEasting().equals("")) {
-                        cell.setCellValue(Double.parseDouble(caplanBlock.getEasting()));
-                        cellStyle = workbook.createCellStyle();
-                        cellStyle.setDataFormat(format.getFormat("#,##0.0000"));
-                        cellStyle.setAlignment(HorizontalAlignment.RIGHT);
-                        cell.setCellStyle(cellStyle);
+                        cell.setCellValue(StringUtils.parseDoubleValue(caplanBlock.getEasting()));
+                        BaseToolsExcel.setCellStyle(workbook, cell, format, Format.DIGITS_4.getString());
                     } else {
                         cell.setCellValue("");
                     }
@@ -144,11 +111,8 @@ public class Caplan2Excel {
                     cell = row.createCell(cellNumber);
 
                     if (!caplanBlock.getNorthing().equals("")) {
-                        cell.setCellValue(Double.parseDouble(caplanBlock.getNorthing()));
-                        cellStyle = workbook.createCellStyle();
-                        cellStyle.setDataFormat(format.getFormat("#,##0.0000"));
-                        cellStyle.setAlignment(HorizontalAlignment.RIGHT);
-                        cell.setCellStyle(cellStyle);
+                        cell.setCellValue(StringUtils.parseDoubleValue(caplanBlock.getNorthing()));
+                        BaseToolsExcel.setCellStyle(workbook, cell, format, Format.DIGITS_4.getString());
                     } else {
                         cell.setCellValue("");
                     }
@@ -160,11 +124,8 @@ public class Caplan2Excel {
                     cell = row.createCell(cellNumber);
 
                     if (!caplanBlock.getHeight().equals("")) {
-                        cell.setCellValue(Double.parseDouble(caplanBlock.getHeight()));
-                        cellStyle = workbook.createCellStyle();
-                        cellStyle.setDataFormat(format.getFormat("#,##0.0000"));
-                        cellStyle.setAlignment(HorizontalAlignment.RIGHT);
-                        cell.setCellStyle(cellStyle);
+                        cell.setCellValue(StringUtils.parseDoubleValue(caplanBlock.getHeight()));
+                        BaseToolsExcel.setCellStyle(workbook, cell, format, Format.DIGITS_4.getString());
                     } else {
                         cell.setCellValue("");
                     }
@@ -200,6 +161,37 @@ public class Caplan2Excel {
         return rowNumber > 1;
     }
 
+    private short prepareCommentRow(Sheet sheet, short rowNumber, short cellNumber) {
+        Row row;
+        Cell cell;
+        row = sheet.createRow(rowNumber);
+        rowNumber++;
+
+        cell = row.createCell(cellNumber);
+        cell.setCellValue(ResourceBundleUtils.getLangString(COLUMN_NAME, Column.pointNumber));
+        cellNumber++;
+
+        cell = row.createCell(cellNumber);
+        cell.setCellValue(ResourceBundleUtils.getLangString(COLUMN_NAME, Column.easting));
+        cellNumber++;
+
+        cell = row.createCell(cellNumber);
+        cell.setCellValue(ResourceBundleUtils.getLangString(COLUMN_NAME, Column.northing));
+        cellNumber++;
+
+        cell = row.createCell(cellNumber);
+        cell.setCellValue(ResourceBundleUtils.getLangString(COLUMN_NAME, Column.height));
+        cellNumber++;
+
+        cell = row.createCell(cellNumber);
+        cell.setCellValue(ResourceBundleUtils.getLangString(COLUMN_NAME, Column.object));
+        cellNumber++;
+
+        cell = row.createCell(cellNumber);
+        cell.setCellValue(ResourceBundleUtils.getLangString(COLUMN_NAME, Column.attribute));
+        return rowNumber;
+    }
+
     /**
      * Returns the Workbook for writing it to a file.
      *
@@ -209,4 +201,4 @@ public class Caplan2Excel {
         return this.workbook;
     }
 
-} // end of Caplan2Excel
+}

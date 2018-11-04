@@ -22,6 +22,8 @@ import de.ryanthara.ja.rycon.ui.preferences.editor.Editor;
 import de.ryanthara.ja.rycon.ui.preferences.editor.EditorSelection;
 import de.ryanthara.ja.rycon.ui.preferences.validator.Validator;
 
+import java.util.Objects;
+
 /**
  * {@code PreferenceSelection} is for selection values like combo used in RyCON.
  * <p>
@@ -41,13 +43,17 @@ public abstract class PreferenceSelection extends Preference<String> {
      *
      * @param label    text string of the preference
      * @param elements elements for the combo of the preference
+     * @throws NullPointerException     will be thrown if elements is null
+     * @throws IllegalArgumentException will be thrown if elements is empty
      */
     protected PreferenceSelection(String label, String... elements) {
         super(label);
         this.elements = elements;
 
-        if (elements == null || elements.length == 0) {
-            throw new IllegalArgumentException("Elements must not be empty");
+        Objects.requireNonNull(elements, "Element must not be empty");
+
+        if (elements.length == 0) {
+            throw new IllegalArgumentException("Element must not be empty");
         }
     }
 
@@ -57,12 +63,17 @@ public abstract class PreferenceSelection extends Preference<String> {
      * @param label        text string of the preference
      * @param elements     elements for the combo of the preference
      * @param defaultValue default value for the preference
+     * @throws NullPointerException     will be thrown if elements is null
+     * @throws IllegalArgumentException will be thrown if elements is empty
      */
     protected PreferenceSelection(String label, String[] elements, String defaultValue) {
         super(label, defaultValue);
         this.elements = elements;
-        if (elements == null || elements.length == 0) {
-            throw new IllegalArgumentException("Elements must not be empty");
+
+        Objects.requireNonNull(elements, "Element must not be empty");
+
+        if (elements.length == 0) {
+            throw new IllegalArgumentException("Element must not be empty");
         }
     }
 
@@ -86,4 +97,4 @@ public abstract class PreferenceSelection extends Preference<String> {
         return null;
     }
 
-} // end of PreferenceSelection
+}

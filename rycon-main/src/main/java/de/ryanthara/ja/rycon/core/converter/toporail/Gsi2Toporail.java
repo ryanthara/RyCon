@@ -17,16 +17,19 @@
  */
 package de.ryanthara.ja.rycon.core.converter.toporail;
 
-import de.ryanthara.ja.rycon.core.converter.gsi.BaseToolsGsi;
+import de.ryanthara.ja.rycon.core.converter.Separator;
+import de.ryanthara.ja.rycon.core.converter.gsi.GsiDecoder;
 import de.ryanthara.ja.rycon.core.elements.GsiBlock;
+import de.ryanthara.ja.rycon.nio.FileFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * This class provides functions to convert Leica GSI formatted files into
- * a text formatted measurement or coordinate file for Toporail.
+ * A converter with functions to convert measurement files from Leica Geosystems
+ * GSI into a text formatted measurement or coordinate file for Toporail.
  *
  * @author sebastian
  * @version 1
@@ -38,16 +41,16 @@ public class Gsi2Toporail {
 
     private static final String variant = "B";
 
-    private final BaseToolsGsi baseToolsGsi;
+    private final GsiDecoder gsiDecoder;
 
     /**
-     * Class constructor for reader line based GSI files.
+     * Creates a converter with a list for the read line based
+     * Leica Geosystems GSI8 or GSI16 file.
      *
-     * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
+     * @param lines list with Leica Geosystems GSI8 or GSI16 lines
      */
-    public Gsi2Toporail(ArrayList<String> readStringLines) {
-        baseToolsGsi = new BaseToolsGsi(readStringLines);
-
+    public Gsi2Toporail(List<String> lines) {
+        gsiDecoder = new GsiDecoder(lines);
     }
 
     /**
@@ -55,20 +58,19 @@ public class Gsi2Toporail {
      * <p>
      * With a parameter it is possible to distinguish between the MEP or PTS file.
      *
-     * @param fileType file type of the read file
-     *
-     * @return converted {@code ArrayList<String>} with lines of text format
+     * @param fileFormat file type of the read file
+     * @return converted {@code List<String>} with lines of text format
      */
-    public ArrayList<String> convertGsi2Toporail(FileType fileType) {
-        if (fileType == FileType.MEP) {
+    public List<String> convertGsi2Toporail(FileFormat fileFormat) {
+        if (fileFormat == FileFormat.MEP) {
             return convertGsi2Mep();
         } else {
             return convertGsi2Pts();
         }
     }
 
-    private ArrayList<String> convertGsi2Mep() {
-        ArrayList<String> result = new ArrayList<>();
+    private List<String> convertGsi2Mep() {
+        List<String> result = new ArrayList<>();
 
         final String fileHeader = "MEP" + variant;
         final String sep = "\t";
@@ -102,17 +104,17 @@ public class Gsi2Toporail {
         /*
 
         ArrayList<GsiBlock> blocks;
-        ArrayList<ArrayList<GsiBlock>> blocksInLines = new ArrayList<>();
+        List<List<GsiBlock>> blocksInLines = new ArrayList<>();
 
         // check for being a valid Toporail coordinate file
-        if (readStringLines.get(0).startsWith("@MEP")) {
+        if (lines.get(0).startsWith("@MEP")) {
 
             int lineCounter = 1;
 
             // skip first line
-            for (int i = 1; i < readStringLines.size(); i++) {
+            for (int i = 1; i < lines.size(); i++) {
                 blocks = new ArrayList<>();
-                String[] tokens = readStringLines.get(i).split("\t");
+                String[] tokens = lines.get(i).split("\t");
 
                 switch (tokens[0]) {
                     case "K": // control measurement line
@@ -136,7 +138,7 @@ public class Gsi2Toporail {
                     lineCounter = lineCounter + 1;
 
                     // sort every 'line' of GSI blocks by word index (WI)
-                    SortHelper.sortByWordIndex(blocks);
+                    SortUtils.sortByWordIndex(blocks);
 
                     blocksInLines.add(blocks);
                 }
@@ -150,7 +152,7 @@ public class Gsi2Toporail {
         // TODO implement comment handling
         final String commentString = null; // comment lines starts with ':'
 
-        for (ArrayList<GsiBlock> blocksAsLine : baseToolsGsi.getEncodedLinesOfGSIBlocks()) {
+        for (List<GsiBlock> blocksInLine : gsiDecoder.getDecodedLinesOfGsiBlocks()) {
             // helpers
             String numericCode = "";
             String pointNumber = "";
@@ -163,8 +165,8 @@ public class Gsi2Toporail {
             String overhauling = "";
             String azimuth = "";
 
-            // blocksAsLine is sorted!
-            for (GsiBlock block : blocksAsLine) {
+            // blocksInLine is sorted!
+            for (GsiBlock block : blocksInLine) {
                 switch (block.getWordIndex()) {
                     case 11: // point number
                         pointNumber = block.toPrintFormatCsv();
@@ -222,11 +224,11 @@ public class Gsi2Toporail {
 
         }
 
-        return result;
+        return List.copyOf(result);
     }
 
-    private ArrayList<String> convertGsi2Pts() {
-        ArrayList<String> result = new ArrayList<>();
+    private List<String> convertGsi2Pts() {
+        List<String> result = new ArrayList<>();
 
         final String fileHeader = "PTS" + variant;
         final String sep = "\t";
@@ -234,7 +236,7 @@ public class Gsi2Toporail {
         // TODO implement comment handling
         final String commentString = null; // comment lines starts with ':'
 
-        for (ArrayList<GsiBlock> blocksAsLine : baseToolsGsi.getEncodedLinesOfGSIBlocks()) {
+        for (List<GsiBlock> blocksInLine : gsiDecoder.getDecodedLinesOfGsiBlocks()) {
             // helpers
             String numericCode = "";
             String pointNumber = "";
@@ -247,8 +249,8 @@ public class Gsi2Toporail {
             String overhauling = "";
             String azimuth = "";
 
-            // blocksAsLine is sorted!
-            for (GsiBlock block : blocksAsLine) {
+            // blocksInLine is sorted!
+            for (GsiBlock block : blocksInLine) {
                 switch (block.getWordIndex()) {
                     case 11: // point number
                         pointNumber = block.toPrintFormatCsv();
@@ -298,15 +300,24 @@ public class Gsi2Toporail {
 
             // one or more values are set
             if (values.length() > 0) {
-                final String resultLine = numericCode + "\t" + pointNumber + "\t" + easting + "\t" + northing + "\t"
-                        + height + "\t" + date + "\t" + author + "\t" + comment + "\t" + overhauling + "\t" + azimuth;
+                final String resultLine =
+                        numericCode + Separator.TABULATOR
+                                + pointNumber + Separator.TABULATOR
+                                + easting + Separator.TABULATOR
+                                + northing + Separator.TABULATOR
+                                + height + Separator.TABULATOR
+                                + date + Separator.TABULATOR
+                                + author + Separator.TABULATOR
+                                + comment + Separator.TABULATOR
+                                + overhauling + Separator.TABULATOR
+                                + azimuth;
 
                 result.add(resultLine);
             }
 
         }
 
-        return result;
+        return List.copyOf(result);
     }
 
-} // end of Gsi2Toporail
+}

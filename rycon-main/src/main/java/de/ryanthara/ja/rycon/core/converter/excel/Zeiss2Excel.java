@@ -19,18 +19,18 @@ package de.ryanthara.ja.rycon.core.converter.excel;
 
 import de.ryanthara.ja.rycon.core.converter.zeiss.ZeissDecoder;
 import de.ryanthara.ja.rycon.core.elements.ZeissBlock;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import de.ryanthara.ja.rycon.nio.FileFormat;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.WorkbookUtil;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * This class provides functions to convert measurement files from Zeiss REC format
+ * A converter with functions to convert measurement and coordinate files from Zeiss REC format
  * and it's dialects (R4, R5, REC500 and M5) into Microsoft Excel (XLS and XLSX) files.
  *
  * @author sebastian
@@ -39,34 +39,33 @@ import java.util.ArrayList;
  */
 public class Zeiss2Excel {
 
-    private final ArrayList<String> readStringLines;
+    private final List<String> lines;
     private Workbook workbook = null;
 
     /**
-     * Class constructor for reader line based text files in different formats.
+     * Creates a converter with a list for the read line based
+     * text files in the Zeiss REC format and it's dialects.
      *
-     * @param readStringLines {@code ArrayList<String>} with lines in text format
+     * <p>
+     * The differentiation of the content is done by the called
+     * method and it's content analyze functionality.
+     *
+     * @param lines list with Zeiss REC format lines
      */
-    public Zeiss2Excel(ArrayList<String> readStringLines) {
-        this.readStringLines = readStringLines;
+    public Zeiss2Excel(List<String> lines) {
+        this.lines = new ArrayList<>(lines);
     }
 
     /**
      * Convert a Zeiss REC file element by element into an Excel file.
      *
-     * @param isXLS           selector to distinguish between XLS and XLSX file extension
+     * @param fileFormat      distinguish between XLS and XLSX file format
      * @param sheetName       name of the sheet (file name from input file)
      * @param writeCommentRow writer comment row
-     *
      * @return success conversion success
      */
-    public boolean convertZeiss2Excel(boolean isXLS, String sheetName, boolean writeCommentRow) {
-        // general preparation of the workbook
-        if (isXLS) {
-            workbook = new HSSFWorkbook();
-        } else {
-            workbook = new XSSFWorkbook();
-        }
+    public boolean convert(FileFormat fileFormat, String sheetName, boolean writeCommentRow) {
+        workbook = BaseToolsExcel.prepareWorkbook(fileFormat);
 
         String safeName = WorkbookUtil.createSafeSheetName(sheetName);
         Sheet sheet = workbook.createSheet(safeName);
@@ -80,7 +79,7 @@ public class Zeiss2Excel {
         short cellNumber;
         short countColumns = 0;
 
-        // TODO implement comment row and multi line stored values
+        // TODO implement comment row and multi line stored values with prepareCommentRow()
 
         /*
         if (writeCommentRow) {
@@ -112,7 +111,7 @@ public class Zeiss2Excel {
         }
         */
 
-        for (String line : readStringLines) {
+        for (String line : lines) {
 
             // skip empty lines directly after reading
             if (!line.trim().isEmpty()) {
@@ -153,4 +152,4 @@ public class Zeiss2Excel {
         return this.workbook;
     }
 
-} // end of Zeiss2Excel
+}

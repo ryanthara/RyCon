@@ -17,20 +17,21 @@
  */
 package de.ryanthara.ja.rycon.core.converter.csv;
 
-import de.ryanthara.ja.rycon.core.converter.gsi.BaseToolsGsi;
+import de.ryanthara.ja.rycon.core.converter.gsi.GsiDecoder;
 import de.ryanthara.ja.rycon.core.elements.GsiBlock;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
-import de.ryanthara.ja.rycon.i18n.WordIndices;
+import de.ryanthara.ja.rycon.i18n.WordIndex;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.TreeSet;
+import java.util.List;
+import java.util.Set;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.WORDINDICES;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundle.WORDINDEX;
 
 /**
- * This class provides functions to convert measurement files from Leica GSI format (GSI8 and GSI16)
- * into a comma separated values (csv) file.
+ * A converter with functions to convert Leica Geosystems GSI format (GSI8 and GSI16)
+ * coordinate and measurement files into comma separated values (CSV) files.
  *
  * @author sebastian
  * @version 1
@@ -38,15 +39,16 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.WORDINDICES;
  */
 public class Gsi2Csv {
 
-    private final BaseToolsGsi baseToolsGsi;
+    private final GsiDecoder gsiDecoder;
 
     /**
-     * Class constructor for reader line based text files in Leica GSI format (GSI8 or GSI16).
+     * Creates a converter with a list for the read line based
+     * Leica Geosystems GSI8 or GSI16 file.
      *
-     * @param readStringLines {@code ArrayList<String>} with lines in text format
+     * @param lines list with Leica Geosystems GSI8 or GSI16 lines
      */
-    public Gsi2Csv(ArrayList<String> readStringLines) {
-        baseToolsGsi = new BaseToolsGsi(readStringLines);
+    public Gsi2Csv(List<String> lines) {
+        gsiDecoder = new GsiDecoder(lines);
     }
 
     /**
@@ -56,12 +58,11 @@ public class Gsi2Csv {
      *
      * @param separator        separator sign as {@code String}
      * @param writeCommentLine if comment line should be written
-     *
-     * @return converted {@code ArrayList<String>} with lines of text format
+     * @return converted {@code List<String>} with lines of text format
      */
-    public ArrayList<String> convertGSI2CSV(String separator, boolean writeCommentLine) {
-        ArrayList<String> result = new ArrayList<>();
-        TreeSet<Integer> foundWordIndices = baseToolsGsi.getFoundAllWordIndices();
+    public List<String> convert(String separator, boolean writeCommentLine) {
+        List<String> result = new ArrayList<>();
+        Set<Integer> foundWordIndices = gsiDecoder.getFoundWordIndices();
 
         // prepare comment line if necessary
         if (writeCommentLine) {
@@ -70,7 +71,7 @@ public class Gsi2Csv {
             int counter = 0;
 
             for (Integer wordIndex : foundWordIndices) {
-                builder.append(ResourceBundleUtils.getLangString(WORDINDICES, WordIndices.valueOf("WI"+wordIndex)));
+                builder.append(ResourceBundleUtils.getLangString(WORDINDEX, WordIndex.valueOf("WI" + wordIndex)));
 
                 if (counter < foundWordIndices.size() - 1) {
                     builder.append(separator);
@@ -82,7 +83,7 @@ public class Gsi2Csv {
             result.add(0, builder.toString());
         }
 
-        for (ArrayList<GsiBlock> blocksInLine : baseToolsGsi.getEncodedLinesOfGSIBlocks()) {
+        for (List<GsiBlock> blocksInLine : gsiDecoder.getDecodedLinesOfGsiBlocks()) {
             String newLine = "";
 
             Iterator<Integer> it = foundWordIndices.iterator();
@@ -108,7 +109,7 @@ public class Gsi2Csv {
             result.add(newLine);
         }
 
-        return result;
+        return List.copyOf(result);
     }
 
-} // end of Gsi2Csv
+}

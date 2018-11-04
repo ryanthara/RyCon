@@ -18,9 +18,10 @@
 package de.ryanthara.ja.rycon.core.converter.gsi;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Instances of this class provides functions to convert between Leica GSI8 and GSI16 vice versa.
+ * A converter with functions to convert between Leica Geosystems GSI8 and GSI16 vice versa.
  *
  * @author sebastian
  * @version 1
@@ -28,15 +29,16 @@ import java.util.ArrayList;
  */
 public class Gsi8vsGsi16 {
 
-    private final ArrayList<String> readStringLines;
+    private final List<String> lines;
 
     /**
-     * Constructs a new instance of this class with a parameter for the reader line based GSI formatted files.
+     * Creates a converter with a list for the read line based
+     * Leica Geosystems GSI8 or GSI16 file.
      *
-     * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
+     * @param lines list with Leica Geosystems GSI8 or GSI16 lines
      */
-    public Gsi8vsGsi16(ArrayList<String> readStringLines) {
-        this.readStringLines = readStringLines;
+    public Gsi8vsGsi16(List<String> lines) {
+        this.lines = new ArrayList<>(lines);
     }
 
     /**
@@ -46,11 +48,11 @@ public class Gsi8vsGsi16 {
      * @param sortOutputFileByNumber ascending sort for output file
      * @return converted GSI file
      */
-    public ArrayList<String> convertGSI8vsGSI16(boolean isGSI16, boolean sortOutputFileByNumber) {
-        BaseToolsGsi baseToolsGsi = new BaseToolsGsi(readStringLines);
-        ArrayList<String> result = BaseToolsGsi.lineTransformation(isGSI16, baseToolsGsi.getEncodedLinesOfGSIBlocks());
+    public List<String> convert(boolean isGSI16, boolean sortOutputFileByNumber) {
+        GsiDecoder gsiDecoder = new GsiDecoder(lines);
+        List<String> result = BaseToolsGsi.lineTransformation(isGSI16, gsiDecoder.getDecodedLinesOfGsiBlocks());
 
-        return sortOutputFileByNumber ? BaseToolsGsi.sortResult(result) : result;
+        return sortOutputFileByNumber ? BaseToolsGsi.sortResult(result) : new ArrayList<>(result);
     }
 
-} // end of Gsi8vsGsi16
+}

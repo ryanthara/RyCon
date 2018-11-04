@@ -21,9 +21,9 @@ import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
-import de.ryanthara.ja.rycon.i18n.Errors;
+import de.ryanthara.ja.rycon.i18n.Error;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
-import de.ryanthara.ja.rycon.i18n.Texts;
+import de.ryanthara.ja.rycon.i18n.Text;
 import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
 import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
 import org.eclipse.swt.SWT;
@@ -35,28 +35,29 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.ERRORS;
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.TEXTS;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundle.ERROR;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundle.TEXT;
 
 /**
- * Instances of this class are used for reading coordinate files (CSV format) from the geodata server
- * Kanton Basel Stadt (Switzerland) from the {@link ConverterWidget} of <tt>RyCON</tt>.
+ * A reader for reading coordinate files from the geodata server Kanton Basel
+ * Stadt (Switzerland) in the {@link ConverterWidget} of RyCON.
  *
  * @author sebastian
  * @version 2
  * @since 12
  */
-public class BaselStadtCsvReader implements Reader {
+public class BaselStadtCsvReader extends Reader {
 
     private static final Logger logger = LoggerFactory.getLogger(BaselStadtCsvReader.class.getName());
+
     private final Shell innerShell;
-    private List<String[]> readCsvFile;
+    private List<String[]> csv;
 
     /**
-     * Constructs a new instance of this class given a reference to the inner shell of the calling object.
+     * Constructs a new reader with a reference to the shell of the calling object.
      *
      * @param innerShell reference to the inner shell
      */
@@ -65,30 +66,13 @@ public class BaselStadtCsvReader implements Reader {
     }
 
     /**
-     * Returns the reader CSV lines as {@link List}.
-     * * <p>
-     * This method is used vice versa with the method {@link #getReadStringLines()}. The one which is not used,
-     * returns null for indication.
+     * Returns the read csv lines as {@link List}.
      *
-     * @return reader CSV lines
+     * @return read csv lines
      */
     @Override
-    public List<String[]> getReadCsvFile() {
-        return readCsvFile;
-    }
-
-    /**
-     * Returns the reader string lines as {@link ArrayList}.
-     * <p>
-     * This method is used vice versa with the method {@link #getReadCsvFile()}. The one which is not used,
-     * returns null for indication.
-     *
-     * @return reader string lines
-     */
-    @Override
-    // TODO correct return null
-    public ArrayList<String> getReadStringLines() {
-        return null;
+    public List<String[]> getCsv() {
+        return List.copyOf(csv);
     }
 
     /**
@@ -100,7 +84,7 @@ public class BaselStadtCsvReader implements Reader {
      */
     @Override
     public boolean readFile(Path file2Read) {
-        boolean success = false;
+        Objects.requireNonNull(file2Read, "path must not be null");
 
         try {
             /* This should be the preferred method of creating a Reader as there are so many possible values to be set it is
@@ -117,18 +101,18 @@ public class BaselStadtCsvReader implements Reader {
                             .withCSVParser(parser)
                             .build();
 
-            readCsvFile = reader.readAll();
+            csv = reader.readAll();
 
-            success = true;
+            return true;
         } catch (IOException e) {
             logger.error("Basel Stadt CSV file '{}' could not be read.", file2Read.toString());
 
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR,
-                    ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.msgBox_Error),
-                    ResourceBundleUtils.getLangString(ERRORS, Errors.csvBSReadingFailed));
-        }
+                    ResourceBundleUtils.getLangStringFromXml(TEXT, Text.msgBox_Error),
+                    ResourceBundleUtils.getLangString(ERROR, Error.csvBSReadingFailed));
 
-        return success;
+            return false;
+        }
     }
 
-} // end of BaselStadtCsvReader
+}

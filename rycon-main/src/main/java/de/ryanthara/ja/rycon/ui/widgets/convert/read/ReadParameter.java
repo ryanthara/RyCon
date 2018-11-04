@@ -18,16 +18,15 @@
 package de.ryanthara.ja.rycon.ui.widgets.convert.read;
 
 /**
- * Instances of this class holds parameter for the reading classes in
- * the package {@link de.ryanthara.ja.rycon.ui.widgets.convert.read}
- * and returns them with getter methods.
+ * A parameter store for the reading classes in the package
+ * {@link de.ryanthara.ja.rycon.ui.widgets.convert.read}.
  *
  * @author sebastian
  * @version 1
  * @since 27
  */
+// TODO check the usage of all parameters -> delete them
 public class ReadParameter {
-
     private final boolean sourceContainsCode;
     private final boolean useSemicolonSeparator;
     private final boolean useZeroHeightsFromCadwork;
@@ -72,4 +71,4 @@ public class ReadParameter {
         return useZeroHeightsFromCadwork;
     }
 
-} // end of ReadParameter
+}

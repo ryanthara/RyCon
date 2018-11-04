@@ -17,14 +17,15 @@
  */
 package de.ryanthara.ja.rycon.core.converter.caplan;
 
+import de.ryanthara.ja.rycon.core.converter.Separator;
 import de.ryanthara.ja.rycon.util.NumberFormatter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Instances of this class provides functions to convert comma separated files (CSV) formatted coordinate files
- * from the geodata server Basel Stadt (Switzerland) into comma separated files (CSV).
+ * A converter with functions to convert coordinate files from
+ * the geodata server Basel Stadt (Switzerland) into Caplan K files.
  *
  * @author sebastian
  * @version 1
@@ -32,16 +33,16 @@ import java.util.List;
  */
 public class CsvBaselStadt2K {
 
-    private final List<String[]> readCSVLines;
+    private final List<String[]> lines;
 
     /**
-     * Constructs a new instance of this class with a parameter for reader line based comma separated values (CSV) files
-     * from the geodata server Basel Stadt (Switzerland).
+     * Creates a converter with a list for the read line based comma separated
+     * values (CSV) file from the geodata server Basel Stadt (Switzerland).
      *
-     * @param readCSVLines {@code List<String[]>} with lines as {@code String[]}
+     * @param lines list with lines as string array
      */
-    public CsvBaselStadt2K(List<String[]> readCSVLines) {
-        this.readCSVLines = readCSVLines;
+    public CsvBaselStadt2K(List<String[]> lines) {
+        this.lines = new ArrayList<>(lines);
     }
 
     /**
@@ -50,20 +51,18 @@ public class CsvBaselStadt2K {
      *
      * @param useSimpleFormat  option to writer a reduced K file which is compatible to Z+F LaserControl
      * @param writeCommentLine option to writer a comment line into the K file with basic information
-     *
-     * @return converted K file as {@code ArrayList<String>}
+     * @return converted K file as {@code List<String>}
      */
-    public ArrayList<String> convertCSVBaselStadt2K(boolean useSimpleFormat, boolean writeCommentLine) {
-        ArrayList<String> result = new ArrayList<>();
+    public List<String> convert(boolean useSimpleFormat, boolean writeCommentLine) {
+        List<String> result = new ArrayList<>();
 
         if (writeCommentLine) {
             BaseToolsCaplanK.writeCommentLine(result);
         }
 
-        // remove comment line
-        readCSVLines.remove(0);
+        removeHeadLine();
 
-        for (String[] stringField : readCSVLines) {
+        for (String[] values : lines) {
             int valencyIndicator;
 
             String valency = BaseToolsCaplanK.valency;
@@ -71,28 +70,25 @@ public class CsvBaselStadt2K {
             String objectTyp = BaseToolsCaplanK.objectTyp;
 
             // point number (no '*', ',' and ';'), column 1 - 16
-            String number = BaseToolsCaplanK.cleanPointNumberString(stringField[0].replaceAll("\\s+", "").trim());
+            String number = BaseToolsCaplanK.cleanPointNumberString(values[0].replaceAll("\\s+", "").trim());
 
             // easting E, column 19-32
-            String easting = String.format("%14s", NumberFormatter.fillDecimalPlace(stringField[2], 4));
+            String easting = String.format("%14s", NumberFormatter.fillDecimalPlaces(values[2], 4));
 
             // northing N, column 33-46
-            String northing = String.format("%14s", NumberFormatter.fillDecimalPlace(stringField[3], 4));
+            String northing = String.format("%14s", NumberFormatter.fillDecimalPlaces(values[3], 4));
             valencyIndicator = 3;
 
             // height (Z) is in column 5, but not always valued
             String height = "";
-            if (!stringField[4].equals("")) {
+            if (!values[4].equals("")) {
                 // height H, column 47-59
-                height = String.format("%13s", NumberFormatter.fillDecimalPlace(stringField[4], 5));
-                Double d = Double.parseDouble(height);
-                if (d != 0d) {
-                    valencyIndicator += 4;
-                }
+                height = String.format("%13s", NumberFormatter.fillDecimalPlaces(values[4], 5));
+                valencyIndicator = BaseToolsCaplanK.getValencyIndicator(valencyIndicator, height);
             }
 
             if (valencyIndicator > 0) {
-                valency = " ".concat(Integer.toString(valencyIndicator));
+                valency = Separator.WHITESPACE.getSign().concat(Integer.toString(valencyIndicator));
             }
 
             /*
@@ -102,7 +98,11 @@ public class CsvBaselStadt2K {
             result.add(BaseToolsCaplanK.prepareCaplanLine(useSimpleFormat, number, valency, easting, northing, height,
                     freeSpace, objectTyp).toString());
         }
-        return result;
+        return List.copyOf(result);
     }
 
-} // end of CsvBaselStadt2K
+    private void removeHeadLine() {
+        lines.remove(0);
+    }
+
+}

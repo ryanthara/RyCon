@@ -74,4 +74,4 @@ public abstract class PreferenceText extends Preference<String> {
         return new ValidatorString();
     }
 
-} // end of PreferenceText
+}

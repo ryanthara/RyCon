@@ -17,10 +17,11 @@
  */
 package de.ryanthara.ja.rycon.core.converter;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
- * This describes the minimum function of a converter for the levelling to cad widget of <tt>RyCON</tt>.
+ * This describes the minimum function of a converter class for the
+ * {@link de.ryanthara.ja.rycon.ui.widgets.ConverterWidget} of RyCON.
  *
  * @author sebastian
  * @version 1
@@ -29,16 +30,16 @@ import java.util.ArrayList;
 public abstract class Converter {
 
     /**
-     * The separator sign which is used for the intermediate step within the 2Asc conversion
-     * to establish point numbers with whitespace characters.
+     * Use a special separator sign for an intermediate step within the '*2Asc'
+     * conversion to establish point numbers with whitespace characters.
      */
-    public static final String SEPARATOR = "'°_°'";
+    public static final String SEPARATOR = "<(-.-)>";
 
     /**
-     * Does the conversion and returns the result as {@code ArrayList<String>}.
+     * Does the conversion and returns the result as {@code List<String>}.
      *
      * @return the converted lines
      */
-    public abstract ArrayList<String> convert();
+    public abstract List<String> convert();
 
-} // end of Converter
+}

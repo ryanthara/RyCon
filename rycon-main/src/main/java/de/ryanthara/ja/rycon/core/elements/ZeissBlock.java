@@ -71,4 +71,4 @@ public class ZeissBlock {
         return value;
     }
 
-}  // end of ZeissBlock
+}

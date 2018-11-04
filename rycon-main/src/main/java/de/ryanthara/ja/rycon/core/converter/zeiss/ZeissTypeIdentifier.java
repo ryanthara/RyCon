@@ -37,12 +37,12 @@ public enum ZeissTypeIdentifier {
     dx("dx"),     // x gape, coordinate difference
     dy("dy"),     // y gape, coordinate difference
     dz("dz"),     // z gape, coordinate difference
-    dX("dX"),     // x gape at a helmert core.core.transformation
-    dY("dY"),     // y gape at a helmert core.core.transformation
+    dX("dX"),     // x gape at a helmert core.core.transformer
+    dY("dY"),     // y gape at a helmert core.core.transformer
     dZ("dZ"),     // height difference
     E("E "),     // horizontal distance
     Ea("Ea"),     // maximum target distance at levelling
-    ep("ep"),     // rotation of the helmert core.core.transformation
+    ep("ep"),     // rotation of the helmert core.core.transformer
     F("F "),     // temperature in Fahrenheit
     Fl("Fl"),     // area in square metres
     HD("HD"),     // horizontal distance
@@ -70,7 +70,7 @@ public enum ZeissTypeIdentifier {
     mz("mz"),     // average error/point defect z direction
     np("np"),     // number of surface corner points
     O("O "),     // transverse at indirect height determination
-    o("o "),     // parameter of the helmert core.core.transformation
+    o("o "),     // parameter of the helmert core.core.transformer
     P("P "),     // air pressure 0=hPa or Torr, 1=InMerc
     PI("PI"),     // point identification
     Ps("Ps"),     // point identification for station coordinates
@@ -125,8 +125,8 @@ public enum ZeissTypeIdentifier {
      */
     de("de"),     // coordinate difference (easting)
     dn("dn"),     // coordinate difference (northing)
-    dE("dE"),     // coordinate difference (easting gap) at helmert core.core.transformation
-    dN("dN"),     // coordinate difference (northing gap) at helmert core.core.transformation
+    dE("dE"),     // coordinate difference (easting gap) at helmert core.core.transformer
+    dN("dN"),     // coordinate difference (northing gap) at helmert core.core.transformer
     Db("Db"),     // levelling: total of backsight distances
     Df("Df"),     // levelling: total of foresight distance
     dR("dR"),     // levelling station difference
@@ -158,7 +158,6 @@ public enum ZeissTypeIdentifier {
      * Returns the type identifier string.
      *
      * @return the type identifier string
-     *
      * @see java.lang.Enum#toString()
      */
     @Override
@@ -166,4 +165,4 @@ public enum ZeissTypeIdentifier {
         return typeIdentifier;
     }
 
-} // end of ZeissTypeIdentifier
+}

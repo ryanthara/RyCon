@@ -20,45 +20,49 @@ package de.ryanthara.ja.rycon.ui.widgets.convert.read;
 import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Interface for reading operations in the {@link ConverterWidget}.
  *
  * @author sebastian
- * @version 1
+ * @version 2
  * @since 12
  */
-public interface Reader {
+public abstract class Reader {
 
     /**
-     * Returns the reader CSV lines as {@link List}.
-     * * <p>
-     * This method is used vice versa with the method {@link #getReadStringLines()}. The one which is not used,
-     * returns null for indication.
+     * Returns the read string lines as {@link List}.
      *
-     * @return reader CSV lines
-     */
-    List<String[]> getReadCsvFile();
-
-    /**
-     * Returns the reader string lines as {@link ArrayList}.
      * <p>
-     * This method is used vice versa with the method {@link #getReadCsvFile()}. The one which is not used,
-     * returns null for indication.
+     * This method is used vice versa with the method {@link #getLines()}. The one which is not used,
+     * returns an empty list for indication.
      *
-     * @return reader string lines
+     * @return read string lines
      */
-    ArrayList<String> getReadStringLines();
+    public List<String[]> getCsv() {
+        return List.of();
+    }
+
+    /**
+     * Returns the read string lines as {@link List}.
+     *
+     * <p>
+     * This method is used vice versa with the method {@link #getCsv()}. The one which is not used,
+     * returns an empty list for indication.
+     *
+     * @return read string lines
+     */
+    public List<String> getLines() {
+        return List.of();
+    }
 
     /**
      * Reads the ... file from ... given as parameter and returns the read file success.
      *
      * @param file2Read {@link Path} reference to file
-     *
      * @return read file success
      */
-    boolean readFile(Path file2Read);
+    public abstract boolean readFile(Path file2Read);
 
-} // end of Reader
+}

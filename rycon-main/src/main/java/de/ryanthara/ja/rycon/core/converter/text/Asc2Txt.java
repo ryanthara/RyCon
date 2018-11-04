@@ -18,16 +18,20 @@
 package de.ryanthara.ja.rycon.core.converter.text;
 
 import de.ryanthara.ja.rycon.core.converter.Converter;
-import de.ryanthara.ja.rycon.ui.util.StringHelper;
+import de.ryanthara.ja.rycon.core.converter.Separator;
+import de.ryanthara.ja.rycon.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
- * Instances of this class provides functions to convert different text based level files into an ascii file.
+ * A converter with functions to convert comma separated (CSV) coordinate files into an ascii file.
+ *
  * <p>
  * The line based ascii file contains one point (no x y z) in every line which coordinates
  * are separated by a single white space character.
+ *
  * <p>
  * The point coordinates are taken from the text level file if present. Otherwise they will be set
  * to local values starting at 0,0 and raise in both axis by a constant value.
@@ -39,16 +43,16 @@ import java.util.ArrayList;
 public class Asc2Txt extends Converter {
 
     private final boolean useWhiteSpaceSeparator;
-    private final ArrayList<String> lines;
+    private final List<String> lines;
 
     /**
-     * Constructs a new instance of this class with a parameter for the read {@code ArrayList<String>}
-     * from Nigra/NigraWin.
+     * Creates a converter with a list for the read line based ascii altitude
+     * register file and an option for the choice of the separator sign.
      *
-     * @param lines                  read lines
+     * @param lines                  ascii altitude register lines
      * @param useWhiteSpaceSeparator true for whitespace instead of tab separator
      */
-    public Asc2Txt(ArrayList<String> lines, boolean useWhiteSpaceSeparator) {
+    public Asc2Txt(List<String> lines, boolean useWhiteSpaceSeparator) {
         this.lines = new ArrayList<>(lines);
         this.useWhiteSpaceSeparator = useWhiteSpaceSeparator;
     }
@@ -56,39 +60,40 @@ public class Asc2Txt extends Converter {
     /**
      * Does the conversion from ascii (nr x y z) with special separator sign sequence
      * to a text file with whitespace or tabulator separator sign into
-     * an {@code ArrayList<String>}.
+     * an {@code List<String>}.
      * <p>
      * The {@link Converter#SEPARATOR separator} sign.
      *
      * @return the converted lines
-     *
      * @see Converter
      */
     @Override
-    public ArrayList<String> convert() {
-        ArrayList<String> result = new ArrayList<>(lines.size());
+    public List<String> convert() {
+        List<String> result = new ArrayList<>(lines.size());
 
-        String replacement = useWhiteSpaceSeparator ? " " : "\t";
+        String replacement = useWhiteSpaceSeparator ? Separator.WHITESPACE.getSign() : Separator.TABULATOR.getSign();
 
         for (String line : lines) {
-            String output = "     ";
             if (useWhiteSpaceSeparator) {
-                String[] split = line.split(Converter.SEPARATOR);
+                String[] values = line.split(Converter.SEPARATOR);
 
-                String number = StringHelper.fillWithSpaces(14, split[0]);
-                String easting = StringHelper.fillWithSpaces(14, split[1]);
-                String northing = StringHelper.fillWithSpaces(14, split[2]);
-                String altitude = StringHelper.fillWithSpaces(12, split[3]);
+                String number = StringUtils.fillWithSpacesFromBeginning(values[0], 14);
+                String easting = StringUtils.fillWithSpacesFromBeginning(values[1], 14);
+                String northing = StringUtils.fillWithSpacesFromBeginning(values[2], 14);
+                String altitude = StringUtils.fillWithSpacesFromBeginning(values[3], 12);
 
-                output = output + number + easting + northing + altitude;
+                String builder = "     " +
+                        number +
+                        easting +
+                        northing +
+                        altitude;
+                result.add(builder);
             } else {
-                output = line.replace(Converter.SEPARATOR, replacement);
+                result.add(line.replace(Converter.SEPARATOR, replacement));
             }
-
-            result.add(output);
         }
 
-        return new ArrayList<>(result);
+        return List.copyOf(result);
     }
 
-} // end of Asc2Txt
+}

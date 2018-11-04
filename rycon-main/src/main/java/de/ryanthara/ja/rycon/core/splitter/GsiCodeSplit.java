@@ -17,18 +17,22 @@
  */
 package de.ryanthara.ja.rycon.core.splitter;
 
+import de.ryanthara.ja.rycon.core.converter.Separator;
 import de.ryanthara.ja.rycon.core.converter.gsi.BaseToolsGsi;
+import de.ryanthara.ja.rycon.core.converter.gsi.GsiDecoder;
 import de.ryanthara.ja.rycon.core.elements.GsiBlock;
 import de.ryanthara.ja.rycon.core.elements.RyBlock;
-import de.ryanthara.ja.rycon.util.SortHelper;
+import de.ryanthara.ja.rycon.util.SortUtils;
+import de.ryanthara.ja.rycon.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.TreeSet;
 
 /**
- * Instances of this class provides functions to split a Leica GSI file by code into separate files.
+ * Instances of this class provides functions to split a Leica Geosystems GSI file by code into separate files.
  *
  * @author sebastian
  * @version 2
@@ -38,24 +42,23 @@ public class GsiCodeSplit {
 
     private static final Logger logger = LoggerFactory.getLogger(GsiCodeSplit.class.getName());
 
-    private final ArrayList<String> readStringLines;
+    private final List<String> lines;
     private final TreeSet<Integer> foundCodes;
 
     /**
-     * Constructs a new instance of this class given a read line based text file in Leica GSI format.
+     * Creates a converter with a list for the read line based Leica Geosystems GSI8 or GSI16 format.
      *
-     * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
+     * @param lines {@code List<String>} with lines as {@code String}
      */
-    public GsiCodeSplit(ArrayList<String> readStringLines) {
-        this.readStringLines = readStringLines;
+    public GsiCodeSplit(List<String> lines) {
+        this.lines = new ArrayList<>(lines);
         this.foundCodes = new TreeSet<>();
-
     }
 
     /**
      * Returns the found codes as {@code TreeSet<Integer>}.
      * <p>
-     * This method is necessary because of the elimination of the code in the string of the reader lines.
+     * This method is necessary because of the elimination of the code in the string of the read lines.
      *
      * @return found codes as {@code TreeSet<Integer>}
      */
@@ -64,26 +67,25 @@ public class GsiCodeSplit {
     }
 
     /**
-     * Splits a code based Leica GSI file into separate files by code.
+     * Splits a code based Leica Geosystems GSI file into separate files by code.
      * <p>
-     * <tt>RyCON</tt> needs a valid GSI format file with code blocks (WI 71). The block order is equal.
+     * RyCON needs a valid GSI format file with code blocks (WI 71). The block order is equal.
      * A separate file is generated for every existing code. Lines without code will get the pseudo code '987789'.
      *
      * @param insertCodeBlock       if code block is insert into the result string
      * @param writeLinesWithoutCode if lines without code should be written to a separate file
-     *
      * @return converted {@code ArrayList<ArrayList<String>>} for writing
      */
-    public ArrayList<ArrayList<String>> processCodeSplit(boolean insertCodeBlock, boolean writeLinesWithoutCode) {
-        ArrayList<ArrayList<String>> result = new ArrayList<>();
-        ArrayList<RyBlock> linesWithCode = new ArrayList<>();
-        ArrayList<RyBlock> linesWithOutCode = new ArrayList<>();
+    public List<List<String>> processCodeSplit(boolean insertCodeBlock, boolean writeLinesWithoutCode) {
+        ArrayList<List<String>> result = new ArrayList<>();
+        List<RyBlock> linesWithCode = new ArrayList<>();
+        List<RyBlock> linesWithOutCode = new ArrayList<>();
 
         // transform lines into GSI-Blocks
-        BaseToolsGsi baseToolsGsi = new BaseToolsGsi(readStringLines);
-        ArrayList<ArrayList<GsiBlock>> gsiBlocks = baseToolsGsi.getEncodedLinesOfGSIBlocks();
+        GsiDecoder gsiDecoder = new GsiDecoder(lines);
+        List<List<GsiBlock>> gsiBlocks = gsiDecoder.getDecodedLinesOfGsiBlocks();
 
-        for (ArrayList<GsiBlock> blocksInLines : gsiBlocks) {
+        for (List<GsiBlock> blocksInLines : gsiBlocks) {
             // helper for code handling inside the switch statements
             int code = -1;
             int validCheckHelperValue = 0;
@@ -95,24 +97,25 @@ public class GsiCodeSplit {
                         newLine = block.toString();
                         break;
                     case 71:
-                        code = Integer.parseInt(block.getDataGSI());
+                        code = StringUtils.parseIntegerValue(block.getDataGSI());
+
                         if (insertCodeBlock) {
-                            newLine = newLine != null ? newLine.concat(" " + block.toString()) : null;
+                            newLine = newLine != null ? newLine.concat(Separator.WHITESPACE.getSign() + block.toString()) : null;
                         }
                         break;
                     case 81:
                         assert newLine != null;
-                        newLine = newLine.concat(" " + block.toString());
+                        newLine = newLine.concat(Separator.WHITESPACE.getSign() + block.toString());
                         validCheckHelperValue += 1;
                         break;
                     case 82:
                         assert newLine != null;
-                        newLine = newLine.concat(" " + block.toString());
+                        newLine = newLine.concat(Separator.WHITESPACE.getSign() + block.toString());
                         validCheckHelperValue += 3;
                         break;
                     case 83:
                         assert newLine != null;
-                        newLine = newLine.concat(" " + block.toString());
+                        newLine = newLine.concat(Separator.WHITESPACE.getSign() + block.toString());
                         validCheckHelperValue += 6;
                         break;
                     default:
@@ -132,12 +135,12 @@ public class GsiCodeSplit {
             }
         }
 
-        SortHelper.sortByCode(linesWithCode);
+        SortUtils.sortByCode(linesWithCode);
 
         // helpers for generating a new array for every found code
         if (linesWithCode.size() > 0) {
             int code = linesWithCode.get(0).getNumber();
-            ArrayList<String> lineStorage = new ArrayList<>();
+            List<String> lineStorage = new ArrayList<>();
 
             // fill in the sorted textBlocks into an ArrayList<ArrayList<String>> for writing it out
             for (RyBlock ryBlock : linesWithCode) {
@@ -158,7 +161,7 @@ public class GsiCodeSplit {
 
         // insert lines without code for writing
         if (writeLinesWithoutCode && (linesWithOutCode.size() > 0)) {
-            ArrayList<String> temp = new ArrayList<>();
+            List<String> temp = new ArrayList<>();
 
             for (RyBlock ryBlock : linesWithOutCode) {
                 temp.add(ryBlock.getString());
@@ -168,7 +171,7 @@ public class GsiCodeSplit {
             result.add(temp);
         }
 
-        return result;
+        return List.copyOf(result);
     }
 
-} // end of GsiCodeSplit
+}

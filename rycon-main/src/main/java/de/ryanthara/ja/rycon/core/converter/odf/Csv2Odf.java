@@ -24,11 +24,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class provides functions to convert measurement or coordinate files from comma separated values (CSV) format
- * into an Open Document Format spreadsheet file.
+ * A converter with functions to convert comma separated values (CSV)
+ * coordinate files into an Open Document Format spreadsheet file.
  *
  * @author sebastian
  * @version 2
@@ -38,26 +39,25 @@ public class Csv2Odf {
 
     private static final Logger logger = LoggerFactory.getLogger(Csv2Odf.class.getName());
 
-    private final List<String[]> readCSVLines;
+    private final List<String[]> lines;
     private SpreadsheetDocument spreadsheetDocument;
 
     /**
-     * Constructs a new instance of this class with a parameter for reader line based CSV files.
+     * Creates a converter with a list for the read line based comma separated values (CSV) files.
      *
-     * @param readCSVLines {@code List<String[]>} with lines as {@code String[]}
+     * @param lines list with lines of comma separated values (CSV)
      */
-    public Csv2Odf(List<String[]> readCSVLines) {
-        this.readCSVLines = readCSVLines;
+    public Csv2Odf(List<String[]> lines) {
+        this.lines = new ArrayList<>(lines);
     }
 
     /**
      * Convert a CSV file element by element into an Open Document Format spreadsheet file.
      *
      * @param sheetName name of the sheet (file name from input file)
-     *
      * @return success conversion success
      */
-    public boolean convertCSV2Ods(Path sheetName) {
+    public boolean convert(Path sheetName) {
         int colIndex;
         int rowIndex = 0;
 
@@ -71,11 +71,11 @@ public class Csv2Odf {
 
             Cell cell;
 
-            for (String[] csvLine : readCSVLines) {
+            for (String[] line : lines) {
                 colIndex = 0;
-                for (String element : csvLine) {
+                for (String value : line) {
                     cell = table.getCellByPosition(colIndex, rowIndex);
-                    cell.setStringValue(element);
+                    cell.setStringValue(value);
                     colIndex = colIndex + 1;
                 }
                 rowIndex = rowIndex + 1;
@@ -99,4 +99,4 @@ public class Csv2Odf {
         return this.spreadsheetDocument;
     }
 
-} // end of Csv2Odf
+}

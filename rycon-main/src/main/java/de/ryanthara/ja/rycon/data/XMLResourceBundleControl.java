@@ -33,13 +33,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
- * The <tt>XMLResourceBundleControl</tt> extends the {@link ResourceBundle.Control} for using a XML document
+ * The XMLResourceBundleControl extends the {@link ResourceBundle.Control} for using a XML document
  * instead of a properties file.
  *
  * @author sebastian
@@ -75,15 +72,19 @@ public class XMLResourceBundleControl extends ResourceBundle.Control {
      * @return loaded {@link ResourceBundle}
      * @throws IllegalArgumentException IllegalArgumentException
      * @throws IOException              IOException
+     * @throws NullPointerException     will be thrown if baseName is null
+     * @throws NullPointerException     will be thrown if locale is null
+     * @throws NullPointerException     will be thrown if format is null
+     * @throws NullPointerException     will be thrown if loader is null
      */
     @Override
     public ResourceBundle newBundle(String baseName, Locale locale, String format, ClassLoader loader, boolean reload)
             throws IOException {
 
-        if ((baseName == null) || (locale == null) || (format == null) || (loader == null)) {
-            logger.error("baseName, locale, format and loader cannot be null");
-            throw new IllegalArgumentException("baseName, locale, format and loader cannot be null");
-        }
+        Objects.requireNonNull(baseName, "baseName must not be null!");
+        Objects.requireNonNull(locale, "locale must not be null!");
+        Objects.requireNonNull(format, "format must not be null!");
+        Objects.requireNonNull(loader, "loader must not be null!");
 
         if (!format.equals(XML)) {
             logger.error("format must be xml");
@@ -108,11 +109,11 @@ public class XMLResourceBundleControl extends ResourceBundle.Control {
             urlconnection.setUseCaches(false);
         }
 
-        try (final InputStream stream = urlconnection.getInputStream();
+        try (InputStream stream = urlconnection.getInputStream();
              final BufferedInputStream bis = new BufferedInputStream(stream)
         ) {
             return new XMLResourceBundle(bis);
         }
     }
 
-} // end of XMLResourceBundleControl
+}

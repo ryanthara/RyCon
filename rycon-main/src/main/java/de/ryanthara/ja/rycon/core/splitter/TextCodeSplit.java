@@ -17,10 +17,13 @@
  */
 package de.ryanthara.ja.rycon.core.splitter;
 
+import de.ryanthara.ja.rycon.core.converter.Separator;
 import de.ryanthara.ja.rycon.core.elements.RyBlock;
-import de.ryanthara.ja.rycon.util.SortHelper;
+import de.ryanthara.ja.rycon.util.SortUtils;
+import de.ryanthara.ja.rycon.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
 
@@ -37,16 +40,16 @@ import java.util.TreeSet;
  */
 public class TextCodeSplit {
 
-    private final ArrayList<String> readStringLines;
+    private final List<String> lines;
     private final TreeSet<Integer> foundCodes;
 
     /**
      * Constructs a new instance of this class given a read line based text file with a specified format.
      *
-     * @param arrayList {@code ArrayList<String>} with lines in text format
+     * @param lines {@code List<String>} with lines in text format
      */
-    public TextCodeSplit(ArrayList<String> arrayList) {
-        this.readStringLines = arrayList;
+    public TextCodeSplit(List<String> lines) {
+        this.lines = new ArrayList<>(lines);
         foundCodes = new TreeSet<>();
     }
 
@@ -65,21 +68,20 @@ public class TextCodeSplit {
      * Splits a code based text file into separate files by code.
      * <p>
      * A separate file is generated for every existing code. Lines without code will get the pseudo code '987789'.
-     * <tt>RyCON</tt> need a text file format that is no, code, x, y, z and divided by blank or tab.
+     * RyCON need a text file format that is no, code, x, y, z and divided by blank or tab.
      *
      * @param insertCodeBlock       if code block is insert into the result string
      * @param writeLinesWithoutCode if lines without code should be written to a separate file
-     *
      * @return converted {@code ArrayList<ArrayList<String>>} for writing
      */
-    public ArrayList<ArrayList<String>> processCodeSplit(boolean insertCodeBlock, boolean writeLinesWithoutCode) {
+    public List<ArrayList<String>> processCodeSplit(boolean insertCodeBlock, boolean writeLinesWithoutCode) {
         StringTokenizer stringTokenizer;
 
-        ArrayList<ArrayList<String>> result = new ArrayList<>();
-        ArrayList<RyBlock> linesWithCode = new ArrayList<>();
-        ArrayList<String> linesWithOutCode = new ArrayList<>();
+        List<ArrayList<String>> result = new ArrayList<>();
+        List<RyBlock> linesWithCode = new ArrayList<>();
+        List<String> linesWithOutCode = new ArrayList<>();
 
-        for (String line : readStringLines) {
+        for (String line : lines) {
             stringTokenizer = new StringTokenizer(line);
 
             if (stringTokenizer.countTokens() == 4) {
@@ -92,13 +94,13 @@ public class TextCodeSplit {
                 }
 
                 String easting = stringTokenizer.nextToken();
-                resultLine = resultLine.concat(" " + easting);
+                resultLine = resultLine.concat(Separator.WHITESPACE.getSign() + easting);
 
                 String northing = stringTokenizer.nextToken();
-                resultLine = resultLine.concat(" " + northing);
+                resultLine = resultLine.concat(Separator.WHITESPACE.getSign() + northing);
 
                 String height = stringTokenizer.nextToken();
-                resultLine = resultLine.concat(" " + height);
+                resultLine = resultLine.concat(Separator.WHITESPACE.getSign() + height);
 
                 linesWithOutCode.add(resultLine);
             } else if (stringTokenizer.countTokens() == 5) {
@@ -108,26 +110,28 @@ public class TextCodeSplit {
                 String resultLine = stringTokenizer.nextToken();
 
                 String code = stringTokenizer.nextToken();
-                foundCodes.add(Integer.parseInt(code));
+                int codeValue = StringUtils.parseIntegerValue(code);
+
+                foundCodes.add(codeValue);
 
                 if (insertCodeBlock) {
-                    resultLine = resultLine.concat(" " + code);
+                    resultLine = resultLine.concat(Separator.WHITESPACE.getSign() + code);
                 }
 
                 String easting = stringTokenizer.nextToken();
-                resultLine = resultLine.concat(" " + easting);
+                resultLine = resultLine.concat(Separator.WHITESPACE.getSign() + easting);
 
                 String northing = stringTokenizer.nextToken();
-                resultLine = resultLine.concat(" " + northing);
+                resultLine = resultLine.concat(Separator.WHITESPACE.getSign() + northing);
 
                 String height = stringTokenizer.nextToken();
-                resultLine = resultLine.concat(" " + height);
+                resultLine = resultLine.concat(Separator.WHITESPACE.getSign() + height);
 
-                linesWithCode.add(new RyBlock(Integer.parseInt(code), resultLine));
+                linesWithCode.add(new RyBlock(codeValue, resultLine));
             }
         }
 
-        SortHelper.sortByCode(linesWithCode);
+        SortUtils.sortByCode(linesWithCode);
 
         if (linesWithCode.size() > 0) {
             // helpers for generating a new array for every found code
@@ -160,7 +164,7 @@ public class TextCodeSplit {
             result.add(lineStorage);
         }
 
-        return result;
+        return List.copyOf(result);
     }
 
-}  // end of TextFileTools
+}

@@ -18,7 +18,7 @@
 
 package de.ryanthara.ja.rycon.nio;
 
-import de.ryanthara.ja.rycon.util.check.PathCheck;
+import de.ryanthara.ja.rycon.nio.util.check.PathCheck;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,10 +26,11 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Instances of this class implement functions to read a text based file line by line
- * and stores its values in an {@code ArrayList<String>}.
+ * and stores its values in an {@code List<String>}.
  * <p>
  * A couple of things are implemented as additional functionality. At the moment there
  * is no thread safety implemented or planed due to some reasons.
@@ -49,7 +50,7 @@ public final class LineReader {
     private final Path path;
     private int countReadLines = -1;
     private int countStoredLines = -1;
-    private ArrayList<String> lines = null;
+    private List<String> lines = null;
 
     /**
      * Constructs a new instance of this class with a parameter that accepts a {@link Path} object
@@ -74,10 +75,10 @@ public final class LineReader {
     }
 
     /**
-     * Returns the number of stored read lines in the {@code ArrayList<String>}.
+     * Returns the number of stored read lines in the {@code List<String>}.
      * <p>
      * By default the value is set to -1, which shows, that no read line
-     * has been stored to the {@code ArrayList<String>}. This is for comparison
+     * has been stored to the {@code List<String>}. This is for comparison
      * the read and stored number of lines.
      *
      * @return number of stored lines
@@ -88,21 +89,20 @@ public final class LineReader {
     }
 
     /**
-     * Return the read lines as an {@code ArrayList<String>} object.
+     * Return the read lines as an {@code List<String>} object.
      * <p>
-     * The {@code ArrayList<String>} contains every read line, first line on top.
+     * The {@code List<String>} contains every read line, first line on top.
      *
-     * @return read lines as {@code ArrayList<String>} object
+     * @return read lines as {@code List<String>} object
      */
-    public ArrayList<String> getLines() {
-        return lines;
+    public List<String> getLines() {
+        return List.copyOf(lines);
     }
 
     /**
      * Read a path line by line and return the read success.
      *
      * @param skipEmptyLines should empty lines be skipped
-     *
      * @return success of path reading
      */
     public boolean readFile(boolean skipEmptyLines) {
@@ -117,10 +117,9 @@ public final class LineReader {
      *
      * @param skipEmptyLines should empty lines be skipped
      * @param comment        String for comment signs
-     *
      * @return success of path reading
      */
-    public boolean readFile(final boolean skipEmptyLines, final String comment) {
+    public boolean readFile(boolean skipEmptyLines, final String comment) {
         boolean success = false;
         lines = new ArrayList<>();
         FileInputStream fileInputStream = null;
@@ -138,7 +137,7 @@ public final class LineReader {
 
                     try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(fileInputStream, StandardCharsets.UTF_8))) {
 
-                        // reader the lines into an ArrayList
+                        // read the lines into an ArrayList
                         while ((line = bufferedReader.readLine()) != null) {
                             countReadLines = countReadLines + 1;
 
@@ -166,7 +165,7 @@ public final class LineReader {
                     logger.warn("File '{}' could not be locked.", path.getFileName(), e.getCause());
                 }
             } catch (FileNotFoundException e) {
-                    logger.error("File '{}' could not be found.", path.getFileName(), e.getCause());
+                logger.error("File '{}' could not be found.", path.getFileName(), e.getCause());
             } finally {
                 // reset variables back to initialization values
                 countReadLines = -1;
@@ -185,4 +184,4 @@ public final class LineReader {
         }
     }
 
-} // end of LineReader
+}

@@ -17,15 +17,16 @@
  */
 package de.ryanthara.ja.rycon.core.converter.text;
 
-import de.ryanthara.ja.rycon.Main;
-import de.ryanthara.ja.rycon.data.PreferenceKeys;
+import de.ryanthara.ja.rycon.data.PreferenceKey;
+import de.ryanthara.ja.rycon.util.NumberFormatter;
+import de.ryanthara.ja.rycon.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class provides functions to convert a csv formatted coordinate file from the geodata server
- * Basel Stadt (Switzerland) into a text formatted file.
+ * A converter with functions to convert coordinate coordinate files from
+ * the geodata server Basel Stadt (Switzerland) into a text formatted file.
  *
  * @author sebastian
  * @version 1
@@ -34,16 +35,17 @@ import java.util.List;
 public class CsvBaselStadt2Txt {
 
     private final boolean writeZeroHeights;
-    private final List<String[]> readCSVLines;
+    private final List<String[]> lines;
 
     /**
-     * Class constructor for reader line based CSV files from the geodata server Basel Stadt (Switzerland).
+     * Creates a converter with a list for the read line based comma separated
+     * values (CSV) file from the geodata server Basel Stadt (Switzerland).
      *
-     * @param readCSVLines     {@code List<String[]>} with lines as {@code String[]}
+     * @param lines            list with lines as string array
      * @param writeZeroHeights writes zero coordinates (0.000 metre) into the output file
      */
-    public CsvBaselStadt2Txt(List<String[]> readCSVLines, boolean writeZeroHeights) {
-        this.readCSVLines = readCSVLines;
+    public CsvBaselStadt2Txt(List<String[]> lines, boolean writeZeroHeights) {
+        this.lines = new ArrayList<>(lines);
         this.writeZeroHeights = writeZeroHeights;
     }
 
@@ -55,51 +57,49 @@ public class CsvBaselStadt2Txt {
      * Trailing zeroes are add up til a number of three.
      *
      * @param separator separator sign as {@code String}
-     *
-     * @return converted {@code ArrayList<String>} with lines of text format
+     * @return converted {@code List<String>} with lines of text format
      */
-    public ArrayList<String> convertCSVBaselStadt2TXT(String separator) {
-        ArrayList<String> result = new ArrayList<>();
+    public List<String> convert(String separator) {
+        List<String> result = new ArrayList<>();
 
-        boolean addTrailingZeroes = Boolean.parseBoolean(Main.pref.getUserPreference(PreferenceKeys.ADD_TRAILING_ZEROES));
+        boolean addTrailingZeroes = StringUtils.parseBooleanValue(PreferenceKey.ADD_TRAILING_ZEROES);
 
-        // remove comment line
-        readCSVLines.remove(0);
+        removeHeadLine();
 
-        for (String[] stringField : readCSVLines) {
+        for (String[] values : lines) {
             String line;
 
             // point number is in column 1
-            line = stringField[0].replaceAll("\\s+", "").trim();
+            line = values[0].replaceAll("\\s+", "").trim();
             line = line.concat(separator);
 
             // easting (Y) is in column 3
-            String easting = stringField[2];
+            String easting = values[2];
 
             if (addTrailingZeroes) {
-                easting = BaseToolsTxt.addTrailingZeroes(easting, 3);
+                easting = NumberFormatter.fillDecimalPlaces(easting, 3);
             }
 
             line = line.concat(easting);
             line = line.concat(separator);
 
             // northing (X) is in column 4
-            String northing = stringField[3];
+            String northing = values[3];
 
             if (addTrailingZeroes) {
-                northing = BaseToolsTxt.addTrailingZeroes(northing, 3);
+                northing = NumberFormatter.fillDecimalPlaces(northing, 3);
             }
 
             line = line.concat(northing);
 
             // height (Z) is in column 5, but not always valued
-            if (!stringField[4].equals("")) {
+            if (!values[4].equals("")) {
                 line = line.concat(separator);
 
-                String height = stringField[4];
+                String height = values[4];
 
                 if (addTrailingZeroes) {
-                    height = BaseToolsTxt.addTrailingZeroes(height, 3);
+                    height = NumberFormatter.fillDecimalPlaces(height, 3);
                 }
 
                 line = line.concat(height);
@@ -108,9 +108,14 @@ public class CsvBaselStadt2Txt {
                 line = line.concat("0.000");
             }
 
-                result.add(line.trim());
+            result.add(line.trim());
         }
-        return result;
+
+        return List.copyOf(result);
     }
 
-} // end of CsvBaselStadt2Txt
+    private void removeHeadLine() {
+        lines.remove(0);
+    }
+
+}

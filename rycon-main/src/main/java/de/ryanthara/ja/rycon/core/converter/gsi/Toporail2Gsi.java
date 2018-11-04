@@ -17,17 +17,18 @@
  */
 package de.ryanthara.ja.rycon.core.converter.gsi;
 
-import de.ryanthara.ja.rycon.core.converter.toporail.FileType;
 import de.ryanthara.ja.rycon.core.elements.GsiBlock;
-import de.ryanthara.ja.rycon.util.SortHelper;
+import de.ryanthara.ja.rycon.nio.FileFormat;
+import de.ryanthara.ja.rycon.util.SortUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Instances of this class provides functions to convert Toporail measurement
- * and coordinate files into Leica Geosystems GSI8 and GSI16 formatted files.
+ * A converter with functions to convert Toporail measurement and coordinate
+ * files into Leica Geosystems GSI8 and GSI16 formatted files.
  *
  * @author sebastian
  * @version 1
@@ -37,16 +38,16 @@ public class Toporail2Gsi {
 
     private static final Logger logger = LoggerFactory.getLogger(Toporail2Gsi.class.getName());
 
-    private final ArrayList<String> readStringLines;
+    private final List<String> lines;
 
     /**
-     * Constructs a new instance of this class given an {@code ArrayList<String>} that contains
-     * the read Toporail coordinate or measurement file.
+     * Creates a converter with a list for the read line based
+     * Toporail coordinate or measurement file.
      *
-     * @param readStringLines read lines from Toporail file
+     * @param lines list with Toporail lines
      */
-    public Toporail2Gsi(ArrayList<String> readStringLines) {
-        this.readStringLines = readStringLines;
+    public Toporail2Gsi(List<String> lines) {
+        this.lines = new ArrayList<>(lines);
 
     }
 
@@ -55,32 +56,31 @@ public class Toporail2Gsi {
      * <p>
      * The GSI format decision is done by a parameter in the constructor.
      *
-     * @param fileType file type of the read Toporail file (MEP or PTS)
-     * @param isGSI16  decision which GSI format is used
-     *
+     * @param fileFormat file type of the read Toporail file (MEP or PTS)
+     * @param isGSI16    decision which GSI format is used
      * @return converted {@code ArrayList<String>>} with lines
      */
-    public ArrayList<String> convertToporail2Gsi(FileType fileType, boolean isGSI16) {
-        if (fileType == FileType.MEP) {
+    public List<String> convertToporail2Gsi(FileFormat fileFormat, boolean isGSI16) {
+        if (fileFormat == FileFormat.MEP) {
             return convertMep2Gsi(isGSI16);
         } else {
             return convertPts2Gsi(isGSI16);
         }
     }
 
-    private ArrayList<String> convertMep2Gsi(boolean isGSI16) {
-        ArrayList<GsiBlock> blocks;
-        ArrayList<ArrayList<GsiBlock>> blocksInLines = new ArrayList<>();
+    private List<String> convertMep2Gsi(boolean isGSI16) {
+        List<GsiBlock> blocks;
+        List<List<GsiBlock>> blocksInLines = new ArrayList<>();
 
         // check for being a valid Toporail coordinate file
-        if (readStringLines.get(0).startsWith("@MEP")) {
+        if (lines.get(0).startsWith("@MEP")) {
 
             int lineCounter = 1;
 
             // skip first line
-            for (int i = 1; i < readStringLines.size(); i++) {
+            for (int i = 1; i < lines.size(); i++) {
                 blocks = new ArrayList<>();
-                String[] tokens = readStringLines.get(i).split("\t");
+                String[] tokens = lines.get(i).split("\t");
 
                 switch (tokens[0]) {
                     case "K": // control measurement line
@@ -103,7 +103,7 @@ public class Toporail2Gsi {
                     lineCounter = lineCounter + 1;
 
                     // sort every 'line' of GSI blocks by word index (WI)
-                    SortHelper.sortByWordIndex(blocks);
+                    SortUtils.sortByWordIndex(blocks);
 
                     blocksInLines.add(blocks);
                 }
@@ -113,19 +113,19 @@ public class Toporail2Gsi {
         return BaseToolsGsi.lineTransformation(isGSI16, blocksInLines);
     }
 
-    private ArrayList<String> convertPts2Gsi(boolean isGSI16) {
-        ArrayList<GsiBlock> blocks;
-        ArrayList<ArrayList<GsiBlock>> blocksInLines = new ArrayList<>();
+    private List<String> convertPts2Gsi(boolean isGSI16) {
+        List<GsiBlock> blocks;
+        List<List<GsiBlock>> blocksInLines = new ArrayList<>();
 
         // check for being a valid Toporail coordinate file
-        if (readStringLines.get(0).startsWith("@PTS")) {
+        if (lines.get(0).startsWith("@PTS")) {
 
             int lineCounter = 1;
 
             // skip first line
-            for (int i = 1; i < readStringLines.size(); i++) {
+            for (int i = 1; i < lines.size(); i++) {
                 blocks = new ArrayList<>();
-                String[] tokens = readStringLines.get(i).split("\t");
+                String[] tokens = lines.get(i).split("\t");
 
                 for (int j = 0; j < tokens.length; j++) {
                     switch (j) {
@@ -179,7 +179,7 @@ public class Toporail2Gsi {
                     lineCounter = lineCounter + 1;
 
                     // sort every 'line' of GSI blocks by word index (WI)
-                    SortHelper.sortByWordIndex(blocks);
+                    SortUtils.sortByWordIndex(blocks);
 
                     blocksInLines.add(blocks);
                 }
@@ -189,8 +189,8 @@ public class Toporail2Gsi {
         return BaseToolsGsi.lineTransformation(isGSI16, blocksInLines);
     }
 
-    private ArrayList<GsiBlock> transformControlMeasurementLine(String[] tokens, boolean isGSI16, int lineCounter) {
-        ArrayList<GsiBlock> blocks = new ArrayList<>();
+    private List<GsiBlock> transformControlMeasurementLine(String[] tokens, boolean isGSI16, int lineCounter) {
+        List<GsiBlock> blocks = new ArrayList<>();
 
         for (int j = 1; j < tokens.length; j++) {
             switch (j) {
@@ -231,14 +231,14 @@ public class Toporail2Gsi {
         // check for at least one or more added elements to prevent writing empty lines
         if (blocks.size() > 0) {
             // sort every 'line' of GSI blocks by word index (WI)
-            SortHelper.sortByWordIndex(blocks);
+            SortUtils.sortByWordIndex(blocks);
         }
 
-        return blocks;
+        return List.copyOf(blocks);
     }
 
-    private ArrayList<GsiBlock> transformCoordinateLine(String[] tokens, boolean isGSI16, int lineCounter) {
-        ArrayList<GsiBlock> blocks = new ArrayList<>();
+    private List<GsiBlock> transformCoordinateLine(String[] tokens, boolean isGSI16, int lineCounter) {
+        List<GsiBlock> blocks = new ArrayList<>();
 
         for (int j = 1; j < tokens.length; j++) {
             switch (j) {
@@ -271,14 +271,14 @@ public class Toporail2Gsi {
         // check for at least one or more added elements to prevent writing empty lines
         if (blocks.size() > 0) {
             // sort every 'line' of GSI blocks by word index (WI)
-            SortHelper.sortByWordIndex(blocks);
+            SortUtils.sortByWordIndex(blocks);
         }
 
-        return blocks;
+        return List.copyOf(blocks);
     }
 
-    private ArrayList<GsiBlock> transformMeasurementLine(String[] tokens, boolean isGSI16, int lineCounter) {
-        ArrayList<GsiBlock> blocks = new ArrayList<>();
+    private List<GsiBlock> transformMeasurementLine(String[] tokens, boolean isGSI16, int lineCounter) {
+        List<GsiBlock> blocks = new ArrayList<>();
 
         for (int j = 1; j < tokens.length; j++) {
             switch (j) {
@@ -323,14 +323,14 @@ public class Toporail2Gsi {
         // check for at least one or more added elements to prevent writing empty lines
         if (blocks.size() > 0) {
             // sort every 'line' of GSI blocks by word index (WI)
-            SortHelper.sortByWordIndex(blocks);
+            SortUtils.sortByWordIndex(blocks);
         }
 
-        return blocks;
+        return List.copyOf(blocks);
     }
 
-    private ArrayList<GsiBlock> transformStationLine(String[] tokens, boolean isGSI16, int lineCounter) {
-        ArrayList<GsiBlock> blocks = new ArrayList<>();
+    private List<GsiBlock> transformStationLine(String[] tokens, boolean isGSI16, int lineCounter) {
+        List<GsiBlock> blocks = new ArrayList<>();
 
         for (int j = 1; j < tokens.length; j++) {
             switch (j) {
@@ -364,10 +364,10 @@ public class Toporail2Gsi {
         // check for at least one or more added elements to prevent writing empty lines
         if (blocks.size() > 0) {
             // sort every 'line' of GSI blocks by word index (WI)
-            SortHelper.sortByWordIndex(blocks);
+            SortUtils.sortByWordIndex(blocks);
         }
 
-        return blocks;
+        return List.copyOf(blocks);
     }
 
-} // end of Toporail2Gsi
+}

@@ -97,7 +97,6 @@
         </profile>
     </profiles>
 
-    <!-- dependencies -->
     <dependencies>
         <!-- RyCON base from artifact rycon -->
         <dependency>

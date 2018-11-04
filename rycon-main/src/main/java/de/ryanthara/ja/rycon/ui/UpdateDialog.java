@@ -18,7 +18,7 @@
 
 package de.ryanthara.ja.rycon.ui;
 
-import de.ryanthara.ja.rycon.i18n.Buttons;
+import de.ryanthara.ja.rycon.i18n.Button;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 import de.ryanthara.ja.rycon.ui.util.ShellPositioner;
 import org.eclipse.swt.SWT;
@@ -35,7 +35,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.*;
@@ -49,14 +48,14 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.StringTokenizer;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.BUTTONS;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundle.BUTTON;
 
 /**
  * {@code UpdateDialog} implements an update dialog for RyCON.
  * <p>
- * If there is a new version of <tt>RyCON</tt> available this dialog will show a message and
+ * If there is a new version of RyCON available this dialog will show a message and
  * a short 'what's new' section. The user can open the default browser of the system
- * and will be redirected to the <tt>RyCON</tt> update website.
+ * and will be redirected to the RyCON update website.
  * <p>
  * The code is inspired by the original MessageDialog code from SWT.
  *
@@ -66,8 +65,6 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.BUTTONS;
  */
 public class UpdateDialog extends Dialog {
 
-    private static final Logger logger = LoggerFactory.getLogger(UpdateDialog.class.getName());
-
     /**
      * Member for indicating which button was hit.
      */
@@ -76,6 +73,7 @@ public class UpdateDialog extends Dialog {
      * Member for indicating which button was hit.
      */
     public static final int CLOSE_AND_OPEN_BROWSER = 101;
+    private static final Logger logger = LoggerFactory.getLogger(UpdateDialog.class.getName());
     private static final int SPACING = 20;
     private static final int BUTTON_WIDTH = 61;
     private static final int HORIZONTAL_DIALOG_UNIT_PER_CHAR = 4;
@@ -144,13 +142,13 @@ public class UpdateDialog extends Dialog {
      * Set the update dialog's message. The message will be visible on the dialog while it is open.
      *
      * @param message the message to be shown
-     *
      * @throws java.lang.IllegalArgumentException ERROR_NULL_ARGUMENT - if the string is null
      */
     public void setMessage(String message) {
         if (message == null) {
             SWT.error(SWT.ERROR_NULL_ARGUMENT);
         }
+
         this.message = message;
     }
 
@@ -158,13 +156,13 @@ public class UpdateDialog extends Dialog {
      * Set the what's new info for displaying.
      *
      * @param whatsNewInfo the info to be set
-     *
      * @throws java.lang.IllegalArgumentException ERROR_NULL_ARGUMENT - if the string is null
      */
     public void setWhatsNewInfo(String whatsNewInfo) {
         if (whatsNewInfo == null) {
             SWT.error(SWT.ERROR_NULL_ARGUMENT);
         }
+
         this.whatsNewInfo = whatsNewInfo;
     }
 
@@ -228,9 +226,9 @@ public class UpdateDialog extends Dialog {
         data.horizontalSpan = 2;
         buttonArea.setLayoutData(data);
 
-        Button close = new Button(buttonArea, SWT.PUSH);
-        close.setText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.okAndExitText));
-        close.setToolTipText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.okAndExitToolTip));
+        org.eclipse.swt.widgets.Button close = new org.eclipse.swt.widgets.Button(buttonArea, SWT.PUSH);
+        close.setText(ResourceBundleUtils.getLangString(BUTTON, Button.okAndExitText));
+        close.setToolTipText(ResourceBundleUtils.getLangString(BUTTON, Button.okAndExitToolTip));
         close.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent selectionEvent) {
@@ -245,9 +243,9 @@ public class UpdateDialog extends Dialog {
         closeBtnData.widthHint = Math.max(widthHint, minSize.x);
         close.setLayoutData(closeBtnData);
 
-        Button openBrowser = new Button(buttonArea, SWT.PUSH);
-        openBrowser.setText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.okAndOpenBrowserText));
-        openBrowser.setToolTipText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.okAndOpenBrowserToolTip));
+        org.eclipse.swt.widgets.Button openBrowser = new org.eclipse.swt.widgets.Button(buttonArea, SWT.PUSH);
+        openBrowser.setText(ResourceBundleUtils.getLangString(BUTTON, Button.okAndOpenBrowserText));
+        openBrowser.setToolTipText(ResourceBundleUtils.getLangString(BUTTON, Button.okAndOpenBrowserToolTip));
         openBrowser.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent selectionEvent) {
@@ -349,4 +347,4 @@ public class UpdateDialog extends Dialog {
         }
     }
 
-} // end of class UpdateDialog
+}

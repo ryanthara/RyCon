@@ -17,6 +17,7 @@
  */
 package de.ryanthara.ja.rycon.ui.custom;
 
+import de.ryanthara.ja.rycon.core.converter.Separator;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
@@ -49,7 +50,7 @@ public class FileDialogs {
             concatString = concatString.concat(files[i]);
 
             if (i < files.length - 1) {
-                concatString = concatString.concat(" ");
+                concatString = concatString.concat(Separator.WHITESPACE.getSign());
             }
 
             files2read[i] = Paths.get(workingDir + FileSystems.getDefault().getSeparator() + files[i]);
@@ -71,7 +72,7 @@ public class FileDialogs {
 
         for (int i = 0; i < files.length; i++) {
             concatString = concatString.concat(files[i]);
-            concatString = concatString.concat(" ");
+            concatString = concatString.concat(Separator.WHITESPACE.getSign());
 
             files2read[i] = Paths.get(workingDir + FileSystems.getDefault().getSeparator() + files[i]);
         }
@@ -93,7 +94,6 @@ public class FileDialogs {
      * @param filterExtensions allowed extensions
      * @param filterNames      description of allowed extensions
      * @param source           source text field
-     *
      * @return chosen files as {@link Path} array
      */
     public static Optional<Path[]> showAdvancedFileDialog(Shell innerShell, String filterPath, String text, String[] filterExtensions,
@@ -123,7 +123,6 @@ public class FileDialogs {
      * @param filterNames      description of allowed extensions
      * @param source           source text field
      * @param target           target text field
-     *
      * @return chosen files as {@link Path} array
      */
     public static Optional<Path[]> showAdvancedFileDialog(Shell innerShell, String filterPath, String text, String[] filterExtensions,
@@ -141,4 +140,4 @@ public class FileDialogs {
         }
     }
 
-} // end of FileDialogs
+}

@@ -34,4 +34,4 @@ abstract class AbstractWidget {
 
     abstract void initUI();
 
-} // end of AbstractWidget
+}

@@ -37,7 +37,7 @@ public class PrinterWidget extends AbstractWidget {
      *
      * @param parent parent shell
      */
-    public PrinterWidget(final Shell parent) {
+    public PrinterWidget(Shell parent) {
         this.parent = parent;
 
         initUI();
@@ -73,4 +73,4 @@ public class PrinterWidget extends AbstractWidget {
 
     }
 
-} // end of PrinterWidget
+}

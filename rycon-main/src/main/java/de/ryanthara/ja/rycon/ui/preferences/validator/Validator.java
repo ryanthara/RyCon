@@ -28,7 +28,6 @@ package de.ryanthara.ja.rycon.ui.preferences.validator;
  * See <a href="https://github.com/prasser/swtpreferences">prasser on github</a> for details.
  *
  * @param <T> The generic data type of the subclassed validator
- *
  * @author sebastian
  * @version 1
  * @since 25
@@ -39,9 +38,8 @@ public interface Validator<T> {
      * Checks if the given value is valid.
      *
      * @param t value to be checked
-     *
      * @return true if is valid
      */
-    boolean isValid(final T t);
+    boolean isValid(T t);
 
-} // end of Validator
+}

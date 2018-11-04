@@ -64,4 +64,4 @@ public abstract class PreferenceBoolean extends Preference<Boolean> {
         return null;
     }
 
-} // end of PreferenceBoolean
+}

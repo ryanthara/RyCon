@@ -18,18 +18,19 @@
 package de.ryanthara.ja.rycon.core.converter.csv;
 
 import de.ryanthara.ja.rycon.core.converter.Converter;
+import de.ryanthara.ja.rycon.core.converter.Separator;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
- * Instances of this class provides functions to convert different comma separated values level files into an ascii file.
+ * A converter with functions to convert text based coordinate
+ * files into comma separated values (CSV) files.
+ *
  * <p>
  * The line based ascii file contains one point (no x y z) in every line which coordinates
  * are separated by a single white space character.
- * <p>
- * The point coordinates are taken from the Leica Geosystems level file if present. Otherwise they will be set
- * to local values starting at 0,0 and raise in both axis by a constant value.
  *
  * @author sebastian
  * @version 1
@@ -38,16 +39,16 @@ import java.util.ArrayList;
 public class Asc2Csv extends Converter {
 
     private final boolean useSemicolonSeparator;
-    private final ArrayList<String> lines;
+    private final List<String> lines;
 
     /**
-     * Constructs a new instance of this class with a parameter for the read {@code ArrayList<String>}
-     * from comma separated values leveling files.
+     * Creates a converter with a list for the read line based ascii altitude
+     * register file and an option for the choice of the separator sign.
      *
-     * @param lines ascii altitude register lines
-     * @param useSemicolonSeparator true for semicolon instead of comma separator
+     * @param lines                 ascii altitude register lines
+     * @param useSemicolonSeparator true for semicolon instead of comma
      */
-    public Asc2Csv(ArrayList<String> lines, boolean useSemicolonSeparator) {
+    public Asc2Csv(List<String> lines, boolean useSemicolonSeparator) {
         this.lines = new ArrayList<>(lines);
         this.useSemicolonSeparator = useSemicolonSeparator;
     }
@@ -55,25 +56,24 @@ public class Asc2Csv extends Converter {
     /**
      * Does the conversion from ascii (nr x y z) with special separator sign sequence
      * to a comma separated values file with comma or semicolon separator sign into
-     * an {@code ArrayList<String>}.
+     * an {@code List<String>}.
      * <p>
      * The {@link Converter#SEPARATOR separator} sign.
      *
      * @return the converted lines
-     *
      * @see Converter
      */
     @Override
-    public ArrayList<String> convert() {
-        ArrayList<String> result = new ArrayList<>(lines.size());
+    public List<String> convert() {
+        List<String> result = new ArrayList<>(lines.size());
 
-        String replacement = useSemicolonSeparator ? ";" : ",";
+        String replacement = useSemicolonSeparator ? Separator.SEMICOLON.getSign() : Separator.COMMA.getSign();
 
         for (String line : lines) {
             result.add(line.replace(Converter.SEPARATOR, replacement));
         }
 
-        return new ArrayList<>(result);
+        return List.copyOf(result);
     }
 
-} // end of Asc2Csv
+}

@@ -22,10 +22,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.MissingResourceException;
-import java.util.ResourceBundle;
 
 /**
- * The {@code ResourceBundleUtils} prepares all the texts for <tt>RyCON</tt>.
+ * The {@code ResourceBundleUtils} prepares all the texts for RyCON.
  *
  * @author sebastian
  * @version 1
@@ -38,8 +37,8 @@ public final class ResourceBundleUtils {
     private static final String INDICATOR_MISSING_RESOURCE = "?";
     private static final String INDICATOR_MISSING_KEY = "??";
 
-    public static String getLangString(final ResourceBundles bundleName, final ResourceKeys key) {
-        ResourceBundle resourceBundle = ResourceBundle.getBundle(bundleName.getBundleName());
+    public static String getLangString(ResourceBundle bundleName, final ResourceKey key) {
+        java.util.ResourceBundle resourceBundle = java.util.ResourceBundle.getBundle(bundleName.getBundleName());
 
         if (resourceBundle != null) {
             try {
@@ -53,13 +52,13 @@ public final class ResourceBundleUtils {
         return INDICATOR_MISSING_RESOURCE + key;
     }
 
-    public static String getLangStringFromXml(final ResourceBundles bundleName, final ResourceKeys key) {
-        ResourceBundle resourceBundle = ResourceBundle.getBundle(bundleName.getBundleName(), new XMLResourceBundleControl());
+    public static String getLangStringFromXml(ResourceBundle bundleName, final ResourceKey key) {
+        java.util.ResourceBundle resourceBundle = java.util.ResourceBundle.getBundle(bundleName.getBundleName(), new XMLResourceBundleControl());
 
         if (resourceBundle != null) {
             try {
                 return resourceBundle.getString(key.toString());
-            } catch (final MissingResourceException e) {
+            } catch (MissingResourceException e) {
                 logger.error("Missing key '{}", key.toString(), e.getCause());
                 return INDICATOR_MISSING_KEY + key;
             }
@@ -70,4 +69,4 @@ public final class ResourceBundleUtils {
         return INDICATOR_MISSING_RESOURCE + key;
     }
 
-} // end of ResourceBundleUtils
+}

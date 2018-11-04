@@ -17,19 +17,19 @@
  */
 package de.ryanthara.ja.rycon.core.converter.excel;
 
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import de.ryanthara.ja.rycon.nio.FileFormat;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.WorkbookUtil;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * This class provides functions to convert coordinate or measurement files in ASCII text format
- * into Microsoft Excel (XLS and XLSX) files.
+ * A converter with functions to convert ASCII text coordinate
+ * files into Microsoft Excel files in XLS or XLSX format.
  *
  * @author sebastian
  * @version 1
@@ -37,33 +37,27 @@ import java.util.ArrayList;
  */
 public class Txt2Excel {
 
-    private final ArrayList<String> readStringLines;
+    private final List<String> lines;
     private Workbook workbook;
 
     /**
-     * Class constructor for reader line based text files in different formats.
+     * Creates a converter with a list for the read line based ASCII text file.
      *
-     * @param readStringLines {@code ArrayList<String>} with lines in text format
+     * @param lines list with ASCII text lines
      */
-    public Txt2Excel(ArrayList<String> readStringLines) {
-        this.readStringLines = readStringLines;
+    public Txt2Excel(List<String> lines) {
+        this.lines = new ArrayList<>(lines);
     }
 
     /**
      * Converts a TXT file element by element into an Excel file.
      *
-     * @param isXLS     selector to distinguish between XLS and XLSX file extension
-     * @param sheetName name of the sheet (file name from input file)
-     *
+     * @param fileFormat distinguish between XLS and XLSX file format
+     * @param sheetName  name of the sheet (file name from input file)
      * @return success conversion success
      */
-    public boolean convertTXT2Excel(boolean isXLS, String sheetName) {
-        // general preparation of the workbook
-        if (isXLS) {
-            workbook = new HSSFWorkbook();
-        } else {
-            workbook = new XSSFWorkbook();
-        }
+    public boolean convert(FileFormat fileFormat, String sheetName) {
+        workbook = BaseToolsExcel.prepareWorkbook(fileFormat);
 
         String safeName = WorkbookUtil.createSafeSheetName(sheetName);
         Sheet sheet = workbook.createSheet(safeName);
@@ -74,7 +68,7 @@ public class Txt2Excel {
         short cellNumber;
         short countColumns = 0;
 
-        for (String line : readStringLines) {
+        for (String line : lines) {
             String[] lineSplit = line.trim().split("\\s+");
 
             row = sheet.createRow(rowNumber);
@@ -86,10 +80,10 @@ public class Txt2Excel {
                 cell = row.createCell(cellNumber);
                 cellNumber++;
                 cell.setCellValue(element);
+
                 if (cellNumber > countColumns) {
                     countColumns = cellNumber;
                 }
-
             }
         }
 
@@ -110,4 +104,4 @@ public class Txt2Excel {
         return this.workbook;
     }
 
-} // end of Txt2Excel
+}

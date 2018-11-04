@@ -66,7 +66,6 @@ public enum SourceButton {
      * Returns the {@link SourceButton} from index parameter as static access from switch cases.
      *
      * @param index index to return
-     *
      * @return SourceButton by index
      */
     public static SourceButton fromIndex(int index) {
@@ -90,4 +89,4 @@ public enum SourceButton {
         return this.text;
     }
 
-} // end of SourceButton
+}

@@ -32,7 +32,6 @@ public enum ZeissDialect {
      * Returns the {@link ZeissDialect} from index parameter as static access from switch cases.
      *
      * @param index index to return
-     *
      * @return ZeissDialect by index
      */
     public static ZeissDialect fromIndex(int index) {
@@ -47,4 +46,4 @@ public enum ZeissDialect {
         return selectedZeissDialect;
     }
 
-} // end of ZeissDialect
+}

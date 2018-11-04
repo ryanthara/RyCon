@@ -25,10 +25,11 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
- * Instances of this class provide functions to writer an {@code ArrayList<String>} line by line into a file.
+ * Instances of this class provide functions to writer an {@code List<String>} line by line into a file.
  * <p>
  * A couple of things are implemented as additional functionality. At the moment, there is no thread safety
  * implemented or planed.
@@ -51,7 +52,7 @@ final class LineWriter {
      *
      * @param fileName filename as {@code Path}
      */
-    LineWriter(final Path fileName) {
+    LineWriter(Path fileName) {
         this.fileName = fileName;
     }
 
@@ -66,40 +67,36 @@ final class LineWriter {
     }
 
     /**
-     * Writes a given {@code ArrayList<String>} line by line to the file system.
+     * Writes a given {@code List<String>} line by line to the file system.
      * <p>
      * This second version of the writeFile method uses java.nio functions to writer the file
      * buffered to the file system.
      *
      * @param lines lines to be written to the file
-     *
      * @return writer file success - true if the file was written otherwise false
-     *
-     * @throws IllegalArgumentException throws an {@link IllegalArgumentException} when the lines parameter is null
+     * @throws NullPointerException will be thrown if lines is null
      */
-    public boolean writeFile(final ArrayList<String> lines) {
-        if (lines == null) {
-            throw new IllegalArgumentException();
-        } else {
-            final Charset charset = Charset.forName("UTF-8");
+    public boolean writeFile(List<String> lines) {
+        Objects.requireNonNull(lines, "the path must never be null!");
 
-            writtenLines = 0;
+        final Charset charset = Charset.forName("UTF-8");
 
-            try (BufferedWriter writer = Files.newBufferedWriter(fileName, charset)) {
-                for (String line : lines) {
-                    writer.write(line);
-                    writer.newLine();
+        writtenLines = 0;
 
-                    writtenLines = writtenLines + 1;
-                }
+        try (BufferedWriter writer = Files.newBufferedWriter(fileName, charset)) {
+            for (String line : lines) {
+                writer.write(line);
+                writer.newLine();
 
-                return true;
-            } catch (IOException e) {
-                logger.error("IOException occurred while writing file '{}' in line '{}'.", fileName, writtenLines, e.getCause());
+                writtenLines = writtenLines + 1;
             }
+
+            return true;
+        } catch (IOException e) {
+            logger.error("IOException occurred while writing file '{}' in line '{}'.", fileName, writtenLines, e.getCause());
         }
 
         return false;
     }
 
-} // end of LineWriter
+}

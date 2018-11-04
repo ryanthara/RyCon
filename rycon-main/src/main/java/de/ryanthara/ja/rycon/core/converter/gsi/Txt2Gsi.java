@@ -22,10 +22,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Instances of this class provides functions to convert text formatted measurement files into
- * Leica GSI8 and GSI16 formatted files.
+ * A converter with functions to convert ASCII text coordinate
+ * files into Leica Geosystems GSI8 and GSI16 formatted files.
  *
  * @author sebastian
  * @version 1
@@ -35,80 +36,78 @@ public class Txt2Gsi {
 
     private static final Logger logger = LoggerFactory.getLogger(Txt2Gsi.class.getName());
 
-    private final ArrayList<String> readStringLines;
+    private final List<String> lines;
 
     /**
-     * Constructs a new instance of this class given an {@code ArrayList<String>} that contains
-     * the read txt formatted coordinate file.
+     * Creates a converter with a list for the read line based ASCII text file.
      *
-     * @param readStringLines read lines
+     * @param lines list with ASCII text lines
      */
-    public Txt2Gsi(ArrayList<String> readStringLines) {
-        this.readStringLines = readStringLines;
+    public Txt2Gsi(List<String> lines) {
+        this.lines = new ArrayList<>(lines);
     }
 
     /**
      * Converts a text file (space or tabulator separated) into a GSI formatted file.
      * <p>
-     * <tt>RyCON</tt> uses space or tab as separation sign and not a fixed column position.
+     * RyCON uses space or tab as separation sign and not a fixed column position.
      * <p>
      * The GSI format decision is done by a parameter in the constructor.
      *
      * @param isGSI16                  decision which GSI format is used
      * @param sourceContainsCodeColumn if source file contains a code column
-     *
      * @return converted {@code ArrayList<String>>} with lines
      */
-    public ArrayList<String> convertTxt2Gsi(boolean isGSI16, boolean sourceContainsCodeColumn) {
-        ArrayList<ArrayList<GsiBlock>> blocksInLines = new ArrayList<>();
+    public List<String> convert(boolean isGSI16, boolean sourceContainsCodeColumn) {
+        List<List<GsiBlock>> blocksInLines = new ArrayList<>();
 
         int lineCounter = 1;
 
-        for (String line : readStringLines) {
-            ArrayList<GsiBlock> blocks = new ArrayList<>();
+        for (String line : lines) {
+            List<GsiBlock> blocks = new ArrayList<>();
 
-            String[] lineSplit = line.trim().split("\\s+");
-            switch (lineSplit.length) {
+            String[] values = line.trim().split("\\s+");
+            switch (values.length) {
                 case 1:     // prevent fall through
                     break;
 
                 case 2:     // no, height
-                    blocks.add(new GsiBlock(isGSI16, 11, lineCounter, lineSplit[0]));
-                    blocks.add(new GsiBlock(isGSI16, 83, lineSplit[1]));
+                    blocks.add(new GsiBlock(isGSI16, 11, lineCounter, values[0]));
+                    blocks.add(new GsiBlock(isGSI16, 83, values[1]));
                     break;
 
                 case 3:     // no, code, height or no, easting, northing
-                    blocks.add(new GsiBlock(isGSI16, 11, lineCounter, lineSplit[0]));
+                    blocks.add(new GsiBlock(isGSI16, 11, lineCounter, values[0]));
                     if (sourceContainsCodeColumn) {
-                        blocks.add(new GsiBlock(isGSI16, 71, lineSplit[1]));
-                        blocks.add(new GsiBlock(isGSI16, 83, lineSplit[2]));
+                        blocks.add(new GsiBlock(isGSI16, 71, values[1]));
+                        blocks.add(new GsiBlock(isGSI16, 83, values[2]));
                     } else {
-                        blocks.add(new GsiBlock(isGSI16, 81, lineSplit[1]));
-                        blocks.add(new GsiBlock(isGSI16, 82, lineSplit[2]));
+                        blocks.add(new GsiBlock(isGSI16, 81, values[1]));
+                        blocks.add(new GsiBlock(isGSI16, 82, values[2]));
                     }
                     break;
 
                 case 4:     // no, easting, northing, height
-                    blocks.add(new GsiBlock(isGSI16, 11, lineCounter, lineSplit[0]));
-                    blocks.add(new GsiBlock(isGSI16, 81, lineSplit[1]));
-                    blocks.add(new GsiBlock(isGSI16, 82, lineSplit[2]));
+                    blocks.add(new GsiBlock(isGSI16, 11, lineCounter, values[0]));
+                    blocks.add(new GsiBlock(isGSI16, 81, values[1]));
+                    blocks.add(new GsiBlock(isGSI16, 82, values[2]));
 
                     // necessary because of Basel Stadt CSV distinguish between points without height
-                    if (!lineSplit[3].equals("-9999")) {
-                        blocks.add(new GsiBlock(isGSI16, 83, lineSplit[3]));
+                    if (!values[3].equals("-9999")) {
+                        blocks.add(new GsiBlock(isGSI16, 83, values[3]));
                     }
                     break;
 
                 case 5:     // no, code, easting, northing, height
-                    blocks.add(new GsiBlock(isGSI16, 11, lineCounter, lineSplit[0]));
-                    blocks.add(new GsiBlock(isGSI16, 71, lineSplit[1]));
-                    blocks.add(new GsiBlock(isGSI16, 81, lineSplit[2]));
-                    blocks.add(new GsiBlock(isGSI16, 82, lineSplit[3]));
-                    blocks.add(new GsiBlock(isGSI16, 83, lineSplit[4]));
+                    blocks.add(new GsiBlock(isGSI16, 11, lineCounter, values[0]));
+                    blocks.add(new GsiBlock(isGSI16, 71, values[1]));
+                    blocks.add(new GsiBlock(isGSI16, 81, values[2]));
+                    blocks.add(new GsiBlock(isGSI16, 82, values[3]));
+                    blocks.add(new GsiBlock(isGSI16, 83, values[4]));
                     break;
 
                 default:
-                    logger.trace("Line contains less or more tokens ({}) than needed or allowed.", lineSplit.length);
+                    logger.trace("Line contains less or more tokens ({}) than needed or allowed.", values.length);
                     break;
             }
 
@@ -124,4 +123,4 @@ public class Txt2Gsi {
         return BaseToolsGsi.lineTransformation(isGSI16, blocksInLines);
     }
 
-} // end of Txt2Gsi
+}

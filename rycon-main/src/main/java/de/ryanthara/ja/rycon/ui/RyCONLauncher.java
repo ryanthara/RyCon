@@ -21,7 +21,7 @@ package de.ryanthara.ja.rycon.ui;
 import org.eclipse.swt.widgets.Display;
 
 /**
- * RyCONLauncher controls the launch process of <tt>RyCON</tt> and initialize the Display, a SplashScreen and
+ * RyCONLauncher controls the launch run of RyCON and initialize the Display, a SplashScreen and
  * all of it's services before the main window is shown.
  * <p>
  * This functionality isn't still active.
@@ -36,18 +36,16 @@ public class RyCONLauncher {
      * Constructor which creates a display to show the splash screen.
      */
     private RyCONLauncher() {
-
         Display display = new Display();
 
         // splash screen
         // TODO implement splash screen
         //SplashScreen splashScreen = new SplashScreen(display);
 
-        // initialization process
+        // initialization run
 
         // main window
         new MainApplication();
-
 
         while ((Display.getCurrent().getShells().length != 0)
                 && !Display.getCurrent().getShells()[0].isDisposed()) {
@@ -55,7 +53,6 @@ public class RyCONLauncher {
                 display.sleep();
             }
         }
-
     }
 
     /**
@@ -68,4 +65,5 @@ public class RyCONLauncher {
         // add -XstartOnFirstThread as a java option on VM parameter on OS X
         new RyCONLauncher();
     }
+
 }

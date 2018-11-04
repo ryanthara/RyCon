@@ -24,6 +24,7 @@ import java.util.TreeSet;
 
 /**
  * This {@code TreeSet} has boundaries and ensures, that it never grows beyond a maximum size.
+ *
  * <p>
  * The last element ist removed if the size of the {@code TreeSet} gets bigger than the maximum size.
  *
@@ -36,51 +37,98 @@ public class BoundedTreeSet<E> extends TreeSet<E> {
 
     private int maxSize = Integer.MAX_VALUE;
 
+    /**
+     * Creates a new tree set with a given maximum size.
+     *
+     * @param maxSize the maximum size of the tree set
+     */
     public BoundedTreeSet(int maxSize) {
         super();
         this.setMaxSize(maxSize);
     }
 
-    public BoundedTreeSet(int maxSize, Collection<? extends E> c) {
-        super(c);
+    /**
+     * Creates a new tree set with a given maximum size and initializes it with a collection.
+     *
+     * @param maxSize    the maximum size of the tree set
+     * @param collection the collection to be added
+     */
+    public BoundedTreeSet(int maxSize, Collection<? extends E> collection) {
+        super(collection);
         this.setMaxSize(maxSize);
     }
 
-    public BoundedTreeSet(int maxSize, Comparator<? super E> c) {
-        super(c);
+    public BoundedTreeSet(int maxSize, Comparator<? super E> comparator) {
+        super(comparator);
         this.setMaxSize(maxSize);
     }
 
-    public BoundedTreeSet(int maxSize, SortedSet<E> s) {
-        super(s);
+    /**
+     * Creates a new tree set with a given maximum size and initializes it with a sorted set.
+     *
+     * @param maxSize   the maximum size of the tree set
+     * @param sortedSet the sorted set to be added
+     */
+    public BoundedTreeSet(int maxSize, SortedSet<E> sortedSet) {
+        super(sortedSet);
         this.setMaxSize(maxSize);
     }
 
+    /**
+     * Adds an item to the tree set and adjust it afterwards to it maximum size.
+     *
+     * @param item item to be added
+     * @return true if the item was added
+     */
     public boolean add(E item) {
         boolean out = super.add(item);
+
         adjust();
+
         return out;
     }
 
-    public boolean addAll(Collection<? extends E> c) {
-        boolean out = super.addAll(c);
+    /**
+     * Adds all elements of a collection to the tree set and adjust it afterwards to its maximum size.
+     *
+     * @param collection collection to be added
+     * @return true if all elements were added
+     */
+    public boolean addAll(Collection<? extends E> collection) {
+        boolean out = super.addAll(collection);
+
         adjust();
+
         return out;
     }
 
+    /**
+     * Returns the maximum size.
+     *
+     * @return maximum size
+     */
     public int getMaxSize() {
         return maxSize;
     }
 
+    /**
+     * Sets the maximum size and adjust the tree set afterwards to the maximum value.
+     *
+     * @param max the maximum size of the tree set
+     */
     void setMaxSize(int max) {
         maxSize = max;
+
         adjust();
     }
 
+    /**
+     * Removes all the elements until the tree set has its maximum size.
+     */
     private void adjust() {
         while (maxSize < size()) {
             remove(last());
         }
     }
 
-} // end of BoundedTreeSet
+}

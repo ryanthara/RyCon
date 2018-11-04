@@ -32,7 +32,6 @@ public enum Status {
      * Returns the {@link Status} from index parameter as static access from switch cases.
      *
      * @param index index to return
-     *
      * @return Status by index
      */
     public static Status fromIndex(int index) {
@@ -47,4 +46,4 @@ public enum Status {
         return selectedStatus;
     }
 
-} // end of Status
+}

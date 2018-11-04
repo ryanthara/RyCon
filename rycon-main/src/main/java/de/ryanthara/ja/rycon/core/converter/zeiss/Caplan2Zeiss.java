@@ -20,10 +20,11 @@ package de.ryanthara.ja.rycon.core.converter.zeiss;
 import de.ryanthara.ja.rycon.core.elements.CaplanBlock;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Instances of this class provides functions to convert a Caplan K formatted coordinate file
- * into Zeiss REC files with it's dialects (R4, R5, REC500 and M5).
+ * A converter with functions to convert coordinate coordinate files from Caplan K
+ * program into Zeiss REC files with it's dialects (R4, R5, REC500 and M5).
  *
  * @author sebastian
  * @version 1
@@ -31,30 +32,29 @@ import java.util.ArrayList;
  */
 public class Caplan2Zeiss {
 
-    private final ArrayList<String> readStringLines;
+    private final List<String> lines;
 
     /**
-     * Constructs a new instance of this class with the reader Caplan K file {@link ArrayList} string as parameter.
+     * Creates a converter with a list for the read line based Caplan K file.
      *
-     * @param readStringLines {@code ArrayList<String>} with lines in Caplan K format
+     * @param lines list with Caplan K formatted lines
      */
-    public Caplan2Zeiss(ArrayList<String> readStringLines) {
-        this.readStringLines = readStringLines;
+    public Caplan2Zeiss(List<String> lines) {
+        this.lines = new ArrayList<>(lines);
     }
 
     /**
      * Converts a Caplan K formatted coordinate file into a Zeiss REC formatted file.
      *
      * @param dialect dialect of the target file
-     *
      * @return string lines of the target file
      */
-    public ArrayList<String> convertK2REC(ZeissDialect dialect) {
-        ArrayList<String> result = new ArrayList<>();
+    public List<String> convert(ZeissDialect dialect) {
+        List<String> result = new ArrayList<>();
 
         int lineNumber = 0;
 
-        for (String line : readStringLines) {
+        for (String line : lines) {
             // skip empty lines directly after reading
             if (!line.trim().isEmpty()) {
                 String number = "", easting = "", northing = "", height = "", code = "";
@@ -87,7 +87,7 @@ public class Caplan2Zeiss {
             }
         }
 
-        return result;
+        return List.copyOf(result);
     }
 
-} // end of Caplan2Zeiss
+}

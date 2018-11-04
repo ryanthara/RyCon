@@ -34,10 +34,12 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.IntStream;
 
 /**
- * Instances of this class provides functions to convert different XML based Leica Geosystems
- * level observations files into an ascii file.
+ * A converter with functions to convert Leica Geosystems GSI observations files into ASCII text files.
+ *
  * <p>
  * The line based ascii file contains one point (no x y z) in every line which coordinates
  * are separated by a single white space character.
@@ -57,8 +59,8 @@ public class LeicaObservations2Asc extends Converter {
     private final Path path;
 
     /**
-     * Constructs a new instance of this class with a parameter
-     * for the Leica Geosystems observations protocol (*.LEV).
+     * Creates a converter with a path reference for the
+     * Leica Geosystems observations protocol (*.LEV) file.
      *
      * @param path               path to xml file
      * @param ignoreChangePoints change points with number '0' has to be ignored
@@ -66,7 +68,6 @@ public class LeicaObservations2Asc extends Converter {
     public LeicaObservations2Asc(Path path, boolean ignoreChangePoints) {
         this.path = path;
         this.ignoreChangePoints = ignoreChangePoints;
-
     }
 
     /**
@@ -76,8 +77,8 @@ public class LeicaObservations2Asc extends Converter {
      * @return converted Nigra altitude register format file
      */
     @Override
-    public ArrayList<String> convert() {
-        ArrayList<String> result = new ArrayList<>();
+    public List<String> convert() {
+        List<String> result = new ArrayList<>();
 
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db;
@@ -90,13 +91,12 @@ public class LeicaObservations2Asc extends Converter {
             doc.getDocumentElement().normalize();
 
             // catch all points
-            NodeList nList = doc.getElementsByTagName("Point");
+            NodeList nodeList = doc.getElementsByTagName("Point");
 
-            ArrayList<Point> dummyCoordinates = DummyCoordinates.getList(nList.getLength());
+            List<Point> dummyCoordinates = DummyCoordinates.getList(nodeList.getLength());
 
-            for (int i = 0; i < nList.getLength(); i++) {
-                Node nNode = nList.item(i);
-
+            IntStream.range(0, nodeList.getLength()).forEach(i -> {
+                Node nNode = nodeList.item(i);
                 if (nNode.getNodeType() == Node.ELEMENT_NODE) {
                     Element eElement = (Element) nNode;
 
@@ -116,7 +116,7 @@ public class LeicaObservations2Asc extends Converter {
                         result.add(number.trim() + Converter.SEPARATOR + x + Converter.SEPARATOR + y + Converter.SEPARATOR + height.trim());
                     }
                 }
-            }
+            });
         } catch (ParserConfigurationException e) {
             logger.error("Can not establish a document builder for '{}'.", path.toString(), e.getCause());
         } catch (SAXException e) {
@@ -125,7 +125,7 @@ public class LeicaObservations2Asc extends Converter {
             logger.error("Can not read the file '{}'.", path.toString(), e.getCause());
         }
 
-        return new ArrayList<>(result);
+        return List.copyOf(result);
     }
 
-} // end of LeicaObservations2Asc
+}

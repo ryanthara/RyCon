@@ -18,7 +18,7 @@
 package de.ryanthara.ja.rycon.nio;
 
 /**
- * The {@code FileNameExtension} enumeration holds all filename extension strings for <tt>RyCON</tt>.
+ * The {@code FileNameExtension} enumeration holds all filename extension strings for RyCON.
  *
  * @author sebastian
  * @version 1
@@ -56,4 +56,4 @@ public enum FileNameExtension {
         return extension;
     }
 
-} // end of FileNameExtension
+}

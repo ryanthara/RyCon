@@ -32,8 +32,8 @@ import java.util.Objects;
  */
 public class RyPoint {
 
-    private double x, y, z;
     private final String number;
+    private double x, y, z;
     private String easting;
     private String northing;
     private String height;
@@ -100,7 +100,6 @@ public class RyPoint {
      * and height. Although instrument or reflector height if is set.
      *
      * @param obj object to compare
-     *
      * @return true if equal
      */
     @Override
@@ -159,7 +158,6 @@ public class RyPoint {
      * Returns the horizontal distance between this point and the point p2.
      *
      * @param p2 second point
-     *
      * @return horizontal distance
      */
     public double getHorizontalDistance(RyPoint p2) {
@@ -209,7 +207,6 @@ public class RyPoint {
      * Returns the slope distance between this point and the point p2.
      *
      * @param p2 second point
-     *
      * @return slope distance
      */
     public double getSlopeDistance(RyPoint p2) {
@@ -267,7 +264,6 @@ public class RyPoint {
      * Returns the x coordinate difference (p.x - p2.x)
      *
      * @param p2 second point
-     *
      * @return x coordinate difference (p.x - p2.x)
      */
     private double getDistanceX(RyPoint p2) {
@@ -278,7 +274,6 @@ public class RyPoint {
      * Returns the y coordinate difference (p.y - p2.y)
      *
      * @param p2 second point
-     *
      * @return y coordinate difference (p.y - p2.y)
      */
     private double getDistanceY(RyPoint p2) {
@@ -289,11 +284,10 @@ public class RyPoint {
      * Returns the z coordinate difference (p.z - p2.z)
      *
      * @param p2 second point
-     *
      * @return z coordinate difference (p.z - p2.z)
      */
     private double getDistanceZ(RyPoint p2) {
         return this.z - p2.getZ();
     }
 
-} // end of RyPoint
+}

@@ -17,49 +17,43 @@
  */
 package de.ryanthara.ja.rycon.core.converter.excel;
 
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import de.ryanthara.ja.rycon.nio.FileFormat;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.WorkbookUtil;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class provides functions to convert coordinate files from CSV format into Microsoft Excel files
- * in XLS or XLSX format.
+ * A converter with functions to convert comma separated values (CSV)
+ * coordinate files into Microsoft Excel files in XLS or XLSX format.
  */
 public class Csv2Excel {
 
-    private final List<String[]> readCSVLines;
+    private final List<String[]> lines;
     private Workbook workbook;
 
     /**
-     * Class constructor for reader line based CSV files.
+     * Creates a converter with a list for the read line based comma separated values (CSV) files.
      *
-     * @param readCSVLines {@code List<String[]>} with lines as {@code String[]}
+     * @param lines list with lines of comma separated values (CSV)
      */
-    public Csv2Excel(List<String[]> readCSVLines) {
-        this.readCSVLines = readCSVLines;
+    public Csv2Excel(List<String[]> lines) {
+        this.lines = new ArrayList<>(lines);
     }
 
     /**
      * Convert a CSV file element by element into an Excel file.
      *
-     * @param isXLS     selector to distinguish between XLS and XLSX file extension
-     * @param sheetName name of the sheet (file name from input file)
-     *
+     * @param fileFormat distinguish between XLS and XLSX file format
+     * @param sheetName  name of the sheet (file name from input file)
      * @return success conversion success
      */
-    public boolean convertCSV2Excel(boolean isXLS, String sheetName) {
-        // general preparation of the workbook
-        if (isXLS) {
-            workbook = new HSSFWorkbook();
-        } else {
-            workbook = new XSSFWorkbook();
-        }
+    public boolean convert(FileFormat fileFormat, String sheetName) {
+        workbook = BaseToolsExcel.prepareWorkbook(fileFormat);
 
         String safeName = WorkbookUtil.createSafeSheetName(sheetName);
         Sheet sheet = workbook.createSheet(safeName);
@@ -70,7 +64,7 @@ public class Csv2Excel {
         short cellNumber;
         short countColumns = 0;
 
-        for (String[] csvLine : readCSVLines) {
+        for (String[] csvLine : lines) {
             row = sheet.createRow(rowNumber);
             rowNumber++;
 
@@ -104,4 +98,4 @@ public class Csv2Excel {
         return this.workbook;
     }
 
-} // end of Csv2Excel
+}

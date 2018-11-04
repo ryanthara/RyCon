@@ -18,23 +18,26 @@
 package de.ryanthara.ja.rycon.core.splitter;
 
 import de.ryanthara.ja.rycon.core.elements.RyBlock;
-import de.ryanthara.ja.rycon.util.SortHelper;
+import de.ryanthara.ja.rycon.util.SortUtils;
+import de.ryanthara.ja.rycon.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
 
 public class NodeDatCodeSplit {
-    private final ArrayList<String> readStringLines;
+
+    private final List<String> lines;
     private final TreeSet<Integer> foundCodes;
 
     /**
      * Constructs a new instance of this class given a read line based text file with a specified format.
      *
-     * @param arrayList {@code ArrayList<String>} with lines in text format
+     * @param lines {@code List<String>} with lines in text format
      */
-    public NodeDatCodeSplit(ArrayList<String> arrayList) {
-        this.readStringLines = arrayList;
+    public NodeDatCodeSplit(List<String> lines) {
+        this.lines = lines;
         foundCodes = new TreeSet<>();
     }
 
@@ -53,7 +56,7 @@ public class NodeDatCodeSplit {
      * Splits a 'node.dat' text file from cadwork into separate files by code.
      * <p>
      * A separate file is generated for every existing code. Lines without code will get the pseudo code '987789'.
-     * <tt>RyCON</tt> need a text file format that is no, code, x, y, z and divided by blank or tab.
+     * RyCON need a text file format that is no, code, x, y, z and divided by blank or tab.
      * <p>
      * A 'node.dat' file is a node list export file from cadwork cad program with the following structure.
      * Usually the units are in metre. A code is always set, a name only if the knots are named.
@@ -62,17 +65,17 @@ public class NodeDatCodeSplit {
      *
      * @return converted {@code ArrayList<ArrayList<String>>} for writing
      */
-    public ArrayList<ArrayList<String>> processCodeSplit() {
+    public List<ArrayList<String>> processCodeSplit() {
+        List<String> header = new ArrayList<>();
+        List<ArrayList<String>> result = new ArrayList<>();
+        List<RyBlock> linesWithCode = new ArrayList<>();
+
         StringTokenizer stringTokenizer;
 
-        ArrayList<String> header = new ArrayList<>();
-        ArrayList<ArrayList<String>> result = new ArrayList<>();
-        ArrayList<RyBlock> linesWithCode = new ArrayList<>();
-
         // check for content
-        if (readStringLines.get(1).contains("Knotenliste in [m]")) {
-            for (int i = 0; i < readStringLines.size(); i++) {
-                String line = readStringLines.get(i);
+        if (lines.get(1).contains("Knotenliste in [m]")) {
+            for (int i = 0; i < lines.size(); i++) {
+                String line = lines.get(i);
 
                 // write first six lines into a header which is added to every code file
                 if (i < 6) {
@@ -91,13 +94,15 @@ public class NodeDatCodeSplit {
                     stringTokenizer.nextToken();    // Z
 
                     String code = stringTokenizer.nextToken();
-                    foundCodes.add(Integer.parseInt(code));
 
-                    linesWithCode.add(new RyBlock(Integer.parseInt(code), line));
+                    int codeValue = StringUtils.parseIntegerValue(code);
+
+                    foundCodes.add(codeValue);
+                    linesWithCode.add(new RyBlock(codeValue, line));
                 }
             }
 
-            SortHelper.sortByCode(linesWithCode);
+            SortUtils.sortByCode(linesWithCode);
 
             if (linesWithCode.size() > 0) {
                 // helpers for generating a new array for every found code
@@ -122,7 +127,7 @@ public class NodeDatCodeSplit {
             }
         }
 
-        return result;
+        return List.copyOf(result);
     }
 
-} // end of NodeDatCodeSplit
+}

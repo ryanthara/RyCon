@@ -17,18 +17,19 @@
  */
 package de.ryanthara.ja.rycon;
 
-import de.ryanthara.ja.rycon.cli.CmdLineInterfaceException;
-import de.ryanthara.ja.rycon.cli.CmdLineInterfaceParser;
-import de.ryanthara.ja.rycon.data.DefaultKeys;
+import de.ryanthara.ja.rycon.cli.CommandLineInterfaceException;
+import de.ryanthara.ja.rycon.cli.CommandLineInterfaceParser;
+import de.ryanthara.ja.rycon.data.ApplicationKey;
 import de.ryanthara.ja.rycon.data.PreferenceHandler;
 import de.ryanthara.ja.rycon.data.Version;
-import de.ryanthara.ja.rycon.i18n.Errors;
-import de.ryanthara.ja.rycon.i18n.LangStrings;
-import de.ryanthara.ja.rycon.i18n.Messages;
+import de.ryanthara.ja.rycon.i18n.Error;
+import de.ryanthara.ja.rycon.i18n.LangString;
+import de.ryanthara.ja.rycon.i18n.Message;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 import de.ryanthara.ja.rycon.ui.UpdateDialog;
 import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
 import de.ryanthara.ja.rycon.ui.custom.StatusBar;
+import de.ryanthara.ja.rycon.util.StringUtils;
 import de.ryanthara.ja.rycon.util.Updater;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -43,12 +44,12 @@ import java.util.Arrays;
 import java.util.Locale;
 import java.util.Optional;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.*;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundle.*;
 
 /**
- * {@code Main} implements values, constants and objects for the complete <tt>RyCON</tt> application as an abstract class.
+ * {@code Main} implements values, constants and objects for the complete RyCON application as an abstract class.
  * <p>
- * This class was implemented after version 1 of <tt>RyCON</tt> to get easier access to different things.
+ * This class was implemented after version 1 of RyCON to get easier access to different things.
  * The main idea to do this step was influenced by the code base of JOSM, which is the most popular
  * java written editor for OpenStreetMap data.
  *
@@ -58,15 +59,8 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundles.*;
  */
 public abstract class Main {
 
-    /**
-     * Member that is used to indicate that a text is in singular.
-     */
-    public static final boolean TEXT_SINGULAR = true;
-    /**
-     * Member that is used to indicate that a text is in plural.
-     */
-    public static final boolean TEXT_PLURAL = false;
     private static final Logger logger = LoggerFactory.getLogger(Main.class.getName());
+
     private static final boolean GSI8 = false;
     private static final boolean GSI16 = true;
     /**
@@ -96,7 +90,7 @@ public abstract class Main {
     /**
      * Checks the command line interface and it's given arguments.
      * <p>
-     * <tt>RyCON</tt> accept a couple of simple command line interface (cli) arguments. At the moment there are
+     * RyCON accept a couple of simple command line interface (cli) arguments. At the moment there are
      * the following parameters implemented and can be used as described.
      * <p>
      * --help               shows the help and the valid cli arguments
@@ -104,15 +98,14 @@ public abstract class Main {
      * --file=[input file]  [input file] input file with path which is used in the source text field
      *
      * @param args command line interface arguments
-     *
      * @since 5
      */
     protected static void checkCommandLineInterfaceArguments(String... args) {
-        CmdLineInterfaceParser parser = new CmdLineInterfaceParser();
+        CommandLineInterfaceParser parser = new CommandLineInterfaceParser();
 
         try {
             parser.parseArguments(args);
-        } catch (CmdLineInterfaceException e) {
+        } catch (CommandLineInterfaceException e) {
             logger.error("Can not parse command line interface arguments '{}'.", Arrays.toString(args), e.getCause());
 
             // TODO implement better cli parsing error solution
@@ -146,8 +139,8 @@ public abstract class Main {
     /**
      * Checks the current JAVA version.
      * <p>
-     * During the startup of <tt>RyCON</tt> the version of the installed JRE is checked.
-     * <tt>RyCON</tt> can be started only if a minimum version of a JRE is installed on
+     * During the startup of RyCON the version of the installed JRE is checked.
+     * RyCON can be started only if a minimum version of a JRE is installed on
      * the system. This is due to swt dependencies and java dependencies.
      * <p>
      * At minimum a JRE version of 1.7 is necessary and must be installed on the
@@ -162,18 +155,17 @@ public abstract class Main {
             // safe check
             int pos = version.indexOf('.');
             pos = version.indexOf('.', pos + 1);
-            double ver = Double.parseDouble(version.substring(0, pos));
 
-            if (ver < 1.7) {
+            if (StringUtils.parseDoubleValue(version.substring(0, pos)) < 1.7) {
                 Display display = new Display();
                 Shell shell = new Shell(display);
 
                 int rc = MessageBoxes.showMessageBox(shell, SWT.ICON_ERROR | SWT.YES | SWT.NO,
-                        ResourceBundleUtils.getLangString(ERRORS, Errors.javaVersionText),
-                        ResourceBundleUtils.getLangString(ERRORS, Errors.javaVersionMessage));
+                        ResourceBundleUtils.getLangString(ERROR, Error.javaVersionText),
+                        ResourceBundleUtils.getLangString(ERROR, Error.javaVersionMessage));
 
                 if (rc == SWT.YES) {
-                    Optional<URI> uri = DefaultKeys.JAVA_WEBSITE.getURI();
+                    Optional<URI> uri = ApplicationKey.JAVA_WEBSITE.getURI();
 
                     try {
                         if (uri.isPresent()) {
@@ -194,9 +186,9 @@ public abstract class Main {
     }
 
     /**
-     * Performs an online check for a new <tt>RyCON</tt> version.
+     * Performs an online check for a new RyCON version.
      * <p>
-     * If a newer version of <tt>RyCON</tt> is available an info dialog is shown to the user
+     * If a newer version of RyCON is available an info dialog is shown to the user
      * and an update is offered. This update has to be installed manually.
      * <p>
      * At the moment it is not planned to force an automatic update via Java Webstart functions or special routines.
@@ -219,13 +211,13 @@ public abstract class Main {
                 Shell shell = new Shell(display);
 
                 UpdateDialog updateDialog = new UpdateDialog(shell);
-                updateDialog.setText(ResourceBundleUtils.getLangStringFromXml(LANG_STRINGS, LangStrings.update_Text));
-                updateDialog.setMessage(ResourceBundleUtils.getLangString(MESSAGES, Messages.ryCONUpdate));
+                updateDialog.setText(ResourceBundleUtils.getLangStringFromXml(LANG_STRING, LangString.update_Text));
+                updateDialog.setMessage(ResourceBundleUtils.getLangString(MESSAGE, Message.ryCONUpdate));
                 updateDialog.setWhatsNewInfo(updater.getWhatsNew());
                 int returnCode = updateDialog.open();
 
                 if (returnCode == UpdateDialog.CLOSE_AND_OPEN_BROWSER) {
-                    Optional<URI> uri = DefaultKeys.RyCON_WEBSITE.getURI();
+                    Optional<URI> uri = ApplicationKey.RyCON_WEBSITE.getURI();
 
                     try {
                         if (uri.isPresent()) {
@@ -235,11 +227,11 @@ public abstract class Main {
                         display.dispose();
                         System.exit(0);
                     } catch (IOException e) {
-                        logger.warn("Can not open the RyCON website '{}' with the default browser.", DefaultKeys.RyCON_WEBSITE.getValue(), e.getCause());
+                        logger.warn("Can not open the RyCON website '{}' with the default browser.", ApplicationKey.RyCON_WEBSITE.getValue(), e.getCause());
                     }
                 } else if (returnCode == UpdateDialog.CLOSE_AND_CONTINUE) {
                     logger.info("An old version of RyCON ({}) is used.", Version.getVersion());
-                    logger.info("Please update RyCON from '{}'.", DefaultKeys.RyCON_WEBSITE.getValue());
+                    logger.info("Please update RyCON from '{}'.", ApplicationKey.RyCON_WEBSITE.getValue());
                 }
 
                 display.dispose();
@@ -248,7 +240,7 @@ public abstract class Main {
     }
 
     /**
-     * Returns the reader command line interface input files as string.
+     * Returns the read command line interface input files as string.
      *
      * @return cli input files
      */
@@ -278,7 +270,6 @@ public abstract class Main {
      * Returns true as the indicator for GSI16.
      *
      * @return true as indicator for GSI16 format
-     *
      * @since 3
      */
     public static boolean getGsi16() {
@@ -289,7 +280,6 @@ public abstract class Main {
      * Returns false as the indicator for GSI8.
      *
      * @return false as indicator for GSI8 format
-     *
      * @since 3
      */
     public static boolean getGsi8() {
@@ -334,7 +324,6 @@ public abstract class Main {
      * Sets the locale to a given language code in alpha-2 or alpha-3 language code.
      *
      * @param languageCode language code
-     *
      * @see <a href="http://docs.oracle.com/javase/7/docs/api/java/util/Locale.html">Locale.html</a>
      */
     private static void setLocaleTo(String languageCode) {
@@ -350,8 +339,4 @@ public abstract class Main {
         isSettingsWidgetOpenStatus = isOpen;
     }
 
-    public static void updateStatus(String s) {
-        System.out.println(s);
-    }
-
-}  // end of Main
+}

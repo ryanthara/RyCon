@@ -20,9 +20,11 @@ package de.ryanthara.ja.rycon.core.converter.gsi;
 import de.ryanthara.ja.rycon.core.elements.GsiBlock;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Instances of this class provides functions to convert coordinate files from Cadwork CAD program into Leica GSI files.
+ * A converter with functions to convert Cadwork CAD program
+ * coordinate files into Leica Geosystems GSI files.
  *
  * @author sebastian
  * @version 2
@@ -30,61 +32,58 @@ import java.util.ArrayList;
  */
 public class Cadwork2Gsi {
 
-    private final ArrayList<String> readStringLines;
+    private final List<String> lines;
 
     /**
-     * Constructs a new instance of this class with a parameter for the  {@code ArrayList<String>} with the reader line based
-     * text files from Cadwork CAD program (node.dat).
+     * Creates a converter with a list for the read line based text file from Cadwork CAD program.
      *
-     * @param readStringLines {@code ArrayList<String>} with reader lines from node.dat file
+     * @param lines list with read node.dat lines
      */
-    public Cadwork2Gsi(ArrayList<String> readStringLines) {
-        this.readStringLines = readStringLines;
+    public Cadwork2Gsi(List<String> lines) {
+        this.lines = new ArrayList<>(lines);
     }
 
     /**
-     * Converts a coordinate file from Cadwork (node.dat) into a Leica GSI8 or GS16 formatted file.
+     * Converts a coordinate file from Cadwork (node.dat) into a Leica Geosystems GSI8 or GS16 formatted file.
      * <p>
      * Due to issues data precision is going to be lost.
      *
      * @param isGSI16        Output file is GSI16 format
      * @param useCodeColumn  Use the code column from node.dat
      * @param useZeroHeights Use heights with zero (0.000) values
-     *
-     * @return converted {@code ArrayList<String>} with lines of GSI8 or GSI16 format
+     * @return converted {@code List<String>} with lines of GSI8 or GSI16 format
      */
-    public ArrayList<String> convertCadwork2GSI(boolean isGSI16, boolean useCodeColumn, boolean useZeroHeights) {
-        ArrayList<GsiBlock> blocks;
-        ArrayList<ArrayList<GsiBlock>> blocksInLines = new ArrayList<>();
+    public List<String> convert(boolean isGSI16, boolean useCodeColumn, boolean useZeroHeights) {
+        List<GsiBlock> blocks;
+        List<List<GsiBlock>> blocksInLines = new ArrayList<>();
 
-        // remove not needed headlines
-        readStringLines.subList(0, 3).clear();
+        removeHeadLines();
 
         int lineCounter = 1;
 
-        for (String line : readStringLines) {
+        for (String line : lines) {
             blocks = new ArrayList<>();
 
-            String[] lineSplit = line.trim().split("\\s+", -1);
+            String[] values = line.trim().split("\\s+", -1);
 
             // point number
-            blocks.add(new GsiBlock(isGSI16, 11, lineCounter, lineSplit[5]));
+            blocks.add(new GsiBlock(isGSI16, 11, lineCounter, values[5]));
 
             // use code if necessary
             if (useCodeColumn) {
-                blocks.add(new GsiBlock(isGSI16, 71, lineSplit[4]));
+                blocks.add(new GsiBlock(isGSI16, 71, values[4]));
             }
 
             // easting and northing
-            blocks.add(new GsiBlock(isGSI16, 81, lineSplit[1]));
-            blocks.add(new GsiBlock(isGSI16, 82, lineSplit[2]));
+            blocks.add(new GsiBlock(isGSI16, 81, values[1]));
+            blocks.add(new GsiBlock(isGSI16, 82, values[2]));
 
             // use height if necessary
             if (useZeroHeights) {
-                blocks.add(new GsiBlock(isGSI16, 83, lineSplit[3]));
+                blocks.add(new GsiBlock(isGSI16, 83, values[3]));
             } else {
-                if (!lineSplit[3].equals("0.000000")) {
-                    blocks.add(new GsiBlock(isGSI16, 83, lineSplit[3]));
+                if (!values[3].equals("0.000000")) {
+                    blocks.add(new GsiBlock(isGSI16, 83, values[3]));
                 }
             }
 
@@ -98,4 +97,8 @@ public class Cadwork2Gsi {
         return BaseToolsGsi.lineTransformation(isGSI16, blocksInLines);
     }
 
-} // end of Cadwork2Gsi
+    private void removeHeadLines() {
+        lines.subList(0, 3).clear();
+    }
+
+}

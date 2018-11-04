@@ -18,7 +18,7 @@
 
 package de.ryanthara.ja.rycon.ui.preferences.validator;
 
-import de.ryanthara.ja.rycon.util.check.PathCheck;
+import de.ryanthara.ja.rycon.nio.util.check.PathCheck;
 
 import java.nio.file.Path;
 
@@ -38,12 +38,11 @@ public class ValidatorPath implements Validator<Path> {
      * Validates a given {@code Path} to be valid.
      *
      * @param path path to be checked
-     *
      * @return true if path exists in the file system
      */
     @Override
-    public boolean isValid(final Path path) {
+    public boolean isValid(Path path) {
         return PathCheck.isValid(path);
     }
 
-} // end of ValidatorPath
+}

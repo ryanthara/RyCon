@@ -21,10 +21,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * This class provides functions to convert a txt formatted coordinate file from the geodata server
- * Basel Landschaft (Switzerland) into a text formatted file.
+ * A converter with functions to convert coordinate files from the geodata
+ * server Basel Landschaft (Switzerland) into a text formatted file.
  *
  * @author sebastian
  * @version 1
@@ -35,15 +36,16 @@ public class TxtBaselLandschaft2Txt {
 
     private static final Logger logger = LoggerFactory.getLogger(TxtBaselLandschaft2Txt.class.getName());
 
-    private final ArrayList<String> readStringLines;
+    private final List<String> lines;
 
     /**
-     * Class constructor for reader line based text files in different formats.
+     * Creates a converter with a list for the read line based text files
+     * from the geodata server Basel Landschaft (Switzerland).
      *
-     * @param readStringLines {@code ArrayList<String>} with lines in text format
+     * @param lines list with coordinate lines
      */
-    public TxtBaselLandschaft2Txt(ArrayList<String> readStringLines) {
-        this.readStringLines = readStringLines;
+    public TxtBaselLandschaft2Txt(List<String> lines) {
+        this.lines = new ArrayList<>(lines);
     }
 
     /**
@@ -55,36 +57,34 @@ public class TxtBaselLandschaft2Txt {
      *
      * @param separator       distinguish between tabulator or space as division sign
      * @param writeCodeColumn use 'Versicherungsart' (LFP) as code column on second position
-     *
-     * @return converted {@code ArrayList<String>} with lines of text format
+     * @return converted {@code List<String>} with lines of text format
      */
-    public ArrayList<String> convertTXTBaselLandschaft2TXT(String separator, boolean writeCodeColumn) {
-        ArrayList<String> result = new ArrayList<>();
+    public List<String> convert(String separator, boolean writeCodeColumn) {
+        List<String> result = new ArrayList<>();
 
-        // remove comment line
-        readStringLines.remove(0);
+        removeCommentLine();
 
-        for (String line : readStringLines) {
+        for (String line : lines) {
             String s;
 
-            String[] lineSplit = line.trim().split("\\t", -1);
+            String[] values = line.trim().split("\\t", -1);
 
             // point number is in column 2
-            s = lineSplit[1];
+            s = values[1];
             s = s.concat(separator);
 
-            switch (lineSplit.length) {
+            switch (values.length) {
                 case 5:     // HFP file
                     // easting (Y) is in column 3
-                    s = s.concat(lineSplit[2]);
+                    s = s.concat(values[2]);
                     s = s.concat(separator);
 
                     // northing (X) is in column 4
-                    s = s.concat(lineSplit[3]);
+                    s = s.concat(values[3]);
                     s = s.concat(separator);
 
                     // height (Z) is in column 5, and always valued (HFP file)
-                    s = s.concat(lineSplit[4]);
+                    s = s.concat(values[4]);
                     s = s.concat(separator);
 
                     result.add(s.trim());
@@ -93,34 +93,38 @@ public class TxtBaselLandschaft2Txt {
                 case 6:     // LFP file
                     // use 'Versicherungsart' as code. It is in column 3
                     if (writeCodeColumn) {
-                        s = s.concat(lineSplit[2]);
+                        s = s.concat(values[2]);
                         s = s.concat(separator);
                     }
 
                     // easting (Y) is in column 4
-                    s = s.concat(lineSplit[3]);
+                    s = s.concat(values[3]);
                     s = s.concat(separator);
 
                     // northing (X) is in column 5
-                    s = s.concat(lineSplit[4]);
+                    s = s.concat(values[4]);
                     s = s.concat(separator);
 
                     // height (Z) is in column 6, and not always valued (LFP file)
-                    if (lineSplit[5].equals("NULL")) {
+                    if (values[5].equals("NULL")) {
                         s = s.concat("-9999");
                     } else {
-                        s = s.concat(lineSplit[5]);
+                        s = s.concat(values[5]);
                     }
 
                     result.add(s.trim());
                     break;
 
                 default:
-                    logger.trace("Line contains less or more tokens ({}) than needed or allowed.", lineSplit.length);
+                    logger.trace("Line contains less or more tokens ({}) than needed or allowed.", values.length);
                     break;
             }
         }
-        return result;
+        return List.copyOf(result);
     }
 
-} // end of TxtBaselLandschaft2Txt
+    private void removeCommentLine() {
+        lines.remove(0);
+    }
+
+}

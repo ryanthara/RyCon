@@ -21,7 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class provides functions to convert a CSV formatted measurement or coordinate file into a text formatted file.
+ * A converter with functions to convert comma separated
+ * values (CSV) coordinate files into a text formatted file.
  *
  * @author sebastian
  * @version 1
@@ -29,15 +30,15 @@ import java.util.List;
  */
 public class Csv2Txt {
 
-    private final List<String[]> readCSVLines;
+    private final List<String[]> lines;
 
     /**
-     * Constructs a new instance of this class with a parameter for the reader line based CSV files.
+     * Creates a converter with a list for the read line based comma separated values (CSV) files.
      *
-     * @param readCSVLines {@code List<String[]>} with lines as {@code String[]}
+     * @param lines list with lines of comma separated values (CSV)
      */
-    public Csv2Txt(List<String[]> readCSVLines) {
-        this.readCSVLines = readCSVLines;
+    public Csv2Txt(List<String[]> lines) {
+        this.lines = new ArrayList<>(lines);
     }
 
     /**
@@ -46,18 +47,17 @@ public class Csv2Txt {
      * The number of columns are quite equal.
      *
      * @param separator separator sign to use for conversion
-     *
      * @return converted TXT file
      */
-    public ArrayList<String> convertCSV2TXT(String separator) {
-        ArrayList<String> result = new ArrayList<>();
+    public List<String> convert(String separator) {
+        List<String> result = new ArrayList<>();
 
         // convert the List<String[]> into an ArrayList<String> and use known stuff (-:
-        for (String[] stringField : readCSVLines) {
+        for (String[] values : lines) {
             String line = "";
 
-            for (String s : stringField) {
-                line = line.concat(s);
+            for (String value : values) {
+                line = line.concat(value);
                 line = line.concat(separator);
             }
 
@@ -69,7 +69,8 @@ public class Csv2Txt {
                 result.add(line);
             }
         }
-        return result;
+
+        return List.copyOf(result);
     }
 
-} // end of Csv2Txt
+}

@@ -18,7 +18,7 @@
 
 package de.ryanthara.ja.rycon.util;
 
-import de.ryanthara.ja.rycon.data.DefaultKeys;
+import de.ryanthara.ja.rycon.data.ApplicationKey;
 import de.ryanthara.ja.rycon.data.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,10 +40,10 @@ import java.util.Scanner;
 import java.util.regex.Pattern;
 
 /**
- * Class {@code Updater} handles all of the update functionality for RyCON.
+ * Handles the update functionality for RyCON.
  * <p>
- * Therefore it checks the <tt>RyCON</tt> website (URL 'https://code.ryanthara.de/RyCON')
- * for a new <tt>RyCON</tt> version.
+ * Therefore it checks the RyCON website (URL 'https://code.ryanthara.de/RyCON')
+ * for a new RyCON version.
  *
  * @author sebastian
  * @version 5
@@ -52,7 +52,8 @@ import java.util.regex.Pattern;
 public class Updater {
 
     private static final Logger logger = LoggerFactory.getLogger(Updater.class.getName());
-    private boolean updateAvailable = false;
+
+    private boolean isUpdateAvailable = false;
 
     /**
      * Default constructor which init the logging handler.
@@ -61,7 +62,7 @@ public class Updater {
     }
 
     /**
-     * Performs the check of the <tt>RyCON</tt> update website.
+     * Performs the check of the RyCON update website.
      * <p>
      * Due to JAVA's SSL implementations and it's constrained to store the key in the public keychain,
      * this is a 'hack' to bypass the ssl check easily. This should be done better in a future version.
@@ -70,10 +71,97 @@ public class Updater {
      */
     // TODO correct return null
     public boolean checkForUpdate() {
-        boolean success = false;
+        TrustManager[] trustAllCerts = getTrustManagers();
+        activateTrustManager(trustAllCerts);
 
-        // Create a new trust manager that trust all certificates
-        TrustManager[] trustAllCerts = new TrustManager[]{
+        try {
+            URL updateUrl = new URL(ApplicationKey.RyCON_UPDATE_URL.getValue());
+            HttpsURLConnection huc = (HttpsURLConnection) updateUrl.openConnection();
+            huc.setRequestMethod("GET");
+            huc.connect();
+
+            if (huc.getResponseCode() == 200) { // document found on server
+                if (huc.getContentLength() > 0) {
+                    Scanner scanner = new Scanner(updateUrl.openStream(), StandardCharsets.UTF_8);
+
+                    scanner.next();
+                    String majorMinor = scanner.next();
+
+                    String[] segments = majorMinor.split(Pattern.quote("."));
+                    short majorRelease = StringUtils.parseShort(segments[0]);
+                    short minorRelease = StringUtils.parseShort(segments[1]);
+                    short patchLevel = StringUtils.parseShort(segments[2]);
+
+                    scanner.next();
+                    short build = scanner.nextShort();
+
+                    scanner.next();
+                    String buildDate = scanner.next();
+
+                    int update = 0;
+
+                    update = parseDate(buildDate, update);
+
+                    scanner.close();
+
+                    if (majorRelease > Version.getMajorRelease()) {
+                        isUpdateAvailable = true;
+                    } else if (majorRelease == Version.getMajorRelease() && minorRelease > Version.getMinorRelease()) {
+                        isUpdateAvailable = true;
+                    } else if (majorRelease == Version.getMajorRelease() && minorRelease == Version.getMinorRelease()
+                            && patchLevel > Version.getPatchLevel()) {
+                        isUpdateAvailable = true;
+                    } else if (build > Version.getBuildNumber()) {
+                        isUpdateAvailable = true;
+                    } else if (update < 0) {
+                        isUpdateAvailable = true;
+                    }
+
+                    return true;
+                }
+            } else if (huc.getResponseCode() == 404) { // document not found on server
+                logger.warn("Can not found the 'what's new document on server. Error 404");
+            }
+        } catch (MalformedURLException e) {
+            logger.warn("Update failed because of a wrong URL format.");
+        } catch (IOException e) {
+            logger.warn("IOException caused from no active internet connection.");
+        }
+
+        return false;
+    }
+
+    private int parseDate(String buildDate, int update) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date programDate = sdf.parse(Version.getBuildDate());
+            Date releaseDate = sdf.parse(buildDate);
+
+            update = programDate.compareTo(releaseDate);
+        } catch (ParseException e) {
+            logger.error("Can not parse the date string '{}'.", buildDate);
+        }
+        return update;
+    }
+
+    private void activateTrustManager(TrustManager... trustAllCerts) {
+        try {
+            SSLContext sc = SSLContext.getInstance("SSL");
+            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+        } catch (Exception e) {
+            logger.warn("Can not activate the trust manager for the ssl connection to www.ryanthara.de", e.getCause());
+        }
+    }
+
+    private TrustManager[] getTrustManagers() {
+        /*
+         * In the context of a fast and simple solution,
+         * we decided to use a simple approach
+         * to achieve a secure connection,
+         * by accepting all certificates.
+         */
+        return new TrustManager[]{
                 new X509TrustManager() {
                     public void checkClientTrusted(
                             java.security.cert.X509Certificate[] certs, String authType) {
@@ -88,83 +176,10 @@ public class Updater {
                     }
                 }
         };
-
-        // Activate the new trust manager
-        try {
-            SSLContext sc = SSLContext.getInstance("SSL");
-            sc.init(null, trustAllCerts, new java.security.SecureRandom());
-            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-        } catch (Exception e) {
-            logger.warn("Can not activate the trust manager for the ssl connection to www.ryanthara.de", e.getCause());
-        }
-
-        try {
-            URL updateUrl = new URL(DefaultKeys.RyCON_UPDATE_URL.getValue());
-
-            HttpsURLConnection huc = (HttpsURLConnection) updateUrl.openConnection();
-            huc.setRequestMethod("GET");
-            huc.connect();
-
-            if (huc.getResponseCode() == 200) { // document found on server
-                if (huc.getContentLength() > 0) {
-                    Scanner scanner = new Scanner(updateUrl.openStream(), "UTF-8");
-
-                    scanner.next();
-                    String majorMinor = scanner.next();
-
-                    String[] segments = majorMinor.split(Pattern.quote("."));
-                    short majorRelease = Short.parseShort(segments[0]);
-                    short minorRelease = Short.parseShort(segments[1]);
-                    short patchLevel = Short.parseShort(segments[2]);
-
-                    scanner.next();
-                    short build = scanner.nextShort();
-
-                    scanner.next();
-                    String buildDate = scanner.next();
-
-                    int update = 0;
-
-                    try {
-                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                        Date programDate = sdf.parse(Version.getBuildDate());
-                        Date releaseDate = sdf.parse(buildDate);
-
-                        update = programDate.compareTo(releaseDate);
-                    } catch (ParseException e) {
-                        logger.error("Can not parse the date string '{}'.", buildDate);
-                    }
-
-                    scanner.close();
-
-                    if (majorRelease > Version.getMajorRelease()) {
-                        updateAvailable = true;
-                    } else if (majorRelease == Version.getMajorRelease() && minorRelease > Version.getMinorRelease()) {
-                        updateAvailable = true;
-                    } else if (majorRelease == Version.getMajorRelease() && minorRelease == Version.getMinorRelease()
-                            && patchLevel > Version.getPatchLevel()) {
-                        updateAvailable = true;
-                    } else if (build > Version.getBuildNumber()) {
-                        updateAvailable = true;
-                    } else if (update < 0) {
-                        updateAvailable = true;
-                    }
-                    success = true;
-                }
-            } else if (huc.getResponseCode() == 404) { // document not found on server
-                logger.warn("Can not found the 'what's new document on server. Error 404");
-            }
-        } catch (MalformedURLException e) {
-            logger.warn("Update failed because of a wrong URL format.");
-        } catch (IOException e) {
-            logger.warn("IOException caused from no active internet connection.");
-        }
-
-        return success;
     }
 
     /**
-     * Picks the latest news from a text file on the <tt>RyCON</tt> website and return the content as {@code String}.
+     * Picks the latest news from a text file on the RyCON website and return the content as {@code String}.
      *
      * @return latest news from the update site
      */
@@ -173,7 +188,7 @@ public class Updater {
 
         try {
             // TODO add ssl connection here
-            URL whatsNewURL = new URL(DefaultKeys.RyCON_WHATS_NEW_URL.getValue());
+            URL whatsNewURL = new URL(ApplicationKey.RyCON_WHATS_NEW_URL.getValue());
             BufferedReader in = new BufferedReader(new InputStreamReader(whatsNewURL.openStream(), StandardCharsets.UTF_8));
 
             String inputLine;
@@ -191,13 +206,14 @@ public class Updater {
 
     /**
      * Returns true if an update is available.
+     *
      * <p>
      * The check for an update is done in {@code checkForUpdate()}.
      *
      * @return true if an update is available
      */
     public boolean isUpdateAvailable() {
-        return updateAvailable;
+        return isUpdateAvailable;
     }
 
-} // end of Updater
+}

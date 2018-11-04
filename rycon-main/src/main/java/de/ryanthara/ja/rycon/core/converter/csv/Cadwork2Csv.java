@@ -18,10 +18,11 @@
 package de.ryanthara.ja.rycon.core.converter.csv;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * This class provides functions to convert coordinate files from Cadwork CAD program (node.dat) into
- * comma separated values files (CSV) with different separation signs.
+ * A converter with functions to convert Cadwork CAD program
+ * coordinate files into comma separated values (CSV) files.
  *
  * @author sebastian
  * @version 1
@@ -29,15 +30,15 @@ import java.util.ArrayList;
  */
 public class Cadwork2Csv {
 
-    private final ArrayList<String> readStringLines;
+    private final List<String> lines;
 
     /**
-     * Class constructor for reader line based text files from Cadwork CAD program in node.dat file format.
+     * Creates a converter with a list for the read line based text file from Cadwork CAD program.
      *
-     * @param readStringLines {@code ArrayList<String>} with reader lines from node.dat file
+     * @param lines list with read node.dat lines
      */
-    public Cadwork2Csv(ArrayList<String> readStringLines) {
-        this.readStringLines = readStringLines;
+    public Cadwork2Csv(List<String> lines) {
+        this.lines = new ArrayList<>(lines);
     }
 
     /**
@@ -47,19 +48,16 @@ public class Cadwork2Csv {
      * @param writeCommentLine writes a comment line with information about the column content
      * @param useCodeColumn    use the code column from node.dat
      * @param useZeroHeights   use heights with zero (0.000) values
-     *
      * @return converted CSV file
      */
-    public ArrayList<String> convertCadwork2CSV(String separator, boolean writeCommentLine,
-                                                boolean useCodeColumn, boolean useZeroHeights) {
-        ArrayList<String> result = new ArrayList<>();
+    public List<String> convert(String separator, boolean writeCommentLine,
+                                     boolean useCodeColumn, boolean useZeroHeights) {
+        List<String> result = new ArrayList<>();
 
         if (writeCommentLine) {
-            // remove not needed headlines
-            readStringLines.remove(0);
-            readStringLines.remove(0);
+            removeHeadlines(2);
 
-            String[] lineSplit = readStringLines.get(0).trim().split("\\s+", -1);
+            String[] lineSplit = lines.get(0).trim().split("\\s+", -1);
 
             // point number
             String commentLine = lineSplit[5];
@@ -78,46 +76,50 @@ public class Cadwork2Csv {
             commentLine = commentLine.concat(separator);
             commentLine = commentLine.concat(lineSplit[3]);
 
-            readStringLines.remove(0);
+            lines.remove(0);
 
             result.add(commentLine);
         } else {
-            // remove not needed headlines
-            readStringLines.subList(0, 3).clear();
+            removeHeadlines(3);
         }
 
-        for (String line : readStringLines) {
+        for (String line : lines) {
             String s;
-            String[] lineSplit = line.trim().split("\\t, -1");
+            String[] values = line.trim().split("\\t, -1");
 
             // point number
-            s = lineSplit[5];
+            s = values[5];
             s = s.concat(separator);
 
             // use code if necessary
             if (useCodeColumn) {
-                s = s.concat(lineSplit[4]);
+                s = s.concat(values[4]);
                 s = s.concat(separator);
             }
 
             // easting and northing
-            s = s.concat(lineSplit[1]);
+            s = s.concat(values[1]);
             s = s.concat(separator);
-            s = s.concat(lineSplit[2]);
+            s = s.concat(values[2]);
             s = s.concat(separator);
 
             // use height if necessary
             if (useZeroHeights) {
-                s = s.concat(lineSplit[3]);
+                s = s.concat(values[3]);
             } else {
-                if (!lineSplit[3].equals("0.000000")) {
-                    s = s.concat(lineSplit[3]);
+                if (!values[3].equals("0.000000")) {
+                    s = s.concat(values[3]);
                 }
             }
+
             result.add(s.trim());
         }
 
-        return result;
+        return List.copyOf(result);
     }
 
-} // end of Cadwork2Csv
+    private void removeHeadlines(int toIndex) {
+        lines.subList(0, toIndex).clear();
+    }
+
+}

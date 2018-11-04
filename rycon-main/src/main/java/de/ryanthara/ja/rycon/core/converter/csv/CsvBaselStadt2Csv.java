@@ -21,8 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class provides functions to convert a csv formatted coordinate file from the geodata server
- * Basel Stadt (Switzerland) into a comma separated values file (CSV) with different separation signs.
+ * A converter with functions to convert coordinate files from the geodata
+ * server Basel Stadt (Switzerland) into comma separated values (CSV) files.
  *
  * @author sebastian
  * @version 1
@@ -30,15 +30,16 @@ import java.util.List;
  */
 public class CsvBaselStadt2Csv {
 
-    private final List<String[]> readCSVLines;
+    private final List<String[]> lines;
 
     /**
-     * Class constructor for reader line based CSV files from the geodata server Basel Stadt (Switzerland).
+     * Creates a converter with a list for the read line based comma separated
+     * values (CSV) file from the geodata server Basel Stadt (Switzerland).
      *
-     * @param readCSVLines {@code List<String[]>} with lines as {@code String[]}
+     * @param lines list with lines as string array
      */
-    public CsvBaselStadt2Csv(List<String[]> readCSVLines) {
-        this.readCSVLines = readCSVLines;
+    public CsvBaselStadt2Csv(List<String[]> lines) {
+        this.lines = new ArrayList<>(lines);
     }
 
     /**
@@ -48,38 +49,39 @@ public class CsvBaselStadt2Csv {
      * With a parameter it is possible to distinguish between comma or semicolon as separator.
      *
      * @param separator separator sign as {@code String}
-     *
-     * @return converted {@code ArrayList<String>} with lines of CSV format
+     * @return converted {@code List<String>} with lines of CSV format
      */
-    public ArrayList<String> convertCSVBaselStadt2CSV(String separator) {
-        ArrayList<String> result = new ArrayList<>();
+    public List<String> convert(String separator) {
+        List<String> result = new ArrayList<>();
 
-        // remove comment line
-        readCSVLines.remove(0);
+        removeHeadLine();
 
-        for (String[] stringField : readCSVLines) {
-            String line;
-
+        for (String[] values : lines) {
             // point number is in column 1
-            line = stringField[0].replaceAll("\\s+", "").trim();
+            String line = values[0].replaceAll("\\s+", "").trim();
             line = line.concat(separator);
 
             // easting (Y) is in column 3
-            line = line.concat(stringField[2]);
+            line = line.concat(values[2]);
             line = line.concat(separator);
 
             // northing (X) is in column 4
-            line = line.concat(stringField[3]);
+            line = line.concat(values[3]);
 
             // height (Z) is in column 5, but not always valued
-            if (!stringField[4].equals("")) {
+            if (!values[4].equals("")) {
                 line = line.concat(separator);
-                line = line.concat(stringField[4]);
+                line = line.concat(values[4]);
             }
 
             result.add(line.trim());
         }
-        return result;
+
+        return List.copyOf(result);
     }
 
-} // end of CsvBaselStadt2Csv
+    private void removeHeadLine() {
+        lines.remove(0);
+    }
+
+}

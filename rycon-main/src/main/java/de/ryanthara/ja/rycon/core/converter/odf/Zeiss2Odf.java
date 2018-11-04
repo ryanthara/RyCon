@@ -27,10 +27,11 @@ import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * This class provides functions to convert measurement files from Zeiss REC format
- * and it's dialects (R4, R5, REC500 and M5) into OpenDocument spreadsheet files.
+ * A converter with functions to convert measurement and coordinate files from Zeiss REC
+ * format and it's dialects (R4, R5, REC500 and M5) into OpenDocument spreadsheet files.
  *
  * @author sebastian
  * @version 1
@@ -40,17 +41,21 @@ public class Zeiss2Odf {
 
     private static final Logger logger = LoggerFactory.getLogger(Zeiss2Odf.class.getName());
 
-    private final ArrayList<String> readStringLines;
+    private final List<String> lines;
     private SpreadsheetDocument spreadsheetDocument;
 
     /**
-     * Constructs a new instance of this class with a parameter for the reader line based Zeiss REC files in
-     * different dialects (R4, R5, REC500 and M5).
+     * Creates a converter with a list for the read line based
+     * text files in the Zeiss REC format and it's dialects.
      *
-     * @param readStringLines {@code ArrayList<String>} with lines in text format
+     * <p>
+     * The differentiation of the content is done by the called
+     * method and it's content analyze functionality.
+     *
+     * @param lines list with Zeiss REC format lines
      */
-    public Zeiss2Odf(ArrayList<String> readStringLines) {
-        this.readStringLines = readStringLines;
+    public Zeiss2Odf(List<String> lines) {
+        this.lines = new ArrayList<>(lines);
     }
 
     /**
@@ -60,7 +65,6 @@ public class Zeiss2Odf {
      * different structure and line length.
      *
      * @param sheetName name of the sheet (file name from input file)
-     *
      * @return success conversion success
      */
     public boolean convertZeiss2Ods(Path sheetName) {
@@ -77,8 +81,7 @@ public class Zeiss2Odf {
 
             Cell cell;
 
-            for (String line : readStringLines) {
-
+            for (String line : lines) {
                 // skip empty lines
                 if (line.trim().length() > 0) {
                     colIndex = 0;
@@ -112,4 +115,4 @@ public class Zeiss2Odf {
         return this.spreadsheetDocument;
     }
 
-} // end of Zeiss2Odf
+}

@@ -21,41 +21,46 @@ import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.core.splitter.GsiCodeSplit;
 import de.ryanthara.ja.rycon.core.splitter.NodeDatCodeSplit;
 import de.ryanthara.ja.rycon.core.splitter.TextCodeSplit;
-import de.ryanthara.ja.rycon.data.PreferenceKeys;
+import de.ryanthara.ja.rycon.data.PreferenceKey;
 import de.ryanthara.ja.rycon.i18n.*;
+import de.ryanthara.ja.rycon.i18n.Error;
 import de.ryanthara.ja.rycon.nio.FileNameExtension;
 import de.ryanthara.ja.rycon.nio.LineReader;
 import de.ryanthara.ja.rycon.nio.WriteFile2Disk;
-import de.ryanthara.ja.rycon.ui.Sizes;
+import de.ryanthara.ja.rycon.nio.util.check.PathCheck;
+import de.ryanthara.ja.rycon.ui.Size;
 import de.ryanthara.ja.rycon.ui.custom.*;
 import de.ryanthara.ja.rycon.ui.util.ShellPositioner;
+import de.ryanthara.ja.rycon.ui.util.TextCheck;
 import de.ryanthara.ja.rycon.util.StringUtils;
-import de.ryanthara.ja.rycon.util.check.PathCheck;
-import de.ryanthara.ja.rycon.util.check.TextCheck;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.*;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundle.*;
 
 /**
  * Instances of this class implements a complete widget and it's functionality to split coordinate files by code.
  * <p>
- * The {@link CodeSplitterWidget} of <tt>RyCON</tt> is used to split measurement files (GSI or text format)
+ * The {@link CodeSplitterWidget} of RyCON is used to split measurement files (GSI or text format)
  * by code into several files. Each generated file contains only lines of one code. The code is added
  * to the file name of the written file.
  * <p>
  * This version of the CodeSplitterWidget supports the following file types:
  * <ul>
- * <li>Leica GSI format files (GSI8 and GSI16)
+ * <li>Leica Geosystems GSI format files (GSI8 and GSI16)
  * <li>text files with code (format no, code, x, y, z)
  * </ul>
  *
@@ -69,7 +74,8 @@ public class CodeSplitterWidget extends AbstractWidget {
 
     private final String[] acceptableFileSuffixes = new String[]{"*.gsi", "*.txt", "*.dat"};
     private Shell parent;
-    private Button chkBoxInsertCodeColumn, chkBoxWriteCodeZero;
+    private Button chkBoxInsertCodeColumn;
+    private Button chkBoxWriteCodeZero;
     private Path[] files2read;
     private InputFieldsComposite inputFieldsComposite;
     private Shell innerShell;
@@ -81,7 +87,7 @@ public class CodeSplitterWidget extends AbstractWidget {
      *
      * @param parent parent shell
      */
-    public CodeSplitterWidget(final Shell parent) {
+    public CodeSplitterWidget(Shell parent) {
         this.parent = parent;
         this.files2read = new Path[0];
 
@@ -111,13 +117,13 @@ public class CodeSplitterWidget extends AbstractWidget {
             if (processFileOperationsDND()) {
                 String status;
 
-                final String helper = ResourceBundleUtils.getLangString(MESSAGES, Messages.splitFilesStatus);
+                final String helper = ResourceBundleUtils.getLangString(MESSAGE, Message.splitFilesStatus);
 
                 // use counter to display different text on the status bar
                 if (Main.countFileOps == 1) {
-                    status = String.format(StringUtils.singularPluralMessage(helper, Main.TEXT_SINGULAR), Main.countFileOps);
+                    status = String.format(StringUtils.getSingularMessage(helper), Main.countFileOps);
                 } else {
-                    status = String.format(StringUtils.singularPluralMessage(helper, Main.TEXT_PLURAL), Main.countFileOps);
+                    status = String.format(StringUtils.getPluralMessage(helper), Main.countFileOps);
                 }
 
                 Main.statusBar.setStatus(status, Status.OK);
@@ -151,13 +157,13 @@ public class CodeSplitterWidget extends AbstractWidget {
             if (processFileOperations()) {
                 String status;
 
-                final String helper = ResourceBundleUtils.getLangString(MESSAGES, Messages.splitFilesStatus);
+                final String helper = ResourceBundleUtils.getLangString(MESSAGE, Message.splitFilesStatus);
 
                 // use counter to display different text on the status bar
                 if (Main.countFileOps == 1) {
-                    status = String.format(StringUtils.singularPluralMessage(helper, Main.TEXT_SINGULAR), files2read.length, Main.countFileOps);
+                    status = String.format(StringUtils.getSingularMessage(helper), files2read.length, Main.countFileOps);
                 } else {
-                    status = String.format(StringUtils.singularPluralMessage(helper, Main.TEXT_PLURAL), files2read.length, Main.countFileOps);
+                    status = String.format(StringUtils.getPluralMessage(helper), files2read.length, Main.countFileOps);
                 }
 
                 Main.statusBar.setStatus(status, Status.OK);
@@ -179,8 +185,8 @@ public class CodeSplitterWidget extends AbstractWidget {
     }
 
     void initUI() {
-        int height = Sizes.RyCON_WIDGET_HEIGHT.getValue();
-        int width = Sizes.RyCON_WIDGET_WIDTH.getValue();
+        int height = Size.RyCON_WIDGET_HEIGHT.getValue();
+        int width = Size.RyCON_WIDGET_WIDTH.getValue();
 
         GridLayout gridLayout = new GridLayout(1, true);
         gridLayout.marginHeight = 5;
@@ -192,7 +198,7 @@ public class CodeSplitterWidget extends AbstractWidget {
 
         innerShell = new Shell(parent, SWT.CLOSE | SWT.DIALOG_TRIM | SWT.MAX | SWT.TITLE | SWT.APPLICATION_MODAL);
         innerShell.addListener(SWT.Close, event -> actionBtnCancel());
-        innerShell.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.splitter_Shell));
+        innerShell.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.splitter_Shell));
         innerShell.setSize(width, height);
 
         innerShell.setLayout(gridLayout);
@@ -217,12 +223,12 @@ public class CodeSplitterWidget extends AbstractWidget {
      */
     private void actionBtnSource() {
         String[] filterNames = new String[]{
-                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameGsi),
-                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameTxtCode),
-                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.filterNameCadwork),
+                ResourceBundleUtils.getLangString(FILECHOOSER, FileChooser.filterNameGsi),
+                ResourceBundleUtils.getLangString(FILECHOOSER, FileChooser.filterNameTxtCode),
+                ResourceBundleUtils.getLangString(FILECHOOSER, FileChooser.filterNameCadwork),
         };
 
-        String filterPath = Main.pref.getUserPreference(PreferenceKeys.DIR_PROJECT);
+        String filterPath = Main.pref.getUserPreference(PreferenceKey.DIR_PROJECT);
 
         // Set the initial filter path according to anything pasted or typed in
         if (!inputFieldsComposite.getSourceTextField().getText().trim().equals("")) {
@@ -238,7 +244,7 @@ public class CodeSplitterWidget extends AbstractWidget {
         Optional<Path[]> files = FileDialogs.showAdvancedFileDialog(
                 innerShell,
                 filterPath,
-                ResourceBundleUtils.getLangString(FILECHOOSERS, FileChoosers.splitterSourceText),
+                ResourceBundleUtils.getLangString(FILECHOOSER, FileChooser.splitterSourceText),
                 acceptableFileSuffixes,
                 filterNames,
                 inputFieldsComposite.getSourceTextField(),
@@ -255,9 +261,9 @@ public class CodeSplitterWidget extends AbstractWidget {
      * This method is used from the class InputFieldsComposite!
      */
     private void actionBtnTarget() {
-        String filterPath = Main.pref.getUserPreference(PreferenceKeys.DIR_PROJECT);
+        String filterPath = Main.pref.getUserPreference(PreferenceKey.DIR_PROJECT);
 
-        Text input = inputFieldsComposite.getTargetTextField();
+        org.eclipse.swt.widgets.Text input = inputFieldsComposite.getTargetTextField();
 
         // Set the initial filter path according to anything selected or typed in
         if (!TextCheck.isEmpty(input)) {
@@ -267,14 +273,14 @@ public class CodeSplitterWidget extends AbstractWidget {
         }
 
         DirectoryDialogs.showAdvancedDirectoryDialog(innerShell, input,
-                DirectoryDialogsTypes.DIR_GENERAL.getText(),
-                DirectoryDialogsTypes.DIR_GENERAL.getMessage(),
+                DirectoryDialogsTyp.DIR_GENERAL.getText(),
+                DirectoryDialogsTyp.DIR_GENERAL.getMessage(),
                 filterPath);
     }
 
     private void createAdvice(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.advice));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.advice));
 
         GridLayout gridLayout = new GridLayout(1, true);
 
@@ -309,7 +315,7 @@ public class CodeSplitterWidget extends AbstractWidget {
 
     private void createOptions(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.generalOptions));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.generalOptions));
 
         GridLayout gridLayout = new GridLayout(1, true);
 
@@ -321,26 +327,26 @@ public class CodeSplitterWidget extends AbstractWidget {
 
         chkBoxInsertCodeColumn = new Button(group, SWT.CHECK);
         chkBoxInsertCodeColumn.setSelection(false);
-        chkBoxInsertCodeColumn.setText(ResourceBundleUtils.getLangString(CHECKBOXES, CheckBoxes.insertCodeColumn));
+        chkBoxInsertCodeColumn.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBox.insertCodeColumn));
 
         chkBoxWriteCodeZero = new Button(group, SWT.CHECK);
         chkBoxWriteCodeZero.setSelection(false);
-        chkBoxWriteCodeZero.setText(ResourceBundleUtils.getLangString(CHECKBOXES, CheckBoxes.writeCodeZeroSplitter));
+        chkBoxWriteCodeZero.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBox.writeCodeZeroSplitter));
     }
 
-    private int executeSplitGsi(boolean insertCodeColumn, boolean writeFileWithCodeZero, int counter, Path file2read,
-                                ArrayList<String> readFile) {
+    private int executeSplitGsi(boolean insertCodeColumn, boolean writeFileWithCodeZero, int counter,
+                                Path file2read, List<String> readFile) {
 
         GsiCodeSplit gsiCodeSplit = new GsiCodeSplit(readFile);
-        ArrayList<ArrayList<String>> writeFile = gsiCodeSplit.processCodeSplit(insertCodeColumn, writeFileWithCodeZero);
+        List<List<String>> codeSplitLines = gsiCodeSplit.processCodeSplit(insertCodeColumn, writeFileWithCodeZero);
 
         Iterator<Integer> codeIterator = gsiCodeSplit.getFoundCodes().iterator();
 
         // write file by file with one code
-        for (ArrayList<String> lines : writeFile) {
-            final String codeString = Main.pref.getUserPreference(PreferenceKeys.PARAM_CODE_STRING) + "-" + codeIterator.next();
+        for (List<String> linesByCode : codeSplitLines) {
+            final String codeString = Main.pref.getUserPreference(PreferenceKey.PARAM_CODE_STRING) + "-" + codeIterator.next();
 
-            if (WriteFile2Disk.writeFile2Disk(file2read, lines, codeString, FileNameExtension.LEICA_GSI.getExtension())) {
+            if (WriteFile2Disk.writeFile2Disk(file2read, linesByCode, codeString, FileNameExtension.LEICA_GSI.getExtension())) {
                 counter = counter + 1;
             }
         }
@@ -348,17 +354,17 @@ public class CodeSplitterWidget extends AbstractWidget {
         return counter;
     }
 
-    private int executeSplitNodeDat(int counter, Path file2read, ArrayList<String> readFile) {
+    private int executeSplitNodeDat(int counter, Path file2read, List<String> readFile) {
         NodeDatCodeSplit nodeDatCodeSplit = new NodeDatCodeSplit(readFile);
-        ArrayList<ArrayList<String>> writeFile = nodeDatCodeSplit.processCodeSplit();
+        List<ArrayList<String>> codeSplitLines = nodeDatCodeSplit.processCodeSplit();
 
         Iterator<Integer> codeIterator = nodeDatCodeSplit.getFoundCodes().iterator();
 
         // write file by file with one code
-        for (ArrayList<String> lines : writeFile) {
-            final String codeString = Main.pref.getUserPreference(PreferenceKeys.PARAM_CODE_STRING) + "-" + codeIterator.next();
+        for (List<String> linesByCode : codeSplitLines) {
+            final String codeString = Main.pref.getUserPreference(PreferenceKey.PARAM_CODE_STRING) + "-" + codeIterator.next();
 
-            if (WriteFile2Disk.writeFile2Disk(file2read, lines, codeString, FileNameExtension.DAT.getExtension())) {
+            if (WriteFile2Disk.writeFile2Disk(file2read, linesByCode, codeString, FileNameExtension.DAT.getExtension())) {
                 counter = counter + 1;
             }
         }
@@ -366,19 +372,19 @@ public class CodeSplitterWidget extends AbstractWidget {
         return counter;
     }
 
-    private int executeSplitTxt(boolean insertCodeColumn, boolean writeFileWithCodeZero, int counter, Path file2read,
-                                ArrayList<String> readFile) {
+    private int executeSplitTxt(boolean insertCodeColumn, boolean writeFileWithCodeZero, int counter,
+                                Path file2read, List<String> readFile) {
 
         TextCodeSplit textCodeSplit = new TextCodeSplit(readFile);
-        ArrayList<ArrayList<String>> writeFile = textCodeSplit.processCodeSplit(insertCodeColumn, writeFileWithCodeZero);
+        List<ArrayList<String>> codeSplitLines = textCodeSplit.processCodeSplit(insertCodeColumn, writeFileWithCodeZero);
 
         Iterator<Integer> codeIterator = textCodeSplit.getFoundCodes().iterator();
 
         // write file by file with one code
-        for (ArrayList<String> lines : writeFile) {
-            final String editString = Main.pref.getUserPreference(PreferenceKeys.PARAM_CODE_STRING) + "-" + codeIterator.next();
+        for (List<String> linesByCode : codeSplitLines) {
+            final String editString = Main.pref.getUserPreference(PreferenceKey.PARAM_CODE_STRING) + "-" + codeIterator.next();
 
-            if (WriteFile2Disk.writeFile2Disk(file2read, lines, editString, FileNameExtension.TXT.getExtension())) {
+            if (WriteFile2Disk.writeFile2Disk(file2read, linesByCode, editString, FileNameExtension.TXT.getExtension())) {
                 counter = counter + 1;
             }
         }
@@ -389,30 +395,30 @@ public class CodeSplitterWidget extends AbstractWidget {
     private int fileOperations(boolean insertCodeColumn, boolean writeFileWithCodeZero) {
         int counter = 0;
 
-        for (Path path : files2read) {
+        for (Path file2read : files2read) {
             // first attempt to ignore logfile.txt files
-            if (!path.toString().toLowerCase().contains("logfile.txt")) {
-                LineReader lineReader = new LineReader(path);
+            if (!file2read.toString().toLowerCase().contains("logfile.txt")) {
+                LineReader lineReader = new LineReader(file2read);
 
                 if (lineReader.readFile(false)) {
-                    ArrayList<String> readFile = lineReader.getLines();
+                    List<String> readFile = lineReader.getLines();
 
                     // the glob pattern ("glob:*.dat) doesn't work here
                     PathMatcher matcherDAT = FileSystems.getDefault().getPathMatcher("regex:(?iu:.+\\.DAT)");
                     PathMatcher matcherGSI = FileSystems.getDefault().getPathMatcher("regex:(?iu:.+\\.GSI)");
                     PathMatcher matcherTXT = FileSystems.getDefault().getPathMatcher("regex:(?iu:.+\\.TXT)");
 
-                    if (matcherDAT.matches(path)) {
-                        counter = executeSplitNodeDat(counter, path, readFile);
-                    } else if (matcherGSI.matches(path)) {
-                        counter = executeSplitGsi(insertCodeColumn, writeFileWithCodeZero, counter, path, readFile);
-                    } else if (matcherTXT.matches(path)) {
-                        counter = executeSplitTxt(insertCodeColumn, writeFileWithCodeZero, counter, path, readFile);
+                    if (matcherDAT.matches(file2read)) {
+                        counter = executeSplitNodeDat(counter, file2read, readFile);
+                    } else if (matcherGSI.matches(file2read)) {
+                        counter = executeSplitGsi(insertCodeColumn, writeFileWithCodeZero, counter, file2read, readFile);
+                    } else if (matcherTXT.matches(file2read)) {
+                        counter = executeSplitTxt(insertCodeColumn, writeFileWithCodeZero, counter, file2read, readFile);
                     } else {
-                        logger.warn("File format of '{}' are not supported (yet).", path.getFileName());
+                        logger.warn("File format of '{}' are not supported (yet).", file2read.getFileName());
                     }
                 } else {
-                    logger.warn("File {} could not be read.", path.toString());
+                    logger.warn("File {} could not be read.", file2read.toString());
                 }
             }
         }
@@ -434,16 +440,16 @@ public class CodeSplitterWidget extends AbstractWidget {
         if (counter > 0) {
             String message;
 
-            final String helper = ResourceBundleUtils.getLangString(MESSAGES, Messages.splitFilesMessage);
+            final String helper = ResourceBundleUtils.getLangString(MESSAGE, Message.splitFilesMessage);
 
             if (counter == 1) {
-                message = String.format(StringUtils.singularPluralMessage(helper, Main.TEXT_SINGULAR), files2read.length, counter);
+                message = String.format(StringUtils.getSingularMessage(helper), files2read.length, counter);
             } else {
-                message = String.format(StringUtils.singularPluralMessage(helper, Main.TEXT_PLURAL), files2read.length, counter);
+                message = String.format(StringUtils.getPluralMessage(helper), files2read.length, counter);
             }
 
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_INFORMATION,
-                    ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.msgBox_Success), message);
+                    ResourceBundleUtils.getLangStringFromXml(TEXT, Text.msgBox_Success), message);
 
             // set the counter for status bar information
             Main.countFileOps = counter;
@@ -451,8 +457,8 @@ public class CodeSplitterWidget extends AbstractWidget {
             return true;
         } else {
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING,
-                    ResourceBundleUtils.getLangStringFromXml(TEXTS, Texts.msgBox_Error),
-                    ResourceBundleUtils.getLangString(ERRORS, Errors.codeSplitFailed));
+                    ResourceBundleUtils.getLangStringFromXml(TEXT, Text.msgBox_Error),
+                    ResourceBundleUtils.getLangString(ERROR, Error.codeSplitFailed));
 
             return false;
         }
@@ -472,4 +478,4 @@ public class CodeSplitterWidget extends AbstractWidget {
         }
     }
 
-} // end of CodeSplitterWidget
+}

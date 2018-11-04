@@ -18,16 +18,16 @@
 package de.ryanthara.ja.rycon.i18n;
 
 /**
- * The {@code Advice} enumeration holds all the advices of <tt>RyCON</tt>.
+ * The {@code Advice} enumeration holds all the advices of RyCON.
  * <p>
- * This enumeration is used for encapsulating the data. The interface {@link ResourceKeys}
+ * This enumeration is used for encapsulating the data. The interface {@link ResourceKey}
  * is used to access different enumerations in the class {@link ResourceBundleUtils}.
  *
  * @author sebastian
  * @version 1
  * @since 2.0
  */
-public enum Advice implements ResourceKeys {
+public enum Advice implements ResourceKey {
 
     analyzerWidget,
     analyzerWidget2,
@@ -56,4 +56,4 @@ public enum Advice implements ResourceKeys {
     transformationWidget2,
     transformationWidget3,
 
-} // end of Advice
+}

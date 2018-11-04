@@ -51,7 +51,6 @@ class FileToolsExcel {
      * Writes the converted XLS file to the file system.
      *
      * @param writeFile file to be written
-     *
      * @return success writer success
      */
     boolean writeXls(Path writeFile) {
@@ -71,7 +70,6 @@ class FileToolsExcel {
      * Writes the converted XLSX file to the file system.
      *
      * @param writeFile path to be written
-     *
      * @return success writer success
      */
     boolean writeXlsx(Path writeFile) {
@@ -89,4 +87,4 @@ class FileToolsExcel {
         return writeSuccess;
     }
 
-} // end of FileToolsExcel
+}

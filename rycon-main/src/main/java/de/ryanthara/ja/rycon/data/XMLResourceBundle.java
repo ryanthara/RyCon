@@ -30,7 +30,7 @@ import java.io.InputStream;
 import java.util.*;
 
 /**
- * The <tt>XMLResourceBundle</tt> extends the {@link ResourceBundle} for using a XML document instead of a properties file.
+ * The XMLResourceBundle extends the {@link ResourceBundle} for using a XML document instead of a properties file.
  *
  * @author sebastian
  * @version 1
@@ -44,7 +44,6 @@ class XMLResourceBundle extends ResourceBundle {
      * Constructor which accepts a reference to the {@link InputStream} of the XML file.
      *
      * @param stream InputStream for the XML file
-     *
      * @throws IOException InputStream exception
      */
     XMLResourceBundle(InputStream stream) throws IOException {
@@ -71,9 +70,7 @@ class XMLResourceBundle extends ResourceBundle {
      * object for the given key.
      *
      * @param key the key for the desired object
-     *
      * @return the object for the given key, or null
-     *
      * @throws NullPointerException if <code>key</code> is <code>null</code>
      */
     @Override
@@ -81,4 +78,4 @@ class XMLResourceBundle extends ResourceBundle {
         return properties.getProperty(key);
     }
 
-} // end of XMLResourceBundle
+}

@@ -86,4 +86,4 @@ public class Group extends Preference<String> {
         // Empty by design
     }
 
-} // end of Group
+}

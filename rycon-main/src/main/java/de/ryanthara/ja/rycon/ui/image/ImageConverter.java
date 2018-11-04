@@ -50,7 +50,7 @@ import java.awt.image.WritableRaster;
  * <p>
  * This converter depends on the ImageConverter.class by Michael Karneim from
  * beanfabrics.org, who implements the basic functionality for converting the
- * AWT/Swing Images and Icons to SWT ImageDate objects.
+ * AWT/Swing Image and Icons to SWT ImageDate objects.
  * <p>
  * The functions for retina support are added from IconLoader by Konstantin Bulenkov
  * from http://bulenkov.com/2013/06/23/retina-support-in-oracle-jdk-1-7/ with jar.
@@ -69,7 +69,6 @@ public class ImageConverter {
      *
      * @param display Display object on which the image is loaded (swt dependency)
      * @param path    String with the URL of the image as String
-     *
      * @return {@link org.eclipse.swt.graphics.Image} object
      */
     public Image convertToImage(Display display, String path) {
@@ -94,10 +93,8 @@ public class ImageConverter {
      * Convert a {@code BufferedImage} object to an {@code ImageData} object.
      *
      * @param bufferedImage the BufferedImage to convert
-     *
      * @return converted BufferedImage as ImageData
      */
-    // TODO correct return null
     private ImageData convertToImageData(BufferedImage bufferedImage) {
         if (bufferedImage.getColorModel() instanceof DirectColorModel) {
             DirectColorModel colorModel = (DirectColorModel) bufferedImage.getColorModel();
@@ -142,9 +139,11 @@ public class ImageConverter {
                     data.setPixel(x, y, pixelArray[0]);
                 }
             }
+
             return data;
         }
+
         return null;
     }
 
-} // end of ImageConverter
+}

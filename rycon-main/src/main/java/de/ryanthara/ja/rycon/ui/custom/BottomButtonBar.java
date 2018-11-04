@@ -17,7 +17,7 @@
  */
 package de.ryanthara.ja.rycon.ui.custom;
 
-import de.ryanthara.ja.rycon.i18n.Buttons;
+import de.ryanthara.ja.rycon.i18n.Button;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -25,7 +25,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +32,7 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.BUTTONS;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundle.BUTTON;
 
 /**
  * Instances of this class implements a custom composite with three buttons ('Cancel', 'OK' and 'OK and EXIT')
@@ -76,7 +75,6 @@ public class BottomButtonBar extends Composite {
      * @param wHint   width
      * @param hHint   height
      * @param changed changed
-     *
      * @return result of super() call
      */
     @Override
@@ -92,9 +90,9 @@ public class BottomButtonBar extends Composite {
 
         this.setLayout(new FillLayout());
 
-        Button btnCancel = new Button(this, SWT.NONE);
-        btnCancel.setText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.cancelText));
-        btnCancel.setToolTipText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.cancelToolTip));
+        org.eclipse.swt.widgets.Button btnCancel = new org.eclipse.swt.widgets.Button(this, SWT.NONE);
+        btnCancel.setText(ResourceBundleUtils.getLangString(BUTTON, Button.cancelText));
+        btnCancel.setToolTipText(ResourceBundleUtils.getLangString(BUTTON, Button.cancelToolTip));
         btnCancel.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -102,9 +100,9 @@ public class BottomButtonBar extends Composite {
             }
         });
 
-        Button btnOK = new Button(this, SWT.NONE);
-        btnOK.setText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.okAndOpenText));
-        btnOK.setToolTipText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.okAndOpenToolTip));
+        org.eclipse.swt.widgets.Button btnOK = new org.eclipse.swt.widgets.Button(this, SWT.NONE);
+        btnOK.setText(ResourceBundleUtils.getLangString(BUTTON, Button.okAndOpenText));
+        btnOK.setToolTipText(ResourceBundleUtils.getLangString(BUTTON, Button.okAndOpenToolTip));
         btnOK.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -113,9 +111,9 @@ public class BottomButtonBar extends Composite {
         });
 
         if (okAndExitButton) {
-            Button btnOKAndExit = new Button(this, SWT.NONE);
-            btnOKAndExit.setText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.okAndExitText));
-            btnOKAndExit.setToolTipText(ResourceBundleUtils.getLangString(BUTTONS, Buttons.okAndExitToolTip));
+            org.eclipse.swt.widgets.Button btnOKAndExit = new org.eclipse.swt.widgets.Button(this, SWT.NONE);
+            btnOKAndExit.setText(ResourceBundleUtils.getLangString(BUTTON, Button.okAndExitText));
+            btnOKAndExit.setToolTipText(ResourceBundleUtils.getLangString(BUTTON, Button.okAndExitToolTip));
             btnOKAndExit.addSelectionListener(new SelectionAdapter() {
                 @Override
                 public void widgetSelected(SelectionEvent e) {
@@ -144,4 +142,4 @@ public class BottomButtonBar extends Composite {
         }
     }
 
-} // end of BottomButtonBar
+}

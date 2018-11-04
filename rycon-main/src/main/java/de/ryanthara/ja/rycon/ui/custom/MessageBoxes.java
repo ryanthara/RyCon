@@ -36,10 +36,9 @@ public class MessageBoxes {
      * @param icon       the icon of the message box
      * @param text       the headline text of the message box
      * @param message    the message of the message box
-     *
      * @return int value
      */
-    public static int showMessageBox(final Shell innerShell, final int icon, final String text, final String message) {
+    public static int showMessageBox(Shell innerShell, final int icon, final String text, final String message) {
         MessageBox messageBox = new MessageBox(innerShell, icon);
 
         messageBox.setText(text);
@@ -48,4 +47,4 @@ public class MessageBoxes {
         return messageBox.open();
     }
 
-} // end of MessageBoxes
+}

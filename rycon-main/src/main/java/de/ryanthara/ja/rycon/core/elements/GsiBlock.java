@@ -18,18 +18,18 @@
 package de.ryanthara.ja.rycon.core.elements;
 
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
-import de.ryanthara.ja.rycon.i18n.WordIndices;
-import de.ryanthara.ja.rycon.ui.util.StringHelper;
+import de.ryanthara.ja.rycon.i18n.WordIndex;
+import de.ryanthara.ja.rycon.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundles.WORDINDICES;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundle.WORDINDEX;
 
 /**
- * Instances of this class represents an object to store and handle the values of a Leica GSI block.
+ * Instances of this class represents an object to store and handle the values of a Leica Geosystems GSI block.
  * <p>
  * The Leica Geo Serial Interface (GSI) is a general purpose, serial data interface
  * for bi-directional communication between TPS Total Stations, Levelling instruments and computers.
@@ -50,9 +50,9 @@ public class GsiBlock {
     private String dataGSI, information, sign;
 
     /**
-     * Constructs a new instance of this class given a reader GSI block as string.
+     * Constructs a new instance of this class given a read GSI block as string.
      * <p>
-     * This constructor is used for reading Leica GSI formatted files.
+     * This constructor is used for reading Leica Geosystems GSI formatted files.
      *
      * @param blockAsString complete GSI block as string
      */
@@ -60,7 +60,7 @@ public class GsiBlock {
         blockAsString = blockAsString.trim();
 
         this.isGSI16 = blockAsString.length() == 23;
-        this.wordIndex = Integer.parseInt(blockAsString.substring(0, 2));
+        this.wordIndex = StringUtils.parseIntegerValue(blockAsString.substring(0, 2));
         this.information = blockAsString.substring(2, 6);
         this.sign = blockAsString.substring(6, 7);
         this.dataGSI = blockAsString.substring(7);
@@ -84,7 +84,7 @@ public class GsiBlock {
             this.wordIndex = wordIndex;
             this.information = String.format("%04d", lineNumber);
             this.sign = "+";
-            this.dataGSI = StringHelper.fillWithZeros(length, dataGSI);
+            this.dataGSI = StringUtils.fillWithZerosFromBeginning(dataGSI, length);
         }
     }
 
@@ -113,7 +113,8 @@ public class GsiBlock {
             this.information = "..46";
 
             try {
-                double d = Double.parseDouble(dataGSI);
+                double d = StringUtils.parseDoubleValue(dataGSI);
+
                 if (d == 0d) {
                     dataGSI = "0";
                 } else {
@@ -132,7 +133,7 @@ public class GsiBlock {
             this.information = "..4.";
         }
 
-        this.dataGSI = StringHelper.fillWithZeros(length, dataGSI);
+        this.dataGSI = StringUtils.fillWithZerosFromBeginning(dataGSI, length);
     }
 
     /**
@@ -153,7 +154,7 @@ public class GsiBlock {
         this.sign = sign;
 
         int length = isGSI16 ? 16 : 8;
-        this.dataGSI = StringHelper.fillWithZeros(length, dataGSI);
+        this.dataGSI = StringUtils.fillWithZerosFromBeginning(dataGSI, length);
     }
 
     /**
@@ -189,7 +190,6 @@ public class GsiBlock {
      * @return formatted {@code String} for ascii output
      */
     public String toPrintFormatAsc() {
-
         return this.toPrintFormatTxt().trim();
     }
 
@@ -209,24 +209,24 @@ public class GsiBlock {
      */
     // TODO: 29.10.16 checks the right length for print string length (16, 17, sign)
     public String toPrintFormatTxt() {
-        String s = this.dataGSI;
-        int length = s.length();
+        String txt = this.dataGSI;
+        int length = txt.length();
 
         StringBuilder stringBuilder;
 
         switch (wordIndex) {
             case 11:        // point number
-                s = preparePrintString(s);
+                txt = preparePrintString(txt);
                 break;
             case 21:        // angle Hz
             case 22:        // angle Vz
             case 24:        // angle Hz0
             case 25:        // angle difference (Hz0 - Hz)
                 if (this.information.endsWith("2") || this.information.endsWith("3")) {
-                    stringBuilder = new StringBuilder(s);
-                    s = stringBuilder.insert(length - 5, ".").toString();
-                    s = trimLeadingZeros(s);
-                    s = StringHelper.fillWithSpaces(length + 1, s);
+                    stringBuilder = new StringBuilder(txt);
+                    txt = stringBuilder.insert(length - 5, ".").toString();
+                    txt = trimLeadingZeros(txt);
+                    txt = StringUtils.fillWithSpacesFromBeginning(txt, length + 1);
                 }
                 break;
             case 26:        // offset
@@ -236,31 +236,31 @@ public class GsiBlock {
             case 31:        // slope distance
             case 32:        // horizontal distance
             case 33:        // height difference
-                stringBuilder = new StringBuilder(s);
+                stringBuilder = new StringBuilder(txt);
 
                 if (this.information.endsWith("0")) {
-                    s = stringBuilder.insert(length - 3, ".").toString();
+                    txt = stringBuilder.insert(length - 3, ".").toString();
                 } else if (this.information.endsWith("6")) {
-                    s = stringBuilder.insert(length - 4, ".").toString();
+                    txt = stringBuilder.insert(length - 4, ".").toString();
                 } else if (this.information.endsWith("8")) {
-                    s = stringBuilder.insert(length - 5, ".").toString();
+                    txt = stringBuilder.insert(length - 5, ".").toString();
                 } else {
-                    s = stringBuilder.insert(length - 3, ".").toString();
+                    txt = stringBuilder.insert(length - 3, ".").toString();
                 }
 
-                s = insertMinusSign(s);
-                s = StringHelper.fillWithSpaces(length + 2, s);
+                txt = insertMinusSign(txt);
+                txt = StringUtils.fillWithSpacesFromBeginning(txt, length + 2);
                 break;
             case 41:        // code
-                s = trimLeadingZeros(s);
-                s = StringHelper.fillWithSpaces(length, s);
+                txt = trimLeadingZeros(txt);
+                txt = StringUtils.fillWithSpacesFromBeginning(txt, length);
                 break;
             case 58:        // addition constant in 1/10 mm
-                stringBuilder = new StringBuilder(s);
-                s = stringBuilder.insert(length - 4, ".").toString();
+                stringBuilder = new StringBuilder(txt);
+                txt = stringBuilder.insert(length - 4, ".").toString();
 
-                s = this.sign + trimLeadingZeros(s);
-                s = StringHelper.fillWithSpaces(length, s);
+                txt = this.sign + trimLeadingZeros(txt);
+                txt = StringUtils.fillWithSpacesFromBeginning(txt, length);
                 break;
             case 71:        // comment 1, mostly used for code
             case 72:        // attribute 1
@@ -271,7 +271,7 @@ public class GsiBlock {
             case 77:        // attribute 6
             case 78:        // attribute 7
             case 79:        // attribute 8
-                s = preparePrintString(s);
+                txt = preparePrintString(txt);
                 break;
             case 81:        // easting E
             case 82:        // northing N
@@ -281,26 +281,26 @@ public class GsiBlock {
             case 86:        // height H0
             case 87:        // target height
             case 88:        // instrument height
-                stringBuilder = new StringBuilder(s);
+                stringBuilder = new StringBuilder(txt);
 
                 if (this.information.endsWith("0")) {           // mm
-                    s = stringBuilder.insert(this.dataGSI.length() - 3, ".").toString();
+                    txt = stringBuilder.insert(this.dataGSI.length() - 3, ".").toString();
                 } else if (this.information.endsWith("6")) {    // 1/10 mm
-                    s = stringBuilder.insert(this.dataGSI.length() - 4, ".").toString();
+                    txt = stringBuilder.insert(this.dataGSI.length() - 4, ".").toString();
                 }
 
-                s = insertMinusSign(s);
+                txt = insertMinusSign(txt);
 
                 // add two spaces, one for the sign and one for the decimal dot
-                s = StringHelper.fillWithSpaces(length + 2, s);
+                txt = StringUtils.fillWithSpacesFromBeginning(txt, length + 2);
                 break;
             default:
-                s = ResourceBundleUtils.getLangString(WORDINDICES, WordIndices.WI9999);
+                txt = ResourceBundleUtils.getLangString(WORDINDEX, WordIndex.WI9999);
                 logger.trace("Line contains unknown word index ({}).", dataGSI);
                 break;
         }
 
-        return s;
+        return txt;
     }
 
     /**
@@ -318,7 +318,6 @@ public class GsiBlock {
      * Due to issues of the format, leading zeros are added or values are cut off.
      *
      * @param isGSI16 True for GSI16 format
-     *
      * @return GsiBlock as String depending on format GSI8/GSI16
      */
     public String toString(boolean isGSI16) {
@@ -343,7 +342,6 @@ public class GsiBlock {
         return result;
     }
 
-
     private String insertMinusSign(String s) {
         if (this.sign.equals("-")) {
             return this.sign + trimLeadingZeros(s);
@@ -353,20 +351,22 @@ public class GsiBlock {
     }
 
     private String preparePrintString(String s) {
-        return StringHelper.fillWithSpaces(s.length(), trimLeadingZeros(s));
+        return StringUtils.fillWithSpacesFromBeginning(trimLeadingZeros(s), s.length());
     }
 
     private String removeSign(String dataGSI) {
+        sign = "+";
+
         if (dataGSI.startsWith("+")) {
-            sign = "+";
             return dataGSI.substring(1);
-        } else if (dataGSI.startsWith("-")) {
+        }
+
+        if (dataGSI.startsWith("-")) {
             sign = "-";
             return dataGSI.substring(1);
-        } else {
-            sign = "+";
-            return dataGSI;
         }
+
+        return dataGSI;
     }
 
     private String trimLeadingZeros(String s) {
@@ -380,4 +380,4 @@ public class GsiBlock {
         }
     }
 
-} // end of GsiBlock
+}

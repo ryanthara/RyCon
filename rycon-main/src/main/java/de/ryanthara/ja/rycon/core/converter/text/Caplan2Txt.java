@@ -20,10 +20,11 @@ package de.ryanthara.ja.rycon.core.converter.text;
 import de.ryanthara.ja.rycon.core.elements.CaplanBlock;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Instances of this class provides functions to convert a Caplan K formatted coordinate file
- * into a text formatted file.
+ * A converter with functions to convert coordinate coordinate files
+ * from Caplan K program into a text formatted file.
  *
  * @author sebastian
  * @version 1
@@ -31,15 +32,15 @@ import java.util.ArrayList;
  */
 public class Caplan2Txt {
 
-    private final ArrayList<String> readStringLines;
+    private final List<String> lines;
 
     /**
-     * Constructs a new instance of this class with the reader Caplan K file {@link ArrayList} string as parameter.
+     * Creates a converter with a list for the read line based Caplan K file.
      *
-     * @param readStringLines {@code ArrayList<String>} with lines in Caplan K format
+     * @param lines list with Caplan K formatted lines
      */
-    public Caplan2Txt(ArrayList<String> readStringLines) {
-        this.readStringLines = readStringLines;
+    public Caplan2Txt(List<String> lines) {
+        this.lines = new ArrayList<>(lines);
     }
 
     /**
@@ -49,13 +50,12 @@ public class Caplan2Txt {
      * @param writeSimpleFormat writes a simple format (nr x y z or nr code x y z)
      * @param writeCommentLine  writes a comment line into the file
      * @param writeCodeColumn   writes a code column (nr code x y z attr)
-     *
-     * @return converted {@code ArrayList<String>} with lines of text format
+     * @return converted {@code List<String>} with lines of text format
      */
-    public ArrayList<String> convertK2TXT(String separator, boolean writeSimpleFormat, boolean writeCommentLine,
-                                          boolean writeCodeColumn) {
+    public List<String> convert(String separator, boolean writeSimpleFormat, boolean writeCommentLine,
+                                     boolean writeCodeColumn) {
 
-        ArrayList<String> result = new ArrayList<>();
+        List<String> result = new ArrayList<>();
 
         if (writeCommentLine) {
             String commentLine = "";
@@ -69,7 +69,7 @@ public class Caplan2Txt {
             result.add(commentLine);
         }
 
-        for (String line : readStringLines) {
+        for (String line : lines) {
             // skip empty lines directly after reading
             if (!line.trim().isEmpty()) {
                 String s = "";
@@ -111,7 +111,7 @@ public class Caplan2Txt {
             }
         }
 
-        return result;
+        return List.copyOf(result);
     }
 
-} // end of Caplan2Txt
+}

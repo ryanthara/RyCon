@@ -23,10 +23,11 @@ import org.eclipse.swt.graphics.Point;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
- * Instances of this class provides functions to convert a NigraWin/NivNET altitude register from version 4.0 (*.ASC)
- * into an ascii file.
+ * A converter with functions to convert NigraWin/NivNET altitude register files into ASCII text files.
+ *
  * <p>
  * The line based ascii file contains one point (no x y z) in every line which coordinates
  * are separated by a single white space character.
@@ -43,16 +44,15 @@ import java.util.Iterator;
  */
 public class NigraAltitudeRegisterAsc2Asc extends Converter {
 
-    private final ArrayList<String> readStringLines;
+    private final List<String> lines;
 
     /**
-     * Constructs a new instance of this class with a parameter for the read {@code ArrayList<String>}
-     * altitude register from Nigra/NigraWin.
+     * Creates a converter with a list for the read line based altitude register from Nigra/NigraWin.
      *
-     * @param readStringLines read lines
+     * @param lines list with the altitude register
      */
-    public NigraAltitudeRegisterAsc2Asc(ArrayList<String> readStringLines) {
-        this.readStringLines = new ArrayList<>(readStringLines);
+    public NigraAltitudeRegisterAsc2Asc(List<String> lines) {
+        this.lines = new ArrayList<>(lines);
     }
 
     /**
@@ -67,28 +67,21 @@ public class NigraAltitudeRegisterAsc2Asc extends Converter {
      * @return converted Nigra/NigraWin altitude register format file
      */
     @Override
-    public ArrayList<String> convert() {
-        ArrayList<String> result = new ArrayList<>();
+    public List<String> convert() {
+        List<String> result = new ArrayList<>();
 
         // Detect the number of pages of the Nigra/NigraWin altitude register
-        int numPages = 1;
-        for (String line : readStringLines) {
-            if (line.startsWith("\f")) {
-                numPages = numPages + 1;
-            }
-        }
+        int numPages = getNumPages();
 
-        ArrayList<Point> dummyCoordinates = DummyCoordinates.getList(readStringLines.size() - numPages * 8);
+        List<Point> dummyCoordinates = DummyCoordinates.getList(lines.size() - numPages * 8);
 
-        // remove the first 8 lines which doesn't contains altitudes
-        ArrayList<String> headlines = new ArrayList<>(readStringLines.subList(0, 8));
-        readStringLines.removeAll(headlines);
+        removeHeadLines();
 
         int counter = 0;
-        for (Iterator<String> iterator = readStringLines.iterator(); iterator.hasNext(); ) {
+        for (Iterator<String> iterator = lines.iterator(); iterator.hasNext(); ) {
             String line = iterator.next();
 
-            // the Nigra/NigraWin altitude register is paginated for printing -> skip this 8 lines on each page
+            // The Nigra/NigraWin altitude register is paginated for printing -> skip this 8 lines on each page
             if (line.startsWith("\f")) {
                 iterator.remove();
                 iterator.next();
@@ -101,7 +94,7 @@ public class NigraAltitudeRegisterAsc2Asc extends Converter {
 
                     String x, y;
 
-                    // line length and positions are taken from the Nigra/NigraWin standard format
+                    // Line length and positions are taken from the Nigra/NigraWin standard format
                     if (line.length() == 116) {
                         y = line.substring(91, 105);
                         x = line.substring(106, 116);
@@ -117,7 +110,22 @@ public class NigraAltitudeRegisterAsc2Asc extends Converter {
             }
         }
 
-        return new ArrayList<>(result);
+        return List.copyOf(result);
     }
 
-} // end of NigraAltitudeRegisterAsc2Asc
+    private int getNumPages() {
+        int numPages = 1;
+        for (String line : lines) {
+            if (line.startsWith("\f")) {
+                numPages = numPages + 1;
+            }
+        }
+        return numPages;
+    }
+
+    private void removeHeadLines() {
+        List<String> headlines = new ArrayList<>(lines.subList(0, 8));
+        lines.removeAll(headlines);
+    }
+
+}

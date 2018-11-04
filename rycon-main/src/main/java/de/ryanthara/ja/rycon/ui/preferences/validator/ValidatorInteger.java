@@ -39,7 +39,7 @@ public class ValidatorInteger implements Validator<Integer> {
      * @param min minimum value
      * @param max maximum value
      */
-    public ValidatorInteger(final int min, final int max) {
+    public ValidatorInteger(int min, final int max) {
         this.min = min;
         this.max = max;
     }
@@ -48,12 +48,11 @@ public class ValidatorInteger implements Validator<Integer> {
      * Checks if the given value is valid.
      *
      * @param i value to be checked
-     *
      * @return true if is valid
      */
     @Override
-    public boolean isValid(final Integer i) {
+    public boolean isValid(Integer i) {
         return (i >= min) && (i <= max);
     }
 
-} // end of ValidatorInteger
+}

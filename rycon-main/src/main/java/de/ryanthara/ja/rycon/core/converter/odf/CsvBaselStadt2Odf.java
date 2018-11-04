@@ -17,6 +17,7 @@
  */
 package de.ryanthara.ja.rycon.core.converter.odf;
 
+import de.ryanthara.ja.rycon.util.StringUtils;
 import org.odftoolkit.simple.SpreadsheetDocument;
 import org.odftoolkit.simple.table.Cell;
 import org.odftoolkit.simple.table.Table;
@@ -24,12 +25,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 /**
- * This class provides functions to convert a csv formatted coordinate file from the geodata server
- * Basel Stadt (Switzerland) into an Open Document Format spreadsheet file.
+ * A converter with functions to convert coordinate coordinate files from the geodata
+ * server Basel Stadt (Switzerland) into an Open Document Format spreadsheet file.
  *
  * @author sebastian
  * @version 1
@@ -39,16 +41,17 @@ public class CsvBaselStadt2Odf {
 
     private static final Logger logger = LoggerFactory.getLogger(CsvBaselStadt2Odf.class.getName());
 
-    private final List<String[]> readCSVLines;
+    private final List<String[]> lines;
     private SpreadsheetDocument spreadsheetDocument;
 
     /**
-     * Constructs a new instance of this class for reader line based CSV files from the geodata server Basel Stadt (Switzerland).
+     * Creates a converter with a list for the read line based comma separated
+     * values (CSV) file from the geodata server Basel Stadt (Switzerland).
      *
-     * @param readCSVLines {@code List<String[]>} with lines as {@code String[]}
+     * @param lines list with lines as string array
      */
-    public CsvBaselStadt2Odf(List<String[]> readCSVLines) {
-        this.readCSVLines = readCSVLines;
+    public CsvBaselStadt2Odf(List<String[]> lines) {
+        this.lines = new ArrayList<>(lines);
     }
 
     /**
@@ -56,10 +59,9 @@ public class CsvBaselStadt2Odf {
      *
      * @param sheetName       name of the sheet (file name from input file)
      * @param writeCommentRow writer comment row
-     *
      * @return success conversion success
      */
-    public boolean convertCsvBaselStadt2Ods(Path sheetName, boolean writeCommentRow) {
+    public boolean convert(Path sheetName, boolean writeCommentRow) {
         int colIndex = 0;
         int rowIndex = 0;
 
@@ -74,39 +76,31 @@ public class CsvBaselStadt2Odf {
             Cell cell;
 
             if (writeCommentRow) {
-                String[] commentLine = readCSVLines.get(0);
-
-                for (String description : commentLine) {
-                    cell = table.getCellByPosition(colIndex, rowIndex);
-                    cell.setStringValue(description);
-                    colIndex = colIndex + 1;
-                }
-                rowIndex = rowIndex + 1;
+                rowIndex = prepareCommentRow(colIndex, rowIndex, table);
             }
 
-            // remove furthermore the still not needed comment line
-            readCSVLines.remove(0);
+            removeCommentLine();
 
-            for (String[] csvLine : readCSVLines) {
+            for (String[] values : lines) {
                 colIndex = 0;
 
-                for (int i = 0; i < csvLine.length; i++) {
+                for (int i = 0; i < values.length; i++) {
                     cell = table.getCellByPosition(colIndex, rowIndex);
 
                     switch (i) {
                         case 0:
                         case 1:
-                            cell.setStringValue(csvLine[i]);
+                            cell.setStringValue(values[i]);
                             break;
 
                         case 2:
                         case 3:
                         case 4:
                         case 5:
-                            if (csvLine[i].equalsIgnoreCase("")) {
-                                cell.setStringValue(csvLine[i]);
+                            if (values[i].equalsIgnoreCase("")) {
+                                cell.setStringValue(values[i]);
                             } else {
-                                cell.setDoubleValue(Double.parseDouble(csvLine[i]));
+                                cell.setDoubleValue(StringUtils.parseDoubleValue(values[i]));
                                 cell.setFormatString("#,##0.000");
                             }
                             break;
@@ -116,11 +110,11 @@ public class CsvBaselStadt2Odf {
                         case 8:
                         case 9:
                         case 10:
-                            cell.setStringValue(csvLine[i]);
+                            cell.setStringValue(values[i]);
                             break;
 
                         default:
-                            logger.trace("Line contains less or more tokens ({}) than needed or allowed.\n{}", csvLine.length, Arrays.toString(csvLine));
+                            logger.trace("Line contains less or more tokens ({}) than needed or allowed.\n{}", values.length, Arrays.toString(values));
                             break;
                     }
                     colIndex = colIndex + 1;
@@ -137,6 +131,23 @@ public class CsvBaselStadt2Odf {
         return rowIndex > 1;
     }
 
+    private int prepareCommentRow(int colIndex, int rowIndex, Table table) {
+        Cell cell;
+        String[] values = lines.get(0);
+
+        for (String value : values) {
+            cell = table.getCellByPosition(colIndex, rowIndex);
+            cell.setStringValue(value);
+            colIndex = colIndex + 1;
+        }
+        rowIndex = rowIndex + 1;
+        return rowIndex;
+    }
+
+    private void removeCommentLine() {
+        lines.remove(0);
+    }
+
     /**
      * Returns the SpreadsheetDocument object for writing it to a file.
      *
@@ -146,4 +157,4 @@ public class CsvBaselStadt2Odf {
         return this.spreadsheetDocument;
     }
 
-} // end of CsvBaselStadt2Odf
+}

@@ -21,7 +21,6 @@ package de.ryanthara.ja.rycon.ui;
 import de.ryanthara.ja.rycon.ui.image.ImageConverter;
 import de.ryanthara.ja.rycon.ui.util.ShellPositioner;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
@@ -32,8 +31,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.Semaphore;
+
 /**
- * {@code SplashScreen} displays a splash screen while <tt>RyCON</tt> is starting.
+ * {@code SplashScreen} displays a splash screen while RyCON is starting.
  * <p>
  * This is necessary because of a bug in Cocoa from Apple when
  * starting a SWT-jar which needs -XstartOnFirstThread option!
@@ -62,7 +63,7 @@ class SplashScreen {
      */
     public SplashScreen(Display display) {
 
-        final Image image = new ImageConverter().convertToImage(display, Images.splashScreen.getPath());
+        final org.eclipse.swt.graphics.Image image = new ImageConverter().convertToImage(display, Image.splashScreen.getPath());
         final Shell shell = new Shell(SWT.ON_TOP);
         final ProgressBar progressBar = new ProgressBar(shell, SWT.NONE);
         progressBar.setMaximum(SPLASH_MAX);
@@ -124,4 +125,32 @@ class SplashScreen {
         }
     }
 
-} // end of SplashScreen
+    private static void executeSafeForMac(Runnable r) {
+        // On non Mac systems no problem
+        if (!System.getProperty("os.name").toLowerCase().contains("mac")) {
+            r.run();
+            return;
+        }
+
+        // On Mac we must be moar intelligent
+        Display display = Display.getDefault();
+        final Semaphore sem = new Semaphore(0);
+        Thread t = new Thread(() -> {
+            r.run();
+            sem.release(); // Can be anything.
+            display.asyncExec(() -> {
+            }); // Ensure the Event loop has one last thing to do
+        }, "SplashScreenInteractor");
+        t.start();
+
+        // Okay, we do SWT event loop stuff to make the SplashScreen responsible until the
+        // SplashScreen stuff doing Runnable has been done and the semaphore is released.
+        while (!display.isDisposed() && !sem.tryAcquire()) {
+            if (!display.readAndDispatch()) {
+                display.sleep();
+            }
+        }
+
+    }
+
+}

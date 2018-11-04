@@ -36,12 +36,11 @@ public class ValidatorCharacter implements Validator<String> {
      * Checks if the given string is valid.
      *
      * @param s value to be checked
-     *
      * @return true if is valid
      */
     @Override
-    public boolean isValid(final String s) {
+    public boolean isValid(String s) {
         return s != null && s.length() == 1;
     }
 
-} // end of ValidatorCharacter
+}

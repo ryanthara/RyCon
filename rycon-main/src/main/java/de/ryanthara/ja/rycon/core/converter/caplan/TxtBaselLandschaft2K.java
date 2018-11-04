@@ -17,18 +17,21 @@
  */
 package de.ryanthara.ja.rycon.core.converter.caplan;
 
+import de.ryanthara.ja.rycon.core.converter.Separator;
 import de.ryanthara.ja.rycon.util.NumberFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Instances of this class provides functions to convert text formatted coordinate files from the geodata server
- * Basel Landschaft (Switzerland) into Caplan K formatted files.
+ * A converter with functions to convert coordinate files from the
+ * geodata server Basel Landschaft (Switzerland) into Caplan K files.
+ *
  * <p>
- * Due to some reasons the geodata Server Basel Landschaft delivers different file formats for
- * location and height reference points.
+ * Due to some reasons the geodata server Basel Landschaft (Switzerland) delivers
+ * different file formats for location and height reference points.
  *
  * @author sebastian
  * @version 1
@@ -38,16 +41,16 @@ public class TxtBaselLandschaft2K {
 
     private static final Logger logger = LoggerFactory.getLogger(TxtBaselLandschaft2K.class.getName());
 
-    private final ArrayList<String> readStringLines;
+    private final List<String> lines;
 
     /**
-     * Constructs a new instance of this class with a parameter for reader line based text files from the
-     * geodata Server Basel Landschaft (Switzerland).
+     * Creates a converter with a list for the read line based text files
+     * from the geodata server Basel Landschaft (Switzerland).
      *
-     * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
+     * @param lines list with coordinate lines
      */
-    public TxtBaselLandschaft2K(ArrayList<String> readStringLines) {
-        this.readStringLines = readStringLines;
+    public TxtBaselLandschaft2K(List<String> lines) {
+        this.lines = new ArrayList<>(lines);
     }
 
     /**
@@ -56,23 +59,21 @@ public class TxtBaselLandschaft2K {
      * @param useSimpleFormat  option to writer a reduced K file which is compatible to Z+F LaserControl
      * @param writeCodeColumn  option to writer a found code into the K file
      * @param writeCommentLine option to writer a comment line into the K file with basic information
-     *
-     * @return converted K file as {@code ArrayList<String>}
+     * @return converted K file as {@code List<String>}
      */
-    public ArrayList<String> convertTXTBaselLandschaft2K(boolean useSimpleFormat, boolean writeCommentLine, boolean writeCodeColumn) {
-        ArrayList<String> result = new ArrayList<>();
+    public List<String> convert(boolean useSimpleFormat, boolean writeCommentLine, boolean writeCodeColumn) {
+        List<String> result = new ArrayList<>();
 
-        // remove not needed headlines
-        readStringLines.remove(0);
+        removeHeadLine();
 
         if (writeCommentLine) {
             BaseToolsCaplanK.writeCommentLine(result);
         }
 
-        for (String line : readStringLines) {
+        for (String line : lines) {
             int valencyIndicator = -1;
 
-            String[] lineSplit = line.trim().split("\\t", -1);
+            String[] values = line.trim().split("\\t", -1);
 
             String valency = BaseToolsCaplanK.valency;
             String freeSpace = BaseToolsCaplanK.freeSpace;
@@ -82,65 +83,65 @@ public class TxtBaselLandschaft2K {
             String height = BaseToolsCaplanK.height;
 
             // point number is always in column 1 (no '*', ',' and ';'), column 1 - 16
-            String number = BaseToolsCaplanK.cleanPointNumberString(lineSplit[1]);
+            String number = BaseToolsCaplanK.cleanPointNumberString(values[1]);
 
-            switch (lineSplit.length) {
+            switch (values.length) {
                 case 5:     // HFP file
                     // easting (Y) is in column 3 -> column 19-32
-                    easting = String.format("%14s", NumberFormatter.fillDecimalPlace(lineSplit[2], 4));
+                    easting = String.format("%14s", NumberFormatter.fillDecimalPlaces(values[2], 4));
 
                     // northing (X) is in column 4 -> column 33-46
-                    northing = String.format("%14s", NumberFormatter.fillDecimalPlace(lineSplit[3], 4));
+                    northing = String.format("%14s", NumberFormatter.fillDecimalPlaces(values[3], 4));
                     valencyIndicator = 3;
 
                     // height (Z) is in column 5, and not always valued (LFP file) -> column 47-59
-                    height = String.format("%13s", NumberFormatter.fillDecimalPlace(lineSplit[4], 5));
-                    Double d = Double.parseDouble(height);
-                    if (d != 0d) {
-                        valencyIndicator += 4;
-                    }
+                    height = String.format("%13s", NumberFormatter.fillDecimalPlaces(values[4], 5));
+                    valencyIndicator = BaseToolsCaplanK.getValencyIndicator(valencyIndicator, height);
                     break;
 
                 case 6:     // LFP file
                     // use 'Versicherungsart' as code. It is in column 3 -> column 62...
                     if (writeCodeColumn) {
-                        objectTyp = "|".concat(lineSplit[2]);
+                        objectTyp = "|".concat(values[2]);
                     }
 
                     // easting (Y) is in column 4 -> column 19-32
-                    easting = String.format("%14s", NumberFormatter.fillDecimalPlace(lineSplit[3], 4));
+                    easting = String.format("%14s", NumberFormatter.fillDecimalPlaces(values[3], 4));
 
                     // northing (X) is in column 5 -> column 33-46
-                    northing = String.format("%14s", NumberFormatter.fillDecimalPlace(lineSplit[4], 4));
+                    northing = String.format("%14s", NumberFormatter.fillDecimalPlaces(values[4], 4));
                     valencyIndicator = 3;
 
                     // height (Z) is in column 6, and not always valued (LFP file) -> column 47-59
-                    if (lineSplit[5].equals("NULL")) {
-                        height = String.format("%13s", NumberFormatter.fillDecimalPlace("-9999", 5));
+                    if (values[5].equals("NULL")) {
+                        height = String.format("%13s", NumberFormatter.fillDecimalPlaces("-9999", 5));
                     } else {
-                        height = String.format("%13s", NumberFormatter.fillDecimalPlace(lineSplit[5], 5));
-                        if (Double.parseDouble(height) != 0d) {
-                            valencyIndicator += 4;
-                        }
+                        height = String.format("%13s", NumberFormatter.fillDecimalPlaces(values[5], 5));
+                        valencyIndicator = BaseToolsCaplanK.getValencyIndicator(valencyIndicator, height);
                     }
                     break;
 
                 default:
-                    logger.trace("Line contains less or more tokens ({}) than needed or allowed.", lineSplit.length);
+                    logger.trace("Line contains less or more tokens ({}) than needed or allowed.", values.length);
                     break;
             }
             if (valencyIndicator > 0) {
-                valency = " ".concat(Integer.toString(valencyIndicator));
+                valency = Separator.WHITESPACE.getSign().concat(Integer.toString(valencyIndicator));
             }
 
             /*
-            2. pick up the relevant elements from the blocks from every line, check Z+F option
+            2. pick up the relevant values from the blocks from every line, check Z+F option
             if Z+F option is checked, then use only no 7 x y z for K file
              */
             result.add(BaseToolsCaplanK.prepareCaplanLine(useSimpleFormat, number, valency, easting, northing, height,
                     freeSpace, objectTyp).toString());
         }
-        return result;
+
+        return List.copyOf(result);
     }
 
-} // end of TxtBaselLandschaft2K
+    private void removeHeadLine() {
+        lines.remove(0);
+    }
+
+}

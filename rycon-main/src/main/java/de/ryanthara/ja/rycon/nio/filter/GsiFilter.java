@@ -23,7 +23,7 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Path;
 
 /**
- * A filter for files in the Leica GSI format with the file ending '.gsi'.
+ * A filter that accepts files in the Leica Geosystems GSI format with the file ending '.gsi'.
  *
  * @author sebastian
  * @version 1
@@ -35,7 +35,6 @@ public class GsiFilter implements DirectoryStream.Filter<Path> {
      * Decides if the given directory path should be accepted or filtered.
      *
      * @param path the directory path to be tested
-     *
      * @return {@code true} if the directory path should be accepted
      */
     @Override
@@ -51,4 +50,4 @@ public class GsiFilter implements DirectoryStream.Filter<Path> {
         return false;
     }
 
-} // end of GsiFilter
+}

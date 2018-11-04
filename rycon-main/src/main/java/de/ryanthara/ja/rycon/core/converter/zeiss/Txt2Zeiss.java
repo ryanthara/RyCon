@@ -21,61 +21,60 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Instances of this class provides functions to convert text formatted coordinate files into Zeiss REC files and
- * it's dialects (R4, R5, REC500 and M5).
+ * A converter with functions to convert ASCII text coordinate files
+ * into Zeiss REC files and it's dialects (R4, R5, REC500 and M5).
  */
 public class Txt2Zeiss {
 
     private static final Logger logger = LoggerFactory.getLogger(Txt2Zeiss.class.getName());
 
-    private final ArrayList<String> readStringLines;
+    private final List<String> lines;
 
     /**
-     * Constructs a new instance of this class with a parameter for reader line based text files in Zeiss REC format
-     * and it's dialects (R4, R5, REC500 and M5).
+     * Creates a converter with a list for the read line based ASCII text file.
      *
-     * @param readStringLines {@code ArrayList<String>} with lines in text format
+     * @param lines list with ASCII text lines
      */
-    public Txt2Zeiss(ArrayList<String> readStringLines) {
-        this.readStringLines = readStringLines;
+    public Txt2Zeiss(List<String> lines) {
+        this.lines = new ArrayList<>(lines);
     }
 
     /**
      * Converts a text formatted coordinate file (nr x y (z) or nr code x y z) into a Zeiss REC formatted file.
      *
      * @param dialect dialect of the target file
-     *
      * @return string lines of the target file
      */
-    public ArrayList<String> convertTXT2REC(ZeissDialect dialect) {
-        ArrayList<String> result = new ArrayList<>();
+    public List<String> convert(ZeissDialect dialect) {
+        List<String> result = new ArrayList<>();
 
         int lineNumber = 0;
 
-        for (String line : readStringLines) {
-            String[] lineSplit = line.trim().split("\\s+");
+        for (String line : lines) {
+            String[] values = line.trim().split("\\s+");
 
             String code = "";
             String northing = "";
             String easting = "";
             String height = "";
 
-            String number = lineSplit[0];
+            String number = values[0];
 
             lineNumber = lineNumber + 1;
 
-            switch (lineSplit.length) {
+            switch (values.length) {
                 case 3:     // line contains no height
-                    easting = lineSplit[1];
-                    northing = lineSplit[2];
+                    easting = values[1];
+                    northing = values[2];
                     break;
 
                 case 4:     // line contains no code
-                    easting = lineSplit[1];
-                    northing = lineSplit[2];
-                    height = lineSplit[3];
+                    easting = values[1];
+                    northing = values[2];
+                    height = values[3];
                     break;
 
                 case 6:     // line contains code at second position and height
@@ -83,21 +82,21 @@ public class Txt2Zeiss {
                     Code is not used at the moment because the only chance to do this would be in M5 dialect.
                      */
                     // TODO: 16.10.16 use code from ASCII text file in M5 format
-                    //code = lineSplit[1];
-                    easting = lineSplit[2];
-                    northing = lineSplit[3];
-                    height = lineSplit[4];
+                    //code = values[1];
+                    easting = values[2];
+                    northing = values[3];
+                    height = values[4];
                     break;
 
                 default:
-                    logger.trace("Line contains less or more tokens ({}) than needed or allowed.", lineSplit.length);
+                    logger.trace("Line contains less or more tokens ({}) than needed or allowed.", values.length);
                     break;
             }
 
             result.add(BaseToolsZeiss.prepareLineOfCoordinates(dialect, number, code, easting, northing, height, lineNumber));
         }
 
-        return result;
+        return List.copyOf(result);
     }
 
-} // end of Txt2Zeiss
+}

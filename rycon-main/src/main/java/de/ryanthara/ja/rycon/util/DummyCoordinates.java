@@ -20,10 +20,12 @@ package de.ryanthara.ja.rycon.util;
 import org.eclipse.swt.graphics.Point;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Instances of this class delivers dummy coordinates for
- * the {@link de.ryanthara.ja.rycon.ui.widgets.LevellingWidget}.
+ * This class delivers dummy coordinates for the
+ * {@link de.ryanthara.ja.rycon.ui.widgets.LevellingWidget}.
+ *
  * <p>
  * The coordinate space for rectangles and points is considered
  * to have increasing values downward and to the right from its
@@ -34,25 +36,31 @@ import java.util.ArrayList;
  * @version 1
  * @since 27
  */
-public class DummyCoordinates {
+public final class DummyCoordinates {
 
     /**
-     * Returns the dummy coordinate as {@link ArrayList} of 2D {@link Point}.
+     * DummyCoordinates is non-instantiable.
+     */
+    private DummyCoordinates() {
+        throw new AssertionError();
+    }
+
+    /**
+     * Returns the dummy coordinate as {@link List} of 2D {@link Point}.
      * <p>
      * The dummy coordinates raises one for one with a distance of one metre.
      *
      * @param length array length
-     *
      * @return dummy coordinates
      */
-    public static ArrayList<Point> getList(int length) {
-        ArrayList<Point> points = new ArrayList<>(length);
+    public static List<Point> getList(int length) {
+        List<Point> points = new ArrayList<>(length);
 
         for (int i = 0; i < length; i++) {
             points.add(new Point(i, i));
         }
 
-        return points;
+        return List.copyOf(points);
     }
 
-} // end of DummyCoordinates
+}

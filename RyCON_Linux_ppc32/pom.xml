@@ -83,6 +83,14 @@
             <artifactId>org.eclipse.swt.gtk.linux.ppc</artifactId>
             <version>4.6.1</version>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.eclipse.platform/org.eclipse.swt.gtk.linux.ppc
+        <dependency>
+            <groupId>org.eclipse.platform</groupId>
+            <artifactId>org.eclipse.swt.gtk.linux.ppc</artifactId>
+            <version>3.105.3</version>
+        </dependency> -->
+
     </dependencies>
 
 </project>

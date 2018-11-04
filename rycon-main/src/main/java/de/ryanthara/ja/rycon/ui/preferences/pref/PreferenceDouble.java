@@ -91,4 +91,4 @@ public abstract class PreferenceDouble extends Preference<Double> {
         return validator;
     }
 
-} // end of ValidatorDouble
+}

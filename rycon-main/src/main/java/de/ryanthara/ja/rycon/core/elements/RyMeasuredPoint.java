@@ -24,7 +24,7 @@ import de.ryanthara.ja.rycon.ui.widgets.ReportWidget;
  * for the reference line structure.
  * <p>
  * These measurement points are used in the analyzer for Leica Geosystems logfile.txt files in the
- * {@link ReportWidget} of <tt>RyCON</tt>.
+ * {@link ReportWidget} of RyCON.
  * <p>
  * This class based on an equal idea to the {@link RyPoint} structure.
  *
@@ -45,7 +45,7 @@ public class RyMeasuredPoint {
      * @param measured   the measured point
      * @param lineOffset the line offset values
      */
-    public RyMeasuredPoint(final String pointID, final RyPoint measured, final RyPoint lineOffset) {
+    public RyMeasuredPoint(String pointID, final RyPoint measured, final RyPoint lineOffset) {
         this.pointID = pointID;
         this.measured = measured;
         this.lineOffset = lineOffset;
@@ -78,4 +78,4 @@ public class RyMeasuredPoint {
         return pointID;
     }
 
-} // end of RyMeasuredPoint
+}

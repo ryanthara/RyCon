@@ -17,6 +17,8 @@
  */
 package de.ryanthara.ja.rycon.core.elements;
 
+import de.ryanthara.ja.rycon.core.converter.Separator;
+
 /**
  * Instances of this class defines a special helper object for smart handling and better sorting
  * of strings by a given integer value.
@@ -67,7 +69,7 @@ public class RyBlock {
      * @return number and block as string
      */
     public String toString() {
-        return number + " " + string;
+        return number + Separator.WHITESPACE.getSign() + string;
     }
 
-} // end of RyBlock
+}

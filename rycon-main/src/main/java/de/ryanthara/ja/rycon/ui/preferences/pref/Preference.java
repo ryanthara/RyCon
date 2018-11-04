@@ -22,6 +22,8 @@ import de.ryanthara.ja.rycon.ui.preferences.PreferencesDialog;
 import de.ryanthara.ja.rycon.ui.preferences.editor.Editor;
 import de.ryanthara.ja.rycon.ui.preferences.validator.Validator;
 
+import java.util.Objects;
+
 /**
  * {@code Preference<T>} is an abstract base class for different {@code PreferenceT<generic data typ></>} classes of RyCON.
  * <p>
@@ -33,7 +35,6 @@ import de.ryanthara.ja.rycon.ui.preferences.validator.Validator;
  * See <a href="https://github.com/prasser/swtpreferences">prasser on github</a> for details.
  *
  * @param <T> The generic data type of the subclassed editor
- *
  * @author sebastian
  * @version 1
  * @since 25
@@ -59,13 +60,12 @@ public abstract class Preference<T> {
      * Constructs a new instance of {@code PreferenceT} according to the parameters.
      *
      * @param label text string of the preference
+     * @throws NullPointerException will be thrown if label is null
      */
     protected Preference(String label) {
-        this.label = label;
+        Objects.requireNonNull(label, "the label must never be null!");
 
-        if (label == null) {
-            throw new IllegalArgumentException("Label must not be null");
-        }
+        this.label = label;
     }
 
     /**
@@ -132,4 +132,4 @@ public abstract class Preference<T> {
         this.dialog = dialog;
     }
 
-} // end of Preference
+}

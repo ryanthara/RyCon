@@ -17,16 +17,21 @@
  */
 package de.ryanthara.ja.rycon.core.elements;
 
+import de.ryanthara.ja.rycon.util.StringUtils;
+
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Instances of this class represents an object to store and handle the values of a Caplan K file line.
+ * Instances of this class represents an object to store a line and its values of a Caplan K file.
+ *
  * <p>
  * The Caplan K file format was developed by Cremer Programmentwicklung GmbH to storage coordinate files
  * in with different coordinate systems and reference frames.
+ *
  * <p>
  * Example K file:
- * <p>
+ * <pre>
  * ----+----1----+----2----+----3----+----4----+----5----+----6----+----7----+----8
  * !-------------------------------------------------------------------------------
  * ! The following data was created by RyCON Build xxx on YYYY-MM-DD.
@@ -37,6 +42,7 @@ import java.util.ArrayList;
  * 1062           7  2612259.5681  1256789.1990    256.90815 |10
  * TF 1067G       4  2612259.5681  1256789.1990    256.90815 |10
  * NG 2156U       3  2612259.5681  1256789.1990      0.00000 |10
+ * </pre>
  *
  * @author sebastian
  * @version 5
@@ -45,7 +51,7 @@ import java.util.ArrayList;
 public class CaplanBlock {
 
     private final String line;
-    private final ArrayList<String> attributes;
+    private final List<String> attributes;
     private final boolean isConverted;
     private int valency = -1;
     private String number, easting, northing, height, code;
@@ -53,7 +59,7 @@ public class CaplanBlock {
     /**
      * Constructs a {@link CaplanBlock} from a given string line which is set as parameter.
      * <p>
-     * The core.core.transformation of the values is initialized from here.
+     * The core.core.transformer of the values is initialized from here.
      *
      * @param line Caplan K file string line
      */
@@ -71,14 +77,14 @@ public class CaplanBlock {
     }
 
     /**
-     * Returns the attributes as {@link ArrayList}.
+     * Returns the attributes as {@link List}.
      * <p>
      * Due to some reasons the first attribute is stored in the code field!
      *
      * @return the attributes
      */
-    public ArrayList<String> getAttributes() {
-        return attributes;
+    public List<String> getAttributes() {
+        return List.copyOf(attributes);
     }
 
     /**
@@ -165,7 +171,7 @@ public class CaplanBlock {
                 if (line.length() >= 18) {
                     String valencyString = line.substring(18, 18);
                     if (!valencyString.isEmpty()) {
-                        valency = Integer.parseInt(valencyString);
+                        valency = StringUtils.parseIntegerValue(valencyString);
 
                         if (valency < 0 | valency > 7) {
                             valency = -1;
@@ -184,6 +190,7 @@ public class CaplanBlock {
                     northing = line.substring(34, 46).trim();
                     val = val + 2;
                 }
+
                 // height H, column 47-59
                 if (line.length() >= 59) {
                     height = line.substring(48, 59).trim();
@@ -206,7 +213,7 @@ public class CaplanBlock {
                 }
 
                 // returns converting success and found valency
-                if (val == 3 || val == 4 || val == 7) {
+                if (val == 3 || val == 7) {
                     valency = val;
                     success = true;
                 }
@@ -216,4 +223,4 @@ public class CaplanBlock {
         return success;
     }
 
-} // end of CaplanBlock
+}

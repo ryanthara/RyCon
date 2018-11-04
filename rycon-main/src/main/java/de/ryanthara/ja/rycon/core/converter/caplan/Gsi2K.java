@@ -17,54 +17,59 @@
  */
 package de.ryanthara.ja.rycon.core.converter.caplan;
 
-import de.ryanthara.ja.rycon.core.converter.gsi.BaseToolsGsi;
+import de.ryanthara.ja.rycon.core.converter.Separator;
+import de.ryanthara.ja.rycon.core.converter.gsi.GsiDecoder;
 import de.ryanthara.ja.rycon.core.elements.GsiBlock;
 import de.ryanthara.ja.rycon.util.NumberFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Instances of this class provides functions to convert coordinate and measurement files from
- * the Leica GSI format (GSI8 and GSI16) into Caplan K formatted files.
+ * A converter with functions to convert Leica Geosystems GSI format
+ * (GSI8 and GSI16) coordinate and measurement files into Caplan K files.
  *
  * @author sebastian
  * @version 1
  * @since 12
  */
 public class Gsi2K {
+
     private static final Logger logger = LoggerFactory.getLogger(Gsi2K.class.getName());
 
-    private final BaseToolsGsi baseToolsGsi;
+    private final GsiDecoder gsiDecoder;
 
     /**
-     * Constructs a new instance of this class with a parameter for reader line based text files in the Leica GSI format.
-     * <p>
-     * The differentiation of the content is done by the called method and it's content analyze functionality.
+     * Creates a converter with a list for the read line based
+     * Leica Geosystems GSI8 or GSI16 file.
      *
-     * @param readStringLines {@code ArrayList<String>} with lines as {@code String}
+     * @param lines list with Leica Geosystems GSI8 or GSI16 lines
      */
-    public Gsi2K(ArrayList<String> readStringLines) {
-        baseToolsGsi = new BaseToolsGsi(readStringLines);
+    public Gsi2K(List<String> lines) {
+        gsiDecoder = new GsiDecoder(lines);
     }
 
     /**
-     * Converts a Leica GSI file into a CAPLAN K file.
+     * Converts a Leica Geosystems GSI file into a CAPLAN K file.
+     *
+     * <p>
+     * The differentiation of the content is done by the called
+     * method and it's content analyze functionality.
      *
      * @param useSimpleFormat  option to writer a reduced K file which is compatible to Z+F LaserControl
      * @param writeCommentLine option to writer a comment line into the K file with basic information
-     *
-     * @return converted K file as {@code ArrayList<String>}
+     * @return converted K file as {@code List<String>}
      */
-    public ArrayList<String> convertGSI2K(boolean useSimpleFormat, boolean writeCommentLine) {
-        ArrayList<String> result = new ArrayList<>();
+    public List<String> convert(boolean useSimpleFormat, boolean writeCommentLine) {
+        List<String> result = new ArrayList<>();
 
         if (writeCommentLine) {
             BaseToolsCaplanK.writeCommentLine(result);
         }
 
-        for (ArrayList<GsiBlock> blocksInLine : baseToolsGsi.getEncodedLinesOfGSIBlocks()) {
+        for (List<GsiBlock> blocksInLine : gsiDecoder.getDecodedLinesOfGsiBlocks()) {
             StringBuilder stringBuilder = new StringBuilder();
 
             // prevent wrong output with empty strings of defined length from class
@@ -77,7 +82,7 @@ public class Gsi2K {
             String objectTyp = BaseToolsCaplanK.objectTyp;
             String attr = "";
 
-            for (int i = 0; i < baseToolsGsi.getFoundAllWordIndices().size(); i++) {
+            for (int i = 0; i < gsiDecoder.getDecodedLinesOfGsiBlocks().size(); i++) {
                 int valencyIndicator = 0;
 
                 for (GsiBlock block : blocksInLine) {
@@ -105,32 +110,32 @@ public class Gsi2K {
                             break;
 
                         case 81:        // easting E, column 19-32
-                            easting = String.format("%14s", NumberFormatter.fillDecimalPlace(printFormatCSV, 4));
+                            easting = String.format("%14s", NumberFormatter.fillDecimalPlaces(printFormatCSV, 4));
                             valencyIndicator = 3;
                             break;
 
                         case 82:        // northing N, column 33-46
-                            northing = String.format("%14s", NumberFormatter.fillDecimalPlace(printFormatCSV, 4));
+                            northing = String.format("%14s", NumberFormatter.fillDecimalPlaces(printFormatCSV, 4));
                             valencyIndicator = 3;
                             break;
 
                         case 83:        // height H, column 47-59
-                            height = String.format("%13s", NumberFormatter.fillDecimalPlace(printFormatCSV, 5));
+                            height = String.format("%13s", NumberFormatter.fillDecimalPlaces(printFormatCSV, 5));
                             valencyIndicator += 4;
                             break;
 
                         case 84:        // easting E0, column 19-32
-                            easting = String.format("%14s", NumberFormatter.fillDecimalPlace(printFormatCSV, 4));
+                            easting = String.format("%14s", NumberFormatter.fillDecimalPlaces(printFormatCSV, 4));
                             valencyIndicator = 3;
                             break;
 
                         case 85:        // northing N0, column 33-46
-                            northing = String.format("%14s", NumberFormatter.fillDecimalPlace(printFormatCSV, 4));
+                            northing = String.format("%14s", NumberFormatter.fillDecimalPlaces(printFormatCSV, 4));
                             valencyIndicator = 3;
                             break;
 
                         case 86:        // height H0, column 47-59
-                            height = String.format("%13s", NumberFormatter.fillDecimalPlace(printFormatCSV, 5));
+                            height = String.format("%13s", NumberFormatter.fillDecimalPlaces(printFormatCSV, 5));
                             valencyIndicator += 4;
                             break;
 
@@ -140,7 +145,7 @@ public class Gsi2K {
                     }
 
                     if (valencyIndicator > 0) {
-                        valency = " ".concat(Integer.toString(valencyIndicator));
+                        valency = Separator.WHITESPACE.getSign().concat(Integer.toString(valencyIndicator));
                     }
                 }
 
@@ -158,10 +163,11 @@ public class Gsi2K {
                 // clean up some variables after line reading is finished
                 attr = "";
             }
+
             result.add(stringBuilder.toString());
         }
 
-        return result;
+        return List.copyOf(result);
     }
 
-} // end of Gsi2K
+}
