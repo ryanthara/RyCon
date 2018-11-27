@@ -19,9 +19,9 @@ package de.ryanthara.ja.rycon.ui;
 
 import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.data.*;
-import de.ryanthara.ja.rycon.i18n.Button;
+import de.ryanthara.ja.rycon.i18n.Buttons;
 import de.ryanthara.ja.rycon.i18n.*;
-import de.ryanthara.ja.rycon.i18n.Text;
+import de.ryanthara.ja.rycon.i18n.Texts;
 import de.ryanthara.ja.rycon.nio.util.check.PathCheck;
 import de.ryanthara.ja.rycon.ui.cocoa.CocoaUIEnhancer;
 import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
@@ -55,7 +55,7 @@ import java.util.Optional;
 import java.util.prefs.BackingStoreException;
 import java.util.stream.IntStream;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundle.*;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.*;
 import static de.ryanthara.ja.rycon.ui.MainApplicationDnDButtons.*;
 import static de.ryanthara.ja.rycon.ui.custom.Status.OK;
 import static de.ryanthara.ja.rycon.ui.custom.Status.WARNING;
@@ -122,7 +122,7 @@ public class MainApplication extends Main {
 
     private void actionBtn01() {
         new GeneratorWidget(shell);
-        statusBar.setStatus(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.status_InitGenerator), OK);
+        statusBar.setStatus(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.status_InitGenerator), OK);
     }
 
     private void actionBtn02() {
@@ -132,11 +132,11 @@ public class MainApplication extends Main {
             try {
                 if (PathCheck.directoryContainsSubfolder(cardReaderPath, 1)) {
                     new TransferWidget(shell);
-                    statusBar.setStatus(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.status_InitTransfer), OK);
+                    statusBar.setStatus(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.status_InitTransfer), OK);
                 } else {
                     MessageBoxes.showMessageBox(shell, SWT.ICON_WARNING,
-                            ResourceBundleUtils.getLangString(ResourceBundle.WARNING, Warning.noCardReaderExistsText),
-                            ResourceBundleUtils.getLangString(ResourceBundle.WARNING, Warning.noCardReaderExistsMessage));
+                            ResourceBundleUtils.getLangString(ResourceBundles.WARNING, Warnings.noCardReaderExistsText),
+                            ResourceBundleUtils.getLangString(ResourceBundles.WARNING, Warnings.noCardReaderExistsMessage));
                 }
             } catch (IOException e) {
                 logger.warn("Card reader path '{}' doesn't contains subfolder for level 1", cardReaderPath.toString());
@@ -146,48 +146,48 @@ public class MainApplication extends Main {
 
     private void actionBtn03() {
         new ClearUpWidget(shell);
-        statusBar.setStatus(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.status_InitClearUp), OK);
+        statusBar.setStatus(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.status_InitClearUp), OK);
     }
 
     private void actionBtn04() {
         new CodeSplitterWidget(shell);
-        statusBar.setStatus(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.status_InitSplitter), OK);
+        statusBar.setStatus(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.status_InitSplitter), OK);
     }
 
     private void actionBtn05() {
         new LevellingWidget(shell);
-        statusBar.setStatus(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.status_InitLevelling), OK);
+        statusBar.setStatus(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.status_InitLevelling), OK);
     }
 
     private void actionBtn06() {
         new ConverterWidget(shell);
-        statusBar.setStatus(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.status_InitConverter), OK);
+        statusBar.setStatus(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.status_InitConverter), OK);
     }
 
     private void actionBtn07() {
         new ReportWidget(shell);
-        statusBar.setStatus(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.status_InitReport), OK);
+        statusBar.setStatus(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.status_InitReport), OK);
     }
 
     private void actionBtn08() {
         new TransformationWidget(shell);
-        statusBar.setStatus(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.status_InitTransformation), OK);
+        statusBar.setStatus(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.status_InitTransformation), OK);
     }
 
     private void actionBtn09() {
-        MessageBoxes.showMessageBox(shell, SWT.ICON_WARNING, "Warning", "Not implemented yet.");
+        MessageBoxes.showMessageBox(shell, SWT.ICON_WARNING, "Warnings", "Not implemented yet.");
         new PrinterWidget(shell);
         statusBar.setStatus("not implemented yet.", WARNING);
     }
 
     private void actionBtn11() {
         new AboutWidget(shell);
-        statusBar.setStatus(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.status_InitAbout), OK);
+        statusBar.setStatus(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.status_InitAbout), OK);
     }
 
     private void actionBtnP() {
         new SettingsWidget(shell);
-        statusBar.setStatus(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.status_InitSettings), OK);
+        statusBar.setStatus(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.status_InitSettings), OK);
     }
 
     private void addKeyBoardInputFilter(Shell shell) {
@@ -271,8 +271,8 @@ public class MainApplication extends Main {
     private void createButtonAbout(Composite composite) {
         org.eclipse.swt.widgets.Button btnAbout = new org.eclipse.swt.widgets.Button(composite, SWT.PUSH | SWT.LEFT);
         btnAbout.setImage(new ImageConverter().convertToImage(display, Image.btnAbout.getPath()));
-        btnAbout.setText(ResourceBundleUtils.getLangString(BUTTON, Button.aboutText));
-        btnAbout.setToolTipText(ResourceBundleUtils.getLangString(BUTTON, Button.aboutToolTip));
+        btnAbout.setText(ResourceBundleUtils.getLangString(BUTTON, Buttons.aboutText));
+        btnAbout.setToolTipText(ResourceBundleUtils.getLangString(BUTTON, Buttons.aboutToolTip));
 
         btnAbout.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -288,8 +288,8 @@ public class MainApplication extends Main {
     private void createButtonCleanTool(Composite composite) {
         org.eclipse.swt.widgets.Button btnToolboxClean = new org.eclipse.swt.widgets.Button(composite, SWT.PUSH | SWT.LEFT);
         btnToolboxClean.setImage(new ImageConverter().convertToImage(display, Image.btnClean.getPath()));
-        btnToolboxClean.setText(ResourceBundleUtils.getLangString(BUTTON, Button.cleanText));
-        btnToolboxClean.setToolTipText(ResourceBundleUtils.getLangString(BUTTON, Button.cleanToolTip));
+        btnToolboxClean.setText(ResourceBundleUtils.getLangString(BUTTON, Buttons.cleanText));
+        btnToolboxClean.setToolTipText(ResourceBundleUtils.getLangString(BUTTON, Buttons.cleanToolTip));
 
         btnToolboxClean.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -307,8 +307,8 @@ public class MainApplication extends Main {
     private void createButtonConvertTool(Composite composite) {
         org.eclipse.swt.widgets.Button btnToolboxConvert = new org.eclipse.swt.widgets.Button(composite, SWT.PUSH | SWT.LEFT);
         btnToolboxConvert.setImage(new ImageConverter().convertToImage(display, Image.btnConvert.getPath()));
-        btnToolboxConvert.setText(ResourceBundleUtils.getLangString(BUTTON, Button.convertText));
-        btnToolboxConvert.setToolTipText(ResourceBundleUtils.getLangString(BUTTON, Button.convertToolTip));
+        btnToolboxConvert.setText(ResourceBundleUtils.getLangString(BUTTON, Buttons.convertText));
+        btnToolboxConvert.setToolTipText(ResourceBundleUtils.getLangString(BUTTON, Buttons.convertToolTip));
 
         btnToolboxConvert.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -324,8 +324,8 @@ public class MainApplication extends Main {
     private void createButtonCopyTool(Composite composite) {
         org.eclipse.swt.widgets.Button btnToolboxCopyTool = new org.eclipse.swt.widgets.Button(composite, SWT.PUSH | SWT.LEFT);
         btnToolboxCopyTool.setImage(new ImageConverter().convertToImage(display, Image.btnCopy.getPath()));
-        btnToolboxCopyTool.setText(ResourceBundleUtils.getLangString(BUTTON, Button.importText));
-        btnToolboxCopyTool.setToolTipText(ResourceBundleUtils.getLangString(BUTTON, Button.importToolTip));
+        btnToolboxCopyTool.setText(ResourceBundleUtils.getLangString(BUTTON, Buttons.importText));
+        btnToolboxCopyTool.setToolTipText(ResourceBundleUtils.getLangString(BUTTON, Buttons.importToolTip));
 
         btnToolboxCopyTool.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -341,8 +341,8 @@ public class MainApplication extends Main {
     private void createButtonExit(Composite composite) {
         org.eclipse.swt.widgets.Button btnExit = new org.eclipse.swt.widgets.Button(composite, SWT.PUSH | SWT.LEFT);
         btnExit.setImage(new ImageConverter().convertToImage(display, Image.btnExit.getPath()));
-        btnExit.setText(ResourceBundleUtils.getLangString(BUTTON, Button.exitText));
-        btnExit.setToolTipText(ResourceBundleUtils.getLangString(BUTTON, Button.exitToolTip));
+        btnExit.setText(ResourceBundleUtils.getLangString(BUTTON, Buttons.exitText));
+        btnExit.setToolTipText(ResourceBundleUtils.getLangString(BUTTON, Buttons.exitToolTip));
 
         btnExit.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -358,8 +358,8 @@ public class MainApplication extends Main {
     private void createButtonLevelTool(Composite composite) {
         org.eclipse.swt.widgets.Button btnToolboxLeveling = new org.eclipse.swt.widgets.Button(composite, SWT.PUSH | SWT.LEFT);
         btnToolboxLeveling.setImage(new ImageConverter().convertToImage(display, Image.btnLevel.getPath()));
-        btnToolboxLeveling.setText(ResourceBundleUtils.getLangString(BUTTON, Button.levellingText));
-        btnToolboxLeveling.setToolTipText(ResourceBundleUtils.getLangString(BUTTON, Button.levellingToolTip));
+        btnToolboxLeveling.setText(ResourceBundleUtils.getLangString(BUTTON, Buttons.levellingText));
+        btnToolboxLeveling.setToolTipText(ResourceBundleUtils.getLangString(BUTTON, Buttons.levellingToolTip));
 
         btnToolboxLeveling.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -377,8 +377,8 @@ public class MainApplication extends Main {
     private void createButtonPrintTool(Composite composite) {
         org.eclipse.swt.widgets.Button btnPrint = new org.eclipse.swt.widgets.Button(composite, SWT.PUSH | SWT.LEFT);
         btnPrint.setImage(new ImageConverter().convertToImage(display, Image.btnPrint.getPath()));
-        btnPrint.setText(ResourceBundleUtils.getLangString(BUTTON, Button.printText));
-        btnPrint.setToolTipText(ResourceBundleUtils.getLangString(BUTTON, Button.printToolTip));
+        btnPrint.setText(ResourceBundleUtils.getLangString(BUTTON, Buttons.printText));
+        btnPrint.setToolTipText(ResourceBundleUtils.getLangString(BUTTON, Buttons.printToolTip));
 
         btnPrint.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -396,8 +396,8 @@ public class MainApplication extends Main {
     private void createButtonProject(Composite composite) {
         org.eclipse.swt.widgets.Button btnToolboxProject = new org.eclipse.swt.widgets.Button(composite, SWT.PUSH | SWT.LEFT);
         btnToolboxProject.setImage(new ImageConverter().convertToImage(display, Image.btnProject.getPath()));
-        btnToolboxProject.setText(ResourceBundleUtils.getLangString(BUTTON, Button.generatorText));
-        btnToolboxProject.setToolTipText(ResourceBundleUtils.getLangString(BUTTON, Button.generatorToolTip));
+        btnToolboxProject.setText(ResourceBundleUtils.getLangString(BUTTON, Buttons.generatorText));
+        btnToolboxProject.setToolTipText(ResourceBundleUtils.getLangString(BUTTON, Buttons.generatorToolTip));
 
         btnToolboxProject.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -413,8 +413,8 @@ public class MainApplication extends Main {
     private void createButtonReport(Composite composite) {
         org.eclipse.swt.widgets.Button btnToolboxReport = new org.eclipse.swt.widgets.Button(composite, SWT.PUSH | SWT.LEFT);
         btnToolboxReport.setImage(new ImageConverter().convertToImage(display, Image.btnReport.getPath()));
-        btnToolboxReport.setText(ResourceBundleUtils.getLangString(BUTTON, Button.reportText));
-        btnToolboxReport.setToolTipText(ResourceBundleUtils.getLangString(BUTTON, Button.reportToolTip));
+        btnToolboxReport.setText(ResourceBundleUtils.getLangString(BUTTON, Buttons.reportText));
+        btnToolboxReport.setToolTipText(ResourceBundleUtils.getLangString(BUTTON, Buttons.reportToolTip));
 
         btnToolboxReport.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -432,8 +432,8 @@ public class MainApplication extends Main {
     private void createButtonSettingsTool(Composite composite) {
         org.eclipse.swt.widgets.Button btnSettings = new org.eclipse.swt.widgets.Button(composite, SWT.PUSH | SWT.LEFT);
         btnSettings.setImage(new ImageConverter().convertToImage(display, Image.btnSettings.getPath()));
-        btnSettings.setText(ResourceBundleUtils.getLangString(BUTTON, Button.settingsText));
-        btnSettings.setToolTipText(ResourceBundleUtils.getLangString(BUTTON, Button.settingsToolTip));
+        btnSettings.setText(ResourceBundleUtils.getLangString(BUTTON, Buttons.settingsText));
+        btnSettings.setToolTipText(ResourceBundleUtils.getLangString(BUTTON, Buttons.settingsToolTip));
 
         btnSettings.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -449,8 +449,8 @@ public class MainApplication extends Main {
     private void createButtonSplitTool(Composite composite) {
         org.eclipse.swt.widgets.Button btnToolboxSplitter = new org.eclipse.swt.widgets.Button(composite, SWT.PUSH | SWT.LEFT);
         btnToolboxSplitter.setImage(new ImageConverter().convertToImage(display, Image.btnSplit.getPath()));
-        btnToolboxSplitter.setText(ResourceBundleUtils.getLangString(BUTTON, Button.splitterText));
-        btnToolboxSplitter.setToolTipText(ResourceBundleUtils.getLangString(BUTTON, Button.splitterToolTip));
+        btnToolboxSplitter.setText(ResourceBundleUtils.getLangString(BUTTON, Buttons.splitterText));
+        btnToolboxSplitter.setToolTipText(ResourceBundleUtils.getLangString(BUTTON, Buttons.splitterToolTip));
 
         btnToolboxSplitter.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -468,8 +468,8 @@ public class MainApplication extends Main {
     private void createButtonTransformationTool(Composite composite) {
         org.eclipse.swt.widgets.Button btnTransformation = new org.eclipse.swt.widgets.Button(composite, SWT.PUSH | SWT.LEFT);
         btnTransformation.setImage(new ImageConverter().convertToImage(display, Image.btnTransformation.getPath()));
-        btnTransformation.setText(ResourceBundleUtils.getLangString(BUTTON, Button.transformationText));
-        btnTransformation.setToolTipText(ResourceBundleUtils.getLangString(BUTTON, Button.transformationToolTip));
+        btnTransformation.setText(ResourceBundleUtils.getLangString(BUTTON, Buttons.transformationText));
+        btnTransformation.setToolTipText(ResourceBundleUtils.getLangString(BUTTON, Buttons.transformationToolTip));
 
         btnTransformation.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -484,7 +484,7 @@ public class MainApplication extends Main {
 
     private StatusBar createStatusBar(Shell shell) {
         StatusBar statusBar = new StatusBar(shell);
-        statusBar.setStatus(ResourceBundleUtils.getLangStringFromXml(LANG_STRING, LangString.application_Initialized), OK);
+        statusBar.setStatus(ResourceBundleUtils.getLangStringFromXml(LANG_STRING, LangStrings.application_Initialized), OK);
 
         Main.statusBar = statusBar;
 
@@ -511,15 +511,15 @@ public class MainApplication extends Main {
             final Menu menu = new Menu(shell, SWT.POP_UP);
 
             MenuItem webItem = new MenuItem(menu, SWT.PUSH);
-            webItem.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.trayMenu_WebsiteItem));
+            webItem.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.trayMenu_WebsiteItem));
             webItem.addListener(SWT.Selection, event -> openRyCONWebsite());
 
             MenuItem helpItem = new MenuItem(menu, SWT.PUSH);
-            helpItem.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.trayMenu_HelpItem));
+            helpItem.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.trayMenu_HelpItem));
             helpItem.addListener(SWT.Selection, event -> openRyCONWebsiteHelp());
 
             MenuItem settingsItem = new MenuItem(menu, SWT.PUSH);
-            settingsItem.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.trayMenu_SettingsItem));
+            settingsItem.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.trayMenu_SettingsItem));
             settingsItem.addListener(SWT.Selection, event -> {
                 if (!Main.isSettingsWidgetOpen()) {
                     new SettingsWidget(shell);
@@ -529,12 +529,12 @@ public class MainApplication extends Main {
             new MenuItem(menu, SWT.SEPARATOR);
 
             MenuItem infoItem = new MenuItem(menu, SWT.PUSH);
-            infoItem.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.trayMenu_InfoItem) + Version.getBuildNumber() + " (" + Version.getBuildDate() + ")");
+            infoItem.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.trayMenu_InfoItem) + Version.getBuildNumber() + " (" + Version.getBuildDate() + ")");
 
             new MenuItem(menu, SWT.SEPARATOR);
 
             MenuItem exitItem = new MenuItem(menu, SWT.PUSH);
-            exitItem.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.trayMenu_ExitItem));
+            exitItem.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.trayMenu_ExitItem));
             exitItem.addListener(SWT.Selection, event -> actionBtn00());
 
             item.addListener(SWT.MenuDetect, event -> menu.setVisible(true));
@@ -611,7 +611,7 @@ public class MainApplication extends Main {
      * </ul>
      */
     private void initUI() {
-        final String appName = ResourceBundleUtils.getLangStringFromXml(LANG_STRING, LangString.application_Name);
+        final String appName = ResourceBundleUtils.getLangStringFromXml(LANG_STRING, LangStrings.application_Name);
 
         // TODO check this as a better solution to CocoaUIEnhancer class
 
@@ -622,7 +622,7 @@ public class MainApplication extends Main {
                 JOptionPane.showMessageDialog(null, "About dialog")
         );
         desktop.setPreferencesHandler(e ->
-                JOptionPane.showMessageDialog(null, "Preference dialog")
+                JOptionPane.showMessageDialog(null, "Preferences dialog")
         );
         desktop.setQuitHandler((e,r) -> {
                     JOptionPane.showMessageDialog(null, "Quit dialog");
@@ -650,7 +650,7 @@ public class MainApplication extends Main {
 
         // Dock icon for OS X and Windows task bar
         shell.setImage(new ImageConverter().convertToImage(display, Image.taskIcon.getPath()));
-        shell.setText(ResourceBundleUtils.getLangStringFromXml(LANG_STRING, LangString.application_Title));
+        shell.setText(ResourceBundleUtils.getLangStringFromXml(LANG_STRING, LangStrings.application_Title));
 
         FormLayout formLayout = new FormLayout();
         shell.setLayout(formLayout);
@@ -686,7 +686,7 @@ public class MainApplication extends Main {
         StatusBar statusBar = createStatusBar(shell);
 
         if (pref.isDefaultSettingsGenerated()) {
-            statusBar.setStatus(ResourceBundleUtils.getLangString(MESSAGE, Message.newConfigFileGenerated), WARNING);
+            statusBar.setStatus(ResourceBundleUtils.getLangString(MESSAGE, Messages.newConfigFileGenerated), WARNING);
         }
 
         shell.pack();
@@ -761,7 +761,7 @@ public class MainApplication extends Main {
     }
 
     private void quit() {
-        statusBar.setStatus(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.status_InitExit), OK);
+        statusBar.setStatus(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.status_InitExit), OK);
         shell.getDisplay().dispose();
     }
 

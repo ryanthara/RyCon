@@ -55,7 +55,7 @@ class XMLResourceBundle extends ResourceBundle {
      * Returns an enumeration of the keys.
      *
      * @return an <code>Enumeration</code> of the keys contained in
-     * this <code>ResourceBundle</code> and its parent bundles.
+     * this <code>ResourceBundles</code> and its parent bundles.
      */
     @Override
     public Enumeration<String> getKeys() {

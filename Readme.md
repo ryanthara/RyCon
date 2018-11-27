@@ -76,6 +76,21 @@ file and the 'License_ADDENDUM.txt' file.
 developer please feel free to contact me or fork the codebase of **RyCON** on [github](https://github.com/ryanthara/RyCon)
 and bring in your own ideas.
 
+### Conventions
+
+The following conventions apply to the development of RyCON.
+
+* Use your own IDE, but use the standard code formatting options
+
+* Use the java **Naming Conventions**
+
+* Use abbreviations only when they are useful or represent standards (e.g. XML or URL)
+
+* Use a **CamelCase** most of the time, but deviate if abbreviations make sense. (e.g. isXLSX() instead of isXlsx())
+
+* ...
+
+
 ### Needed libraries
 
 For the development of **RyCON** you will need the following libraries:

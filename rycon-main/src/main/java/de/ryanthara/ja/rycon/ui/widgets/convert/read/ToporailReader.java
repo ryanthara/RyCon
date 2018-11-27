@@ -17,9 +17,9 @@
  */
 package de.ryanthara.ja.rycon.ui.widgets.convert.read;
 
-import de.ryanthara.ja.rycon.i18n.Error;
+import de.ryanthara.ja.rycon.i18n.Errors;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
-import de.ryanthara.ja.rycon.i18n.Text;
+import de.ryanthara.ja.rycon.i18n.Texts;
 import de.ryanthara.ja.rycon.nio.FileFormat;
 import de.ryanthara.ja.rycon.nio.LineReader;
 import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
@@ -32,8 +32,8 @@ import org.slf4j.LoggerFactory;
 import java.nio.file.Path;
 import java.util.List;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundle.ERROR;
-import static de.ryanthara.ja.rycon.i18n.ResourceBundle.TEXT;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.ERROR;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.TEXT;
 
 /**
  * A reader for reading Toporail MEP and PTS files in the {@link ConverterWidget} of RyCON.
@@ -94,15 +94,15 @@ public class ToporailReader extends Reader {
             String errorMessage;
 
             if (fileFormat == FileFormat.MEP) {
-                errorMessage = ResourceBundleUtils.getLangString(ERROR, Error.toporailMepReadingFailed);
+                errorMessage = ResourceBundleUtils.getLangString(ERROR, Errors.toporailMepReadingFailed);
             } else {
-                errorMessage = ResourceBundleUtils.getLangString(ERROR, Error.toporailPtsReadingFailed);
+                errorMessage = ResourceBundleUtils.getLangString(ERROR, Errors.toporailPtsReadingFailed);
             }
 
             logger.warn("File '{}' could not be read.", file2Read.getFileName());
 
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR,
-                    ResourceBundleUtils.getLangStringFromXml(TEXT, Text.msgBox_Error), errorMessage);
+                    ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.msgBox_Error), errorMessage);
 
             return false;
         }

@@ -26,7 +26,8 @@ import de.ryanthara.ja.rycon.ui.widgets.SettingsWidget;
  * @version 1
  * @since 12
  */
-public enum Preference implements ResourceKey {
+public enum Preferences implements ResourceKey {
+
     addSpaceAtLineEnd,
     addTraillingZeroes,
     category_Files,

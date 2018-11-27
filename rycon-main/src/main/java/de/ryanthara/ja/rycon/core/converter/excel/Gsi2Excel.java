@@ -18,9 +18,9 @@
 package de.ryanthara.ja.rycon.core.converter.excel;
 
 import de.ryanthara.ja.rycon.core.converter.gsi.GsiDecoder;
-import de.ryanthara.ja.rycon.core.elements.GsiBlock;
+import de.ryanthara.ja.rycon.core.elements.GSIBlock;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
-import de.ryanthara.ja.rycon.i18n.WordIndex;
+import de.ryanthara.ja.rycon.i18n.WordIndices;
 import de.ryanthara.ja.rycon.nio.FileFormat;
 import de.ryanthara.ja.rycon.util.StringUtils;
 import org.apache.poi.ss.usermodel.*;
@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundle.WORDINDEX;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.WORDINDEX;
 
 /**
  * A converter with functions to convert Leica Geosystems GSI format (GSI8 and GSI16)
@@ -83,13 +83,13 @@ public class Gsi2Excel {
         }
 
         // Fill gsi content into rows and cells
-        for (List<GsiBlock> blocksInLine : gsiDecoder.getDecodedLinesOfGsiBlocks()) {
+        for (List<GSIBlock> blocksInLine : gsiDecoder.getDecodedLinesOfGsiBlocks()) {
             row = sheet.createRow(rowNumber);
             rowNumber++;
 
             cellNumber = 0;
 
-            for (GsiBlock block : blocksInLine) {
+            for (GSIBlock block : blocksInLine) {
                 cell = row.createCell(cellNumber);
                 cellNumber++;
 
@@ -195,7 +195,7 @@ public class Gsi2Excel {
             cell = row.createCell(cellNumber);
             cellNumber++;
 
-            cell.setCellValue(ResourceBundleUtils.getLangString(WORDINDEX, WordIndex.valueOf("WI" + wordIndex)));
+            cell.setCellValue(ResourceBundleUtils.getLangString(WORDINDEX, WordIndices.valueOf("WI" + wordIndex)));
         }
         return rowNumber;
     }

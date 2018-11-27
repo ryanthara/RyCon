@@ -18,8 +18,8 @@
 package de.ryanthara.ja.rycon.nio;
 
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
-import de.ryanthara.ja.rycon.i18n.Text;
-import de.ryanthara.ja.rycon.i18n.Warning;
+import de.ryanthara.ja.rycon.i18n.Texts;
+import de.ryanthara.ja.rycon.i18n.Warnings;
 import de.ryanthara.ja.rycon.nio.util.PathUtils;
 import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -30,8 +30,8 @@ import org.eclipse.swt.widgets.Shell;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundle.TEXT;
-import static de.ryanthara.ja.rycon.i18n.ResourceBundle.WARNING;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.TEXT;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.WARNING;
 
 /**
  * Provides a function to write Microsoft Excel files to the file system.
@@ -65,8 +65,8 @@ public final class WriteExcel2Disk {
             final Shell shell = Display.getCurrent().getActiveShell();
 
             int returnValue = MessageBoxes.showMessageBox(shell, SWT.ICON_WARNING | SWT.YES | SWT.NO,
-                    ResourceBundleUtils.getLangStringFromXml(TEXT, Text.msgBox_Warning),
-                    String.format(ResourceBundleUtils.getLangString(WARNING, Warning.fileExistsOverwrite), outputFileName));
+                    ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.msgBox_Warning),
+                    String.format(ResourceBundleUtils.getLangString(WARNING, Warnings.fileExistsOverwrite), outputFileName));
 
             if (returnValue == SWT.YES) {
                 if (filenameExtension.equalsIgnoreCase(FileNameExtension.XLS.getExtension())) {

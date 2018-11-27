@@ -18,7 +18,7 @@
 package de.ryanthara.ja.rycon.core.converter.ltop;
 
 import de.ryanthara.ja.rycon.core.converter.gsi.GsiDecoder;
-import de.ryanthara.ja.rycon.core.elements.GsiBlock;
+import de.ryanthara.ja.rycon.core.elements.GSIBlock;
 import de.ryanthara.ja.rycon.util.NumberFormatter;
 import de.ryanthara.ja.rycon.util.StringUtils;
 
@@ -76,7 +76,7 @@ public class Gsi2Mes {
 
         BaseToolsLtop.writeCommendLine(result, BaseToolsLtop.measurementLineIdentifier);
 
-        for (List<GsiBlock> blocksInLine : gsiDecoder.getDecodedLinesOfGsiBlocks()) {
+        for (List<GSIBlock> blocksInLine : gsiDecoder.getDecodedLinesOfGsiBlocks()) {
             /*
             110001+0000FS01 84..16+61720467 85..16+23483343 86..16+02593776 88..16+00000000
             110002+00009004 21.322+21956015 22.322+09463619 31..06+00253959 51..1.+0005+344 87..16+00000000

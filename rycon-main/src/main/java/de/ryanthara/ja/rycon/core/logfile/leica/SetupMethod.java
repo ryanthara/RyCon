@@ -17,6 +17,8 @@
  */
 package de.ryanthara.ja.rycon.core.logfile.leica;
 
+import java.util.Optional;
+
 /**
  * This enumeration holds the setup methods.
  * <p>
@@ -33,7 +35,7 @@ package de.ryanthara.ja.rycon.core.logfile.leica;
  * The method strings in the logfile.txt file differs from the complete name to some reasons.
  *
  * @author sebastian
- * @version 1
+ * @version 2
  * @since 27
  */
 public enum SetupMethod {
@@ -57,16 +59,14 @@ public enum SetupMethod {
      * @param identifier identifier string from logfile.txt file
      * @return current SetupMethod
      */
-    public static SetupMethod fromIdentifier(String identifier) {
-        SetupMethod currentModel = null;
-
+    public static Optional<SetupMethod> fromIdentifier(String identifier) {
         for (SetupMethod method : values()) {
             if (method.identifier.equals(identifier)) {
-                currentModel = method;
+                return Optional.of(method);
             }
         }
 
-        return currentModel;
+        return Optional.empty();
     }
 
     /**

@@ -23,11 +23,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Instances of this class represents an object to store a line and its values of a Caplan K file.
+ * A CaplanBlock stores a string line and its values of a Caplan K file.
  *
  * <p>
- * The Caplan K file format was developed by Cremer Programmentwicklung GmbH to storage coordinate files
- * in with different coordinate systems and reference frames.
+ * The Caplan K file format was developed by Cremer Programmentwicklung GmbH to store
+ * coordinate files in with different coordinate systems and reference frames.
  *
  * <p>
  * Example K file:
@@ -57,9 +57,10 @@ public class CaplanBlock {
     private String number, easting, northing, height, code;
 
     /**
-     * Constructs a {@link CaplanBlock} from a given string line which is set as parameter.
+     * Constructs a CaplanBlock from a given string line.
+     *
      * <p>
-     * The core.core.transformer of the values is initialized from here.
+     * The transformation of the line into values is initialized from here.
      *
      * @param line Caplan K file string line
      */

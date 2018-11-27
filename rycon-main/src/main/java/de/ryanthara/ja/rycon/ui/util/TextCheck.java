@@ -18,15 +18,17 @@
 
 package de.ryanthara.ja.rycon.ui.util;
 
-import de.ryanthara.ja.rycon.i18n.Error;
+import de.ryanthara.ja.rycon.i18n.Errors;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
-import de.ryanthara.ja.rycon.i18n.Text;
-import de.ryanthara.ja.rycon.i18n.Warning;
+import de.ryanthara.ja.rycon.i18n.Texts;
+import de.ryanthara.ja.rycon.i18n.Warnings;
 import de.ryanthara.ja.rycon.nio.util.check.PathCheck;
+import de.ryanthara.ja.rycon.ui.custom.InputFieldsComposite;
 import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,10 +37,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.StringTokenizer;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundle.*;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.*;
 
 /**
- * This class implements different kind of checks for {@link org.eclipse.swt.widgets.Text} fields.
+ * This class implements different kind of checks for {@link Text} fields.
  * <p>
  * It is used by all main widgets of RyCON.
  *
@@ -58,15 +60,17 @@ public final class TextCheck {
     }
 
     /**
-     * Checks the source and target {@link org.eclipse.swt.widgets.Text} fields for being valid files and returns the valid ones
+     * Checks the source and target {@link Text} fields for being valid files and returns the valid ones
      * as a {@link Path} array.
      *
-     * @param source      the source text field
-     * @param target      the target text field
+     * @param inputFieldsComposite the input fields composite with source and target text field
      * @param chosenFiles the chosen files to be checked
      * @return the valid chosen files
      */
-    public static Path[] checkSourceAndTargetText(org.eclipse.swt.widgets.Text source, org.eclipse.swt.widgets.Text target, Path... chosenFiles) {
+    public static Path[] checkSourceAndTargetText(InputFieldsComposite inputFieldsComposite, Path... chosenFiles) {
+        Text source = inputFieldsComposite.getSourceTextField();
+        Text target = inputFieldsComposite.getTargetTextField();
+
         Path[] files2read = null;
 
         final Shell shell = Display.getCurrent().getActiveShell();
@@ -74,8 +78,8 @@ public final class TextCheck {
         if (isEmpty(source) || isEmpty(target)) {
 
             MessageBoxes.showMessageBox(shell, SWT.ICON_WARNING,
-                    ResourceBundleUtils.getLangStringFromXml(TEXT, Text.msgBox_Warning),
-                    ResourceBundleUtils.getLangString(WARNING, Warning.emptyTextField));
+                    ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.msgBox_Warning),
+                    ResourceBundleUtils.getLangString(WARNING, Warnings.emptyTextField));
 
             files2read = new Path[0];
         } else if (chosenFiles == null) {
@@ -89,8 +93,8 @@ public final class TextCheck {
                     files2read[i] = Paths.get(s);
                 } else {
                     MessageBoxes.showMessageBox(shell, SWT.ICON_WARNING,
-                            ResourceBundleUtils.getLangStringFromXml(TEXT, Text.msgBox_Warning),
-                            ResourceBundleUtils.getLangString(ERROR, Error.fileExistsNot));
+                            ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.msgBox_Warning),
+                            ResourceBundleUtils.getLangString(ERROR, Errors.fileExistsNot));
                 }
             }
 
@@ -107,22 +111,22 @@ public final class TextCheck {
     }
 
     /**
-     * Checks the content of the {@link org.eclipse.swt.widgets.Text} field if it is a valid directory in the file system.
+     * Checks the content of the {@link Text} field if it is a valid directory in the file system.
      *
      * @param textField text field which content has to be checked
      * @return true if directory exist
      */
-    public static boolean isDirExists(org.eclipse.swt.widgets.Text textField) {
+    public static boolean isDirExists(Text textField) {
         return PathCheck.directoryExists(textField.getText());
     }
 
     /**
-     * Checks the content of a {@link org.eclipse.swt.widgets.Text} field if it is a valid double value.
+     * Checks the content of a {@link Text} field if it is a valid double value.
      *
      * @param textField text to be checked
      * @return success of the check
      */
-    public static boolean isDoubleValue(org.eclipse.swt.widgets.Text textField) {
+    public static boolean isDoubleValue(Text textField) {
         boolean isDoubleValue = false;
 
         try {
@@ -130,29 +134,29 @@ public final class TextCheck {
             isDoubleValue = true;
 
         } catch (NumberFormatException e) {
-            logger.error("Text field contains a value '{}' that can not be parsed into a double value.", textField.getText(), e.getCause());
+            logger.error("Texts field contains a value '{}' that can not be parsed into a double value.", textField.getText(), e.getCause());
         }
 
         return isDoubleValue;
     }
 
     /**
-     * Checks if the {@link org.eclipse.swt.widgets.Text} field contains an empty String.
+     * Checks if the {@link Text} field contains an empty String.
      *
      * @param textField text field to be checked
      * @return true if text field contains an empty string
      */
-    public static boolean isEmpty(org.eclipse.swt.widgets.Text textField) {
+    public static boolean isEmpty(Text textField) {
         return textField.getText().isEmpty();
     }
 
     /**
-     * Checks the content of the {@link org.eclipse.swt.widgets.Text} field if it is a valid file in the file system.
+     * Checks the content of the {@link Text} field if it is a valid file in the file system.
      *
      * @param textField text field which content has to be checked
      * @return true if file exist
      */
-    public static boolean isFileExists(org.eclipse.swt.widgets.Text textField) {
+    public static boolean isFileExists(Text textField) {
         return PathCheck.fileExists(textField.getText());
     }
 

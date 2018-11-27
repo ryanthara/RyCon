@@ -18,7 +18,7 @@
 package de.ryanthara.ja.rycon.core.converter.gsi;
 
 import de.ryanthara.ja.rycon.core.converter.Converter;
-import de.ryanthara.ja.rycon.core.elements.GsiBlock;
+import de.ryanthara.ja.rycon.core.elements.GSIBlock;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,19 +64,19 @@ public class Asc2Gsi extends Converter {
      */
     @Override
     public List<String> convert() {
-        List<List<GsiBlock>> blocksInLines = new ArrayList<>(lines.size());
+        List<List<GSIBlock>> blocksInLines = new ArrayList<>(lines.size());
 
         // check for at least one or more added elements to prevent writing empty lines
         IntStream.range(0, lines.size()).forEach(i -> {
-            List<GsiBlock> blocks = new ArrayList<>(4);
+            List<GSIBlock> blocks = new ArrayList<>(4);
             final String line = lines.get(i);
             final String[] split = line.split(Converter.SEPARATOR);
 
             if (split.length == 4) {
-                blocks.add(new GsiBlock(isGsi16, 11, i + 1, split[0]));
-                blocks.add(new GsiBlock(isGsi16, 81, split[1]));
-                blocks.add(new GsiBlock(isGsi16, 82, split[2]));
-                blocks.add(new GsiBlock(isGsi16, 83, split[3]));
+                blocks.add(new GSIBlock(isGsi16, 11, i + 1, split[0]));
+                blocks.add(new GSIBlock(isGsi16, 81, split[1]));
+                blocks.add(new GSIBlock(isGsi16, 82, split[2]));
+                blocks.add(new GSIBlock(isGsi16, 83, split[3]));
             }
 
             if (blocks.size() > 0) {

@@ -17,11 +17,13 @@
  */
 package de.ryanthara.ja.rycon.ui.custom;
 
+import java.util.Optional;
+
 /**
  * This enumeration is used for the status of the {@link StatusBar}.
  *
  * @author sebastian
- * @version 1
+ * @version 2
  * @since 12
  */
 public enum Status {
@@ -34,16 +36,16 @@ public enum Status {
      * @param index index to return
      * @return Status by index
      */
-    public static Status fromIndex(int index) {
-        Status selectedStatus = null;
+    public static Optional<Status> fromIndex(int index) {
+        assert index < values().length;
 
         for (Status status : values()) {
             if (status.ordinal() == index) {
-                selectedStatus = status;
+                return Optional.of(status);
             }
         }
 
-        return selectedStatus;
+        return Optional.empty();
     }
 
 }

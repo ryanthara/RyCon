@@ -61,7 +61,7 @@ class SplashScreen {
      *
      * @param display display object
      */
-    public SplashScreen(Display display) {
+    private SplashScreen(Display display) {
 
         final org.eclipse.swt.graphics.Image image = new ImageConverter().convertToImage(display, Image.splashScreen.getPath());
         final Shell shell = new Shell(SWT.ON_TOP);

@@ -19,7 +19,7 @@ package de.ryanthara.ja.rycon.core.converter.caplan;
 
 import de.ryanthara.ja.rycon.core.converter.Separator;
 import de.ryanthara.ja.rycon.data.Version;
-import de.ryanthara.ja.rycon.i18n.LangString;
+import de.ryanthara.ja.rycon.i18n.LangStrings;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 import de.ryanthara.ja.rycon.util.StringUtils;
 
@@ -27,7 +27,7 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundle.LANG_STRING;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LANG_STRING;
 
 /**
  * Provides basic and helper functions that are used for converting different
@@ -152,7 +152,7 @@ final class BaseToolsCaplanK {
         DateFormat df;
         df = DateFormat.getDateTimeInstance(/* dateStyle */ DateFormat.LONG,
                 /* timeStyle */ DateFormat.MEDIUM);
-        result.add(String.format(ResourceBundleUtils.getLangStringFromXml(LANG_STRING, LangString.commentLine_CaplanK),
+        result.add(String.format(ResourceBundleUtils.getLangStringFromXml(LANG_STRING, LangStrings.commentLine_CaplanK),
                 Version.getVersion(), df.format(d)));
         result.add(commentLine2);
     }

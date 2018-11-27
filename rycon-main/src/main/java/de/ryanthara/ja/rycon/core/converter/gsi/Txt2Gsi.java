@@ -17,7 +17,7 @@
  */
 package de.ryanthara.ja.rycon.core.converter.gsi;
 
-import de.ryanthara.ja.rycon.core.elements.GsiBlock;
+import de.ryanthara.ja.rycon.core.elements.GSIBlock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,12 +59,12 @@ public class Txt2Gsi {
      * @return converted {@code ArrayList<String>>} with lines
      */
     public List<String> convert(boolean isGSI16, boolean sourceContainsCodeColumn) {
-        List<List<GsiBlock>> blocksInLines = new ArrayList<>();
+        List<List<GSIBlock>> blocksInLines = new ArrayList<>();
 
         int lineCounter = 1;
 
         for (String line : lines) {
-            List<GsiBlock> blocks = new ArrayList<>();
+            List<GSIBlock> blocks = new ArrayList<>();
 
             String[] values = line.trim().split("\\s+");
             switch (values.length) {
@@ -72,38 +72,38 @@ public class Txt2Gsi {
                     break;
 
                 case 2:     // no, height
-                    blocks.add(new GsiBlock(isGSI16, 11, lineCounter, values[0]));
-                    blocks.add(new GsiBlock(isGSI16, 83, values[1]));
+                    blocks.add(new GSIBlock(isGSI16, 11, lineCounter, values[0]));
+                    blocks.add(new GSIBlock(isGSI16, 83, values[1]));
                     break;
 
                 case 3:     // no, code, height or no, easting, northing
-                    blocks.add(new GsiBlock(isGSI16, 11, lineCounter, values[0]));
+                    blocks.add(new GSIBlock(isGSI16, 11, lineCounter, values[0]));
                     if (sourceContainsCodeColumn) {
-                        blocks.add(new GsiBlock(isGSI16, 71, values[1]));
-                        blocks.add(new GsiBlock(isGSI16, 83, values[2]));
+                        blocks.add(new GSIBlock(isGSI16, 71, values[1]));
+                        blocks.add(new GSIBlock(isGSI16, 83, values[2]));
                     } else {
-                        blocks.add(new GsiBlock(isGSI16, 81, values[1]));
-                        blocks.add(new GsiBlock(isGSI16, 82, values[2]));
+                        blocks.add(new GSIBlock(isGSI16, 81, values[1]));
+                        blocks.add(new GSIBlock(isGSI16, 82, values[2]));
                     }
                     break;
 
                 case 4:     // no, easting, northing, height
-                    blocks.add(new GsiBlock(isGSI16, 11, lineCounter, values[0]));
-                    blocks.add(new GsiBlock(isGSI16, 81, values[1]));
-                    blocks.add(new GsiBlock(isGSI16, 82, values[2]));
+                    blocks.add(new GSIBlock(isGSI16, 11, lineCounter, values[0]));
+                    blocks.add(new GSIBlock(isGSI16, 81, values[1]));
+                    blocks.add(new GSIBlock(isGSI16, 82, values[2]));
 
                     // necessary because of Basel Stadt CSV distinguish between points without height
                     if (!values[3].equals("-9999")) {
-                        blocks.add(new GsiBlock(isGSI16, 83, values[3]));
+                        blocks.add(new GSIBlock(isGSI16, 83, values[3]));
                     }
                     break;
 
                 case 5:     // no, code, easting, northing, height
-                    blocks.add(new GsiBlock(isGSI16, 11, lineCounter, values[0]));
-                    blocks.add(new GsiBlock(isGSI16, 71, values[1]));
-                    blocks.add(new GsiBlock(isGSI16, 81, values[2]));
-                    blocks.add(new GsiBlock(isGSI16, 82, values[3]));
-                    blocks.add(new GsiBlock(isGSI16, 83, values[4]));
+                    blocks.add(new GSIBlock(isGSI16, 11, lineCounter, values[0]));
+                    blocks.add(new GSIBlock(isGSI16, 71, values[1]));
+                    blocks.add(new GSIBlock(isGSI16, 81, values[2]));
+                    blocks.add(new GSIBlock(isGSI16, 82, values[3]));
+                    blocks.add(new GSIBlock(isGSI16, 83, values[4]));
                     break;
 
                 default:

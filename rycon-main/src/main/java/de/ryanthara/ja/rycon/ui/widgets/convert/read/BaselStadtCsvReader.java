@@ -21,9 +21,9 @@ import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
-import de.ryanthara.ja.rycon.i18n.Error;
+import de.ryanthara.ja.rycon.i18n.Errors;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
-import de.ryanthara.ja.rycon.i18n.Text;
+import de.ryanthara.ja.rycon.i18n.Texts;
 import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
 import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
 import org.eclipse.swt.SWT;
@@ -38,8 +38,8 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundle.ERROR;
-import static de.ryanthara.ja.rycon.i18n.ResourceBundle.TEXT;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.ERROR;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.TEXT;
 
 /**
  * A reader for reading coordinate files from the geodata server Kanton Basel
@@ -108,8 +108,8 @@ public class BaselStadtCsvReader extends Reader {
             logger.error("Basel Stadt CSV file '{}' could not be read.", file2Read.toString());
 
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR,
-                    ResourceBundleUtils.getLangStringFromXml(TEXT, Text.msgBox_Error),
-                    ResourceBundleUtils.getLangString(ERROR, Error.csvBSReadingFailed));
+                    ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.msgBox_Error),
+                    ResourceBundleUtils.getLangString(ERROR, Errors.csvBSReadingFailed));
 
             return false;
         }

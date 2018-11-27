@@ -18,7 +18,7 @@
 package de.ryanthara.ja.rycon.i18n;
 
 /**
- * The {@code Column} enumeration holds texts that are used in different export formats of RyCON.
+ * The {@code DistinctTypes} enumeration holds all the distinct types of RyCON.
  * <p>
  * This enumeration is used for encapsulating the data. The interface {@link ResourceKey}
  * is used to access different enumerations in the class {@link ResourceBundleUtils}.
@@ -27,14 +27,18 @@ package de.ryanthara.ja.rycon.i18n;
  * @version 1
  * @since 2.0
  */
-public enum Column implements ResourceKey {
+public enum DistinctTypes implements ResourceKey {
 
-    attribute,
-    easting,
-    height,
-    northing,
-    object,
-    pointNumber,
-    valency
+    altimetric_CHGeo98,
+    altimetric_Ellipsoid,
+    altimetric_LHN95,
+    altimetric_LN02,
+    planimetric_LV03_Civil,
+    planimetric_LV03_Military,
+    planimetric_LV95,
+    projection_ETRF93GeocentricToLV95,
+    projection_ETRF93GeographicToLV95,
+    projection_LV95ToETRF93Geocentric,
+    projection_LV95ToETRF93Geographic,
 
 }

@@ -19,7 +19,7 @@ package de.ryanthara.ja.rycon.ui.preferences.editor;
 
 import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.data.PreferenceKey;
-import de.ryanthara.ja.rycon.i18n.Preference;
+import de.ryanthara.ja.rycon.i18n.Preferences;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 import de.ryanthara.ja.rycon.ui.custom.DirectoryDialogs;
 import de.ryanthara.ja.rycon.ui.custom.DirectoryDialogsTyp;
@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.Text;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundle.PREFERENCE;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.PREFERENCE;
 
 /**
  * {@code EditorPath} is an editor for choosing valid paths.
@@ -130,8 +130,8 @@ public class EditorPath extends Editor<Path> {
         gridData = new GridData(SWT.CENTER, SWT.CENTER, false, false);
 
         Button button = new Button(parent, SWT.PUSH);
-        button.setText(ResourceBundleUtils.getLangString(PREFERENCE, Preference.path_Btn_Text));
-        button.setToolTipText(ResourceBundleUtils.getLangString(PREFERENCE, Preference.path_Btn_ToolTip));
+        button.setText(ResourceBundleUtils.getLangString(PREFERENCE, Preferences.path_Btn_Text));
+        button.setToolTipText(ResourceBundleUtils.getLangString(PREFERENCE, Preferences.path_Btn_ToolTip));
         button.setLayoutData(gridData);
 
         button.addSelectionListener(new SelectionAdapter() {

@@ -24,7 +24,6 @@ import de.ryanthara.ja.rycon.core.converter.gsi.Asc2Gsi;
 import de.ryanthara.ja.rycon.core.converter.text.Asc2Txt;
 import de.ryanthara.ja.rycon.data.PreferenceKey;
 import de.ryanthara.ja.rycon.i18n.*;
-import de.ryanthara.ja.rycon.i18n.Error;
 import de.ryanthara.ja.rycon.nio.FileNameExtension;
 import de.ryanthara.ja.rycon.nio.LineReader;
 import de.ryanthara.ja.rycon.nio.WriteFile2Disk;
@@ -42,6 +41,7 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,7 +50,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static de.ryanthara.ja.rycon.Main.countFileOps;
-import static de.ryanthara.ja.rycon.i18n.ResourceBundle.*;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.*;
 import static de.ryanthara.ja.rycon.ui.custom.Status.OK;
 
 /**
@@ -128,7 +128,7 @@ public class LevellingWidget extends AbstractWidget {
             if (processFileOperationsDND()) {
                 String status;
 
-                final String helper = ResourceBundleUtils.getLangString(MESSAGE, Message.levellingStatus);
+                final String helper = ResourceBundleUtils.getLangString(MESSAGE, Messages.levellingStatus);
 
                 // use counter to display different text on the status bar
                 if (countFileOps == 1) {
@@ -154,20 +154,13 @@ public class LevellingWidget extends AbstractWidget {
             return false;
         }
 
-        if (files2read.length == 0) {
-            files2read = new Path[1];
-            files2read[0] = Paths.get(inputFieldsComposite.getSourceTextField().getText());
-        } else {
-            files2read = TextCheck.checkSourceAndTargetText(
-                    inputFieldsComposite.getSourceTextField(),
-                    inputFieldsComposite.getTargetTextField(), files2read);
-        }
+        provideFiles2ReadFromText();
 
         if ((files2read != null) && (files2read.length > 0)) {
             if (processFileOperations()) {
                 String status;
 
-                final String helper = ResourceBundleUtils.getLangString(MESSAGE, Message.levellingStatus);
+                final String helper = ResourceBundleUtils.getLangString(MESSAGE, Messages.levellingStatus);
 
                 // use counter to display different text on the status bar
                 if (Main.countFileOps == 1) {
@@ -183,6 +176,15 @@ public class LevellingWidget extends AbstractWidget {
         }
 
         return false;
+    }
+
+    private void provideFiles2ReadFromText() {
+        if (files2read.length == 0) {
+            files2read = new Path[1];
+            files2read[0] = Paths.get(inputFieldsComposite.getSourceTextField().getText());
+        } else {
+            files2read = TextCheck.checkSourceAndTargetText(inputFieldsComposite, files2read);
+        }
     }
 
     /*
@@ -211,7 +213,7 @@ public class LevellingWidget extends AbstractWidget {
 
         innerShell = new Shell(parent, SWT.CLOSE | SWT.DIALOG_TRIM | SWT.MAX | SWT.TITLE | SWT.APPLICATION_MODAL);
         innerShell.addListener(SWT.Close, event -> actionBtnCancel());
-        innerShell.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.levelling_Shell));
+        innerShell.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.levelling_Shell));
         innerShell.setSize(width, height);
 
         innerShell.setLayout(gridLayout);
@@ -237,13 +239,13 @@ public class LevellingWidget extends AbstractWidget {
      */
     private void actionBtnSource() {
         String[] filterNames = new String[]{
-                ResourceBundleUtils.getLangString(FILECHOOSER, FileChooser.filterNameGsiLevel),
-                ResourceBundleUtils.getLangString(FILECHOOSER, FileChooser.filterNameLeicaObservations),
-                ResourceBundleUtils.getLangString(FILECHOOSER, FileChooser.filterNameLeicaProtocol),
-                ResourceBundleUtils.getLangString(FILECHOOSER, FileChooser.filterNameNigraAltitudeRegisterAsc),
-                ResourceBundleUtils.getLangString(FILECHOOSER, FileChooser.filterNameNigraAltitudeRegisterHvz),
-                ResourceBundleUtils.getLangString(FILECHOOSER, FileChooser.filterNameNigraCalculations),
-                ResourceBundleUtils.getLangString(FILECHOOSER, FileChooser.filterNameNivNetOutput),
+                ResourceBundleUtils.getLangString(FILECHOOSER, FileChoosers.filterNameGsiLevel),
+                ResourceBundleUtils.getLangString(FILECHOOSER, FileChoosers.filterNameLeicaObservations),
+                ResourceBundleUtils.getLangString(FILECHOOSER, FileChoosers.filterNameLeicaProtocol),
+                ResourceBundleUtils.getLangString(FILECHOOSER, FileChoosers.filterNameNigraAltitudeRegisterAsc),
+                ResourceBundleUtils.getLangString(FILECHOOSER, FileChoosers.filterNameNigraAltitudeRegisterHvz),
+                ResourceBundleUtils.getLangString(FILECHOOSER, FileChoosers.filterNameNigraCalculations),
+                ResourceBundleUtils.getLangString(FILECHOOSER, FileChoosers.filterNameNivNetOutput),
         };
 
         String filterPath = Main.pref.getUserPreference(PreferenceKey.DIR_PROJECT);
@@ -262,7 +264,7 @@ public class LevellingWidget extends AbstractWidget {
         Optional<Path[]> files = FileDialogs.showAdvancedFileDialog(
                 innerShell,
                 filterPath,
-                ResourceBundleUtils.getLangString(FILECHOOSER, FileChooser.levellingSourceText),
+                ResourceBundleUtils.getLangString(FILECHOOSER, FileChoosers.levellingSourceText),
                 acceptableFileSuffixes,
                 filterNames,
                 inputFieldsComposite.getSourceTextField(),
@@ -281,7 +283,7 @@ public class LevellingWidget extends AbstractWidget {
     private void actionBtnTarget() {
         String filterPath = Main.pref.getUserPreference(PreferenceKey.DIR_PROJECT);
 
-        org.eclipse.swt.widgets.Text input = inputFieldsComposite.getTargetTextField();
+        Text input = inputFieldsComposite.getTargetTextField();
 
         // Set the initial filter path according to anything selected or typed in
         if (!TextCheck.isEmpty(input)) {
@@ -298,7 +300,7 @@ public class LevellingWidget extends AbstractWidget {
 
     private void createAdvice(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.advice));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.advice));
 
         GridLayout gridLayout = new GridLayout(1, true);
 
@@ -311,13 +313,13 @@ public class LevellingWidget extends AbstractWidget {
         Label tip = new Label(group, SWT.WRAP | SWT.BORDER | SWT.LEFT);
 
         String text =
-                ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.levellingWidget) + "\n" +
-                        ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.levellingWidget2) + "\n\n" +
-                        ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.levellingWidget3);
+                ResourceBundleUtils.getLangStringFromXml(ADVICE, Advices.levellingWidget) + "\n" +
+                        ResourceBundleUtils.getLangStringFromXml(ADVICE, Advices.levellingWidget2) + "\n\n" +
+                        ResourceBundleUtils.getLangStringFromXml(ADVICE, Advices.levellingWidget3);
 
         tip.setText(text);
 
-        // tip.setText(ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.levellingWidget));
+        // tip.setText(ResourceBundleUtils.getLangStringFromXml(ADVICE, Advices.levellingWidget));
         tip.setLayoutData(new GridData(SWT.HORIZONTAL, SWT.TOP, true, false, 1, 1));
     }
 
@@ -333,7 +335,7 @@ public class LevellingWidget extends AbstractWidget {
 
     private void createOptions(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.generalOptions));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.generalOptions));
 
         GridLayout gridLayout = new GridLayout(1, true);
 
@@ -345,20 +347,20 @@ public class LevellingWidget extends AbstractWidget {
 
         chkBoxIgnoreChangePoints = new org.eclipse.swt.widgets.Button(group, SWT.CHECK);
         chkBoxIgnoreChangePoints.setSelection(true);
-        chkBoxIgnoreChangePoints.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBox.levellingIgnoreChangePoints));
+        chkBoxIgnoreChangePoints.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBoxes.levellingIgnoreChangePoints));
 
         chkBoxCsvSemicolonSeparator = new org.eclipse.swt.widgets.Button(group, SWT.CHECK);
         chkBoxCsvSemicolonSeparator.setSelection(false);
-        chkBoxCsvSemicolonSeparator.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBox.separatorCSVSemiColon));
+        chkBoxCsvSemicolonSeparator.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBoxes.separatorCSVSemiColon));
 
         chkBoxTxtSpaceSeparator = new org.eclipse.swt.widgets.Button(group, SWT.CHECK);
         chkBoxTxtSpaceSeparator.setSelection(false);
-        chkBoxTxtSpaceSeparator.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBox.separatorTXTSpace));
+        chkBoxTxtSpaceSeparator.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBoxes.separatorTXTSpace));
     }
 
     private void createOutputFormat(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.levelling_GroupOutputFormat));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.levelling_GroupOutputFormat));
 
         GridLayout gridLayout = new GridLayout(1, true);
 
@@ -372,19 +374,19 @@ public class LevellingWidget extends AbstractWidget {
         radio.setLayout(new RowLayout(SWT.HORIZONTAL));
 
         org.eclipse.swt.widgets.Button radioBtnGsi8 = new org.eclipse.swt.widgets.Button(radio, SWT.RADIO);
-        radioBtnGsi8.setText(ResourceBundleUtils.getLangString(BUTTON, Button.radioBtnLevelGsi8));
+        radioBtnGsi8.setText(ResourceBundleUtils.getLangString(BUTTON, Buttons.radioBtnLevelGsi8));
 
         org.eclipse.swt.widgets.Button radioBtnGsi16 = new org.eclipse.swt.widgets.Button(radio, SWT.RADIO);
-        radioBtnGsi16.setText(ResourceBundleUtils.getLangString(BUTTON, Button.radioBtnLevelGsi16));
+        radioBtnGsi16.setText(ResourceBundleUtils.getLangString(BUTTON, Buttons.radioBtnLevelGsi16));
 
         org.eclipse.swt.widgets.Button radioBtnAsc = new org.eclipse.swt.widgets.Button(radio, SWT.RADIO);
-        radioBtnAsc.setText(ResourceBundleUtils.getLangString(BUTTON, Button.radioBtnLevelAsc));
+        radioBtnAsc.setText(ResourceBundleUtils.getLangString(BUTTON, Buttons.radioBtnLevelAsc));
 
         org.eclipse.swt.widgets.Button radioBtnCsv = new org.eclipse.swt.widgets.Button(radio, SWT.RADIO);
-        radioBtnCsv.setText(ResourceBundleUtils.getLangString(BUTTON, Button.radioBtnLevelCsv));
+        radioBtnCsv.setText(ResourceBundleUtils.getLangString(BUTTON, Buttons.radioBtnLevelCsv));
 
         org.eclipse.swt.widgets.Button radioBtnTxt = new org.eclipse.swt.widgets.Button(radio, SWT.RADIO);
-        radioBtnTxt.setText(ResourceBundleUtils.getLangString(BUTTON, Button.radioBtnLevelTxt));
+        radioBtnTxt.setText(ResourceBundleUtils.getLangString(BUTTON, Buttons.radioBtnLevelTxt));
 
         radioBtnGsi16.setSelection(true);
     }
@@ -521,7 +523,7 @@ public class LevellingWidget extends AbstractWidget {
         if (counter > 0) {
             String message;
 
-            final String helper = ResourceBundleUtils.getLangString(MESSAGE, Message.levellingMessage);
+            final String helper = ResourceBundleUtils.getLangString(MESSAGE, Messages.levellingMessage);
 
             if (counter == 1) {
                 message = String.format(StringUtils.getSingularMessage(helper), counter);
@@ -530,15 +532,15 @@ public class LevellingWidget extends AbstractWidget {
             }
 
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_INFORMATION,
-                    ResourceBundleUtils.getLangStringFromXml(TEXT, Text.msgBox_Success), message);
+                    ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.msgBox_Success), message);
 
             // set the counter for status bar information
             countFileOps = counter;
             success = true;
         } else {
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING,
-                    ResourceBundleUtils.getLangStringFromXml(TEXT, Text.msgBox_Error),
-                    ResourceBundleUtils.getLangString(ERROR, Error.levellingPreparationFailed));
+                    ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.msgBox_Error),
+                    ResourceBundleUtils.getLangString(ERROR, Errors.levellingPreparationFailed));
 
             success = false;
         }

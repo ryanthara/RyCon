@@ -18,7 +18,7 @@
 
 package de.ryanthara.ja.rycon.ui.preferences.editor;
 
-import de.ryanthara.ja.rycon.i18n.Preference;
+import de.ryanthara.ja.rycon.i18n.Preferences;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 import de.ryanthara.ja.rycon.ui.preferences.PreferencesDialog;
 import de.ryanthara.ja.rycon.ui.preferences.util.Resources;
@@ -32,7 +32,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundle.PREFERENCE;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.PREFERENCE;
 
 /**
  * {@code Editor<T>} is an abstract base class for different {@code EditorT<generic data typ></>} classes of RyCON.
@@ -147,7 +147,7 @@ public abstract class Editor<T> {
 
         buttonDefault = new Button(parent, SWT.PUSH);
         buttonDefault.setImage(Resources.getImageDefault());
-        buttonDefault.setToolTipText(ResourceBundleUtils.getLangString(PREFERENCE, Preference.toolTipDefault));
+        buttonDefault.setToolTipText(ResourceBundleUtils.getLangString(PREFERENCE, Preferences.toolTipDefault));
         buttonDefault.setLayoutData(gridData);
         buttonDefault.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -171,7 +171,7 @@ public abstract class Editor<T> {
 
         buttonUndo = new Button(parent, SWT.PUSH);
         buttonUndo.setImage(Resources.getImageUndo());
-        buttonUndo.setToolTipText(ResourceBundleUtils.getLangString(PREFERENCE, Preference.toolTipUndo));
+        buttonUndo.setToolTipText(ResourceBundleUtils.getLangString(PREFERENCE, Preferences.toolTipUndo));
         buttonUndo.setLayoutData(gridData);
         buttonUndo.addSelectionListener(new SelectionAdapter() {
             @Override

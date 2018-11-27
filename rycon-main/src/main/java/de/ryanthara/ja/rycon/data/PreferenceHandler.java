@@ -18,7 +18,7 @@
 
 package de.ryanthara.ja.rycon.data;
 
-import de.ryanthara.ja.rycon.i18n.LangString;
+import de.ryanthara.ja.rycon.i18n.LangStrings;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +33,7 @@ import java.util.prefs.PreferenceChangeEvent;
 import java.util.prefs.PreferenceChangeListener;
 import java.util.prefs.Preferences;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundle.LANG_STRING;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LANG_STRING;
 
 /**
  * Instances of this class provides functions for handling system and user settings for RyCON.
@@ -425,7 +425,7 @@ public class PreferenceHandler implements PreferenceChangeListener {
      */
     private void createDefaultPreferencesForGeneral() {
         setUserPreference(PreferenceKey.BUILD_VERSION, Version.getBuildNumber() + " : " + Version.getBuildDate());
-        setUserPreference(PreferenceKey.GENERATOR, ResourceBundleUtils.getLangStringFromXml(LANG_STRING, LangString.application_Name));
+        setUserPreference(PreferenceKey.GENERATOR, ResourceBundleUtils.getLangStringFromXml(LANG_STRING, LangStrings.application_Name));
         setUserPreference(PreferenceKey.OVERWRITE_EXISTING, DefaultKey.OVERWRITE_EXISTING.getValue());
         setUserPreference(PreferenceKey.PARAM_CODE_STRING, DefaultKey.PARAM_CODE_STRING.getValue());
         setUserPreference(PreferenceKey.PARAM_LEVEL_STRING, DefaultKey.PARAM_LEVEL_STRING.getValue());
@@ -506,7 +506,7 @@ public class PreferenceHandler implements PreferenceChangeListener {
      */
     private void registerPreferenceChangeListener() {
         Preferences.userRoot().node(currentNode).addPreferenceChangeListener(this);
-        logger.info("Preference listener '{}' added.", this.toString());
+        logger.info("Preferences listener '{}' added.", this.toString());
     }
 
 }

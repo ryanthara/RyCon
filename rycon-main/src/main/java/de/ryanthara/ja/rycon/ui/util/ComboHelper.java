@@ -1,7 +1,7 @@
 /*
  * License: GPL. Copyright 2016- (C) by Sebastian Aust (https://www.ryanthara.de/)
  *
- * This file is part of the package de.ryanthara.ja.rycon.i18n
+ * This file is part of the package de.ryanthara.ja.rycon.ui.util
  *
  * This package is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -15,26 +15,34 @@
  * You should have received a copy of the GNU General Public License along with
  * this package. If not, see <http://www.gnu.org/licenses/>.
  */
-package de.ryanthara.ja.rycon.i18n;
+package de.ryanthara.ja.rycon.ui.util;
+
+import org.eclipse.swt.widgets.Combo;
 
 /**
- * The {@code LangString} enumeration holds all the other language strings for RyCON.
- * <p>
- * This enumeration is used for encapsulating the data. The interface {@link ResourceKey}
- * is used to access different enumerations in the class {@link ResourceBundleUtils}.
+ * Helper class containing different functionality for {@link org.eclipse.swt.custom.CCombo} list choosers.
  *
  * @author sebastian
  * @version 1
- * @since 2.0
+ * @since 26
  */
-public enum LangString implements ResourceKey {
+public class ComboHelper {
 
-    application_Initialized,
-    application_Name,
-    application_Title,
-    buildString,
-    commentLine_CaplanK,
-    commentLine_Ltop,
-    update_Text,
+    /**
+     * ComboHelper is non-instantiable.
+     */
+    private ComboHelper() {
+        throw new AssertionError();
+    }
+
+    /**
+     * Returns the selected item from the list.
+     *
+     * @param list list with a selected item
+     * @return selected item
+     */
+    public static int getSelectedItem(Combo list) {
+        return list.getSelectionIndex();
+    }
 
 }

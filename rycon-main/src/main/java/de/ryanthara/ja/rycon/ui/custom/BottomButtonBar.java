@@ -17,7 +17,7 @@
  */
 package de.ryanthara.ja.rycon.ui.custom;
 
-import de.ryanthara.ja.rycon.i18n.Button;
+import de.ryanthara.ja.rycon.i18n.Buttons;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -25,6 +25,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +33,7 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundle.BUTTON;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.BUTTON;
 
 /**
  * Instances of this class implements a custom composite with three buttons ('Cancel', 'OK' and 'OK and EXIT')
@@ -51,6 +52,9 @@ public class BottomButtonBar extends Composite {
     private static final Logger logger = LoggerFactory.getLogger(BottomButtonBar.class.getName());
     private final Object callingObject;
     private final boolean okAndExitButton;
+    private Button btnCancel;
+    private Button btnOK;
+    private Button btnOKAndExit;
 
     /**
      * Constructs a new instance of this class given a calling object, a parent composite and a style.
@@ -90,9 +94,9 @@ public class BottomButtonBar extends Composite {
 
         this.setLayout(new FillLayout());
 
-        org.eclipse.swt.widgets.Button btnCancel = new org.eclipse.swt.widgets.Button(this, SWT.NONE);
-        btnCancel.setText(ResourceBundleUtils.getLangString(BUTTON, Button.cancelText));
-        btnCancel.setToolTipText(ResourceBundleUtils.getLangString(BUTTON, Button.cancelToolTip));
+        btnCancel = new Button(this, SWT.NONE);
+        btnCancel.setText(ResourceBundleUtils.getLangString(BUTTON, Buttons.cancelText));
+        btnCancel.setToolTipText(ResourceBundleUtils.getLangString(BUTTON, Buttons.cancelToolTip));
         btnCancel.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -100,9 +104,9 @@ public class BottomButtonBar extends Composite {
             }
         });
 
-        org.eclipse.swt.widgets.Button btnOK = new org.eclipse.swt.widgets.Button(this, SWT.NONE);
-        btnOK.setText(ResourceBundleUtils.getLangString(BUTTON, Button.okAndOpenText));
-        btnOK.setToolTipText(ResourceBundleUtils.getLangString(BUTTON, Button.okAndOpenToolTip));
+        btnOK = new Button(this, SWT.NONE);
+        btnOK.setText(ResourceBundleUtils.getLangString(BUTTON, Buttons.okAndOpenText));
+        btnOK.setToolTipText(ResourceBundleUtils.getLangString(BUTTON, Buttons.okAndOpenToolTip));
         btnOK.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -111,9 +115,9 @@ public class BottomButtonBar extends Composite {
         });
 
         if (okAndExitButton) {
-            org.eclipse.swt.widgets.Button btnOKAndExit = new org.eclipse.swt.widgets.Button(this, SWT.NONE);
-            btnOKAndExit.setText(ResourceBundleUtils.getLangString(BUTTON, Button.okAndExitText));
-            btnOKAndExit.setToolTipText(ResourceBundleUtils.getLangString(BUTTON, Button.okAndExitToolTip));
+            btnOKAndExit = new Button(this, SWT.NONE);
+            btnOKAndExit.setText(ResourceBundleUtils.getLangString(BUTTON, Buttons.okAndExitText));
+            btnOKAndExit.setToolTipText(ResourceBundleUtils.getLangString(BUTTON, Buttons.okAndExitToolTip));
             btnOKAndExit.addSelectionListener(new SelectionAdapter() {
                 @Override
                 public void widgetSelected(SelectionEvent e) {
@@ -142,4 +146,35 @@ public class BottomButtonBar extends Composite {
         }
     }
 
+    /**
+     * Disable the ok button.
+     */
+    public void disableOkButton() {
+        btnOK.setEnabled(false);
+    }
+
+    /**
+     * Disable the ok and exit button if it is present.
+     */
+    public void disableOkAndExitButton() {
+        if (!btnOKAndExit.isDisposed()) {
+            btnOKAndExit.setEnabled(false);
+        }
+    }
+
+    /**
+     * Enables the ok button.
+     */
+    public void enableOkButton() {
+        btnOK.setEnabled(true);
+    }
+
+    /**
+     * Enables the ok and exit button if it is present.
+     */
+    public void enableOkAndExitButton() {
+        if (!btnOKAndExit.isDisposed()) {
+            btnOKAndExit.setEnabled(true);
+        }
+    }
 }

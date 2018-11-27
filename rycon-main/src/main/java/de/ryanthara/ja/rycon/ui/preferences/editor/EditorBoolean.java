@@ -18,7 +18,7 @@
 
 package de.ryanthara.ja.rycon.ui.preferences.editor;
 
-import de.ryanthara.ja.rycon.i18n.Preference;
+import de.ryanthara.ja.rycon.i18n.Preferences;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 import de.ryanthara.ja.rycon.ui.preferences.PreferencesDialog;
 import org.eclipse.swt.SWT;
@@ -28,7 +28,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundle.PREFERENCE;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.PREFERENCE;
 
 /**
  * {@code EditorBoolean} is an editor for boolean values.
@@ -64,7 +64,7 @@ public class EditorBoolean extends Editor<Boolean> {
         GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, false);
 
         checkbox = new Button(parent, SWT.CHECK);
-        checkbox.setText(ResourceBundleUtils.getLangString(PREFERENCE, Preference.labelNo));
+        checkbox.setText(ResourceBundleUtils.getLangString(PREFERENCE, Preferences.labelNo));
         checkbox.setSelection(false);
         checkbox.setLayoutData(gridData);
         checkbox.addSelectionListener(new SelectionAdapter() {
@@ -73,9 +73,9 @@ public class EditorBoolean extends Editor<Boolean> {
                 setValid(true);
                 update();
                 if (checkbox.getSelection()) {
-                    checkbox.setText(ResourceBundleUtils.getLangString(PREFERENCE, Preference.labelYes));
+                    checkbox.setText(ResourceBundleUtils.getLangString(PREFERENCE, Preferences.labelYes));
                 } else {
-                    checkbox.setText(ResourceBundleUtils.getLangString(PREFERENCE, Preference.labelNo));
+                    checkbox.setText(ResourceBundleUtils.getLangString(PREFERENCE, Preferences.labelNo));
                 }
             }
         });
@@ -106,8 +106,8 @@ public class EditorBoolean extends Editor<Boolean> {
         setInitialValue((Boolean) t);
         checkbox.setSelection((Boolean) t);
         checkbox.setText((Boolean) t ?
-                ResourceBundleUtils.getLangString(PREFERENCE, Preference.labelYes) :
-                ResourceBundleUtils.getLangString(PREFERENCE, Preference.labelNo));
+                ResourceBundleUtils.getLangString(PREFERENCE, Preferences.labelYes) :
+                ResourceBundleUtils.getLangString(PREFERENCE, Preferences.labelNo));
         super.update();
     }
 

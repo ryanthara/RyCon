@@ -18,9 +18,9 @@
 package de.ryanthara.ja.rycon.core.converter.odf;
 
 import de.ryanthara.ja.rycon.core.converter.gsi.GsiDecoder;
-import de.ryanthara.ja.rycon.core.elements.GsiBlock;
+import de.ryanthara.ja.rycon.core.elements.GSIBlock;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
-import de.ryanthara.ja.rycon.i18n.WordIndex;
+import de.ryanthara.ja.rycon.i18n.WordIndices;
 import de.ryanthara.ja.rycon.util.StringUtils;
 import org.odftoolkit.simple.SpreadsheetDocument;
 import org.odftoolkit.simple.table.Cell;
@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 import java.nio.file.Path;
 import java.util.List;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundle.WORDINDEX;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.WORDINDEX;
 
 /**
  * A converter with functions to convert Leica Geosystems GSI format (GSI8 and GSI16)
@@ -83,9 +83,9 @@ public class Gsi2Odf {
             }
 
             // fill gsi content into rows and cells
-            for (List<GsiBlock> blocksInLine : gsiDecoder.getDecodedLinesOfGsiBlocks()) {
+            for (List<GSIBlock> blocksInLine : gsiDecoder.getDecodedLinesOfGsiBlocks()) {
                 colIndex = 0;
-                for (GsiBlock block : blocksInLine) {
+                for (GSIBlock block : blocksInLine) {
                     cell = table.getCellByPosition(colIndex, rowIndex);
 
                     switch (block.getWordIndex()) {
@@ -189,13 +189,13 @@ public class Gsi2Odf {
             cell = table.getCellByPosition(colIndex, 0);
             colIndex = colIndex + 1;
 
-            cell.setStringValue(ResourceBundleUtils.getLangString(WORDINDEX, WordIndex.valueOf("WI" + wordIndex)));
+            cell.setStringValue(ResourceBundleUtils.getLangString(WORDINDEX, WordIndices.valueOf("WI" + wordIndex)));
         }
         rowIndex = rowIndex + 1;
         return rowIndex;
     }
 
-    private void setCellValue(Cell cell, GsiBlock block) {
+    private void setCellValue(Cell cell, GSIBlock block) {
         cell.setDoubleValue(StringUtils.parseDoubleValue(block.toPrintFormatCsv()));
     }
 

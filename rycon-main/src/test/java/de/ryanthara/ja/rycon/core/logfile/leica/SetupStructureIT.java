@@ -232,18 +232,61 @@ class SetupStructureIT {
 
     @Test
     void getStation() {
-        RyPoint stationKnownAzimuth = new RyPoint("ST-WEST", "60.000", "20.000", "15.000");
-        RyPoint stationKnownBacksightPoint = new RyPoint("5002", "621906.180", "265244.026", "293.451");
-        RyPoint stationOrientationAndHeightTransfer = new RyPoint("FS03", "2610218.287", "1267037.378", "1.643", "0.000");
-        RyPoint stationResection = new RyPoint("FS04", "2610184.057", "1267049.603", "1.612", "0.000");
-        RyPoint stationResectionHelmert = new RyPoint("FS01", "6919.584", "2080.066", "290.882", "0.000");
-        RyPoint stationResectionLocal = new RyPoint("BS1", "0.280", "15.294", "1.426", "0.000");
+        RyPoint stationKnownAzimuth = new RyPoint.Builder("ST-WEST")
+                .setEasting("60.000")
+                .setNorthing("20.000")
+                .setHeight("15.000")
+                .build();
 
         assertEquals(setupStructureKnownAzimuth.getStation(), stationKnownAzimuth);
+
+        RyPoint stationKnownBacksightPoint = new RyPoint.Builder("5002")
+                .setEasting("621906.180")
+                .setNorthing("265244.026")
+                .setHeight("293.451")
+                .build();
+
         assertEquals(setupStructureKnownBacksightPoint.getStation(), stationKnownBacksightPoint);
+
+        RyPoint stationOrientationAndHeightTransfer = new RyPoint.Builder("FS03")
+                .setEasting("2610218.287")
+                .setNorthing("1267037.378")
+                .setHeight("1.643")
+                .setInstrumentOrReflectorHeight("0.000")
+                .build();
+
+        // E=      2610218.287	N=      1267037.378	H=            1.643	hi=      0.000
+
+        RyPoint p = setupStructureOrientationAndHeightTransfer.getStation();
+
+
         assertEquals(setupStructureOrientationAndHeightTransfer.getStation(), stationOrientationAndHeightTransfer);
+
+        RyPoint stationResection = new RyPoint.Builder("FS04")
+                .setEasting("2610184.057")
+                .setNorthing("1267049.603")
+                .setHeight("1.612")
+                .setInstrumentOrReflectorHeight("0.000")
+                .build();
+
         assertEquals(setupStructureResection.getStation(), stationResection);
+
+        RyPoint stationResectionHelmert = new RyPoint.Builder("FS01")
+                .setEasting("6919.584")
+                .setNorthing("2080.066")
+                .setHeight("290.882")
+                .setInstrumentOrReflectorHeight("0.000")
+                .build();
+
         assertEquals(setupStructureResectionHelmert.getStation(), stationResectionHelmert);
+
+        RyPoint stationResectionLocal = new RyPoint.Builder("BS1")
+                .setEasting("0.280")
+                .setNorthing("15.294")
+                .setHeight("1.426")
+                .setInstrumentOrReflectorHeight("0.000")
+                .build();
+
         assertEquals(setupStructureResectionLocal.getStation(), stationResectionLocal);
     }
 

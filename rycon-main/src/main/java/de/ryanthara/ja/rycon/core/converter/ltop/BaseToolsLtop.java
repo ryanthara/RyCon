@@ -21,7 +21,7 @@ import de.ryanthara.ja.rycon.core.converter.Separator;
 import de.ryanthara.ja.rycon.core.elements.RyPoint;
 import de.ryanthara.ja.rycon.data.PreferenceKey;
 import de.ryanthara.ja.rycon.data.Version;
-import de.ryanthara.ja.rycon.i18n.LangString;
+import de.ryanthara.ja.rycon.i18n.LangStrings;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 import de.ryanthara.ja.rycon.util.StringUtils;
 
@@ -31,7 +31,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.TreeSet;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundle.LANG_STRING;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LANG_STRING;
 
 /**
  * Provides basic and helper functions that are used for converting different
@@ -149,7 +149,14 @@ final class BaseToolsLtop {
             z = StringUtils.parseDoubleValue(height);
         }
 
-        ryPoints.add(new RyPoint(number, x, y, z, resultLine));
+        RyPoint p = new RyPoint.Builder(number)
+                .setX(x)
+                .setY(y)
+                .setZ(z)
+                .appendPrintLine(resultLine)
+                .build();
+
+        ryPoints.add(p);
     }
 
     /**
@@ -224,7 +231,7 @@ final class BaseToolsLtop {
         DateFormat df;
         df = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.MEDIUM);
 
-        result.add(String.format(firstLineIdentifier + Separator.WHITESPACE.getSign() + ResourceBundleUtils.getLangStringFromXml(LANG_STRING, LangString.commentLine_Ltop), Version.getVersion(), df.format(d)));
+        result.add(String.format(firstLineIdentifier + Separator.WHITESPACE.getSign() + ResourceBundleUtils.getLangStringFromXml(LANG_STRING, LangStrings.commentLine_Ltop), Version.getVersion(), df.format(d)));
     }
 
 }

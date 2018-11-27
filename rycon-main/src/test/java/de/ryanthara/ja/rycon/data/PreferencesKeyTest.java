@@ -5,7 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 @DisplayName("Testing PreferenceKey enumeration...")
-class PreferenceKeyTest {
+class PreferencesKeyTest {
     /*
      * Consider a tests consist of three core parts: given, when and then.
      */

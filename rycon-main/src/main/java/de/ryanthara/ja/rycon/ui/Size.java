@@ -30,8 +30,8 @@ public enum Size {
 
     RyCON_GRID_WIDTH(325),
     RyCON_GRID_HEIGHT(135),
-    RyCON_WIDGET_WIDTH(666),
-    RyCON_WIDGET_HEIGHT(412);
+    RyCON_WIDGET_WIDTH(750),
+    RyCON_WIDGET_HEIGHT(450);
 
     private final int value;
 

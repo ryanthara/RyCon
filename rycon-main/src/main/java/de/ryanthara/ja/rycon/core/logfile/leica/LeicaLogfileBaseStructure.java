@@ -298,7 +298,12 @@ public abstract class LeicaLogfileBaseStructure {
         final String height = elements[6].trim();
         final String instrumentHeight = elements[8].trim();
 
-        return new RyPoint(number, easting, northing, height, instrumentHeight);
+        return new RyPoint.Builder(number)
+                .setEasting(easting)
+                .setNorthing(northing)
+                .setHeight(height)
+                .setInstrumentOrReflectorHeight(instrumentHeight)
+                .build();
     }
 
     /*
@@ -319,11 +324,17 @@ public abstract class LeicaLogfileBaseStructure {
         final String easting = elements[1].trim();
         final String northing = elements[3].trim();
 
+        String height = "";
+
         if (elements.length > 5) {
-            return new RyPoint(number, easting, northing, elements[5].trim());
+            height = elements[5].trim();
         }
 
-        return new RyPoint(number, easting, northing, "");
+        return new RyPoint.Builder(number)
+                .setEasting(easting)
+                .setNorthing(northing)
+                .setHeight(height)
+                .build();
     }
 
     /*
@@ -343,7 +354,11 @@ public abstract class LeicaLogfileBaseStructure {
         final String northing = elements[3].trim();
         final String height = elements[5].trim();
 
-        return new RyPoint(number, easting, northing, height);
+        return new RyPoint.Builder(number)
+                .setEasting(easting)
+                .setNorthing(northing)
+                .setHeight(height)
+                .build();
     }
 
     /*
@@ -362,7 +377,12 @@ public abstract class LeicaLogfileBaseStructure {
         final String height = elements[5].trim();
         final String reflectorHeight = elements[7].trim();
 
-        return new RyPoint(number, easting, northing, height, reflectorHeight);
+        return new RyPoint.Builder(number)
+                .setEasting(easting)
+                .setNorthing(northing)
+                .setHeight(height)
+                .setInstrumentOrReflectorHeight(reflectorHeight)
+                .build();
     }
 
 }

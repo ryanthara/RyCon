@@ -18,7 +18,7 @@
 package de.ryanthara.ja.rycon.i18n;
 
 /**
- * The {@code Button} enumeration holds all the texts for the buttons of RyCON.
+ * The {@code CheckBoxes} enumeration holds all the texts for the checkboxes of RyCON.
  * <p>
  * This enumeration is used for encapsulating the data. The interface {@link ResourceKey}
  * is used to access different enumerations in the class {@link ResourceBundleUtils}.
@@ -27,52 +27,31 @@ package de.ryanthara.ja.rycon.i18n;
  * @version 1
  * @since 2.0
  */
-public enum Button implements ResourceKey {
+public enum CheckBoxes implements ResourceKey {
 
-    aboutText,
-    aboutToolTip,
-    reportText,
-    reportToolTip,
-    cancelText,
-    cancelToolTip,
-    chooseFilesText,
-    chooseFilesToolTip,
-    chooseLogfilePathText,
-    choosePathText,
-    choosePathToolTip,
-    cleanText,
-    cleanToolTip,
-    convertText,
-    convertToolTip,
-    exitText,
-    exitToolTip,
-    generatorText,
-    generatorToolTip,
-    importText,
-    importToolTip,
-    levellingText,
-    levellingToolTip,
-    okAndExitText,
-    okAndExitToolTip,
-    okAndOpenBrowserText,
-    okAndOpenBrowserToolTip,
-    okAndOpenText,
-    okAndOpenToolTip,
-    preferencesDialog_OkButtonText,
-    printText,
-    printToolTip,
-    radioBtnLevelAsc,
-    radioBtnLevelCsv,
-    radioBtnLevelGsi8,
-    radioBtnLevelGsi16,
-    radioBtnLevelTxt,
-    settingsText,
-    settingsToolTip,
-    splitterText,
-    splitterToolTip,
-    transformationText,
-    transformationToolTip,
-    txtCsvSpecialFormat,
-
+    cleanBlocksByContent,
+    cleanLogfile,
+    cleanMeasurementFile,
+    createAdminFolder,
+    createBigDataFolder,
+    createProjectFolder,
+    eliminateDuplicatePointsLTOP,
+    holdControlPointsClearUp,
+    holdStationsClearUp,
+    insertCodeColumn,
+    levellingIgnoreChangePoints,
+    moveTransferWidget,
+    openFileManager,
+    separatorCSVSemiColon,
+    separatorTXTSpace,
+    sortOutputFileByNumber,
+    sourceContainsCodeCsvChk,
+    sourceContainsCodeTxtChk,
+    useSimpleKFormatChk,
+    useZeroHeightsCadwork,
+    writeCodeColumn,
+    writeCodeZeroSplitter,
+    writeCommentLine,
+    writeZeroHeights,
 
 }

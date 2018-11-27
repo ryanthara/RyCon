@@ -22,9 +22,9 @@ import de.ryanthara.ja.rycon.cli.CommandLineInterfaceParser;
 import de.ryanthara.ja.rycon.data.ApplicationKey;
 import de.ryanthara.ja.rycon.data.PreferenceHandler;
 import de.ryanthara.ja.rycon.data.Version;
-import de.ryanthara.ja.rycon.i18n.Error;
-import de.ryanthara.ja.rycon.i18n.LangString;
-import de.ryanthara.ja.rycon.i18n.Message;
+import de.ryanthara.ja.rycon.i18n.Errors;
+import de.ryanthara.ja.rycon.i18n.LangStrings;
+import de.ryanthara.ja.rycon.i18n.Messages;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 import de.ryanthara.ja.rycon.ui.UpdateDialog;
 import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
@@ -44,7 +44,7 @@ import java.util.Arrays;
 import java.util.Locale;
 import java.util.Optional;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundle.*;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.*;
 
 /**
  * {@code Main} implements values, constants and objects for the complete RyCON application as an abstract class.
@@ -53,8 +53,11 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundle.*;
  * The main idea to do this step was influenced by the code base of JOSM, which is the most popular
  * java written editor for OpenStreetMap data.
  *
+ * <p>
+ * This now based on the singleton design pattern to enhance the code and defeat some issues.
+ *
  * @author sebastian
- * @version 10
+ * @version 11
  * @since 2
  */
 public abstract class Main {
@@ -161,8 +164,8 @@ public abstract class Main {
                 Shell shell = new Shell(display);
 
                 int rc = MessageBoxes.showMessageBox(shell, SWT.ICON_ERROR | SWT.YES | SWT.NO,
-                        ResourceBundleUtils.getLangString(ERROR, Error.javaVersionText),
-                        ResourceBundleUtils.getLangString(ERROR, Error.javaVersionMessage));
+                        ResourceBundleUtils.getLangString(ERROR, Errors.javaVersionText),
+                        ResourceBundleUtils.getLangString(ERROR, Errors.javaVersionMessage));
 
                 if (rc == SWT.YES) {
                     Optional<URI> uri = ApplicationKey.JAVA_WEBSITE.getURI();
@@ -211,8 +214,8 @@ public abstract class Main {
                 Shell shell = new Shell(display);
 
                 UpdateDialog updateDialog = new UpdateDialog(shell);
-                updateDialog.setText(ResourceBundleUtils.getLangStringFromXml(LANG_STRING, LangString.update_Text));
-                updateDialog.setMessage(ResourceBundleUtils.getLangString(MESSAGE, Message.ryCONUpdate));
+                updateDialog.setText(ResourceBundleUtils.getLangStringFromXml(LANG_STRING, LangStrings.update_Text));
+                updateDialog.setMessage(ResourceBundleUtils.getLangString(MESSAGE, Messages.ryCONUpdate));
                 updateDialog.setWhatsNewInfo(updater.getWhatsNew());
                 int returnCode = updateDialog.open();
 

@@ -18,16 +18,16 @@
 package de.ryanthara.ja.rycon.core.converter.csv;
 
 import de.ryanthara.ja.rycon.core.converter.gsi.GsiDecoder;
-import de.ryanthara.ja.rycon.core.elements.GsiBlock;
+import de.ryanthara.ja.rycon.core.elements.GSIBlock;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
-import de.ryanthara.ja.rycon.i18n.WordIndex;
+import de.ryanthara.ja.rycon.i18n.WordIndices;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundle.WORDINDEX;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.WORDINDEX;
 
 /**
  * A converter with functions to convert Leica Geosystems GSI format (GSI8 and GSI16)
@@ -71,7 +71,7 @@ public class Gsi2Csv {
             int counter = 0;
 
             for (Integer wordIndex : foundWordIndices) {
-                builder.append(ResourceBundleUtils.getLangString(WORDINDEX, WordIndex.valueOf("WI" + wordIndex)));
+                builder.append(ResourceBundleUtils.getLangString(WORDINDEX, WordIndices.valueOf("WI" + wordIndex)));
 
                 if (counter < foundWordIndices.size() - 1) {
                     builder.append(separator);
@@ -83,7 +83,7 @@ public class Gsi2Csv {
             result.add(0, builder.toString());
         }
 
-        for (List<GsiBlock> blocksInLine : gsiDecoder.getDecodedLinesOfGsiBlocks()) {
+        for (List<GSIBlock> blocksInLine : gsiDecoder.getDecodedLinesOfGsiBlocks()) {
             String newLine = "";
 
             Iterator<Integer> it = foundWordIndices.iterator();
@@ -92,7 +92,7 @@ public class Gsi2Csv {
                 Integer wordIndex = it.next();
                 String intern = "";
 
-                for (GsiBlock block : blocksInLine) {
+                for (GSIBlock block : blocksInLine) {
                     // check the WI and fill in an empty block of spaces if WI doesn't match to 'column'
                     if (wordIndex == block.getWordIndex()) {
                         intern = block.toPrintFormatCsv();

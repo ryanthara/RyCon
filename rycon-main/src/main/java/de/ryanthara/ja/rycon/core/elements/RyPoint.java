@@ -17,14 +17,10 @@
  */
 package de.ryanthara.ja.rycon.core.elements;
 
-import de.ryanthara.ja.rycon.ui.widgets.ReportWidget;
-
 import java.util.Objects;
 
 /**
- * Instances of this class defines an object of type point as 'RyPoint' with coordinates and additional attributes.
- * <p>
- * RyPoint is used for duplicate elimination, first for writing LTOP KOO files.
+ * A RyPoint defines a one to three dimensional point object with optional attributes.
  *
  * @author sebastian
  * @version 2
@@ -33,64 +29,32 @@ import java.util.Objects;
 public class RyPoint {
 
     private final String number;
-    private double x, y, z;
-    private String easting;
-    private String northing;
-    private String height;
-    private String printLine;
-    private String instrumentOrReflectorHeight;
+    private final double x;
+    private final double y;
+    private final double z;
+    private final String easting;
+    private final String northing;
+    private final String height;
+    private final String printLine;
+    private final String instrumentOrReflectorHeight;
 
-    /**
-     * Constructs a new instance of this class given a bunch of parameters.
-     *
-     * @param number    the point number
-     * @param x         the x coordinate
-     * @param y         the y coordinate
-     * @param z         the z coordinate
-     * @param printLine the complete ready to use print line
+    /*
+     * In the context of evolving RyCON,
+     * facing design issues and lost readability
+     * we decided to use a builder pattern
+     * to achieve a clearer code and avoid telescoping constructors,
+     * accepting some additional inner classes.
      */
-    public RyPoint(String number, double x, double y, double z, String printLine) {
-        this.number = number;
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.printLine = printLine;
-    }
-
-    /**
-     * Constructs a new point with number, eating, northing and height as strings.
-     * <p>
-     * This is used for data encapsulation in the {@link ReportWidget}.
-     *
-     * @param number   the point number
-     * @param easting  the easting coordinate
-     * @param northing the northing coordinate
-     * @param height   the height
-     */
-    public RyPoint(String number, String easting, String northing, String height) {
-        this.number = number;
-        this.easting = easting;
-        this.northing = northing;
-        this.height = height;
-    }
-
-    /**
-     * Constructs a new point with number, eating, northing and height as strings.
-     * <p>
-     * This is used for data encapsulation in the {@link ReportWidget}.
-     *
-     * @param number                      the point number
-     * @param easting                     the easting coordinate
-     * @param northing                    the northing coordinate
-     * @param height                      the height
-     * @param instrumentOrReflectorHeight the instrument or reflector height
-     */
-    public RyPoint(String number, String easting, String northing, String height, String instrumentOrReflectorHeight) {
-        this.number = number;
-        this.easting = easting;
-        this.northing = northing;
-        this.height = height;
-        this.instrumentOrReflectorHeight = instrumentOrReflectorHeight;
+    private RyPoint(Builder builder) {
+        this.number = builder.number;
+        this.x = builder.x;
+        this.y = builder.y;
+        this.z = builder.z;
+        this.easting = builder.easting;
+        this.northing = builder.northing;
+        this.height = builder.height;
+        this.instrumentOrReflectorHeight = builder.instrumentOrReflectorHeight;
+        this.printLine = builder.printLine;
     }
 
     /**
@@ -288,6 +252,137 @@ public class RyPoint {
      */
     private double getDistanceZ(RyPoint p2) {
         return this.z - p2.getZ();
+    }
+
+    /**
+     * The builder pattern for the RyPoint class.
+     *
+     * @author sebastian
+     * @version 1
+     * @since 26
+     */
+    public static class Builder {
+        // required
+        private final String number;
+
+        // optional
+        private double x, y, z;
+        private String printLine;
+        private String easting;
+        private String northing;
+        private String height;
+        private String instrumentOrReflectorHeight;
+
+        /**
+         * Build a new {@link RyPoint} with a point number string.
+         *
+         * @param number point number
+         */
+        public Builder(String number) {
+            this.number = number;
+        }
+
+        /**
+         * Sets the easting coordinate of the {@link RyPoint} to given string value.
+         *
+         * @param easting value for the easting coordinate
+         * @return the Builder
+         */
+        public Builder setEasting(String easting) {
+            this.easting = easting;
+            return this;
+        }
+
+        /**
+         * Sets the northing coordinate of the {@link RyPoint} to given string value.
+         *
+         * @param northing value for the northing coordinate
+         * @return the Builder
+         */
+        public Builder setNorthing(String northing) {
+            this.northing = northing;
+            return this;
+        }
+
+        /**
+         * Sets the height coordinate of the {@link RyPoint} to given string value.
+         *
+         * @param height value for the height coordinate
+         * @return the Builder
+         */
+        public Builder setHeight(String height) {
+            this.height = height;
+            return this;
+        }
+
+        /**
+         * Sets the x coordinate of the {@link RyPoint} to given value.
+         *
+         * @param x value for the x coordinate
+         * @return the Builder
+         */
+        public Builder setX(double x) {
+            this.x = x;
+            return this;
+        }
+
+        /**
+         * Sets the y coordinate of the {@link RyPoint} to given value.
+         *
+         * @param y value for the y coordinate
+         * @return the Builder
+         */
+        public Builder setY(double y) {
+            this.y = y;
+            return this;
+        }
+
+        /**
+         * Sets the z coordinate of the {@link RyPoint} to given value.
+         *
+         * @param z value for the z coordinate
+         * @return the Builder
+         */
+        public Builder setZ(double z) {
+            this.z = z;
+            return this;
+        }
+
+        /**
+         * Appends the ready to use print line to the {@link RyPoint}.
+         *
+         * <p>
+         * The print line contains a complete ready to use print line of the {@link RyPoint} that
+         * contains all the other attributes and values of the {@link RyPoint} in a single string line.
+         *
+         * @param printLine the print line
+         * @return the Builder
+         */
+        public Builder appendPrintLine(String printLine) {
+            this.printLine = printLine;
+            return this;
+        }
+
+        /**
+         * Sets the the instrument or reflector height of the {@link RyPoint} to given value.
+         *
+         * @param instrumentOrReflectorHeight the instrument or reflector height
+         * @return the Builder
+         */
+        public Builder setInstrumentOrReflectorHeight(String instrumentOrReflectorHeight) {
+            this.instrumentOrReflectorHeight = instrumentOrReflectorHeight;
+            return this;
+        }
+
+        /**
+         * Builds the {@link RyPoint} with a call to the private constructor.
+         *
+         * @return the Builder
+         */
+        public RyPoint build() {
+            return new RyPoint(this);
+        }
+
     }
 
 }

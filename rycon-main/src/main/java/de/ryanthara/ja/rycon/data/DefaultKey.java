@@ -17,10 +17,10 @@
  */
 package de.ryanthara.ja.rycon.data;
 
-import de.ryanthara.ja.rycon.i18n.LangString;
+import de.ryanthara.ja.rycon.i18n.LangStrings;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundle.LANG_STRING;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.LANG_STRING;
 
 /**
  * The {@code DefaultKey} enumeration holds all the default values for RyCON.
@@ -37,6 +37,7 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundle.LANG_STRING;
  * @since 2.0
  */
 public enum DefaultKey {
+
     ADD_TRAILING_ZEROES("true"),
     BUILD_VERSION(Version.getBuildNumber() + " : " + Version.getBuildDate()),
     CONVERTER_SETTING_ELIMINATE_ZERO_COORDINATE("true"),
@@ -58,7 +59,7 @@ public enum DefaultKey {
     DIR_PROJECT_LOG_FILES("08.Bearb_Rapp/Messdaten/LOG"),
     DIR_PROJECT_MEASUREMENT_FILES("08.Bearb_Rapp/Messdaten/GSI"),
     DIR_PROJECT_TEMPLATE("./projects/template-folder"),
-    GENERATOR(ResourceBundleUtils.getLangStringFromXml(LANG_STRING, LangString.application_Name)),
+    GENERATOR(ResourceBundleUtils.getLangStringFromXml(LANG_STRING, LangStrings.application_Name)),
     GSI_SETTING_LINE_ENDING_WITH_BLANK("true"),
     LAST_COPIED_LOGFILE(""),
     LAST_POS_PRIMARY_MONITOR("-9999, -9999"),

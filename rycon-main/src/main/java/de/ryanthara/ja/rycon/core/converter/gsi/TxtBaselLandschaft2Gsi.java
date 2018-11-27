@@ -17,7 +17,7 @@
  */
 package de.ryanthara.ja.rycon.core.converter.gsi;
 
-import de.ryanthara.ja.rycon.core.elements.GsiBlock;
+import de.ryanthara.ja.rycon.core.elements.GSIBlock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,8 +59,8 @@ public class TxtBaselLandschaft2Gsi {
      * @return converted {@code List<String>} with lines of text format
      */
     public List<String> convert(boolean isGSI16, boolean useAnnotationColumn) {
-        List<GsiBlock> blocks;
-        List<List<GsiBlock>> blocksInLines = new ArrayList<>();
+        List<GSIBlock> blocks;
+        List<List<GSIBlock>> blocksInLines = new ArrayList<>();
 
         int lineCounter = 1;
 
@@ -74,35 +74,35 @@ public class TxtBaselLandschaft2Gsi {
 
             switch (values.length) {
                 case 5:     // HFP file
-                    blocks.add(new GsiBlock(isGSI16, 11, lineCounter, values[1]));
+                    blocks.add(new GSIBlock(isGSI16, 11, lineCounter, values[1]));
 
                     if (useAnnotationColumn) {
-                        blocks.add(new GsiBlock(isGSI16, 71, values[0]));
+                        blocks.add(new GSIBlock(isGSI16, 71, values[0]));
                     }
 
-                    blocks.add(new GsiBlock(isGSI16, 81, values[2]));
-                    blocks.add(new GsiBlock(isGSI16, 82, values[3]));
-                    blocks.add(new GsiBlock(isGSI16, 83, values[4]));
+                    blocks.add(new GSIBlock(isGSI16, 81, values[2]));
+                    blocks.add(new GSIBlock(isGSI16, 82, values[3]));
+                    blocks.add(new GSIBlock(isGSI16, 83, values[4]));
                     break;
 
                 case 6:     // LFP file
-                    blocks.add(new GsiBlock(isGSI16, 11, lineCounter, values[1]));
+                    blocks.add(new GSIBlock(isGSI16, 11, lineCounter, values[1]));
 
                     if (useAnnotationColumn) {
                         if (values[2].equals("NULL")) {
-                            blocks.add(new GsiBlock(isGSI16, 41, "-1"));
+                            blocks.add(new GSIBlock(isGSI16, 41, "-1"));
                         } else {
-                            blocks.add(new GsiBlock(isGSI16, 41, values[2]));
+                            blocks.add(new GSIBlock(isGSI16, 41, values[2]));
                         }
-                        blocks.add(new GsiBlock(isGSI16, 71, values[0]));
+                        blocks.add(new GSIBlock(isGSI16, 71, values[0]));
                     }
 
-                    blocks.add(new GsiBlock(isGSI16, 81, values[3]));
-                    blocks.add(new GsiBlock(isGSI16, 82, values[4]));
+                    blocks.add(new GSIBlock(isGSI16, 81, values[3]));
+                    blocks.add(new GSIBlock(isGSI16, 82, values[4]));
 
                     // prevent 'NULL' element in height
                     if (!values[5].equals("NULL")) {
-                        blocks.add(new GsiBlock(isGSI16, 83, values[5]));
+                        blocks.add(new GSIBlock(isGSI16, 83, values[5]));
                     }
 
                     break;

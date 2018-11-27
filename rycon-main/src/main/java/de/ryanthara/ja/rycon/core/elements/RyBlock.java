@@ -23,7 +23,7 @@ import de.ryanthara.ja.rycon.core.converter.Separator;
  * Instances of this class defines a special helper object for smart handling and better sorting
  * of strings by a given integer value.
  * <p>
- * This is used for sorting {@link GsiBlock} by number or text lines by code.
+ * This is used for sorting {@link GSIBlock} by number or text lines by code.
  *
  * @author sebastian
  * @version 1

@@ -37,7 +37,7 @@ public final class ResourceBundleUtils {
     private static final String INDICATOR_MISSING_RESOURCE = "?";
     private static final String INDICATOR_MISSING_KEY = "??";
 
-    public static String getLangString(ResourceBundle bundleName, final ResourceKey key) {
+    public static String getLangString(ResourceBundles bundleName, final ResourceKey key) {
         java.util.ResourceBundle resourceBundle = java.util.ResourceBundle.getBundle(bundleName.getBundleName());
 
         if (resourceBundle != null) {
@@ -52,7 +52,7 @@ public final class ResourceBundleUtils {
         return INDICATOR_MISSING_RESOURCE + key;
     }
 
-    public static String getLangStringFromXml(ResourceBundle bundleName, final ResourceKey key) {
+    public static String getLangStringFromXml(ResourceBundles bundleName, final ResourceKey key) {
         java.util.ResourceBundle resourceBundle = java.util.ResourceBundle.getBundle(bundleName.getBundleName(), new XMLResourceBundleControl());
 
         if (resourceBundle != null) {

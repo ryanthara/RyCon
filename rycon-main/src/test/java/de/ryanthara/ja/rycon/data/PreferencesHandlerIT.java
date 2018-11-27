@@ -14,14 +14,14 @@ import java.util.prefs.BackingStoreException;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("Testing the PreferenceHandler class...")
-class PreferenceHandlerIT {
+class PreferencesHandlerIT {
 
     private static Logger logger;
     private static PreferenceHandler preferenceHandler;
 
     @BeforeAll
     static void initPreferenceHandler() {
-        logger = LoggerFactory.getLogger(PreferenceHandlerIT.class.getName());
+        logger = LoggerFactory.getLogger(PreferencesHandlerIT.class.getName());
         preferenceHandler = new PreferenceHandler();
     }
 

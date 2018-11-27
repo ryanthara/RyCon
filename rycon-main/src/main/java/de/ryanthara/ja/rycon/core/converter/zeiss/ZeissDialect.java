@@ -17,11 +17,13 @@
  */
 package de.ryanthara.ja.rycon.core.converter.zeiss;
 
+import java.util.Optional;
+
 /**
  * This enumeration holds the dialect names of the Zeiss REC files.
  *
  * @author sebastian
- * @version 1
+ * @version 2
  * @since 12
  */
 public enum ZeissDialect {
@@ -34,16 +36,16 @@ public enum ZeissDialect {
      * @param index index to return
      * @return ZeissDialect by index
      */
-    public static ZeissDialect fromIndex(int index) {
-        ZeissDialect selectedZeissDialect = null;
+    public static Optional<ZeissDialect> fromIndex(int index) {
+        assert index < values().length;
 
         for (ZeissDialect zeissDialect : values()) {
             if (zeissDialect.ordinal() == index) {
-                selectedZeissDialect = zeissDialect;
+                return Optional.of(zeissDialect);
             }
         }
 
-        return selectedZeissDialect;
+        return Optional.empty();
     }
 
 }

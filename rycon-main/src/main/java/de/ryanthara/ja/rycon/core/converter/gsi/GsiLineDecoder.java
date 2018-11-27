@@ -17,7 +17,7 @@
  */
 package de.ryanthara.ja.rycon.core.converter.gsi;
 
-import de.ryanthara.ja.rycon.core.elements.GsiBlock;
+import de.ryanthara.ja.rycon.core.elements.GSIBlock;
 import de.ryanthara.ja.rycon.util.SortUtils;
 
 import java.util.ArrayList;
@@ -52,13 +52,13 @@ class GsiLineDecoder {
     }
 
     /**
-     * Decodes a single line of Leica Geosystems GSI8 or GSI16 blocks into an array list of {@link GsiBlock}.
+     * Decodes a single line of Leica Geosystems GSI8 or GSI16 blocks into an array list of {@link GSIBlock}.
      *
      * @param line line to convert
      * @return array list of converted GsiBlocks
      */
-    List<GsiBlock> decode(String line) {
-        ArrayList<GsiBlock> blocks = new ArrayList<>();
+    List<GSIBlock> decode(String line) {
+        ArrayList<GSIBlock> blocks = new ArrayList<>();
 
         if (!line.equalsIgnoreCase("")) {
             int size = BaseToolsGsi.getBlockSize(line);
@@ -73,7 +73,7 @@ class GsiLineDecoder {
             }
 
             for (String blockAsString : lineSplit) {
-                GsiBlock block = new GsiBlock(blockAsString);
+                GSIBlock block = new GSIBlock(blockAsString);
                 blocks.add(block);
                 foundWordIndices.add(block.getWordIndex());
             }

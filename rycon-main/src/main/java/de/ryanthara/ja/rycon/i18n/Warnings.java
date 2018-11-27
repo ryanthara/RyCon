@@ -18,8 +18,7 @@
 package de.ryanthara.ja.rycon.i18n;
 
 /**
- * The {@code WordIndex} enumeration holds all the word indices for
- * the used Leica Geosystems GSI format word indices of RyCON.
+ * The {@code Warnings} enumeration holds all the texts for the warning messages of RyCON.
  * <p>
  * This enumeration is used for encapsulating the data. The interface {@link ResourceKey}
  * is used to access different enumerations in the class {@link ResourceBundleUtils}.
@@ -28,88 +27,15 @@ package de.ryanthara.ja.rycon.i18n;
  * @version 1
  * @since 2.0
  */
-public enum WordIndex implements ResourceKey {
-
-    WI01,
-    WI02,
-    WI03,
-    WI04,
-    WI05,
-    WI06,
-    WI07,
-    WI08,
-    WI09,
-    WI11,
-    WI12,
-    WI13,
-    WI16,
-    WI17,
-    WI18,
-    WI19,
-    WI21,
-    WI22,
-    WI24,
-    WI25,
-    WI26,
-    WI27,
-    WI28,
-    WI31,
-    WI32,
-    WI33,
-    WI330,
-    WI331,
-    WI332,
-    WI333,
-    WI334,
-    WI335,
-    WI336,
-    WI34,
-    WI35,
-    WI36,
-    WI37,
-    WI374,
-    WI38,
-    WI41,
-    WI42,
-    WI43,
-    WI44,
-    WI45,
-    WI46,
-    WI47,
-    WI48,
-    WI49,
-    WI51,
-    WI52,
-    WI53,
-    WI54,
-    WI571,
-    WI572,
-    WI58,
-    WI59,
-    WI61,
-    WI62,
-    WI63,
-    WI64,
-    WI71,
-    WI72,
-    WI73,
-    WI74,
-    WI75,
-    WI76,
-    WI77,
-    WI78,
-    WI79,
-    WI81,
-    WI82,
-    WI83,
-    WI84,
-    WI85,
-    WI86,
-    WI87,
-    WI88,
-    WI95,
-    WI573,
-    WI574,
-    WI9999
+public enum Warnings implements ResourceKey {
+    adminDirExists,
+    bigDataDirExists,
+    emptyTextField,
+    fileExists,
+    fileExistsOverwrite,
+    noControlPointsLTOP,
+    noCardReaderExistsMessage,
+    noCardReaderExistsText,
+    projectDirExists
 
 }

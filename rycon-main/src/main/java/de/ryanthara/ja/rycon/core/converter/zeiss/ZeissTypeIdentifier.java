@@ -37,12 +37,12 @@ public enum ZeissTypeIdentifier {
     dx("dx"),     // x gape, coordinate difference
     dy("dy"),     // y gape, coordinate difference
     dz("dz"),     // z gape, coordinate difference
-    dX("dX"),     // x gape at a helmert core.core.transformer
-    dY("dY"),     // y gape at a helmert core.core.transformer
+    dX("dX"),     // x gape at a helmert transformation
+    dY("dY"),     // y gape at a helmert transformation
     dZ("dZ"),     // height difference
     E("E "),     // horizontal distance
     Ea("Ea"),     // maximum target distance at levelling
-    ep("ep"),     // rotation of the helmert core.core.transformer
+    ep("ep"),     // rotation of the helmert transformation
     F("F "),     // temperature in Fahrenheit
     Fl("Fl"),     // area in square metres
     HD("HD"),     // horizontal distance
@@ -70,7 +70,7 @@ public enum ZeissTypeIdentifier {
     mz("mz"),     // average error/point defect z direction
     np("np"),     // number of surface corner points
     O("O "),     // transverse at indirect height determination
-    o("o "),     // parameter of the helmert core.core.transformer
+    o("o "),     // parameter of the helmert transformation
     P("P "),     // air pressure 0=hPa or Torr, 1=InMerc
     PI("PI"),     // point identification
     Ps("Ps"),     // point identification for station coordinates
@@ -125,8 +125,8 @@ public enum ZeissTypeIdentifier {
      */
     de("de"),     // coordinate difference (easting)
     dn("dn"),     // coordinate difference (northing)
-    dE("dE"),     // coordinate difference (easting gap) at helmert core.core.transformer
-    dN("dN"),     // coordinate difference (northing gap) at helmert core.core.transformer
+    dE("dE"),     // coordinate difference (easting gap) at helmert transformation
+    dN("dN"),     // coordinate difference (northing gap) at helmert transformation
     Db("Db"),     // levelling: total of backsight distances
     Df("Df"),     // levelling: total of foresight distance
     dR("dR"),     // levelling station difference

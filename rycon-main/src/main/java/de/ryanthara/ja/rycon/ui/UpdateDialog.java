@@ -18,7 +18,7 @@
 
 package de.ryanthara.ja.rycon.ui;
 
-import de.ryanthara.ja.rycon.i18n.Button;
+import de.ryanthara.ja.rycon.i18n.Buttons;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 import de.ryanthara.ja.rycon.ui.util.ShellPositioner;
 import org.eclipse.swt.SWT;
@@ -48,7 +48,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.StringTokenizer;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundle.BUTTON;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.BUTTON;
 
 /**
  * {@code UpdateDialog} implements an update dialog for RyCON.
@@ -227,8 +227,8 @@ public class UpdateDialog extends Dialog {
         buttonArea.setLayoutData(data);
 
         org.eclipse.swt.widgets.Button close = new org.eclipse.swt.widgets.Button(buttonArea, SWT.PUSH);
-        close.setText(ResourceBundleUtils.getLangString(BUTTON, Button.okAndExitText));
-        close.setToolTipText(ResourceBundleUtils.getLangString(BUTTON, Button.okAndExitToolTip));
+        close.setText(ResourceBundleUtils.getLangString(BUTTON, Buttons.okAndExitText));
+        close.setToolTipText(ResourceBundleUtils.getLangString(BUTTON, Buttons.okAndExitToolTip));
         close.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent selectionEvent) {
@@ -244,8 +244,8 @@ public class UpdateDialog extends Dialog {
         close.setLayoutData(closeBtnData);
 
         org.eclipse.swt.widgets.Button openBrowser = new org.eclipse.swt.widgets.Button(buttonArea, SWT.PUSH);
-        openBrowser.setText(ResourceBundleUtils.getLangString(BUTTON, Button.okAndOpenBrowserText));
-        openBrowser.setToolTipText(ResourceBundleUtils.getLangString(BUTTON, Button.okAndOpenBrowserToolTip));
+        openBrowser.setText(ResourceBundleUtils.getLangString(BUTTON, Buttons.okAndOpenBrowserText));
+        openBrowser.setToolTipText(ResourceBundleUtils.getLangString(BUTTON, Buttons.okAndOpenBrowserToolTip));
         openBrowser.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent selectionEvent) {

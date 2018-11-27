@@ -19,7 +19,7 @@ package de.ryanthara.ja.rycon.core.converter.toporail;
 
 import de.ryanthara.ja.rycon.core.converter.Separator;
 import de.ryanthara.ja.rycon.core.converter.gsi.GsiDecoder;
-import de.ryanthara.ja.rycon.core.elements.GsiBlock;
+import de.ryanthara.ja.rycon.core.elements.GSIBlock;
 import de.ryanthara.ja.rycon.nio.FileFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -103,8 +103,8 @@ public class Gsi2Toporail {
 
         /*
 
-        ArrayList<GsiBlock> blocks;
-        List<List<GsiBlock>> blocksInLines = new ArrayList<>();
+        ArrayList<GSIBlock> blocks;
+        List<List<GSIBlock>> blocksInLines = new ArrayList<>();
 
         // check for being a valid Toporail coordinate file
         if (lines.get(0).startsWith("@MEP")) {
@@ -152,7 +152,7 @@ public class Gsi2Toporail {
         // TODO implement comment handling
         final String commentString = null; // comment lines starts with ':'
 
-        for (List<GsiBlock> blocksInLine : gsiDecoder.getDecodedLinesOfGsiBlocks()) {
+        for (List<GSIBlock> blocksInLine : gsiDecoder.getDecodedLinesOfGsiBlocks()) {
             // helpers
             String numericCode = "";
             String pointNumber = "";
@@ -166,22 +166,22 @@ public class Gsi2Toporail {
             String azimuth = "";
 
             // blocksInLine is sorted!
-            for (GsiBlock block : blocksInLine) {
+            for (GSIBlock block : blocksInLine) {
                 switch (block.getWordIndex()) {
                     case 11: // point number
                         pointNumber = block.toPrintFormatCsv();
                         break;
                     case 18: // date YYYYMMDD
                         // extract year
-                        // blocks.add(new GsiBlock(isGSI16, 18, year.substring(2, 4) + "000000"));
+                        // blocks.add(new GSIBlock(isGSI16, 18, year.substring(2, 4) + "000000"));
                         date = block.toPrintFormatCsv();
                         break;
                     case 19: // date YYYYMMDD
                         // extract month and day
                         date = block.toPrintFormatCsv();
 
-                        // blocks.add(new GsiBlock(isGSI16, 17, day + month + year));
-                        //blocks.add(new GsiBlock(isGSI16, 19, month + day + "0000"));
+                        // blocks.add(new GSIBlock(isGSI16, 17, day + month + year));
+                        //blocks.add(new GSIBlock(isGSI16, 19, month + day + "0000"));
                         break;
                     case 21: // azimuth (gon)
                         azimuth = block.toPrintFormatCsv();
@@ -236,7 +236,7 @@ public class Gsi2Toporail {
         // TODO implement comment handling
         final String commentString = null; // comment lines starts with ':'
 
-        for (List<GsiBlock> blocksInLine : gsiDecoder.getDecodedLinesOfGsiBlocks()) {
+        for (List<GSIBlock> blocksInLine : gsiDecoder.getDecodedLinesOfGsiBlocks()) {
             // helpers
             String numericCode = "";
             String pointNumber = "";
@@ -250,22 +250,22 @@ public class Gsi2Toporail {
             String azimuth = "";
 
             // blocksInLine is sorted!
-            for (GsiBlock block : blocksInLine) {
+            for (GSIBlock block : blocksInLine) {
                 switch (block.getWordIndex()) {
                     case 11: // point number
                         pointNumber = block.toPrintFormatCsv();
                         break;
                     case 18: // date YYYYMMDD
                         // extract year
-                        // blocks.add(new GsiBlock(isGSI16, 18, year.substring(2, 4) + "000000"));
+                        // blocks.add(new GSIBlock(isGSI16, 18, year.substring(2, 4) + "000000"));
                         date = block.toPrintFormatCsv();
                         break;
                     case 19: // date YYYYMMDD
                         // extract month and day
                         date = block.toPrintFormatCsv();
 
-                        // blocks.add(new GsiBlock(isGSI16, 17, day + month + year));
-                        //blocks.add(new GsiBlock(isGSI16, 19, month + day + "0000"));
+                        // blocks.add(new GSIBlock(isGSI16, 17, day + month + year));
+                        //blocks.add(new GSIBlock(isGSI16, 19, month + day + "0000"));
                         break;
                     case 21: // azimuth (gon)
                         azimuth = block.toPrintFormatCsv();

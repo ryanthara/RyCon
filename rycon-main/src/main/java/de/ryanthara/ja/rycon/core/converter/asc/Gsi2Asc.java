@@ -19,7 +19,7 @@ package de.ryanthara.ja.rycon.core.converter.asc;
 
 import de.ryanthara.ja.rycon.core.converter.Converter;
 import de.ryanthara.ja.rycon.core.converter.gsi.GsiDecoder;
-import de.ryanthara.ja.rycon.core.elements.GsiBlock;
+import de.ryanthara.ja.rycon.core.elements.GSIBlock;
 import de.ryanthara.ja.rycon.util.DummyCoordinates;
 import org.eclipse.swt.graphics.Point;
 
@@ -65,10 +65,10 @@ public class Gsi2Asc extends Converter {
     @Override
     public List<String> convert() {
         List<String> result = new ArrayList<>();
-        List<List<GsiBlock>> encodedLinesOfGsiBlocks = gsiDecoder.getDecodedLinesOfGsiBlocks();
+        List<List<GSIBlock>> encodedLinesOfGsiBlocks = gsiDecoder.getDecodedLinesOfGsiBlocks();
 
         int countLevelLines = 0;
-        for (List<GsiBlock> blocksInLine : encodedLinesOfGsiBlocks) {
+        for (List<GSIBlock> blocksInLine : encodedLinesOfGsiBlocks) {
             if (blocksInLine.size() == 1) {
                 countLevelLines = countLevelLines + 1;
             }
@@ -76,9 +76,9 @@ public class Gsi2Asc extends Converter {
 
         // works only with the reduced ArrayList without change points for better dummy coordinate result
         if (ignoreChangePoints) {
-            List<List<GsiBlock>> reducedEncodedLinesOfGSIBlocks = new ArrayList<>();
+            List<List<GSIBlock>> reducedEncodedLinesOfGSIBlocks = new ArrayList<>();
 
-            for (List<GsiBlock> blocksInLine : encodedLinesOfGsiBlocks) {
+            for (List<GSIBlock> blocksInLine : encodedLinesOfGsiBlocks) {
                 if (!blocksInLine.get(0).toPrintFormatAsc().equals("0")) {
                     reducedEncodedLinesOfGSIBlocks.add(blocksInLine);
                 }
@@ -99,7 +99,7 @@ public class Gsi2Asc extends Converter {
          */
 
         int counter = 0;
-        for (List<GsiBlock> blocksInLine : encodedLinesOfGsiBlocks) {
+        for (List<GSIBlock> blocksInLine : encodedLinesOfGsiBlocks) {
             String number = blocksInLine.get(0).toPrintFormatAsc();
             String height = null;
 

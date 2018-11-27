@@ -17,7 +17,7 @@
  */
 package de.ryanthara.ja.rycon.core.converter.gsi;
 
-import de.ryanthara.ja.rycon.core.elements.GsiBlock;
+import de.ryanthara.ja.rycon.core.elements.GSIBlock;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,8 +54,8 @@ public class Nigra2Gsi {
      */
     // TODO Use method
     public List<String> convert(boolean isGSI16) {
-        List<GsiBlock> blocks;
-        List<List<GsiBlock>> blocksInLines = new ArrayList<>();
+        List<GSIBlock> blocks;
+        List<List<GSIBlock>> blocksInLines = new ArrayList<>();
         StringTokenizer stringTokenizer;
 
         int lineCounter = 1;
@@ -72,10 +72,10 @@ public class Nigra2Gsi {
                 String northing = Integer.toString(i);
                 String height = stringTokenizer.nextToken();
 
-                blocks.add(new GsiBlock(isGSI16, 11, lineCounter, number));
-                blocks.add(new GsiBlock(isGSI16, 81, easting));
-                blocks.add(new GsiBlock(isGSI16, 82, northing));
-                blocks.add(new GsiBlock(isGSI16, 83, height));
+                blocks.add(new GSIBlock(isGSI16, 11, lineCounter, number));
+                blocks.add(new GSIBlock(isGSI16, 81, easting));
+                blocks.add(new GSIBlock(isGSI16, 82, northing));
+                blocks.add(new GSIBlock(isGSI16, 83, height));
             }
 
             // check for at least one or more added elements to prevent writing empty lines

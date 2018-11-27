@@ -68,4 +68,8 @@
     <entry key="trayMenu_InfoItem">RyCON build:</entry>
     <entry key="trayMenu_SettingsItem">Settings...</entry>
     <entry key="trayMenu_WebsiteItem">Open RyCON website in browser...</entry>
+    <entry key="transformation_Method">Transformation method</entry>
+    <entry key="transformation_PointOfPoints">point %s of %s</entry>
+    <entry key="cancelled">cancelled</entry>
+    <entry key="finished">finished</entry>
 </properties>

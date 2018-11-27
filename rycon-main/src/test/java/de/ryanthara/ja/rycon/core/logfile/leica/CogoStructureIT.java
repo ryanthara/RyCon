@@ -33,45 +33,100 @@ class CogoStructureIT {
 
     @Test
     void getArcCenter() {
-        RyPoint arcCenter = new RyPoint("204", "612270.803", "268455.801", "262.756");
+        final RyPoint arcCenter = new RyPoint.Builder("204")
+                .setEasting("612270.803")
+                .setNorthing("268455.801")
+                .setHeight("262.756")
+                .build();
 
         assertEquals(arcCenter, cogoStructureArcCenter.getArcCenter());
     }
 
     @Test
     void getComputed() {
-        RyPoint computed = new RyPoint("T1", "629441.106", "268653.794", "297.850");
+        final RyPoint computed = new RyPoint.Builder("T1")
+                .setEasting("629441.106")
+                .setNorthing("268653.794")
+                .setHeight("297.850")
+                .build();
 
         assertEquals(cogoStructureArcOffsetPoint.getComputed(), computed);
     }
 
     @Test
     void getComputedBasePoint() {
-        final RyPoint offsetPoint = new RyPoint("2.4", "612270.795", "268455.796", "262.757");
-        final RyPoint computed = new RyPoint("2.5", "612270.796", "268455.794", "255.970");
-
-        final String distAlongLine = "-0.003";
-        final String offsetFromLine = "0.002";
+        final RyPoint offsetPoint = new RyPoint.Builder("2.4")
+                .setEasting("612270.795")
+                .setNorthing("268455.796")
+                .setHeight("262.757")
+                .build();
 
         assertEquals(offsetPoint, cogoStructureLineBasePoint.getOffsetPoint());
+
+        final RyPoint computed = new RyPoint.Builder("2.5")
+                .setEasting("612270.796")
+                .setNorthing("268455.794")
+                .setHeight("255.970")
+                .build();
+
         assertEquals(computed, cogoStructureLineBasePoint.getComputed());
 
+        final String distAlongLine = "-0.003";
+
         assertEquals(distAlongLine, cogoStructureLineBasePoint.getDistAlongLine());
+
+        final String offsetFromLine = "0.002";
+
         assertEquals(offsetFromLine, cogoStructureLineBasePoint.getOffsetFromLine());
     }
 
     @Test
     void getComputedIntersectionBearingBearing() {
-        final RyPoint id1 = new RyPoint("E6", "7.844", "-9.000", "-----");
-        final RyPoint id2 = new RyPoint("D5", "0.344", "-16.500", "-----");
-        final RyPoint id3 = new RyPoint("D2", "-20.926", "-16.500", "-----");
-        final RyPoint id4 = new RyPoint("D5", "0.344", "-16.500", "-----");
-        final RyPoint id5 = new RyPoint("C1", "-29.926", "-24.000", "-----");
-        final RyPoint id6 = new RyPoint("D5", "0.344", "-16.500", "-----");
-
-        final RyPoint computed1 = new RyPoint("1", "7.844", "-9.000", "-----");
-        final RyPoint computed2 = new RyPoint("8", "-10.291", "-5.865", "-----");
-        final RyPoint computed3 = new RyPoint("9", "-29.926", "-16.500", "-----");
+        final RyPoint id1 = new RyPoint.Builder("E6")
+                .setEasting("7.844")
+                .setNorthing("-9.000")
+                .setHeight("-----")
+                .build();
+        final RyPoint id2 = new RyPoint.Builder("D5")
+                .setEasting("0.344")
+                .setNorthing("-16.500")
+                .setHeight("-----")
+                .build();
+        final RyPoint id3 = new RyPoint.Builder("D2")
+                .setEasting("-20.926")
+                .setNorthing("-16.500")
+                .setHeight("-----")
+                .build();
+        final RyPoint id4 = new RyPoint.Builder("D5")
+                .setEasting("0.344")
+                .setNorthing("-16.500")
+                .setHeight("-----")
+                .build();
+        final RyPoint id5 = new RyPoint.Builder("C1")
+                .setEasting("-29.926")
+                .setNorthing("-24.000")
+                .setHeight("-----")
+                .build();
+        final RyPoint id6 = new RyPoint.Builder("D5")
+                .setEasting("0.344")
+                .setNorthing("-16.500")
+                .setHeight("-----")
+                .build();
+        final RyPoint computed1 = new RyPoint.Builder("1")
+                .setEasting("7.844")
+                .setNorthing("-9.000")
+                .setHeight("-----")
+                .build();
+        final RyPoint computed2 = new RyPoint.Builder("8")
+                .setEasting("-10.291")
+                .setNorthing("-5.865")
+                .setHeight("-----")
+                .build();
+        final RyPoint computed3 = new RyPoint.Builder("9")
+                .setEasting("-29.926")
+                .setNorthing("-16.500")
+                .setHeight("-----")
+                .build();
 
         final String direction1 = "120.0000";
         final String direction2 = "50.0000";
@@ -107,19 +162,66 @@ class CogoStructureIT {
 
     @Test
     void getComputedIntersectionBearingDistance() {
-        final RyPoint id1 = new RyPoint("E4", "-10.156", "-9.000", "-----");
-        final RyPoint id2 = new RyPoint("D6", "7.844", "-16.500", "-----");
-        final RyPoint id3 = new RyPoint("E4", "-10.156", "-9.000", "-----");
-        final RyPoint id4 = new RyPoint("D6", "7.844", "-16.500", "-----");
-        final RyPoint id5 = new RyPoint("F1", "-29.926", "0.000", "-----");
-        final RyPoint id6 = new RyPoint("E4", "-10.156", "-9.000", "-----");
-        final RyPoint id7 = new RyPoint("F1", "-29.926", "0.000", "-----");
-        final RyPoint id8 = new RyPoint("E4", "-10.156", "-9.000", "-----");
-
-        final RyPoint computed10   = new RyPoint("10", "-2.143", "-17.013", "-----");
-        final RyPoint computed10_1 = new RyPoint("10.1", "7.331", "-26.487", "-----");
-        final RyPoint computed11   = new RyPoint("11", "-0.178", "-9.666", "-----");
-        final RyPoint computed11_1 = new RyPoint("11.1", "-18.620", "-3.674", "-----");
+        final RyPoint id1 = new RyPoint.Builder("E4")
+                .setEasting("-10.156")
+                .setNorthing("-9.000")
+                .setHeight("-----")
+                .build();
+        final RyPoint id2 = new RyPoint.Builder("D6")
+                .setEasting("7.844")
+                .setNorthing("-16.500")
+                .setHeight("-----")
+                .build();
+        final RyPoint id3 = new RyPoint.Builder("E4")
+                .setEasting("-10.156")
+                .setNorthing("-9.000")
+                .setHeight("-----")
+                .build();
+        final RyPoint id4 = new RyPoint.Builder("D6")
+                .setEasting("7.844")
+                .setNorthing("-16.500")
+                .setHeight("-----")
+                .build();
+        final RyPoint id5 = new RyPoint.Builder("F1")
+                .setEasting("-29.926")
+                .setNorthing("0.000")
+                .setHeight("-----")
+                .build();
+        final RyPoint id6 = new RyPoint.Builder("E4")
+                .setEasting("-10.156")
+                .setNorthing("-9.000")
+                .setHeight("-----")
+                .build();
+        final RyPoint id7 = new RyPoint.Builder("F1")
+                .setEasting("-29.926")
+                .setNorthing("0.000")
+                .setHeight("-----")
+                .build();
+        final RyPoint id8 = new RyPoint.Builder("E4")
+                .setEasting("-10.156")
+                .setNorthing("-9.000")
+                .setHeight("-----")
+                .build();
+        final RyPoint computed10 = new RyPoint.Builder("10")
+                .setEasting("-2.143")
+                .setNorthing("-17.013")
+                .setHeight("-----")
+                .build();
+        final RyPoint computed10_1 = new RyPoint.Builder("10.1")
+                .setEasting("7.331")
+                .setNorthing("-26.487")
+                .setHeight("-----")
+                .build();
+        final RyPoint computed11 = new RyPoint.Builder("11")
+                .setEasting("-0.178")
+                .setNorthing("-9.666")
+                .setHeight("-----")
+                .build();
+        final RyPoint computed11_1 = new RyPoint.Builder("11.1")
+                .setEasting("-18.620")
+                .setNorthing("-3.674")
+                .setHeight("-----")
+                .build();
 
         final String direction1 = "150.0000";
         final String distance1 = "10.000";
@@ -161,9 +263,21 @@ class CogoStructureIT {
 
     @Test
     void getComputedLineOffsetPoint() {
-        final RyPoint startPoint = new RyPoint("2", "909.008", "2721.609", "287.692");
-        final RyPoint endPoint = new RyPoint("3", "908.002", "2722.769", "287.692");
-        final RyPoint computed = new RyPoint("100", "908.505", "2722.189", "287.692");
+        final RyPoint startPoint = new RyPoint.Builder("2")
+                .setEasting("909.008")
+                .setNorthing("2721.609")
+                .setHeight("287.692")
+                .build();
+        final RyPoint endPoint = new RyPoint.Builder("3")
+                .setEasting("908.002")
+                .setNorthing("2722.769")
+                .setHeight("287.692")
+                .build();
+        final RyPoint computed = new RyPoint.Builder("100")
+                .setEasting("908.505")
+                .setNorthing("2722.189")
+                .setHeight("287.692")
+                .build();
 
         final String length = "1.535";
         final String azimuth = "354.515";
@@ -183,7 +297,12 @@ class CogoStructureIT {
 
     @Test
     void getComputedPointsForAnalyzeShiftRotateScale() {
-        final RyPoint shift = new RyPoint("Shift", "-5400000.000", "0.000", "0.000");
+        final RyPoint shift = new RyPoint.Builder("Shift")
+                .setEasting("-5400000.000")
+                .setNorthing("0.000")
+                .setHeight("0.000")
+                .build();
+
         final String rotate = "0.0000g";
         final String scale = "1.00000000";
         final String ofPointsNew = "16";
@@ -195,22 +314,86 @@ class CogoStructureIT {
         assertEquals(ofPointsNew, cogoStructureShiftRotateScale.getNumberOfPointsNew());
         assertEquals(ofPointsSkipped, cogoStructureShiftRotateScale.getNumberOfPointsSkipped());
 
-        RyPoint computed_1 = new RyPoint("1", "621049.650", "263217.922", "-----");
-        RyPoint computed_2 = new RyPoint("2", "621052.123", "263216.224", "-----");
-        RyPoint computed_3 = new RyPoint("3", "621090.214", "263198.951", "-----");
-        RyPoint computed_4 = new RyPoint("4", "621087.340", "263199.811", "-----");
-        RyPoint computed_5 = new RyPoint("5", "621084.480", "263200.715", "-----");
-        RyPoint computed_6 = new RyPoint("6", "621081.635", "263201.668", "-----");
-        RyPoint computed_7 = new RyPoint("7", "621078.809", "263202.675", "-----");
-        RyPoint computed_8 = new RyPoint("8", "621076.005", "263203.740", "-----");
-        RyPoint computed_9 = new RyPoint("9", "621073.225", "263204.869", "-----");
-        RyPoint computed_10 = new RyPoint("10", "621070.473", "263206.064", "-----");
-        RyPoint computed_11 = new RyPoint("11", "621067.751", "263207.324", "-----");
-        RyPoint computed_12 = new RyPoint("12", "621065.060", "263208.650", "-----");
-        RyPoint computed_13 = new RyPoint("13", "621062.401", "263210.040", "-----");
-        RyPoint computed_14 = new RyPoint("14", "621059.777", "263211.493", "-----");
-        RyPoint computed_15 = new RyPoint("15", "621057.188", "263213.008", "-----");
-        RyPoint computed_16 = new RyPoint("16", "621054.636", "263214.586", "-----");
+        RyPoint computed_1 = new RyPoint.Builder("1")
+                .setEasting("621049.650")
+                .setNorthing("263217.922")
+                .setHeight("-----")
+                .build();
+        RyPoint computed_2 = new RyPoint.Builder("2")
+                .setEasting("621052.123")
+                .setNorthing("263216.224")
+                .setHeight("-----")
+                .build();
+        RyPoint computed_3 = new RyPoint.Builder("3")
+                .setEasting("621090.214")
+                .setNorthing("263198.951")
+                .setHeight("-----")
+                .build();
+        RyPoint computed_4 = new RyPoint.Builder("4")
+                .setEasting("621087.340")
+                .setNorthing("263199.811")
+                .setHeight("-----")
+                .build();
+        RyPoint computed_5 = new RyPoint.Builder("5")
+                .setEasting("621084.480")
+                .setNorthing("263200.715")
+                .setHeight("-----")
+                .build();
+        RyPoint computed_6 = new RyPoint.Builder("6")
+                .setEasting("621081.635")
+                .setNorthing("263201.668")
+                .setHeight("-----")
+                .build();
+        RyPoint computed_7 = new RyPoint.Builder("7")
+                .setEasting("621078.809")
+                .setNorthing("263202.675")
+                .setHeight("-----")
+                .build();
+        RyPoint computed_8 = new RyPoint.Builder("8")
+                .setEasting("621076.005")
+                .setNorthing("263203.740")
+                .setHeight("-----")
+                .build();
+        RyPoint computed_9 = new RyPoint.Builder("9")
+                .setEasting("621073.225")
+                .setNorthing("263204.869")
+                .setHeight("-----")
+                .build();
+        RyPoint computed_10 = new RyPoint.Builder("10")
+                .setEasting("621070.473")
+                .setNorthing("263206.064")
+                .setHeight("-----")
+                .build();
+        RyPoint computed_11 = new RyPoint.Builder("11")
+                .setEasting("621067.751")
+                .setNorthing("263207.324")
+                .setHeight("-----")
+                .build();
+        RyPoint computed_12 = new RyPoint.Builder("12")
+                .setEasting("621065.060")
+                .setNorthing("263208.650")
+                .setHeight("-----")
+                .build();
+        RyPoint computed_13 = new RyPoint.Builder("13")
+                .setEasting("621062.401")
+                .setNorthing("263210.040")
+                .setHeight("-----")
+                .build();
+        RyPoint computed_14 = new RyPoint.Builder("14")
+                .setEasting("621059.777")
+                .setNorthing("263211.493")
+                .setHeight("-----")
+                .build();
+        RyPoint computed_15 = new RyPoint.Builder("15")
+                .setEasting("621057.188")
+                .setNorthing("263213.008")
+                .setHeight("-----")
+                .build();
+        RyPoint computed_16 = new RyPoint.Builder("16")
+                .setEasting("621054.636")
+                .setNorthing("263214.586")
+                .setHeight("-----")
+                .build();
 
         List<RyPoint> transformedPoints = cogoStructureShiftRotateScale.getComputedPoints();
 
@@ -236,10 +419,26 @@ class CogoStructureIT {
 
     @Test
     void getComputedPointsForArcSegmentation() {
-        RyPoint p1 = new RyPoint("R MH1", "629490.733", "268733.806", "297.850");
-        RyPoint p2 = new RyPoint("R MH2", "629490.732", "268733.807", "297.851");
-        RyPoint p3 = new RyPoint("R MH3", "629490.731", "268733.808", "297.852");
-        RyPoint p4 = new RyPoint("R MH4", "629490.730", "268733.809", "297.853");
+        RyPoint p1 = new RyPoint.Builder("R MH1")
+                .setEasting("629490.733")
+                .setNorthing("268733.806")
+                .setHeight("297.850")
+                .build();
+        RyPoint p2 = new RyPoint.Builder("R MH2")
+                .setEasting("629490.732")
+                .setNorthing("268733.807")
+                .setHeight("297.851")
+                .build();
+        RyPoint p3 = new RyPoint.Builder("R MH3")
+                .setEasting("629490.731")
+                .setNorthing("268733.808")
+                .setHeight("297.852")
+                .build();
+        RyPoint p4 = new RyPoint.Builder("R MH4")
+                .setEasting("629490.730")
+                .setNorthing("268733.809")
+                .setHeight("297.853")
+                .build();
 
         List<RyPoint> computedPoints = cogoStructureArcSegmentationInfo.getComputedPoints();
 
@@ -253,18 +452,56 @@ class CogoStructureIT {
 
     @Test
     void getComputedPointsForIntersectionFourPoints() {
-        RyPoint id01 = new RyPoint("5E", "6250.933", "2176.430", "-----");
-        RyPoint id02 = new RyPoint("3E", "6246.990", "2176.430", "-----");
-        RyPoint id03 = new RyPoint("6E", "6249.933", "2177.430", "-----");
-        RyPoint id04 = new RyPoint("8E", "6249.933", "2173.487", "-----");
-
-        RyPoint id11 = new RyPoint("9E", "6250.933", "2174.487", "-----");
-        RyPoint id12 = new RyPoint("11E", "6246.990", "2174.487", "-----");
-        RyPoint id13 = new RyPoint("6E", "6249.933", "2177.430", "-----");
-        RyPoint id14 = new RyPoint("8E", "6249.933", "2173.487", "-----");
-
-        RyPoint computed1 = new RyPoint("13E", "6249.933", "2176.430", "-----");
-        RyPoint computed2 = new RyPoint("14E", "6249.933", "2174.487", "-----");
+        RyPoint id01 = new RyPoint.Builder("5E")
+                .setEasting("6250.933")
+                .setNorthing("2176.430")
+                .setHeight("-----")
+                .build();
+        RyPoint id02 = new RyPoint.Builder("3E")
+                .setEasting("6246.990")
+                .setNorthing("2176.430")
+                .setHeight("-----")
+                .build();
+        RyPoint id03 = new RyPoint.Builder("6E")
+                .setEasting("6249.933")
+                .setNorthing("2177.430")
+                .setHeight("-----")
+                .build();
+        RyPoint id04 = new RyPoint.Builder("8E")
+                .setEasting("6249.933")
+                .setNorthing("2173.487")
+                .setHeight("-----")
+                .build();
+        RyPoint id11 = new RyPoint.Builder("9E")
+                .setEasting("6250.933")
+                .setNorthing("2174.487")
+                .setHeight("-----")
+                .build();
+        RyPoint id12 = new RyPoint.Builder("11E")
+                .setEasting("6246.990")
+                .setNorthing("2174.487")
+                .setHeight("-----")
+                .build();
+        RyPoint id13 = new RyPoint.Builder("6E")
+                .setEasting("6249.933")
+                .setNorthing("2177.430")
+                .setHeight("-----")
+                .build();
+        RyPoint id14 = new RyPoint.Builder("8E")
+                .setEasting("6249.933")
+                .setNorthing("2173.487")
+                .setHeight("-----")
+                .build();
+        RyPoint computed1 = new RyPoint.Builder("13E")
+                .setEasting("6249.933")
+                .setNorthing("2176.430")
+                .setHeight("-----")
+                .build();
+        RyPoint computed2 = new RyPoint.Builder("14E")
+                .setEasting("6249.933")
+                .setNorthing("2174.487")
+                .setHeight("-----")
+                .build();
 
         List<RyPoint> computedPoints = cogoStructureIntersectionFourPoints.getComputedPoints();
         List<RyIntersection> intersections = cogoStructureIntersectionFourPoints.getIntersections();
@@ -288,8 +525,16 @@ class CogoStructureIT {
 
     @Test
     void getComputedPointsForInverse() {
-        final RyPoint from = new RyPoint("1", "6243.086", "2200.414", "244.940");
-        final RyPoint to = new RyPoint("2", "6213.109", "2202.264", "244.940");
+        final RyPoint from = new RyPoint.Builder("1")
+                .setEasting("6243.086")
+                .setNorthing("2200.414")
+                .setHeight("244.940")
+                .build();
+        final RyPoint to = new RyPoint.Builder("2")
+                .setEasting("6213.109")
+                .setNorthing("2202.264")
+                .setHeight("244.940")
+                .build();
 
         final String direction = "303.9223";
         final String distance = "30.034";
@@ -311,13 +556,36 @@ class CogoStructureIT {
         assertEquals(distance1, cogoStructureIntersectionDistanceDistance.getIntersections().get(0).getDistance1());
         assertEquals(distance2, cogoStructureIntersectionDistanceDistance.getIntersections().get(0).getDistance2());
 
-        RyPoint start1 = new RyPoint("318", "2613619.086", "1260823.689", "325.528");
-        RyPoint end1 = new RyPoint("310", "2613619.086", "1260863.565", "323.530");
-        RyPoint computed1 = new RyPoint("R1", "2613943.584", "1260845.514", "325.528");
-
-        RyPoint start2 = new RyPoint("318", "2613619.086", "1260823.689", "325.528");
-        RyPoint end2 = new RyPoint("310", "2613619.086", "1260863.565", "323.530");
-        RyPoint computed2 = new RyPoint("R2", "2613294.820", "1260841.740", "325.528");
+        RyPoint start1 = new RyPoint.Builder("318")
+                .setEasting("2613619.086")
+                .setNorthing("1260823.689")
+                .setHeight("325.528")
+                .build();
+        RyPoint end1 = new RyPoint.Builder("310")
+                .setEasting("2613619.086")
+                .setNorthing("1260863.565")
+                .setHeight("323.530")
+                .build();
+        RyPoint computed1 = new RyPoint.Builder("R1")
+                .setEasting("2613943.584")
+                .setNorthing("1260845.514")
+                .setHeight("325.528")
+                .build();
+        RyPoint start2 = new RyPoint.Builder("318")
+                .setEasting("2613619.086")
+                .setNorthing("1260823.689")
+                .setHeight("325.528")
+                .build();
+        RyPoint end2 = new RyPoint.Builder("310")
+                .setEasting("2613619.086")
+                .setNorthing("1260863.565")
+                .setHeight("323.530")
+                .build();
+        RyPoint computed2 = new RyPoint.Builder("R2")
+                .setEasting("2613294.820")
+                .setNorthing("1260841.740")
+                .setHeight("325.528")
+                .build();
 
         List<RyPoint> computedPoints = cogoStructureIntersectionDistanceDistance.getComputedPoints();
         List<RyIntersection> intersections = cogoStructureIntersectionDistanceDistance.getIntersections();
@@ -336,8 +604,16 @@ class CogoStructureIT {
 
     @Test
     void getComputedPointsForLineSegmentation() {
-        RyPoint start = new RyPoint("2", "617187.520", "264445.281", "284.317");
-        RyPoint end = new RyPoint("1", "617192.135", "264452.911", "280.218");
+        RyPoint start = new RyPoint.Builder("2")
+                .setEasting("617187.520")
+                .setNorthing("264445.281")
+                .setHeight("284.317")
+                .build();
+        RyPoint end = new RyPoint.Builder("1")
+                .setEasting("617192.135")
+                .setNorthing("264452.911")
+                .setHeight("280.218")
+                .build();
 
         assertEquals(start, cogoStructureLineSegmentationInfo.getStartPoint());
         assertEquals(end, cogoStructureLineSegmentationInfo.getEndPoint());
@@ -358,12 +634,31 @@ class CogoStructureIT {
         assertEquals(segmentsLength, cogoStructureLineSegmentationInfo.getSegmentsLength());
         assertEquals(method, cogoStructureLineSegmentationInfo.getSegmentationMethod());
 
-
-        RyPoint r1 = new RyPoint("100", "617188.290", "264446.552", "283.633");
-        RyPoint r2 = new RyPoint("101", "617189.059", "264447.824", "282.950");
-        RyPoint r3 = new RyPoint("102", "617189.828", "264449.096", "282.267");
-        RyPoint r4 = new RyPoint("103", "617190.597", "264450.367", "281.584");
-        RyPoint r5 = new RyPoint("104", "617191.366", "264451.639", "280.901");
+        RyPoint r1 = new RyPoint.Builder("100")
+                .setEasting("617188.290")
+                .setNorthing("264446.552")
+                .setHeight("283.633")
+                .build();
+        RyPoint r2 = new RyPoint.Builder("101")
+                .setEasting("617189.059")
+                .setNorthing("264447.824")
+                .setHeight("282.950")
+                .build();
+        RyPoint r3 = new RyPoint.Builder("102")
+                .setEasting("617189.828")
+                .setNorthing("264449.096")
+                .setHeight("282.267")
+                .build();
+        RyPoint r4 = new RyPoint.Builder("103")
+                .setEasting("617190.597")
+                .setNorthing("264450.367")
+                .setHeight("281.584")
+                .build();
+        RyPoint r5 = new RyPoint.Builder("104")
+                .setEasting("617191.366")
+                .setNorthing("264451.639")
+                .setHeight("280.901")
+                .build();
 
         List<RyPoint> computedPoints = cogoStructureLineSegmentationInfo.getComputedPoints();
 
@@ -378,20 +673,48 @@ class CogoStructureIT {
 
     @Test
     void getComputedTraverse() {
-        final RyPoint fromPoint1 = new RyPoint("F4", "-10.156", "0.000", "-----");
+        final RyPoint fromPoint1 = new RyPoint.Builder("F4")
+                .setEasting("-10.156")
+                .setNorthing("0.000")
+                .setHeight("-----")
+                .build();
+        final RyPoint toPoint1 = new RyPoint.Builder("7")
+                .setEasting("-10.156")
+                .setNorthing("0.000")
+                .setHeight("-----")
+                .build();
+
         final String direction1 = "365.0000";
         final String distance1 = "0.000";
-        final RyPoint toPoint1 = new RyPoint("7", "-10.156", "0.000", "-----");
 
-        final RyPoint fromPoint2 = new RyPoint("D6", "7.844", "-16.500", "-----");
+
+        final RyPoint fromPoint2 = new RyPoint.Builder("D6")
+                .setEasting("7.844")
+                .setNorthing("-16.500")
+                .setHeight("-----")
+                .build();
+        final RyPoint toPoint2 = new RyPoint.Builder("5")
+                .setEasting("4.157")
+                .setNorthing("-13.235")
+                .setHeight("-----")
+                .build();
+
         final String direction2 = "272.7662";
         final String distance2 = "2.000";
-        final RyPoint toPoint2 = new RyPoint("5", "4.157", "-13.235", "-----");
 
-        final RyPoint fromPoint7 = new RyPoint("H4", "-10.156", "0.000", "-----");
+        final RyPoint fromPoint7 = new RyPoint.Builder("H4")
+                .setEasting("-10.156")
+                .setNorthing("0.000")
+                .setHeight("-----")
+                .build();
+        final RyPoint toPoint7 = new RyPoint.Builder("7")
+                .setEasting("-10.156")
+                .setNorthing("0.000")
+                .setHeight("-----")
+                .build();
+
         final String direction7 = "365.0000";
         final String distance7 = "0.000";
-        final RyPoint toPoint7 = new RyPoint("7", "-10.156", "0.000", "-----");
 
         List<RyTraverse> traverses = cogoStructureTraverse.getTraverses();
 

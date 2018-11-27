@@ -18,7 +18,7 @@
 package de.ryanthara.ja.rycon.core.converter.gsi;
 
 import de.ryanthara.ja.rycon.core.converter.zeiss.ZeissDecoder;
-import de.ryanthara.ja.rycon.core.elements.GsiBlock;
+import de.ryanthara.ja.rycon.core.elements.GSIBlock;
 import de.ryanthara.ja.rycon.core.elements.ZeissBlock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,8 +70,8 @@ public class Zeiss2Gsi {
      * @return converted {@code List<String>} with lines of text format
      */
     public List<String> convert(boolean isGSI16) {
-        List<GsiBlock> blocks = new ArrayList<>();
-        List<List<GsiBlock>> blocksInLines = new ArrayList<>();
+        List<GSIBlock> blocks = new ArrayList<>();
+        List<List<GSIBlock>> blocksInLines = new ArrayList<>();
 
         String pointNumber = "";
 
@@ -117,7 +117,7 @@ public class Zeiss2Gsi {
                         writeLineCounter = writeLineCounter + 1;
 
                         // run the new line information
-                        blocks.add(new GsiBlock(isGSI16, 11, readLineCounter, pointNumber));
+                        blocks.add(new GSIBlock(isGSI16, 11, readLineCounter, pointNumber));
                     }
 
                     for (ZeissBlock zeissBlock : decoder.getZeissBlocks()) {
@@ -137,46 +137,46 @@ public class Zeiss2Gsi {
         return BaseToolsGsi.lineTransformation(isGSI16, blocksInLines);
     }
 
-    private void fillValuesIntoBlocks(ZeissBlock zeissBlock, List<GsiBlock> blocks, boolean isGSI16, int readLineCounter) {
+    private void fillValuesIntoBlocks(ZeissBlock zeissBlock, List<GSIBlock> blocks, boolean isGSI16, int readLineCounter) {
         switch (zeissBlock.getTypeIdentifier()) {
             case ah:
                 // target height
-                blocks.add(new GsiBlock(isGSI16, 87, zeissBlock.getValue()));
+                blocks.add(new GSIBlock(isGSI16, 87, zeissBlock.getValue()));
                 break;
 
             case dR:
                 // station difference (levelling)
-                blocks.add(new GsiBlock(isGSI16, 571, zeissBlock.getValue()));
+                blocks.add(new GSIBlock(isGSI16, 571, zeissBlock.getValue()));
                 break;
 
             case dx:
                 // northing coordinate difference
-                blocks.add(new GsiBlock(isGSI16, 85, zeissBlock.getValue()));
+                blocks.add(new GSIBlock(isGSI16, 85, zeissBlock.getValue()));
                 break;
 
             case dy:
                 // easting coordinate difference
-                blocks.add(new GsiBlock(isGSI16, 84, zeissBlock.getValue()));
+                blocks.add(new GSIBlock(isGSI16, 84, zeissBlock.getValue()));
                 break;
 
             case dz:
                 // height coordinate difference
-                blocks.add(new GsiBlock(isGSI16, 86, zeissBlock.getValue()));
+                blocks.add(new GSIBlock(isGSI16, 86, zeissBlock.getValue()));
                 break;
 
             case h:
                 // height difference
-                blocks.add(new GsiBlock(isGSI16, 33, zeissBlock.getValue()));
+                blocks.add(new GSIBlock(isGSI16, 33, zeissBlock.getValue()));
                 break;
 
             case hz:
                 // desired horizontal angle
-                blocks.add(new GsiBlock(isGSI16, 24, zeissBlock.getValue()));
+                blocks.add(new GSIBlock(isGSI16, 24, zeissBlock.getValue()));
                 break;
 
             case ih:
                 // instrument height
-                blocks.add(new GsiBlock(isGSI16, 88, zeissBlock.getValue()));
+                blocks.add(new GSIBlock(isGSI16, 88, zeissBlock.getValue()));
                 break;
 
             case pm:
@@ -187,42 +187,42 @@ public class Zeiss2Gsi {
 
             case th:
                 // target height
-                blocks.add(new GsiBlock(isGSI16, 87, zeissBlock.getValue()));
+                blocks.add(new GSIBlock(isGSI16, 87, zeissBlock.getValue()));
                 break;
 
             case v1:
                 // desired vertical angle
-                blocks.add(new GsiBlock(isGSI16, 27, zeissBlock.getValue()));
+                blocks.add(new GSIBlock(isGSI16, 27, zeissBlock.getValue()));
                 break;
 
             case x:
                 // local easting coordinate
-                blocks.add(new GsiBlock(isGSI16, 84, zeissBlock.getValue()));
+                blocks.add(new GSIBlock(isGSI16, 84, zeissBlock.getValue()));
                 break;
 
             case y:
                 // local northing coordinate
-                blocks.add(new GsiBlock(isGSI16, 85, zeissBlock.getValue()));
+                blocks.add(new GSIBlock(isGSI16, 85, zeissBlock.getValue()));
                 break;
 
             case A:
                 // addition constant 1/10mm
-                blocks.add(new GsiBlock(isGSI16, 58, zeissBlock.getValue()));
+                blocks.add(new GSIBlock(isGSI16, 58, zeissBlock.getValue()));
                 break;
 
             case D:
                 // slope distance
-                blocks.add(new GsiBlock(isGSI16, 31, zeissBlock.getValue()));
+                blocks.add(new GSIBlock(isGSI16, 31, zeissBlock.getValue()));
                 break;
 
             case Dh:
                 // horizontal angle difference (Hz0 - Hz)
-                blocks.add(new GsiBlock(isGSI16, 25, zeissBlock.getValue()));
+                blocks.add(new GSIBlock(isGSI16, 25, zeissBlock.getValue()));
                 break;
 
             case Dv:
                 // vertical angle difference (V0 - V)
-                blocks.add(new GsiBlock(isGSI16, 28, zeissBlock.getValue()));
+                blocks.add(new GSIBlock(isGSI16, 28, zeissBlock.getValue()));
                 break;
 
             case DI:
@@ -233,22 +233,22 @@ public class Zeiss2Gsi {
 
             case E:
                 // horizontal distance
-                blocks.add(new GsiBlock(isGSI16, 32, zeissBlock.getValue()));
+                blocks.add(new GSIBlock(isGSI16, 32, zeissBlock.getValue()));
                 break;
 
             case Hz:
                 // horizontal angle
-                blocks.add(new GsiBlock(isGSI16, 21, zeissBlock.getValue()));
+                blocks.add(new GSIBlock(isGSI16, 21, zeissBlock.getValue()));
                 break;
 
             case HD:
                 // horizontal distance
-                blocks.add(new GsiBlock(isGSI16, 32, zeissBlock.getValue()));
+                blocks.add(new GSIBlock(isGSI16, 32, zeissBlock.getValue()));
                 break;
 
             case HV:
                 // offset, maybe horizontal rotation
-                blocks.add(new GsiBlock(isGSI16, 26, zeissBlock.getValue()));
+                blocks.add(new GSIBlock(isGSI16, 26, zeissBlock.getValue()));
                 break;
 
             case KA:
@@ -265,12 +265,12 @@ public class Zeiss2Gsi {
 
             case KD:
                 // point identification: beginning and end of a levelling line
-                blocks.add(new GsiBlock(isGSI16, 41, "?......1"));
+                blocks.add(new GSIBlock(isGSI16, 41, "?......1"));
                 break;
 
             case KN:
                 // point identification: beginning and end of a levelling line
-                blocks.add(new GsiBlock(isGSI16, 41, "?......1"));
+                blocks.add(new GSIBlock(isGSI16, 41, "?......1"));
                 break;
 
             case KR:
@@ -280,22 +280,22 @@ public class Zeiss2Gsi {
 
             case L:
                 // single staff reading at levelling
-                blocks.add(new GsiBlock(isGSI16, 330, zeissBlock.getValue()));
+                blocks.add(new GSIBlock(isGSI16, 330, zeissBlock.getValue()));
                 break;
 
             case Lr:
                 // backwards staff reading at levelling
-                blocks.add(new GsiBlock(isGSI16, 331, zeissBlock.getValue()));
+                blocks.add(new GSIBlock(isGSI16, 331, zeissBlock.getValue()));
                 break;
 
             case Lv:
                 // forward staff reading at levelling
-                blocks.add(new GsiBlock(isGSI16, 332, zeissBlock.getValue()));
+                blocks.add(new GSIBlock(isGSI16, 332, zeissBlock.getValue()));
                 break;
 
             case Lz:
                 // intermediate staff reading at levelling
-                blocks.add(new GsiBlock(isGSI16, 332, zeissBlock.getValue()));
+                blocks.add(new GSIBlock(isGSI16, 332, zeissBlock.getValue()));
                 break;
 
             case PI:
@@ -305,72 +305,72 @@ public class Zeiss2Gsi {
 
             case SD:
                 // slope distance
-                blocks.add(new GsiBlock(isGSI16, 31, zeissBlock.getValue()));
+                blocks.add(new GSIBlock(isGSI16, 31, zeissBlock.getValue()));
                 break;
 
             case T:
                 // text information
-                blocks.add(new GsiBlock(isGSI16, 42, zeissBlock.getValue()));
+                blocks.add(new GSIBlock(isGSI16, 42, zeissBlock.getValue()));
                 break;
 
             case TI:
                 // text information
-                blocks.add(new GsiBlock(isGSI16, 42, zeissBlock.getValue()));
+                blocks.add(new GSIBlock(isGSI16, 42, zeissBlock.getValue()));
                 break;
 
             case TN:
                 // general text information (levelling)
-                blocks.add(new GsiBlock(isGSI16, 42, zeissBlock.getValue()));
+                blocks.add(new GSIBlock(isGSI16, 42, zeissBlock.getValue()));
                 break;
 
             case TO:
                 // general text information (levelling)
-                blocks.add(new GsiBlock(isGSI16, 42, zeissBlock.getValue()));
+                blocks.add(new GSIBlock(isGSI16, 42, zeissBlock.getValue()));
                 break;
 
             case TR:
                 // text information
-                blocks.add(new GsiBlock(isGSI16, 42, zeissBlock.getValue()));
+                blocks.add(new GSIBlock(isGSI16, 42, zeissBlock.getValue()));
                 break;
 
             case V1:
                 // vertical angle
-                blocks.add(new GsiBlock(isGSI16, 22, zeissBlock.getValue()));
+                blocks.add(new GSIBlock(isGSI16, 22, zeissBlock.getValue()));
                 break;
 
             case X:
                 // northing coordinate
-                blocks.add(new GsiBlock(isGSI16, 82, zeissBlock.getValue()));
+                blocks.add(new GSIBlock(isGSI16, 82, zeissBlock.getValue()));
                 break;
 
             case X_:
                 // northing coordinate
-                blocks.add(new GsiBlock(isGSI16, 82, zeissBlock.getValue()));
+                blocks.add(new GSIBlock(isGSI16, 82, zeissBlock.getValue()));
                 break;
 
             case Y:
                 // easting coordinate
-                blocks.add(new GsiBlock(isGSI16, 81, zeissBlock.getValue()));
+                blocks.add(new GSIBlock(isGSI16, 81, zeissBlock.getValue()));
                 break;
 
             case Y_:
                 // easting coordinate
-                blocks.add(new GsiBlock(isGSI16, 81, zeissBlock.getValue()));
+                blocks.add(new GSIBlock(isGSI16, 81, zeissBlock.getValue()));
                 break;
 
             case Z:
                 // height coordinate
-                blocks.add(new GsiBlock(isGSI16, 83, zeissBlock.getValue()));
+                blocks.add(new GSIBlock(isGSI16, 83, zeissBlock.getValue()));
                 break;
 
             case ZE:
                 // height coordinate
-                blocks.add(new GsiBlock(isGSI16, 83, zeissBlock.getValue()));
+                blocks.add(new GSIBlock(isGSI16, 83, zeissBlock.getValue()));
                 break;
 
             case Z_:
                 // height coordinate
-                blocks.add(new GsiBlock(isGSI16, 83, zeissBlock.getValue()));
+                blocks.add(new GSIBlock(isGSI16, 83, zeissBlock.getValue()));
                 break;
 
             default:
@@ -408,38 +408,38 @@ public class Zeiss2Gsi {
     The point number and code number are stored in an combined string and has to be split here.
      */
     // TODO find out how the point and code number storing is organized
-    private void preparePointAndCodeNumber(List<GsiBlock> blocks, ZeissBlock zeissBlock, boolean isGSI16) {
+    private void preparePointAndCodeNumber(List<GSIBlock> blocks, ZeissBlock zeissBlock, boolean isGSI16) {
         String s = zeissBlock.getValue();
 
         String codeNumber = "", pointNumber = "";
 
-        blocks.add(new GsiBlock(isGSI16, 11, pointNumber));
-        blocks.add(new GsiBlock(isGSI16, 41, codeNumber));
+        blocks.add(new GSIBlock(isGSI16, 11, pointNumber));
+        blocks.add(new GSIBlock(isGSI16, 41, codeNumber));
     }
 
     /*
     Writes values that are read from more than one Zeiss REC line into one GSI block (e.g. date and time,
     or ppm and prism constant)
      */
-    private void writeMultiLinedValues(List<GsiBlock> blocks, boolean isGSI16) {
+    private void writeMultiLinedValues(List<GSIBlock> blocks, boolean isGSI16) {
         // date and time
         if ((dateLine == timeLine) || (dateLine == timeLine + 1)) {
             // writer blocks for date and time strings
-            blocks.add(new GsiBlock(isGSI16, 18, format1));
-            blocks.add(new GsiBlock(isGSI16, 19, format2));
+            blocks.add(new GSIBlock(isGSI16, 18, format1));
+            blocks.add(new GSIBlock(isGSI16, 19, format2));
 
             // reset helper values
             dateLine = -1;
             timeLine = -1;
         } else if (dateLine > timeLine) {
             // writer block for date string
-            blocks.add(new GsiBlock(isGSI16, 18, format1));
+            blocks.add(new GSIBlock(isGSI16, 18, format1));
 
             // reset helper value
             dateLine = -1;
         } else {
             // writer block for time string
-            blocks.add(new GsiBlock(isGSI16, 19, format1));
+            blocks.add(new GSIBlock(isGSI16, 19, format1));
 
             // reset helper value
             timeLine = -1;
@@ -448,7 +448,7 @@ public class Zeiss2Gsi {
         // ppm and prism constant
         if ((constantLine >= ppmLine + 1) || (constantLine <= ppmLine + 1)) {
             // writer block
-            blocks.add(new GsiBlock(isGSI16, 51, ppmAndAdditionConstant));
+            blocks.add(new GSIBlock(isGSI16, 51, ppmAndAdditionConstant));
 
             // reset helper values
             constantLine = -1;

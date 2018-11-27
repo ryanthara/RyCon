@@ -20,9 +20,9 @@ package de.ryanthara.ja.rycon.ui.widgets;
 import de.ryanthara.ja.rycon.Main;
 import de.ryanthara.ja.rycon.data.DefaultKey;
 import de.ryanthara.ja.rycon.data.PreferenceKey;
-import de.ryanthara.ja.rycon.i18n.Preference;
+import de.ryanthara.ja.rycon.i18n.Preferences;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
-import de.ryanthara.ja.rycon.i18n.Text;
+import de.ryanthara.ja.rycon.i18n.Texts;
 import de.ryanthara.ja.rycon.ui.custom.DirectoryDialogsTyp;
 import de.ryanthara.ja.rycon.ui.preferences.PreferencesDialog;
 import de.ryanthara.ja.rycon.ui.preferences.pref.*;
@@ -34,8 +34,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static de.ryanthara.ja.rycon.core.converter.zeiss.ZeissDialect.*;
-import static de.ryanthara.ja.rycon.i18n.ResourceBundle.PREFERENCE;
-import static de.ryanthara.ja.rycon.i18n.ResourceBundle.TEXT;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.PREFERENCE;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.TEXT;
 
 /**
  * The {@code SettingsWidget} is the dialog to change all the preferences of RyCON.
@@ -70,8 +70,8 @@ public class SettingsWidget {
     private void createDialog() {
         PreferencesDialog dialog = new PreferencesDialog(
                 parent,
-                ResourceBundleUtils.getLangStringFromXml(TEXT, Text.preferencesDialog_Text),
-                ResourceBundleUtils.getLangStringFromXml(TEXT, Text.preferencesDialog_Message));
+                ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.preferencesDialog_Text),
+                ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.preferencesDialog_Message));
 
         createTabGeneral(dialog);
         createTabFiles(dialog);
@@ -85,12 +85,12 @@ public class SettingsWidget {
     }
 
     private void createTabFormats(PreferencesDialog dialog) {
-        dialog.addCategory(ResourceBundleUtils.getLangString(PREFERENCE, Preference.category_Formats));
+        dialog.addCategory(ResourceBundleUtils.getLangString(PREFERENCE, Preferences.category_Formats));
 
-        dialog.addGroup(ResourceBundleUtils.getLangString(PREFERENCE, Preference.group_FormatsTitle));
+        dialog.addGroup(ResourceBundleUtils.getLangString(PREFERENCE, Preferences.group_FormatsTitle));
 
         dialog.addPreference(new PreferenceBoolean(
-                ResourceBundleUtils.getLangString(PREFERENCE, Preference.addTraillingZeroes),
+                ResourceBundleUtils.getLangString(PREFERENCE, Preferences.addTraillingZeroes),
                 Boolean.valueOf(DefaultKey.ADD_TRAILING_ZEROES.getValue())) {
 
             public Boolean getValue() {
@@ -103,7 +103,7 @@ public class SettingsWidget {
         });
 
         dialog.addPreference(new PreferenceBoolean(
-                ResourceBundleUtils.getLangString(PREFERENCE, Preference.addSpaceAtLineEnd),
+                ResourceBundleUtils.getLangString(PREFERENCE, Preferences.addSpaceAtLineEnd),
                 Boolean.valueOf(DefaultKey.GSI_SETTING_LINE_ENDING_WITH_BLANK.getValue())) {
 
             public Boolean getValue() {
@@ -116,7 +116,7 @@ public class SettingsWidget {
         });
 
         dialog.addPreference(new PreferenceSelection(
-                ResourceBundleUtils.getLangString(PREFERENCE, Preference.defaultZeissFormat),
+                ResourceBundleUtils.getLangString(PREFERENCE, Preferences.defaultZeissFormat),
                 new String[]{R4.name(), R5.name(), REC500.name(), M5.name()},
                 DefaultKey.CONVERTER_SETTING_ZEISS_DIALECT.getValue()) {
 
@@ -135,12 +135,12 @@ public class SettingsWidget {
     }
 
     private void createTabGeneral(PreferencesDialog dialog) {
-        dialog.addCategory(ResourceBundleUtils.getLangString(PREFERENCE, Preference.category_General));
+        dialog.addCategory(ResourceBundleUtils.getLangString(PREFERENCE, Preferences.category_General));
 
-        dialog.addGroup(ResourceBundleUtils.getLangString(PREFERENCE, Preference.group_GeneralSettingsTitle));
+        dialog.addGroup(ResourceBundleUtils.getLangString(PREFERENCE, Preferences.group_GeneralSettingsTitle));
 
         dialog.addPreference(new PreferenceString(
-                ResourceBundleUtils.getLangString(PREFERENCE, Preference.userString),
+                ResourceBundleUtils.getLangString(PREFERENCE, Preferences.userString),
                 DefaultKey.PARAM_USER_STRING.getValue()) {
 
             public String getValue() {
@@ -153,7 +153,7 @@ public class SettingsWidget {
         });
 
         dialog.addPreference(new PreferenceDouble(
-                ResourceBundleUtils.getLangString(PREFERENCE, Preference.equalPointsMinimumDistance),
+                ResourceBundleUtils.getLangString(PREFERENCE, Preferences.equalPointsMinimumDistance),
                 0.005, 0.10,
                 Double.valueOf(DefaultKey.CONVERTER_SETTING_POINT_IDENTICAL_DISTANCE.getValue())) {
 
@@ -170,12 +170,12 @@ public class SettingsWidget {
     }
 
     private void createTabModules(PreferencesDialog dialog) {
-        dialog.addCategory(ResourceBundleUtils.getLangString(PREFERENCE, Preference.category_Modules));
+        dialog.addCategory(ResourceBundleUtils.getLangString(PREFERENCE, Preferences.category_Modules));
 
-        dialog.addGroup(ResourceBundleUtils.getLangString(PREFERENCE, Preference.group_ClearUpTitle));
+        dialog.addGroup(ResourceBundleUtils.getLangString(PREFERENCE, Preferences.group_ClearUpTitle));
 
         dialog.addPreference(new PreferenceString(
-                ResourceBundleUtils.getLangString(PREFERENCE, Preference.clearUpIdentifierFreeStation),
+                ResourceBundleUtils.getLangString(PREFERENCE, Preferences.clearUpIdentifierFreeStation),
                 DefaultKey.PARAM_FREE_STATION_STRING.getValue()) {
 
             @Override
@@ -190,7 +190,7 @@ public class SettingsWidget {
         });
 
         dialog.addPreference(new PreferenceString(
-                ResourceBundleUtils.getLangString(PREFERENCE, Preference.clearUpIdentifierKnownStation),
+                ResourceBundleUtils.getLangString(PREFERENCE, Preferences.clearUpIdentifierKnownStation),
                 DefaultKey.PARAM_KNOWN_STATION_STRING.getValue()) {
 
             @Override
@@ -205,7 +205,7 @@ public class SettingsWidget {
         });
 
         dialog.addPreference(new PreferenceString(
-                ResourceBundleUtils.getLangString(PREFERENCE, Preference.clearUpIdentifierStakeOut),
+                ResourceBundleUtils.getLangString(PREFERENCE, Preferences.clearUpIdentifierStakeOut),
                 DefaultKey.PARAM_CONTROL_POINT_STRING.getValue()) {
 
             @Override
@@ -219,10 +219,10 @@ public class SettingsWidget {
             }
         });
 
-        dialog.addGroup(ResourceBundleUtils.getLangString(PREFERENCE, Preference.group_ConverterTitle));
+        dialog.addGroup(ResourceBundleUtils.getLangString(PREFERENCE, Preferences.group_ConverterTitle));
 
         dialog.addPreference(new PreferenceBoolean(
-                ResourceBundleUtils.getLangString(PREFERENCE, Preference.convertZeroCoordinates),
+                ResourceBundleUtils.getLangString(PREFERENCE, Preferences.convertZeroCoordinates),
                 Boolean.valueOf(DefaultKey.CONVERTER_SETTING_ELIMINATE_ZERO_COORDINATE.getValue())) {
 
             @Override
@@ -237,7 +237,7 @@ public class SettingsWidget {
         });
 
         dialog.addPreference(new PreferenceBoolean(
-                ResourceBundleUtils.getLangString(PREFERENCE, Preference.ltopUseZenithDistance),
+                ResourceBundleUtils.getLangString(PREFERENCE, Preferences.ltopUseZenithDistance),
                 Boolean.valueOf(DefaultKey.CONVERTER_SETTING_LTOP_USE_ZENITH_DISTANCE.getValue())) {
 
             @Override
@@ -255,12 +255,12 @@ public class SettingsWidget {
     }
 
     private void createTabFiles(PreferencesDialog dialog) {
-        dialog.addCategory(ResourceBundleUtils.getLangString(PREFERENCE, Preference.category_Files));
+        dialog.addCategory(ResourceBundleUtils.getLangString(PREFERENCE, Preferences.category_Files));
 
-        dialog.addGroup(ResourceBundleUtils.getLangString(PREFERENCE, Preference.group_FileHandling));
+        dialog.addGroup(ResourceBundleUtils.getLangString(PREFERENCE, Preferences.group_FileHandling));
 
         dialog.addPreference(new PreferenceBoolean(
-                ResourceBundleUtils.getLangString(PREFERENCE, Preference.overwriteExistingFiles),
+                ResourceBundleUtils.getLangString(PREFERENCE, Preferences.overwriteExistingFiles),
                 Boolean.valueOf(DefaultKey.OVERWRITE_EXISTING.getValue())) {
 
             public Boolean getValue() {
@@ -272,10 +272,10 @@ public class SettingsWidget {
             }
         });
 
-        dialog.addGroup(ResourceBundleUtils.getLangString(PREFERENCE, Preference.group_FileExtensions));
+        dialog.addGroup(ResourceBundleUtils.getLangString(PREFERENCE, Preferences.group_FileExtensions));
 
         dialog.addPreference(new PreferenceString(
-                ResourceBundleUtils.getLangString(PREFERENCE, Preference.fileCompletion_Converter),
+                ResourceBundleUtils.getLangString(PREFERENCE, Preferences.fileCompletion_Converter),
                 DefaultKey.PARAM_EDIT_STRING.getValue()) {
 
             public String getValue() {
@@ -288,7 +288,7 @@ public class SettingsWidget {
         });
 
         dialog.addPreference(new PreferenceString(
-                ResourceBundleUtils.getLangString(PREFERENCE, Preference.fileCompletion_Splitter),
+                ResourceBundleUtils.getLangString(PREFERENCE, Preferences.fileCompletion_Splitter),
                 DefaultKey.PARAM_CODE_STRING.getValue()) {
 
             @Override
@@ -303,7 +303,7 @@ public class SettingsWidget {
         });
 
         dialog.addPreference(new PreferenceString(
-                ResourceBundleUtils.getLangString(PREFERENCE, Preference.fileCompletion_Levelling),
+                ResourceBundleUtils.getLangString(PREFERENCE, Preferences.fileCompletion_Levelling),
                 DefaultKey.PARAM_LEVEL_STRING.getValue()) {
 
             @Override
@@ -318,7 +318,7 @@ public class SettingsWidget {
         });
 
         dialog.addPreference(new PreferenceString(
-                ResourceBundleUtils.getLangString(PREFERENCE, Preference.fileCompletion_Ltop),
+                ResourceBundleUtils.getLangString(PREFERENCE, Preferences.fileCompletion_Ltop),
                 DefaultKey.PARAM_LTOP_STRING.getValue()) {
 
             @Override
@@ -336,12 +336,12 @@ public class SettingsWidget {
     }
 
     private void createTabPaths(PreferencesDialog dialog) {
-        dialog.addCategory(ResourceBundleUtils.getLangString(PREFERENCE, Preference.category_Paths));
+        dialog.addCategory(ResourceBundleUtils.getLangString(PREFERENCE, Preferences.category_Paths));
 
-        dialog.addGroup(ResourceBundleUtils.getLangString(PREFERENCE, Preference.group_PathBase));
+        dialog.addGroup(ResourceBundleUtils.getLangString(PREFERENCE, Preferences.group_PathBase));
 
         dialog.addPreference(new PreferencePath(
-                ResourceBundleUtils.getLangString(PREFERENCE, Preference.path_BaseLabel),
+                ResourceBundleUtils.getLangString(PREFERENCE, Preferences.path_BaseLabel),
                 Paths.get(DefaultKey.DIR_BASE.getValue()),
                 DirectoryDialogsTyp.DIR_BASE) {
 
@@ -356,10 +356,10 @@ public class SettingsWidget {
             }
         });
 
-        dialog.addGroup(ResourceBundleUtils.getLangString(PREFERENCE, Preference.group_PathAdmin));
+        dialog.addGroup(ResourceBundleUtils.getLangString(PREFERENCE, Preferences.group_PathAdmin));
 
         dialog.addPreference(new PreferencePath(
-                ResourceBundleUtils.getLangString(PREFERENCE, Preference.path_AdminFolderLabel),
+                ResourceBundleUtils.getLangString(PREFERENCE, Preferences.path_AdminFolderLabel),
                 Paths.get(DefaultKey.DIR_ADMIN.getValue()),
                 DirectoryDialogsTyp.DIR_ADMIN) {
 
@@ -375,7 +375,7 @@ public class SettingsWidget {
         });
 
         dialog.addPreference(new PreferencePath(
-                ResourceBundleUtils.getLangString(PREFERENCE, Preference.path_AdminTemplateLabel),
+                ResourceBundleUtils.getLangString(PREFERENCE, Preferences.path_AdminTemplateLabel),
                 Paths.get(DefaultKey.DIR_ADMIN_TEMPLATE.getValue()),
                 DirectoryDialogsTyp.DIR_ADMIN_TEMPLATE) {
 
@@ -390,10 +390,10 @@ public class SettingsWidget {
             }
         });
 
-        dialog.addGroup(ResourceBundleUtils.getLangString(PREFERENCE, Preference.group_PathProject));
+        dialog.addGroup(ResourceBundleUtils.getLangString(PREFERENCE, Preferences.group_PathProject));
 
         dialog.addPreference(new PreferencePath(
-                ResourceBundleUtils.getLangString(PREFERENCE, Preference.path_ProjectFolderLabel),
+                ResourceBundleUtils.getLangString(PREFERENCE, Preferences.path_ProjectFolderLabel),
                 Paths.get(DefaultKey.DIR_PROJECT.getValue()),
                 DirectoryDialogsTyp.DIR_PROJECT) {
 
@@ -409,7 +409,7 @@ public class SettingsWidget {
         });
 
         dialog.addPreference(new PreferencePath(
-                ResourceBundleUtils.getLangString(PREFERENCE, Preference.path_ProjectTemplateLabel),
+                ResourceBundleUtils.getLangString(PREFERENCE, Preferences.path_ProjectTemplateLabel),
                 Paths.get(DefaultKey.DIR_PROJECT_TEMPLATE.getValue()),
                 DirectoryDialogsTyp.DIR_PROJECT_TEMPLATE) {
 
@@ -424,10 +424,10 @@ public class SettingsWidget {
             }
         });
 
-        dialog.addGroup(ResourceBundleUtils.getLangString(PREFERENCE, Preference.group_PathBigData));
+        dialog.addGroup(ResourceBundleUtils.getLangString(PREFERENCE, Preferences.group_PathBigData));
 
         dialog.addPreference(new PreferencePath(
-                ResourceBundleUtils.getLangString(PREFERENCE, Preference.path_BigDataFolderLabel),
+                ResourceBundleUtils.getLangString(PREFERENCE, Preferences.path_BigDataFolderLabel),
                 Paths.get(DefaultKey.DIR_BIG_DATA.getValue()),
                 DirectoryDialogsTyp.DIR_BIG_DATA) {
 
@@ -443,7 +443,7 @@ public class SettingsWidget {
         });
 
         dialog.addPreference(new PreferencePath(
-                ResourceBundleUtils.getLangString(PREFERENCE, Preference.path_BigDataTemplateLabel),
+                ResourceBundleUtils.getLangString(PREFERENCE, Preferences.path_BigDataTemplateLabel),
                 Paths.get(DefaultKey.DIR_BIG_DATA_TEMPLATE.getValue()),
                 DirectoryDialogsTyp.DIR_BIG_DATA_TEMPLATE) {
 

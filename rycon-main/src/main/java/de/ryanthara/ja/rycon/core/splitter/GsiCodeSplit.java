@@ -20,7 +20,7 @@ package de.ryanthara.ja.rycon.core.splitter;
 import de.ryanthara.ja.rycon.core.converter.Separator;
 import de.ryanthara.ja.rycon.core.converter.gsi.BaseToolsGsi;
 import de.ryanthara.ja.rycon.core.converter.gsi.GsiDecoder;
-import de.ryanthara.ja.rycon.core.elements.GsiBlock;
+import de.ryanthara.ja.rycon.core.elements.GSIBlock;
 import de.ryanthara.ja.rycon.core.elements.RyBlock;
 import de.ryanthara.ja.rycon.util.SortUtils;
 import de.ryanthara.ja.rycon.util.StringUtils;
@@ -83,15 +83,15 @@ public class GsiCodeSplit {
 
         // transform lines into GSI-Blocks
         GsiDecoder gsiDecoder = new GsiDecoder(lines);
-        List<List<GsiBlock>> gsiBlocks = gsiDecoder.getDecodedLinesOfGsiBlocks();
+        List<List<GSIBlock>> gsiBlocks = gsiDecoder.getDecodedLinesOfGsiBlocks();
 
-        for (List<GsiBlock> blocksInLines : gsiBlocks) {
+        for (List<GSIBlock> blocksInLines : gsiBlocks) {
             // helper for code handling inside the switch statements
             int code = -1;
             int validCheckHelperValue = 0;
             String newLine = null;
 
-            for (GsiBlock block : blocksInLines) {
+            for (GSIBlock block : blocksInLines) {
                 switch (block.getWordIndex()) {
                     case 11:
                         newLine = block.toString();

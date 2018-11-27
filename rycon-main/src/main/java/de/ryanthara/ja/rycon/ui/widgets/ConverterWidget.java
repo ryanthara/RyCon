@@ -22,9 +22,6 @@ import de.ryanthara.ja.rycon.core.converter.Separator;
 import de.ryanthara.ja.rycon.core.converter.zeiss.ZeissDialect;
 import de.ryanthara.ja.rycon.data.PreferenceKey;
 import de.ryanthara.ja.rycon.i18n.*;
-import de.ryanthara.ja.rycon.i18n.Button;
-import de.ryanthara.ja.rycon.i18n.Error;
-import de.ryanthara.ja.rycon.i18n.Text;
 import de.ryanthara.ja.rycon.nio.FileFormat;
 import de.ryanthara.ja.rycon.ui.Size;
 import de.ryanthara.ja.rycon.ui.custom.*;
@@ -55,13 +52,10 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.IntStream;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundle.*;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.*;
 import static de.ryanthara.ja.rycon.ui.custom.Status.OK;
 import static de.ryanthara.ja.rycon.ui.widgets.convert.FileFilterIndex.*;
 
@@ -79,17 +73,17 @@ public class ConverterWidget extends AbstractWidget {
 
     private static final Logger logger = LoggerFactory.getLogger(ConverterWidget.class.getName());
     private final Shell parent;
-    private org.eclipse.swt.widgets.Button chkBoxCadworkUseZeroHeights;
-    private org.eclipse.swt.widgets.Button chkBoxCsvSemicolonSeparatorSource;
-    private org.eclipse.swt.widgets.Button chkBoxCsvSemicolonSeparatorTarget;
-    private org.eclipse.swt.widgets.Button chkBoxKFormatUseSimpleCaplanKFormat;
-    private org.eclipse.swt.widgets.Button chkBoxLtopEliminateDuplicatePoints;
-    private org.eclipse.swt.widgets.Button chkBoxSortOutputFileByNumber;
-    private org.eclipse.swt.widgets.Button chkBoxSourceContainsCode;
-    private org.eclipse.swt.widgets.Button chkBoxTxtSpaceSeparator;
-    private org.eclipse.swt.widgets.Button chkBoxWriteCodeColumn;
-    private org.eclipse.swt.widgets.Button chkBoxWriteCommentLine;
-    private org.eclipse.swt.widgets.Button chkBoxWriteZeroHeights;
+    private Button chkBoxCadworkUseZeroHeights;
+    private Button chkBoxCsvSemicolonSeparatorSource;
+    private Button chkBoxCsvSemicolonSeparatorTarget;
+    private Button chkBoxKFormatUseSimpleCaplanKFormat;
+    private Button chkBoxLtopEliminateDuplicatePoints;
+    private Button chkBoxSortOutputFileByNumber;
+    private Button chkBoxSourceContainsCode;
+    private Button chkBoxTxtSpaceSeparator;
+    private Button chkBoxWriteCodeColumn;
+    private Button chkBoxWriteCommentLine;
+    private Button chkBoxWriteZeroHeights;
     private Path[] files2read;
     private Group groupOptionsSource;
     private Group groupOptionsTarget;
@@ -120,24 +114,18 @@ public class ConverterWidget extends AbstractWidget {
     }
 
     boolean actionBtnOk() {
-        if (TextCheck.isEmpty(inputFieldsComposite.getSourceTextField()) || TextCheck.isEmpty(inputFieldsComposite.getTargetTextField())) {
+        if (TextCheck.isEmpty(inputFieldsComposite.getSourceTextField()) ||
+                TextCheck.isEmpty(inputFieldsComposite.getTargetTextField())) {
             return false;
         }
 
-        if (files2read.length == 0) {
-            files2read = new Path[1];
-            files2read[0] = Paths.get(inputFieldsComposite.getSourceTextField().getText());
-        } else {
-            files2read = TextCheck.checkSourceAndTargetText(
-                    inputFieldsComposite.getSourceTextField(),
-                    inputFieldsComposite.getTargetTextField(), files2read);
-        }
+        provideFiles2ReadFromText();
 
         if ((files2read != null) && (files2read.length > 0)) {
             if (processFileOperations()) {
                 String status;
 
-                final String helper = ResourceBundleUtils.getLangString(MESSAGE, Message.conversionStatus);
+                final String helper = ResourceBundleUtils.getLangString(MESSAGE, Messages.conversionStatus);
 
                 // use counter to display different text on the status bar
                 if (Main.countFileOps == 1) {
@@ -153,6 +141,15 @@ public class ConverterWidget extends AbstractWidget {
         }
 
         return false;
+    }
+
+    private void provideFiles2ReadFromText() {
+        if (files2read.length == 0) {
+            files2read = new Path[1];
+            files2read[0] = Paths.get(inputFieldsComposite.getSourceTextField().getText());
+        } else {
+            files2read = TextCheck.checkSourceAndTargetText(inputFieldsComposite, files2read);
+        }
     }
 
     /*
@@ -181,7 +178,7 @@ public class ConverterWidget extends AbstractWidget {
 
         innerShell = new Shell(parent, SWT.CLOSE | SWT.DIALOG_TRIM | SWT.MAX | SWT.TITLE | SWT.APPLICATION_MODAL);
         innerShell.addListener(SWT.Close, event -> actionBtnCancel());
-        innerShell.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.converter_Shell));
+        innerShell.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.converter_Shell));
         innerShell.setSize(width, height);
 
         innerShell.setLayout(gridLayout);
@@ -201,10 +198,9 @@ public class ConverterWidget extends AbstractWidget {
         toggleOptionsSource(groupSource.getChildren());
         toggleOptionsTarget(groupTarget.getChildren());
 
-        innerShell.pack();
-        innerShell.open();
+        layoutAndPositShell();
 
-        updateInnerShell();
+        innerShell.open();
     }
 
     /*
@@ -227,7 +223,7 @@ public class ConverterWidget extends AbstractWidget {
         }
 
         fileDialog.setFilterPath(filterPath);
-        fileDialog.setText(ResourceBundleUtils.getLangString(FILECHOOSER, FileChooser.converterSourceText));
+        fileDialog.setText(ResourceBundleUtils.getLangString(FILECHOOSER, FileChoosers.converterSourceText));
 
         fileDialog.setFilterExtensions(CSV.getExtensionsArray());
         fileDialog.setFilterNames(CSV.getFilterNamesArray());
@@ -288,7 +284,7 @@ public class ConverterWidget extends AbstractWidget {
 
     private void createAdvice(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.advice));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.advice));
 
         GridLayout gridLayout = new GridLayout(1, true);
 
@@ -301,13 +297,13 @@ public class ConverterWidget extends AbstractWidget {
         Label tip = new Label(group, SWT.WRAP | SWT.BORDER | SWT.LEFT);
 
         String text =
-                ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.converterWidget) + "\n\n" +
-                        ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.converterWidget2) + "\n\n" +
-                        ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.converterWidget3);
+                ResourceBundleUtils.getLangStringFromXml(ADVICE, Advices.converterWidget) + "\n\n" +
+                        ResourceBundleUtils.getLangStringFromXml(ADVICE, Advices.converterWidget2) + "\n\n" +
+                        ResourceBundleUtils.getLangStringFromXml(ADVICE, Advices.converterWidget3);
 
         tip.setText(text);
 
-        // tip.setText(ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.converterWidget));
+        // tip.setText(ResourceBundleUtils.getLangStringFromXml(ADVICE, Advices.converterWidget));
         tip.setLayoutData(new GridData(SWT.HORIZONTAL, SWT.TOP, true, false, 1, 1));
     }
 
@@ -324,14 +320,14 @@ public class ConverterWidget extends AbstractWidget {
         compositeSourceTarget.setLayoutData(gridData);
 
         groupSource = new Group(compositeSourceTarget, SWT.NONE);
-        groupSource.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.converter_GroupSourceFormat));
+        groupSource.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.converter_GroupSourceFormat));
         groupSource.setLayout(new GridLayout(2, false));
 
         gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
         groupSource.setLayoutData(gridData);
 
         groupTarget = new Group(compositeSourceTarget, SWT.NONE);
-        groupTarget.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.converter_GroupTargetFormat));
+        groupTarget.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.converter_GroupTargetFormat));
         groupTarget.setLayout(new GridLayout(2, false));
 
         gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
@@ -356,7 +352,7 @@ public class ConverterWidget extends AbstractWidget {
 
     private void createOptionsGeneral(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.generalOptions));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.generalOptions));
 
         GridLayout gridLayout = new GridLayout(1, true);
 
@@ -366,79 +362,79 @@ public class ConverterWidget extends AbstractWidget {
         group.setLayout(gridLayout);
         group.setLayoutData(gridData);
 
-        chkBoxWriteCommentLine = new org.eclipse.swt.widgets.Button(group, SWT.CHECK);
+        chkBoxWriteCommentLine = new Button(group, SWT.CHECK);
         chkBoxWriteCommentLine.setSelection(false);
-        chkBoxWriteCommentLine.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBox.writeCommentLine));
+        chkBoxWriteCommentLine.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBoxes.writeCommentLine));
 
-        chkBoxWriteCodeColumn = new org.eclipse.swt.widgets.Button(group, SWT.CHECK);
+        chkBoxWriteCodeColumn = new Button(group, SWT.CHECK);
         chkBoxWriteCodeColumn.setSelection(false);
-        chkBoxWriteCodeColumn.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBox.writeCodeColumn));
+        chkBoxWriteCodeColumn.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBoxes.writeCodeColumn));
 
-        chkBoxWriteZeroHeights = new org.eclipse.swt.widgets.Button(group, SWT.CHECK);
+        chkBoxWriteZeroHeights = new Button(group, SWT.CHECK);
         chkBoxWriteZeroHeights.setSelection(false);
-        chkBoxWriteZeroHeights.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBox.writeZeroHeights));
+        chkBoxWriteZeroHeights.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBoxes.writeZeroHeights));
 
         innerShell.layout(true, true);
     }
 
     private void createOptionsOptionalCadworkSource() {
-        groupOptionsSource.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.converter_CadworkSource));
+        groupOptionsSource.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.converter_CadworkSource));
 
-        chkBoxCadworkUseZeroHeights = new org.eclipse.swt.widgets.Button(groupOptionsSource, SWT.CHECK);
+        chkBoxCadworkUseZeroHeights = new Button(groupOptionsSource, SWT.CHECK);
         chkBoxCadworkUseZeroHeights.setSelection(false);
-        chkBoxCadworkUseZeroHeights.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBox.useZeroHeightsCadwork));
+        chkBoxCadworkUseZeroHeights.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBoxes.useZeroHeightsCadwork));
 
         groupOptionsSource.layout(true);
     }
 
     private void createOptionsOptionalCaplanKTarget() {
-        groupOptionsTarget.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.converter_CaplanKTarget));
+        groupOptionsTarget.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.converter_CaplanKTarget));
 
-        chkBoxKFormatUseSimpleCaplanKFormat = new org.eclipse.swt.widgets.Button(groupOptionsTarget, SWT.CHECK);
+        chkBoxKFormatUseSimpleCaplanKFormat = new Button(groupOptionsTarget, SWT.CHECK);
         chkBoxKFormatUseSimpleCaplanKFormat.setSelection(true);
-        chkBoxKFormatUseSimpleCaplanKFormat.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBox.useSimpleKFormatChk));
+        chkBoxKFormatUseSimpleCaplanKFormat.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBoxes.useSimpleKFormatChk));
 
-        chkBoxSortOutputFileByNumber = new org.eclipse.swt.widgets.Button(groupOptionsTarget, SWT.CHECK);
+        chkBoxSortOutputFileByNumber = new Button(groupOptionsTarget, SWT.CHECK);
         chkBoxSortOutputFileByNumber.setSelection(false);
-        chkBoxSortOutputFileByNumber.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBox.sortOutputFileByNumber));
+        chkBoxSortOutputFileByNumber.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBoxes.sortOutputFileByNumber));
 
         groupOptionsTarget.layout(true);
     }
 
     private void createOptionsOptionalCsvSource() {
-        groupOptionsSource.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.converter_CsvSource));
+        groupOptionsSource.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.converter_CsvSource));
 
-        chkBoxSourceContainsCode = new org.eclipse.swt.widgets.Button(groupOptionsSource, SWT.CHECK);
+        chkBoxSourceContainsCode = new Button(groupOptionsSource, SWT.CHECK);
         chkBoxSourceContainsCode.setSelection(false);
-        chkBoxSourceContainsCode.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBox.sourceContainsCodeCsvChk));
+        chkBoxSourceContainsCode.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBoxes.sourceContainsCodeCsvChk));
 
-        chkBoxCsvSemicolonSeparatorSource = new org.eclipse.swt.widgets.Button(groupOptionsSource, SWT.CHECK);
+        chkBoxCsvSemicolonSeparatorSource = new Button(groupOptionsSource, SWT.CHECK);
         chkBoxCsvSemicolonSeparatorSource.setSelection(false);
-        chkBoxCsvSemicolonSeparatorSource.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBox.separatorCSVSemiColon));
+        chkBoxCsvSemicolonSeparatorSource.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBoxes.separatorCSVSemiColon));
 
         groupOptionsSource.layout(true);
     }
 
     private void createOptionsOptionalCsvTarget() {
-        groupOptionsTarget.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.converter_CsvTarget));
+        groupOptionsTarget.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.converter_CsvTarget));
 
-        chkBoxCsvSemicolonSeparatorTarget = new org.eclipse.swt.widgets.Button(groupOptionsTarget, SWT.CHECK);
+        chkBoxCsvSemicolonSeparatorTarget = new Button(groupOptionsTarget, SWT.CHECK);
         chkBoxCsvSemicolonSeparatorTarget.setSelection(false);
-        chkBoxCsvSemicolonSeparatorTarget.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBox.separatorCSVSemiColon));
+        chkBoxCsvSemicolonSeparatorTarget.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBoxes.separatorCSVSemiColon));
 
         groupOptionsTarget.layout(true);
     }
 
     private void createOptionsOptionalLtop() {
-        groupOptionsTarget.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.converter_LtopTarget));
+        groupOptionsTarget.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.converter_LtopTarget));
 
-        chkBoxLtopEliminateDuplicatePoints = new org.eclipse.swt.widgets.Button(groupOptionsTarget, SWT.CHECK);
+        chkBoxLtopEliminateDuplicatePoints = new Button(groupOptionsTarget, SWT.CHECK);
         chkBoxLtopEliminateDuplicatePoints.setSelection(true);
-        chkBoxLtopEliminateDuplicatePoints.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBox.eliminateDuplicatePointsLTOP));
+        chkBoxLtopEliminateDuplicatePoints.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBoxes.eliminateDuplicatePointsLTOP));
 
-        chkBoxSortOutputFileByNumber = new org.eclipse.swt.widgets.Button(groupOptionsTarget, SWT.CHECK);
+        chkBoxSortOutputFileByNumber = new Button(groupOptionsTarget, SWT.CHECK);
         chkBoxSortOutputFileByNumber.setSelection(false);
-        chkBoxSortOutputFileByNumber.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBox.sortOutputFileByNumber));
+        chkBoxSortOutputFileByNumber.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBoxes.sortOutputFileByNumber));
 
         groupOptionsTarget.layout(true);
     }
@@ -468,28 +464,28 @@ public class ConverterWidget extends AbstractWidget {
     }
 
     private void createOptionsOptionalTxtSource() {
-        groupOptionsSource.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.converter_TxtSource));
+        groupOptionsSource.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.converter_TxtSource));
 
-        chkBoxSourceContainsCode = new org.eclipse.swt.widgets.Button(groupOptionsSource, SWT.CHECK);
+        chkBoxSourceContainsCode = new Button(groupOptionsSource, SWT.CHECK);
         chkBoxSourceContainsCode.setSelection(false);
-        chkBoxSourceContainsCode.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBox.sourceContainsCodeTxtChk));
+        chkBoxSourceContainsCode.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBoxes.sourceContainsCodeTxtChk));
 
         groupOptionsSource.layout(true);
     }
 
     private void createOptionsOptionalTxtTarget() {
-        groupOptionsTarget.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.converter_TxtTarget));
+        groupOptionsTarget.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.converter_TxtTarget));
 
-        chkBoxTxtSpaceSeparator = new org.eclipse.swt.widgets.Button(groupOptionsTarget, SWT.CHECK);
+        chkBoxTxtSpaceSeparator = new Button(groupOptionsTarget, SWT.CHECK);
         chkBoxTxtSpaceSeparator.setSelection(false);
-        chkBoxTxtSpaceSeparator.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBox.separatorTXTSpace));
+        chkBoxTxtSpaceSeparator.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBoxes.separatorTXTSpace));
 
         groupOptionsTarget.layout(true);
     }
 
     private void createRadioButtonsSource(SelectionListener selectionListener, Group group) {
         for (SourceButton button : SourceButton.values()) {
-            org.eclipse.swt.widgets.Button radioBtn = new org.eclipse.swt.widgets.Button(group, SWT.RADIO);
+            Button radioBtn = new Button(group, SWT.RADIO);
             radioBtn.addSelectionListener(selectionListener);
             radioBtn.setText(button.getText());
 
@@ -501,7 +497,7 @@ public class ConverterWidget extends AbstractWidget {
 
     private void createRadioButtonsTarget(SelectionListener selectionListener, Group group) {
         for (TargetButton button : TargetButton.values()) {
-            org.eclipse.swt.widgets.Button radioBtn = new org.eclipse.swt.widgets.Button(group, SWT.RADIO);
+            Button radioBtn = new Button(group, SWT.RADIO);
             radioBtn.addSelectionListener(selectionListener);
             radioBtn.setText(button.getText());
 
@@ -513,7 +509,7 @@ public class ConverterWidget extends AbstractWidget {
 
     private void createTxtCsv(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.converter_TxtCsv));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.converter_TxtCsv));
 
         GridLayout gridLayout = new GridLayout(2, false);
 
@@ -526,8 +522,8 @@ public class ConverterWidget extends AbstractWidget {
         GridData gridData1 = new GridData(GridData.FILL, GridData.CENTER, true, true);
         gridData1.horizontalSpan = 2;
 
-        org.eclipse.swt.widgets.Button button = new org.eclipse.swt.widgets.Button(group, SWT.CHECK);
-        button.setText(ResourceBundleUtils.getLangString(BUTTON, Button.txtCsvSpecialFormat));
+        Button button = new Button(group, SWT.CHECK);
+        button.setText(ResourceBundleUtils.getLangString(BUTTON, Buttons.txtCsvSpecialFormat));
         button.setLayoutData(gridData1);
 
         Group group1 = new Group(group, SWT.NONE);
@@ -540,10 +536,10 @@ public class ConverterWidget extends AbstractWidget {
         group2.setLayout(new GridLayout(2, true));
         group2.setLayoutData(gridData3);
 
-        org.eclipse.swt.widgets.Button buttonAdd = new org.eclipse.swt.widgets.Button(group2, SWT.NONE);
+        Button buttonAdd = new Button(group2, SWT.NONE);
         buttonAdd.setText("+");
 
-        org.eclipse.swt.widgets.Button buttonMinus = new org.eclipse.swt.widgets.Button(group2, SWT.NONE);
+        Button buttonMinus = new Button(group2, SWT.NONE);
         buttonMinus.setText("-");
 
         /*
@@ -644,20 +640,20 @@ public class ConverterWidget extends AbstractWidget {
 
     private void createTxtCsv2(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.converter_TxtCsv));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.converter_TxtCsv));
 
         FillLayout fillLayout = new FillLayout(SWT.NONE);
         group.setLayout(fillLayout);
 
-        org.eclipse.swt.widgets.Button button = new org.eclipse.swt.widgets.Button(group, SWT.CHECK);
-        button.setText(ResourceBundleUtils.getLangString(BUTTON, Button.txtCsvSpecialFormat));
+        Button button = new Button(group, SWT.CHECK);
+        button.setText(ResourceBundleUtils.getLangString(BUTTON, Buttons.txtCsvSpecialFormat));
 
         // this button has a minimum size of 400 x 400. If the window is resized to be big
         // enough to show more than 400 x 400, the button will grow in size. If the window
         // is made too small to show 400 x 400, scrollbars will appear.
         ScrolledComposite c1 = new ScrolledComposite(group, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 
-        org.eclipse.swt.widgets.Button b1 = new org.eclipse.swt.widgets.Button(c1, SWT.PUSH);
+        Button b1 = new Button(c1, SWT.PUSH);
         b1.setText("fixed size button");
         b1.setSize(800, 200);
         c1.setContent(b1);
@@ -665,7 +661,7 @@ public class ConverterWidget extends AbstractWidget {
 
     private void createTxtCsvTable(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.converter_TxtCsv));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.converter_TxtCsv));
 
         GridLayout gridLayout = new GridLayout(2, false);
 
@@ -678,8 +674,8 @@ public class ConverterWidget extends AbstractWidget {
         GridData gridData1 = new GridData(GridData.FILL, GridData.CENTER, true, true);
         gridData1.horizontalSpan = 2;
 
-        org.eclipse.swt.widgets.Button button = new org.eclipse.swt.widgets.Button(group, SWT.CHECK);
-        button.setText(ResourceBundleUtils.getLangString(BUTTON, Button.txtCsvSpecialFormat));
+        Button button = new Button(group, SWT.CHECK);
+        button.setText(ResourceBundleUtils.getLangString(BUTTON, Buttons.txtCsvSpecialFormat));
         button.setLayoutData(gridData1);
 
         Group group1 = new Group(group, SWT.NONE);
@@ -687,10 +683,10 @@ public class ConverterWidget extends AbstractWidget {
         group1.setLayout(new GridLayout(2, true));
         group1.setLayoutData(gridData2);
 
-        org.eclipse.swt.widgets.Button buttonAdd = new org.eclipse.swt.widgets.Button(group1, SWT.NONE);
+        Button buttonAdd = new Button(group1, SWT.NONE);
         buttonAdd.setText("+");
 
-        org.eclipse.swt.widgets.Button buttonMinus = new org.eclipse.swt.widgets.Button(group1, SWT.NONE);
+        Button buttonMinus = new Button(group1, SWT.NONE);
         buttonMinus.setText("-");
 
         Table table = new Table(group1, SWT.HIDE_SELECTION);
@@ -743,14 +739,14 @@ public class ConverterWidget extends AbstractWidget {
                 System.out.println("HIT");
 
                 TableColumn column = new TableColumn(table, SWT.RIGHT);
-                column.setText("Column " + table.getColumnCount());
+                column.setText("Columns " + table.getColumnCount());
                 column.setWidth(250);
 
                 for (int i = 0; i < table.getColumnCount(); i++) {
                     TableEditor tableEditor = new TableEditor(table);
 
                     CCombo comboColumn = new CCombo(table, SWT.NONE);
-                    comboColumn.setText("Column");
+                    comboColumn.setText("Columns");
                     comboColumn.add("combo item 1");
                     comboColumn.add("combo item 2");
 
@@ -850,14 +846,14 @@ public class ConverterWidget extends AbstractWidget {
             tableEditor.setEditor(combo, items[i], 0);
             tableEditor = new TableEditor(table1);
 
-            Text text = new Text(table1, SWT.NONE);
-            text.setText("Text");
+            Texts text = new Texts(table1, SWT.NONE);
+            text.setText("Texts");
 
             tableEditor.grabHorizontal = true;
             tableEditor.setEditor(text, items[i], 1);
             tableEditor = new TableEditor(table1);
 
-            Button button4 = new Button(table1, SWT.CHECK);
+            Buttons button4 = new Buttons(table1, SWT.CHECK);
             button4.pack();
 
             tableEditor.minimumWidth = button4.getSize().x;
@@ -873,7 +869,7 @@ public class ConverterWidget extends AbstractWidget {
     private void determineFilterIndex(FileDialog fileDialog) {
         int selectedBtnSource = RadioHelper.getSelectedBtn(groupSource.getChildren());
 
-        switch (SourceButton.fromIndex(selectedBtnSource)) {
+        switch (Objects.requireNonNull(SourceButton.fromIndex(selectedBtnSource).orElse(null))) {
             case GSI8:
             case GSI16:
                 fileDialog.setFilterIndex(GSI.ordinal());
@@ -916,7 +912,7 @@ public class ConverterWidget extends AbstractWidget {
         return new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
                 // prevent double fired events
-                boolean isSelected = ((org.eclipse.swt.widgets.Button) e.getSource()).getSelection();
+                boolean isSelected = ((Button) e.getSource()).getSelection();
                 if (isSelected) {
                     toggleOptionsSource(groupSource.getChildren());
                     toggleOptionsTarget(groupTarget.getChildren());
@@ -938,7 +934,7 @@ public class ConverterWidget extends AbstractWidget {
         toggleOptionsSource(groupSource.getChildren());
         toggleOptionsTarget(groupTarget.getChildren());
 
-        updateInnerShell();
+        layoutAndPositShell();
     }
 
     private Map<Integer, Reader> prepareReadFiles(ReadParameter readParameter) {
@@ -980,8 +976,6 @@ public class ConverterWidget extends AbstractWidget {
     }
 
     private boolean processFileOperations() {
-        boolean success;
-
         int counter = 0;
         int sourceNumber = RadioHelper.getSelectedBtn(groupSource.getChildren());
         int targetNumber = RadioHelper.getSelectedBtn(groupTarget.getChildren());
@@ -1026,7 +1020,7 @@ public class ConverterWidget extends AbstractWidget {
         if (counter > 0) {
             String message;
 
-            final String helper = ResourceBundleUtils.getLangString(MESSAGE, Message.conversionMessage);
+            final String helper = ResourceBundleUtils.getLangString(MESSAGE, Messages.conversionMessage);
 
             if (counter == 1) {
                 message = String.format(StringUtils.getSingularMessage(helper), counter);
@@ -1035,21 +1029,19 @@ public class ConverterWidget extends AbstractWidget {
             }
 
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_INFORMATION,
-                    ResourceBundleUtils.getLangStringFromXml(TEXT, Text.msgBox_Success), message);
+                    ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.msgBox_Success), message);
 
             // set the counter for status bar information
             Main.countFileOps = counter;
 
-            success = true;
+            return true;
         } else {
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR,
-                    ResourceBundleUtils.getLangStringFromXml(TEXT, Text.msgBox_Error),
-                    ResourceBundleUtils.getLangString(ERROR, Error.conversionFailed));
+                    ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.msgBox_Error),
+                    ResourceBundleUtils.getLangString(ERROR, Errors.conversionFailed));
 
-            success = false;
+            return false;
         }
-
-        return success;
     }
 
     private ReadParameter prepareReadParameter() {
@@ -1180,19 +1172,10 @@ public class ConverterWidget extends AbstractWidget {
         final int width = Size.RyCON_WIDGET_WIDTH.getValue();
         int selectedBtnSource = RadioHelper.getSelectedBtn(childrenSource);
 
-        // Remove special options if present
-        IntStream.range(0, innerShell.getChildren().length).forEach(i -> {
-            Control c = innerShell.getChildren()[i];
-            if (c.equals(groupOptionsSource)) {
-                innerShell.getChildren()[i].dispose();
-            }
-        });
+        disposeSpecialOptionsGroup(groupOptionsSource);
+        disposeBottomElements();
 
-        // Remove advice text and bottom button bar
-        innerShell.getChildren()[innerShell.getChildren().length - 1].dispose();
-        innerShell.getChildren()[innerShell.getChildren().length - 1].dispose();
-
-        switch (SourceButton.fromIndex(selectedBtnSource)) {
+        switch (Objects.requireNonNull(SourceButton.fromIndex(selectedBtnSource).orElse(null))) {
             case GSI8:
             case GSI16:
                 break;
@@ -1228,27 +1211,17 @@ public class ConverterWidget extends AbstractWidget {
         createAdvice(width);
         new BottomButtonBar(this, innerShell, BottomButtonBar.OK_AND_EXIT_BUTTON);
 
-        updateInnerShell();
+        layoutAndPositShell();
     }
 
     private void toggleOptionsTarget(Control... childrenTarget) {
         final int width = Size.RyCON_WIDGET_WIDTH.getValue();
         int selectedBtnTarget = RadioHelper.getSelectedBtn(childrenTarget);
 
-        // Remove special options if present
-        for (int i = 0; i < innerShell.getChildren().length; i++) {
-            Control c = innerShell.getChildren()[i];
+        disposeSpecialOptionsGroup(groupOptionsTarget);
+        disposeBottomElements();
 
-            if (c.equals(groupOptionsSource)) {
-                innerShell.getChildren()[i].dispose();
-            }
-        }
-
-        // Remove advice text and bottom button bar
-        innerShell.getChildren()[innerShell.getChildren().length - 1].dispose();
-        innerShell.getChildren()[innerShell.getChildren().length - 1].dispose();
-
-        switch (TargetButton.fromIndex(selectedBtnTarget)) {
+        switch (Objects.requireNonNull(TargetButton.fromIndex(selectedBtnTarget).orElse(null))) {
             case GSI8:
             case GSI16:
                 createOptionsOptionalTarget(width);
@@ -1292,22 +1265,40 @@ public class ConverterWidget extends AbstractWidget {
         createAdvice(width);
         new BottomButtonBar(this, innerShell, BottomButtonBar.OK_AND_EXIT_BUTTON);
 
-        updateInnerShell();
+        layoutAndPositShell();
+    }
+
+    /*
+     * Dispose advice text and bottom button bar
+     */
+    private void disposeBottomElements() {
+        innerShell.getChildren()[innerShell.getChildren().length - 1].dispose();
+        innerShell.getChildren()[innerShell.getChildren().length - 1].dispose();
+    }
+
+    private void disposeSpecialOptionsGroup(Group group) {
+        for (int i = 0; i < innerShell.getChildren().length; i++) {
+            Control c = innerShell.getChildren()[i];
+
+            if (c.equals(group)) {
+                innerShell.getChildren()[i].dispose();
+            }
+        }
     }
 
     private void createOptionsOptionalGsiTarget() {
-        groupOptionsTarget.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.converter_GsiTarget));
+        groupOptionsTarget.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.converter_GsiTarget));
 
-        chkBoxSortOutputFileByNumber = new org.eclipse.swt.widgets.Button(groupOptionsTarget, SWT.CHECK);
+        chkBoxSortOutputFileByNumber = new Button(groupOptionsTarget, SWT.CHECK);
         chkBoxSortOutputFileByNumber.setSelection(false);
-        chkBoxSortOutputFileByNumber.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBox.sortOutputFileByNumber));
+        chkBoxSortOutputFileByNumber.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBoxes.sortOutputFileByNumber));
 
         groupOptionsTarget.layout(true);
     }
 
     @SuppressWarnings("MethodCanBeVariableArityMethod")
     private void toggleRadioButtons(FileDialog fileDialog, Control[] childrenSource, Control[] childrenTarget) {
-        switch (FileFilterIndex.fromIndex(fileDialog.getFilterIndex())) {
+        switch (Objects.requireNonNull(FileFilterIndex.fromIndex(fileDialog.getFilterIndex()).orElse(null))) {
             case GSI:
                 if (RadioHelper.getSelectedBtn(childrenSource) > 1) {
                     RadioHelper.selectBtn(childrenSource, 1);
@@ -1369,10 +1360,7 @@ public class ConverterWidget extends AbstractWidget {
         }
     }
 
-    /*
-     * Layout the inner shell to make changes happen
-     */
-    private void updateInnerShell() {
+    private void layoutAndPositShell() {
         innerShell.pack();
         innerShell.layout(true, true);
         innerShell.setLocation(ShellPositioner.centerShellOnPrimaryMonitorVertically(innerShell));

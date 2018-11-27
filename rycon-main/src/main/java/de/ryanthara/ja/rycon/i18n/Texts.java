@@ -18,7 +18,7 @@
 package de.ryanthara.ja.rycon.i18n;
 
 /**
- * The {@code Text} enumeration holds all the widget texts (headlines) for RyCON.
+ * The {@code Texts} enumeration holds all the widget texts (headlines) for RyCON.
  * <p>
  * This enumeration is used for encapsulating the data. The interface {@link ResourceKey}
  * is used to access different enumerations in the class {@link ResourceBundleUtils}.
@@ -27,10 +27,11 @@ package de.ryanthara.ja.rycon.i18n;
  * @version 1
  * @since 2.0
  */
-public enum Text implements ResourceKey {
+public enum Texts implements ResourceKey {
 
     about,
     advice,
+    cancelled,
     clearUp_Shell,
     converter_Shell,
     converter_GroupSourceFormat,
@@ -45,6 +46,7 @@ public enum Text implements ResourceKey {
     converter_TxtCsv,
     converter_TxtSource,
     converter_TxtTarget,
+    finished,
     generalOptions,
     generator_AdminDescription,
     generator_BigDataDescription,
@@ -91,12 +93,13 @@ public enum Text implements ResourceKey {
     transformation_GroupProjection,
     transformation_GroupReferenceFrameSource,
     transformation_GroupReferenceFrameTarget,
+    transformation_Method,
+    transformation_PointOfPoints,
     transformation_Shell,
     trayMenu_ExitItem,
     trayMenu_HelpItem,
     trayMenu_InfoItem,
     trayMenu_SettingsItem,
     trayMenu_WebsiteItem,
-
 
 }

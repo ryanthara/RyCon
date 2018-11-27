@@ -19,6 +19,8 @@ package de.ryanthara.ja.rycon.ui.widgets.convert;
 
 import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
 
+import java.util.Optional;
+
 /**
  * This enumeration is used for the target format radio buttons of the {@link ConverterWidget}.
  * <p>
@@ -26,7 +28,7 @@ import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
  * <ul>
  * <li>Leica Geosystems GSI8 format</li>
  * <li>Leica Geosystems GSI16 format</li>
- * <li>Text based formatted files</li>
+ * <li>Texts based formatted files</li>
  * <li>Comma separated values formatted files</li>
  * <li>Zeiss REC formats and it's dialects</li>
  * <li>LTOP KOO and MES formats</li>
@@ -63,21 +65,21 @@ public enum TargetButton {
     }
 
     /**
-     * Returns the {@link TargetButton} from index parameter as static access from switch cases.
+     * Returns the {@link TargetButton} by index parameter as static access for switch cases.
      *
      * @param index index to return
      * @return TargetButton by index
      */
-    public static TargetButton fromIndex(int index) {
-        TargetButton selectedTargetButton = null;
+    public static Optional<TargetButton> fromIndex(int index) {
+        assert index < values().length;
 
         for (TargetButton targetButton : values()) {
             if (targetButton.ordinal() == index) {
-                selectedTargetButton = targetButton;
+                return Optional.of(targetButton);
             }
         }
 
-        return selectedTargetButton;
+        return Optional.empty();
     }
 
     /**

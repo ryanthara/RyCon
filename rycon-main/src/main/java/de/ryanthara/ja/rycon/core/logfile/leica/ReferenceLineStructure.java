@@ -344,6 +344,7 @@ public class ReferenceLineStructure extends LeicaLogfileBaseStructure {
 
     // use original order for enum
     private enum Elements {
+
         TPS_STATION("TPS Station"),
 
         // Reference Line Information

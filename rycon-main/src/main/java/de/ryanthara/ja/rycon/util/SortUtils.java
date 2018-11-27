@@ -17,7 +17,7 @@
  */
 package de.ryanthara.ja.rycon.util;
 
-import de.ryanthara.ja.rycon.core.elements.GsiBlock;
+import de.ryanthara.ja.rycon.core.elements.GSIBlock;
 import de.ryanthara.ja.rycon.core.elements.RyBlock;
 
 import java.util.Comparator;
@@ -51,15 +51,15 @@ public final class SortUtils {
     }
 
     /**
-     * Sorts an {@code List<GsiBlock>} of {@code GsiBlock} elements by word index (WI).
+     * Sorts an {@code List<GSIBlock>} of {@code GSIBlock} elements by word index (WI).
      *
      * <p>
      * The line doesn't contains two or more blocks with the same word index.
      *
-     * @param gsiBlocks {@code List<GsiBlock>} to be sorted by word index (WI)
+     * @param GSIBlocks {@code List<GSIBlock>} to be sorted by word index (WI)
      */
-    public static void sortByWordIndex(List<GsiBlock> gsiBlocks) {
-        gsiBlocks.sort((o1, o2) -> {
+    public static void sortByWordIndex(List<GSIBlock> GSIBlocks) {
+        GSIBlocks.sort((o1, o2) -> {
             if (o1.getWordIndex() > o2.getWordIndex()) {
                 return 1;
             } else if (o1.equals(o2)) {

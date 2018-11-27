@@ -18,7 +18,7 @@
 package de.ryanthara.ja.rycon.i18n;
 
 /**
- * The {@code FileChooser} enumeration holds all the texts for the file choosers of RyCON.
+ * The {@code FileChoosers} enumeration holds all the texts for the file choosers of RyCON.
  * <p>
  * This enumeration is used for encapsulating the data. The interface {@link ResourceKey}
  * is used to access different enumerations in the class {@link ResourceBundleUtils}.
@@ -27,7 +27,7 @@ package de.ryanthara.ja.rycon.i18n;
  * @version 1
  * @since 2.0
  */
-public enum FileChooser implements ResourceKey {
+public enum FileChoosers implements ResourceKey {
 
     cardReaderMessage,
     cardReaderText,

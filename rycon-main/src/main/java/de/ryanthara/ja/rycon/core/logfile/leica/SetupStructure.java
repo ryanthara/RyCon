@@ -183,7 +183,11 @@ public class SetupStructure extends LeicaLogfileBaseStructure {
                 switch (setupMethod) {
                     case KNOWN_AZIMUTH:
                     case KNOWN_BACKSIGHT_POINT:
-                        station = new RyPoint(stationId, easting, northing, height);
+                        station = new RyPoint.Builder(stationId)
+                                .setEasting(easting)
+                                .setNorthing(northing)
+                                .setHeight(height)
+                                .build();
 
                         // skip reading next line
                         i++;
@@ -193,8 +197,13 @@ public class SetupStructure extends LeicaLogfileBaseStructure {
                     case RESECTION_HELMERT:
                     case RESECTION_LOCAL:
                         final String instrumentHeight = elements[7].trim();
-                        station = new RyPoint(stationId, easting, northing, height, instrumentHeight);
-
+                        station = new RyPoint.Builder(stationId)
+                                .setEasting(easting)
+                                .setNorthing(northing)
+                                .setHeight(height)
+                                .setInstrumentOrReflectorHeight(instrumentHeight)
+                                .build();
+                        
                         // skip reading next line
                         i++;
                         break;
@@ -219,8 +228,9 @@ public class SetupStructure extends LeicaLogfileBaseStructure {
 
     private SetupMethod getSetupMethod(String line) {
         SetupMethod setupMethod;
-        setupMethod = SetupMethod.fromIdentifier(line.split("\"")[1]);
+        setupMethod = SetupMethod.fromIdentifier(line.split("\"")[1]).orElse(null);
 
+        assert setupMethod != null;
         switch (setupMethod) {
             case KNOWN_AZIMUTH:
                 break;
@@ -330,6 +340,7 @@ public class SetupStructure extends LeicaLogfileBaseStructure {
 
     // use original order for enum
     private enum Method {
+
         // Setup Method
         SETUP_METHOD("Setup Method"),
 

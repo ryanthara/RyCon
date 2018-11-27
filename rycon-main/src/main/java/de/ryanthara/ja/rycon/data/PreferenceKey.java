@@ -28,6 +28,7 @@ package de.ryanthara.ja.rycon.data;
  * @since 23
  */
 public enum PreferenceKey {
+
     ADD_TRAILING_ZEROES,
     BUILD_VERSION,
     CONVERTER_SETTING_ELIMINATE_ZERO_COORDINATE,

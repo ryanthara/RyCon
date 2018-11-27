@@ -29,7 +29,7 @@ import java.lang.reflect.Method;
 import java.util.stream.IntStream;
 
 /**
- * Provide a hook to connecting the 'Preference', 'About' and 'Quit' menu items of the Mac OS X
+ * Provide a hook to connecting the 'Preferences', 'About' and 'Quit' menu items of the Mac OS X
  * Application menu when using the SWT Cocoa bindings.
  * <p>
  * This code does not require the Cocoa SWT JAR in order to be compiled as it uses reflection to
@@ -114,17 +114,17 @@ public class CocoaUIEnhancer {
 
     /**
      * Hooks the given Listener to the Mac OS X application Quit menu and the {@code Listeners}
-     * to the About and Preference menus.
+     * to the About and Preferences menus.
      *
      * @param display             The Display to use.
      * @param quitListener        The listener to invoke when the Quit menu is invoked.
      * @param aboutListener       The listener to invoke when the About menu is invoked.
-     * @param preferencesListener The listener to invoke when the Preference menu is invoked.
+     * @param preferencesListener The listener to invoke when the Preferences menu is invoked.
      */
     public void hookApplicationMenu(Display display, Listener quitListener,
                                     Listener aboutListener, Listener preferencesListener) {
         // This is our callbackObject whose 'actionProc' method will be called when the About or
-        // Preference menuItem is invoked.
+        // Preferences menuItem is invoked.
 
         MenuHookObject target = new MenuHookObject(aboutListener, preferencesListener);
 
@@ -199,7 +199,7 @@ public class CocoaUIEnhancer {
         object = invoke(osCls, "objc_lookUpClass", new Object[]{"SWTApplicationDelegate"});
         long cls = convertToLong(object);
 
-        // Add the action callbacks for Preference and About menu items.
+        // Add the action callbacks for Preferences and About menu items.
         invoke(osCls, "class_addMethod", new Object[]{
                 wrapPointer(cls),
                 wrapPointer(sel_preferencesMenuItemSelected_),
@@ -232,12 +232,12 @@ public class CocoaUIEnhancer {
             invoke(nsmenuitemCls, quitMenuItem, "setTitle", new Object[]{nsStr});
         }
 
-        // Enable the Preference menuItem.
+        // Enable the Preferences menuItem.
         Object prefMenuItem =
                 invoke(nsmenuCls, appMenu, "itemAtIndex", new Object[]{wrapPointer(kPreferencesMenuItem)});
         invoke(nsmenuitemCls, prefMenuItem, "setEnabled", new Object[]{true});
 
-        // Set the action to execute when the About or Preference menuItem is invoked.
+        // Set the action to execute when the About or Preferences menuItem is invoked.
         //
         // We don't need to set the target here as the current target is the SWTApplicationDelegate
         // and we have registered the new selectors on it. So just set the new action to invoke the

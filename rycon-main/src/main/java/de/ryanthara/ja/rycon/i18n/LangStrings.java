@@ -18,7 +18,7 @@
 package de.ryanthara.ja.rycon.i18n;
 
 /**
- * The {@code Message} enumeration holds all the texts for the messages of RyCON.
+ * The {@code LangStrings} enumeration holds all the other language strings for RyCON.
  * <p>
  * This enumeration is used for encapsulating the data. The interface {@link ResourceKey}
  * is used to access different enumerations in the class {@link ResourceBundleUtils}.
@@ -27,35 +27,14 @@ package de.ryanthara.ja.rycon.i18n;
  * @version 1
  * @since 2.0
  */
-public enum Message implements ResourceKey {
+public enum LangStrings implements ResourceKey {
 
-    adminAndBigDataAndProjectsCreated,
-    adminAndBigDatasCreated,
-    adminAndProjectsCreated,
-    adminDirEqualityMessage,
-    adminFoldersCreated,
-    bigDataAndProjectsCreated,
-    bigDataDirEqualityMessage,
-    bigDataFoldersCreated,
-    cardReaderFilesCopySuccessful,
-    clearUpMessage,
-    clearUpStatus,
-    conversionMessage,
-    conversionStatus,
-    levellingMessage,
-    levellingStatus,
-    newConfigFileGenerated,
-    projectDirEqualityMessage,
-    projectFoldersCreated,
-    reportMessage,
-    reportStatus,
-    ryCONUpdate,
-    splitFilesMessage,
-    splitFilesStatus,
-    transferCopyMessage,
-    transferMoveMessage,
-    transferText,
-    transformationMessage,
-    transformationStatus,
+    application_Initialized,
+    application_Name,
+    application_Title,
+    buildString,
+    commentLine_CaplanK,
+    commentLine_Ltop,
+    update_Text,
 
 }

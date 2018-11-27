@@ -24,7 +24,7 @@ import de.ryanthara.ja.rycon.core.clearup.GsiLtopClearUp;
 import de.ryanthara.ja.rycon.core.clearup.LogfileClearUp;
 import de.ryanthara.ja.rycon.data.PreferenceKey;
 import de.ryanthara.ja.rycon.i18n.*;
-import de.ryanthara.ja.rycon.i18n.Error;
+import de.ryanthara.ja.rycon.i18n.Errors;
 import de.ryanthara.ja.rycon.nio.FileNameExtension;
 import de.ryanthara.ja.rycon.nio.LineReader;
 import de.ryanthara.ja.rycon.nio.WriteFile2Disk;
@@ -50,7 +50,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundle.*;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.*;
 import static de.ryanthara.ja.rycon.ui.custom.Status.OK;
 
 /**
@@ -131,14 +131,7 @@ public class ClearUpWidget extends AbstractWidget {
             return false;
         }
 
-        if (files2read.length == 0) {
-            files2read = new Path[1];
-            files2read[0] = Paths.get(inputFieldsComposite.getSourceTextField().getText());
-        } else {
-            files2read = TextCheck.checkSourceAndTargetText(
-                    inputFieldsComposite.getSourceTextField(),
-                    inputFieldsComposite.getTargetTextField(), files2read);
-        }
+        provideFiles2ReadFromText();
 
         if ((files2read != null) && (files2read.length > 0)) {
             if (processFileOperations()) {
@@ -149,6 +142,15 @@ public class ClearUpWidget extends AbstractWidget {
         }
 
         return false;
+    }
+
+    private void provideFiles2ReadFromText() {
+        if (files2read.length == 0) {
+            files2read = new Path[1];
+            files2read[0] = Paths.get(inputFieldsComposite.getSourceTextField().getText());
+        } else {
+            files2read = TextCheck.checkSourceAndTargetText(inputFieldsComposite, files2read);
+        }
     }
 
     /*
@@ -177,7 +179,7 @@ public class ClearUpWidget extends AbstractWidget {
 
         innerShell = new Shell(parent, SWT.CLOSE | SWT.DIALOG_TRIM | SWT.MAX | SWT.TITLE | SWT.APPLICATION_MODAL);
         innerShell.addListener(SWT.Close, event -> actionBtnCancel());
-        innerShell.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.clearUp_Shell));
+        innerShell.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.clearUp_Shell));
         innerShell.setSize(width, height);
 
         innerShell.setLayout(gridLayout);
@@ -202,9 +204,9 @@ public class ClearUpWidget extends AbstractWidget {
      */
     private void actionBtnSource() {
         String[] filterNames = new String[]{
-                ResourceBundleUtils.getLangString(FILECHOOSER, FileChooser.filterNameGsi),
-                ResourceBundleUtils.getLangString(FILECHOOSER, FileChooser.filterNameLtop),
-                ResourceBundleUtils.getLangString(FILECHOOSER, FileChooser.filterNameLogfileTxt)
+                ResourceBundleUtils.getLangString(FILECHOOSER, FileChoosers.filterNameGsi),
+                ResourceBundleUtils.getLangString(FILECHOOSER, FileChoosers.filterNameLtop),
+                ResourceBundleUtils.getLangString(FILECHOOSER, FileChoosers.filterNameLogfileTxt)
         };
 
         String filterPath = Main.pref.getUserPreference(PreferenceKey.DIR_PROJECT);
@@ -223,7 +225,7 @@ public class ClearUpWidget extends AbstractWidget {
         Optional<Path[]> files = FileDialogs.showAdvancedFileDialog(
                 innerShell,
                 filterPath,
-                ResourceBundleUtils.getLangString(FILECHOOSER, FileChooser.clearUpSourceText),
+                ResourceBundleUtils.getLangString(FILECHOOSER, FileChoosers.clearUpSourceText),
                 acceptableFileSuffixes,
                 filterNames,
                 inputFieldsComposite.getSourceTextField(),
@@ -260,7 +262,7 @@ public class ClearUpWidget extends AbstractWidget {
 
     private void createAdvice(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.advice));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.advice));
 
         GridLayout gridLayout = new GridLayout(1, true);
 
@@ -273,13 +275,13 @@ public class ClearUpWidget extends AbstractWidget {
         Label tip = new Label(group, SWT.WRAP | SWT.BORDER | SWT.LEFT);
 
         String text =
-                ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.clearUpWidget) + "\n\n" +
-                        ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.clearUpWidget2) + "\n\n" +
-                        ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.clearUpWidget3);
+                ResourceBundleUtils.getLangStringFromXml(ADVICE, Advices.clearUpWidget) + "\n\n" +
+                        ResourceBundleUtils.getLangStringFromXml(ADVICE, Advices.clearUpWidget2) + "\n\n" +
+                        ResourceBundleUtils.getLangStringFromXml(ADVICE, Advices.clearUpWidget3);
 
         tip.setText(text);
 
-        // tip.setText(ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.clearUpWidget));
+        // tip.setText(ResourceBundleUtils.getLangStringFromXml(ADVICE, Advices.clearUpWidget));
         tip.setLayoutData(new GridData(SWT.HORIZONTAL, SWT.TOP, true, false, 1, 1));
     }
 
@@ -295,7 +297,7 @@ public class ClearUpWidget extends AbstractWidget {
 
     private void createOptions(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.generalOptions));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.generalOptions));
 
         GridLayout gridLayout = new GridLayout(1, true);
 
@@ -307,15 +309,15 @@ public class ClearUpWidget extends AbstractWidget {
 
         chkBoxHoldStations = new Button(group, SWT.CHECK);
         chkBoxHoldStations.setSelection(false);
-        chkBoxHoldStations.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBox.holdStationsClearUp));
+        chkBoxHoldStations.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBoxes.holdStationsClearUp));
 
         chkBoxHoldControlPoints = new Button(group, SWT.CHECK);
         chkBoxHoldControlPoints.setSelection(false);
-        chkBoxHoldControlPoints.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBox.holdControlPointsClearUp));
+        chkBoxHoldControlPoints.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBoxes.holdControlPointsClearUp));
 
         chkBoxCleanBlocksByContent = new Button(group, SWT.CHECK);
         chkBoxCleanBlocksByContent.setSelection(true);
-        chkBoxCleanBlocksByContent.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBox.cleanBlocksByContent));
+        chkBoxCleanBlocksByContent.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBoxes.cleanBlocksByContent));
     }
 
     private int fileOperations(boolean holdStations, boolean holdControlPoints) {
@@ -388,7 +390,7 @@ public class ClearUpWidget extends AbstractWidget {
         if (counter > 0) {
             String message;
 
-            final String helper = ResourceBundleUtils.getLangString(MESSAGE, Message.clearUpMessage);
+            final String helper = ResourceBundleUtils.getLangString(MESSAGE, Messages.clearUpMessage);
 
             if (counter == 1) {
                 message = String.format(StringUtils.getSingularMessage(helper), counter);
@@ -397,16 +399,16 @@ public class ClearUpWidget extends AbstractWidget {
             }
 
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_INFORMATION,
-                    ResourceBundleUtils.getLangStringFromXml(TEXT, Text.msgBox_Success), message);
+                    ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.msgBox_Success), message);
 
             // set the counter for status bar information
             Main.countFileOps = counter;
             success = true;
         } else {
-            final String message = ResourceBundleUtils.getLangString(ERROR, Error.clearUpFailed);
+            final String message = ResourceBundleUtils.getLangString(ERROR, Errors.clearUpFailed);
 
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING,
-                    ResourceBundleUtils.getLangStringFromXml(TEXT, Text.msgBox_Error), message);
+                    ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.msgBox_Error), message);
 
             success = false;
         }
@@ -429,7 +431,7 @@ public class ClearUpWidget extends AbstractWidget {
     private void updateStatus() {
         String status;
 
-        final String helper = ResourceBundleUtils.getLangString(MESSAGE, Message.clearUpStatus);
+        final String helper = ResourceBundleUtils.getLangString(MESSAGE, Messages.clearUpStatus);
 
         // use counter to display different text on the status bar
         if (Main.countFileOps == 1) {

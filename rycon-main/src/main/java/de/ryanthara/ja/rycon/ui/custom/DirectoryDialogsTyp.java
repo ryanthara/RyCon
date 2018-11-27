@@ -17,10 +17,10 @@
  */
 package de.ryanthara.ja.rycon.ui.custom;
 
-import de.ryanthara.ja.rycon.i18n.FileChooser;
+import de.ryanthara.ja.rycon.i18n.FileChoosers;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundle.FILECHOOSER;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.FILECHOOSER;
 
 /**
  * The {@code DirectoryDialogsTyp} enumeration holds the directory dialog text
@@ -35,32 +35,32 @@ import static de.ryanthara.ja.rycon.i18n.ResourceBundle.FILECHOOSER;
 public enum DirectoryDialogsTyp {
 
     DIR_ADMIN(
-            ResourceBundleUtils.getLangString(FILECHOOSER, FileChooser.dirAdminMessage),
-            ResourceBundleUtils.getLangString(FILECHOOSER, FileChooser.dirAdminText)),
+            ResourceBundleUtils.getLangString(FILECHOOSER, FileChoosers.dirAdminMessage),
+            ResourceBundleUtils.getLangString(FILECHOOSER, FileChoosers.dirAdminText)),
     DIR_ADMIN_TEMPLATE(
-            ResourceBundleUtils.getLangString(FILECHOOSER, FileChooser.dirAdminTemplateMessage),
-            ResourceBundleUtils.getLangString(FILECHOOSER, FileChooser.dirAdminTemplateText)),
+            ResourceBundleUtils.getLangString(FILECHOOSER, FileChoosers.dirAdminTemplateMessage),
+            ResourceBundleUtils.getLangString(FILECHOOSER, FileChoosers.dirAdminTemplateText)),
     DIR_BASE(
-            ResourceBundleUtils.getLangString(FILECHOOSER, FileChooser.dirBaseMessage),
-            ResourceBundleUtils.getLangString(FILECHOOSER, FileChooser.dirBaseText)),
+            ResourceBundleUtils.getLangString(FILECHOOSER, FileChoosers.dirBaseMessage),
+            ResourceBundleUtils.getLangString(FILECHOOSER, FileChoosers.dirBaseText)),
     DIR_BIG_DATA(
-            ResourceBundleUtils.getLangString(FILECHOOSER, FileChooser.dirBigDataMessage),
-            ResourceBundleUtils.getLangString(FILECHOOSER, FileChooser.dirBigDataText)),
+            ResourceBundleUtils.getLangString(FILECHOOSER, FileChoosers.dirBigDataMessage),
+            ResourceBundleUtils.getLangString(FILECHOOSER, FileChoosers.dirBigDataText)),
     DIR_BIG_DATA_TEMPLATE(
-            ResourceBundleUtils.getLangString(FILECHOOSER, FileChooser.dirBigDataTemplateMessage),
-            ResourceBundleUtils.getLangString(FILECHOOSER, FileChooser.dirBigDataTemplateText)),
+            ResourceBundleUtils.getLangString(FILECHOOSER, FileChoosers.dirBigDataTemplateMessage),
+            ResourceBundleUtils.getLangString(FILECHOOSER, FileChoosers.dirBigDataTemplateText)),
     DIR_CARD_READER(
-            ResourceBundleUtils.getLangString(FILECHOOSER, FileChooser.cardReaderText),
-            ResourceBundleUtils.getLangString(FILECHOOSER, FileChooser.cardReaderMessage)),
+            ResourceBundleUtils.getLangString(FILECHOOSER, FileChoosers.cardReaderText),
+            ResourceBundleUtils.getLangString(FILECHOOSER, FileChoosers.cardReaderMessage)),
     DIR_GENERAL(
-            ResourceBundleUtils.getLangString(FILECHOOSER, FileChooser.generalText),
-            ResourceBundleUtils.getLangString(FILECHOOSER, FileChooser.generalMessage)),
+            ResourceBundleUtils.getLangString(FILECHOOSER, FileChoosers.generalText),
+            ResourceBundleUtils.getLangString(FILECHOOSER, FileChoosers.generalMessage)),
     DIR_PROJECT(
-            ResourceBundleUtils.getLangString(FILECHOOSER, FileChooser.dirProjectMessage),
-            ResourceBundleUtils.getLangString(FILECHOOSER, FileChooser.dirProjectText)),
+            ResourceBundleUtils.getLangString(FILECHOOSER, FileChoosers.dirProjectMessage),
+            ResourceBundleUtils.getLangString(FILECHOOSER, FileChoosers.dirProjectText)),
     DIR_PROJECT_TEMPLATE(
-            ResourceBundleUtils.getLangString(FILECHOOSER, FileChooser.dirProjectTemplateMessage),
-            ResourceBundleUtils.getLangString(FILECHOOSER, FileChooser.dirProjectTemplateText));
+            ResourceBundleUtils.getLangString(FILECHOOSER, FileChoosers.dirProjectTemplateMessage),
+            ResourceBundleUtils.getLangString(FILECHOOSER, FileChoosers.dirProjectTemplateText));
 
     private final String message;
     private final String text;

@@ -125,6 +125,7 @@ Dist/Height from Plane	:                 	dDist=        0.001	dH=           0.00
 
     // use original order for enum
     private enum Elements {
+
         // Reference Line Information
         TPS_STATION("TPS Station"),
 

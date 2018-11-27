@@ -28,21 +28,33 @@ class ReferenceLineStructureIT {
 
     @Test
     void getDesignLineOffsets() {
-        final RyPoint designLineOffsets = new RyPoint("Design Line/Offs.", "0.000", "1.750", "0.000");
+        final RyPoint designLineOffsets = new RyPoint.Builder("Design Line/Offs.")
+                .setEasting("0.000")
+                .setNorthing("1.750")
+                .setHeight("0.000")
+                .build();
 
         assertEquals(referenceLineStructure.getDesignLineOffsets(), designLineOffsets);
     }
 
     @Test
     void getDesignPoint() {
-        final RyPoint designPoint = new RyPoint("Design Point", "35.150", "9.000", "257.820");
+        final RyPoint designPoint = new RyPoint.Builder("Design Point")
+                .setEasting("35.150")
+                .setNorthing("9.000")
+                .setHeight("257.820")
+                .build();
 
         assertEquals(referenceLineStructure.getDesignPoint(), designPoint);
     }
 
     @Test
     void getEndPoint() {
-        final RyPoint endPoint = new RyPoint("72-47", "33.400", "63.400", "257.820");
+        final RyPoint endPoint = new RyPoint.Builder("72-47")
+                .setEasting("33.400")
+                .setNorthing("63.400")
+                .setHeight("257.820")
+                .build();
 
         assertEquals(referenceLineStructure.getEndPoint(), endPoint);
     }
@@ -56,19 +68,41 @@ class ReferenceLineStructureIT {
 
     @Test
     void getMeasuredLineOffset() {
-        final RyPoint lineOffset1 = new RyPoint("Line/Offset", "-0.001", "-9.318", "0.096");
-        final RyPoint lineOffset2 = new RyPoint("Line/Offset", "-0.002", "-9.314", "0.196");
+        final RyPoint lineOffset1 = new RyPoint.Builder("Line/Offset")
+                .setEasting("-0.001")
+                .setNorthing("-9.318")
+                .setHeight("0.096")
+                .build();
 
         assertNotEquals(referenceLineStructure.getMeasuredLineOffset(), lineOffset1);
+
+        final RyPoint lineOffset2 = new RyPoint.Builder("Line/Offset")
+                .setEasting("-0.002")
+                .setNorthing("-9.314")
+                .setHeight("0.196")
+                .build();
+
         assertEquals(referenceLineStructure.getMeasuredLineOffset(), lineOffset2);
     }
 
     @Test
     void getMeasuredPoint() {
-        final RyPoint measuredPoint1 = new RyPoint("Measured", "37.640", "-5.878", "257.916", "0.000");
-        final RyPoint measuredPoint2 = new RyPoint("Measured", "37.641", "-5.879", "257.915", "0.000");
+        final RyPoint measuredPoint1 = new RyPoint.Builder("Measured")
+                .setEasting("37.640")
+                .setNorthing("-5.878")
+                .setHeight("257.916")
+                .setInstrumentOrReflectorHeight("0.000")
+                .build();
 
         assertNotEquals(referenceLineStructure.getMeasuredPoint(), measuredPoint1);
+
+        final RyPoint measuredPoint2 = new RyPoint.Builder("Measured")
+                .setEasting("37.641")
+                .setNorthing("-5.879")
+                .setHeight("257.915")
+                .setInstrumentOrReflectorHeight("0.000")
+                .build();
+
         assertEquals(referenceLineStructure.getMeasuredPoint(), measuredPoint2);
     }
 
@@ -131,28 +165,46 @@ class ReferenceLineStructureIT {
 
     @Test
     void getStakedPoint() {
-        final RyPoint stakedPoint = new RyPoint("Staked Point", "35.166", "9.012", "257.250", "0.100");
+        final RyPoint stakedPoint = new RyPoint.Builder("Staked Point")
+                .setEasting("35.166")
+                .setNorthing("9.012")
+                .setHeight("257.250")
+                .setInstrumentOrReflectorHeight("0.100")
+                .build();
 
         assertEquals(referenceLineStructure.getStakedPoint(), stakedPoint);
     }
 
     @Test
     void getStakeoutDifference() {
-        final RyPoint stakeoutDifference = new RyPoint("Stakeout Difference", "-0.016", "-0.012", "0.570");
+        final RyPoint stakeoutDifference = new RyPoint.Builder("Stakeout Difference")
+                .setEasting("-0.016")
+                .setNorthing("-0.012")
+                .setHeight("0.570")
+                .build();
 
         assertEquals(referenceLineStructure.getStakeoutDifference(), stakeoutDifference);
     }
 
     @Test
     void getStartPoint() {
-        final RyPoint startPoint = new RyPoint("72-17", "33.400", "9.000", "257.820");
+        final RyPoint startPoint = new RyPoint.Builder("72-17")
+                .setEasting("33.400")
+                .setNorthing("9.000")
+                .setHeight("257.820")
+                .build();
 
         assertEquals(referenceLineStructure.getStartPoint(), startPoint);
     }
 
     @Test
     void getTpsStation() {
-        final RyPoint tpsStation = new RyPoint("FS01", "34.204", "-5.348", "259.397", "0.000");
+        final RyPoint tpsStation = new RyPoint.Builder("FS01")
+                .setEasting("34.204")
+                .setNorthing("-5.348")
+                .setHeight("259.397")
+                .setInstrumentOrReflectorHeight("0.000")
+                .build();
 
         assertEquals(referenceLineStructure.getTpsStation(), tpsStation);
     }

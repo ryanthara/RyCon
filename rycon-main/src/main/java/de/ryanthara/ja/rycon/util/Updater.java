@@ -120,7 +120,7 @@ public class Updater {
                     return true;
                 }
             } else if (huc.getResponseCode() == 404) { // document not found on server
-                logger.warn("Can not found the 'what's new document on server. Error 404");
+                logger.warn("Can not found the 'what's new document on server. Errors 404");
             }
         } catch (MalformedURLException e) {
             logger.warn("Update failed because of a wrong URL format.");

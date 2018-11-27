@@ -22,9 +22,9 @@ import de.ryanthara.ja.rycon.core.clearup.GsiClearUp;
 import de.ryanthara.ja.rycon.core.clearup.LogfileClearUp;
 import de.ryanthara.ja.rycon.data.PreferenceKey;
 import de.ryanthara.ja.rycon.i18n.*;
-import de.ryanthara.ja.rycon.i18n.Button;
-import de.ryanthara.ja.rycon.i18n.Error;
-import de.ryanthara.ja.rycon.i18n.Text;
+import de.ryanthara.ja.rycon.i18n.Buttons;
+import de.ryanthara.ja.rycon.i18n.Errors;
+import de.ryanthara.ja.rycon.i18n.Texts;
 import de.ryanthara.ja.rycon.nio.FileNameExtension;
 import de.ryanthara.ja.rycon.nio.LineReader;
 import de.ryanthara.ja.rycon.nio.WriteFile2Disk;
@@ -63,7 +63,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.TreeSet;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundle.*;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.*;
 import static de.ryanthara.ja.rycon.ui.custom.Status.OK;
 
 /**
@@ -147,15 +147,15 @@ public class TransferWidget extends AbstractWidget {
 
                         checkCardReaderPathAndUpdateListsAndPreferences();
 
-                        Main.statusBar.setStatus(ResourceBundleUtils.getLangString(MESSAGE, Message.cardReaderFilesCopySuccessful), OK);
+                        Main.statusBar.setStatus(ResourceBundleUtils.getLangString(MESSAGE, Messages.cardReaderFilesCopySuccessful), OK);
                     }
 
                     String helper, message;
 
                     if (chkBoxMoveOption.getSelection()) {
-                        helper = ResourceBundleUtils.getLangString(MESSAGE, Message.transferMoveMessage);
+                        helper = ResourceBundleUtils.getLangString(MESSAGE, Messages.transferMoveMessage);
                     } else {
-                        helper = ResourceBundleUtils.getLangString(MESSAGE, Message.transferCopyMessage);
+                        helper = ResourceBundleUtils.getLangString(MESSAGE, Messages.transferCopyMessage);
                     }
 
                     if (countCopiedFiles == 1) {
@@ -166,7 +166,7 @@ public class TransferWidget extends AbstractWidget {
 
                     if (countCopiedFiles > 0) {
                         MessageBoxes.showMessageBox(parent, SWT.ICON_INFORMATION,
-                                ResourceBundleUtils.getLangString(MESSAGE, Message.transferText), message);
+                                ResourceBundleUtils.getLangString(MESSAGE, Messages.transferText), message);
                     }
 
                     return success;
@@ -175,8 +175,8 @@ public class TransferWidget extends AbstractWidget {
                 }
             } else {
                 MessageBoxes.showMessageBox(parent, SWT.ICON_INFORMATION,
-                        ResourceBundleUtils.getLangString(ERROR, Error.transferNoDataSelectedText),
-                        ResourceBundleUtils.getLangString(ERROR, Error.transferNoDataSelected));
+                        ResourceBundleUtils.getLangString(ERROR, Errors.transferNoDataSelectedText),
+                        ResourceBundleUtils.getLangString(ERROR, Errors.transferNoDataSelected));
             }
         } else {
             showCardReaderNotExitsWarning();
@@ -214,7 +214,7 @@ public class TransferWidget extends AbstractWidget {
 
         innerShell = new Shell(parent, SWT.CLOSE | SWT.DIALOG_TRIM | SWT.MAX | SWT.TITLE | SWT.APPLICATION_MODAL);
         innerShell.addListener(SWT.Close, event -> actionBtnCancel());
-        innerShell.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.transfer_Shell));
+        innerShell.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.transfer_Shell));
         innerShell.setSize(width, height);
 
         innerShell.setLayout(gridLayout);
@@ -557,7 +557,7 @@ public class TransferWidget extends AbstractWidget {
 
     private void createGroupCardReader() {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.transfer_CardReader));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.transfer_CardReader));
 
         GridLayout gridLayout = new GridLayout();
         gridLayout.marginHeight = 5;
@@ -571,7 +571,7 @@ public class TransferWidget extends AbstractWidget {
         group.setLayoutData(gridData);
 
         Label cardReaderLabel = new Label(group, SWT.NONE);
-        cardReaderLabel.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.transfer_CardReaderPath));
+        cardReaderLabel.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.transfer_CardReaderPath));
 
         Path cardReader = Paths.get(Main.pref.getUserPreference(PreferenceKey.DIR_CARD_READER));
 
@@ -605,8 +605,8 @@ public class TransferWidget extends AbstractWidget {
         cardReaderPath.setLayoutData(gridData);
 
         org.eclipse.swt.widgets.Button btnCardReaderPath = new org.eclipse.swt.widgets.Button(group, SWT.NONE);
-        btnCardReaderPath.setText(ResourceBundleUtils.getLangString(BUTTON, Button.choosePathText));
-        btnCardReaderPath.setToolTipText(ResourceBundleUtils.getLangString(BUTTON, Button.choosePathText));
+        btnCardReaderPath.setText(ResourceBundleUtils.getLangString(BUTTON, Buttons.choosePathText));
+        btnCardReaderPath.setToolTipText(ResourceBundleUtils.getLangString(BUTTON, Buttons.choosePathText));
         btnCardReaderPath.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -629,7 +629,7 @@ public class TransferWidget extends AbstractWidget {
         final String delimiter = FileSystems.getDefault().getSeparator();
 
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.transfer_FolderAndProject));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.transfer_FolderAndProject));
 
         GridLayout gridLayout = new GridLayout(4, true);
 
@@ -644,7 +644,7 @@ public class TransferWidget extends AbstractWidget {
 
         // DBX folder
         Group jobGroup = new Group(group, SWT.NONE);
-        jobGroup.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.transfer_GroupDBX));
+        jobGroup.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.transfer_GroupDBX));
 
         gridLayout = new GridLayout(1, true);
         jobGroup.setLayout(gridLayout);
@@ -664,7 +664,7 @@ public class TransferWidget extends AbstractWidget {
 
         // Export folder, here GSI folder
         Group exportGroup = new Group(group, SWT.NONE);
-        exportGroup.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.transfer_GroupExport));
+        exportGroup.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.transfer_GroupExport));
 
         gridLayout = new GridLayout(1, true);
         exportGroup.setLayout(gridLayout);
@@ -684,7 +684,7 @@ public class TransferWidget extends AbstractWidget {
 
         // Data folder
         Group dataGroup = new Group(group, SWT.NONE);
-        dataGroup.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.transfer_GroupData));
+        dataGroup.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.transfer_GroupData));
 
         gridLayout = new GridLayout(1, true);
         dataGroup.setLayout(gridLayout);
@@ -704,7 +704,7 @@ public class TransferWidget extends AbstractWidget {
 
         // Last used projects
         Group projectGroup = new Group(group, SWT.NONE);
-        projectGroup.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.transfer_LastUsedProjects));
+        projectGroup.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.transfer_LastUsedProjects));
 
         gridLayout = new GridLayout(1, true);
         projectGroup.setLayout(gridLayout);
@@ -730,7 +730,7 @@ public class TransferWidget extends AbstractWidget {
         final String delimiter = FileSystems.getDefault().getSeparator();
 
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.transfer_TargetProject));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.transfer_TargetProject));
 
         GridLayout gridLayout = new GridLayout();
         gridLayout.marginHeight = 5;
@@ -744,7 +744,7 @@ public class TransferWidget extends AbstractWidget {
         group.setLayoutData(gridData);
 
         Label targetProjectLabel = new Label(group, SWT.NONE);
-        targetProjectLabel.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.transfer_TargetProjectLabel));
+        targetProjectLabel.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.transfer_TargetProjectLabel));
 
         targetProjectPath = new org.eclipse.swt.widgets.Text(group, SWT.SINGLE | SWT.BORDER);
 
@@ -801,8 +801,8 @@ public class TransferWidget extends AbstractWidget {
         targetProjectPath.setLayoutData(gridData);
 
         org.eclipse.swt.widgets.Button btnChooseProjectPath = new org.eclipse.swt.widgets.Button(group, SWT.NONE);
-        btnChooseProjectPath.setText(ResourceBundleUtils.getLangString(BUTTON, Button.choosePathText));
-        btnChooseProjectPath.setToolTipText(ResourceBundleUtils.getLangString(BUTTON, Button.choosePathText));
+        btnChooseProjectPath.setText(ResourceBundleUtils.getLangString(BUTTON, Buttons.choosePathText));
+        btnChooseProjectPath.setToolTipText(ResourceBundleUtils.getLangString(BUTTON, Buttons.choosePathText));
         btnChooseProjectPath.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -823,7 +823,7 @@ public class TransferWidget extends AbstractWidget {
 
     private void createGroupAdvice(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.advice));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.advice));
 
         GridLayout gridLayout = new GridLayout(1, true);
 
@@ -836,18 +836,18 @@ public class TransferWidget extends AbstractWidget {
         Label tip = new Label(group, SWT.WRAP | SWT.BORDER | SWT.LEFT);
 
         String text =
-                ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.transferWidget) + "\n" +
-                        ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.transferWidget2) + "\n\n" +
-                        ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.transferWidget3);
+                ResourceBundleUtils.getLangStringFromXml(ADVICE, Advices.transferWidget) + "\n" +
+                        ResourceBundleUtils.getLangStringFromXml(ADVICE, Advices.transferWidget2) + "\n\n" +
+                        ResourceBundleUtils.getLangStringFromXml(ADVICE, Advices.transferWidget3);
 
         tip.setText(text);
-        // tip.setText(ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.transferWidget));
+        // tip.setText(ResourceBundleUtils.getLangStringFromXml(ADVICE, Advices.transferWidget));
         tip.setLayoutData(new GridData(SWT.HORIZONTAL, SWT.TOP, true, false, 1, 1));
     }
 
     private void createGroupOptions(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.generalOptions));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.generalOptions));
 
         GridLayout gridLayout = new GridLayout(1, true);
 
@@ -859,15 +859,15 @@ public class TransferWidget extends AbstractWidget {
 
         chkBoxMoveOption = new org.eclipse.swt.widgets.Button(group, SWT.CHECK);
         chkBoxMoveOption.setSelection(false);
-        chkBoxMoveOption.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBox.moveTransferWidget));
+        chkBoxMoveOption.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBoxes.moveTransferWidget));
 
         chkBoxCleanMeasurementFile = new org.eclipse.swt.widgets.Button(group, SWT.CHECK);
         chkBoxCleanMeasurementFile.setSelection(false);
-        chkBoxCleanMeasurementFile.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBox.cleanMeasurementFile));
+        chkBoxCleanMeasurementFile.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBoxes.cleanMeasurementFile));
 
         chkBoxCleanLogfile = new org.eclipse.swt.widgets.Button(group, SWT.CHECK);
         chkBoxCleanLogfile.setSelection(false);
-        chkBoxCleanLogfile.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBox.cleanLogfile));
+        chkBoxCleanLogfile.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBoxes.cleanLogfile));
     }
 
     private void initCardReading() {
@@ -1024,14 +1024,14 @@ public class TransferWidget extends AbstractWidget {
 
     private void showCardReaderNotExitsWarning() {
         MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR,
-                ResourceBundleUtils.getLangStringFromXml(TEXT, Text.msgBox_Error),
-                ResourceBundleUtils.getLangString(ERROR, Error.cardReaderPathNotExists));
+                ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.msgBox_Error),
+                ResourceBundleUtils.getLangString(ERROR, Errors.cardReaderPathNotExists));
     }
 
     private void showFileExistsWarning(Path path) {
         MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING,
-                ResourceBundleUtils.getLangStringFromXml(TEXT, Text.msgBox_Warning),
-                String.format(ResourceBundleUtils.getLangString(WARNING, Warning.fileExists), path.getFileName()));
+                ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.msgBox_Warning),
+                String.format(ResourceBundleUtils.getLangString(WARNING, Warnings.fileExists), path.getFileName()));
     }
 
     /*

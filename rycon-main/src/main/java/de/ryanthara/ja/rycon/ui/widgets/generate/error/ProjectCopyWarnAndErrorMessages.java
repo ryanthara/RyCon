@@ -17,13 +17,13 @@
  */
 package de.ryanthara.ja.rycon.ui.widgets.generate.error;
 
-import de.ryanthara.ja.rycon.i18n.Error;
+import de.ryanthara.ja.rycon.i18n.Errors;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
-import de.ryanthara.ja.rycon.i18n.Warning;
+import de.ryanthara.ja.rycon.i18n.Warnings;
 import de.ryanthara.ja.rycon.ui.widgets.GeneratorWidget;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundle.ERROR;
-import static de.ryanthara.ja.rycon.i18n.ResourceBundle.WARNING;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.ERROR;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.WARNING;
 
 /**
  * Instances of this class holds the warning and error messages of the {@link GeneratorWidget}.
@@ -42,7 +42,7 @@ public final class ProjectCopyWarnAndErrorMessages implements CopyWarnAndErrorMe
      */
     @Override
     public String getErrorMessage(String number) {
-        return String.format(ResourceBundleUtils.getLangString(ERROR, Error.projectDirCopy), number);
+        return String.format(ResourceBundleUtils.getLangString(ERROR, Errors.projectDirCopy), number);
     }
 
     /**
@@ -53,7 +53,7 @@ public final class ProjectCopyWarnAndErrorMessages implements CopyWarnAndErrorMe
      */
     @Override
     public String getWarnMessage(String number) {
-        return String.format(ResourceBundleUtils.getLangString(WARNING, Warning.projectDirExists), number);
+        return String.format(ResourceBundleUtils.getLangString(WARNING, Warnings.projectDirExists), number);
     }
 
 }

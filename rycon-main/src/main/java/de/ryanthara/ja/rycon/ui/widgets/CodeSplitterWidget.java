@@ -23,7 +23,7 @@ import de.ryanthara.ja.rycon.core.splitter.NodeDatCodeSplit;
 import de.ryanthara.ja.rycon.core.splitter.TextCodeSplit;
 import de.ryanthara.ja.rycon.data.PreferenceKey;
 import de.ryanthara.ja.rycon.i18n.*;
-import de.ryanthara.ja.rycon.i18n.Error;
+import de.ryanthara.ja.rycon.i18n.Errors;
 import de.ryanthara.ja.rycon.nio.FileNameExtension;
 import de.ryanthara.ja.rycon.nio.LineReader;
 import de.ryanthara.ja.rycon.nio.WriteFile2Disk;
@@ -49,7 +49,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundle.*;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.*;
 
 /**
  * Instances of this class implements a complete widget and it's functionality to split coordinate files by code.
@@ -117,7 +117,7 @@ public class CodeSplitterWidget extends AbstractWidget {
             if (processFileOperationsDND()) {
                 String status;
 
-                final String helper = ResourceBundleUtils.getLangString(MESSAGE, Message.splitFilesStatus);
+                final String helper = ResourceBundleUtils.getLangString(MESSAGE, Messages.splitFilesStatus);
 
                 // use counter to display different text on the status bar
                 if (Main.countFileOps == 1) {
@@ -144,20 +144,13 @@ public class CodeSplitterWidget extends AbstractWidget {
             return false;
         }
 
-        if (files2read.length == 0) {
-            files2read = new Path[1];
-            files2read[0] = Paths.get(inputFieldsComposite.getSourceTextField().getText());
-        } else {
-            files2read = TextCheck.checkSourceAndTargetText(
-                    inputFieldsComposite.getSourceTextField(),
-                    inputFieldsComposite.getTargetTextField(), files2read);
-        }
+        provideFiles2ReadFromText();
 
         if ((files2read != null) && (files2read.length > 0)) {
             if (processFileOperations()) {
                 String status;
 
-                final String helper = ResourceBundleUtils.getLangString(MESSAGE, Message.splitFilesStatus);
+                final String helper = ResourceBundleUtils.getLangString(MESSAGE, Messages.splitFilesStatus);
 
                 // use counter to display different text on the status bar
                 if (Main.countFileOps == 1) {
@@ -173,6 +166,15 @@ public class CodeSplitterWidget extends AbstractWidget {
         }
 
         return false;
+    }
+
+    private void provideFiles2ReadFromText() {
+        if (files2read.length == 0) {
+            files2read = new Path[1];
+            files2read[0] = Paths.get(inputFieldsComposite.getSourceTextField().getText());
+        } else {
+            files2read = TextCheck.checkSourceAndTargetText(inputFieldsComposite, files2read);
+        }
     }
 
     void actionBtnOkAndExit() {
@@ -198,7 +200,7 @@ public class CodeSplitterWidget extends AbstractWidget {
 
         innerShell = new Shell(parent, SWT.CLOSE | SWT.DIALOG_TRIM | SWT.MAX | SWT.TITLE | SWT.APPLICATION_MODAL);
         innerShell.addListener(SWT.Close, event -> actionBtnCancel());
-        innerShell.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.splitter_Shell));
+        innerShell.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.splitter_Shell));
         innerShell.setSize(width, height);
 
         innerShell.setLayout(gridLayout);
@@ -223,9 +225,9 @@ public class CodeSplitterWidget extends AbstractWidget {
      */
     private void actionBtnSource() {
         String[] filterNames = new String[]{
-                ResourceBundleUtils.getLangString(FILECHOOSER, FileChooser.filterNameGsi),
-                ResourceBundleUtils.getLangString(FILECHOOSER, FileChooser.filterNameTxtCode),
-                ResourceBundleUtils.getLangString(FILECHOOSER, FileChooser.filterNameCadwork),
+                ResourceBundleUtils.getLangString(FILECHOOSER, FileChoosers.filterNameGsi),
+                ResourceBundleUtils.getLangString(FILECHOOSER, FileChoosers.filterNameTxtCode),
+                ResourceBundleUtils.getLangString(FILECHOOSER, FileChoosers.filterNameCadwork),
         };
 
         String filterPath = Main.pref.getUserPreference(PreferenceKey.DIR_PROJECT);
@@ -244,7 +246,7 @@ public class CodeSplitterWidget extends AbstractWidget {
         Optional<Path[]> files = FileDialogs.showAdvancedFileDialog(
                 innerShell,
                 filterPath,
-                ResourceBundleUtils.getLangString(FILECHOOSER, FileChooser.splitterSourceText),
+                ResourceBundleUtils.getLangString(FILECHOOSER, FileChoosers.splitterSourceText),
                 acceptableFileSuffixes,
                 filterNames,
                 inputFieldsComposite.getSourceTextField(),
@@ -280,7 +282,7 @@ public class CodeSplitterWidget extends AbstractWidget {
 
     private void createAdvice(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.advice));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.advice));
 
         GridLayout gridLayout = new GridLayout(1, true);
 
@@ -293,13 +295,13 @@ public class CodeSplitterWidget extends AbstractWidget {
         Label tip = new Label(group, SWT.WRAP | SWT.BORDER | SWT.LEFT);
 
         String text =
-                ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.splitterWidget) + "\n\n" +
-                        ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.splitterWidget2) + "\n" +
-                        ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.splitterWidget3);
+                ResourceBundleUtils.getLangStringFromXml(ADVICE, Advices.splitterWidget) + "\n\n" +
+                        ResourceBundleUtils.getLangStringFromXml(ADVICE, Advices.splitterWidget2) + "\n" +
+                        ResourceBundleUtils.getLangStringFromXml(ADVICE, Advices.splitterWidget3);
 
         tip.setText(text);
 
-        // tip.setText(ResourceBundleUtils.getLangStringFromXml(ADVICE, Advice.splitterWidget));
+        // tip.setText(ResourceBundleUtils.getLangStringFromXml(ADVICE, Advices.splitterWidget));
         tip.setLayoutData(new GridData(SWT.HORIZONTAL, SWT.TOP, true, false, 1, 1));
     }
 
@@ -315,7 +317,7 @@ public class CodeSplitterWidget extends AbstractWidget {
 
     private void createOptions(int width) {
         Group group = new Group(innerShell, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.generalOptions));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.generalOptions));
 
         GridLayout gridLayout = new GridLayout(1, true);
 
@@ -327,11 +329,11 @@ public class CodeSplitterWidget extends AbstractWidget {
 
         chkBoxInsertCodeColumn = new Button(group, SWT.CHECK);
         chkBoxInsertCodeColumn.setSelection(false);
-        chkBoxInsertCodeColumn.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBox.insertCodeColumn));
+        chkBoxInsertCodeColumn.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBoxes.insertCodeColumn));
 
         chkBoxWriteCodeZero = new Button(group, SWT.CHECK);
         chkBoxWriteCodeZero.setSelection(false);
-        chkBoxWriteCodeZero.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBox.writeCodeZeroSplitter));
+        chkBoxWriteCodeZero.setText(ResourceBundleUtils.getLangString(CHECKBOX, CheckBoxes.writeCodeZeroSplitter));
     }
 
     private int executeSplitGsi(boolean insertCodeColumn, boolean writeFileWithCodeZero, int counter,
@@ -440,7 +442,7 @@ public class CodeSplitterWidget extends AbstractWidget {
         if (counter > 0) {
             String message;
 
-            final String helper = ResourceBundleUtils.getLangString(MESSAGE, Message.splitFilesMessage);
+            final String helper = ResourceBundleUtils.getLangString(MESSAGE, Messages.splitFilesMessage);
 
             if (counter == 1) {
                 message = String.format(StringUtils.getSingularMessage(helper), files2read.length, counter);
@@ -449,7 +451,7 @@ public class CodeSplitterWidget extends AbstractWidget {
             }
 
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_INFORMATION,
-                    ResourceBundleUtils.getLangStringFromXml(TEXT, Text.msgBox_Success), message);
+                    ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.msgBox_Success), message);
 
             // set the counter for status bar information
             Main.countFileOps = counter;
@@ -457,8 +459,8 @@ public class CodeSplitterWidget extends AbstractWidget {
             return true;
         } else {
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_WARNING,
-                    ResourceBundleUtils.getLangStringFromXml(TEXT, Text.msgBox_Error),
-                    ResourceBundleUtils.getLangString(ERROR, Error.codeSplitFailed));
+                    ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.msgBox_Error),
+                    ResourceBundleUtils.getLangString(ERROR, Errors.codeSplitFailed));
 
             return false;
         }

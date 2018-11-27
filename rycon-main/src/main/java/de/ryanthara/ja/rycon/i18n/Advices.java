@@ -18,7 +18,7 @@
 package de.ryanthara.ja.rycon.i18n;
 
 /**
- * The {@code ToolTip} enumeration holds all the tool tips of RyCON.
+ * The {@code Advices} enumeration holds all the advices of RyCON.
  * <p>
  * This enumeration is used for encapsulating the data. The interface {@link ResourceKey}
  * is used to access different enumerations in the class {@link ResourceBundleUtils}.
@@ -27,13 +27,33 @@ package de.ryanthara.ja.rycon.i18n;
  * @version 1
  * @since 2.0
  */
-public enum ToolTip implements ResourceKey {
+public enum Advices implements ResourceKey {
 
-    preferencesDialog_OkBtn,
-    projection_change,
-    transformation_altimetricFrameSource,
-    transformation_altimetricFrameTarget,
-    transformation_planimetricFrameSource,
-    transformation_planimetricFrameTarget,
+    analyzerWidget,
+    analyzerWidget2,
+    analyzerWidget3,
+    clearUpWidget,
+    clearUpWidget2,
+    clearUpWidget3,
+    converterWidget,
+    converterWidget2,
+    converterWidget3,
+    generatorWidget,
+    generatorWidget2,
+    generatorWidget3,
+    levellingWidget,
+    levellingWidget2,
+    levellingWidget3,
+    pasteCoordinates,
+    pasteCoordinates2,
+    splitterWidget,
+    splitterWidget2,
+    splitterWidget3,
+    transferWidget,
+    transferWidget2,
+    transferWidget3,
+    transformationWidget,
+    transformationWidget2,
+    transformationWidget3,
 
 }

@@ -26,7 +26,7 @@ import java.util.List;
  * @version 1
  * @since 26
  */
-public interface Processor {
+interface Processor {
 
     /**
      * Processes the clear up run for the current block type.

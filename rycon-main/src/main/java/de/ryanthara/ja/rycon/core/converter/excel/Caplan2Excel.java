@@ -18,7 +18,7 @@
 package de.ryanthara.ja.rycon.core.converter.excel;
 
 import de.ryanthara.ja.rycon.core.elements.CaplanBlock;
-import de.ryanthara.ja.rycon.i18n.Column;
+import de.ryanthara.ja.rycon.i18n.Columns;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 import de.ryanthara.ja.rycon.nio.FileFormat;
 import de.ryanthara.ja.rycon.util.StringUtils;
@@ -28,7 +28,7 @@ import org.apache.poi.ss.util.WorkbookUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundle.COLUMN_NAME;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.COLUMN_NAME;
 
 /**
  * A converter with functions to convert coordinate coordinate files from
@@ -168,27 +168,27 @@ public class Caplan2Excel {
         rowNumber++;
 
         cell = row.createCell(cellNumber);
-        cell.setCellValue(ResourceBundleUtils.getLangString(COLUMN_NAME, Column.pointNumber));
+        cell.setCellValue(ResourceBundleUtils.getLangString(COLUMN_NAME, Columns.pointNumber));
         cellNumber++;
 
         cell = row.createCell(cellNumber);
-        cell.setCellValue(ResourceBundleUtils.getLangString(COLUMN_NAME, Column.easting));
+        cell.setCellValue(ResourceBundleUtils.getLangString(COLUMN_NAME, Columns.easting));
         cellNumber++;
 
         cell = row.createCell(cellNumber);
-        cell.setCellValue(ResourceBundleUtils.getLangString(COLUMN_NAME, Column.northing));
+        cell.setCellValue(ResourceBundleUtils.getLangString(COLUMN_NAME, Columns.northing));
         cellNumber++;
 
         cell = row.createCell(cellNumber);
-        cell.setCellValue(ResourceBundleUtils.getLangString(COLUMN_NAME, Column.height));
+        cell.setCellValue(ResourceBundleUtils.getLangString(COLUMN_NAME, Columns.height));
         cellNumber++;
 
         cell = row.createCell(cellNumber);
-        cell.setCellValue(ResourceBundleUtils.getLangString(COLUMN_NAME, Column.object));
+        cell.setCellValue(ResourceBundleUtils.getLangString(COLUMN_NAME, Columns.object));
         cellNumber++;
 
         cell = row.createCell(cellNumber);
-        cell.setCellValue(ResourceBundleUtils.getLangString(COLUMN_NAME, Column.attribute));
+        cell.setCellValue(ResourceBundleUtils.getLangString(COLUMN_NAME, Columns.attribute));
         return rowNumber;
     }
 

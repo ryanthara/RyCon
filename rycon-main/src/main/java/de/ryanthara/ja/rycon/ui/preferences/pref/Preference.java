@@ -25,7 +25,7 @@ import de.ryanthara.ja.rycon.ui.preferences.validator.Validator;
 import java.util.Objects;
 
 /**
- * {@code Preference<T>} is an abstract base class for different {@code PreferenceT<generic data typ></>} classes of RyCON.
+ * {@code Preferences<T>} is an abstract base class for different {@code PreferenceT<generic data typ></>} classes of RyCON.
  * <p>
  * The subclassed preferences exists for different generic data types (Model) like strings, booleans, integer values
  * and represents them with an corresponding control (Control) or needed ui components (View) like text fields

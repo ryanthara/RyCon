@@ -18,8 +18,8 @@
 package de.ryanthara.ja.rycon.nio;
 
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
-import de.ryanthara.ja.rycon.i18n.Text;
-import de.ryanthara.ja.rycon.i18n.Warning;
+import de.ryanthara.ja.rycon.i18n.Texts;
+import de.ryanthara.ja.rycon.i18n.Warnings;
 import de.ryanthara.ja.rycon.nio.util.PathUtils;
 import de.ryanthara.ja.rycon.nio.util.check.PathCheck;
 import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
@@ -31,8 +31,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundle.TEXT;
-import static de.ryanthara.ja.rycon.i18n.ResourceBundle.WARNING;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.TEXT;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.WARNING;
 import static de.ryanthara.ja.rycon.nio.util.PathUtils.prepareOutputFileName;
 
 /**
@@ -72,8 +72,8 @@ public final class WriteFile2Disk {
                     final String outputFilename = p.toString();
 
                     int returnValue = MessageBoxes.showMessageBox(shell, SWT.ICON_WARNING | SWT.YES | SWT.NO,
-                            ResourceBundleUtils.getLangStringFromXml(TEXT, Text.msgBox_Warning),
-                            String.format(ResourceBundleUtils.getLangString(WARNING, Warning.fileExistsOverwrite), outputFilename));
+                            ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.msgBox_Warning),
+                            String.format(ResourceBundleUtils.getLangString(WARNING, Warnings.fileExistsOverwrite), outputFilename));
 
                     if (returnValue == SWT.YES) {
                         return new LineWriter(outputFile).writeFile(writeFile);

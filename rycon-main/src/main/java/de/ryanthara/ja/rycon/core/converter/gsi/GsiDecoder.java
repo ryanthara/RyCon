@@ -17,7 +17,7 @@
  */
 package de.ryanthara.ja.rycon.core.converter.gsi;
 
-import de.ryanthara.ja.rycon.core.elements.GsiBlock;
+import de.ryanthara.ja.rycon.core.elements.GSIBlock;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +34,7 @@ import java.util.TreeSet;
 public class GsiDecoder {
 
     private final List<String> lines;
-    private final List<List<GsiBlock>> decodedBlocks;
+    private final List<List<GSIBlock>> decodedBlocks;
     private Set<Integer> foundWordIndices;
 
     /**
@@ -48,8 +48,8 @@ public class GsiDecoder {
         this.foundWordIndices = new TreeSet<>();
     }
 
-    private List<List<GsiBlock>> decodeToBlocks(List<String> lines) {
-        List<List<GsiBlock>> blocksInLines = new ArrayList<>();
+    private List<List<GSIBlock>> decodeToBlocks(List<String> lines) {
+        List<List<GSIBlock>> blocksInLines = new ArrayList<>();
 
         GsiLineDecoder lineDecoder = new GsiLineDecoder();
 
@@ -63,11 +63,11 @@ public class GsiDecoder {
     }
 
     /**
-     * Returns the decoded list of {@link GsiBlock}.
+     * Returns the decoded list of {@link GSIBlock}.
      *
      * @return decoded GSIBlocks
      */
-    public List<List<GsiBlock>> getDecodedLinesOfGsiBlocks() {
+    public List<List<GSIBlock>> getDecodedLinesOfGsiBlocks() {
         if (lines != null && lines.size() > 0) {
             return decodedBlocks;
         } else {

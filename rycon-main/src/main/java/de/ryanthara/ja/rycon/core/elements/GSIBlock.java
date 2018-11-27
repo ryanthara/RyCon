@@ -18,7 +18,7 @@
 package de.ryanthara.ja.rycon.core.elements;
 
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
-import de.ryanthara.ja.rycon.i18n.WordIndex;
+import de.ryanthara.ja.rycon.i18n.WordIndices;
 import de.ryanthara.ja.rycon.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,37 +26,41 @@ import org.slf4j.LoggerFactory;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundle.WORDINDEX;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.WORDINDEX;
 
 /**
- * Instances of this class represents an object to store and handle the values of a Leica Geosystems GSI block.
+ * A GSIBlock is an object to store and handle the values of a Leica Geosystems GSI block.
+ *
  * <p>
  * The Leica Geo Serial Interface (GSI) is a general purpose, serial data interface
- * for bi-directional communication between TPS Total Stations, Levelling instruments and computers.
+ * for bi-directional communication between TPS Total Stations, GNSS receivers and
+ * Levelling instruments and computers.
+ *
  * <p>
  * The GSI interface is composed in a sequence of blocks, ending with a terminator (CR or CR/LF).
  * The later introduced enhanced GSI16 format starts every line with a <code>*</code> sign.
+ * It stores the values in 16 instead of 8 digits.
  *
  * @author sebastian
- * @version 5
+ * @version 6
  * @since 8
  */
-public class GsiBlock {
+public class GSIBlock {
 
-    private static final Logger logger = LoggerFactory.getLogger(GsiBlock.class.getName());
-
+    private static final Logger logger = LoggerFactory.getLogger(GSIBlock.class.getName());
     private boolean isGSI16;
     private int wordIndex;
     private String dataGSI, information, sign;
 
     /**
-     * Constructs a new instance of this class given a read GSI block as string.
+     * Creates a GSIBlock from a read GSI block string.
+     *
      * <p>
      * This constructor is used for reading Leica Geosystems GSI formatted files.
      *
      * @param blockAsString complete GSI block as string
      */
-    public GsiBlock(String blockAsString) {
+    public GSIBlock(String blockAsString) {
         blockAsString = blockAsString.trim();
 
         this.isGSI16 = blockAsString.length() == 23;
@@ -67,17 +71,18 @@ public class GsiBlock {
     }
 
     /**
-     * Constructs a new instance of this class given its GSI8/GSI16 identifier, the word index, the line number and
-     * the data string.
+     * Creates a GSIBlock from values given as parameters.
+     *
      * <p>
-     * This constructor is used for the GSI block that contains the line number and the point number string. (WI=11)
+     * This constructor is used for the GSI block that contains the line number
+     * and the point number string. (WI=11)
      *
      * @param isGSI16    boolean for indicating a GSI16 file
      * @param wordIndex  word index (WI) of the block
      * @param lineNumber information for the point number (filled up with zeros)
      * @param dataGSI    GSI data as string
      */
-    public GsiBlock(boolean isGSI16, int wordIndex, int lineNumber, String dataGSI) {
+    public GSIBlock(boolean isGSI16, int wordIndex, int lineNumber, String dataGSI) {
         int length = isGSI16 ? 16 : 8;
 
         if (wordIndex == 11) {
@@ -88,19 +93,18 @@ public class GsiBlock {
         }
     }
 
-    // TODO: 23.10.16 implement unit handling
-
     /**
-     * Constructs a new instance of this class given its GSI8/GSI16 identifier, the word index and the data string.
+     * Creates a GSIBlock from values given as parameters.
+     *
      * <p>
-     * This constructor is used for all GSI blocks except the point number one (WI=11). The data string can contains
-     * the sign ('+' or '-') or not.
+     * This constructor is used for all GSI blocks except the point number
+     * one (WI=11). The data string can contains the sign ('+' or '-') or not.
      *
      * @param isGSI16   boolean for indicating a GSI16 file
      * @param wordIndex word index (WI) of the block
      * @param dataGSI   GSI data as string with sign
      */
-    public GsiBlock(boolean isGSI16, int wordIndex, String dataGSI) {
+    public GSIBlock(boolean isGSI16, int wordIndex, String dataGSI) {
         int length = isGSI16 ? 16 : 8;
 
         this.wordIndex = wordIndex;
@@ -137,27 +141,6 @@ public class GsiBlock {
     }
 
     /**
-     * Constructs a new instance of this class given its GSI8/GSI16 identifier, the word index, the information
-     * related to data, the sign and the data string.
-     * <p>
-     * This constructor is additionally used to change between GSI8 and GSI16 data in the levelling widgets.
-     *
-     * @param isGSI16     boolean for indicating a GSI16 file
-     * @param wordIndex   word index (pos 1-2)
-     * @param information information related to data (pos 3-6)
-     * @param sign        sign (+ or -)(pos 7)
-     * @param dataGSI     GSI8 data (pos 8-15) or GSI16 data (pos8-23)
-     */
-    private GsiBlock(boolean isGSI16, int wordIndex, String information, String sign, String dataGSI) {
-        this.wordIndex = wordIndex;
-        this.information = information;
-        this.sign = sign;
-
-        int length = isGSI16 ? 16 : 8;
-        this.dataGSI = StringUtils.fillWithZerosFromBeginning(dataGSI, length);
-    }
-
-    /**
      * Returns the gsi data as string
      *
      * @return gsi data as string
@@ -176,16 +159,16 @@ public class GsiBlock {
     }
 
     /**
-     * Returns true if GsiBlock is GSI16 format.
+     * Returns true if GSIBlock is GSI16 format.
      *
-     * @return true if GsiBlock is GSI16 format
+     * @return true if GSIBlock is GSI16 format
      */
     public boolean isGSI16() {
         return isGSI16;
     }
 
     /**
-     * Returns a GsiBlock in asc format without separation sign. No additional invisible spaces are created.
+     * Returns a GSIBlock in asc format without separation sign. No additional invisible spaces are created.
      *
      * @return formatted {@code String} for ascii output
      */
@@ -194,7 +177,7 @@ public class GsiBlock {
     }
 
     /**
-     * Returns a GsiBlock in csv format without separation sign. No additional invisible spaces are created.
+     * Returns a GSIBlock in csv format without separation sign. No additional invisible spaces are created.
      *
      * @return formatted {@code String} for csv output
      */
@@ -203,7 +186,7 @@ public class GsiBlock {
     }
 
     /**
-     * Returns a GsiBlock in a printable format filled up with invisible spaces to a defined length (e.g. 16 characters).
+     * Returns a GSIBlock in a printable format filled up with invisible spaces to a defined length (e.g. 16 characters).
      *
      * @return formatted {@code String} for column based txt output
      */
@@ -295,7 +278,7 @@ public class GsiBlock {
                 txt = StringUtils.fillWithSpacesFromBeginning(txt, length + 2);
                 break;
             default:
-                txt = ResourceBundleUtils.getLangString(WORDINDEX, WordIndex.WI9999);
+                txt = ResourceBundleUtils.getLangString(WORDINDEX, WordIndices.WI9999);
                 logger.trace("Line contains unknown word index ({}).", dataGSI);
                 break;
         }
@@ -304,21 +287,21 @@ public class GsiBlock {
     }
 
     /**
-     * Returns a GsiBlock as String in the origin format.
+     * Returns a GSIBlock as String in the origin format.
      *
-     * @return GsiBlock as String
+     * @return GSIBlock as String
      */
     public String toString() {
         return wordIndex + information + sign + dataGSI;
     }
 
     /**
-     * Returns a GsiBlock as String in defined format (GSI8 or GSI16).
+     * Returns a GSIBlock as String in defined format (GSI8 or GSI16).
      * <p>
      * Due to issues of the format, leading zeros are added or values are cut off.
      *
      * @param isGSI16 True for GSI16 format
-     * @return GsiBlock as String depending on format GSI8/GSI16
+     * @return GSIBlock as String depending on format GSI8/GSI16
      */
     public String toString(boolean isGSI16) {
         String data;

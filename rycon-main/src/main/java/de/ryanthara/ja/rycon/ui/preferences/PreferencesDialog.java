@@ -19,8 +19,9 @@
 package de.ryanthara.ja.rycon.ui.preferences;
 
 import de.ryanthara.ja.rycon.Main;
+import de.ryanthara.ja.rycon.i18n.Buttons;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
-import de.ryanthara.ja.rycon.i18n.ToolTip;
+import de.ryanthara.ja.rycon.i18n.ToolTips;
 import de.ryanthara.ja.rycon.ui.Size;
 import de.ryanthara.ja.rycon.ui.preferences.editor.Editor;
 import de.ryanthara.ja.rycon.ui.preferences.pref.Preference;
@@ -36,8 +37,8 @@ import java.util.*;
 import java.util.List;
 import java.util.Map.Entry;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundle.BUTTON;
-import static de.ryanthara.ja.rycon.i18n.ResourceBundle.TOOLTIP;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.BUTTON;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.TOOLTIP;
 import static de.ryanthara.ja.rycon.ui.custom.Status.OK;
 
 /**
@@ -185,8 +186,8 @@ public class PreferencesDialog {
         parent.setLayoutData(gridData);
 
         saveButton = new org.eclipse.swt.widgets.Button(parent, SWT.NONE);
-        saveButton.setText(ResourceBundleUtils.getLangString(BUTTON, de.ryanthara.ja.rycon.i18n.Button.preferencesDialog_OkButtonText));
-        saveButton.setToolTipText(ResourceBundleUtils.getLangStringFromXml(TOOLTIP, ToolTip.preferencesDialog_OkBtn));
+        saveButton.setText(ResourceBundleUtils.getLangString(BUTTON, Buttons.preferencesDialog_OkButtonText));
+        saveButton.setToolTipText(ResourceBundleUtils.getLangStringFromXml(TOOLTIP, ToolTips.preferencesDialog_OkBtn));
         saveButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {

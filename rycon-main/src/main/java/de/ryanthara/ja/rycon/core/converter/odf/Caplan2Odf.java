@@ -19,7 +19,7 @@ package de.ryanthara.ja.rycon.core.converter.odf;
 
 import de.ryanthara.ja.rycon.core.converter.excel.Format;
 import de.ryanthara.ja.rycon.core.elements.CaplanBlock;
-import de.ryanthara.ja.rycon.i18n.Column;
+import de.ryanthara.ja.rycon.i18n.Columns;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
 import de.ryanthara.ja.rycon.util.StringUtils;
 import org.odftoolkit.simple.SpreadsheetDocument;
@@ -32,7 +32,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundle.COLUMN_NAME;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.COLUMN_NAME;
 
 /**
  * A converter with functions to convert coordinate coordinate files
@@ -166,27 +166,27 @@ public class Caplan2Odf {
     private int prepareCommentRow(int rowIndex, int colIndex, Table table) {
         Cell cell;
         cell = table.getCellByPosition(colIndex, rowIndex);
-        cell.setStringValue(ResourceBundleUtils.getLangString(COLUMN_NAME, Column.pointNumber));
+        cell.setStringValue(ResourceBundleUtils.getLangString(COLUMN_NAME, Columns.pointNumber));
         colIndex = colIndex + 1;
 
         cell = table.getCellByPosition(colIndex, rowIndex);
-        cell.setStringValue(ResourceBundleUtils.getLangString(COLUMN_NAME, Column.easting));
+        cell.setStringValue(ResourceBundleUtils.getLangString(COLUMN_NAME, Columns.easting));
         colIndex = colIndex + 1;
 
         cell = table.getCellByPosition(colIndex, rowIndex);
-        cell.setStringValue(ResourceBundleUtils.getLangString(COLUMN_NAME, Column.northing));
+        cell.setStringValue(ResourceBundleUtils.getLangString(COLUMN_NAME, Columns.northing));
         colIndex = colIndex + 1;
 
         cell = table.getCellByPosition(colIndex, rowIndex);
-        cell.setStringValue(ResourceBundleUtils.getLangString(COLUMN_NAME, Column.height));
+        cell.setStringValue(ResourceBundleUtils.getLangString(COLUMN_NAME, Columns.height));
         colIndex = colIndex + 1;
 
         cell = table.getCellByPosition(colIndex, rowIndex);
-        cell.setStringValue(ResourceBundleUtils.getLangString(COLUMN_NAME, Column.object));
+        cell.setStringValue(ResourceBundleUtils.getLangString(COLUMN_NAME, Columns.object));
         colIndex = colIndex + 1;
 
         cell = table.getCellByPosition(colIndex, rowIndex);
-        cell.setStringValue(ResourceBundleUtils.getLangString(COLUMN_NAME, Column.attribute));
+        cell.setStringValue(ResourceBundleUtils.getLangString(COLUMN_NAME, Columns.attribute));
 
         rowIndex = rowIndex + 1;
         return rowIndex;

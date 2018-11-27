@@ -370,7 +370,7 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
     }
 
     /**
-     * Returns the number of new points for shift/rotate/scale core.core.transformer.
+     * Returns the number of new points for shift/rotate/scale transformation.
      *
      * @return the number of new points
      */
@@ -379,7 +379,7 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
     }
 
     /**
-     * Returns the number of skipped points for shift/rotate/scale core.core.transformer.
+     * Returns the number of skipped points for shift/rotate/scale transformation.
      *
      * @return the number of skipped points
      */
@@ -433,7 +433,7 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
     }
 
     /**
-     * Returns the calculated rotation of the shift/rotate/scale core.core.transformer.
+     * Returns the calculated rotation of the shift/rotate/scale transformation.
      *
      * @return the rotation
      */
@@ -442,7 +442,7 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
     }
 
     /**
-     * Returns the calculated scale of the shift/rotate/scale core.core.transformer.
+     * Returns the calculated scale of the shift/rotate/scale transformation.
      *
      * @return the rotation
      */
@@ -478,7 +478,7 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
     }
 
     /**
-     * Returns the shift result of a shift/rotate/scale core.core.transformer.
+     * Returns the shift result of a shift/rotate/scale transformation.
      *
      * @return the shift
      */
@@ -696,7 +696,11 @@ public class CogoStructure extends LeicaLogfileBaseStructure {
 
         if (iterator.hasNext()) {
             final String[] shiftElements = iterator.next().split("\\s+");
-            shift = new RyPoint(shiftElements[0], shiftElements[3], shiftElements[6], shiftElements[9]);
+            shift = new RyPoint.Builder(shiftElements[0])
+                    .setEasting(shiftElements[3])
+                    .setNorthing(shiftElements[6])
+                    .setHeight(shiftElements[9])
+                    .build();
 
             final String[] rotateScale = iterator.next().split("\\s+");
             rotation = rotateScale[4];

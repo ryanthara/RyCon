@@ -21,8 +21,8 @@ import de.ryanthara.ja.rycon.core.converter.Separator;
 import de.ryanthara.ja.rycon.core.converter.gsi.BaseToolsGsi;
 import de.ryanthara.ja.rycon.data.DefaultKey;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
-import de.ryanthara.ja.rycon.i18n.Text;
-import de.ryanthara.ja.rycon.i18n.Warning;
+import de.ryanthara.ja.rycon.i18n.Texts;
+import de.ryanthara.ja.rycon.i18n.Warnings;
 import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -33,8 +33,8 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundle.TEXT;
-import static de.ryanthara.ja.rycon.i18n.ResourceBundle.WARNING;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.TEXT;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.WARNING;
 
 /**
  * Instances of this class provides functions to clean up a LTOP measurement file in the Leica Geosystems GSI format.
@@ -152,8 +152,8 @@ public class GsiLtopClearUp {
                         final Shell shell = Display.getCurrent().getActiveShell();
 
                         MessageBoxes.showMessageBox(shell, SWT.ICON_WARNING,
-                                ResourceBundleUtils.getLangStringFromXml(TEXT, Text.msgBox_Warning),
-                                String.format(ResourceBundleUtils.getLangString(WARNING, Warning.noControlPointsLTOP), currentStation));
+                                ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.msgBox_Warning),
+                                String.format(ResourceBundleUtils.getLangString(WARNING, Warnings.noControlPointsLTOP), currentStation));
 
                         range = range + 1;
                     } else {

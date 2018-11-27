@@ -17,7 +17,7 @@
  */
 package de.ryanthara.ja.rycon.core.converter.gsi;
 
-import de.ryanthara.ja.rycon.core.elements.GsiBlock;
+import de.ryanthara.ja.rycon.core.elements.GSIBlock;
 import de.ryanthara.ja.rycon.nio.FileFormat;
 import de.ryanthara.ja.rycon.util.SortUtils;
 import org.slf4j.Logger;
@@ -69,8 +69,8 @@ public class Toporail2Gsi {
     }
 
     private List<String> convertMep2Gsi(boolean isGSI16) {
-        List<GsiBlock> blocks;
-        List<List<GsiBlock>> blocksInLines = new ArrayList<>();
+        List<GSIBlock> blocks;
+        List<List<GSIBlock>> blocksInLines = new ArrayList<>();
 
         // check for being a valid Toporail coordinate file
         if (lines.get(0).startsWith("@MEP")) {
@@ -114,8 +114,8 @@ public class Toporail2Gsi {
     }
 
     private List<String> convertPts2Gsi(boolean isGSI16) {
-        List<GsiBlock> blocks;
-        List<List<GsiBlock>> blocksInLines = new ArrayList<>();
+        List<GSIBlock> blocks;
+        List<List<GSIBlock>> blocksInLines = new ArrayList<>();
 
         // check for being a valid Toporail coordinate file
         if (lines.get(0).startsWith("@PTS")) {
@@ -130,19 +130,19 @@ public class Toporail2Gsi {
                 for (int j = 0; j < tokens.length; j++) {
                     switch (j) {
                         case 0: // numeric code
-                            blocks.add(new GsiBlock(isGSI16, 41, tokens[0]));
+                            blocks.add(new GSIBlock(isGSI16, 41, tokens[0]));
                             break;
                         case 1: // point number
-                            blocks.add(new GsiBlock(isGSI16, 11, lineCounter, tokens[1]));
+                            blocks.add(new GSIBlock(isGSI16, 11, lineCounter, tokens[1]));
                             break;
                         case 2: // easting
-                            blocks.add(new GsiBlock(isGSI16, 81, tokens[2]));
+                            blocks.add(new GSIBlock(isGSI16, 81, tokens[2]));
                             break;
                         case 3: // northing
-                            blocks.add(new GsiBlock(isGSI16, 82, tokens[3]));
+                            blocks.add(new GSIBlock(isGSI16, 82, tokens[3]));
                             break;
                         case 4: // height
-                            blocks.add(new GsiBlock(isGSI16, 83, tokens[4]));
+                            blocks.add(new GSIBlock(isGSI16, 83, tokens[4]));
                             break;
                         case 5: // date YYYYMMDD
                             if (tokens[5].length() == 8) {
@@ -152,22 +152,22 @@ public class Toporail2Gsi {
                                 String month = date.substring(4, 6);
                                 String day = date.substring(6, 8);
 
-                                // blocks.add(new GsiBlock(isGSI16, 17, day + month + year));
-                                blocks.add(new GsiBlock(isGSI16, 18, year.substring(2, 4) + "000000"));
-                                blocks.add(new GsiBlock(isGSI16, 19, month + day + "0000"));
+                                // blocks.add(new GSIBlock(isGSI16, 17, day + month + year));
+                                blocks.add(new GSIBlock(isGSI16, 18, year.substring(2, 4) + "000000"));
+                                blocks.add(new GSIBlock(isGSI16, 19, month + day + "0000"));
                             }
                             break;
                         case 6: // author
-                            blocks.add(new GsiBlock(isGSI16, 71, tokens[6]));
+                            blocks.add(new GSIBlock(isGSI16, 71, tokens[6]));
                             break;
                         case 7: // comment
-                            blocks.add(new GsiBlock(isGSI16, 72, tokens[7]));
+                            blocks.add(new GSIBlock(isGSI16, 72, tokens[7]));
                             break;
                         case 8: // overhauling (mm)
-                            blocks.add(new GsiBlock(isGSI16, 73, tokens[8]));
+                            blocks.add(new GSIBlock(isGSI16, 73, tokens[8]));
                             break;
                         case 9: // azimuth (gon)
-                            blocks.add(new GsiBlock(isGSI16, 21, tokens[9]));
+                            blocks.add(new GSIBlock(isGSI16, 21, tokens[9]));
                             break;
                         default:
                             logger.trace("Found one more token '{}'.", j);
@@ -189,39 +189,39 @@ public class Toporail2Gsi {
         return BaseToolsGsi.lineTransformation(isGSI16, blocksInLines);
     }
 
-    private List<GsiBlock> transformControlMeasurementLine(String[] tokens, boolean isGSI16, int lineCounter) {
-        List<GsiBlock> blocks = new ArrayList<>();
+    private List<GSIBlock> transformControlMeasurementLine(String[] tokens, boolean isGSI16, int lineCounter) {
+        List<GSIBlock> blocks = new ArrayList<>();
 
         for (int j = 1; j < tokens.length; j++) {
             switch (j) {
                 case 1: // numeric code
-                    blocks.add(new GsiBlock(isGSI16, 41, tokens[1]));
+                    blocks.add(new GSIBlock(isGSI16, 41, tokens[1]));
                     break;
                 case 2: // point number
-                    blocks.add(new GsiBlock(isGSI16, 71, lineCounter, tokens[2]));
+                    blocks.add(new GSIBlock(isGSI16, 71, lineCounter, tokens[2]));
                     break;
                 case 3: // numeric code
-                    blocks.add(new GsiBlock(isGSI16, 42, tokens[3]));
+                    blocks.add(new GSIBlock(isGSI16, 42, tokens[3]));
                     break;
                 case 4: // point number
-                    blocks.add(new GsiBlock(isGSI16, 72, tokens[4]));
+                    blocks.add(new GSIBlock(isGSI16, 72, tokens[4]));
                     break;
                 case 5: // slope distance or horizontal distance -> valued in 'height difference'
                     break;
                 case 6: // height difference
                     if (tokens[6].equalsIgnoreCase("")) {
                         // slope distance
-                        blocks.add(new GsiBlock(isGSI16, 31, tokens[5]));
+                        blocks.add(new GSIBlock(isGSI16, 31, tokens[5]));
                     } else {
                         // horizontal distance
-                        blocks.add(new GsiBlock(isGSI16, 32, tokens[5]));
+                        blocks.add(new GSIBlock(isGSI16, 32, tokens[5]));
                     }
 
                     // height difference
-                    blocks.add(new GsiBlock(isGSI16, 33, tokens[6]));
+                    blocks.add(new GSIBlock(isGSI16, 33, tokens[6]));
                     break;
                 case 7: // comment
-                    blocks.add(new GsiBlock(isGSI16, 72, tokens[7]));
+                    blocks.add(new GSIBlock(isGSI16, 72, tokens[7]));
                     break;
                 default:
                     logger.trace("Found one more token '{}'.", j);
@@ -237,31 +237,31 @@ public class Toporail2Gsi {
         return List.copyOf(blocks);
     }
 
-    private List<GsiBlock> transformCoordinateLine(String[] tokens, boolean isGSI16, int lineCounter) {
-        List<GsiBlock> blocks = new ArrayList<>();
+    private List<GSIBlock> transformCoordinateLine(String[] tokens, boolean isGSI16, int lineCounter) {
+        List<GSIBlock> blocks = new ArrayList<>();
 
         for (int j = 1; j < tokens.length; j++) {
             switch (j) {
                 case 1: // numeric code
-                    blocks.add(new GsiBlock(isGSI16, 41, tokens[1]));
+                    blocks.add(new GSIBlock(isGSI16, 41, tokens[1]));
                     break;
                 case 2: // point number
-                    blocks.add(new GsiBlock(isGSI16, 11, lineCounter, tokens[2]));
+                    blocks.add(new GSIBlock(isGSI16, 11, lineCounter, tokens[2]));
                     break;
                 case 3: // usage
-                    blocks.add(new GsiBlock(isGSI16, 71, tokens[3]));
+                    blocks.add(new GSIBlock(isGSI16, 71, tokens[3]));
                     break;
                 case 4: // easting
-                    blocks.add(new GsiBlock(isGSI16, 81, tokens[4]));
+                    blocks.add(new GSIBlock(isGSI16, 81, tokens[4]));
                     break;
                 case 5: // northing
-                    blocks.add(new GsiBlock(isGSI16, 82, tokens[5]));
+                    blocks.add(new GSIBlock(isGSI16, 82, tokens[5]));
                     break;
                 case 6: // height
-                    blocks.add(new GsiBlock(isGSI16, 83, tokens[6]));
+                    blocks.add(new GSIBlock(isGSI16, 83, tokens[6]));
                     break;
                 case 7: // comment
-                    blocks.add(new GsiBlock(isGSI16, 72, tokens[7]));
+                    blocks.add(new GSIBlock(isGSI16, 72, tokens[7]));
                     break;
                 default:
                     logger.trace("Found one more token '{}'.", j);
@@ -277,43 +277,43 @@ public class Toporail2Gsi {
         return List.copyOf(blocks);
     }
 
-    private List<GsiBlock> transformMeasurementLine(String[] tokens, boolean isGSI16, int lineCounter) {
-        List<GsiBlock> blocks = new ArrayList<>();
+    private List<GSIBlock> transformMeasurementLine(String[] tokens, boolean isGSI16, int lineCounter) {
+        List<GSIBlock> blocks = new ArrayList<>();
 
         for (int j = 1; j < tokens.length; j++) {
             switch (j) {
                 case 1: // numeric code
-                    blocks.add(new GsiBlock(isGSI16, 41, tokens[1]));
+                    blocks.add(new GSIBlock(isGSI16, 41, tokens[1]));
                     break;
                 case 2: // point number
-                    blocks.add(new GsiBlock(isGSI16, 11, lineCounter, tokens[2]));
+                    blocks.add(new GSIBlock(isGSI16, 11, lineCounter, tokens[2]));
                     break;
                 case 3: // slope distance (m)
-                    blocks.add(new GsiBlock(isGSI16, 31, tokens[3]));
+                    blocks.add(new GSIBlock(isGSI16, 31, tokens[3]));
                     break;
                 case 4: // horizontal angle (gon)
-                    blocks.add(new GsiBlock(isGSI16, 21, tokens[4]));
+                    blocks.add(new GSIBlock(isGSI16, 21, tokens[4]));
                     break;
                 case 5: // vertical angle (gon)
-                    blocks.add(new GsiBlock(isGSI16, 22, tokens[5]));
+                    blocks.add(new GSIBlock(isGSI16, 22, tokens[5]));
                     break;
                 case 6: // reflector height (m)
-                    blocks.add(new GsiBlock(isGSI16, 87, tokens[6]));
+                    blocks.add(new GSIBlock(isGSI16, 87, tokens[6]));
                     break;
                 case 7: // longitudinal shift
-                    blocks.add(new GsiBlock(isGSI16, 71, tokens[7]));
+                    blocks.add(new GSIBlock(isGSI16, 71, tokens[7]));
                     break;
                 case 8: // lateral shift
-                    blocks.add(new GsiBlock(isGSI16, 72, tokens[8]));
+                    blocks.add(new GSIBlock(isGSI16, 72, tokens[8]));
                     break;
                 case 9: // comment
-                    blocks.add(new GsiBlock(isGSI16, 72, tokens[9]));
+                    blocks.add(new GSIBlock(isGSI16, 72, tokens[9]));
                     break;
                 case 10: // overhauling (mm)
-                    blocks.add(new GsiBlock(isGSI16, 73, tokens[10]));
+                    blocks.add(new GSIBlock(isGSI16, 73, tokens[10]));
                     break;
                 case 11: // azimuth (gon)
-                    blocks.add(new GsiBlock(isGSI16, 74, tokens[11]));
+                    blocks.add(new GSIBlock(isGSI16, 74, tokens[11]));
                     break;
                 default:
                     logger.trace("Found one more token '{}'.", j);
@@ -329,32 +329,32 @@ public class Toporail2Gsi {
         return List.copyOf(blocks);
     }
 
-    private List<GsiBlock> transformStationLine(String[] tokens, boolean isGSI16, int lineCounter) {
-        List<GsiBlock> blocks = new ArrayList<>();
+    private List<GSIBlock> transformStationLine(String[] tokens, boolean isGSI16, int lineCounter) {
+        List<GSIBlock> blocks = new ArrayList<>();
 
         for (int j = 1; j < tokens.length; j++) {
             switch (j) {
                 case 1: // numeric code
-                    blocks.add(new GsiBlock(isGSI16, 41, tokens[1]));
+                    blocks.add(new GSIBlock(isGSI16, 41, tokens[1]));
                     break;
                 case 2: // point number
-                    blocks.add(new GsiBlock(isGSI16, 11, lineCounter, tokens[2]));
+                    blocks.add(new GSIBlock(isGSI16, 11, lineCounter, tokens[2]));
                     break;
                 case 3: // station type
-                    blocks.add(new GsiBlock(isGSI16, 71, tokens[3]));
+                    blocks.add(new GSIBlock(isGSI16, 71, tokens[3]));
                     break;
                 case 4: // instrument height (m)
                     // TODO: 19.11.17 Check for unit (metre)
-                    blocks.add(new GsiBlock(isGSI16, 88, tokens[4]));
+                    blocks.add(new GSIBlock(isGSI16, 88, tokens[4]));
                     break;
                 case 5: // temperature in °C
-                    blocks.add(new GsiBlock(isGSI16, 72, tokens[5]));
+                    blocks.add(new GSIBlock(isGSI16, 72, tokens[5]));
                     break;
                 case 6: // air pressure in Mbar
-                    blocks.add(new GsiBlock(isGSI16, 73, tokens[6]));
+                    blocks.add(new GSIBlock(isGSI16, 73, tokens[6]));
                     break;
                 case 7: // comment
-                    blocks.add(new GsiBlock(isGSI16, 74, tokens[7]));
+                    blocks.add(new GSIBlock(isGSI16, 74, tokens[7]));
                     break;
                 default:
                     logger.trace("Found one more token '{}'.", j);

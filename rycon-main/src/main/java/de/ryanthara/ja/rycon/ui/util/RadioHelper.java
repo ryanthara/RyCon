@@ -45,6 +45,7 @@ public final class RadioHelper {
      * @param control {@code Control[]} object with radio buttons
      * @return number of the selected radio button
      */
+    // TODO Implement button handling with enumeration if possible
     public static int getSelectedBtn(Control... control) {
         int number = -1;
 
@@ -67,7 +68,7 @@ public final class RadioHelper {
      * Enables a certain radio button in the given control group.
      *
      * @param control Control with radio buttons
-     * @param number  Button to enable
+     * @param number  Buttons to enable
      */
     public static void selectBtn(Control[] control, int number) {
         for (int i = 0; i < control.length; i++) {

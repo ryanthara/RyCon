@@ -17,9 +17,9 @@
  */
 package de.ryanthara.ja.rycon.ui.widgets.convert.read;
 
-import de.ryanthara.ja.rycon.i18n.Error;
+import de.ryanthara.ja.rycon.i18n.Errors;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
-import de.ryanthara.ja.rycon.i18n.Text;
+import de.ryanthara.ja.rycon.i18n.Texts;
 import de.ryanthara.ja.rycon.nio.LineReader;
 import de.ryanthara.ja.rycon.ui.custom.MessageBoxes;
 import de.ryanthara.ja.rycon.ui.widgets.ConverterWidget;
@@ -31,8 +31,8 @@ import org.slf4j.LoggerFactory;
 import java.nio.file.Path;
 import java.util.List;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundle.ERROR;
-import static de.ryanthara.ja.rycon.i18n.ResourceBundle.TEXT;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.ERROR;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.TEXT;
 
 /**
  * A reader for reading coordinate files from the geodata server Kanton Basel
@@ -87,8 +87,8 @@ public class BaselLandschaftTxtReader extends Reader {
             logger.warn("Basel Landschaft text file {} could not be read.", file2Read.toString());
 
             MessageBoxes.showMessageBox(innerShell, SWT.ICON_ERROR,
-                    ResourceBundleUtils.getLangStringFromXml(TEXT, Text.msgBox_Error),
-                    ResourceBundleUtils.getLangString(ERROR, Error.txtBLReadingFailed));
+                    ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.msgBox_Error),
+                    ResourceBundleUtils.getLangString(ERROR, Errors.txtBLReadingFailed));
 
             return false;
         }

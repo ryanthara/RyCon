@@ -18,7 +18,7 @@
 package de.ryanthara.ja.rycon.core.converter.gsi;
 
 import de.ryanthara.ja.rycon.core.elements.CaplanBlock;
-import de.ryanthara.ja.rycon.core.elements.GsiBlock;
+import de.ryanthara.ja.rycon.core.elements.GSIBlock;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,8 +54,8 @@ public class Caplan2Gsi {
      * @return converted GSI format file
      */
     public List<String> convert(boolean isGSI16, boolean writeCodeColumn) {
-        List<GsiBlock> blocks;
-        List<List<GsiBlock>> blocksInLines = new ArrayList<>();
+        List<GSIBlock> blocks;
+        List<List<GSIBlock>> blocksInLines = new ArrayList<>();
 
         int lineCounter = 1;
 
@@ -67,31 +67,31 @@ public class Caplan2Gsi {
                 CaplanBlock caplanBlock = new CaplanBlock(line);
 
                 if (caplanBlock.getNumber() != null) {
-                    blocks.add(new GsiBlock(isGSI16, 11, lineCounter, caplanBlock.getNumber()));
+                    blocks.add(new GSIBlock(isGSI16, 11, lineCounter, caplanBlock.getNumber()));
                 }
 
                 if ((caplanBlock.getValency() != -1) & writeCodeColumn) {
-                    blocks.add(new GsiBlock(isGSI16, 41, Integer.toString(caplanBlock.getValency())));
+                    blocks.add(new GSIBlock(isGSI16, 41, Integer.toString(caplanBlock.getValency())));
                 }
 
                 if (caplanBlock.getEasting() != null) {
-                    blocks.add(new GsiBlock(isGSI16, 81, caplanBlock.getEasting()));
+                    blocks.add(new GSIBlock(isGSI16, 81, caplanBlock.getEasting()));
                 }
 
                 if (caplanBlock.getNorthing() != null) {
-                    blocks.add(new GsiBlock(isGSI16, 82, caplanBlock.getNorthing()));
+                    blocks.add(new GSIBlock(isGSI16, 82, caplanBlock.getNorthing()));
                 }
 
                 if (caplanBlock.getHeight() != null) {
-                    blocks.add(new GsiBlock(isGSI16, 83, caplanBlock.getHeight()));
+                    blocks.add(new GSIBlock(isGSI16, 83, caplanBlock.getHeight()));
                 }
 
                 if ((caplanBlock.getCode() != null) & writeCodeColumn) {
-                    blocks.add(new GsiBlock(isGSI16, 71, caplanBlock.getCode()));
+                    blocks.add(new GSIBlock(isGSI16, 71, caplanBlock.getCode()));
 
                     if (caplanBlock.getAttributes().size() > 0) {
                         for (int i = 1; (i < caplanBlock.getAttributes().size()) & (i < 9); i++) {
-                            blocks.add(new GsiBlock(isGSI16, (71 + i), caplanBlock.getAttributes().get(i)));
+                            blocks.add(new GSIBlock(isGSI16, (71 + i), caplanBlock.getAttributes().get(i)));
                             lineCounter = lineCounter + 1;
                         }
                     }

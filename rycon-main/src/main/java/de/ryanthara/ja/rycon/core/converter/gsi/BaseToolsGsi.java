@@ -19,7 +19,7 @@ package de.ryanthara.ja.rycon.core.converter.gsi;
 
 import de.ryanthara.ja.rycon.core.converter.Converter;
 import de.ryanthara.ja.rycon.core.converter.Separator;
-import de.ryanthara.ja.rycon.core.elements.GsiBlock;
+import de.ryanthara.ja.rycon.core.elements.GSIBlock;
 import de.ryanthara.ja.rycon.data.PreferenceKey;
 import de.ryanthara.ja.rycon.util.StringUtils;
 
@@ -59,8 +59,8 @@ public final class BaseToolsGsi {
         throw new AssertionError();
     }
 
-    private static String getBlockByWordIndex(List<GsiBlock> blocks, int wordIndex) {
-        for (GsiBlock block : blocks) {
+    private static String getBlockByWordIndex(List<GSIBlock> blocks, int wordIndex) {
+        for (GSIBlock block : blocks) {
             if (block.getWordIndex() == wordIndex) {
                 return block.toString();
             }
@@ -108,7 +108,7 @@ public final class BaseToolsGsi {
      */
     public static boolean isTargetLine(String line) {
         GsiLineDecoder gsiLineDecoder = new GsiLineDecoder();
-        List<GsiBlock> blocks = gsiLineDecoder.decode(line);
+        List<GSIBlock> blocks = gsiLineDecoder.decode(line);
 
         final String block11 = getBlockByWordIndex(blocks, 11);
         final String block81 = getBlockByWordIndex(blocks, 81);
@@ -140,17 +140,17 @@ public final class BaseToolsGsi {
     }
 
     /**
-     * Transforms a line of encoded {@code GsiBlock}s into a string line and fill it up into an
+     * Transforms a line of encoded {@code GSIBlock}s into a string line and fill it up into an
      * {@code List<String>} for file writing.
      *
      * @param isGSI16  distinguish between GSI8 or GSI16 output format
-     * @param gsiLines List<List<GsiBlock>> of encoded GSIBlocks
+     * @param gsiLines List<List<GSIBlock>> of encoded GSIBlocks
      * @return transformed string line with GSI content
      */
-    static List<String> lineTransformation(boolean isGSI16, List<List<GsiBlock>> gsiLines) {
+    static List<String> lineTransformation(boolean isGSI16, List<List<GSIBlock>> gsiLines) {
         List<String> result = new ArrayList<>();
 
-        for (List<GsiBlock> gsiLine : gsiLines) {
+        for (List<GSIBlock> gsiLine : gsiLines) {
             String newLine = "";
 
             if (isGSI16) {
@@ -159,7 +159,7 @@ public final class BaseToolsGsi {
 
             int counter = 0;
 
-            for (GsiBlock block : gsiLine) {
+            for (GSIBlock block : gsiLine) {
                 newLine = newLine.concat(block.toString(isGSI16));
 
                 if (counter < gsiLine.size()) {

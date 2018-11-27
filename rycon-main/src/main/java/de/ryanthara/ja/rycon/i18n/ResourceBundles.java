@@ -20,7 +20,7 @@ package de.ryanthara.ja.rycon.i18n;
 import de.ryanthara.ja.rycon.core.converter.Separator;
 
 /**
- * The {@code ResourceBundle} enumeration holds the paths to all resource bundles
+ * The {@code ResourceBundles} enumeration holds the paths to all resource bundles
  * for RyCON.
  * <p>
  * This enumeration is used for encapsulating the data. The access to the different
@@ -30,18 +30,18 @@ import de.ryanthara.ja.rycon.core.converter.Separator;
  * @version 1
  * @since 2.0
  */
-public enum ResourceBundle {
+public enum ResourceBundles {
 
     ADVICE("de/ryanthara/ja/rycon/ui/Advices"),
     BUTTON("de/ryanthara/ja/rycon/ui/Buttons"),
     COLUMN_NAME("de/ryanthara/ja/rycon/core/converter/ColumnNames"),
     CHECKBOX("de/ryanthara/ja/rycon/ui/CheckBoxes"),
     DISTINCTTYPE("de/ryanthara/ja/rycon/core/transformer/DistinctTypes"),
-    ERROR("de/ryanthara/ja/rycon/ui/Error"),
+    ERROR("de/ryanthara/ja/rycon/ui/Errors"),
     FILECHOOSER("de/ryanthara/ja/rycon/ui/FileChoosers"),
     LABEL("de/ryanthara/ja/rycon/ui/Labels"),
     LANG_STRING("de/ryanthara/ja/rycon/LangStrings"),
-    MESSAGE("de/ryanthara/ja/rycon/ui/Message"),
+    MESSAGE("de/ryanthara/ja/rycon/ui/Messages"),
     PREFERENCE("de/ryanthara/ja/rycon/ui/Preferences"),
     TEXT("de/ryanthara/ja/rycon/ui/Texts"),
     TOOLTIP("de/ryanthara/ja/rycon/ui/ToolTips"),
@@ -50,7 +50,7 @@ public enum ResourceBundle {
 
     private final String bundleName;
 
-    ResourceBundle(String bundleName) {
+    ResourceBundles(String bundleName) {
         this.bundleName = bundleName;
     }
 

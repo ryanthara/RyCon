@@ -17,7 +17,7 @@
  */
 package de.ryanthara.ja.rycon.core.converter.gsi;
 
-import de.ryanthara.ja.rycon.core.elements.GsiBlock;
+import de.ryanthara.ja.rycon.core.elements.GSIBlock;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,8 +54,8 @@ public class Cadwork2Gsi {
      * @return converted {@code List<String>} with lines of GSI8 or GSI16 format
      */
     public List<String> convert(boolean isGSI16, boolean useCodeColumn, boolean useZeroHeights) {
-        List<GsiBlock> blocks;
-        List<List<GsiBlock>> blocksInLines = new ArrayList<>();
+        List<GSIBlock> blocks;
+        List<List<GSIBlock>> blocksInLines = new ArrayList<>();
 
         removeHeadLines();
 
@@ -67,23 +67,23 @@ public class Cadwork2Gsi {
             String[] values = line.trim().split("\\s+", -1);
 
             // point number
-            blocks.add(new GsiBlock(isGSI16, 11, lineCounter, values[5]));
+            blocks.add(new GSIBlock(isGSI16, 11, lineCounter, values[5]));
 
             // use code if necessary
             if (useCodeColumn) {
-                blocks.add(new GsiBlock(isGSI16, 71, values[4]));
+                blocks.add(new GSIBlock(isGSI16, 71, values[4]));
             }
 
             // easting and northing
-            blocks.add(new GsiBlock(isGSI16, 81, values[1]));
-            blocks.add(new GsiBlock(isGSI16, 82, values[2]));
+            blocks.add(new GSIBlock(isGSI16, 81, values[1]));
+            blocks.add(new GSIBlock(isGSI16, 82, values[2]));
 
             // use height if necessary
             if (useZeroHeights) {
-                blocks.add(new GsiBlock(isGSI16, 83, values[3]));
+                blocks.add(new GSIBlock(isGSI16, 83, values[3]));
             } else {
                 if (!values[3].equals("0.000000")) {
-                    blocks.add(new GsiBlock(isGSI16, 83, values[3]));
+                    blocks.add(new GSIBlock(isGSI16, 83, values[3]));
                 }
             }
 

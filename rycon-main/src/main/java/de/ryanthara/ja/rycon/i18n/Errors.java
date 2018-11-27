@@ -18,7 +18,7 @@
 package de.ryanthara.ja.rycon.i18n;
 
 /**
- * The {@code Error} enumeration holds all the error messages of RyCON.
+ * The {@code Errors} enumeration holds all the error messages of RyCON.
  * <p>
  * This enumeration is used for encapsulating the data. The interface {@link ResourceKey}
  * is used to access different enumerations in the class {@link ResourceBundleUtils}.
@@ -27,7 +27,7 @@ package de.ryanthara.ja.rycon.i18n;
  * @version 1
  * @since 2.0
  */
-public enum Error implements ResourceKey {
+public enum Errors implements ResourceKey {
 
     adminDirCopy,
     adminDirEquality,

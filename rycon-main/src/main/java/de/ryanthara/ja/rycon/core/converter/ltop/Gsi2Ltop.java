@@ -18,7 +18,7 @@
 package de.ryanthara.ja.rycon.core.converter.ltop;
 
 import de.ryanthara.ja.rycon.core.converter.gsi.GsiDecoder;
-import de.ryanthara.ja.rycon.core.elements.GsiBlock;
+import de.ryanthara.ja.rycon.core.elements.GSIBlock;
 import de.ryanthara.ja.rycon.core.elements.RyPoint;
 import de.ryanthara.ja.rycon.util.NumberFormatter;
 import org.slf4j.Logger;
@@ -71,7 +71,7 @@ public class Gsi2Ltop {
 
         BaseToolsLtop.writeCommendLine(result, BaseToolsLtop.cartesianCoordsIdentifier);
 
-        for (List<GsiBlock> blocksInLine : gsiDecoder.getDecodedLinesOfGsiBlocks()) {
+        for (List<GSIBlock> blocksInLine : gsiDecoder.getDecodedLinesOfGsiBlocks()) {
             // prevent wrong output with empty strings of defined length from class
             number = BaseToolsLtop.number;
             pointType = BaseToolsLtop.pointType;
@@ -84,7 +84,7 @@ public class Gsi2Ltop {
             xi = BaseToolsLtop.xi;
 
             for (int i = 0; i < gsiDecoder.getDecodedLinesOfGsiBlocks().size(); i++) {
-                for (GsiBlock block : blocksInLine) {
+                for (GSIBlock block : blocksInLine) {
                     String s = block.toPrintFormatCsv();
 
                     switch (block.getWordIndex()) {

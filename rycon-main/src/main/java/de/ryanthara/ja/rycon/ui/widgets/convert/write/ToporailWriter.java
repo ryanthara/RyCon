@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A writer for writing Toporail MEP and PTS files in the {@link ConverterWidget} of RyCON.
@@ -82,7 +83,7 @@ public class ToporailWriter extends Writer {
         boolean success = false;
         java.util.List<String> writeFile = null;
 
-        switch (SourceButton.fromIndex(parameter.getSourceNumber())) {
+        switch (Objects.requireNonNull(SourceButton.fromIndex(parameter.getSourceNumber()).orElse(null))) {
             case GSI8:
                 // fall through for GSI8 format
             case GSI16:

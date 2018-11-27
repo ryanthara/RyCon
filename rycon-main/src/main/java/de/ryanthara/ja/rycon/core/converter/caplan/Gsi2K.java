@@ -19,7 +19,7 @@ package de.ryanthara.ja.rycon.core.converter.caplan;
 
 import de.ryanthara.ja.rycon.core.converter.Separator;
 import de.ryanthara.ja.rycon.core.converter.gsi.GsiDecoder;
-import de.ryanthara.ja.rycon.core.elements.GsiBlock;
+import de.ryanthara.ja.rycon.core.elements.GSIBlock;
 import de.ryanthara.ja.rycon.util.NumberFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,7 +69,7 @@ public class Gsi2K {
             BaseToolsCaplanK.writeCommentLine(result);
         }
 
-        for (List<GsiBlock> blocksInLine : gsiDecoder.getDecodedLinesOfGsiBlocks()) {
+        for (List<GSIBlock> blocksInLine : gsiDecoder.getDecodedLinesOfGsiBlocks()) {
             StringBuilder stringBuilder = new StringBuilder();
 
             // prevent wrong output with empty strings of defined length from class
@@ -85,7 +85,7 @@ public class Gsi2K {
             for (int i = 0; i < gsiDecoder.getDecodedLinesOfGsiBlocks().size(); i++) {
                 int valencyIndicator = 0;
 
-                for (GsiBlock block : blocksInLine) {
+                for (GSIBlock block : blocksInLine) {
                     String printFormatCSV = block.toPrintFormatCsv();
 
                     switch (block.getWordIndex()) {

@@ -18,7 +18,7 @@
 package de.ryanthara.ja.rycon.core.converter.zeiss;
 
 import de.ryanthara.ja.rycon.core.converter.gsi.GsiDecoder;
-import de.ryanthara.ja.rycon.core.elements.GsiBlock;
+import de.ryanthara.ja.rycon.core.elements.GSIBlock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,7 +55,7 @@ public class Gsi2Zeiss {
         List<String> result = new ArrayList<>();
         int lineNumber = 0;
 
-        for (List<GsiBlock> blocksInLine : gsiDecoder.getDecodedLinesOfGsiBlocks()) {
+        for (List<GSIBlock> blocksInLine : gsiDecoder.getDecodedLinesOfGsiBlocks()) {
             lineNumber = lineNumber + 1;
 
             boolean isStationLine = false;
@@ -65,7 +65,7 @@ public class Gsi2Zeiss {
             String horizontalAngle = "", verticalAngle = "", slopeDistance = "", targetHeight = "";
 
             // grab all the information from one line and fill them into place holders
-            for (GsiBlock block : blocksInLine) {
+            for (GSIBlock block : blocksInLine) {
                 int wordIndex = block.getWordIndex();
 
                 switch (wordIndex) {

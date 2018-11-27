@@ -88,7 +88,7 @@ class TransformerTest {
             // A binary data set file was not correctly loaded
             System.err.println("Data set file missing or not loaded correctly");
         } catch (Exception e) {
-            System.err.println("Error 2");
+            System.err.println("Errors 2");
         }
     }
 

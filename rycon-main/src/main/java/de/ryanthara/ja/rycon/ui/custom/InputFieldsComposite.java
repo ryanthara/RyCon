@@ -18,9 +18,9 @@
 
 package de.ryanthara.ja.rycon.ui.custom;
 
-import de.ryanthara.ja.rycon.i18n.Button;
+import de.ryanthara.ja.rycon.i18n.Buttons;
 import de.ryanthara.ja.rycon.i18n.ResourceBundleUtils;
-import de.ryanthara.ja.rycon.i18n.Text;
+import de.ryanthara.ja.rycon.i18n.Texts;
 import de.ryanthara.ja.rycon.ui.Size;
 import de.ryanthara.ja.rycon.ui.util.TextCheck;
 import org.eclipse.swt.SWT;
@@ -38,15 +38,15 @@ import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static de.ryanthara.ja.rycon.i18n.ResourceBundle.BUTTON;
-import static de.ryanthara.ja.rycon.i18n.ResourceBundle.TEXT;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.BUTTON;
+import static de.ryanthara.ja.rycon.i18n.ResourceBundles.TEXT;
 
 /**
  * Instances of this class implements a custom composite with two labels, two text fields and two buttons for
  * file and directory inputs used in RyCON's widgets.
  *
  * @author sebastian
- * @version 4
+ * @version 5
  * @since 4
  */
 public class InputFieldsComposite extends Composite {
@@ -124,7 +124,7 @@ public class InputFieldsComposite extends Composite {
         checkWidget();
 
         Group group = new Group(this, SWT.NONE);
-        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, de.ryanthara.ja.rycon.i18n.Text.pathSelection));
+        group.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.pathSelection));
 
         GridLayout gridLayout = new GridLayout();
         gridLayout.numColumns = 3;
@@ -148,7 +148,7 @@ public class InputFieldsComposite extends Composite {
 
     private org.eclipse.swt.widgets.Button createSourceComposite(Group group) {
         final Label source = new Label(group, SWT.NONE);
-        source.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Text.source));
+        source.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.source));
 
         sourceTextField = new org.eclipse.swt.widgets.Text(group, SWT.BORDER);
         sourceTextField.addListener(SWT.Traverse, event -> {
@@ -173,8 +173,8 @@ public class InputFieldsComposite extends Composite {
         sourceTextField.setLayoutData(gridData);
 
         org.eclipse.swt.widgets.Button btnSource = new org.eclipse.swt.widgets.Button(group, SWT.NONE);
-        btnSource.setText(ResourceBundleUtils.getLangString(BUTTON, de.ryanthara.ja.rycon.i18n.Button.chooseFilesText));
-        btnSource.setToolTipText(ResourceBundleUtils.getLangString(BUTTON, Button.chooseFilesToolTip));
+        btnSource.setText(ResourceBundleUtils.getLangString(BUTTON, Buttons.chooseFilesText));
+        btnSource.setToolTipText(ResourceBundleUtils.getLangString(BUTTON, Buttons.chooseFilesToolTip));
         btnSource.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -191,7 +191,7 @@ public class InputFieldsComposite extends Composite {
 
     private org.eclipse.swt.widgets.Button createTargetComposite(Group group) {
         Label target = new Label(group, SWT.NONE);
-        target.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, de.ryanthara.ja.rycon.i18n.Text.target));
+        target.setText(ResourceBundleUtils.getLangStringFromXml(TEXT, Texts.target));
         target.setLayoutData(new GridData());
 
         targetTextField = new org.eclipse.swt.widgets.Text(group, SWT.SINGLE | SWT.BORDER);
@@ -206,7 +206,7 @@ public class InputFieldsComposite extends Composite {
         targetTextField.setLayoutData(gridData);
 
         org.eclipse.swt.widgets.Button btnTarget = new org.eclipse.swt.widgets.Button(group, SWT.NONE);
-        btnTarget.setText(ResourceBundleUtils.getLangString(BUTTON, de.ryanthara.ja.rycon.i18n.Button.choosePathText));
+        btnTarget.setText(ResourceBundleUtils.getLangString(BUTTON, Buttons.choosePathText));
         btnTarget.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -214,7 +214,7 @@ public class InputFieldsComposite extends Composite {
             }
         });
 
-        btnTarget.setToolTipText(ResourceBundleUtils.getLangString(BUTTON, Button.choosePathToolTip));
+        btnTarget.setToolTipText(ResourceBundleUtils.getLangString(BUTTON, Buttons.choosePathToolTip));
         btnTarget.setLayoutData(new GridData());
 
         return btnTarget;
